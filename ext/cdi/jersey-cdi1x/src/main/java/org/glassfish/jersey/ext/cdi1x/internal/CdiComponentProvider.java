@@ -448,8 +448,72 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         };
     }
 
+    private boolean containsJaxRsParameterizedCtor(final AnnotatedType annotatedType) {
+        return containAnnotatedParameters(annotatedType.getConstructors(), JaxRsParamProducer.JAX_RS_STRING_PARAM_ANNOTATIONS);
+    }
+
+    private boolean containsJaxRsConstructorInjection(final AnnotatedType annotatedType) {
+        return containAnnotatedParameters(annotatedType.getConstructors(), JAX_RS_INJECT_ANNOTATIONS);
+    }
+
+    private boolean containsJaxRsMethodInjection(final AnnotatedType annotatedType) {
+        return containAnnotatedParameters(annotatedType.getMethods(), JAX_RS_INJECT_ANNOTATIONS);
+    }
+
+    private boolean containsJaxRsFieldInjection(final AnnotatedType annotatedType) {
+        return containAnnotation(annotatedType.getFields(), JAX_RS_INJECT_ANNOTATIONS);
+    }
+
+    private boolean containAnnotatedParameters(final Collection<AnnotatedCallable> annotatedCallables,
+                                               final Set<Class<? extends Annotation>> annotationSet) {
+        for (final AnnotatedCallable c : annotatedCallables) {
+            if (containAnnotation(c.getParameters(), annotationSet)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean containAnnotation(final Collection<Annotated> elements,
+                                      final Set<Class<? extends Annotation>> annotationSet) {
+        for (final Annotated element : elements) {
+            if (hasAnnotation(element, annotationSet)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasAnnotation(final Annotated element, final Set<Class<? extends Annotation>> annotations) {
+        for (final Class<? extends Annotation> a : annotations) {
+            if (element.isAnnotationPresent(a)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unused")
-    private void processAnnotatedType(@Observes
+    private void afterTypeDiscovery(@Observes final AfterTypeDiscovery afterTypeDiscovery) {
+        if (LOGGER.isLoggable(Level.CONFIG) && !jerseyVetoedTypes.isEmpty()) {
+            LOGGER.config(LocalizationMessages.CDI_TYPE_VETOED(customHk2TypesProvider,
+                    listElements(new StringBuilder().append("\n"), jerseyVetoedTypes).toString()));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery beforeBeanDiscovery, final BeanManager beanManager) {
+        beforeBeanDiscovery.addAnnotatedType(
+            beanManager.createAnnotatedType(JaxRsParamProducer.class),
+            "Jersey " + JaxRsParamProducer.class.getName()
+        );
+        beforeBeanDiscovery.addAnnotatedType(
+            beanManager.createAnnotatedType(ProcessJAXRSAnnotatedTypes.class),
+            "Jersey " + ProcessJAXRSAnnotatedTypes.class.getName()
+        );
+    }
+
+    public void processAnnotatedType(//@Observes
     // We can not apply the following constraint
     // if we want to fully support {@link org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider}.
     // Covered by tests/integration/cdi-with-jersey-injection-custom-cfg-webapp test application:
@@ -535,64 +599,6 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
     }
 
-    private boolean containsJaxRsParameterizedCtor(final AnnotatedType annotatedType) {
-        return containAnnotatedParameters(annotatedType.getConstructors(), JaxRsParamProducer.JAX_RS_STRING_PARAM_ANNOTATIONS);
-    }
-
-    private boolean containsJaxRsConstructorInjection(final AnnotatedType annotatedType) {
-        return containAnnotatedParameters(annotatedType.getConstructors(), JAX_RS_INJECT_ANNOTATIONS);
-    }
-
-    private boolean containsJaxRsMethodInjection(final AnnotatedType annotatedType) {
-        return containAnnotatedParameters(annotatedType.getMethods(), JAX_RS_INJECT_ANNOTATIONS);
-    }
-
-    private boolean containsJaxRsFieldInjection(final AnnotatedType annotatedType) {
-        return containAnnotation(annotatedType.getFields(), JAX_RS_INJECT_ANNOTATIONS);
-    }
-
-    private boolean containAnnotatedParameters(final Collection<AnnotatedCallable> annotatedCallables,
-                                               final Set<Class<? extends Annotation>> annotationSet) {
-        for (final AnnotatedCallable c : annotatedCallables) {
-            if (containAnnotation(c.getParameters(), annotationSet)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean containAnnotation(final Collection<Annotated> elements,
-                                      final Set<Class<? extends Annotation>> annotationSet) {
-        for (final Annotated element : elements) {
-            if (hasAnnotation(element, annotationSet)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean hasAnnotation(final Annotated element, final Set<Class<? extends Annotation>> annotations) {
-        for (final Class<? extends Annotation> a : annotations) {
-            if (element.isAnnotationPresent(a)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @SuppressWarnings("unused")
-    private void afterTypeDiscovery(@Observes final AfterTypeDiscovery afterTypeDiscovery) {
-        if (LOGGER.isLoggable(Level.CONFIG) && !jerseyVetoedTypes.isEmpty()) {
-            LOGGER.config(LocalizationMessages.CDI_TYPE_VETOED(customHk2TypesProvider,
-                    listElements(new StringBuilder().append("\n"), jerseyVetoedTypes).toString()));
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery beforeBeanDiscovery,
-            final javax.enterprise.inject.spi.BeanManager beanManager) {
-        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(JaxRsParamProducer.class));
-    }
 
     @SuppressWarnings("unused")
     private void processInjectionTarget(@Observes final ProcessInjectionTarget event) {
