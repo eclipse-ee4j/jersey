@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<assembly>
+    <id>src</id>
+
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+        <format>tar.bz2</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <componentDescriptors>
+        <componentDescriptor>${project.basedir}/src/main/assembly/common-dependencies.xml</componentDescriptor>
+    </componentDescriptors>
+
+    <dependencySets>
+        <!-- JAX-RS RI Sources -->
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>jaxrs-ri/src</outputDirectory>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0644</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/NOTICE.md</exclude>
+                </excludes>
+            </unpackOptions>
+            <includes>
+                <include>javax.ws.rs:*:*:sources:*</include>
+                <include>org.glassfish.jersey.*:*:*:sources:*</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>jaxrs-ri</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/dependency/META-INF/services</directory>
+            <outputDirectory>jaxrs-ri/src/META-INF/services</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

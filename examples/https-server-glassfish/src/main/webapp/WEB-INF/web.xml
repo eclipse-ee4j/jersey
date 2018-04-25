@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>org.glassfish.jersey.examples.https.glassfish.resources</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected resource</web-resource-name>
+            <url-pattern>/*</url-pattern>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+
+        <!-- added -->
+        <auth-constraint>
+            <!-- role name used in HelloWorldResource.java-->
+            <role-name>myRole</role-name>
+        </auth-constraint>
+        <!-- /added -->
+
+        <!-- https -->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <!-- added -->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <!-- realm name used in GlassFish -->
+        <realm-name>myRealm</realm-name>
+    </login-config>
+    <security-role>
+        <role-name>myRole</role-name>
+    </security-role>
+    <!-- /added -->
+</web-app>

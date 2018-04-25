@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent"> %ents;]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="modules-and-dependencies">
+    <title>Modules and dependencies</title>
+
+    <section>
+        <title>Java SE Compatibility</title>
+
+        <para>
+            <emphasis>2.x branch: </emphasis>
+            <itemizedlist>
+                <listitem>
+                    <para>Until version 2.6, Jersey was compiled with Java SE 6. This has changed in Jersey 2.7.</para>
+                </listitem>
+                <listitem>
+                    <para>Up to version 2.25.x almost all Jersey components are compiled with Java SE 7 target.
+                    It means, that you will need at least Java
+                    SE 7 to be able to compile and run your application that is using latest Jersey.
+                    Only <literal>core-common</literal> and <literal>core-client</literal> modules are still compiled with Java class
+                    version runnable with Java SE 6.</para>
+                </listitem>
+                <listitem>
+                    <para>Since Jersey 2.26, all modules are build using Java SE 8 and there is no support for running it
+                    on older Java SE distributions.</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </section>
+    <section>
+        <title>Introduction to Jersey dependencies</title>
+
+        <para>
+            Jersey is built, assembled and installed using <link xlink:href="http://maven.apache.org/">Apache Maven</link>.
+            Non-snapshot Jersey releases are deployed to the
+            <link xlink:href="http://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
+            <link xlink:href="http://maven.java.net/">Java.Net Maven repositories</link>, which contain also Jersey SNAPSHOT
+            versions. In case you would want to test the latest development builds check out the
+            <link xlink:href="https://maven.java.net/content/repositories/snapshots/org/glassfish/jersey">
+                Java.Net Snapshots Maven repository</link>.
+        </para>
+
+        <para>
+            An application that uses Jersey and depends on Jersey modules is in turn required to also include in the application
+            dependencies the set of 3rd party modules that Jersey modules depend on. Jersey is designed as a pluggable component
+            architecture and different applications can therefore require different sets of Jersey modules. This also means that
+            the set of external Jersey dependencies required to be included in the application dependencies may vary in each
+            application based on the Jersey modules that are being used by the application.
+        </para>
+
+        <para>
+            Developers using Maven or a Maven-aware build system in their projects are likely to find it easier to include and
+            manage dependencies of their applications compared to developers using ant or other build systems that are not
+            compatible with Maven. This document will explain to both maven and non-maven developers how to depend on
+            Jersey modules in their application. Ant developers are likely to find the
+            <link xlink:href="http://maven.apache.org/ant-tasks/index.html">Ant Tasks for Maven</link> very useful.
+        </para>
+    </section>
+
+    <section xml:id="dependencies">
+        <title>Common Jersey Use Cases</title>
+
+        <section xml:id="servlet-app-glassfish">
+            <title>Servlet based application on Glassfish</title>
+            <para>If you are using Glassfish application server, you don't need to package
+                anything with your application, everything is already included. You just need to declare
+                (provided) dependency on JAX-RS API to be able to compile your application.
+            </para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId>javax.ws.rs&lt;/groupId&gt;
+    &lt;artifactId>javax.ws.rs-api&lt;/artifactId&gt;
+    &lt;version&gt;&jax-rs-api-jar.version;&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</programlisting>
+
+            <para>If you are using any Jersey specific feature, you will need to depend on Jersey directly.</para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-servlet&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;!-- if you are using Jersey client specific features without the server side --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.core&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-client&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+            </programlisting>
+        </section>
+
+        <section xml:id="servlet-app-general">
+            <title>Servlet based server-side application</title>
+            <para>Following dependencies apply to application server (servlet containers) without any
+                integrated JAX-RS implementation. Then application needs to include JAX-RS API and Jersey
+                implementation in deployed application.</para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  --&gt;
+    &lt;artifactId&gt;jersey-container-servlet&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- Required only when you are using JAX-RS Client --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.core&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-client&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+        </section>
+
+        <section xml:id="client-jdk">
+            <title>Client application on JDK</title>
+            <para>Applications running on plain JDK using only client part of JAX-RS specification need
+                to depend only on client. There are various additional modules which can be added, like
+                for example grizzly or apache or jetty connector (see dependencies snipped below). Jersey client
+                runs by default with plain JDK (using HttpUrlConnection). See <xref linkend="client"/>.
+                for more details.
+            </para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.core&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-client&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+            </programlisting>
+
+            <para>Currently available connectors:</para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-grizzly-connector&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-apache-connector&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-jetty-connector&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+        </section>
+
+        <section xml:id="server-jdk">
+            <title>Server-side application on supported containers</title>
+            <para>Apart for a standard JAX-RS Servlet-based deployment that works with any Servlet container that
+                supports Servlet 2.5 and higher,
+                Jersey provides support for programmatic deployment to the following containers: Grizzly 2 (HTTP and Servlet),
+                JDK Http server, Simple Http server and Jetty Http server. This chapter presents only required maven dependencies,
+                more information can be found in <xref linkend="deployment"/>.
+            </para>
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-grizzly2-http&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-grizzly2-servlet&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-jdk-http&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-simple-http&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-jetty-http&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-container-jetty-servlet&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+        </section>
+    </section>
+
+    <xi:include href="modules.xml" />
+</chapter>

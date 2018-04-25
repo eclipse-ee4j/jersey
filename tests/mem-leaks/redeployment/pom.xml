@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey.tests.memleaks</groupId>
+        <artifactId>project</artifactId>
+        <version>2.28-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.glassfish.jersey.tests.memleaks.redeployment</groupId>
+    <artifactId>project</artifactId>
+    <packaging>pom</packaging>
+    <name>jersey-tests-memleak-redeployment</name>
+
+    <description>
+        Memory leaks redeployment test.
+
+        This module (and all sub-modules) combine container-runner-maven-plugin goals ('download', 'startAndDeploy', 'stop') with
+        'redeploy' goal which repetitively redeploys and tests with a single http request the deployed application.
+
+        To build all the modules in the redeployment sub-module, run:
+
+        mvn clean install -amd -pl tests/mem-leaks/ -P tomcat,memleak-redeployment -fae
+    </description>
+
+    <properties>
+        <!-- by default, bound to 'none' phase; if 'memleak-redeployment' profile active, they're activated -->
+        <phase.common.pre-integration-test>${phase.redeployment.pre-integration-test}</phase.common.pre-integration-test>
+        <phase.common.post-integration-test>${phase.redeployment.post-integration-test}</phase.common.post-integration-test>
+    </properties>
+
+    <modules>
+        <module>redeployment-leaking-test-app</module>
+        <module>redeployment-hello-world-app-ref</module>
+        <module>redeployment-no-jersey-app</module>
+        <module>redeployment-threadlocals-app</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>memleak-redeployment</id>
+            <properties>
+                <!-- set all the phases for this sub-module tree so that the executions are un-bound from the 'none' phase -->
+                <phase.redeployment.pre-integration-test>pre-integration-test</phase.redeployment.pre-integration-test>
+                <phase.redeployment.integration-test>integration-test</phase.redeployment.integration-test>
+                <phase.redeployment.post-integration-test>post-integration-test</phase.redeployment.post-integration-test>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                            <artifactId>container-runner-maven-plugin</artifactId>
+                            <configuration>
+                                <!-- these three memleak.redeploy.* properties should be initialized by sub-modules -->
+                                <expectedStatus>${memleak.redeploy.expectedStatus}</expectedStatus>
+                                <redeployCount>${memleak.redeploy.count}</redeployCount>
+                                <requestPathQuery>${memleak.redeploy.requestPathQuery}</requestPathQuery>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-enforcer-plugin</artifactId>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                                    <artifactId>custom-enforcer-rules</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <executions>
+                                <execution>
+                                    <id>enforce-out-of-memory-did-not-occur</id>
+                                    <goals>
+                                        <goal>enforce</goal>
+                                    </goals>
+                                    <phase>${phase.redeployment.post-integration-test}</phase>
+                                    <configuration>
+                                        <rules>
+                                            <rule implementation="org.glassfish.jersey.test.maven.rule.FilePatternDoesNotExistRule">
+                                                <files>
+                                                    <file>${memleak.jvm.heapdumpdir}/java_pid*.hprof</file>
+                                                </files>
+                                            </rule>
+                                            <rule implementation="org.glassfish.jersey.test.maven.rule.PatternNotMatchedInFileRule">
+                                                <file>${external.container.logFile}</file>
+                                                <pattern>.*java\.lang\.OutOfMemoryError.*</pattern>
+                                            </rule>
+                                        </rules>
+                                        <fail>true</fail>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>wls</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                            <artifactId>container-runner-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>wls-redeploy</id>
+                                    <goals>
+                                        <goal>redeployWls</goal>
+                                    </goals>
+                                    <phase>${phase.redeployment.integration-test}</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>gf4</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                            <artifactId>container-runner-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>gf4-redeploy</id>
+                                    <goals>
+                                        <goal>redeployGf4</goal>
+                                    </goals>
+                                    <phase>${phase.redeployment.integration-test}</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                            <artifactId>container-runner-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>tomcat-redeploy</id>
+                                    <goals>
+                                        <goal>redeployTomcat</goal>
+                                    </goals>
+                                    <phase>${phase.redeployment.integration-test}</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

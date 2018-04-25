@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey</groupId>
+        <artifactId>project</artifactId>
+        <version>2.28-SNAPSHOT</version>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>Eclipse Distribution License v. 1.0</name>
+            <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+            <distribution>repo</distribution>
+            <comments>Except for AngularJS, bootstrap.js, jQuery, jQuery Barcode plugin, KineticJS
+                See also https://github.com/eclipse-ee4j/jersey/blob/master/NOTICE.md</comments>
+        </license>
+        <license>
+            <name>jQuery license</name>
+            <url>jquery.org/license</url>
+            <distribution>repo</distribution>
+            <comments>jQuery v1.12.4</comments>
+        </license>
+        <license>
+            <name>MIT license</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+            <comments>AngularJS, Bootstrap v3.3.7 (http://getbootstrap.com), 
+                      jQuery Barcode plugin 0.3, KineticJS v4.7.1</comments>
+        </license>
+    </licenses>
+
+    <groupId>org.glassfish.jersey.examples</groupId>
+    <artifactId>project</artifactId>
+    <packaging>pom</packaging>
+    <name>jersey-examples</name>
+
+    <description>Jersey examples</description>
+
+    <modules>
+        <module>assemblies</module>
+        <module>bean-validation-webapp</module>
+        <module>bookmark</module>
+        <module>bookmark-em</module>
+        <module>bookstore-webapp</module>
+        <module>cdi-webapp</module>
+        <module>clipboard</module>
+        <module>clipboard-programmatic</module>
+        <module>declarative-linking</module>
+        <module>entity-filtering</module>
+        <module>entity-filtering-selectable</module>
+        <module>entity-filtering-security</module>
+        <module>extended-wadl-webapp</module>
+        <module>exception-mapping</module>
+        <module>feed-combiner-java8-webapp</module>
+        <module>freemarker-webapp</module>
+        <module>flight-mgmt-webapp</module>
+        <module>groovy</module>
+        <module>helloworld</module>
+        <module>helloworld-benchmark</module>
+        <module>helloworld-cdi2-se</module>
+        <module>helloworld-netty</module>
+        <module>helloworld-programmatic</module>
+        <module>helloworld-pure-jax-rs</module>
+        <module>helloworld-webapp</module>
+        <module>helloworld-weld</module>
+        <module>helloworld-spring-webapp</module>
+        <module>helloworld-spring-annotations</module>
+        <module>http-patch</module>
+        <module>http-trace</module>
+        <module>https-clientserver-grizzly</module>
+        <module>https-server-glassfish</module>
+        <module>java8-webapp</module>
+        <module>jaxb</module>
+        <module>jaxrs-types-injection</module>
+        <module>jersey-ejb</module>
+        <module>json-binding-webapp</module>
+        <module>json-jackson</module>
+        <module>json-jackson1</module>
+        <module>json-jettison</module>
+        <module>json-moxy</module>
+        <module>json-processing-webapp</module>
+        <module>json-with-padding</module>
+        <module>managed-beans-webapp</module>
+        <module>managed-client</module>
+        <module>managed-client-webapp</module>
+        <module>managed-client-simple-webapp</module>
+        <module>monitoring-webapp</module>
+        <module>multipart-webapp</module>
+        <module>open-tracing</module>
+        <module>osgi-helloworld-webapp</module>
+        <module>osgi-http-service</module>
+        <module>oauth-client-twitter</module>
+        <module>oauth2-client-google-webapp</module>
+        <module>reload</module>
+        <module>rx-client-webapp</module>
+        <module>server-async</module>
+        <module>server-async-managed</module>
+        <module>server-async-standalone</module>
+        <module>server-sent-events-jersey</module>
+        <module>server-sent-events-jaxrs</module>
+        <module>servlet3-webapp</module>
+        <module>simple-console</module>
+        <module>shortener-webapp</module>
+        <module>sparklines</module>
+        <module>sse-item-store-jersey-webapp</module>
+        <module>sse-item-store-jaxrs-webapp</module>
+        <module>sse-twitter-aggregator</module>
+        <module>system-properties-example</module>
+        <module>tone-generator</module>
+        <module>webapp-example-parent</module>
+        <module>xml-moxy</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <dependencies>
+                        <!-- Contains shared Jersey example assembly descriptors-->
+                        <dependency>
+                            <groupId>org.glassfish.jersey.examples</groupId>
+                            <artifactId>assemblies</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>assemble-src-zip</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                            <configuration>
+                                <descriptorRefs>
+                                    <!-- Reference to a descriptor in org.glassfish.jersey.examples:assemblies module -->
+                                    <descriptorRef>src-zip</descriptorRef>
+                                </descriptorRefs>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>java</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

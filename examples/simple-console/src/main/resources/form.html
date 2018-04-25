@@ -1,0 +1,67 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+    <title>A Form</title>
+    <script type="text/javascript">
+        function setColours() {
+            var http_request = new XMLHttpRequest();
+            if (document.bio.hint.value.length > 0)
+                http_request.open("GET", "form/colours?match="+document.bio.hint.value, false);
+            else
+                http_request.open("GET", "form/colours", false);
+            http_request.setRequestHeader("Accept", "application/json");
+            http_request.send(null);
+            if (http_request.status == 200) {
+                list = eval("(" + http_request.responseText + ")");
+                document.bio.colour.options.length = 0;
+                document.bio.colour.options[0] = new Option("Pick a colour", "", true, false);
+                for (var i = 0; i<list.length; i++) {
+                    document.bio.colour.options[i+1] = new Option(list[i], list[i], false, false);
+                }
+            } else {
+                alert("There was a problem fetching the list of colours.");
+            }
+            http_request = null;
+        }
+    </script>
+</head>
+<body>
+<p>Tell me about yourself:</p>
+<form name="bio" action="form" method="POST">
+    <table>
+        <tr>
+            <td align="right">Name:</td>
+            <td><input type="text" name="name" value="" size="30" /></td>
+        </tr>
+        <tr>
+            <td align="right">Favorite colour:</td>
+            <td>
+                <select name="colour" onmousedown="setColours()">
+                    <option>Pick a colour</option>
+                </select> <i>Populated dynamically when you click on the control</i><br/>
+                <input type="text" name="hint" value="" size="13"/> <i>Type a hint to reduce the number of options</i>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Submit" name="submit" />
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

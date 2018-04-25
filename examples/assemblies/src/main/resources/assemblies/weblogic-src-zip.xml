@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<assembly>
+    <!--
+     An assembly that produces an example project source zip bundle with
+     the jersey dependencies in the original project pom.xml file transformed
+     to the "provided" scope.
+     The resulting zipped example project sources are thus able to build example
+     binaries that are suitable for a deployment on containers which host Jersey
+     runtime by default (e.g. GlassFish).
+    -->
+    <id>wls-project-src</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}</directory>
+            <outputDirectory>/</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <excludes>
+                <exclude>pom.xml</exclude>
+                <exclude>**/WEB-INF/web.xml</exclude>
+                <exclude>**/WEB-INF/weblogic.xml</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/glassfish-web.xml</exclude>
+                <exclude>**/sun-web.xml</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/target/wls-pom-file</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <!-- will copy everything from /examples/etc/wls/main/webapp/WEB-INF -->
+            <!-- currently the directory is empty -->
+            <directory>${project.basedir}/target/wls-web-xml-file/src/main/webapp/WEB-INF</directory>
+            <outputDirectory>/src/main/webapp/WEB-INF</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/../etc/wls</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

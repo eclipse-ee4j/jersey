@@ -1,0 +1,866 @@
+/*
+ * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.jersey.client;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+
+import javax.ws.rs.RuntimeType;
+import javax.ws.rs.core.Configurable;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Feature;
+
+import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.ExtendedConfig;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
+import org.glassfish.jersey.internal.BootstrapBag;
+import org.glassfish.jersey.internal.BootstrapConfigurator;
+import org.glassfish.jersey.internal.ContextResolverFactory;
+import org.glassfish.jersey.internal.ExceptionMapperFactory;
+import org.glassfish.jersey.internal.JaxrsProviders;
+import org.glassfish.jersey.internal.ServiceFinder;
+import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.Injections;
+import org.glassfish.jersey.internal.inject.ProviderBinder;
+import org.glassfish.jersey.internal.spi.AutoDiscoverable;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
+import org.glassfish.jersey.message.internal.MessageBodyFactory;
+import org.glassfish.jersey.model.internal.CommonConfig;
+import org.glassfish.jersey.model.internal.ComponentBag;
+import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
+import org.glassfish.jersey.process.internal.RequestScope;
+
+/**
+ * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable
+ * configurable} contract.
+ *
+ * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Martin Matula
+ * @author Libor Kramolis (libor.kramolis at oracle.com)
+ */
+public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig {
+    /**
+     * Internal configuration state.
+     */
+    private State state;
+
+    private static class RuntimeConfigConfigurator implements BootstrapConfigurator {
+
+        private final State runtimeConfig;
+
+        private RuntimeConfigConfigurator(State runtimeConfig) {
+            this.runtimeConfig = runtimeConfig;
+        }
+
+        @Override
+        public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
+            bootstrapBag.setConfiguration(runtimeConfig);
+            injectionManager.register(Bindings.service(runtimeConfig).to(Configuration.class));
+        }
+    }
+
+    /**
+     * Default encapsulation of the internal configuration state.
+     */
+    private static class State implements Configurable<State>, ExtendedConfig {
+
+        /**
+         * Strategy that returns the same state instance.
+         */
+        private static final StateChangeStrategy IDENTITY = state -> state;
+        /**
+         * Strategy that returns a copy of the state instance.
+         */
+        private static final StateChangeStrategy COPY_ON_CHANGE = State::copy;
+
+        private volatile StateChangeStrategy strategy;
+        private final CommonConfig commonConfig;
+        private final JerseyClient client;
+        private volatile ConnectorProvider connectorProvider;
+        private volatile ExecutorService executorService;
+        private volatile ScheduledExecutorService scheduledExecutorService;
+
+        private final LazyValue<ClientRuntime> runtime = Values.lazy((Value<ClientRuntime>) this::initRuntime);
+
+        /**
+         * Configuration state change strategy.
+         */
+        private interface StateChangeStrategy {
+
+            /**
+             * Invoked whenever a mutator method is called in the given configuration
+             * state.
+             *
+             * @param state configuration state to be mutated.
+             * @return state instance that will be mutated and returned from the
+             * invoked configuration state mutator method.
+             */
+            State onChange(final State state);
+        }
+
+        /**
+         * Default configuration state constructor with {@link StateChangeStrategy "identity"}
+         * state change strategy.
+         *
+         * @param client bound parent Jersey client.
+         */
+        State(final JerseyClient client) {
+            this.strategy = IDENTITY;
+            this.commonConfig = new CommonConfig(RuntimeType.CLIENT, ComponentBag.EXCLUDE_EMPTY);
+            this.client = client;
+            final Iterator<ConnectorProvider> iterator = ServiceFinder.find(ConnectorProvider.class).iterator();
+            if (iterator.hasNext()) {
+                this.connectorProvider = iterator.next();
+            } else {
+                this.connectorProvider = new HttpUrlConnectorProvider();
+            }
+        }
+
+        /**
+         * Copy the original configuration state while using the default state change
+         * strategy.
+         *
+         * @param client   new Jersey client parent for the state.
+         * @param original configuration strategy to be copied.
+         */
+        private State(final JerseyClient client, final State original) {
+            this.strategy = IDENTITY;
+            this.client = client;
+            this.commonConfig = new CommonConfig(original.commonConfig);
+            this.connectorProvider = original.connectorProvider;
+            this.executorService = original.executorService;
+            this.scheduledExecutorService = original.scheduledExecutorService;
+        }
+
+        /**
+         * Create a copy of the configuration state within the same parent Jersey
+         * client instance scope.
+         *
+         * @return configuration state copy.
+         */
+        State copy() {
+            return new State(this.client, this);
+        }
+
+        /**
+         * Create a copy of the configuration state in a scope of the given
+         * parent Jersey client instance.
+         *
+         * @param client parent Jersey client instance.
+         * @return configuration state copy.
+         */
+        State copy(final JerseyClient client) {
+            return new State(client, this);
+        }
+
+        void markAsShared() {
+            strategy = COPY_ON_CHANGE;
+        }
+
+        State preInitialize() {
+            final State state = strategy.onChange(this);
+            state.strategy = COPY_ON_CHANGE;
+            state.runtime.get().preInitialize();
+            return state;
+
+        }
+
+        @Override
+        public State property(final String name, final Object value) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.property(name, value);
+            return state;
+        }
+
+        public State loadFrom(final Configuration config) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.loadFrom(config);
+            return state;
+        }
+
+        @Override
+        public State register(final Class<?> providerClass) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(providerClass);
+            return state;
+        }
+
+        @Override
+        public State register(final Object provider) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(provider);
+            return state;
+        }
+
+        @Override
+        public State register(final Class<?> providerClass, final int bindingPriority) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(providerClass, bindingPriority);
+            return state;
+        }
+
+        @Override
+        public State register(final Class<?> providerClass, final Class<?>... contracts) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(providerClass, contracts);
+            return state;
+        }
+
+        @Override
+        public State register(final Class<?> providerClass, final Map<Class<?>, Integer> contracts) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(providerClass, contracts);
+            return state;
+        }
+
+        @Override
+        public State register(final Object provider, final int bindingPriority) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(provider, bindingPriority);
+            return state;
+        }
+
+        @Override
+        public State register(final Object provider, final Class<?>... contracts) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(provider, contracts);
+            return state;
+        }
+
+        @Override
+        public State register(final Object provider, final Map<Class<?>, Integer> contracts) {
+            final State state = strategy.onChange(this);
+            state.commonConfig.register(provider, contracts);
+            return state;
+        }
+
+        State connectorProvider(final ConnectorProvider provider) {
+            if (provider == null) {
+                throw new NullPointerException(LocalizationMessages.NULL_CONNECTOR_PROVIDER());
+            }
+            final State state = strategy.onChange(this);
+            state.connectorProvider = provider;
+            return state;
+        }
+
+        State executorService(final ExecutorService executorService) {
+            if (executorService == null) {
+                throw new NullPointerException(LocalizationMessages.NULL_EXECUTOR_SERVICE());
+            }
+            final State state = strategy.onChange(this);
+            state.executorService = executorService;
+            return state;
+        }
+
+        State scheduledExecutorService(final ScheduledExecutorService scheduledExecutorService) {
+            if (scheduledExecutorService == null) {
+                throw new NullPointerException(LocalizationMessages.NULL_SCHEDULED_EXECUTOR_SERVICE());
+            }
+            final State state = strategy.onChange(this);
+            state.scheduledExecutorService = scheduledExecutorService;
+            return state;
+        }
+
+        Connector getConnector() {
+            // Get the connector only if the runtime has been initialized.
+            return (runtime.isInitialized()) ? runtime.get().getConnector() : null;
+        }
+
+        ConnectorProvider getConnectorProvider() {
+            return connectorProvider;
+        }
+
+        ExecutorService getExecutorService() {
+            return executorService;
+        }
+
+        ScheduledExecutorService getScheduledExecutorService() {
+            return scheduledExecutorService;
+        }
+
+        JerseyClient getClient() {
+            return client;
+        }
+
+        @Override
+        public State getConfiguration() {
+            return this;
+        }
+
+        @Override
+        public RuntimeType getRuntimeType() {
+            return commonConfig.getConfiguration().getRuntimeType();
+        }
+
+        @Override
+        public Map<String, Object> getProperties() {
+            return commonConfig.getConfiguration().getProperties();
+        }
+
+        @Override
+        public Object getProperty(final String name) {
+            return commonConfig.getConfiguration().getProperty(name);
+        }
+
+        @Override
+        public Collection<String> getPropertyNames() {
+            return commonConfig.getConfiguration().getPropertyNames();
+        }
+
+        @Override
+        public boolean isProperty(final String name) {
+            return commonConfig.getConfiguration().isProperty(name);
+        }
+
+        @Override
+        public boolean isEnabled(final Feature feature) {
+            return commonConfig.getConfiguration().isEnabled(feature);
+        }
+
+        @Override
+        public boolean isEnabled(final Class<? extends Feature> featureClass) {
+            return commonConfig.getConfiguration().isEnabled(featureClass);
+        }
+
+        @Override
+        public boolean isRegistered(final Object component) {
+            return commonConfig.getConfiguration().isRegistered(component);
+        }
+
+        @Override
+        public boolean isRegistered(final Class<?> componentClass) {
+            return commonConfig.getConfiguration().isRegistered(componentClass);
+        }
+
+        @Override
+        public Map<Class<?>, Integer> getContracts(final Class<?> componentClass) {
+            return commonConfig.getConfiguration().getContracts(componentClass);
+        }
+
+        @Override
+        public Set<Class<?>> getClasses() {
+            return commonConfig.getConfiguration().getClasses();
+        }
+
+        @Override
+        public Set<Object> getInstances() {
+            return commonConfig.getConfiguration().getInstances();
+        }
+
+        public void configureAutoDiscoverableProviders(InjectionManager injectionManager,
+                                                       List<AutoDiscoverable> autoDiscoverables) {
+            commonConfig.configureAutoDiscoverableProviders(injectionManager, autoDiscoverables, false);
+        }
+
+        public void configureForcedAutoDiscoverableProviders(InjectionManager injectionManager) {
+            commonConfig.configureAutoDiscoverableProviders(injectionManager, Collections.emptyList(), true);
+        }
+
+        public void configureMetaProviders(InjectionManager injectionManager, ManagedObjectsFinalizer finalizer) {
+            commonConfig.configureMetaProviders(injectionManager, finalizer);
+        }
+
+        public ComponentBag getComponentBag() {
+            return commonConfig.getComponentBag();
+        }
+
+        /**
+         * Initialize the newly constructed client instance.
+         */
+        @SuppressWarnings("MethodOnlyUsedFromInnerClass")
+        private ClientRuntime initRuntime() {
+            /*
+             * Ensure that any attempt to add a new provider, feature, binder or modify the connector
+             * will cause a copy of the current state.
+             */
+            markAsShared();
+
+            final State runtimeCfgState = this.copy();
+            runtimeCfgState.markAsShared();
+
+            InjectionManager injectionManager = Injections.createInjectionManager();
+            injectionManager.register(new ClientBinder(runtimeCfgState.getProperties()));
+
+            BootstrapBag bootstrapBag = new BootstrapBag();
+            bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
+            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
+                    new RequestScope.RequestScopeConfigurator(),
+                    new RuntimeConfigConfigurator(runtimeCfgState),
+                    new ContextResolverFactory.ContextResolversConfigurator(),
+                    new MessageBodyFactory.MessageBodyWorkersConfigurator(),
+                    new ExceptionMapperFactory.ExceptionMappersConfigurator(),
+                    new JaxrsProviders.ProvidersConfigurator(),
+                    new AutoDiscoverableConfigurator(RuntimeType.CLIENT));
+            bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
+
+            // AutoDiscoverable.
+            if (!CommonProperties.getValue(runtimeCfgState.getProperties(), RuntimeType.CLIENT,
+                    CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE, Boolean.FALSE, Boolean.class)) {
+                runtimeCfgState.configureAutoDiscoverableProviders(injectionManager, bootstrapBag.getAutoDiscoverables());
+            } else {
+                runtimeCfgState.configureForcedAutoDiscoverableProviders(injectionManager);
+            }
+
+            // Configure binders and features.
+            runtimeCfgState.configureMetaProviders(injectionManager, bootstrapBag.getManagedObjectsFinalizer());
+
+            // Bind providers.
+            ProviderBinder.bindProviders(runtimeCfgState.getComponentBag(), RuntimeType.CLIENT, null, injectionManager);
+
+            ClientExecutorProvidersConfigurator executorProvidersConfigurator =
+                    new ClientExecutorProvidersConfigurator(runtimeCfgState.getComponentBag(),
+                            runtimeCfgState.client,
+                            this.executorService,
+                            this.scheduledExecutorService);
+            executorProvidersConfigurator.init(injectionManager, bootstrapBag);
+
+            injectionManager.completeRegistration();
+
+            bootstrapConfigurators.forEach(configurator -> configurator.postInit(injectionManager, bootstrapBag));
+
+            final ClientConfig configuration = new ClientConfig(runtimeCfgState);
+            final Connector connector = connectorProvider.getConnector(client, configuration);
+            final ClientRuntime crt = new ClientRuntime(configuration, connector, injectionManager, bootstrapBag);
+
+            client.registerShutdownHook(crt);
+            return crt;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final State state = (State) o;
+
+            if (client != null ? !client.equals(state.client) : state.client != null) {
+                return false;
+            }
+            if (!commonConfig.equals(state.commonConfig)) {
+                return false;
+            }
+            return connectorProvider == null ? state.connectorProvider == null
+                    : connectorProvider.equals(state.connectorProvider);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = commonConfig.hashCode();
+            result = 31 * result + (client != null ? client.hashCode() : 0);
+            result = 31 * result + (connectorProvider != null ? connectorProvider.hashCode() : 0);
+            return result;
+        }
+    }
+
+    /**
+     * Construct a new Jersey configuration instance with the default features
+     * and property values.
+     */
+    public ClientConfig() {
+        this.state = new State(null);
+    }
+
+    /**
+     * Construct a new Jersey configuration instance and register the provided list of provider classes.
+     *
+     * @param providerClasses provider classes to be registered with this client configuration.
+     */
+    public ClientConfig(final Class<?>... providerClasses) {
+        this();
+        for (final Class<?> providerClass : providerClasses) {
+            state.register(providerClass);
+        }
+    }
+
+    /**
+     * Construct a new Jersey configuration instance and register the provided list of provider instances.
+     *
+     * @param providers provider instances to be registered with this client configuration.
+     */
+    public ClientConfig(final Object... providers) {
+        this();
+        for (final Object provider : providers) {
+            state.register(provider);
+        }
+    }
+
+    /**
+     * Construct a new Jersey configuration instance with the features as well as
+     * property values copied from the supplied JAX-RS configuration instance.
+     *
+     * @param parent parent Jersey client instance.
+     */
+    ClientConfig(final JerseyClient parent) {
+        this.state = new State(parent);
+    }
+
+    /**
+     * Construct a new Jersey configuration instance with the features as well as
+     * property values copied from the supplied JAX-RS configuration instance.
+     *
+     * @param parent parent Jersey client instance.
+     * @param that   original {@link javax.ws.rs.core.Configuration}.
+     */
+    ClientConfig(final JerseyClient parent, final Configuration that) {
+        if (that instanceof ClientConfig) {
+            state = ((ClientConfig) that).state.copy(parent);
+        } else {
+            state = new State(parent);
+            state.loadFrom(that);
+        }
+    }
+
+    /**
+     * Construct a new Jersey configuration instance using the supplied state.
+     *
+     * @param state to be referenced from the new configuration instance.
+     */
+    private ClientConfig(final State state) {
+        this.state = state;
+    }
+
+    /**
+     * Take a snapshot of the current configuration and its internal state.
+     * <p/>
+     * The returned configuration object is an new instance different from the
+     * original one, however the cloning of the internal configuration state is
+     * lazily deferred until either original or the snapshot configuration is
+     * modified for the first time since the snapshot was taken.
+     *
+     * @return snapshot of the current configuration.
+     */
+    ClientConfig snapshot() {
+        state.markAsShared();
+        return new ClientConfig(state);
+    }
+
+    /**
+     * Load the internal configuration state from an externally provided configuration state.
+     * <p>
+     * Calling this method effectively replaces existing configuration state of the instance
+     * with the state represented by the externally provided configuration.
+     *
+     * @param config external configuration state to replace the configuration of this configurable
+     *               instance.
+     * @return the updated client configuration instance.
+     */
+    public ClientConfig loadFrom(final Configuration config) {
+        if (config instanceof ClientConfig) {
+            state = ((ClientConfig) config).state.copy();
+        } else {
+            state.loadFrom(config);
+        }
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Class<?> providerClass) {
+        state = state.register(providerClass);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Object provider) {
+        state = state.register(provider);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Class<?> providerClass, final int bindingPriority) {
+        state = state.register(providerClass, bindingPriority);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Class<?> providerClass, final Class<?>... contracts) {
+        state = state.register(providerClass, contracts);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Class<?> providerClass, final Map<Class<?>, Integer> contracts) {
+        state = state.register(providerClass, contracts);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Object provider, final int bindingPriority) {
+        state = state.register(provider, bindingPriority);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Object provider, final Class<?>... contracts) {
+        state = state.register(provider, contracts);
+        return this;
+    }
+
+    @Override
+    public ClientConfig register(final Object provider, final Map<Class<?>, Integer> contracts) {
+        state = state.register(provider, contracts);
+        return this;
+    }
+
+    @Override
+    public ClientConfig property(final String name, final Object value) {
+        state = state.property(name, value);
+        return this;
+    }
+
+    @Override
+    public ClientConfig getConfiguration() {
+        return this;
+    }
+
+    @Override
+    public RuntimeType getRuntimeType() {
+        return state.getRuntimeType();
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return state.getProperties();
+    }
+
+    @Override
+    public Object getProperty(final String name) {
+        return state.getProperty(name);
+    }
+
+    @Override
+    public Collection<String> getPropertyNames() {
+        return state.getPropertyNames();
+    }
+
+    @Override
+    public boolean isProperty(final String name) {
+        return state.isProperty(name);
+    }
+
+    @Override
+    public boolean isEnabled(final Feature feature) {
+        return state.isEnabled(feature);
+    }
+
+    @Override
+    public boolean isEnabled(final Class<? extends Feature> featureClass) {
+        return state.isEnabled(featureClass);
+    }
+
+    @Override
+    public boolean isRegistered(final Object component) {
+        return state.isRegistered(component);
+    }
+
+    @Override
+    public Map<Class<?>, Integer> getContracts(final Class<?> componentClass) {
+        return state.getContracts(componentClass);
+    }
+
+    @Override
+    public boolean isRegistered(final Class<?> componentClass) {
+        return state.isRegistered(componentClass);
+    }
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        return state.getClasses();
+    }
+
+    @Override
+    public Set<Object> getInstances() {
+        return state.getInstances();
+    }
+
+    /**
+     * Register a custom Jersey client connector provider.
+     * <p>
+     * The registered {@code ConnectorProvider} instance will provide a
+     * Jersey client {@link org.glassfish.jersey.client.spi.Connector}
+     * for the {@link org.glassfish.jersey.client.JerseyClient} instance
+     * created with this client configuration.
+     * </p>
+     *
+     * @param connectorProvider custom connector provider. Must not be {@code null}.
+     * @return this client config instance.
+     * @throws java.lang.NullPointerException in case the {@code connectorProvider} is {@code null}.
+     * @since 2.5
+     */
+    public ClientConfig connectorProvider(final ConnectorProvider connectorProvider) {
+        state = state.connectorProvider(connectorProvider);
+        return this;
+    }
+
+    /**
+     * Register custom Jersey client async executor.
+     *
+     * @param executorService custom executor service instance
+     * @return this client config instance
+     */
+    public ClientConfig executorService(final ExecutorService executorService) {
+        state = state.executorService(executorService);
+        return this;
+    }
+
+    /**
+     * Register custom Jersey client scheduler.
+     *
+     * @param scheduledExecutorService custom scheduled executor service instance
+     * @return this client config instance
+     */
+    public ClientConfig scheduledExecutorService(final ScheduledExecutorService scheduledExecutorService) {
+        state = state.scheduledExecutorService(scheduledExecutorService);
+        return this;
+    }
+
+    /**
+     * Get the client transport connector.
+     * <p>
+     * May return {@code null} if no connector has been set.
+     *
+     * @return client transport connector or {code null} if not set.
+     */
+    public Connector getConnector() {
+        return state.getConnector();
+    }
+
+    /**
+     * Get the client transport connector provider.
+     * <p>
+     * If no custom connector provider has been set,
+     * {@link org.glassfish.jersey.client.HttpUrlConnectorProvider default connector provider}
+     * instance is returned.
+     *
+     * @return configured client transport connector provider.
+     * @since 2.5
+     */
+    public ConnectorProvider getConnectorProvider() {
+        return state.getConnectorProvider();
+    }
+
+    /**
+     * Get custom client executor service.
+     * <p>
+     * May return null if no custom executor service has been set.
+     *
+     * @return custom executor service instance or {@code null} if not set.
+     * @since 2.26
+     */
+    public ExecutorService getExecutorService() {
+        return state.getExecutorService();
+    }
+
+    /**
+     * Get custom client scheduled executor service.
+     * <p>
+     * May return null if no custom scheduled executor service has been set.
+     *
+     * @return custom executor service instance or {@code null} if not set.
+     * @since 2.26
+     */
+    public ScheduledExecutorService getScheduledExecutorService() {
+        return state.getScheduledExecutorService();
+    }
+
+    /**
+     * Get the configured runtime.
+     *
+     * @return configured runtime.
+     */
+    ClientRuntime getRuntime() {
+        return state.runtime.get();
+    }
+
+    public ClientExecutor getClientExecutor() {
+        return state.runtime.get();
+    }
+
+    /**
+     * Get the parent Jersey client this configuration is bound to.
+     * <p>
+     * May return {@code null} if no parent client has been bound.
+     *
+     * @return bound parent Jersey client or {@code null} if not bound.
+     */
+    public JerseyClient getClient() {
+        return state.getClient();
+    }
+
+
+    /**
+     * Pre initializes this configuration by initializing {@link ClientRuntime client runtime}
+     * including {@link org.glassfish.jersey.message.MessageBodyWorkers message body workers}.
+     * Once this method is called no other method implementing {@link Configurable} should be called
+     * on this pre initialized configuration otherwise configuration will change back to uninitialized.
+     * <p/>
+     * Note that this method must be called only when configuration is attached to the client.
+     *
+     * @return Client configuration.
+     */
+    ClientConfig preInitialize() {
+        state = state.preInitialize();
+        return this;
+    }
+
+    /**
+     * Check that the configuration instance has a parent client set.
+     *
+     * @throws IllegalStateException in case no parent Jersey client has been
+     *                               bound to the configuration instance yet.
+     */
+    void checkClient() throws IllegalStateException {
+        if (getClient() == null) {
+            throw new IllegalStateException("Client configuration does not contain a parent client instance.");
+        }
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ClientConfig other = (ClientConfig) obj;
+        return this.state == other.state || (this.state != null && this.state.equals(other.state));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.state != null ? this.state.hashCode() : 0);
+        return hash;
+    }
+}

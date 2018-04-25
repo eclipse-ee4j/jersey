@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey.tests</groupId>
+        <artifactId>project</artifactId>
+        <version>2.28-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.glassfish.jersey.tests.integration</groupId>
+    <artifactId>project</artifactId>
+    <packaging>pom</packaging>
+    <name>jersey-tests-integration</name>
+
+    <modules>
+        <module>async-jersey-filter</module>
+        <module>cdi-beanvalidation-webapp</module>
+        <module>cdi-ejb-test-webapp</module>
+        <module>cdi-iface-with-non-jaxrs-impl-test-webapp</module>
+        <module>cdi-multimodule</module>
+        <module>ejb-multimodule-reload</module>
+        <module>cdi-multipart-webapp</module>
+        <module>cdi-test-webapp</module>
+        <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
+        <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>
+        <module>cdi-with-jersey-injection-webapp</module>
+        <module>client-connector-provider</module>
+        <module>ejb-multimodule</module>
+        <module>ejb-test-webapp</module>
+        <module>j-376</module>
+        <module>j-441</module>
+        <module>j-59</module>
+        <module>jaxrs-component-inject</module>
+        <module>jersey-1107</module>
+        <module>jersey-1223</module>
+        <module>jersey-1604</module>
+        <module>jersey-1667</module>
+        <module>jersey-1829</module>
+        <module>jersey-1883</module>
+        <module>jersey-1928</module>
+        <module>jersey-1960</module>
+        <module>jersey-1964</module>
+        <module>jersey-2031</module>
+        <module>jersey-2136</module>
+        <module>jersey-2137</module>
+        <module>jersey-2154</module>
+        <module>jersey-2160</module>
+        <module>jersey-2164</module>
+        <module>jersey-2167</module>
+        <module>jersey-2176</module>
+        <module>jersey-2184</module>
+        <module>jersey-2255</module>
+        <module>jersey-2322</module>
+        <module>jersey-2335</module>
+        <module>jersey-2421</module>
+        <module>jersey-2551</module>
+        <module>jersey-2612</module>
+        <module>jersey-2637</module>
+        <module>jersey-2654</module>
+        <module>jersey-2673</module>
+        <module>jersey-2689</module>
+        <module>jersey-2704</module>
+        <module>jersey-2776</module>
+        <module>jersey-2794</module>
+        <module>jersey-2846</module>
+        <module>jersey-2878</module>
+        <module>jersey-2892</module>
+        <module>jersey-780</module>
+        <module>portability-jersey-1</module>
+        <module>portability-jersey-2</module>
+        <module>property-check</module>
+        <module>security-digest</module>
+        <module>servlet-2.5-autodiscovery-1</module>
+        <module>servlet-2.5-autodiscovery-2</module>
+        <module>servlet-2.5-filter</module>
+        <module>servlet-2.5-inflector-1</module>
+        <module>servlet-2.5-init-1</module>
+        <module>servlet-2.5-init-2</module>
+        <module>servlet-2.5-init-3</module>
+        <module>servlet-2.5-init-4</module>
+        <module>servlet-2.5-init-5</module>
+        <module>servlet-2.5-init-6</module>
+        <module>servlet-2.5-init-7</module>
+        <module>servlet-2.5-init-8</module>
+        <module>servlet-2.5-mvc-1</module>
+        <module>servlet-2.5-mvc-2</module>
+        <module>servlet-2.5-mvc-3</module>
+        <module>servlet-2.5-reload</module>
+        <module>servlet-3-async</module>
+        <module>servlet-3-chunked-io</module>
+        <module>servlet-3-filter</module>
+        <module>servlet-3-gf-async</module>
+        <module>servlet-3-inflector-1</module>
+        <module>servlet-3-init-1</module>
+        <module>servlet-3-init-2</module>
+        <module>servlet-3-init-3</module>
+        <module>servlet-3-init-4</module>
+        <module>servlet-3-init-5</module>
+        <module>servlet-3-init-6</module>
+        <module>servlet-3-init-7</module>
+        <module>servlet-3-init-8</module>
+        <module>servlet-3-init-provider</module>
+        <module>servlet-3-params</module>
+        <module>servlet-3-sse-1</module>
+        <module>servlet-request-wrapper-binding-2</module>
+        <module>servlet-request-wrapper-binding</module>
+        <module>servlet-tests</module>
+        <module>sonar-test</module>
+        <!-- TODO: temporarily removing spring 4 integration test -->
+        <!-- TODO: conflict in ASM version (too old) of jetty plugin -->
+        <!--<module>spring4</module>-->
+        <module>tracing-support</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <properties>
+                <env>default</env>
+                <jersey.config.test.container.port>9998</jersey.config.test.container.port>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <env>default</env>
+                <jersey.config.test.container.port>9998</jersey.config.test.container.port>
+                <jetty.log.file>${project.build.directory}/jetty-out.log</jetty.log.file>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- configure Jetty to run in a separated JVM in order to get proper coverage -->
+                        <plugin>
+                            <groupId>org.mortbay.jetty</groupId>
+                            <artifactId>jetty-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>start-jetty-forked</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>run-forked</goal>
+                                    </goals>
+                                    <configuration>
+                                        <contextPath>/</contextPath>
+                                        <scanIntervalSeconds>0</scanIntervalSeconds>
+                                        <waitForChild>false</waitForChild>
+                                        <jvmArgs>${server.coverage.argline} -Djetty.port=${jersey.config.test.container.port}
+                                            -Dorg.slf4j.simpleLogger.logFile=${jetty.log.file}
+                                        </jvmArgs>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>start-jetty</id>
+                                    <phase>none</phase>
+                                </execution>
+                            </executions>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.slf4j</groupId>
+                                    <artifactId>slf4j-simple</artifactId>
+                                    <version>1.7.5</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>${skip.tests}</skip>
+                        <scanIntervalSeconds>10</scanIntervalSeconds>
+                        <stopPort>9999</stopPort>
+                        <stopKey>STOP</stopKey>
+                        <webApp>
+                            <contextPath>/</contextPath>
+                            <webInfIncludeJarPattern>.*/.*jersey-[^/]\.jar$</webInfIncludeJarPattern>
+                        </webApp>
+                        <connectors>
+                            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                                <port>${jersey.config.test.container.port}</port>
+                                <maxIdleTime>60000</maxIdleTime>
+                            </connector>
+                        </connectors>
+                        <jvmArgs>${server.coverage.argline}</jvmArgs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>start-jetty</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <scanIntervalSeconds>0</scanIntervalSeconds>
+                                <daemon>true</daemon>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>stop-jetty</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

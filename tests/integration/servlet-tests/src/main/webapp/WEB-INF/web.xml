@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- servlet for generic use (has all resources) -->
+    <servlet>
+        <servlet-name>testServlet</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>testServlet</servlet-name>
+        <url-pattern>/servlet/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- filter to test NOT commited responses -->
+    <filter>
+        <filter-name>SuppressContentLengthFilter</filter-name>
+        <filter-class>org.glassfish.jersey.tests.integration.servlettests.SuppressContentLengthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SuppressContentLengthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- filter for generic use (has all resources) -->
+    <filter>
+        <filter-name>testFilter</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>testFilter</filter-name>
+        <url-pattern>/filter/*</url-pattern>
+    </filter-mapping>
+
+    <!-- filter context path -->
+    <filter>
+        <filter-name>testFilter2</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests.FilterContextPathResource
+                org.glassfish.jersey.tests.integration.servlettests.FilterNoContextPathResource</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.servlet.filter.contextPath</param-name>
+            <param-value>/contextPathFilter/</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>testFilter2</filter-name>
+        <url-pattern>/contextPathFilter/*</url-pattern>
+    </filter-mapping>
+
+    <!-- forward on 404 -->
+    <filter>
+        <filter-name>testFilter3</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests.FilterForwardOn404Resource</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>testFilter3</filter-name>
+        <url-pattern>/forwardingFilter/*</url-pattern>
+    </filter-mapping>
+
+    <!-- static content regex -->
+    <filter>
+        <filter-name>testFilter4</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests.FilterStaticContentResource</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.servlet.filter.staticContentRegex</param-name>
+            <param-value>/staticContentFilter/.*\.jsp</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>testFilter4</filter-name>
+        <url-pattern>/staticContentFilter/*</url-pattern>
+    </filter-mapping>
+
+    <!-- form consumption -->
+    <filter>
+        <filter-name>FormConsumptionFilter</filter-name>
+        <filter-class>org.glassfish.jersey.tests.integration.servlettests.FormConsumptionFilter</filter-class>
+    </filter>
+    <servlet>
+        <servlet-name>FormConsumptionServlet</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests.FormConsumptionResource</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FormConsumptionServlet</servlet-name>
+        <url-pattern>/form-consumption/*</url-pattern>
+    </servlet-mapping>
+    <filter-mapping>
+        <filter-name>FormConsumptionFilter</filter-name>
+        <url-pattern>/form-consumption/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 404 -->
+    <filter>
+        <filter-name>custom404</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.tests.integration.servlettests.CustomMediaTypeAnd404Resource</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.servlet.filter.contextPath</param-name>
+            <param-value>/custom404/</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>custom404</filter-name>
+        <url-pattern>/custom404/*</url-pattern>
+    </filter-mapping>
+</web-app>

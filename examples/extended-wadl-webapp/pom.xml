@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey.examples</groupId>
+        <artifactId>webapp-example-parent</artifactId>
+        <relativePath>../webapp-example-parent/pom.xml</relativePath>
+        <version>2.28-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>extended-wadl-webapp</artifactId>
+    <name>jersey-examples-extended-wadl-webapp</name>
+    <packaging>war</packaging>
+
+    <description>Extended WADL example.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Extended Wadl Config: Dependency to jersey-wadl-doclet is needed here to keep the correct build order. -->
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-wadl-doclet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-servlet</artifactId>
+        </dependency>
+
+        <!-- Pax-Exam and JUnit dependencies -->
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-junit4</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-forked</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-junit-extender-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.tinybundles</groupId>
+            <artifactId>tinybundles</artifactId>
+            <scope>test</scope>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-link-mvn</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- OSGi runtime - Felix -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.framework</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>aopalliance-repackaged</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Extended Wadl Config: this plugin generates the jaxb beans from xsd schemas -->
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.8.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generatePackage>org.glassfish.jersey.examples.extendedwadl</generatePackage>
+                    <schemaDirectory>src/main/xsd</schemaDirectory>
+                    <!--<includeSchemas>-->
+                    <!--<includeSchema>**/*.xsd</includeSchema>-->
+                    <!--</includeSchemas>-->
+                    <extension>true</extension>
+                    <strict>false</strict>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+
+            <!-- Extended Wadl Config: javadoc plugin generates resourcedoc.xml during the compilation using doclet.
+            Generated file is then used during runtime to attach javadoc information to wadl. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <verbose>false</verbose>
+                    <show>public</show>
+                    <subpackages>org.glassfish.jersey.examples.extendedwadl</subpackages>
+                    <doclet>org.glassfish.jersey.wadl.doclet.ResourceDoclet</doclet>
+                    <docletPath>${path.separator}${project.build.outputDirectory}</docletPath>
+                    <docletArtifacts>
+                        <!-- jersey doclet generator -->
+                        <docletArtifact>
+                            <groupId>org.glassfish.jersey.ext</groupId>
+                            <artifactId>jersey-wadl-doclet</artifactId>
+                            <version>${project.version}</version>
+                        </docletArtifact>
+                        <!--
+                            Also specify jersey and xerces as doclet artifacts as the ResourceDoclet
+                            uses classes provided by them to generate the resourcedoc.
+                         -->
+                        <docletArtifact>
+                            <groupId>org.glassfish.jersey.core</groupId>
+                            <artifactId>jersey-server</artifactId>
+                            <version>${project.version}</version>
+                        </docletArtifact>
+                        <docletArtifact>
+                            <groupId>xerces</groupId>
+                            <artifactId>xercesImpl</artifactId>
+                            <version>${xerces.version}</version>
+                        </docletArtifact>
+                    </docletArtifacts>
+                    <!-- the following option is required as a work around for
+                         version 2.5 of the javadoc plugin which will be used
+                         by a maven version > 2.0.9 -->
+                    <useStandardDocletOptions>false</useStandardDocletOptions>
+                    <additionalparam>-output ${project.build.outputDirectory}/resourcedoc.xml</additionalparam>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <enableAssertions>false</enableAssertions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>maven-paxexam-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>org.glassfish.jersey.examples.extendedwadl.App</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>xml-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>transform-gf-pom</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>transform</goal>
+                                </goals>
+                                <configuration>
+                                    <transformationSets>
+                                        <transformationSet>
+                                            <dir>${project.build.directory}/gf-pom-file</dir>
+                                            <includes>
+                                                <include>pom.xml</include>
+                                            </includes>
+                                            <stylesheet>src/main/xslt/gf.xsl</stylesheet>
+                                            <outputDir>${project.build.directory}/gf-pom-file</outputDir>
+                                        </transformationSet>
+                                    </transformationSets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sonar</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <!-- disable JaCoCo listener because it's not working with <forkMode>always</fork> (<reuseForks>false</reuseForks> respectively)
+                                https://jira.sonarsource.com/browse/SONARJAVA-728 (https://github.com/SonarSource/sonar-java/pull/324) -->
+                                <properties combine.self="override" />
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+</project>

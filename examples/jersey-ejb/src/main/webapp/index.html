@@ -1,0 +1,177 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=MacRoman">
+
+        <style>
+            .created {color: green}
+            .uniqueId {color: red}
+            .message {color: black}
+        </style>
+    </head>
+
+    <body>
+
+        <script type="text/javascript">
+            function getXmlHttpRequest() {
+                try
+                {
+                    // Firefox, Opera 8.0+, Safari
+                    return new XMLHttpRequest();
+                }
+                catch (e)
+                {
+                    // Internet Explorer
+                    try
+                    {
+                        return new ActiveXObject("Msxml2.XMLHTTP");
+                    }
+                    catch (e)
+                    {
+                        try
+                        {
+                            return new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e)
+                        {
+                            alert("Your browser does not support AJAX!");
+                            return null;
+                        }
+                    }
+                }
+            }
+
+            function getMessages()
+            {
+                var xmlHttp = getXmlHttpRequest();
+                xmlHttp.onreadystatechange=function()
+                {
+                    if(xmlHttp.readyState==4)
+                    {
+                        document.getElementById("query").innerHTML="GET app/messages";
+                        document.getElementById("output").innerHTML=xmlHttp.responseText;
+                    }
+                }
+                xmlHttp.open("GET","app/messages/",true);
+                xmlHttp.send(null);
+            }
+
+
+            function getMessage(index)
+            {
+                var xmlHttp = getXmlHttpRequest();
+                xmlHttp.onreadystatechange=function()
+                {
+                    if(xmlHttp.readyState==4)
+                    {
+                        document.getElementById("query").innerHTML="GET app/messages/" + index;
+                        if(xmlHttp.responseText.indexOf("<body>") != -1) {
+                            s = xmlHttp.responseText.substring(xmlHttp.responseText.indexOf("<body>") + 6, xmlHttp.responseText.indexOf("</body>"))
+                            document.getElementById("output").innerHTML=s;
+                        } else {
+                            document.getElementById("output").innerHTML=xmlHttp.responseText;
+                        }
+
+                    }
+                }
+                xmlHttp.open("GET","app/messages/" + index,true);
+                xmlHttp.send(null);
+            }
+
+            function deleteMessage(index)
+            {
+                var xmlHttp = getXmlHttpRequest();
+                xmlHttp.onreadystatechange=function()
+                {
+                    if(xmlHttp.readyState==4)
+                    {
+                        document.getElementById("query").innerHTML="DELETE app/messages/" + index;
+                        if(xmlHttp.responseText.indexOf("<body>") != -1) {
+                            s = xmlHttp.responseText.substring(xmlHttp.responseText.indexOf("<body>") + 6, xmlHttp.responseText.indexOf("</body>"))
+                            document.getElementById("output").innerHTML=s;
+                        } else {
+                            document.getElementById("output").innerHTML=xmlHttp.responseText;
+                        }
+                    }
+                }
+                xmlHttp.open("DELETE","app/messages/" + index,true);
+                xmlHttp.send(null);
+            }
+
+            function addMessage(message)
+            {
+                var xmlHttp = getXmlHttpRequest();
+                xmlHttp.onreadystatechange=function()
+                {
+                    if(xmlHttp.readyState==4)
+                    {
+                        document.getElementById("query").innerHTML="POST app/messages";
+                        document.getElementById("output").innerHTML="";
+                    }
+                }
+                xmlHttp.open("POST","app/messages/",true);
+                xmlHttp.send(message);
+            }
+
+
+        </script>
+
+
+        <h1>MessageBoard sample</h1>
+
+        <form name="form0">
+
+            <button type="button" name="GET0" onclick="getMessages()">LIST ALL MESSAGES</button>
+
+        </form>
+
+
+        <form name="form1">
+            Message id#: <input style="width: 4em" type="text" name="messageNumber" />
+
+<button type="button" name="GET1" onclick="getMessage(document.form1.messageNumber.value)">GET MESSAGE</button>
+
+</form>
+
+<form name="form2">
+    Message id#: <input style="width: 4em" type="text" name="messageNumber" />
+
+<button type="button" name="GET2" onclick="deleteMessage(document.form2.messageNumber.value)">DELETE MESSAGE</button>
+
+</form>
+
+<form name="form3">
+    Message: <input type="test" name="messageText" />
+
+    <button type="button" name="GET2" onclick="addMessage(document.form3.messageText.value)">ADD MESSAGE</button>
+
+</form>
+
+
+<h2>MessageBoard</h2>
+    <h3>query: </h3>
+<div id="query" style="font-weight: bold"></div>
+    <h3>result</h3>
+<div id="output" style="border: 1px solid black; color: black; height: 18em; width: 100%"></div>
+
+
+<script type="text/javascript">
+    getMessages();
+</script>
+
+
+</body>
+</html>

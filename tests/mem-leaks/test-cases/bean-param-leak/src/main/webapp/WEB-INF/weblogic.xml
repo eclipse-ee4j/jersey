@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<wls:weblogic-web-app xmlns:wls="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.0/weblogic-web-app.xsd">
+
+    <wls:container-descriptor>
+        <wls:prefer-application-packages>
+            <!-- jsr311 -->
+            <wls:package-name>javax.ws.rs.*</wls:package-name>
+            <!-- javassist -->
+            <wls:package-name>javassist.*</wls:package-name>
+            <!-- aop repackaged -->
+            <wls:package-name>org.aopalliance.*</wls:package-name>
+
+            <!-- jersey 2 -->
+            <wls:package-name>jersey.repackaged.*</wls:package-name>
+            <wls:package-name>org.glassfish.jersey.*</wls:package-name>
+            <wls:package-name>com.sun.research.ws.wadl.*</wls:package-name>
+
+            <!-- hk2 -->
+            <wls:package-name>org.glassfish.hk2.*</wls:package-name>
+            <wls:package-name>org.jvnet.hk2.*</wls:package-name>
+            <wls:package-name>org.jvnet.tiger_types.*</wls:package-name>
+        </wls:prefer-application-packages>
+
+        <wls:prefer-application-resources>
+            <wls:resource-name>META-INF/services/javax.servlet.ServletContainerInitializer</wls:resource-name>
+            <wls:resource-name>META-INF/services/javax.ws.rs.ext.RuntimeDelegate</wls:resource-name>
+
+            <!-- jersey -->
+            <wls:resource-name>META-INF/services/org.glassfish.jersey.*</wls:resource-name>
+            <wls:resource-name>org.glassfish.jersey.*</wls:resource-name>
+            <wls:resource-name>jersey.repackaged.*</wls:resource-name>
+
+            <!-- hk2 -->
+            <wls:resource-name>META-INF/services/org.glassfish.hk2.*</wls:resource-name>
+        </wls:prefer-application-resources>
+    </wls:container-descriptor>
+
+</wls:weblogic-web-app>

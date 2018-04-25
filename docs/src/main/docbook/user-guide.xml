@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE book [<!ENTITY % ents SYSTEM "jersey.ent" > %ents;]>
+<book xmlns="http://docbook.org/ns/docbook"
+      version="5.0"
+      xml:lang="en"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                          http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd">
+    <info>
+        <title>Jersey &version; User Guide</title>
+    </info>
+    <preface xml:id="preface">
+        <title>Preface</title>
+        <para>
+            This is user guide for Jersey &version;. We are trying to keep it up to date as we add new features.
+            When reading the user guide, please consult also our
+            <link xlink:href="&jersey.javadoc.root.uri;/index.html">Jersey API documentation</link> as an additional source
+            of information about Jersey features and API.
+        </para>
+        <para>
+            If you would like to contribute to the guide or have questions on things not covered in our docs, please
+            contact us at<link xlink:href="mailto:users@jersey.java.net">users@jersey.java.net</link>. Similarly,
+            in case you spot any errors in the Jersey documentation, please report them by filing a new issue in our
+            <link xlink:href="http://java.net/jira/browse/JERSEY">Jersey JIRA Issue Tracker</link>
+            under
+            <literal>docs</literal>
+            component. Please make sure to specify the version of the Jersey User Guide where the error has been spotted
+            by selecting the proper value for the
+            <literal>Affected Version</literal>
+            field.
+        </para>
+        <simplesect>
+            <title>Text formatting conventions</title>
+            <para>
+                First mention of any Jersey and JAX-RS API component in a section links to the API documentation of the
+                referenced component. Any sub-sequent mentions of the component in the same chapter are rendered using a
+                <literal>monospaced</literal>
+                font.
+            </para>
+            <para>
+                <emphasis>Emphasised font</emphasis>
+                is used to a call attention to a newly introduce concept, when it first
+                occurs in the text.
+            </para>
+            <para>
+                In some of the code listings, certain lines are too long to be displayed on one line for the available
+                page width. In such case, the lines that exceed the available page width are broken up into multiple lines
+                using a
+                <literal>'\'</literal>
+                at the end of each line to indicate that a break has been introduced to
+                fit the line in the page. For example:
+
+                <programlisting linenumbering="unnumbered">
+This is an overly long line that \
+might not fit the available page \
+width and had to be broken into \
+multiple lines.
+
+This line fits the page width.
+                </programlisting>
+
+                Should read as:
+
+                <programlisting linenumbering="unnumbered">
+This is an overly long line that might not fit the available page width and had to be broken into multiple lines.
+
+This line fits the page width.
+                </programlisting>
+            </para>
+        </simplesect>
+    </preface>
+
+    <xi:include href="getting-started.xml" />
+    <xi:include href="dependencies.xml" />
+    <xi:include href="jaxrs-resources.xml" />
+    <xi:include href="deployment.xml" />
+    <xi:include href="client.xml" />
+    <xi:include href="rx-client.xml" />
+    <xi:include href="representations.xml" />
+    <xi:include href="mbw.xml" />
+    <xi:include href="media.xml" />
+    <xi:include href="filters.xml" />
+    <xi:include href="async.xml" />
+    <xi:include href="uris-and-links.xml" />
+    <xi:include href="declarative-linking.xml" />
+    <xi:include href="resource-builder.xml" />
+    <xi:include href="sse.xml" />
+    <xi:include href="security.xml" />
+    <xi:include href="wadl.xml" />
+    <xi:include href="bean-validation.xml" />
+    <xi:include href="entity-filtering.xml" />
+    <xi:include href="mvc.xml" />
+    <xi:include href="logging.xml" />
+    <xi:include href="monitoring.xml" />
+    <xi:include href="custom-di.xml" />
+    <xi:include href="cdi.xml" />
+    <xi:include href="spring.xml" />
+    <xi:include href="test-framework.xml" />
+    <xi:include href="how-to-build.xml" />
+    <xi:include href="migration.xml" />
+    <xi:include href="appendix-properties.xml" />
+
+</book>

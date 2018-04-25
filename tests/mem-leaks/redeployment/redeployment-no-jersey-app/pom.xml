@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey.tests.memleaks.redeployment</groupId>
+        <artifactId>project</artifactId>
+        <version>2.28-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>redeployment-no-jersey-app</artifactId>
+    <packaging>war</packaging>
+    <name>jersey-tests-memleak-redeployment-no-jersey-app</name>
+
+    <description>
+        Reproducer of HK2-247, HK2-264
+
+        On some platforms, redeployment of this application does not cause a memory leak. However, several HK2 instances are left
+        in the container (referenced from ThreadLocals), which is what is tested (on Tomcat only).
+
+        [Execution commands]
+
+        Should not fail: mvn -pl :redeployment-no-jersey-app clean install -P tomcat,memleak-redeployment
+
+        Should fail: mvn -pl :redeployment-no-jersey-app clean install -P tomcat,memleak-redeployment,memleak-reproducer
+    </description>
+
+    <properties>
+        <memleak.jvm.maxheap>192m</memleak.jvm.maxheap>
+        <external.container.contextRoot>no-jersey-service</external.container.contextRoot>
+
+        <memleak.redeploy.count>500</memleak.redeploy.count>
+        <memleak.redeploy.expectedStatus>200</memleak.redeploy.expectedStatus>
+        <memleak.redeploy.requestPathQuery>${external.container.contextRoot}</memleak.redeploy.requestPathQuery>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>tomcat</id>
+            <properties>
+                <memleak.jvm.maxheap>42m</memleak.jvm.maxheap>
+                <!-- on Tomcat, we can rely on the log record which is detected bellow by maven-enforcer-plugin -->
+                <memleak.redeploy.count>1</memleak.redeploy.count>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-enforcer-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>enforce-threadlocals-left-cleaned</id>
+                                    <goals>
+                                        <goal>enforce</goal>
+                                    </goals>
+                                    <phase>${phase.redeployment.post-integration-test}</phase>
+                                    <configuration>
+                                        <!-- assure that Tomcat ThreadLocal memory leak detection messages weren't included in the Tomcat output.
+                                        If so, ThreadLocals aren't kept clean and that's what users do not like (see JERSEY-2890). -->
+                                        <rules>
+                                            <rule implementation="org.glassfish.jersey.test.maven.rule.PatternNotMatchedInFileRule">
+                                                <file>${external.container.logFile}</file>
+                                                <pattern>
+                                                    <![CDATA[.*SEVERE.*The web application.*created a ThreadLocal with key.*avoid a probable memory leak.*]]></pattern>
+                                                <maxMatchedLines>3</maxMatchedLines>
+                                            </rule>
+                                        </rules>
+                                        <fail>true</fail>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>memleak-reproducer</id>
+            <properties>
+                <hk2.version>2.5.0-b30</hk2.version>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish.jersey.test-framework.maven</groupId>
+                <artifactId>container-runner-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-locator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-utils</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
