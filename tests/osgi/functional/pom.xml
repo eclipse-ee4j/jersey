@@ -66,6 +66,7 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
+                    <skipTests>${smoke.tests}</skipTests>
                 </configuration>
                 <executions>
                     <execution>

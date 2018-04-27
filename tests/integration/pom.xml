@@ -189,7 +189,13 @@
                 </pluginManagement>
             </build>
         </profile>
-
+        <profile>
+            <id>smokeTests</id>
+            <properties>
+                <skip.tests>true</skip.tests>
+                <smoke.tests>true</smoke.tests>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
