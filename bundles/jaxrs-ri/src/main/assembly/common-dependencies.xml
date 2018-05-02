@@ -53,10 +53,6 @@
             <outputDirectory>jaxrs-ri</outputDirectory>
         </file>
         <file>
-            <source>../../third-party-license-readme.txt</source>
-            <outputDirectory>jaxrs-ri</outputDirectory>
-        </file>
-        <file>
             <source>../../NOTICE.md</source>
             <outputDirectory>jaxrs-ri</outputDirectory>
         </file>
