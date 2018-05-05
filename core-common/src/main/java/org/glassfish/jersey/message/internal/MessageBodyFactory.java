@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.message.internal;
 
@@ -35,6 +36,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -792,21 +794,36 @@ public class MessageBodyFactory implements MessageBodyWorkers {
 
         final TracingLogger tracingLogger = TracingLogger.getInstance(propertiesDelegate);
         MessageBodyWriter<T> selected = null;
-        final Iterator<WriterModel> iterator = writers.iterator();
-        while (iterator.hasNext()) {
-            final WriterModel model = iterator.next();
-            if (model.isWriteable(c, t, as, mediaType)) {
-                selected = (MessageBodyWriter<T>) model.provider();
-                tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
-                break;
-            }
-            tracingLogger.log(MsgTraceEvent.MBW_NOT_WRITEABLE, model.provider());
-        }
 
-        if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
+        Optional<WriterModel> customModel = writers.stream()
+                .filter(WriterModel::isCustom)
+                .filter(model -> model.isWriteable(c, t, as, mediaType))
+                .findAny();
+        if (customModel.isPresent()) {
+            selected = customModel.get().provider();
+            tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
+            if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
+                writers.stream()
+                        .filter(model -> model != customModel.get())
+                        .forEach(model -> tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider()));
+            }
+        } else {
+            final Iterator<WriterModel> iterator = writers.iterator();
             while (iterator.hasNext()) {
                 final WriterModel model = iterator.next();
-                tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider());
+                if (model.isWriteable(c, t, as, mediaType)) {
+                    selected = (MessageBodyWriter<T>) model.provider();
+                    tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
+                    break;
+                }
+                tracingLogger.log(MsgTraceEvent.MBW_NOT_WRITEABLE, model.provider());
+            }
+
+            if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
+                while (iterator.hasNext()) {
+                    final WriterModel model = iterator.next();
+                    tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider());
+                }
             }
         }
 

@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.internal.inject;
 
@@ -83,6 +84,7 @@ public final class Providers {
         interfaces.put(javax.ws.rs.ext.ReaderInterceptor.class, ProviderRuntime.BOTH);
         interfaces.put(javax.ws.rs.ext.WriterInterceptor.class, ProviderRuntime.BOTH);
         interfaces.put(javax.ws.rs.ext.ParamConverterProvider.class, ProviderRuntime.BOTH);
+        interfaces.put(org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper.class, ProviderRuntime.BOTH);
 
         interfaces.put(javax.ws.rs.container.ContainerRequestFilter.class, ProviderRuntime.SERVER);
         interfaces.put(javax.ws.rs.container.ContainerResponseFilter.class, ProviderRuntime.SERVER);
@@ -91,6 +93,7 @@ public final class Providers {
         interfaces.put(javax.ws.rs.client.ClientResponseFilter.class, ProviderRuntime.CLIENT);
         interfaces.put(javax.ws.rs.client.ClientRequestFilter.class, ProviderRuntime.CLIENT);
         interfaces.put(javax.ws.rs.client.RxInvokerProvider.class, ProviderRuntime.CLIENT);
+        interfaces.put(org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory.class, ProviderRuntime.CLIENT);
 
         return interfaces;
     }

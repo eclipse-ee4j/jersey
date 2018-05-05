@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.client;
 
@@ -59,6 +60,7 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -451,10 +453,9 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         @Override
         public CompletionStageRxInvoker rx() {
-            ExecutorServiceProvider instance = this.requestContext.getInjectionManager()
-                                                                  .getInstance(ExecutorServiceProvider.class);
-
-            return new JerseyCompletionStageRxInvoker(this, instance.getExecutorService());
+            InjectionManager injectionManager = this.requestContext.getInjectionManager();
+            ExecutorServiceProvider instance = injectionManager.getInstance(ExecutorServiceProvider.class);
+            return new JerseyCompletionStageRxInvoker(this, instance.getExecutorService(), injectionManager);
         }
 
         @Override
