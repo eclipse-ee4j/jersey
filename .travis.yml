@@ -20,4 +20,4 @@ install: true
 #    - export JAVA_HOME=/home/travis/.linuxbrew/Cellar/jdk/1.8.0-151
 
 script:
-  - mvn -e -U -B -Dtest=!org.glassfish.jersey.tests.e2e.json.JaxbTest* clean install
+  - mvn -e -U -B -DfailIfNoTests=false -Dtest=!org.glassfish.jersey.tests.e2e.json.JaxbTest* clean install
