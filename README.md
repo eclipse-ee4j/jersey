@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/eclipse-ee4j/jersey.svg?branch=master)](https://travis-ci.org/eclipse-ee4j/jersey)
+
 [//]: # " Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
