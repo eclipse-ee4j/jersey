@@ -12,7 +12,7 @@ install: true
 
 before_install:
     - rm -rf ~/.linuxbrew
-    - yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"
+    - yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     - export PATH="$HOME/.linuxbrew/bin:$PATH"
     - export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
     - export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
