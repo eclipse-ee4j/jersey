@@ -12,4 +12,6 @@ install: true
 
 # org.glassfish.jersey.tests.e2e.json.JaxbTest
 script:
-  - mvn -e -U -B clean install -fn
+  - mvn -e -U -B clean install -fn | tee jersey-build.log | grep -E '(?:---)|(?:Tests run\:)|(?:Building)|(?:T E S T S)'
+  - tail -100 jersey-build.log
+  
