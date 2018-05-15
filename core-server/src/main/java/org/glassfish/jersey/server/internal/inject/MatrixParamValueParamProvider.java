@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.internal.inject;
 
@@ -28,7 +29,7 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ParamException;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 
 /**
  * Value supplier provider supporting the {@link MatrixParam &#64;MatrixParam} injection annotation.

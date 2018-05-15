@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.internal.inject;
 
@@ -30,7 +31,7 @@ import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;

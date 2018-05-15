@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.filter;
 
@@ -33,7 +34,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.server.model.AnnotatedMethod;
+import org.glassfish.jersey.model.AnnotatedMethod;
 
 /**
  * A {@link DynamicFeature} supporting the {@code javax.annotation.security.RolesAllowed},
