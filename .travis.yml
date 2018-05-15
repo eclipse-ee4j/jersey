@@ -1,0 +1,18 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
+
+install: true
+
+script:
+  - grep --help
+  - echo 'Tests run: 1, Failures: 2, Errors: 3, Skipped: 4, Time elapsed: 0.374 sec - in org.glassfish.jersey.jaxb.internal.AbstractJaxbProviderTest' | grep -E '(?:Tests run\:)'
+  - echo '--------------------------------------------------------------------------------'
+  - mvn -e -U -B clean install -fn | grep -E '(?:---)|(?:Tests run\:)|(?:Building)|(?:T E S T S)'
+  - tail -100 jersey-build.log
