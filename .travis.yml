@@ -10,11 +10,8 @@ cache:
 
 install: true
 
-# org.glassfish.jersey.tests.e2e.json.JaxbTest
-#  - mvn -e -U -B clean install -fn | tee jersey-build.log | grep -E '(?:---)|(?:Tests run\:)|(?:Building)|(?:T E S T S)'
 script:
   - grep --help
   - echo 'Tests run: 1, Failures: 2, Errors: 3, Skipped: 4, Time elapsed: 0.374 sec - in org.glassfish.jersey.jaxb.internal.AbstractJaxbProviderTest' | grep -E '(?:Tests run\:)'
   - mvn -e -U -B clean install -fn | grep -E '(?:---)|(?:Tests run\:)|(?:Building)|(?:T E S T S)'
   - tail -100 jersey-build.log
-  
