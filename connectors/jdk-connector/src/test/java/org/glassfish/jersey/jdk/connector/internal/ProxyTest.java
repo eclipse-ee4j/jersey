@@ -19,6 +19,7 @@ package org.glassfish.jersey.jdk.connector.internal;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,6 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.internal.util.Base64;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProperties;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -227,7 +227,7 @@ public class ProxyTest extends JerseyTest {
                 response.setStatus(400);
                 return false;
             }
-            String decoded = new String(Base64.decode(authorizationHeader.substring(6).getBytes()),
+            String decoded = new String(Base64.getDecoder().decode(authorizationHeader.substring(6).getBytes()),
                     CHARACTER_SET);
             final String[] split = decoded.split(":");
             final String username = split[0];
