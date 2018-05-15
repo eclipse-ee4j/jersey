@@ -11,6 +11,6 @@ cache:
 install: true
 
 script:
-  - mvn -e -U -B clean install -fn 2>&1 | tee jersey-build.log | grep -E '(---)|(Building)|(Tests run)|(T E S T S)'
+  - travis_wait 120 mvn -e -U -B clean install -fn 2>&1 | tee jersey-build.log | grep -E '(---)|(Building)|(Tests run)|(T E S T S)'
   - echo '------------------------------------------------------------------------'
   - tail -100 jersey-build.log
