@@ -764,6 +764,8 @@
             <properties>
                 <release.tests.args>-Dskip.tests=true</release.tests.args>
                 <skip.tests>true</skip.tests>
+                <!-- the value shall be TRUE in order to skip all tests including excluded from the smoke tests set -->
+                <smoke.tests>true</smoke.tests>
             </properties>
         </profile>
         <profile>
@@ -1171,6 +1173,19 @@
                     </plugins>
                 </pluginManagement>
             </build>
+        </profile>
+        <profile>
+            <id>smokeTests</id>
+            <!--
+            Defines set of test which shall be excluded (for better performance) and the whole Jersey build will run faster
+            including however those tests which covers core functionality of the entire API
+            -->
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <smoke.tests>true</smoke.tests>
+            </properties>
         </profile>
     </profiles>
 
@@ -1963,5 +1978,7 @@
         <xerces.version>2.11.0</xerces.version>
         <xmlunit.version>1.6</xmlunit.version>
         <yasson.version>1.0.1</yasson.version>
+        <!-- Default value shall be FALSE in order to run ALL tests without any exclusions -->
+        <smoke.tests>false</smoke.tests>
     </properties>
 </project>
