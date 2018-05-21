@@ -60,8 +60,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.Providers;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 
 /**
  * Factory for client-side representation of a resource.
@@ -78,6 +84,8 @@ public final class WebResourceFactory implements InvocationHandler {
     private final MultivaluedMap<String, Object> headers;
     private final List<Cookie> cookies;
     private final Form form;
+    private final InjectionManager injectionManager;
+    private final Map<Parameter, ParameterInserter> inserterCache = new HashMap<>();
 
     private static final MultivaluedMap<String, Object> EMPTY_HEADERS = new MultivaluedHashMap<>();
     private static final Form EMPTY_FORM = new Form();
@@ -136,6 +144,9 @@ public final class WebResourceFactory implements InvocationHandler {
         this.headers = headers;
         this.cookies = cookies;
         this.form = form;
+
+        ClientConfig clientConfig = (ClientConfig) target.getConfiguration();
+        this.injectionManager = clientConfig.getRuntime().getInjectionManager();
     }
 
     @Override
@@ -160,6 +171,10 @@ public final class WebResourceFactory implements InvocationHandler {
 
         // response type
         final Class<?> responseType = method.getReturnType();
+
+        final List<Parameter> parameters = Collections.unmodifiableList(
+                Parameter.create(proxyIfc, method.getDeclaringClass(), method, false)
+        );
 
         // determine method name
         String httpMethod = getHttpMethodName(method);
@@ -192,21 +207,22 @@ public final class WebResourceFactory implements InvocationHandler {
         final LinkedList<Cookie> cookies = new LinkedList<>(this.cookies);
         final Form form = new Form();
         form.asMap().putAll(this.form.asMap());
-        final Annotation[][] paramAnns = method.getParameterAnnotations();
+        final Annotation[][] paramAnnotations = method.getParameterAnnotations();
         Object entity = null;
         Type entityType = null;
-        for (int i = 0; i < paramAnns.length; i++) {
-            final Map<Class, Annotation> anns = new HashMap<>();
-            for (final Annotation ann : paramAnns[i]) {
-                anns.put(ann.annotationType(), ann);
+        for (int i = 0; i < paramAnnotations.length; i++) {
+            final Map<Class, Annotation> annotations = new HashMap<>();
+            for (final Annotation annotation : paramAnnotations[i]) {
+                annotations.put(annotation.annotationType(), annotation);
             }
 
             Object value = args[i];
-            if (!hasAnyParamAnnotation(anns)) {
+            Parameter parameter = parameters.get(i);
+            if (!hasAnyParamAnnotation(annotations)) {
                 entityType = method.getGenericParameterTypes()[i];
                 entity = value;
             } else {
-                newTarget = parseParamMetadata(newTarget, headers, cookies, form, anns, value);
+                newTarget = parseParamMetadata(newTarget, headers, cookies, form, annotations, parameter, value);
             }
         }
 
@@ -310,6 +326,17 @@ public final class WebResourceFactory implements InvocationHandler {
             Form form,
             Map<Class, Annotation> anns,
             Object value) {
+        return parseParamMetadata(newTarget, headers, cookies, form, anns, null, value);
+    }
+
+    private WebTarget parseParamMetadata(
+            WebTarget newTarget,
+            MultivaluedHashMap<String, Object> headers,
+            LinkedList<Cookie> cookies,
+            Form form,
+            Map<Class, Annotation> anns,
+            Parameter parameter,
+            Object value) {
 
         Annotation ann;
         if (value == null && (ann = anns.get(DefaultValue.class)) != null) {
@@ -317,9 +344,17 @@ public final class WebResourceFactory implements InvocationHandler {
         }
 
         if (value != null) {
+            ParameterInserter<Object, Object> parameterInserter = getParameterInserter(parameter);
+
             if ((ann = anns.get(PathParam.class)) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
                 newTarget = newTarget.resolveTemplate(((PathParam) ann).value(), value);
             } else if ((ann = anns.get((QueryParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
                 if (value instanceof Collection) {
                     newTarget = newTarget.queryParam(((QueryParam) ann).value(), convert((Collection) value));
                 } else {
@@ -362,6 +397,9 @@ public final class WebResourceFactory implements InvocationHandler {
                     }
                 }
             } else if ((ann = anns.get((HeaderParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
                 if (value instanceof Collection) {
                     headers.addAll(((HeaderParam) ann).value(), convert((Collection) value));
                 } else {
@@ -369,6 +407,9 @@ public final class WebResourceFactory implements InvocationHandler {
                 }
 
             } else if ((ann = anns.get((CookieParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
                 final String name = ((CookieParam) ann).value();
                 Cookie c;
                 if (value instanceof Collection) {
@@ -396,6 +437,9 @@ public final class WebResourceFactory implements InvocationHandler {
                     }
                 }
             } else if ((ann = anns.get((MatrixParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
                 if (value instanceof Collection) {
                     newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), convert((Collection) value));
                 } else {
@@ -412,6 +456,25 @@ public final class WebResourceFactory implements InvocationHandler {
             }
         }
         return newTarget;
+    }
+
+    private <T, R> ParameterInserter<T, R> getParameterInserter(Parameter parameter) {
+        ParameterInserter<T, R> parameterInserter = null;
+        if (parameter != null) {
+            parameterInserter = inserterCache.get(parameter);
+            if (parameterInserter == null) {
+                Iterable<ParameterInserterProvider> parameterInserterProviders
+                        = Providers.getAllProviders(injectionManager, ParameterInserterProvider.class);
+                for (final ParameterInserterProvider parameterInserterProvider : parameterInserterProviders) {
+                    if (parameterInserterProvider != null) {
+                        parameterInserter = (ParameterInserter<T, R>) parameterInserterProvider.get(parameter);
+                        inserterCache.put(parameter, parameterInserter);
+                        break;
+                    }
+                }
+            }
+        }
+        return parameterInserter;
     }
 
     private boolean hasAnyParamAnnotation(final Map<Class, Annotation> anns) {
