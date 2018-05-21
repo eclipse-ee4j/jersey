@@ -19,7 +19,6 @@ import org.glassfish.jersey.microprofile.rest.client.ext.DefaultResponseExceptio
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
@@ -72,26 +71,21 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     }
 
     @Override
-    public <T> T build(Class<T> restClient) throws IllegalStateException, RestClientDefinitionException {
+    public <T> T build(Class<T> restClientInterface) throws IllegalStateException, RestClientDefinitionException {
 
         // interface validity
-        RestClientValidator.getInstance().validate(restClient);
+        RestClientValidator.getInstance().validate(restClientInterface);
 
         registerDefaultExceptionMapper();
+        registerProviders(restClientInterface);
 
-        registerProviders(restClient);
-
+        JerseyClient client = (JerseyClient) clientBuilder.build();
+        client.preInitialize();
         if (baseUri == null) {
             throw new IllegalStateException("Base URI or URL can't be null");
         }
-
-        Client client = clientBuilder.build();
-        if (client instanceof JerseyClient) {
-            ((JerseyClient) client).preInitialize();
-        }
         WebTarget webTarget = client.target(baseUri);
-
-        return WebResourceFactory.newResource(restClient, webTarget);
+        return WebResourceFactory.newResource(restClientInterface, webTarget);
     }
 
     private void registerDefaultExceptionMapper() {

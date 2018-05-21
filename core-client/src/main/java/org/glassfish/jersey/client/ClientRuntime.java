@@ -58,8 +58,9 @@ import org.glassfish.jersey.process.internal.Stages;
  * Client-side request processing runtime.
  *
  * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
+public class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
     private static final Logger LOG = Logger.getLogger(ClientRuntime.class.getName());
 
@@ -355,7 +356,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      *
      * @return injection manager.
      */
-    InjectionManager getInjectionManager() {
+    public InjectionManager getInjectionManager() {
         return injectionManager;
     }
 }

@@ -1,0 +1,174 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) 2010-2017 Oracle and/or its affiliates. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://oss.oracle.com/licenses/CDDL+GPL-1.1
+ * or LICENSE.txt.  See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at LICENSE.txt.
+ *
+ * GPL Classpath Exception:
+ * Oracle designates this particular file as subject to the "Classpath"
+ * exception as provided by Oracle in the GPL Version 2 section of the License
+ * file that accompanied this code.
+ *
+ * Modifications:
+ * If applicable, add the following below the License Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
+ * "Portions Copyright [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ * If you wish your version of this file to be governed by only the CDDL or
+ * only the GPL Version 2, indicate your decision by adding "[Contributor]
+ * elects to include this software in this distribution under the [CDDL or GPL
+ * Version 2] license."  If you don't indicate a single choice of license, a
+ * recipient has the option to distribute your version of this file under
+ * either the CDDL, the GPL Version 2 or to extend the choice of license to
+ * its licensees as provided above.  However, if you add GPL Version 2 code
+ * and therefore, elected the GPL Version 2 license, then the option applies
+ * only if the new code is made subject to such option by the copyright
+ * holder.
+ */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+
+package org.glassfish.jersey.client.internal.inject;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.ext.ParamConverter;
+import javax.inject.Singleton;
+import org.glassfish.jersey.internal.inject.InserterException;
+import org.glassfish.jersey.internal.inject.ParamConverterFactory;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.internal.util.collection.ClassTypePair;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterInserterProvider;
+
+/**
+ * Implementation of {@link ParameterInserterProvider}. For each
+ * parameter, the implementation obtains a
+ * {@link ParamConverter param converter} instance via
+ * {@link ParamConverterFactory} and creates the proper
+ * {@link ParameterInserter parameter inserter}.
+ *
+ * @author Paul Sandoz
+ * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
+ */
+@Singleton
+final class ParameterInserterFactory implements ParameterInserterProvider {
+
+    private final LazyValue<ParamConverterFactory> paramConverterFactory;
+
+    /**
+     * Create new parameter inserter factory.
+     *
+     * @param paramConverterFactory string readers factory.
+     */
+    public ParameterInserterFactory(LazyValue<ParamConverterFactory> paramConverterFactory) {
+        this.paramConverterFactory = paramConverterFactory;
+    }
+
+    @Override
+    public ParameterInserter<?, ?> get(final Parameter p) {
+        return process(
+                paramConverterFactory.get(),
+                p.getDefaultValue(),
+                p.getRawType(),
+                p.getType(),
+                p.getAnnotations(),
+                p.getSourceName());
+    }
+
+    @SuppressWarnings("unchecked")
+    private ParameterInserter<?, ?> process(
+            final ParamConverterFactory paramConverterFactory,
+            final String defaultValue,
+            final Class<?> rawType,
+            final Type type,
+            final Annotation[] annotations,
+            final String parameterName) {
+
+        // Try to find a converter that support rawType and type at first.
+        // E.g. if someone writes a converter that support List<Integer> this approach should precede the next one.
+        ParamConverter<?> converter = paramConverterFactory.getConverter(rawType, type, annotations);
+        if (converter != null) {
+            try {
+                return new SingleValueInserter(converter, parameterName, defaultValue);
+            } catch (final InserterException e) {
+                throw e;
+            } catch (final Exception e) {
+                throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
+            }
+        }
+
+        // Check whether the rawType is the type of the collection supported.
+        if (rawType == List.class || rawType == Set.class || rawType == SortedSet.class) {
+            // Get the generic type of the list. If none is found default to String.
+            final List<ClassTypePair> typePairs = ReflectionHelper.getTypeArgumentAndClass(type);
+            final ClassTypePair typePair = (typePairs.size() == 1) ? typePairs.get(0) : null;
+
+            if (typePair != null) {
+                converter = paramConverterFactory.getConverter(
+                        typePair.rawClass(),
+                        typePair.type(),
+                        annotations
+                );
+            }
+            if (converter != null) {
+                try {
+                    return CollectionInserter.getInstance(rawType, converter, parameterName, defaultValue);
+                } catch (final InserterException e) {
+                    throw e;
+                } catch (final Exception e) {
+                    throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
+                }
+            }
+        }
+
+        // Check primitive types.
+        if (rawType == String.class) {
+            return new SingleStringValueInserter(parameterName, defaultValue);
+        } else if (rawType == Character.class) {
+            return new PrimitiveCharacterInserter(parameterName,
+                    defaultValue,
+                    PrimitiveMapper.primitiveToDefaultValueMap.get(rawType));
+        } else if (rawType.isPrimitive()) {
+            // Convert primitive to wrapper class
+            final Class<?> wrappedRaw = PrimitiveMapper.primitiveToClassMap.get(rawType);
+            if (wrappedRaw == null) {
+                // Primitive type not supported
+                return null;
+            }
+
+            if (wrappedRaw == Character.class) {
+                return new PrimitiveCharacterInserter(parameterName,
+                        defaultValue,
+                        PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
+            }
+
+            return new PrimitiveValueOfInserter(
+                    parameterName,
+                    defaultValue,
+                    PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
+        }
+
+        return null;
+    }
+}
