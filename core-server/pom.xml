@@ -170,6 +170,7 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>2.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -227,6 +228,13 @@
             <artifactId>jersey-hk2</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <version>${microprofile.config.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

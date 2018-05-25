@@ -58,7 +58,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
      * Create and start Netty server.
      *
      * @param baseUri       base uri.
-     * @param configuration Jersey configuration.
+     * @param container     Jersey container.
      * @param sslContext    Netty SSL context (can be null).
      * @param block         when {@code true}, this method will block until the server is stopped. When {@code false}, the
      *                      execution will
@@ -66,25 +66,59 @@ public class NettyHttpContainerProvider implements ContainerProvider {
      * @return Netty channel instance.
      * @throws ProcessingException when there is an issue with creating new container.
      */
-    public static Channel createServer(final URI baseUri, final ResourceConfig configuration, SslContext sslContext,
+    public static Channel createServer(final URI baseUri, final NettyHttpContainer container, SslContext sslContext,
                                        final boolean block)
             throws ProcessingException {
+
+        final ServerBootstrap serverBootstrap = createServerBootstrap(baseUri, container, sslContext);
+        return startServer(getPort(baseUri), container, serverBootstrap, block);
+    }
+
+    /**
+     * Create but not start Netty server.
+     *
+     * @param baseUri       base uri.
+     * @param container     Jersey container.
+     * @param sslContext    Netty SSL context (can be null).
+     * @return Netty bootstrap instance.
+     * @throws ProcessingException when there is an issue with creating new container.
+     */
+    static ServerBootstrap createServerBootstrap(final URI baseUri, final NettyHttpContainer container, SslContext sslContext) {
 
         // Configure the server.
         final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         final EventLoopGroup workerGroup = new NioEventLoopGroup();
-        final NettyHttpContainer container = new NettyHttpContainer(configuration);
+
+        ServerBootstrap b = new ServerBootstrap();
+        b.option(ChannelOption.SO_BACKLOG, 1024);
+        b.group(bossGroup, workerGroup)
+         .channel(NioServerSocketChannel.class)
+         .childHandler(new JerseyServerInitializer(baseUri, sslContext, container));
+
+        return b;
+    }
+
+    /**
+     * Start Netty server.
+     *
+     * @param port          IP port to listen.
+     * @param container     Jersey container.
+     * @param serverBootstrap Netty server bootstrap (i. e. prepared but unstarted server instance)
+     * @param block         when {@code true}, this method will block until the server is stopped. When {@code false}, the
+     *                      execution will
+     *                      end immediately after the server is started.
+     * @return Netty channel instance.
+     * @throws ProcessingException when there is an issue with creating new container.
+     */
+    static Channel startServer(final int port, final NettyHttpContainer container, final ServerBootstrap serverBootstrap,
+                                       final boolean block)
+            throws ProcessingException {
 
         try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.option(ChannelOption.SO_BACKLOG, 1024);
-            b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container));
+            final EventLoopGroup bossGroup = serverBootstrap.config().group();
+            final EventLoopGroup workerGroup = serverBootstrap.config().childGroup();
 
-            int port = getPort(baseUri);
-
-            Channel ch = b.bind(port).sync().channel();
+            Channel ch = serverBootstrap.bind(port).sync().channel();
 
             ch.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
@@ -105,6 +139,24 @@ public class NettyHttpContainerProvider implements ContainerProvider {
         } catch (InterruptedException e) {
             throw new ProcessingException(e);
         }
+    }
+
+    /**
+     * Create and start Netty server.
+     *
+     * @param baseUri       base uri.
+     * @param configuration Jersey configuration.
+     * @param sslContext    Netty SSL context (can be null).
+     * @param block         when {@code true}, this method will block until the server is stopped. When {@code false}, the
+     *                      execution will
+     *                      end immediately after the server is started.
+     * @return Netty channel instance.
+     * @throws ProcessingException when there is an issue with creating new container.
+     */
+    public static Channel createServer(final URI baseUri, final ResourceConfig configuration, SslContext sslContext,
+                                       final boolean block)
+            throws ProcessingException {
+        return createServer(baseUri, new NettyHttpContainer(configuration), sslContext, block);
     }
 
     /**
@@ -172,7 +224,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
         }
     }
 
-    private static int getPort(URI uri) {
+    static int getPort(URI uri) {
         if (uri.getPort() == -1) {
             if ("http".equalsIgnoreCase(uri.getScheme())) {
                 return 80;

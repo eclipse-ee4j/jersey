@@ -21,17 +21,19 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
-
-import javax.ws.rs.ProcessingException;
+import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
+import javax.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.simple.internal.LocalizationMessages;
-
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.core.ContainerSocketProcessor;
+import org.simpleframework.transport.Socket;
 import org.simpleframework.transport.SocketProcessor;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
@@ -149,7 +151,55 @@ public final class SimpleContainerFactory {
             public SocketProcessor get() throws IOException {
                 return new ContainerSocketProcessor(container);
             }
-        });
+        }, true);
+    }
+
+    /**
+     * Create a {@link Closeable} that registers an {@link Container} that in turn manages all root
+     * resource and provider classes found by searching the classes referenced in the java classpath.
+     *
+     * @param address   the URI to create the http server. The URI scheme must be equal to {@code https}
+     *                  . The URI user information and host are ignored. If the URI port is not present then
+     *                  port {@value org.glassfish.jersey.server.spi.Container#DEFAULT_HTTPS_PORT} will be used.
+     *                  The URI path, query and fragment components are ignored.
+     * @param context   this is the SSL context used for SSL connections.
+     * @param config    the resource configuration.
+     * @param sslClientAuthentication Secure socket client authentication policy.
+     * @param start whether the server shall listen to connections immediately
+     * @return the closeable connection, with the endpoint started.
+     * @throws ProcessingException      thrown when problems during server creation.
+     * @throws IllegalArgumentException if {@code address} is {@code null}.
+     */
+    public static SimpleServer create(final URI address, final SSLContext context,
+            final SSLClientAuthentication sslClientAuthentication, final SimpleContainer container, final boolean start) {
+        return _create(address, context, container, new UnsafeValue<SocketProcessor, IOException>() {
+            @Override
+            public SocketProcessor get() throws IOException {
+                return new ContainerSocketProcessor(container) {
+                    @Override
+                    public final void process(final Socket socket) throws IOException {
+                        final SSLEngine sslEngine = socket.getEngine();
+                        if (sslEngine != null) {
+                            switch (sslClientAuthentication) {
+                            case MANDATORY: {
+                                sslEngine.setNeedClientAuth(true);
+                                break;
+                            }
+                            case OPTIONAL: {
+                                sslEngine.setWantClientAuth(true);
+                                break;
+                            }
+                            default: {
+                                sslEngine.setNeedClientAuth(false);
+                                break;
+                            }
+                            }
+                        }
+                        super.process(socket);
+                    }
+                };
+            }
+        }, start);
     }
 
     /**
@@ -201,12 +251,13 @@ public final class SimpleContainerFactory {
             public SocketProcessor get() throws IOException {
                 return new ContainerSocketProcessor(container, count, select);
             }
-        });
+        }, true);
     }
 
     private static SimpleServer _create(final URI address, final SSLContext context,
                                         final SimpleContainer container,
-                                        final UnsafeValue<SocketProcessor, IOException> serverProvider)
+                                        final UnsafeValue<SocketProcessor, IOException> serverProvider,
+                                        final boolean start)
             throws ProcessingException {
         if (address == null) {
             throw new IllegalArgumentException(LocalizationMessages.URI_CANNOT_BE_NULL());
@@ -236,22 +287,26 @@ public final class SimpleContainerFactory {
             final SocketProcessor server = serverProvider.get();
             connection = new SocketConnection(server, analyzer);
 
+            final SimpleServer simpleServer = new SimpleServer() {
+                private InetSocketAddress socketAddr = listen;
 
-            final SocketAddress socketAddr = connection.connect(listen, context);
-            container.onServerStart();
-
-            return new SimpleServer() {
+                @Override
+                public final void start() throws IOException {
+                    this.socketAddr = (InetSocketAddress) connection.connect(listen, context);
+                    container.onServerStart();
+                }
 
                 @Override
                 public void close() throws IOException {
                     container.onServerStop();
                     analyzer.stop();
                     connection.close();
+                    this.socketAddr = listen;
                 }
 
                 @Override
                 public int getPort() {
-                    return ((InetSocketAddress) socketAddr).getPort();
+                    return this.socketAddr.getPort();
                 }
 
                 @Override
@@ -268,6 +323,12 @@ public final class SimpleContainerFactory {
                     }
                 }
             };
+
+            if (start) {
+                simpleServer.start();
+            }
+
+            return simpleServer;
         } catch (final IOException ex) {
             throw new ProcessingException(LocalizationMessages.ERROR_WHEN_CREATING_SERVER(), ex);
         }
