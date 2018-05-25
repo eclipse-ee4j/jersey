@@ -794,36 +794,21 @@ public class MessageBodyFactory implements MessageBodyWorkers {
 
         final TracingLogger tracingLogger = TracingLogger.getInstance(propertiesDelegate);
         MessageBodyWriter<T> selected = null;
-
-        Optional<WriterModel> customModel = writers.stream()
-                .filter(WriterModel::isCustom)
-                .filter(model -> model.isWriteable(c, t, as, mediaType))
-                .findAny();
-        if (customModel.isPresent()) {
-            selected = customModel.get().provider();
-            tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
-            if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
-                writers.stream()
-                        .filter(model -> model != customModel.get())
-                        .forEach(model -> tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider()));
+        final Iterator<WriterModel> iterator = writers.iterator();
+        while (iterator.hasNext()) {
+            final WriterModel model = iterator.next();
+            if (model.isWriteable(c, t, as, mediaType)) {
+                selected = (MessageBodyWriter<T>) model.provider();
+                tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
+                break;
             }
-        } else {
-            final Iterator<WriterModel> iterator = writers.iterator();
+            tracingLogger.log(MsgTraceEvent.MBW_NOT_WRITEABLE, model.provider());
+        }
+
+        if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
             while (iterator.hasNext()) {
                 final WriterModel model = iterator.next();
-                if (model.isWriteable(c, t, as, mediaType)) {
-                    selected = (MessageBodyWriter<T>) model.provider();
-                    tracingLogger.log(MsgTraceEvent.MBW_SELECTED, selected);
-                    break;
-                }
-                tracingLogger.log(MsgTraceEvent.MBW_NOT_WRITEABLE, model.provider());
-            }
-
-            if (tracingLogger.isLogEnabled(MsgTraceEvent.MBW_SKIPPED)) {
-                while (iterator.hasNext()) {
-                    final WriterModel model = iterator.next();
-                    tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider());
-                }
+                tracingLogger.log(MsgTraceEvent.MBW_SKIPPED, model.provider());
             }
         }
 
