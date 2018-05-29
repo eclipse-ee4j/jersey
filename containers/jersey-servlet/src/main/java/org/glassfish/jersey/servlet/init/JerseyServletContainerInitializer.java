@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.servlet.init;
 
@@ -38,6 +39,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.HandlesTypes;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -111,6 +113,8 @@ public final class JerseyServletContainerInitializer implements ServletContainer
         if (classes == null) {
             classes = Collections.emptySet();
         }
+        classes.removeIf(clazz -> clazz.isAnnotationPresent(RegisterRestClient.class));
+
         // PRE INIT
         for (final ServletContainerProvider servletContainerProvider : allServletContainerProviders) {
             servletContainerProvider.preInit(servletContext, classes);
