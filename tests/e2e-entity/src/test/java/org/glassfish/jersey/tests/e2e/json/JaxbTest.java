@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.persistence.internal.helper.JavaVersion;
+import org.glassfish.grizzly.utils.ArrayUtils;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.tests.e2e.json.entity.AnotherArrayTestBean;
 import org.glassfish.jersey.tests.e2e.json.entity.AttrAndCharDataBean;
 import org.glassfish.jersey.tests.e2e.json.entity.ComplexBeanWithAttributes;
@@ -95,12 +98,32 @@ public class JaxbTest extends AbstractJsonTest {
         super(jsonTestSetup);
     }
 
+    /**
+     * check if the current JVM is supported by this test.
+     *
+     * @return true if all tests can be run, false if some tests shall be excluded due to JRE bug
+     */
+    private static boolean isJavaVersionSupported() {
+        final String javaVersion = PropertiesHelper.getSystemProperty("java.version").run();
+        if (javaVersion != null) {
+            int pos =  javaVersion.lastIndexOf("_");
+            if (pos > -1) {
+                final Integer minorVersion = Integer.valueOf(javaVersion.substring(pos+1));
+                return minorVersion < 160 || minorVersion > 172; //only those between 161 and 172 minor
+                                                                 // releases are not supported
+            }
+        }
+        return  true;
+    }
+
     @Parameterized.Parameters()
     public static Collection<JsonTestSetup[]> getJsonProviders() throws Exception {
+        final Class<?>[]
+                filteredClasses = (isJavaVersionSupported()) ? CLASSES : ArrayUtils.remove(CLASSES, EncodedContentBean.class);
         final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<>();
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
-            for (final Class<?> entityClass : CLASSES) {
+            for (final Class<?> entityClass : filteredClasses) {
                 // TODO - remove the condition after jsonb polymorphic adapter is implemented
                 if (!(jsonProvider instanceof JsonTestProvider.JsonbTestProvider)) {
                     jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(entityClass, jsonProvider)});
