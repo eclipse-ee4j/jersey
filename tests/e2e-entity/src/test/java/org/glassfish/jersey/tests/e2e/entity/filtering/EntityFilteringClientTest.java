@@ -77,7 +77,12 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
 
     @Test
     public void testEntityAnnotationsPrimaryView() throws Exception {
-        final String fields = target()
+        final ClientConfig config = new ClientConfig()
+                .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, PrimaryDetailedView.Factory.get());
+        configureClient(config);
+
+        final String fields = ClientBuilder.newClient(config)
+                .target(getBaseUri())
                 .request()
                 .post(Entity.entity(
                                 new OneFilteringOnClassEntity(),
