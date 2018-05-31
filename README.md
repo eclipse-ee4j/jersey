@@ -12,6 +12,8 @@
 [//]: # "  "
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
+[![Build Status](https://travis-ci.org/eclipse-ee4j/jersey.svg?branch=master)](https://travis-ci.org/eclipse-ee4j/jersey)
+
 ### About Jersey
 
 Jersey is a REST framework that provides JAX-RS Reference Implementation and more.
