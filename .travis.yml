@@ -1,4 +1,9 @@
+sudo: required
+
 language: java
+
+services:
+  - docker
 
 jdk:
   - oraclejdk8
@@ -6,8 +11,12 @@ jdk:
 cache:
   directories:
     - .autoconf
+env:
+  matrix:
+    - TEST_SET="-Ptravis_e2e_skip"
+    - TEST_SET="-Ptravis_e2e"
 
 install: true
 
 script:
-  - bash travis.sh
+  - bash travis.sh $TEST_SET
