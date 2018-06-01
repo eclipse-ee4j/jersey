@@ -108,7 +108,7 @@ public class JaxbTest extends AbstractJsonTest {
         if (javaVersion != null) {
             int pos =  javaVersion.lastIndexOf("_");
             if (pos > -1) {
-                final Integer minorVersion = Integer.valueOf(javaVersion.substring(pos+1));
+                final Integer minorVersion = Integer.valueOf(javaVersion.substring(pos + 1));
                 return minorVersion < 160 || minorVersion > 172; //only those between 161 and 172 minor
                                                                  // releases are not supported
             }
