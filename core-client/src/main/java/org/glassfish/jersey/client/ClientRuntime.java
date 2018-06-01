@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.client;
 
@@ -57,13 +58,15 @@ import org.glassfish.jersey.process.internal.Stages;
  * Client-side request processing runtime.
  *
  * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
+public class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
     private static final Logger LOG = Logger.getLogger(ClientRuntime.class.getName());
 
     private final Stage<ClientRequest> requestProcessingRoot;
     private final Stage<ClientResponse> responseProcessingRoot;
+    private final Stage<ClientResponse> responseExceptionMapperProcessingRoot;
 
     private final Connector connector;
     private final ClientConfig config;
@@ -102,6 +105,11 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
         ChainableStage<ClientResponse> responseFilteringStage = ClientFilteringStages.createResponseFilteringStage(
                 injectionManager);
         this.responseProcessingRoot = responseFilteringStage != null ? responseFilteringStage : Stages.identity();
+
+        ChainableStage<ClientResponse> responseExceptionMapperStage =
+                ResponseExceptionMappingStages.createResponseExceptionMappingStage(injectionManager);
+        this.responseExceptionMapperProcessingRoot = responseExceptionMapperStage != null
+                ? responseExceptionMapperStage : Stages.identity();
         this.managedObjectsFinalizer = bootstrapBag.getManagedObjectsFinalizer();
         this.config = config;
         this.connector = connector;
@@ -256,7 +264,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
                 response = aborted.getAbortResponse();
             }
 
-            return Stages.process(response, responseProcessingRoot);
+            ClientResponse processedResponse = Stages.process(response, responseProcessingRoot);
+            return Stages.process(processedResponse, responseExceptionMapperProcessingRoot);
         } catch (final ProcessingException pe) {
             throw pe;
         } catch (final Throwable t) {
@@ -347,7 +356,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      *
      * @return injection manager.
      */
-    InjectionManager getInjectionManager() {
+    public InjectionManager getInjectionManager() {
         return injectionManager;
     }
 }

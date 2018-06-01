@@ -13,25 +13,31 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.client.proxy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.security.AccessController;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
@@ -54,8 +60,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.Providers;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 
 /**
  * Factory for client-side representation of a resource.
@@ -72,11 +84,13 @@ public final class WebResourceFactory implements InvocationHandler {
     private final MultivaluedMap<String, Object> headers;
     private final List<Cookie> cookies;
     private final Form form;
+    private final InjectionManager injectionManager;
+    private final Map<Parameter, ParameterInserter> inserterCache = new HashMap<>();
 
     private static final MultivaluedMap<String, Object> EMPTY_HEADERS = new MultivaluedHashMap<>();
     private static final Form EMPTY_FORM = new Form();
-    private static final List<Class> PARAM_ANNOTATION_CLASSES = Arrays.<Class>asList(PathParam.class, QueryParam.class,
-            HeaderParam.class, CookieParam.class, MatrixParam.class, FormParam.class);
+    private static final Set<Class> PARAM_ANNOTATION_CLASSES = createParamAnnotationSet();
+    private static final Logger LOG = Logger.getLogger(WebResourceFactory.class.getName());
 
     /**
      * Creates a new client-side representation of a resource described by
@@ -130,6 +144,9 @@ public final class WebResourceFactory implements InvocationHandler {
         this.headers = headers;
         this.cookies = cookies;
         this.form = form;
+
+        ClientConfig clientConfig = (ClientConfig) target.getConfiguration();
+        this.injectionManager = clientConfig.getRuntime().getInjectionManager();
     }
 
     @Override
@@ -154,6 +171,10 @@ public final class WebResourceFactory implements InvocationHandler {
 
         // response type
         final Class<?> responseType = method.getReturnType();
+
+        final List<Parameter> parameters = Collections.unmodifiableList(
+                Parameter.create(proxyIfc, method.getDeclaringClass(), method, false)
+        );
 
         // determine method name
         String httpMethod = getHttpMethodName(method);
@@ -186,83 +207,22 @@ public final class WebResourceFactory implements InvocationHandler {
         final LinkedList<Cookie> cookies = new LinkedList<>(this.cookies);
         final Form form = new Form();
         form.asMap().putAll(this.form.asMap());
-        final Annotation[][] paramAnns = method.getParameterAnnotations();
+        final Annotation[][] paramAnnotations = method.getParameterAnnotations();
         Object entity = null;
         Type entityType = null;
-        for (int i = 0; i < paramAnns.length; i++) {
-            final Map<Class, Annotation> anns = new HashMap<>();
-            for (final Annotation ann : paramAnns[i]) {
-                anns.put(ann.annotationType(), ann);
+        for (int i = 0; i < paramAnnotations.length; i++) {
+            final Map<Class, Annotation> annotations = new HashMap<>();
+            for (final Annotation annotation : paramAnnotations[i]) {
+                annotations.put(annotation.annotationType(), annotation);
             }
-            Annotation ann;
+
             Object value = args[i];
-            if (!hasAnyParamAnnotation(anns)) {
+            Parameter parameter = parameters.get(i);
+            if (!hasAnyParamAnnotation(annotations)) {
                 entityType = method.getGenericParameterTypes()[i];
                 entity = value;
             } else {
-                if (value == null && (ann = anns.get(DefaultValue.class)) != null) {
-                    value = ((DefaultValue) ann).value();
-                }
-
-                if (value != null) {
-                    if ((ann = anns.get(PathParam.class)) != null) {
-                        newTarget = newTarget.resolveTemplate(((PathParam) ann).value(), value);
-                    } else if ((ann = anns.get((QueryParam.class))) != null) {
-                        if (value instanceof Collection) {
-                            newTarget = newTarget.queryParam(((QueryParam) ann).value(), convert((Collection) value));
-                        } else {
-                            newTarget = newTarget.queryParam(((QueryParam) ann).value(), value);
-                        }
-                    } else if ((ann = anns.get((HeaderParam.class))) != null) {
-                        if (value instanceof Collection) {
-                            headers.addAll(((HeaderParam) ann).value(), convert((Collection) value));
-                        } else {
-                            headers.addAll(((HeaderParam) ann).value(), value);
-                        }
-
-                    } else if ((ann = anns.get((CookieParam.class))) != null) {
-                        final String name = ((CookieParam) ann).value();
-                        Cookie c;
-                        if (value instanceof Collection) {
-                            for (final Object v : ((Collection) value)) {
-                                if (!(v instanceof Cookie)) {
-                                    c = new Cookie(name, v.toString());
-                                } else {
-                                    c = (Cookie) v;
-                                    if (!name.equals(((Cookie) v).getName())) {
-                                        // is this the right thing to do? or should I fail? or ignore the difference?
-                                        c = new Cookie(name, c.getValue(), c.getPath(), c.getDomain(), c.getVersion());
-                                    }
-                                }
-                                cookies.add(c);
-                            }
-                        } else {
-                            if (!(value instanceof Cookie)) {
-                                cookies.add(new Cookie(name, value.toString()));
-                            } else {
-                                c = (Cookie) value;
-                                if (!name.equals(((Cookie) value).getName())) {
-                                    // is this the right thing to do? or should I fail? or ignore the difference?
-                                    cookies.add(new Cookie(name, c.getValue(), c.getPath(), c.getDomain(), c.getVersion()));
-                                }
-                            }
-                        }
-                    } else if ((ann = anns.get((MatrixParam.class))) != null) {
-                        if (value instanceof Collection) {
-                            newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), convert((Collection) value));
-                        } else {
-                            newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), value);
-                        }
-                    } else if ((ann = anns.get((FormParam.class))) != null) {
-                        if (value instanceof Collection) {
-                            for (final Object v : ((Collection) value)) {
-                                form.param(((FormParam) ann).value(), v.toString());
-                            }
-                        } else {
-                            form.param(((FormParam) ann).value(), value.toString());
-                        }
-                    }
-                }
+                newTarget = parseParamMetadata(newTarget, headers, cookies, form, annotations, parameter, value);
             }
         }
 
@@ -271,17 +231,10 @@ public final class WebResourceFactory implements InvocationHandler {
             return WebResourceFactory.newResource(responseType, newTarget, true, headers, cookies, form);
         }
 
-        // accepted media types
-        Produces produces = method.getAnnotation(Produces.class);
-        if (produces == null) {
-            produces = proxyIfc.getAnnotation(Produces.class);
-        }
-        final String[] accepts = (produces == null) ? EMPTY : produces.value();
-
         // determine content type
         String contentType = null;
+        final List<Object> contentTypeEntries = headers.get(HttpHeaders.CONTENT_TYPE);
         if (entity != null) {
-            final List<Object> contentTypeEntries = headers.get(HttpHeaders.CONTENT_TYPE);
             if ((contentTypeEntries != null) && (!contentTypeEntries.isEmpty())) {
                 contentType = contentTypeEntries.get(0).toString();
             } else {
@@ -292,15 +245,8 @@ public final class WebResourceFactory implements InvocationHandler {
                 if (consumes != null && consumes.value().length > 0) {
                     contentType = consumes.value()[0];
                 }
+
             }
-        }
-
-        Invocation.Builder builder = newTarget.request()
-                .headers(headers) // this resets all headers so do this first
-                .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
-
-        for (final Cookie c : cookies) {
-            builder = builder.cookie(c);
         }
 
         final Object result;
@@ -310,7 +256,11 @@ public final class WebResourceFactory implements InvocationHandler {
             contentType = MediaType.APPLICATION_FORM_URLENCODED;
         } else {
             if (contentType == null) {
-                contentType = MediaType.APPLICATION_OCTET_STREAM;
+                if (entity instanceof javax.json.JsonValue) {
+                    contentType = MediaType.APPLICATION_JSON;
+                } else {
+                    contentType = MediaType.TEXT_PLAIN;
+                }
             }
             if (!form.asMap().isEmpty()) {
                 if (entity instanceof Form) {
@@ -321,26 +271,216 @@ public final class WebResourceFactory implements InvocationHandler {
             }
         }
 
+        // accepted media types
+        Produces produces = method.getAnnotation(Produces.class);
+        if (produces == null) {
+            produces = proxyIfc.getAnnotation(Produces.class);
+        }
+        final String[] accepts = (produces == null) ? EMPTY : produces.value();
+
+        Invocation.Builder builder = newTarget.request()
+                .headers(headers) // this resets all headers so do this first
+                .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
+
+        for (final Cookie c : cookies) {
+            builder = builder.cookie(c);
+        }
+
         final GenericType responseGenericType = new GenericType(method.getGenericReturnType());
+
+        GenericType responseParameterizedType = responseGenericType;
+        if (method.getGenericReturnType() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) method.getGenericReturnType();
+            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+            responseParameterizedType = new GenericType(typeArguments[0]);
+        }
+
         if (entity != null) {
             if (entityType instanceof ParameterizedType) {
                 entity = new GenericEntity(entity, entityType);
             }
-            result = builder.method(httpMethod, Entity.entity(entity, contentType), responseGenericType);
+            if (responseType.isAssignableFrom(java.util.concurrent.CompletionStage.class)) {
+                result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseParameterizedType);
+            } else if (responseType.isAssignableFrom(java.util.concurrent.Future.class)) {
+                result = builder.async().method(httpMethod, Entity.entity(entity, contentType), responseParameterizedType);
+            } else {
+                result = builder.method(httpMethod, Entity.entity(entity, contentType), responseGenericType);
+            }
         } else {
-            result = builder.method(httpMethod, responseGenericType);
+            if (responseType.isAssignableFrom(java.util.concurrent.CompletionStage.class)) {
+                result = builder.rx().method(httpMethod, responseParameterizedType);
+            } else if (responseType.isAssignableFrom(java.util.concurrent.Future.class)) {
+                result = builder.async().method(httpMethod, responseParameterizedType);
+            } else {
+                result = builder.method(httpMethod, responseGenericType);
+            }
         }
 
         return result;
     }
 
-    private boolean hasAnyParamAnnotation(final Map<Class, Annotation> anns) {
-        for (final Class paramAnnotationClass : PARAM_ANNOTATION_CLASSES) {
-            if (anns.containsKey(paramAnnotationClass)) {
-                return true;
+    private WebTarget parseParamMetadata(
+            WebTarget newTarget,
+            MultivaluedHashMap<String, Object> headers,
+            LinkedList<Cookie> cookies,
+            Form form,
+            Map<Class, Annotation> anns,
+            Object value) {
+        return parseParamMetadata(newTarget, headers, cookies, form, anns, null, value);
+    }
+
+    private WebTarget parseParamMetadata(
+            WebTarget newTarget,
+            MultivaluedHashMap<String, Object> headers,
+            LinkedList<Cookie> cookies,
+            Form form,
+            Map<Class, Annotation> anns,
+            Parameter parameter,
+            Object value) {
+
+        Annotation ann;
+        if (value == null && (ann = anns.get(DefaultValue.class)) != null) {
+            value = ((DefaultValue) ann).value();
+        }
+
+        if (value != null) {
+            ParameterInserter<Object, Object> parameterInserter = getParameterInserter(parameter);
+
+            if ((ann = anns.get(PathParam.class)) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
+                newTarget = newTarget.resolveTemplate(((PathParam) ann).value(), value);
+            } else if ((ann = anns.get((QueryParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
+                if (value instanceof Collection) {
+                    newTarget = newTarget.queryParam(((QueryParam) ann).value(), convert((Collection) value));
+                } else {
+                    newTarget = newTarget.queryParam(((QueryParam) ann).value(), value);
+                }
+            } else if (anns.get(BeanParam.class) != null) {
+                Class<?> beanParamType = value.getClass();
+                Field[] fields = beanParamType.getDeclaredFields();
+                for (Field field : fields) {
+                    final Map<Class, Annotation> annsIn = new HashMap<>();
+                    for (final Annotation annIn : field.getAnnotations()) {
+                        annsIn.put(annIn.annotationType(), annIn);
+                    }
+                    if (hasAnyParamAnnotation(annsIn)) {
+                        try {
+                            if (!field.isAccessible()) {
+                                field.setAccessible(true);
+                            }
+                            newTarget = parseParamMetadata(newTarget, headers, cookies, form, annsIn, field.get(value));
+                        } catch (IllegalArgumentException | IllegalAccessException ex) {
+                            LOG.log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                Method[] methods = beanParamType.getDeclaredMethods();
+                for (Method method : methods) {
+                    final Map<Class, Annotation> annsIn = new HashMap<>();
+                    for (final Annotation annIn : method.getAnnotations()) {
+                        annsIn.put(annIn.annotationType(), annIn);
+                    }
+                    if (hasAnyParamAnnotation(annsIn)) {
+                        try {
+                            if (!method.isAccessible()) {
+                                method.setAccessible(true);
+                            }
+                            newTarget = parseParamMetadata(newTarget, headers, cookies, form, annsIn, method.invoke(value));
+                        } catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException ex) {
+                            LOG.log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            } else if ((ann = anns.get((HeaderParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
+                if (value instanceof Collection) {
+                    headers.addAll(((HeaderParam) ann).value(), convert((Collection) value));
+                } else {
+                    headers.addAll(((HeaderParam) ann).value(), value);
+                }
+
+            } else if ((ann = anns.get((CookieParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
+                final String name = ((CookieParam) ann).value();
+                Cookie c;
+                if (value instanceof Collection) {
+                    for (final Object v : ((Collection) value)) {
+                        if (!(v instanceof Cookie)) {
+                            c = new Cookie(name, v.toString());
+                        } else {
+                            c = (Cookie) v;
+                            if (!name.equals(((Cookie) v).getName())) {
+                                // is this the right thing to do? or should I fail? or ignore the difference?
+                                c = new Cookie(name, c.getValue(), c.getPath(), c.getDomain(), c.getVersion());
+                            }
+                        }
+                        cookies.add(c);
+                    }
+                } else {
+                    if (!(value instanceof Cookie)) {
+                        cookies.add(new Cookie(name, value.toString()));
+                    } else {
+                        c = (Cookie) value;
+                        if (!name.equals(((Cookie) value).getName())) {
+                            // is this the right thing to do? or should I fail? or ignore the difference?
+                            cookies.add(new Cookie(name, c.getValue(), c.getPath(), c.getDomain(), c.getVersion()));
+                        }
+                    }
+                }
+            } else if ((ann = anns.get((MatrixParam.class))) != null) {
+                if (parameterInserter != null) {
+                    value = parameterInserter.insert(value);
+                }
+                if (value instanceof Collection) {
+                    newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), convert((Collection) value));
+                } else {
+                    newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), value);
+                }
+            } else if ((ann = anns.get((FormParam.class))) != null) {
+                if (value instanceof Collection) {
+                    for (final Object v : ((Collection) value)) {
+                        form.param(((FormParam) ann).value(), v.toString());
+                    }
+                } else {
+                    form.param(((FormParam) ann).value(), value.toString());
+                }
             }
         }
-        return false;
+        return newTarget;
+    }
+
+    private <T, R> ParameterInserter<T, R> getParameterInserter(Parameter parameter) {
+        ParameterInserter<T, R> parameterInserter = null;
+        if (parameter != null) {
+            parameterInserter = inserterCache.get(parameter);
+            if (parameterInserter == null) {
+                Iterable<ParameterInserterProvider> parameterInserterProviders
+                        = Providers.getAllProviders(injectionManager, ParameterInserterProvider.class);
+                for (final ParameterInserterProvider parameterInserterProvider : parameterInserterProviders) {
+                    if (parameterInserterProvider != null) {
+                        parameterInserter = (ParameterInserter<T, R>) parameterInserterProvider.get(parameter);
+                        inserterCache.put(parameter, parameterInserter);
+                        break;
+                    }
+                }
+            }
+        }
+        return parameterInserter;
+    }
+
+    private boolean hasAnyParamAnnotation(final Map<Class, Annotation> anns) {
+        return anns.keySet()
+                .stream()
+                .anyMatch(PARAM_ANNOTATION_CLASSES::contains);
     }
 
     private Object[] convert(final Collection value) {
@@ -348,11 +488,23 @@ public final class WebResourceFactory implements InvocationHandler {
     }
 
     private static WebTarget addPathFromAnnotation(final AnnotatedElement ae, WebTarget target) {
-        final Path p = ae.getAnnotation(Path.class);
-        if (p != null) {
-            target = target.path(p.value());
+        final Path path = ae.getAnnotation(Path.class);
+        if (path != null && !"/".equals(path.value())) {
+            target = target.path(path.value());
         }
         return target;
+    }
+
+    private static Set<Class> createParamAnnotationSet() {
+        Set<Class> set = new HashSet<>(7);
+        set.add(HeaderParam.class);
+        set.add(CookieParam.class);
+        set.add(MatrixParam.class);
+        set.add(QueryParam.class);
+        set.add(PathParam.class);
+        set.add(FormParam.class);
+        set.add(BeanParam.class);
+        return Collections.unmodifiableSet(set);
     }
 
     @Override

@@ -13,8 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.server.model;
+package org.glassfish.jersey.model;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -115,7 +116,7 @@ public final class AnnotatedMethod implements AnnotatedElement {
      *
      * @return the underlying declared Java method.
      */
-    Method getDeclaredMethod() {
+    public Method getDeclaredMethod() {
         return m;
     }
 

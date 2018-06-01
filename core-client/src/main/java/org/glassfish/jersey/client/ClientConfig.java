@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.client;
 
@@ -34,6 +35,7 @@ import javax.ws.rs.core.Feature;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.ExtendedConfig;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.internal.inject.ParameterInserterConfigurator;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
@@ -56,6 +58,7 @@ import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.RequestScope;
+import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
 
 /**
  * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable
@@ -64,6 +67,7 @@ import org.glassfish.jersey.process.internal.RequestScope;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Martin Matula
  * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig {
     /**
@@ -408,10 +412,11 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             InjectionManager injectionManager = Injections.createInjectionManager();
             injectionManager.register(new ClientBinder(runtimeCfgState.getProperties()));
 
-            BootstrapBag bootstrapBag = new BootstrapBag();
+            BootstrapBag bootstrapBag = new ClientBootstrapBag();
             bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
-            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
-                    new RequestScope.RequestScopeConfigurator(),
+            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(new RequestScope.RequestScopeConfigurator(),
+                    new ParamConverterConfigurator(),
+                    new ParameterInserterConfigurator(),
                     new RuntimeConfigConfigurator(runtimeCfgState),
                     new ContextResolverFactory.ContextResolversConfigurator(),
                     new MessageBodyFactory.MessageBodyWorkersConfigurator(),
@@ -798,7 +803,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
      *
      * @return configured runtime.
      */
-    ClientRuntime getRuntime() {
+    public ClientRuntime getRuntime() {
         return state.runtime.get();
     }
 
