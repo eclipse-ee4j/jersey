@@ -210,6 +210,9 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                     if (providerClassName.trim().length() == 0) {
                         continue;
                     }
+                    if (providerClassName.startsWith("#")) {
+                        continue;
+                    }
                     if (LOGGER.isLoggable(Level.FINEST)) {
                         LOGGER.log(Level.FINEST, "SPI provider: {0}", providerClassName);
                     }
