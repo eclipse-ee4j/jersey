@@ -17,6 +17,7 @@
 package org.glassfish.jersey.internal.util;
 
 import java.util.Arrays;
+import java.util.Base64;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -48,35 +49,35 @@ public class Base64Test {
     @Test
     public void testEncodeString() throws Exception {
         for (int i = 0; i < decoded.length; i++) {
-            assertEquals(encoded[i], new String(Base64.encode(decoded[i].getBytes("ASCII")), "ASCII"));
+            assertEquals(encoded[i], new String(Base64.getEncoder().encode(decoded[i].getBytes("ASCII")), "ASCII"));
         }
     }
 
     @Test
     public void testDecodeString() throws Exception {
         for (int i = 0; i < encoded.length; i++) {
-            assertEquals(decoded[i], new String(Base64.decode(encoded[i].getBytes("ASCII")), "ASCII"));
+            assertEquals(decoded[i], new String(Base64.getDecoder().decode(encoded[i].getBytes("ASCII")), "ASCII"));
         }
     }
 
     @Test
     public void testRoundtripLengthMod3Equals0() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-        byte[] result = Base64.decode(Base64.encode(data));
+        byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
         assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
     }
 
     @Test
     public void testRoundtripLengthMod3Equals1() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-        byte[] result = Base64.decode(Base64.encode(data));
+        byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
         assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
     }
 
     @Test
     public void testRoundtripLengthMod3Equals2() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        byte[] result = Base64.decode(Base64.encode(data));
+        byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
         assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
     }
 
@@ -84,10 +85,10 @@ public class Base64Test {
     public void testRoundtripOneByteGreaterThan127() {
         byte[] data = {(byte) 128};
         try {
-            byte[] result = Base64.decode(Base64.encode(data));
-            fail();
-        } catch (Exception e) {
+            byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
             // ok
+        } catch (Exception e) {
+            fail();
         }
     }
 
@@ -95,10 +96,10 @@ public class Base64Test {
     public void testRoundtripAssortedValues() {
         byte[] data = {0, 1, 63, 64, 65, (byte) 127, (byte) 128, (byte) 1299, (byte) 254, (byte) 255};
         try {
-            Base64.decode(Base64.encode(data));
-            fail();
-        } catch (Exception e) {
+            Base64.getDecoder().decode(Base64.getEncoder().encode(data));
             // ok
+        } catch (Exception e) {
+            fail();
         }
     }
 
@@ -109,10 +110,10 @@ public class Base64Test {
             data[i] = (byte) (255 - i);
         }
         try {
-            new String(Base64.encode(data));
-            fail();
-        } catch (Exception e) {
+            new String(Base64.getEncoder().encode(data));
             // ok
+        } catch (Exception e) {
+            fail();
         }
     }
 
@@ -122,7 +123,7 @@ public class Base64Test {
                 + "+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn"
                 + "+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6"
                 + "/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==";
-        byte[] result = Base64.decode(data.getBytes());
+        byte[] result = Base64.getDecoder().decode(data.getBytes());
 
         assertEquals("incorrect length", result.length, 256);
         for (int i = 0; i < 256; ++i) {

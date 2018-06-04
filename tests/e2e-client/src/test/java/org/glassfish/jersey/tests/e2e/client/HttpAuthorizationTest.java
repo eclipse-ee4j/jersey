@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +40,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.internal.util.Base64;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -157,7 +157,7 @@ public class HttpAuthorizationTest extends JerseyTest {
 
             String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader != null && authHeader.trim().toUpperCase().startsWith("BASIC")) {
-                String decoded = new String(Base64.decode(authHeader.substring(6).getBytes()), CHARACTER_SET);
+                String decoded = new String(Base64.getDecoder().decode(authHeader.substring(6).getBytes()), CHARACTER_SET);
                 //                String decoded = Base64.decodeAsString(authHeader.substring(6));
                 final String[] split = decoded.split(":");
                 final String username = split[0];
