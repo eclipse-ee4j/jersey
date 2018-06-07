@@ -581,13 +581,16 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T>,
     }
 
     /**
-     * Unless already closed, issues {@link
-     * Flow.Subscriber#onComplete() onComplete} signals to current
-     * subscribers, and disallows subsequent attempts to publish.
-     * Upon return, this method does <em>NOT</em> guarantee that all
-     * subscribers have yet completed.
+     * Unless already closed, issues {@link Flow.Subscriber#onComplete()
+     * onComplete} signals to current subscribers when {@code cascading} is
+     * {@code true}. If {@code cascading} is {@code false}, then only closes this
+     * publisher and disallows subsequent attempts to publish. Upon return, even if
+     * {@link Flow.Subscriber#onComplete() onComplete} is called, this method does
+     * <em>NOT</em> guarantee that all subscribers have yet completed.
+     *
+     * @param cascading Controls closing of registered subscribers.
      */
-    public void close() {
+    public void close(boolean cascading) {
         if (!closed) {
             BufferedSubscription<T> b;
             synchronized (this) {
@@ -595,13 +598,26 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T>,
                 clients = null;
                 closed = true;
             }
-            while (b != null) {
-                BufferedSubscription<T> next = b.next;
-                b.next = null;
-                b.onComplete();
-                b = next;
+            if (cascading) {
+                while (b != null) {
+                    BufferedSubscription<T> next = b.next;
+                    b.next = null;
+                    b.onComplete();
+                    b = next;
+                }
             }
         }
+    }
+
+    /**
+     * Unless already closed, issues {@link
+     * Flow.Subscriber#onComplete() onComplete} signals to current
+     * subscribers, and disallows subsequent attempts to publish.
+     * Upon return, this method does <em>NOT</em> guarantee that all
+     * subscribers have yet completed.
+     */
+    public void close() {
+        close(true);
     }
 
     /**

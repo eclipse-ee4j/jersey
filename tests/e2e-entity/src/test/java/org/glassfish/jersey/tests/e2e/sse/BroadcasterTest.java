@@ -142,14 +142,14 @@ public class BroadcasterTest extends JerseyTest {
         target().path("sse/push/secondBroadcast").request().get(String.class);
 
         Assert.assertTrue("Waiting for resultsA1 to be complete failed.",
-                a1Latch.await(3000, TimeUnit.MILLISECONDS));
+                a1Latch.await(6000, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsA2 to be complete failed.",
-                a2Latch.await(3000, TimeUnit.MILLISECONDS));
+                a2Latch.await(6000, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue("Waiting for resultsB1 to be complete failed.",
-                b1Latch.await(3000, TimeUnit.MILLISECONDS));
+                b1Latch.await(6000, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsB2 to be complete failed.",
-                b2Latch.await(3000, TimeUnit.MILLISECONDS));
+                b2Latch.await(6000, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
 

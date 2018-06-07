@@ -313,7 +313,17 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
      * completed.
      */
     public void close() {
-        submissionPublisher.close();
+        close(true);
+    }
+
+    /**
+     * Same as {@link #close()} but with control as to whether registered subscribers should be
+     * closed or not.
+     *
+     * @param cascading Boolean controlling whether to close subscribers or not.
+     */
+    public void close(boolean cascading) {
+        submissionPublisher.close(cascading);
     }
 
     /**
