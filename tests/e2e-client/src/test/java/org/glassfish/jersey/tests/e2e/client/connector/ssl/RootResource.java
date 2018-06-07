@@ -60,7 +60,7 @@ public class RootResource {
         String auth = headers.getRequestHeader("authorization").get(0);
 
         auth = auth.substring("Basic ".length());
-        String[] values = String.valueOf(Base64.getDecoder().decode(auth)).split(":");
+        String[] values = new String(Base64.getDecoder().decode(auth)).split(":");
 
         // String username = values[0];
         // String password = values[1];
