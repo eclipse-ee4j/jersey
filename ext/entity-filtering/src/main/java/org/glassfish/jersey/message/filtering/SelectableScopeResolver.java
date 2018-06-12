@@ -83,6 +83,9 @@ public class SelectableScopeResolver implements ScopeResolver {
         final String[] fields = Tokenizer.tokenize(fieldName, ",");
         for (final String field : fields) {
             final String[] subfields = Tokenizer.tokenize(field, ".");
+            if (subfields.length == 0) {
+                continue;
+            }
             // in case of nested path, add first level as stand-alone to ensure subgraph is added
             scopes.add(SelectableScopeResolver.PREFIX + subfields[0]);
             if (subfields.length > 1) {
