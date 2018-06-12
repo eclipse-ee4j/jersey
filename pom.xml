@@ -569,7 +569,7 @@
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>1.39</version>
+                    <version>1.49</version>
                     <configuration>
                         <excludeFile>etc/config/copyright-exclude</excludeFile>
                         <!--svn|mercurial|git - defaults to svn-->
@@ -585,6 +585,7 @@
                         <!-- check that year is correct -->
                         <ignoreYear>false</ignoreYear>
                         <templateFile>etc/config/copyright.txt</templateFile>
+                        <bsdTemplateFile>etc/config/edl-copyright.txt</bsdTemplateFile>
                     </configuration>
                 </plugin>
                 <plugin>
