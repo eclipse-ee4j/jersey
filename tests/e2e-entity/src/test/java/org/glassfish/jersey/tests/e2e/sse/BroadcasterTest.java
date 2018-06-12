@@ -53,6 +53,8 @@ public class BroadcasterTest extends JerseyTest {
     static final CountDownLatch txLatch = new CountDownLatch(4);
     private static boolean isSingleton = false;
 
+    private static int LATCH_WAIT_TIMEOUT = 16000; //timeout to be waited for asynchronous events to be completed
+
     @Path("sse")
     @Singleton
     public static class SseResource {
@@ -142,14 +144,14 @@ public class BroadcasterTest extends JerseyTest {
         target().path("sse/push/secondBroadcast").request().get(String.class);
 
         Assert.assertTrue("Waiting for resultsA1 to be complete failed.",
-                a1Latch.await(3000, TimeUnit.MILLISECONDS));
+                a1Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsA2 to be complete failed.",
-                a2Latch.await(3000, TimeUnit.MILLISECONDS));
+                a2Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue("Waiting for resultsB1 to be complete failed.",
-                b1Latch.await(3000, TimeUnit.MILLISECONDS));
+                b1Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsB2 to be complete failed.",
-                b2Latch.await(3000, TimeUnit.MILLISECONDS));
+                b2Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
 
@@ -184,7 +186,7 @@ public class BroadcasterTest extends JerseyTest {
                         && resultsB2.get(2).equals("Event3")
                         && resultsB2.get(3).equals("secondBroadcast"));
         target().path("sse/close").request().get();
-        Assert.assertTrue(closeLatch.await(3000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(closeLatch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Sse instances injected into resource and constructor differ. Sse should have been injected"
                 + "as a singleton", isSingleton);
     }
