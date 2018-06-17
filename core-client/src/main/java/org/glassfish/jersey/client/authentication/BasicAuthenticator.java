@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.client.authentication;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -31,6 +34,8 @@ import org.glassfish.jersey.internal.util.Base64;
  * @author Craig McClanahan
  */
 final class BasicAuthenticator {
+
+    private static final Logger LOGGER = Logger.getLogger(BasicAuthenticator.class.getName());
 
     private final HttpAuthenticationFilter.Credentials defaultCredentials;
 
@@ -68,15 +73,15 @@ final class BasicAuthenticator {
      * Adds authentication information to the request.
      *
      * @param request Request context.
-     * @throws RequestAuthenticationException in case that basic credentials missing or are in invalid format
      */
-    public void filterRequest(ClientRequestContext request) throws RequestAuthenticationException {
+    public void filterRequest(ClientRequestContext request) {
         HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter.getCredentials(request,
                 defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
         if (credentials == null) {
-            throw new RequestAuthenticationException(LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
+            LOGGER.fine(LocalizationMessages.AUTHENTICATION_CREDENTIALS_NOT_PROVIDED_BASIC());
+        } else {
+            request.getHeaders().add(HttpHeaders.AUTHORIZATION, calculateAuthentication(credentials));
         }
-        request.getHeaders().add(HttpHeaders.AUTHORIZATION, calculateAuthentication(credentials));
     }
 
     /**
