@@ -96,6 +96,9 @@ final class BasicAuthenticator {
                     .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
 
             if (credentials == null) {
+                if (response.hasEntity()) {
+                    AuthenticationUtil.discardInputAndClose(response.getEntityStream());
+                }
                 throw new ResponseAuthenticationException(null, LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
             }
 
