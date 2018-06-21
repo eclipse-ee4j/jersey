@@ -245,7 +245,7 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
     }
 
     private String getCacheKey(ClientRequestContext request) {
-        return request.getUri().toString() + ":" + request.getMethod();
+        return AuthenticationUtil.getCacheKey(request).toString() + ":" + request.getMethod();
     }
 
     private void updateCache(ClientRequestContext request, boolean success, Type operation) {
