@@ -492,5 +492,6 @@ public class AuthTest extends JerseyTest {
                 .queryParam("param1", "value1")
                 .queryParam("param2", "value2");
         assertEquals("GET 3", r.request().get(String.class));
+
     }
 }
