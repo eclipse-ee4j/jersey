@@ -25,9 +25,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseContext;
@@ -41,8 +41,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
-import javax.annotation.Priority;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
@@ -247,7 +245,7 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
     }
 
     private String getCacheKey(ClientRequestContext request) {
-        return request.getUri().toString() + ":" + request.getMethod();
+        return AuthenticationUtil.getCacheKey(request).toString() + ":" + request.getMethod();
     }
 
     private void updateCache(ClientRequestContext request, boolean success, Type operation) {
