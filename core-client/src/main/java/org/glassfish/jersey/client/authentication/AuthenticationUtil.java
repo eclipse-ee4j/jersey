@@ -18,6 +18,8 @@ package org.glassfish.jersey.client.authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.ws.rs.client.ClientRequestContext;
 
@@ -42,5 +44,23 @@ class AuthenticationUtil {
                 // ignore
             }
         }
+    }
+
+    static URI getCacheKey(ClientRequestContext request) {
+        URI requestUri = request.getUri();
+        if (requestUri.getRawQuery() != null) {
+            // Return a URI without the query part of the request URI
+            try {
+                return new URI(
+                        requestUri.getScheme(),
+                        requestUri.getAuthority(),
+                        requestUri.getPath(),
+                        null,
+                        requestUri.getFragment());
+            } catch (URISyntaxException e) {
+                // Ignore and fall through
+            }
+        }
+        return requestUri;
     }
 }

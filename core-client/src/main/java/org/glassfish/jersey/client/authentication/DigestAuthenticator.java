@@ -90,7 +90,7 @@ final class DigestAuthenticator {
      * @throws IOException When error with encryption occurs.
      */
     boolean filterRequest(final ClientRequestContext request) throws IOException {
-        final DigestScheme digestScheme = digestCache.get(request.getUri());
+        final DigestScheme digestScheme = digestCache.get(AuthenticationUtil.getCacheKey(request));
         if (digestScheme != null) {
             final HttpAuthenticationFilter.Credentials cred = HttpAuthenticationFilter.getCredentials(request,
                     this.credentials, HttpAuthenticationFilter.Type.DIGEST);
@@ -133,10 +133,11 @@ final class DigestAuthenticator {
 
             final boolean success = HttpAuthenticationFilter.repeatRequest(request, response, createNextAuthToken(digestScheme,
                     request, cred));
+            URI cacheKey = AuthenticationUtil.getCacheKey(request);
             if (success) {
-                digestCache.put(request.getUri(), digestScheme);
+                digestCache.put(cacheKey, digestScheme);
             } else {
-                digestCache.remove(request.getUri());
+                digestCache.remove(cacheKey);
             }
             return success;
         }
