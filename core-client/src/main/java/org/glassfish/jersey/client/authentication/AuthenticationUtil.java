@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.client.authentication;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -25,6 +27,25 @@ import javax.ws.rs.client.ClientRequestContext;
  * Common authentication utilities
  */
 class AuthenticationUtil {
+   static void discardInputAndClose(InputStream is) {
+        byte[] buf = new byte[4096];
+        try {
+            while (true) {
+                if (is.read(buf) <= 0) {
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            // ignore
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ex) {
+                // ignore
+            }
+        }
+    }
+
     static URI getCacheKey(ClientRequestContext request) {
         URI requestUri = request.getUri();
         if (requestUri.getRawQuery() != null) {

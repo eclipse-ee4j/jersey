@@ -268,8 +268,16 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
      * {@code false} otherwise).
      */
     static boolean repeatRequest(ClientRequestContext request, ClientResponseContext response, String newAuthorizationHeader) {
-        Client client = request.getClient();
+        // If the failed response has an entity stream, close it. We must do this to avoid leaking a connection
+        // when we replace the entity stream of the failed response with that of the repeated response (see below).
+        // Notice that by closing the entity stream before sending the repeated request we allow the connection allocated
+        // to the failed request to be reused, if possible, for the repeated request.
+        if (response.hasEntity()) {
+            AuthenticationUtil.discardInputAndClose(response.getEntityStream());
+            response.setEntityStream(null);
+        }
 
+        Client client = request.getClient();
         String method = request.getMethod();
         MediaType mediaType = request.getMediaType();
         URI lUri = request.getUri();
@@ -291,6 +299,12 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
         builder.headers(newHeaders);
 
         builder.property(REQUEST_PROPERTY_FILTER_REUSED, "true");
+
+        // Copy other properties, if any, from the original request
+        for (String propertyName : request.getPropertyNames()) {
+            Object propertyValue = request.getProperty(propertyName);
+            builder.property(propertyName, propertyValue);
+        }
 
         Invocation invocation;
         if (request.getEntity() == null) {
