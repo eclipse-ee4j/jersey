@@ -29,6 +29,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import javax.inject.Singleton;
 
@@ -40,6 +41,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -116,6 +118,8 @@ public class AuthTest extends JerseyTest {
     public static class AuthResource {
 
         int requestCount = 0;
+        int queryParamsBasicRequestCount = 0;
+        int queryParamsDigestRequestCount = 0;
 
         @GET
         public String get(@Context HttpHeaders h) {
@@ -147,6 +151,18 @@ public class AuthTest extends JerseyTest {
         @GET
         @Path("noauth")
         public String get() {
+            return "GET";
+        }
+
+        @Path("digest")
+        public String getDigest(@Context HttpHeaders h) {
+            String value = h.getRequestHeaders().getFirst("Authorization");
+            if (value == null) {
+                throw new WebApplicationException(
+                        Response.status(401).header("WWW-Authenticate", "Digest realm=\"WallyWorld\"")
+                            .entity("Forbidden").build());
+            }
+
             return "GET";
         }
 
@@ -211,6 +227,30 @@ public class AuthTest extends JerseyTest {
 
             return e;
         }
+
+        @GET
+        @Path("queryParamsBasic")
+        public String getQueryParamsBasic(@Context HttpHeaders h, @Context UriInfo uriDetails) {
+            queryParamsBasicRequestCount++;
+            String value = h.getRequestHeaders().getFirst("Authorization");
+            if (value == null) {
+                throw new WebApplicationException(
+                        Response.status(401).header("WWW-Authenticate", "Basic realm=\"WallyWorld\"").build());
+            }
+            return "GET " + queryParamsBasicRequestCount;
+        }
+
+        @GET
+        @Path("queryParamsDigest")
+        public String getQueryParamsDigest(@Context HttpHeaders h, @Context UriInfo uriDetails) {
+            queryParamsDigestRequestCount++;
+            String value = h.getRequestHeaders().getFirst("Authorization");
+            if (value == null) {
+                throw new WebApplicationException(
+                        Response.status(401).header("WWW-Authenticate", "Digest realm=\"WallyWorld\"").build());
+            }
+            return "GET " + queryParamsDigestRequestCount;
+        }
     }
 
     @Test
@@ -269,6 +309,24 @@ public class AuthTest extends JerseyTest {
         WebTarget r = client.target(getBaseUri()).path("test/noauth");
 
         assertEquals("GET", r.request().get(String.class));
+    }
+
+    @Test
+    public void testAuthGetWithDigestFilter() {
+        ClientConfig cc = new ClientConfig();
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cc.connectorProvider(new ApacheConnectorProvider());
+        cc.property(ApacheClientProperties.CONNECTION_MANAGER, cm);
+        Client client = ClientBuilder.newClient(cc);
+        client.register(HttpAuthenticationFeature.universal("name", "password"));
+        WebTarget r = client.target(getBaseUri()).path("test/digest");
+
+        assertEquals("GET", r.request().get(String.class));
+
+        // Verify the connection that was used for the request is available for reuse
+        // and no connections are leased
+        assertEquals(cm.getTotalStats().getAvailable(), 1);
+        assertEquals(cm.getTotalStats().getLeased(), 0);
     }
 
     @Test
@@ -364,5 +422,41 @@ public class AuthTest extends JerseyTest {
         WebTarget r = client.target(getBaseUri()).path("test");
 
         assertEquals("POST", r.request().post(Entity.text("POST"), String.class));
+    }
+
+    @Test
+    public void testAuthGetQueryParamsBasic() {
+        ClientConfig cc = new ClientConfig();
+        cc.connectorProvider(new ApacheConnectorProvider());
+        Client client = ClientBuilder.newClient(cc);
+        client.register(HttpAuthenticationFeature.universal("name", "password"));
+
+        WebTarget r = client.target(getBaseUri()).path("test/queryParamsBasic");
+        assertEquals("GET 2", r.request().get(String.class));
+
+        r = client.target(getBaseUri())
+                .path("test/queryParamsBasic")
+                .queryParam("param1", "value1")
+                .queryParam("param2", "value2");
+        assertEquals("GET 3", r.request().get(String.class));
+
+    }
+
+    @Test
+    public void testAuthGetQueryParamsDigest() {
+        ClientConfig cc = new ClientConfig();
+        cc.connectorProvider(new ApacheConnectorProvider());
+        Client client = ClientBuilder.newClient(cc);
+        client.register(HttpAuthenticationFeature.universal("name", "password"));
+
+        WebTarget r = client.target(getBaseUri()).path("test/queryParamsDigest");
+        assertEquals("GET 2", r.request().get(String.class));
+
+        r = client.target(getBaseUri())
+                .path("test/queryParamsDigest")
+                .queryParam("param1", "value1")
+                .queryParam("param2", "value2");
+        assertEquals("GET 3", r.request().get(String.class));
+
     }
 }

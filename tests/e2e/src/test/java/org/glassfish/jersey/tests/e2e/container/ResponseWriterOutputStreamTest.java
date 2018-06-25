@@ -43,6 +43,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
+    private static final String CHECK_STRING = "RESOURCE";
+
     @Path("/")
     public static class Resource {
 
@@ -53,23 +55,23 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
             final ContainerResponse response = new ContainerResponse(context, Response.ok().build());
             final OutputStream os = context.getResponseWriter()
-                    .writeResponseStatusAndHeaders("RESOURCE".getBytes().length, response);
-            os.write("RESOURCE".getBytes());
+                    .writeResponseStatusAndHeaders(CHECK_STRING.getBytes().length, response);
+            os.write(CHECK_STRING.getBytes());
             os.close();
         }
 
         @POST
         @Produces("text/plain")
-        public void post(final ContainerRequest context) throws IOException {
+        public synchronized void post(final ContainerRequest context) throws IOException {
             assertThat(context.getMethod(), is("POST"));
 
             final String s = context.readEntity(String.class);
-            assertEquals("RESOURCE", s);
+            assertEquals(CHECK_STRING, s);
 
             final ContainerResponse response = new ContainerResponse(context, Response.ok().build());
             final OutputStream os = context.getResponseWriter()
-                    .writeResponseStatusAndHeaders("RESOURCE".getBytes().length, response);
-            os.write("RESOURCE".getBytes());
+                    .writeResponseStatusAndHeaders(s.getBytes().length, response);
+            os.write(s.getBytes());
             os.close();
         }
     }
@@ -81,12 +83,12 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
     @Test
     public void testGet() {
-        assertThat(target().request().get(String.class), is("RESOURCE"));
+        assertThat(target().request().get(String.class), is(CHECK_STRING));
     }
 
     @Test
     public void testPost() {
-        assertThat(target().request().post(Entity.text("RESOURCE"), String.class), is("RESOURCE"));
+        assertThat(target().request().post(Entity.text(CHECK_STRING), String.class), is(CHECK_STRING));
     }
 
     @Test

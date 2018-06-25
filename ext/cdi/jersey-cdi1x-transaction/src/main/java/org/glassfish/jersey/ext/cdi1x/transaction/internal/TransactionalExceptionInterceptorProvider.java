@@ -16,13 +16,16 @@
 
 package org.glassfish.jersey.ext.cdi1x.transaction.internal;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Set;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.ExceptionMapper;
 
 import javax.annotation.Priority;
 import javax.enterprise.event.Observes;
@@ -33,6 +36,8 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Qualifier;
 import javax.interceptor.Interceptor;
 import javax.transaction.TransactionalException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.ext.ExceptionMapper;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.ext.cdi1x.internal.GenericCdiBeanSupplier;
@@ -40,12 +45,6 @@ import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.spi.ComponentProvider;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Jersey CDI extension that provides means to retain {@link WebApplicationException}
@@ -100,10 +99,17 @@ public class TransactionalExceptionInterceptorProvider implements ComponentProvi
     }
 
     @SuppressWarnings("unused")
-    private void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery beforeBeanDiscovery, final javax.enterprise.inject.spi
-            .BeanManager beanManager) {
-        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(WebAppExceptionHolder.class));
-        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(WebAppExceptionInterceptor.class));
-        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(TransactionalExceptionMapper.class));
+    private void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager) {
+        addAnnotatedTypes(beforeBeanDiscovery, beanManager,
+                WebAppExceptionHolder.class,
+                WebAppExceptionInterceptor.class,
+                TransactionalExceptionMapper.class
+        );
+    }
+
+    private static void addAnnotatedTypes(BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager, Class<?>... types) {
+        for (Class<?> type : types) {
+            beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(type), "Jersey " + type.getName());
+        }
     }
 }
