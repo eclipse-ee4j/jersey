@@ -87,7 +87,7 @@ public class LinkingTest extends JerseyTest {
                     + "{id:'2',price:'0.0',links:["
                     + "{uri:'/orders/2',params:{rel:'self'},uriBuilder:{absolute:false},rels:['self'],rel:'self'}]}"
                     + "],firstPage:true,previousPageAvailable:false,nextPageAvailable:true,lastPage:false}",
-                order, true);
+                order, false);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class LinkingTest extends JerseyTest {
                     + "{id:'4',price:'0.0',links:["
                     + "{uri:'/orders/4',params:{rel:'self'},uriBuilder:{absolute:false},rels:['self'],rel:'self'}]}"
                     + "],firstPage:false,previousPageAvailable:true,nextPageAvailable:true,lastPage:false}",
-                order, true);
+                order, false);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class LinkingTest extends JerseyTest {
                     + "{id:'6',price:'0.0',links:["
                     + "{uri:'/orders/6',params:{rel:'self'},uriBuilder:{absolute:false},rels:['self'],rel:'self'}]}"
                     + "],firstPage:false,previousPageAvailable:true,nextPageAvailable:false,lastPage:true}",
-                order, true);
+                order, false);
     }
 
 

@@ -1173,6 +1173,21 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <!--
+            Profile is aimed to run the build on travis
+            due to travis limitations for output (max 4MB) this profile is used along with grep which reduces
+            the output.
+            However some e2e tests produce output which is not grepped (thus is not visible) and run longer than
+            10 minutes which results in the whole build is being murdered by Travis because of death suspection
+
+            the whole build is run as clean install but excludes several e2e tests because of the not grepped output
+            -->
+            <id>travis_main</id>
+            <properties>
+                <exclude.sse.tests>**/BroadcasterTest*,**/ClientCloseTest*,**/ResponseWriterOutputStreamTest*</exclude.sse.tests>
+            </properties>
+        </profile>
     </profiles>
 
     <reporting>
@@ -1964,5 +1979,6 @@
         <xerces.version>2.11.0</xerces.version>
         <xmlunit.version>1.6</xmlunit.version>
         <yasson.version>1.0.1</yasson.version>
+        <exclude.sse.tests>none</exclude.sse.tests>
     </properties>
 </project>
