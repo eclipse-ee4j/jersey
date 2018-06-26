@@ -31,17 +31,17 @@ public class OAuthBase64Test {
     public void test() throws IOException {
         final String str = "Hello World123456789jhfsljkh347uweihd7834yfoiuhef5re4g54es35gf474w5/";
         final String encoded = Base64.encode(str.getBytes());
-        final String encodedUtil = new String(org.glassfish.jersey.internal.util.Base64.encode(str.getBytes()));
-        final String encodedUtilStr = org.glassfish.jersey.internal.util.Base64.encodeAsString(str);
+        final String encodedUtil = new String(java.util.Base64.getEncoder().encode(str.getBytes()));
+        final String encodedUtilStr = java.util.Base64.getEncoder().encodeToString(str.getBytes());
 
         System.out.println(encoded);
         Assert.assertEquals(encoded, encodedUtil);
         Assert.assertEquals(encoded, encodedUtilStr);
 
         final String decoded = new String(Base64.decode(encoded));
-        final String decodedUtil = new String(org.glassfish.jersey.internal.util.Base64.decode(encoded.getBytes()));
-        final String decodedUtilStr = org.glassfish.jersey.internal.util.Base64.decodeAsString(encoded.getBytes());
-        final String decodedUtilStr2 = org.glassfish.jersey.internal.util.Base64.decodeAsString(encoded);
+        final String decodedUtil = new String(java.util.Base64.getDecoder().decode(encoded.getBytes()));
+        final String decodedUtilStr = new String(java.util.Base64.getDecoder().decode(encoded.getBytes()));
+        final String decodedUtilStr2 = new String(java.util.Base64.getDecoder().decode(encoded));
 
         Assert.assertEquals(decoded, decodedUtil);
         Assert.assertEquals(decoded, decodedUtilStr);

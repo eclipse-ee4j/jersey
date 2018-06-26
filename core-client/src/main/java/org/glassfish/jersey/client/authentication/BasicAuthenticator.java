@@ -16,12 +16,13 @@
 
 package org.glassfish.jersey.client.authentication;
 
+import java.util.Base64;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.util.Base64;
 
 /**
  * Implementation of Basic Http Authentication method (RFC 2617).
@@ -61,7 +62,7 @@ final class BasicAuthenticator {
         System.arraycopy(prefix, 0, usernamePassword, 0, prefix.length);
         System.arraycopy(password, 0, usernamePassword, prefix.length, password.length);
 
-        return "Basic " + Base64.encodeAsString(usernamePassword);
+        return "Basic " + Base64.getEncoder().encodeToString(usernamePassword);
     }
 
     /**
