@@ -16,11 +16,13 @@
 
 package org.glassfish.jersey.tests.e2e.sse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Assert;
+import org.junit.Test;
 
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,19 +30,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-
-import javax.inject.Singleton;
-
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.test.JerseyTest;
-
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * JAX-RS {@link javax.ws.rs.sse.SseBroadcaster} test.
@@ -49,11 +48,14 @@ import org.junit.Test;
  */
 public class BroadcasterTest extends JerseyTest {
 
+    final Logger log = Logger.getLogger(BroadcasterTest.class.getName());
+
     static final CountDownLatch closeLatch = new CountDownLatch(4);
     static final CountDownLatch txLatch = new CountDownLatch(4);
     private static boolean isSingleton = false;
 
-    private static int LATCH_WAIT_TIMEOUT = 16000; //timeout to be waited for asynchronous events to be completed
+    private static int MAIN_WAIT_TIMEOUT = 1000; //timeout for the main thread to wait for asynchronous event to be completed
+    private static int ASYNC_WAIT_TIMEOUT = 1000; //timeout for asynchronous events to complete activities
 
     @Path("sse")
     @Singleton
@@ -71,9 +73,10 @@ public class BroadcasterTest extends JerseyTest {
         @Path("events")
         public void getServerSentEvents(@Context final SseEventSink eventSink, @Context final Sse sse) {
             isSingleton = this.sse == sse;
-            eventSink.send(sse.newEventBuilder().data("Event1").build());
-            eventSink.send(sse.newEventBuilder().data("Event2").build());
-            eventSink.send(sse.newEventBuilder().data("Event3").build());
+            final OutboundSseEvent.Builder builder = sse.newEventBuilder();
+            eventSink.send(builder.data("Event1").build());
+            eventSink.send(builder.data("Event2").build());
+            eventSink.send(builder.data("Event3").build());
             broadcaster.register(eventSink);
             broadcaster.onClose((subscriber) -> {
                 if (subscriber == eventSink) {
@@ -122,6 +125,12 @@ public class BroadcasterTest extends JerseyTest {
             a2Latch.countDown();
         });
         eventSourceA.open();
+        int waitCount = 0;
+        do {
+            waitCount++;
+            Thread.sleep(MAIN_WAIT_TIMEOUT);
+        } while (!eventSourceA.isOpen());
+        log.info(String.format("Waited for %d seconds", waitCount));
 
         target().path("sse/push/firstBroadcast").request().get(String.class);
 
@@ -140,18 +149,24 @@ public class BroadcasterTest extends JerseyTest {
             b2Latch.countDown();
         });
         eventSourceB.open();
+        waitCount = 0;
+        do {
+            waitCount++;
+            Thread.sleep(MAIN_WAIT_TIMEOUT);
+        } while (!eventSourceB.isOpen());
+        log.info(String.format("Waited for %d seconds", waitCount));
 
         target().path("sse/push/secondBroadcast").request().get(String.class);
 
         Assert.assertTrue("Waiting for resultsA1 to be complete failed.",
-                a1Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+                a1Latch.await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsA2 to be complete failed.",
-                a2Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+                a2Latch.await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue("Waiting for resultsB1 to be complete failed.",
-                b1Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+                b1Latch.await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsB2 to be complete failed.",
-                b2Latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+                b2Latch.await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
 
@@ -186,7 +201,7 @@ public class BroadcasterTest extends JerseyTest {
                         && resultsB2.get(2).equals("Event3")
                         && resultsB2.get(3).equals("secondBroadcast"));
         target().path("sse/close").request().get();
-        Assert.assertTrue(closeLatch.await(LATCH_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+        closeLatch.await();
         Assert.assertTrue("Sse instances injected into resource and constructor differ. Sse should have been injected"
                 + "as a singleton", isSingleton);
     }

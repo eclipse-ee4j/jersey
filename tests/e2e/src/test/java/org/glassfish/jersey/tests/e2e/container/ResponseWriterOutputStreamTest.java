@@ -18,12 +18,16 @@ package org.glassfish.jersey.tests.e2e.container;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
@@ -44,6 +48,7 @@ import static org.junit.Assert.assertEquals;
 public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
     private static final String CHECK_STRING = "RESOURCE";
+    private static final CountDownLatch latch = new CountDownLatch(1);
 
     @Path("/")
     public static class Resource {
@@ -62,17 +67,22 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
         @POST
         @Produces("text/plain")
-        public synchronized void post(final ContainerRequest context) throws IOException {
+        public void post(final ContainerRequest context) throws IOException {
             assertThat(context.getMethod(), is("POST"));
 
             final String s = context.readEntity(String.class);
             assertEquals(CHECK_STRING, s);
 
             final ContainerResponse response = new ContainerResponse(context, Response.ok().build());
-            final OutputStream os = context.getResponseWriter()
-                    .writeResponseStatusAndHeaders(s.getBytes().length, response);
-            os.write(s.getBytes());
-            os.close();
+            try {
+                final OutputStream os = context.getResponseWriter()
+                        .writeResponseStatusAndHeaders(s.getBytes().length, response);
+                os.write(s.getBytes());
+                os.close();
+            } finally {
+                latch.countDown();
+            }
+
         }
     }
 
@@ -87,12 +97,16 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
     }
 
     @Test
-    public void testPost() {
-        assertThat(target().request().post(Entity.text(CHECK_STRING), String.class), is(CHECK_STRING));
+    public void testPost() throws InterruptedException, ExecutionException {
+        final Invocation invocation = target().request().buildPost(Entity.text(CHECK_STRING));
+        final Future<Response> resp = invocation.submit();
+        latch.await();
+        final String response = resp.get().readEntity(String.class);
+        assertThat(response, is(CHECK_STRING));
     }
 
     @Test
-    public void testAll() {
+    public void testAll() throws InterruptedException, ExecutionException {
         testGet();
         testPost();
     }
