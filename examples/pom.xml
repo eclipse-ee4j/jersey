@@ -53,7 +53,7 @@
 
     <modules>
         <module>assemblies</module>
-        <module>bean-validation-webapp</module>
+        <!--<module>bean-validation-webapp</module>-->
         <module>bookmark</module>
         <module>bookmark-em</module>
         <module>bookstore-webapp</module>
@@ -66,9 +66,9 @@
         <module>entity-filtering-security</module>
         <module>extended-wadl-webapp</module>
         <module>exception-mapping</module>
-        <module>feed-combiner-java8-webapp</module>
+        <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
-        <module>flight-mgmt-webapp</module>
+        <!--<module>flight-mgmt-webapp</module>-->
         <module>groovy</module>
         <module>helloworld</module>
         <module>helloworld-benchmark</module>
@@ -99,13 +99,13 @@
         <module>managed-client</module>
         <module>managed-client-webapp</module>
         <module>managed-client-simple-webapp</module>
-        <module>monitoring-webapp</module>
+        <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
         <module>open-tracing</module>
         <module>osgi-helloworld-webapp</module>
         <module>osgi-http-service</module>
         <module>oauth-client-twitter</module>
-        <module>oauth2-client-google-webapp</module>
+        <!--<module>oauth2-client-google-webapp</module>-->
         <module>reload</module>
         <module>rx-client-webapp</module>
         <module>server-async</module>
@@ -115,13 +115,13 @@
         <module>server-sent-events-jaxrs</module>
         <module>servlet3-webapp</module>
         <module>simple-console</module>
-        <module>shortener-webapp</module>
-        <module>sparklines</module>
+        <!--<module>shortener-webapp</module>-->
+        <!--<module>sparklines</module>-->
         <module>sse-item-store-jersey-webapp</module>
         <module>sse-item-store-jaxrs-webapp</module>
         <module>sse-twitter-aggregator</module>
         <module>system-properties-example</module>
-        <module>tone-generator</module>
+        <!--<module>tone-generator</module>-->
         <module>webapp-example-parent</module>
         <module>xml-moxy</module>
     </modules>
