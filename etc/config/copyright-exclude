@@ -35,6 +35,7 @@ jaxb.index
 /etc/jersey-1-migrated-tests
 /etc/config/copyright-exclude
 /etc/config/copyright.txt
+/etc/config/edl-copyright.txt
 /LICENSE.md
 /third-party-license-readme.txt
 nb-configuration.xml
