@@ -461,7 +461,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    public void testAuthGetWithBasicFilter() {
+    public void testAuthGetWithBasicFilterAndContent() {
         ClientConfig cc = new ClientConfig();
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
         cc.connectorProvider(new ApacheConnectorProvider());
@@ -484,7 +484,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    public void testAuthGetWithDigestFilter() {
+    public void testAuthGetWithDigestFilterAndContent() {
         ClientConfig cc = new ClientConfig();
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
         cc.connectorProvider(new ApacheConnectorProvider());
