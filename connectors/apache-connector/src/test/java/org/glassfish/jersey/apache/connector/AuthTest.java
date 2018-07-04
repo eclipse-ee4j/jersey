@@ -156,6 +156,7 @@ public class AuthTest extends JerseyTest {
             return "GET";
         }
 
+        @GET
         @Path("digest")
         public String getDigest(@Context HttpHeaders h) {
             String value = h.getRequestHeaders().getFirst("Authorization");
