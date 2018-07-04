@@ -149,6 +149,11 @@ public class AuthTest extends JerseyTest {
         }
 
         @GET
+        @Path("noauth")
+        public String get() {
+            return "GET";
+        }
+
         @Path("digest")
         public String getDigest(@Context HttpHeaders h) {
             String value = h.getRequestHeaders().getFirst("Authorization");
@@ -291,6 +296,17 @@ public class AuthTest extends JerseyTest {
         Client client = ClientBuilder.newClient(cc);
         client.register(HttpAuthenticationFeature.basic("name", "password"));
         WebTarget r = client.target(getBaseUri()).path("test/filter");
+
+        assertEquals("GET", r.request().get(String.class));
+    }
+
+    @Test
+    public void testAuthGetBasicNoChallenge() {
+        ClientConfig cc = new ClientConfig();
+        cc.connectorProvider(new ApacheConnectorProvider());
+        Client client = ClientBuilder.newClient(cc);
+        client.register(HttpAuthenticationFeature.basicBuilder().build());
+        WebTarget r = client.target(getBaseUri()).path("test/noauth");
 
         assertEquals("GET", r.request().get(String.class));
     }
