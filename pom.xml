@@ -569,7 +569,7 @@
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>1.39</version>
+                    <version>1.49</version>
                     <configuration>
                         <excludeFile>etc/config/copyright-exclude</excludeFile>
                         <!--svn|mercurial|git - defaults to svn-->
@@ -585,6 +585,7 @@
                         <!-- check that year is correct -->
                         <ignoreYear>false</ignoreYear>
                         <templateFile>etc/config/copyright.txt</templateFile>
+                        <bsdTemplateFile>etc/config/edl-copyright.txt</bsdTemplateFile>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -764,7 +765,6 @@
             <properties>
                 <release.tests.args>-Dskip.tests=true</release.tests.args>
                 <skip.tests>true</skip.tests>
-                <skip.e2e>true</skip.e2e>
             </properties>
         </profile>
         <profile>
@@ -1183,25 +1183,9 @@
 
             the whole build is run as clean install but excludes several e2e tests because of the not grepped output
             -->
-            <id>travis_e2e_skip</id>
+            <id>travis_main</id>
             <properties>
-                <skip.e2e>true</skip.e2e>
-            </properties>
-        </profile>
-        <profile>
-            <!--
-             Profile is aimed to run the build on travis
-            due to travis limitations for output (max 4MB) this profile is used to run e2e tests only.
-
-            the only thing which is happen using throfile is run of e2e tests (without additional build or so)
-            everything is already build using travis_e2e_skip profile
-
-            the whole build is run as test -Ptravis_e2e
-            -->
-            <id>travis_e2e</id>
-            <properties>
-                <skip.e2e>false</skip.e2e>
-                <skip.tests>true</skip.tests>
+                <exclude.sse.tests>**/BroadcasterTest*,**/ClientCloseTest*,**/ResponseWriterOutputStreamTest*</exclude.sse.tests>
             </properties>
         </profile>
     </profiles>
@@ -1995,6 +1979,6 @@
         <xerces.version>2.11.0</xerces.version>
         <xmlunit.version>1.6</xmlunit.version>
         <yasson.version>1.0.1</yasson.version>
-        <skip.e2e>false</skip.e2e>
+        <exclude.sse.tests>none</exclude.sse.tests>
     </properties>
 </project>

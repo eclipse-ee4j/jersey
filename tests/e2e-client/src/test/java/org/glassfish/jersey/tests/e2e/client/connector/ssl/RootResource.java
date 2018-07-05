@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
+import java.util.Base64;
 import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
@@ -23,7 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
-import org.glassfish.jersey.internal.util.Base64;
 
 /**
  * Simple resource demonstrating low level approach of getting user credentials.
@@ -60,7 +60,7 @@ public class RootResource {
         String auth = headers.getRequestHeader("authorization").get(0);
 
         auth = auth.substring("Basic ".length());
-        String[] values = Base64.decodeAsString(auth).split(":");
+        String[] values = new String(Base64.getDecoder().decode(auth)).split(":");
 
         // String username = values[0];
         // String password = values[1];

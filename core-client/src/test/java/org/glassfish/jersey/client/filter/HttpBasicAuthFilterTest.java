@@ -17,6 +17,7 @@
 package org.glassfish.jersey.client.filter;
 
 
+import java.util.Base64;
 import java.util.concurrent.Future;
 
 import javax.ws.rs.client.Client;
@@ -34,7 +35,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.internal.util.Base64;
+
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -53,7 +54,8 @@ public class HttpBasicAuthFilterTest {
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.get();
 
-        assertEquals("Basic " + Base64.encodeAsString("Uzivatelske jmeno:Heslo"), r.getHeaderString(HttpHeaders.AUTHORIZATION));
+        assertEquals("Basic " + Base64.getEncoder().encodeToString("Uzivatelske jmeno:Heslo".getBytes()),
+                     r.getHeaderString(HttpHeaders.AUTHORIZATION));
     }
 
     @Test
@@ -63,7 +65,7 @@ public class HttpBasicAuthFilterTest {
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.get();
 
-        assertEquals("Basic " + Base64.encodeAsString(":"), r.getHeaderString(HttpHeaders.AUTHORIZATION));
+        assertEquals("Basic " + Base64.getEncoder().encodeToString(":".getBytes()), r.getHeaderString(HttpHeaders.AUTHORIZATION));
     }
 
     private static class TestConnector implements Connector, ConnectorProvider {
