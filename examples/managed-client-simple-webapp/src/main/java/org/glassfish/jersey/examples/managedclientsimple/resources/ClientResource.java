@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * (Portions) Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -7,7 +8,6 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.examples.managedclientsimple.resources;
 

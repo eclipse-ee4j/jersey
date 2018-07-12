@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * (Portions) Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +43,6 @@ import javax.inject.Singleton;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Miroslav Fuksa
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 @Singleton
 public class ParamConverterFactory implements ParamConverterProvider {
