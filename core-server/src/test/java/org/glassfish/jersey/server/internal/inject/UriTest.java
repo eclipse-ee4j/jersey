@@ -31,7 +31,7 @@ import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;

@@ -18,7 +18,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 /**
  * A resource that uses managed clients to retrieve values of internal

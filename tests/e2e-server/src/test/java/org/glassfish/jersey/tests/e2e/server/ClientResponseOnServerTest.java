@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;

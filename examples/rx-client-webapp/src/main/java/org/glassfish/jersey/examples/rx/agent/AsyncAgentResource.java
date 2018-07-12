@@ -42,7 +42,7 @@ import org.glassfish.jersey.examples.rx.domain.Recommendation;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ManagedAsync;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 /**
  * Obtain information about visited (destination) and recommended (destination, forecast, price) places for "Async" user. Uses

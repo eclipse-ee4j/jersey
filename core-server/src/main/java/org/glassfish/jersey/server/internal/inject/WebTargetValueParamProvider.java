@@ -46,7 +46,7 @@ import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ExtendedUriInfo;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;

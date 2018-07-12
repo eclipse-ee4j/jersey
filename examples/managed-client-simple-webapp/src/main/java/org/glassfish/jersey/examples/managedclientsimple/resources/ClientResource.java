@@ -20,7 +20,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 /**
  * A resource which use managed client injected by {@link org.glassfish.jersey.server.Uri @Uri annotation} to query

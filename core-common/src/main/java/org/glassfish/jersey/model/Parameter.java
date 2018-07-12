@@ -49,7 +49,7 @@ import javax.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 /**
  * Method parameter model.

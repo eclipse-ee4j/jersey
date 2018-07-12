@@ -43,7 +43,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;

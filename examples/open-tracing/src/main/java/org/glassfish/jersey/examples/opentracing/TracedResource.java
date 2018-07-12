@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.opentracing.OpenTracingFeature;
 import org.glassfish.jersey.opentracing.OpenTracingUtils;
 import org.glassfish.jersey.server.ManagedAsync;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.uri.Uri;
 
 import io.opentracing.Span;
 
