@@ -125,7 +125,9 @@ final class DigestAuthenticator {
             final HttpAuthenticationFilter.Credentials cred = HttpAuthenticationFilter.getCredentials(request,
                     this.credentials, HttpAuthenticationFilter.Type.DIGEST);
             if (cred == null) {
-
+                if (response.hasEntity()) {
+                    AuthenticationUtil.discardInputAndClose(response.getEntityStream());
+                }
                 throw new ResponseAuthenticationException(null, LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_DIGEST());
             }
 
