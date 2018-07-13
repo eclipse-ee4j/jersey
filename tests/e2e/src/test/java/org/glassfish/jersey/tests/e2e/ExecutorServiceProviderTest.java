@@ -16,12 +16,15 @@
 
 package org.glassfish.jersey.tests.e2e;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,6 +40,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Application;
@@ -52,6 +57,7 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link org.glassfish.jersey.spi.ExecutorServiceProvider} E2E tests.
@@ -137,17 +143,21 @@ public class ExecutorServiceProviderTest extends JerseyTest {
             executorService.shutdownNow();
         }
 
-        private class CustomExecutorService implements ExecutorService {
+        /* package private */ class CustomExecutorService implements ExecutorService {
 
             private final ExecutorService delegate;
             private final AtomicBoolean isCleanedUp;
 
             public CustomExecutorService() {
-                this.isCleanedUp = new AtomicBoolean(false);
-                this.delegate = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                this(Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
                         .setNameFormat("async-request-%d")
                         .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
-                        .build());
+                        .build()));
+            }
+
+            public CustomExecutorService(ExecutorService delegate) {
+                this.isCleanedUp = new AtomicBoolean(false);
+                this.delegate = delegate;
 
                 executorCreationCount++;
                 executors.add(this);
@@ -228,6 +238,17 @@ public class ExecutorServiceProviderTest extends JerseyTest {
             public void execute(Runnable command) {
                 delegate.execute(command);
             }
+        }
+    }
+
+    public static class SecondCustomExecutorProvider extends CustomExecutorProvider {
+        public static final String NAME_FORMAT = "second-async-request";
+
+        public ExecutorService getExecutorService() {
+            return new CustomExecutorService(Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                    .setNameFormat(NAME_FORMAT + "-%d")
+                    .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
+                    .build()));
         }
     }
 
@@ -352,6 +373,32 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("Unexpected number of released server executors", 1, serverExecutorProvider.executorReleaseCount);
         assertEquals("Unexpected number of server executors stored in the set.",
                 0, serverExecutorProvider.executors.size());
+
+        setUp(); // re-starting test container to ensure proper post-test tearDown.
+    }
+
+    @Test
+    public void testClientBuilderExecutorServiceTakesPrecedenceOverRegistered() throws Exception {
+        serverExecutorProvider.reset();
+        CountDownLatch nameLatch = new CountDownLatch(1);
+        Set<String> threadName = new HashSet<>(1);
+
+        final CustomExecutorProvider executorProvider = new CustomExecutorProvider();
+        Client client = ClientBuilder.newBuilder().register(executorProvider).register(new ClientRequestFilter() {
+            @Override
+            public void filter(ClientRequestContext requestContext) throws IOException {
+                threadName.add(Thread.currentThread().getName());
+                nameLatch.countDown();
+            }
+        }).executorService(new SecondCustomExecutorProvider().getExecutorService()).build();
+
+        client.target(getBaseUri()).path("resource").request().async().get(String.class).get();
+        assertTrue(nameLatch.await(10, TimeUnit.SECONDS));
+        assertEquals(threadName.size(), 1);
+        assertTrue(threadName.iterator().next().startsWith(SecondCustomExecutorProvider.NAME_FORMAT));
+
+        tearDown(); // stopping test container
+        client.close();
 
         setUp(); // re-starting test container to ensure proper post-test tearDown.
     }
