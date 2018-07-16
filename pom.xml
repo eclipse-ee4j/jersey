@@ -1204,6 +1204,20 @@
                 <skip.tests>true</skip.tests>
             </properties>
         </profile>
+	<profile>
+            <!-- Use -Peclipse_repo to use SNAPSHOTs stored in Eclipse's Nexus instance ("Nightly Builds") -->
+            <id>eclipse_repo</id>
+	    <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>repo.jaxrs-api.eclipse.org</id>
+                    <name>JAX-RS API Repository - Snapshots</name>
+                    <url>https://repo.eclipse.org/content/repositories/jax-rs-api-snapshots</url>
+                </repository>
+            </repositories>
+	</profile>
     </profiles>
 
     <reporting>
