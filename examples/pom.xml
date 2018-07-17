@@ -80,6 +80,7 @@
         <module>helloworld-weld</module>
         <module>helloworld-spring-webapp</module>
         <module>helloworld-spring-annotations</module>
+        <module>helloworld-microprofile-rest-client</module>
         <module>http-patch</module>
         <module>http-trace</module>
         <module>https-clientserver-grizzly</module>

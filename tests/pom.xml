@@ -39,6 +39,7 @@
     <modules>
         <module>e2e</module>
         <module>e2e-client</module>
+        <module>microprofile-rest-client-tck</module>
         <module>e2e-core-common</module>
         <module>e2e-entity</module>
         <module>e2e-inject</module>
