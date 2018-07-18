@@ -54,7 +54,7 @@ public class LoggingInterceptorTest {
 
     @Test
     public void testReadableTypeApplicationSubVndApiJson() {
-        assertTrue(LoggingInterceptor.isReadable(new MediaType("application", "vnd.api+json")))
+        assertTrue(LoggingInterceptor.isReadable(new MediaType("application", "vnd.api+json")));
     }
 
     @Test
