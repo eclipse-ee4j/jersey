@@ -85,7 +85,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         add(MediaType.APPLICATION_SVG_XML_TYPE);
         add(MediaType.APPLICATION_XHTML_XML_TYPE);
         add(MediaType.APPLICATION_XML_TYPE);
-        add(APPLICATION_VND_API_JSON); 
+        add(APPLICATION_VND_API_JSON);
     }};
 
     private static final Comparator<Map.Entry<String, List<String>>> COMPARATOR =
