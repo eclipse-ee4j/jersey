@@ -79,13 +79,13 @@ abstract class LoggingInterceptor implements WriterInterceptor {
 
     private static final Set<MediaType> READABLE_APP_MEDIA_TYPES = new HashSet<MediaType>() {{
         add(TEXT_MEDIA_TYPE);
+        add(APPLICATION_VND_API_JSON);
         add(MediaType.APPLICATION_ATOM_XML_TYPE);
         add(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         add(MediaType.APPLICATION_JSON_TYPE);
         add(MediaType.APPLICATION_SVG_XML_TYPE);
         add(MediaType.APPLICATION_XHTML_XML_TYPE);
         add(MediaType.APPLICATION_XML_TYPE);
-        add(APPLICATION_VND_API_JSON);
     }};
 
     private static final Comparator<Map.Entry<String, List<String>>> COMPARATOR =
