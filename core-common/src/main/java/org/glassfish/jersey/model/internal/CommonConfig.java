@@ -49,6 +49,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.CompositeBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.ProviderBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -570,7 +571,8 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
      * @param forcedOnly        defines whether all or only forced auto-discoverables should be configured.
      */
     public void configureAutoDiscoverableProviders(final InjectionManager injectionManager,
-            final Collection<AutoDiscoverable> autoDiscoverables, final boolean forcedOnly) {
+                                                   final Collection<AutoDiscoverable> autoDiscoverables,
+                                                   final boolean forcedOnly) {
         // Check whether meta providers have been initialized for a config this config has been loaded from.
         if (!disableMetaProviderConfiguration) {
             final Set<AutoDiscoverable> providers = new TreeSet<>((o1, o2) -> {
@@ -603,7 +605,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                         autoDiscoverable.configure(this);
                     } catch (final Exception e) {
                         LOGGER.log(Level.FINE,
-                                   LocalizationMessages.AUTODISCOVERABLE_CONFIGURATION_FAILED(autoDiscoverable.getClass()), e);
+                                LocalizationMessages.AUTODISCOVERABLE_CONFIGURATION_FAILED(autoDiscoverable.getClass()), e);
                     }
                 }
             }
@@ -652,10 +654,10 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     }
 
     private void configureExternalObjects(InjectionManager injectionManager) {
-          componentBag.getInstances(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                  .forEach(injectionManager::register);
-          componentBag.getClasses(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                  .forEach(injectionManager::register);
+        componentBag.getInstances(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
+                .forEach(injectionManager::register);
+        componentBag.getClasses(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
+                .forEach(injectionManager::register);
     }
 
     private void configureFeatures(InjectionManager injectionManager,
@@ -701,6 +703,10 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
 
             if (success) {
                 processed.add(registration);
+                final ContractProvider providerModel = componentBag.getModel(feature.getClass());
+                if (providerModel != null) {
+                    ProviderBinder.bindProvider(feature, providerModel, injectionManager);
+                }
                 configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
                 enabledFeatureClasses.add(registration.getFeatureClass());
                 enabledFeatures.add(feature);
