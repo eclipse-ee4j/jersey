@@ -106,6 +106,13 @@ public class GenericEntityTest extends JerseyTest {
         }
     }
 
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterNull() {
+        final SseEventSource source = SseEventSource.target(target("genericentityresource/string")).build();
+        source.register(null);
+    }
+
     @Singleton
     @Path("genericentityresource")
     public static class SSEGenericEntityResource {
