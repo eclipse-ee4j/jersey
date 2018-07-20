@@ -137,6 +137,28 @@ public class PersonResourceTest extends JerseyTest {
     }
 
     /**
+     * Test empty (but valid) filters.
+     * Valid empty filters are:
+     *  . ,. , .. .,
+     *
+     *
+     * result is empty object (nothing is returned) but Jersey will not throw any exception
+     */
+    @Test
+    public void testEmptyFilters() throws Exception {
+        final Person entity = target("people").path("1234")
+                .queryParam("select", ".").request()
+                .get(Person.class);
+
+        // Null values (all elements).
+        assertThat(entity.getFamilyName(), nullValue());
+        assertThat(entity.getGivenName(), nullValue());
+        assertThat(entity.getAddresses(), nullValue());
+        assertThat(entity.getPhoneNumbers(), nullValue());
+        assertThat(entity.getRegion(), nullValue());
+    }
+
+    /**
      * Test 2nd and 3rd level filters.
      */
     @Test

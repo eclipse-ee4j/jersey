@@ -17,8 +17,8 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 
-import org.glassfish.jersey.internal.util.Base64;
 
 /**
  * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
@@ -46,6 +46,6 @@ class ProxyBasicAuthenticator {
         System.arraycopy(prefix, 0, usernamePassword, 0, prefix.length);
         System.arraycopy(passwordBytes, 0, usernamePassword, prefix.length, passwordBytes.length);
 
-        return "Basic " + Base64.encodeAsString(usernamePassword);
+        return "Basic " + Base64.getEncoder().encodeToString(usernamePassword);
     }
 }

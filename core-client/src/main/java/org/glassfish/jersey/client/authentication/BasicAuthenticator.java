@@ -16,12 +16,15 @@
 
 package org.glassfish.jersey.client.authentication;
 
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.util.Base64;
 
 /**
  * Implementation of Basic Http Authentication method (RFC 2617).
@@ -31,6 +34,8 @@ import org.glassfish.jersey.internal.util.Base64;
  * @author Craig McClanahan
  */
 final class BasicAuthenticator {
+
+    private static final Logger LOGGER = Logger.getLogger(BasicAuthenticator.class.getName());
 
     private final HttpAuthenticationFilter.Credentials defaultCredentials;
 
@@ -61,22 +66,22 @@ final class BasicAuthenticator {
         System.arraycopy(prefix, 0, usernamePassword, 0, prefix.length);
         System.arraycopy(password, 0, usernamePassword, prefix.length, password.length);
 
-        return "Basic " + Base64.encodeAsString(usernamePassword);
+        return "Basic " + Base64.getEncoder().encodeToString(usernamePassword);
     }
 
     /**
      * Adds authentication information to the request.
      *
      * @param request Request context.
-     * @throws RequestAuthenticationException in case that basic credentials missing or are in invalid format
      */
-    public void filterRequest(ClientRequestContext request) throws RequestAuthenticationException {
+    public void filterRequest(ClientRequestContext request) {
         HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter.getCredentials(request,
                 defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
         if (credentials == null) {
-            throw new RequestAuthenticationException(LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
+            LOGGER.fine(LocalizationMessages.AUTHENTICATION_CREDENTIALS_NOT_PROVIDED_BASIC());
+        } else {
+            request.getHeaders().add(HttpHeaders.AUTHORIZATION, calculateAuthentication(credentials));
         }
-        request.getHeaders().add(HttpHeaders.AUTHORIZATION, calculateAuthentication(credentials));
     }
 
     /**
@@ -96,6 +101,9 @@ final class BasicAuthenticator {
                     .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
 
             if (credentials == null) {
+                if (response.hasEntity()) {
+                    AuthenticationUtil.discardInputAndClose(response.getEntityStream());
+                }
                 throw new ResponseAuthenticationException(null, LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
             }
 

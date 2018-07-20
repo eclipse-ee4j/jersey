@@ -127,7 +127,7 @@ class HttpConnection {
         });
     }
 
-    synchronized void close() {
+    void close() {
         if (state == State.CLOSED) {
             return;
         }
@@ -218,6 +218,9 @@ class HttpConnection {
     }
 
     private void changeState(State newState) {
+        if (state == State.CLOSED) {
+            return;
+        }
         State old = state;
         state = newState;
 
@@ -414,9 +417,11 @@ class HttpConnection {
 
         @Override
         void processConnectionClosed() {
-            cancelAllTimeouts();
-            changeState(State.CLOSED_BY_SERVER);
-            HttpConnection.this.close();
+            synchronized (HttpConnection.this) {
+                cancelAllTimeouts();
+                changeState(State.CLOSED_BY_SERVER);
+                HttpConnection.this.close();
+            }
         }
 
         @Override

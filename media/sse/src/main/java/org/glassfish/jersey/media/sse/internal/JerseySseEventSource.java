@@ -122,7 +122,7 @@ public class JerseySseEventSource implements SseEventSource {
                            final Consumer<Throwable> onError,
                            final Runnable onComplete) {
         if (onSubscribe == null || onEvent == null || onError == null || onComplete == null) {
-            throw new IllegalStateException(LocalizationMessages.PARAMS_NULL());
+            throw new IllegalArgumentException(LocalizationMessages.PARAMS_NULL());
         }
 
         publisher.subscribe(new Flow.Subscriber<InboundSseEvent>() {
