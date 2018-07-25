@@ -384,6 +384,32 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         Set<String> threadName = new HashSet<>(1);
 
         final CustomExecutorProvider executorProvider = new CustomExecutorProvider();
+        Client client = ClientBuilder.newBuilder().register(new ClientRequestFilter() {
+            @Override
+            public void filter(ClientRequestContext requestContext) throws IOException {
+                threadName.add(Thread.currentThread().getName());
+                nameLatch.countDown();
+            }
+        }).executorService(new SecondCustomExecutorProvider().getExecutorService()).register(executorProvider).build();
+
+        client.target(getBaseUri()).path("resource").request().async().get(String.class).get();
+        assertTrue(nameLatch.await(10, TimeUnit.SECONDS));
+        assertEquals(threadName.size(), 1);
+        assertTrue(threadName.iterator().next().startsWith(SecondCustomExecutorProvider.NAME_FORMAT));
+
+        tearDown(); // stopping test container
+        client.close();
+
+        setUp(); // re-starting test container to ensure proper post-test tearDown.
+    }
+
+    @Test
+    public void testRegisteredExecutorServiceDoesNotTakesPrecedenceOverClientBuilder() throws Exception {
+        serverExecutorProvider.reset();
+        CountDownLatch nameLatch = new CountDownLatch(1);
+        Set<String> threadName = new HashSet<>(1);
+
+        final CustomExecutorProvider executorProvider = new CustomExecutorProvider();
         Client client = ClientBuilder.newBuilder().register(executorProvider).register(new ClientRequestFilter() {
             @Override
             public void filter(ClientRequestContext requestContext) throws IOException {
