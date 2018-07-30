@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -102,10 +103,8 @@ class JerseySseBroadcaster extends JerseyPublisher<OutboundSseEvent> implements 
         if (event == null) {
             throw new IllegalArgumentException(LocalizationMessages.PARAM_NULL("event"));
         }
-        publish(event);
 
-        // TODO JAX-RS 2.1
-        return null;
+        return CompletableFuture.completedFuture(publish(event));
     }
 
     private void notifyOnCompleteHandlers(Flow.Subscriber<? super OutboundSseEvent> subscriber) {
