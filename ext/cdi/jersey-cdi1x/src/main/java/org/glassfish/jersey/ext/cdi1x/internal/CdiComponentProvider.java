@@ -144,7 +144,10 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
     });
 
-    private final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(clazz -> Resource.from(clazz) != null);
+    // Check first if a class is a JAX-RS resource, and only if so check with validation.
+    // This prevents unnecessary warnings being logged for pure CDI beans.
+    private final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(
+            clazz -> Resource.from(clazz, true) != null && Resource.from(clazz) != null);
 
     private final Hk2CustomBoundTypesProvider customHk2TypesProvider;
     private final InjectionManagerStore injectionManagerStore;
