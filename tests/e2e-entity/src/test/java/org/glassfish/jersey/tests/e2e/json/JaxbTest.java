@@ -124,10 +124,7 @@ public class JaxbTest extends AbstractJsonTest {
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
             for (final Class<?> entityClass : filteredClasses) {
-                // TODO - remove the condition after jsonb polymorphic adapter is implemented
-                if (!(jsonProvider instanceof JsonTestProvider.JsonbTestProvider)) {
-                    jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(entityClass, jsonProvider)});
-                }
+                jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(entityClass, jsonProvider)});
             }
         }
 
