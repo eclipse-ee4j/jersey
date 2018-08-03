@@ -77,6 +77,13 @@
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
+            <exclusions>
+                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <exclusion>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
