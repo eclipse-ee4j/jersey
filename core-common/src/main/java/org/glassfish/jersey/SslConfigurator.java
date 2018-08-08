@@ -307,7 +307,7 @@ public final class SslConfigurator {
 
     private SslConfigurator(boolean readSystemProperties) {
         if (readSystemProperties) {
-            retrieve();
+            retrieve(AccessController.doPrivileged(PropertiesHelper.getSystemProperties()));
         }
     }
 
@@ -780,42 +780,35 @@ public final class SslConfigurator {
     }
 
     /**
-     * Retrieve the SSL context configuration from the system properties.
+     * Retrieve the SSL context configuration from the supplied properties.
      *
+     * @param props properties containing the SSL context configuration.
      * @return updated SSL configurator instance.
      */
-    public SslConfigurator retrieve() {
-        trustStoreProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_STORE_PROVIDER));
-        keyStoreProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_STORE_PROVIDER));
+    public SslConfigurator retrieve(Properties props) {
+        trustStoreProvider = props.getProperty(TRUST_STORE_PROVIDER);
+        keyStoreProvider = props.getProperty(KEY_STORE_PROVIDER);
 
-        trustManagerFactoryProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_MANAGER_FACTORY_PROVIDER));
-        keyManagerFactoryProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_MANAGER_FACTORY_PROVIDER));
+        trustManagerFactoryProvider = props.getProperty(TRUST_MANAGER_FACTORY_PROVIDER);
+        keyManagerFactoryProvider = props.getProperty(KEY_MANAGER_FACTORY_PROVIDER);
 
-        trustStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_TYPE));
-        keyStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_TYPE));
+        trustStoreType = props.getProperty(TRUST_STORE_TYPE);
+        keyStoreType = props.getProperty(KEY_STORE_TYPE);
 
-        final String trustStorePassword = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_STORE_PASSWORD));
-        if (trustStorePassword != null) {
-            trustStorePass = trustStorePassword.toCharArray();
+        if (props.getProperty(TRUST_STORE_PASSWORD) != null) {
+            trustStorePass = props.getProperty(TRUST_STORE_PASSWORD).toCharArray();
         } else {
             trustStorePass = null;
         }
 
-        final String keyStorePassword = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_STORE_PASSWORD));
-        if (keyStorePassword != null) {
-            keyStorePass = keyStorePassword.toCharArray();
+        if (props.getProperty(KEY_STORE_PASSWORD) != null) {
+            keyStorePass = props.getProperty(KEY_STORE_PASSWORD).toCharArray();
         } else {
             keyStorePass = null;
         }
 
-        trustStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_FILE));
-        keyStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_FILE));
+        trustStoreFile = props.getProperty(TRUST_STORE_FILE);
+        keyStoreFile = props.getProperty(KEY_STORE_FILE);
 
         trustStoreBytes = null;
         keyStoreBytes = null;
