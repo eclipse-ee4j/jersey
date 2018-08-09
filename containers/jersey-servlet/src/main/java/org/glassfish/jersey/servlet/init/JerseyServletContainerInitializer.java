@@ -68,10 +68,10 @@ import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
  - If an application subclass is present that is not being handled by an
  existing servlet then the servlet added by the ContainerInitializer MUST be
  named with the fully qualified name of the Application subclass.  If the
- Application subclass is annotated with @PathPrefix and no servlet-mapping
+ Application subclass is annotated with @ApplicationPath and no servlet-mapping
  exists for the added servlet then a new servlet mapping is added with the
- value of the @PathPrefix  annotation with "/*" appended otherwise the existing
- mapping is used. If the Application subclass is not annotated with @PathPrefix
+ value of the @ApplicationPath annotation with "/*" appended otherwise the existing
+ mapping is used. If the Application subclass is not annotated with @ApplicationPath
  then the application MUST be packaged with a web.xml that specifies a servlet
  mapping for the added servlet. It is an error for more than one Application
  to be deployed at the same effective servlet mapping.
