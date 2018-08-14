@@ -116,12 +116,23 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
         /*
          * Check the {@code component} whether it is correctly configured for client or server {@link RuntimeType runtime}.
          */
-        java.util.function.Predicate<Class<?>> correctlyConfigured =
+        java.util.function.Predicate<Class<?>> correctlyConfiguredComponentClass =
                 componentClass -> Providers.checkProviderRuntime(componentClass,
                         componentBag.getModel(componentClass),
                         RuntimeType.SERVER,
                         !registeredClasses.contains(componentClass),
                         resourceClasses.contains(componentClass));
+
+        /*
+         * Check the {@code component} class from instance whether it is correctly configured for client or server {@link RuntimeType runtime}.
+         */
+        java.util.function.Predicate<Class<?>> correctlyConfiguredComponentInstance =
+                componentClass -> Providers.checkProviderRuntime(componentClass,
+                        componentBag.getModel(componentClass),
+                        RuntimeType.SERVER,
+                        !registeredClasses.contains(componentClass),
+                        isResourceClassOrInstance(componentClass, resourceClasses, resourceInstances)
+                );
 
         /*
          * Check the {@code resource class} whether it is correctly configured for client or server {@link RuntimeType runtime}.
@@ -136,7 +147,7 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
 
         Set<Class<?>> componentClasses =
                 componentBag.getClasses(ComponentBag.excludeMetaProviders(injectionManager)).stream()
-                        .filter(correctlyConfigured)
+                        .filter(correctlyConfiguredComponentClass)
                         .collect(Collectors.toSet());
 
         // Merge programmatic resource classes with component classes.
@@ -169,7 +180,7 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
         // Merge programmatic resource instances with other component instances.
         Set<Object> instances =
                 componentBag.getInstances(ComponentBag.excludeMetaProviders(injectionManager)).stream()
-                        .filter(instance -> correctlyConfigured.test(instance.getClass()))
+                        .filter(instance -> correctlyConfiguredComponentInstance.test(instance.getClass()))
                         .collect(Collectors.toSet());
         instances.addAll(resourceInstances);
 
@@ -185,6 +196,19 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
                 ProviderBinder.bindProvider(component, model, injectionManager);
             }
         }
+    }
+
+    private boolean isResourceClassOrInstance(
+            final Class<?> componentClass,
+            final Collection<Class<?>> resourceClasses,
+            final Collection<Object> resourceInstances
+    ) {
+        return resourceClasses.contains(componentClass)
+                ||
+                resourceInstances
+                        .stream()
+                        .map(Object::getClass)
+                        .anyMatch(componentClass::equals);
     }
 
     private boolean bindWithComponentProvider(
