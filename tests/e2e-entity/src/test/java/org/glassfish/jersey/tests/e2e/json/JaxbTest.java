@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.persistence.internal.helper.JavaVersion;
 import org.glassfish.grizzly.utils.ArrayUtils;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.tests.e2e.json.entity.AnotherArrayTestBean;
@@ -99,6 +98,16 @@ public class JaxbTest extends AbstractJsonTest {
     }
 
     /**
+     * checks provided string to be a number
+     *
+     * @param s string
+     * @return true if string is a number false otherwise
+     */
+    private static boolean isNumeric(String s) {
+        return java.util.regex.Pattern.matches("\\d+", s);
+    }
+
+    /**
      * check if the current JVM is supported by this test.
      *
      * @return true if all tests can be run, false if some tests shall be excluded due to JRE bug
@@ -108,7 +117,8 @@ public class JaxbTest extends AbstractJsonTest {
         if (javaVersion != null) {
             int pos =  javaVersion.lastIndexOf("_");
             if (pos > -1) {
-                final Integer minorVersion = Integer.valueOf(javaVersion.substring(pos + 1));
+                final String rawMinorVersion = javaVersion.substring(pos + 1);
+                final Integer minorVersion = (isNumeric(rawMinorVersion)) ? Integer.valueOf(rawMinorVersion) : 0;
                 return minorVersion < 160 || minorVersion > 172; //only those between 161 and 172 minor
                                                                  // releases are not supported
             }
