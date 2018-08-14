@@ -113,31 +113,9 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
 
         Set<Class<?>> registeredClasses = runtimeConfig.getRegisteredClasses();
 
-        /*
-         * Check the {@code component} whether it is correctly configured for client or server {@link RuntimeType runtime}.
-         */
-        java.util.function.Predicate<Class<?>> correctlyConfigured =
-                componentClass -> Providers.checkProviderRuntime(componentClass,
-                        componentBag.getModel(componentClass),
-                        RuntimeType.SERVER,
-                        !registeredClasses.contains(componentClass),
-                        resourceClasses.contains(componentClass));
-
-        /*
-         * Check the {@code resource class} whether it is correctly configured for client or server {@link RuntimeType runtime}.
-         */
-        BiPredicate<Class<?>, ContractProvider> correctlyConfiguredResource =
-                (resourceClass, model) -> Providers.checkProviderRuntime(
-                        resourceClass,
-                        model,
-                        RuntimeType.SERVER,
-                        !registeredClasses.contains(resourceClass),
-                        true);
-
-        Set<Class<?>> componentClasses =
-                componentBag.getClasses(ComponentBag.excludeMetaProviders(injectionManager)).stream()
-                        .filter(correctlyConfigured)
-                        .collect(Collectors.toSet());
+        Set<Class<?>> componentClasses = componentBag.getClasses(ComponentBag.excludeMetaProviders(injectionManager)).stream()
+                .filter(clazz -> isComponentClassConfiguredCorrectly(componentBag, registeredClasses, resourceClasses, clazz))
+                .collect(Collectors.toSet());
 
         // Merge programmatic resource classes with component classes.
         Set<Class<?>> classes = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -157,7 +135,7 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
                     continue;
                 }
 
-                if (model != null && !correctlyConfiguredResource.test(componentClass, model)) {
+                if (isNotCorrectlyConfiguredResource(registeredClasses, componentClass, model)) {
                     model = null;
                 }
                 resourceContext.unsafeBindResource(componentClass, model);
@@ -167,17 +145,16 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
         }
 
         // Merge programmatic resource instances with other component instances.
-        Set<Object> instances =
-                componentBag.getInstances(ComponentBag.excludeMetaProviders(injectionManager)).stream()
-                        .filter(instance -> correctlyConfigured.test(instance.getClass()))
-                        .collect(Collectors.toSet());
+        Set<Object> instances = componentBag.getInstances(ComponentBag.excludeMetaProviders(injectionManager)).stream().filter(
+                instance -> isComponentInstanceConfiguredCorrectly(componentBag, registeredClasses, resourceInstances, instance))
+                .collect(Collectors.toSet());
         instances.addAll(resourceInstances);
 
         // Bind instances.
         for (Object component: instances) {
             ContractProvider model = componentBag.getModel(component.getClass());
             if (resourceInstances.contains(component)) {
-                if (model != null && !correctlyConfiguredResource.test(component.getClass(), model)) {
+                if (isNotCorrectlyConfiguredResource(registeredClasses, component.getClass(), model)) {
                     model = null;
                 }
                 resourceContext.unsafeBindResource(component, model);
@@ -196,5 +173,23 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
             }
         }
         return false;
+    }
+
+    private static boolean isNotCorrectlyConfiguredResource(Collection<Class<?>> registeredClasses, Class<?> resourceClass,
+            ContractProvider model) {
+        return model != null && !Providers.checkProviderRuntime(resourceClass, model, RuntimeType.SERVER,
+                !registeredClasses.contains(resourceClass), true);
+    }
+
+    private static boolean isComponentClassConfiguredCorrectly(ComponentBag componentBag, Collection<Class<?>> registeredClasses,
+            Collection<Class<?>> resourceClasses, Class<?> componentClass) {
+        return Providers.checkProviderRuntime(componentClass, componentBag.getModel(componentClass), RuntimeType.SERVER,
+                !registeredClasses.contains(componentClass), resourceClasses.contains(componentClass));
+    }
+
+    private static boolean isComponentInstanceConfiguredCorrectly(ComponentBag componentBag,
+            Collection<Class<?>> registeredClasses, Collection<?> resourceInstances, Object instance) {
+        return Providers.checkProviderRuntime(instance.getClass(), componentBag.getModel(instance.getClass()), RuntimeType.SERVER,
+                !registeredClasses.contains(instance.getClass()), resourceInstances.contains(instance));
     }
 }
