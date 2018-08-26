@@ -165,7 +165,7 @@ public final class NettyHttpServerProviderTest {
             case JAXRS.Configuration.HOST:
                 return "localhost";
             case JAXRS.Configuration.PORT:
-                return 0;
+                return JAXRS.Configuration.FREE_PORT;
             case JAXRS.Configuration.ROOT_PATH:
                 return "/";
             case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
