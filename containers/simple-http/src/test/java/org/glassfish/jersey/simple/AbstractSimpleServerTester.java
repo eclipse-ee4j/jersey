@@ -49,21 +49,25 @@ public abstract class AbstractSimpleServerTester {
      * @return The HTTP port of the URI
      */
     protected final int getPort() {
+        if (server != null) {
+            return server.getPort();
+        }
+
         final String value = AccessController
                 .doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
         if (value != null) {
 
             try {
                 final int i = Integer.parseInt(value);
-                if (i <= 0) {
-                    throw new NumberFormatException("Value not positive.");
+                if (i < 0) {
+                    throw new NumberFormatException("Value is negative.");
                 }
                 return i;
             } catch (NumberFormatException e) {
                 LOGGER.log(
                         Level.CONFIG,
                         "Value of 'jersey.config.test.container.port'"
-                        + " property is not a valid positive integer [" + value + "]."
+                        + " property is not a valid non-negative integer [" + value + "]."
                         + " Reverting to default [" + DEFAULT_PORT + "].",
                         e);
             }
@@ -83,28 +87,28 @@ public abstract class AbstractSimpleServerTester {
         config.register(LoggingFeature.class);
         final URI baseUri = getBaseUri();
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + getBaseUri());
     }
 
     public void startServerNoLoggingFilter(Class... resources) {
         ResourceConfig config = new ResourceConfig(resources);
         final URI baseUri = getBaseUri();
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + getBaseUri());
     }
 
     public void startServer(ResourceConfig config) {
         final URI baseUri = getBaseUri();
         config.register(LoggingFeature.class);
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + getBaseUri());
     }
 
     public void startServer(ResourceConfig config, int count, int select) {
         final URI baseUri = getBaseUri();
         config.register(LoggingFeature.class);
         server = SimpleContainerFactory.create(baseUri, config, count, select);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + getBaseUri());
     }
 
     public URI getBaseUri() {

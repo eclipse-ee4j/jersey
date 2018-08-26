@@ -28,6 +28,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.junit.After;
 
 /**
@@ -50,20 +51,24 @@ public abstract class AbstractJettyServerTester {
      * @return The HTTP port of the URI
      */
     protected final int getPort() {
+        if (server != null) {
+            return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
+        }
+
         final String value = AccessController
                 .doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
         if (value != null) {
 
             try {
                 final int i = Integer.parseInt(value);
-                if (i <= 0) {
-                    throw new NumberFormatException("Value not positive.");
+                if (i < 0) {
+                    throw new NumberFormatException("Value is negative.");
                 }
                 return i;
             } catch (NumberFormatException e) {
                 LOGGER.log(Level.CONFIG,
                         "Value of 'jersey.config.test.container.port'"
-                                + " property is not a valid positive integer [" + value + "]."
+                                + " property is not a valid non-negative integer [" + value + "]."
                                 + " Reverting to default [" + DEFAULT_PORT + "].",
                         e);
             }
@@ -82,13 +87,13 @@ public abstract class AbstractJettyServerTester {
         config.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
         final URI baseUri = getBaseUri();
         server = JettyHttpContainerFactory.createServer(baseUri, config);
-        LOGGER.log(Level.INFO, "Jetty-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Jetty-http server started on base uri: " + getBaseUri());
     }
 
     public void startServer(ResourceConfig config) {
         final URI baseUri = getBaseUri();
         server = JettyHttpContainerFactory.createServer(baseUri, config);
-        LOGGER.log(Level.INFO, "Jetty-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Jetty-http server started on base uri: " + getBaseUri());
     }
 
     public URI getBaseUri() {

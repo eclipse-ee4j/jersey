@@ -137,14 +137,14 @@ public final class NettyHttpServerProviderTest {
         if (value != null) {
             try {
                 final int i = Integer.parseInt(value);
-                if (i <= 0) {
-                    throw new NumberFormatException("Value is not positive.");
+                if (i < 0) {
+                    throw new NumberFormatException("Value is negative.");
                 }
                 return i;
             } catch (final NumberFormatException e) {
                 LOGGER.log(Level.CONFIG,
                         "Value of 'jersey.config.test.container.port'"
-                                + " property is not a valid positive integer [" + value + "]."
+                                + " property is not a valid non-negative integer [" + value + "]."
                                 + " Reverting to default [" + DEFAULT_PORT + "].",
                         e);
             }
