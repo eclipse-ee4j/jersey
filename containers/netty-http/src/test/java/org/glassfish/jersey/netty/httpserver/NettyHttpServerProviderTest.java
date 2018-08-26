@@ -17,6 +17,7 @@
 package org.glassfish.jersey.netty.httpserver;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -150,6 +151,43 @@ public final class NettyHttpServerProviderTest {
         }
 
         return DEFAULT_PORT;
+    }
+
+    @Test(timeout = 15000)
+    public final void shouldScanFreePort() throws InterruptedException, ExecutionException {
+        // given
+        final ServerProvider serverProvider = new NettyHttpServerProvider();
+        final Application application = new Application();
+        final JAXRS.Configuration configuration = name -> {
+            switch (name) {
+            case JAXRS.Configuration.PROTOCOL:
+                return "HTTP";
+            case JAXRS.Configuration.HOST:
+                return "localhost";
+            case JAXRS.Configuration.PORT:
+                return 0;
+            case JAXRS.Configuration.ROOT_PATH:
+                return "/";
+            case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
+                return SSLClientAuthentication.NONE;
+            case JAXRS.Configuration.SSL_CONTEXT:
+                try {
+                    return SSLContext.getDefault();
+                } catch (final NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
+            case ServerProperties.AUTO_START:
+                return TRUE;
+            default:
+                return null;
+            }
+        };
+
+        // when
+        final Server server = serverProvider.createServer(Server.class, application, configuration);
+
+        // then
+        assertThat(server.port(), is(greaterThan(0)));
     }
 
 }
