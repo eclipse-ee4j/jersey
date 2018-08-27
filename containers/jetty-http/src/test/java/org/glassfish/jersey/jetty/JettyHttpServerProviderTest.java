@@ -127,7 +127,7 @@ public final class JettyHttpServerProviderTest {
 
     private static final Logger LOGGER = Logger.getLogger(JettyHttpServerProviderTest.class.getName());
 
-    private static final int DEFAULT_PORT = 9998;
+    private static final int DEFAULT_PORT = 0;
 
     private static final int getPort() {
         final String value = AccessController

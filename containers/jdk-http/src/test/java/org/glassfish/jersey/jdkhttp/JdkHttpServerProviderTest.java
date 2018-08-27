@@ -129,7 +129,7 @@ public final class JdkHttpServerProviderTest {
 
     private static final Logger LOGGER = Logger.getLogger(JdkHttpServerProviderTest.class.getName());
 
-    private static final int DEFAULT_PORT = 9998;
+    private static final int DEFAULT_PORT = 0;
 
     private static final int getPort() {
         final String value = AccessController

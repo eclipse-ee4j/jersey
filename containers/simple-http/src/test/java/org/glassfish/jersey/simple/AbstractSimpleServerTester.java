@@ -39,7 +39,7 @@ import org.junit.After;
 public abstract class AbstractSimpleServerTester {
 
     public static final String CONTEXT = "";
-    private final int DEFAULT_PORT = 9998;
+    private final int DEFAULT_PORT = 0;
 
     private static final Logger LOGGER = Logger.getLogger(AbstractSimpleServerTester.class.getName());
 

@@ -43,7 +43,7 @@ public abstract class AbstractJettyServerTester {
     private static final Logger LOGGER = Logger.getLogger(AbstractJettyServerTester.class.getName());
 
     public static final String CONTEXT = "";
-    private static final int DEFAULT_PORT = 9998;
+    private static final int DEFAULT_PORT = 0;
 
     /**
      * Get the port to be used for test application deployments.

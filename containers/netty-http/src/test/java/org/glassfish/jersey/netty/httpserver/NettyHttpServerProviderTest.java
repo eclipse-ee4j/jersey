@@ -129,7 +129,7 @@ public final class NettyHttpServerProviderTest {
     }
     private static final Logger LOGGER = Logger.getLogger(NettyHttpServerProviderTest.class.getName());
 
-    private static final int DEFAULT_PORT = 9998;
+    private static final int DEFAULT_PORT = 0;
 
     private static final int getPort() {
         final String value = AccessController
