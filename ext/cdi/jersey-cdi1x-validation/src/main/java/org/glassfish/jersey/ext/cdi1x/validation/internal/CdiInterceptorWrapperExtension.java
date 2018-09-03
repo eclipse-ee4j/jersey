@@ -43,7 +43,7 @@ import javax.interceptor.Interceptor;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor;
+import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
 
 /**
  * CDI extension to register {@link CdiInterceptorWrapper}.
@@ -78,7 +78,7 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param afterTypeDiscovery CDI bootstrap event.
      */
     private void afterTypeDiscovery(@Observes final AfterTypeDiscovery afterTypeDiscovery) {
-        afterTypeDiscovery.getInterceptors().remove(ValidationInterceptor.class);
+        afterTypeDiscovery.getInterceptors().removeIf(ValidationInterceptor.class::equals);
     }
 
     /**

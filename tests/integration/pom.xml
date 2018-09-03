@@ -236,6 +236,43 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>${skip.tests}</skip>
+                        <scanIntervalSeconds>10</scanIntervalSeconds>
+                        <stopPort>9999</stopPort>
+                        <stopKey>STOP</stopKey>
+                        <webApp>
+                            <contextPath>/</contextPath>
+                            <webInfIncludeJarPattern>.*/.*jersey-[^/]\.jar$</webInfIncludeJarPattern>
+                        </webApp>
+                        <httpConnector>
+                            <port>${jersey.config.test.container.port}</port>
+                            <idleTimeout>60000</idleTimeout>
+                        </httpConnector>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>start-jetty</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <configuration>
+                                <scanIntervalSeconds>0</scanIntervalSeconds>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>stop-jetty</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
