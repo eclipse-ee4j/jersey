@@ -192,12 +192,6 @@
             <comments>AngularJS, Bootstrap v3.3.7,
                       jQuery Barcode plugin 0.3, KineticJS v4.7.1</comments>
         </license>
-        <license>
-            <name>W3C license</name>
-            <url>https://www.w3.org/Consortium/Legal/copyright-documents-19990405</url>
-            <distribution>repo</distribution>
-            <comments>Content of core-server/etc</comments>
-        </license>
     </licenses>
 
     <scm>    
@@ -208,8 +202,8 @@
     </scm>
 
     <organization>
-        <name>Eclipse Foundation</name>
-        <url>https://www.eclipse.org/org/foundation/</url>
+        <name>Oracle Corporation</name>
+        <url>http://www.oracle.com/</url>
     </organization>
 
     <build>
@@ -1200,7 +1194,7 @@
              Profile is aimed to run the build on travis
             due to travis limitations for output (max 4MB) this profile is used to run e2e tests only.
 
-            the only thing which is happen using throfile is run of e2e tests (without additional build or so)
+            the only thing which is happen using profile is run of e2e tests (with additional build)
             everything is already build using travis_e2e_skip profile
 
             the whole build is run as test -Ptravis_e2e
@@ -1404,6 +1398,11 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
                 <version>1.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-config</artifactId>
+                <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
@@ -1662,7 +1661,7 @@
                 <version>${javax.el.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.web</groupId>
+                <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
                 <version>${javax.el.impl.version}</version>
             </dependency>
@@ -1679,13 +1678,13 @@
             </dependency>
 
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${validation.impl.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator-cdi</artifactId>
                 <version>${validation.impl.version}</version>
             </dependency>
@@ -1730,7 +1729,7 @@
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.servlet</groupId>
-                <artifactId>weld-servlet-core</artifactId>
+                <artifactId>weld-servlet</artifactId>
                 <version>${weld.version}</version>
             </dependency>
 
@@ -1929,11 +1928,11 @@
         <checkstyle.mvn.plugin.version>2.16</checkstyle.mvn.plugin.version>
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
-        <ejb.version>3.2</ejb.version>
-        <gf.impl.version>4.0</gf.impl.version>
+        <ejb.version>3.2.2</ejb.version>
+        <gf.impl.version>5.0</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
-        <findbugs.glassfish.version>1.3</findbugs.glassfish.version>
-        <findbugs.version>3.0.2</findbugs.version>
+        <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
+        <findbugs.version>3.0.3</findbugs.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <gpg.mvn.plugin.version>1.6</gpg.mvn.plugin.version>
@@ -1942,43 +1941,42 @@
         <guava.version>18.0</guava.version>
         <hamcrest.version>1.3</hamcrest.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>2.5.0-b42</hk2.version>
+        <hk2.version>2.5.0-b62</hk2.version>
+        <hk2.config.version>2.5.0-b56</hk2.config.version>
         <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
-        <jackson.version>2.8.10</jackson.version>
+        <jackson.version>2.9.6</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
-        <javassist.version>3.22.0-CR2</javassist.version>
-        <javax.annotation.version>1.2</javax.annotation.version>
-        <javax.annotation.bundle.version>1.2</javax.annotation.bundle.version>
-        <javax.el.version>2.2.4</javax.el.version>
-        <javax.el.impl.version>2.2.4</javax.el.impl.version>
-        <javax.interceptor.version>1.2</javax.interceptor.version>
-        <javax.persistence.version>1.0</javax.persistence.version>
-        <javax.validation.api.version>1.1.0.Final</javax.validation.api.version>
+        <javassist.version>3.22.0-GA</javassist.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <javax.annotation.bundle.version>1.3.2</javax.annotation.bundle.version>
+        <javax.el.version>3.0.1-b06</javax.el.version>
+        <javax.el.impl.version>3.0.1-b09</javax.el.impl.version>
+        <javax.interceptor.version>1.2.2</javax.interceptor.version>
+        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
         <jaxb.api.version>2.2.7</jaxb.api.version>
         <jaxb.ri.version>2.2.7</jaxb.ri.version>
         <jsonb.api.version>1.0</jsonb.api.version>
         <jaxrs.api.spec.version>2.1</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>2.1.1</jaxrs.api.impl.version>
+        <jaxrs.api.impl.version>2.1</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
-        <jetty.version>9.4.7.v20170914</jetty.version>
+        <jetty.version>9.4.12.v20180830</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.41</jmockit.version>
         <jsonp.ri.version>1.1</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.1</jsonp.jaxrs.version>
-        <jsp.version>2.0</jsp.version>
+        <jsonp.jaxrs.version>1.1.2</jsonp.jaxrs.version>
+        <jsp.version>2.3.3</jsp.version>
         <jstl.version>1.2</jstl.version>
-        <jta.api.version>1.2</jta.api.version>
+        <jta.api.version>1.3</jta.api.version>
         <kryo.version>4.0.1</kryo.version>
-        <logback.version>1.2.3</logback.version>
-        <mimepull.version>1.9.6</mimepull.version>
+        <mimepull.version>1.9.7</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
         <moxy.version>2.6.4</moxy.version>
-        <mockito.version>1.10.19</mockito.version>
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.5.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -1989,18 +1987,16 @@
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
         <rxjava2.version>2.0.4</rxjava2.version>
-        <rome.version>1.0</rome.version>
         <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
-        <servlet4.version>4.0.0</servlet4.version>
+        <servlet4.version>4.0.1</servlet4.version>
         <simple.version>6.0.1</simple.version>
-        <slf4j.version>1.7.12</slf4j.version>
+        <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.4.RELEASE</spring4.version>
-        <validation.impl.version>5.1.3.Final</validation.impl.version> <!-- 5.3.3.Final doesn't work - osgi bv tests -->
+        <validation.impl.version>6.0.11.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
-        <xmlunit.version>1.6</xmlunit.version>
         <yasson.version>1.0.1</yasson.version>
         <skip.e2e>false</skip.e2e>
     </properties>
