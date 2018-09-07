@@ -41,7 +41,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -51,6 +51,13 @@
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
             <version>1.2</version>
+            <exclusions>
+                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <exclusion>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
