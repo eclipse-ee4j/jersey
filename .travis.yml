@@ -7,14 +7,16 @@ services:
 
 jdk:
   - oraclejdk8
+  - openjdk8
 
 cache:
   directories:
     - .autoconf
 env:
   matrix:
-    - TEST_SET="-Ptravis_main"
-    - TEST_SET="-fn -Dtest=BroadcasterTest,ClientCloseTest,ResponseWriterOutputStreamTest -DfailIfNoTests=false"
+    - TEST_SET="-Ptravis_e2e_skip"
+    - TEST_SET="-Ptravis_e2e"
+    - TEST_SET="glassfish-copyright:copyright"
 
 install: true
 

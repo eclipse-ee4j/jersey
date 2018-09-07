@@ -138,7 +138,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
      * and then by the declared supported media types, if the provided classes
      * are the same.
      */
-    private static final Comparator<AbstractEntityProviderModel<?>> WORKER_BY_TYPE_COMPARATOR =
+    static final Comparator<AbstractEntityProviderModel<?>> WORKER_BY_TYPE_COMPARATOR =
             new Comparator<AbstractEntityProviderModel<?>>() {
 
                 @Override
@@ -154,7 +154,8 @@ public class MessageBodyFactory implements MessageBodyWorkers {
                     } else if (o2ProviderClassParam.isAssignableFrom(o1ProviderClassParam)) {
                         return -1;
                     }
-                    return 0;
+                    // Fallback to comparing provided class name.
+                    return CLASS_BY_NAME_COMPARATOR.compare(o1ProviderClassParam, o2ProviderClassParam);
                 }
 
                 private int compare(List<MediaType> mediaTypeList1, List<MediaType> mediaTypeList2) {
@@ -164,6 +165,8 @@ public class MessageBodyFactory implements MessageBodyWorkers {
                     return MediaTypes.MEDIA_TYPE_LIST_COMPARATOR.compare(mediaTypeList2, mediaTypeList1);
                 }
             };
+
+    private static final Comparator<Class<?>> CLASS_BY_NAME_COMPARATOR = Comparator.comparing(Class::getName);
 
     private InjectionManager injectionManager;
 

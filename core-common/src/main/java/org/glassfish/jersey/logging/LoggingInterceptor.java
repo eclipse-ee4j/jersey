@@ -70,8 +70,16 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     private static final String NOTIFICATION_PREFIX = "* ";
     private static final MediaType TEXT_MEDIA_TYPE = new MediaType("text", "*");
 
+    /**
+     * application/vnd.api+json (documented here: http://jsonapi.org/)
+     * is a modified form of JSON, which is not present in the JAX-RS
+     * MediaType class as a static constant. Requested in Issue #3849
+    */
+    private static final MediaType APPLICATION_VND_API_JSON = new MediaType("application", "vnd.api+json");
+
     private static final Set<MediaType> READABLE_APP_MEDIA_TYPES = new HashSet<MediaType>() {{
         add(TEXT_MEDIA_TYPE);
+        add(APPLICATION_VND_API_JSON);
         add(MediaType.APPLICATION_ATOM_XML_TYPE);
         add(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         add(MediaType.APPLICATION_JSON_TYPE);

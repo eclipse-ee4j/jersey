@@ -45,6 +45,7 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
+                    <skipTests>${skip.e2e}</skipTests>
                 </configuration>
                 <dependencies>
                     <dependency>

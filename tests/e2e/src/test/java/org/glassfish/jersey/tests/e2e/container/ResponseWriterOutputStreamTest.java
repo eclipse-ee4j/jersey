@@ -16,22 +16,26 @@
 
 package org.glassfish.jersey.tests.e2e.container;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ContainerResponse;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.ContainerResponse;
-import org.glassfish.jersey.server.ResourceConfig;
-
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -62,7 +66,7 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
 
         @POST
         @Produces("text/plain")
-        public synchronized void post(final ContainerRequest context) throws IOException {
+        public void post(final ContainerRequest context) throws IOException {
             assertThat(context.getMethod(), is("POST"));
 
             final String s = context.readEntity(String.class);
@@ -87,12 +91,28 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
     }
 
     @Test
-    public void testPost() {
-        assertThat(target().request().post(Entity.text(CHECK_STRING), String.class), is(CHECK_STRING));
+    public void testPost() throws InterruptedException, ExecutionException {
+        final CountDownLatch controlLatch = new CountDownLatch(1);
+        final Invocation invocation = target().request().buildPost(Entity.text(CHECK_STRING));
+        final Future<Response> resp = invocation.submit(new InvocationCallback<Response>() {
+            @Override
+            public void completed(Response response) {
+                controlLatch.countDown();
+            }
+
+            @Override
+            public void failed(Throwable throwable) {
+                controlLatch.countDown();
+
+            }
+        });
+        controlLatch.await();
+        final String response = resp.get().readEntity(String.class);
+        assertThat(response, is(CHECK_STRING));
     }
 
     @Test
-    public void testAll() {
+    public void testAll() throws InterruptedException, ExecutionException {
         testGet();
         testPost();
     }
