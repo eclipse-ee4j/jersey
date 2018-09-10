@@ -70,10 +70,6 @@ Javassist Version 3.22.0-CR2
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Java(TM) EE Interceptors 1.1 API Version 1.0.0.Beta1
-* License: LGPL 2.1
-* Copyright 2005, JBoss Inc., and individual contributors as indicated by the @authors tag.
-
 Jackson JAX-RS Providers Version 2.8.10
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
