@@ -75,7 +75,7 @@ public class VFSSchemeResourceFinderTest {
             while (entries.hasMoreElements()) {
                 final JarEntry entry = entries.nextElement();
 
-                if (entry.getName().endsWith(".class")) {
+                if (entry.getName().endsWith(".class") && !entry.getName().endsWith("module-info.class")) {
                     actualEntries++;
                 }
             }
