@@ -121,6 +121,10 @@ public class JaxbTest extends AbstractJsonTest {
                 final Integer minorVersion = (isNumeric(rawMinorVersion)) ? Integer.valueOf(rawMinorVersion) : 0;
                 return minorVersion < 160 || minorVersion > 172; //only those between 161 and 172 minor
                                                                  // releases are not supported
+            } else if (javaVersion.contains("adoptopenjdk")) {
+                return false; //because that is exactly that case when
+                // Eclipse Jenkins runs JVM of adoptopenjdk of not supported version
+                //and we even do not have a chance to recognize that
             }
         }
         return  true;
