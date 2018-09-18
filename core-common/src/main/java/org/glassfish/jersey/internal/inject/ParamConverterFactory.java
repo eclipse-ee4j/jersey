@@ -20,14 +20,12 @@ package org.glassfish.jersey.internal.inject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.inject.Singleton;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
-
-import javax.inject.Singleton;
 
 /**
  * An aggregate {@link ParamConverterProvider param converter provider} that loads all
@@ -51,7 +49,7 @@ public class ParamConverterFactory implements ParamConverterProvider {
 
     public ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
 
-        Set<ParamConverterProvider> copyProviders = new HashSet<>(providers);
+        Set<ParamConverterProvider> copyProviders = new LinkedHashSet<>(providers);
         converterProviders = new ArrayList<>();
         converterProviders.addAll(customProviders);
         copyProviders.removeAll(customProviders);
