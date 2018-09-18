@@ -18,6 +18,7 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.logging.Logger;
 
 import javax.ws.rs.WebApplicationException;
@@ -31,7 +32,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.glassfish.jersey.internal.util.Base64;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -73,7 +73,7 @@ public class SecurityFilter implements ContainerRequestFilter {
             // "Only HTTP Basic authentication is supported"
         }
         authentication = authentication.substring("Basic ".length());
-        String[] values = Base64.decodeAsString(authentication).split(":");
+        String[] values = new String(Base64.getDecoder().decode(authentication)).split(":");
         if (values.length < 2) {
             throw new WebApplicationException(400);
             // "Invalid syntax for username and password"

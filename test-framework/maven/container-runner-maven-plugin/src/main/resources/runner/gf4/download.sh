@@ -47,7 +47,7 @@ fi
 
 if [ "$OVERWRITE" = "true" -o ! -d "$DIST_DIR"/"$DIST_SUBDIR" ]; then
     rm -rf "$DIST_DIR"/"$DIST_SUBDIR"
-
+    mkdir -p "$DIST_DIR"
     unzip -o "$DIST_TGT_LOCATION" -d "$DIST_DIR"
     chmod -R 777 "$DIST_DIR"/"$DIST_SUBDIR"
 fi

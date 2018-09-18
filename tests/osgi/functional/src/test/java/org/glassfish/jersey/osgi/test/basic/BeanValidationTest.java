@@ -68,10 +68,10 @@ public class BeanValidationTest {
 
                 // validation
                 mavenBundle().groupId("org.glassfish.jersey.ext").artifactId("jersey-bean-validation").versionAsInProject(),
-                mavenBundle().groupId("org.hibernate").artifactId("hibernate-validator").versionAsInProject(),
+                mavenBundle().groupId("org.hibernate.validator").artifactId("hibernate-validator").versionAsInProject(),
                 mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml").artifactId("classmate").versionAsInProject(),
-                mavenBundle().groupId("javax.el").artifactId("javax.el-api").versionAsInProject()
+                mavenBundle().groupId("org.glassfish").artifactId("javax.el").versionAsInProject()
         ));
 
         options = Helper.addPaxExamMavenLocalRepositoryProperty(options);
