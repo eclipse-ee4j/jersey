@@ -39,3 +39,7 @@ org.glassfish.jersey.server.internal.monitoring.core
 org.objectweb.asm Version 5.0.4
 * License: Modified BSD (http://asm.objectweb.org/license.html)
 * Copyright: (c) 2000-2011 INRIA, France Telecom. All rights reserved.
+
+W3.org documents
+* License: W3C License
+* Copyright: Copyright (c) 1994-2001 World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/
