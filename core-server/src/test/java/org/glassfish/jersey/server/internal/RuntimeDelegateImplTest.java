@@ -41,8 +41,6 @@ import javax.ws.rs.JAXRS.Configuration;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
 
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.server.ApplicationHandler;
@@ -217,75 +215,6 @@ public class RuntimeDelegateImplTest {
 
         // when
         final JAXRS.Configuration configuration = configurationBuilder.from(propertiesProvider).build();
-
-        // then
-        assertThat(configuration, is(notNullValue()));
-        assertThat(configuration.protocol(), is("HTTPS"));
-        assertThat(configuration.host(), is("hostname"));
-        assertThat(configuration.port(), is(8080));
-        assertThat(configuration.rootPath(), is("path"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
-        assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
-        assertThat(configuration.property(ServerProperties.HTTP_SERVER_CLASS), is(theInstance(mockServerClass)));
-        assertThat(configuration.property(ServerProperties.AUTO_START), is(FALSE));
-    }
-
-    @Test
-    public final void shouldBuildCustomConfigurationFromMicroprofileConfig() {
-        // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
-        final SSLContext mockSslContext = new SSLContext(null, null, null) {
-        };
-        final Class<Server> mockServerClass = Server.class;
-        final Config config = new Config() {
-            @Override
-            public final <T> T getValue(final String propertyName, final Class<T> propertyType) {
-                return null;
-            }
-
-            @Override
-            public final <T> Optional<T> getOptionalValue(final String propertyName, final Class<T> propertyType) {
-                if (JAXRS.Configuration.PROTOCOL.equals(propertyName) && String.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast("HTTPS"));
-                }
-                if (JAXRS.Configuration.HOST.equals(propertyName) && String.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast("hostname"));
-                }
-                if (JAXRS.Configuration.PORT.equals(propertyName) && Integer.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast(8080));
-                }
-                if (JAXRS.Configuration.ROOT_PATH.equals(propertyName) && String.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast("path"));
-                }
-                if (JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION.equals(propertyName)
-                        && JAXRS.Configuration.SSLClientAuthentication.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
-                }
-                if (JAXRS.Configuration.SSL_CONTEXT.equals(propertyName) && SSLContext.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast(mockSslContext));
-                }
-                if (ServerProperties.HTTP_SERVER_CLASS.equals(propertyName) && Class.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast(mockServerClass));
-                }
-                if (ServerProperties.AUTO_START.equals(propertyName) && Boolean.class.equals(propertyType)) {
-                    return Optional.of(propertyType.cast(FALSE));
-                }
-                return Optional.empty();
-            }
-
-            @Override
-            public final Iterable<String> getPropertyNames() {
-                return null;
-            }
-
-            @Override
-            public final Iterable<ConfigSource> getConfigSources() {
-                return null;
-            }
-        };
-
-        // when
-        final JAXRS.Configuration configuration = configurationBuilder.from(config).build();
 
         // then
         assertThat(configuration, is(notNullValue()));
