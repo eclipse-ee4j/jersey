@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.gf.ejb.internal;
 
@@ -331,7 +332,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 LocalizationMessages.EJB_INTERFACE_HANDLING_METHOD_LOOKUP_EXCEPTION(method, component, iFace), ex);
     }
 
-    private List<Class> remoteAndLocalIfaces(final Class<?> resourceClass) {
+    private static List<Class> remoteAndLocalIfaces(final Class<?> resourceClass) {
         final List<Class> allLocalOrRemoteIfaces = new LinkedList<>();
         if (resourceClass.isAnnotationPresent(Remote.class)) {
             allLocalOrRemoteIfaces.addAll(Arrays.asList(resourceClass.getAnnotation(Remote.class).value()));
@@ -357,18 +358,22 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
     }
 
-    private static Object lookup(InitialContext ic, Class<?> c, String name, EjbComponentProvider provider)
+    private static Object lookup(InitialContext ic, Class<?> rawType, String name, EjbComponentProvider provider)
             throws NamingException {
         try {
-            return lookupSimpleForm(ic, name, provider);
+            return lookupSimpleForm(ic, rawType, name, provider);
         } catch (NamingException ex) {
-            LOGGER.log(Level.WARNING, LocalizationMessages.EJB_CLASS_SIMPLE_LOOKUP_FAILED(c.getName()), ex);
+            LOGGER.log(Level.WARNING, LocalizationMessages.EJB_CLASS_SIMPLE_LOOKUP_FAILED(rawType.getName()), ex);
 
-            return lookupFullyQualifiedForm(ic, c, name, provider);
+            return lookupFullyQualifiedForm(ic, rawType, name, provider);
         }
     }
 
-    private static Object lookupSimpleForm(InitialContext ic, String name, EjbComponentProvider provider) throws NamingException {
+    private static Object lookupSimpleForm(
+            InitialContext ic,
+            Class<?> rawType,
+            String name,
+            EjbComponentProvider provider) throws NamingException {
         if (provider.libNames.isEmpty()) {
             String jndiName = "java:module/" + name;
             return ic.lookup(jndiName);
@@ -380,8 +385,16 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 try {
                     result = ic.lookup(jndiName);
                     if (result != null) {
-                        return result;
+                        if (rawType.isInstance(result)
+                                || remoteAndLocalIfaces(rawType)
+                                        .stream()
+                                        .filter(iFaces -> iFaces.isInstance(result))
+                                        .findAny()
+                                        .isPresent()) {
+                            return result;
+                        }
                     }
+
                 } catch (NamingException e) {
                     ne = e;
                 }
@@ -390,20 +403,30 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
     }
 
-    private static Object lookupFullyQualifiedForm(InitialContext ic, Class<?> c, String name, EjbComponentProvider provider)
-            throws NamingException {
+    private static Object lookupFullyQualifiedForm(
+            InitialContext ic,
+            Class<?> rawType,
+            String name,
+            EjbComponentProvider provider) throws NamingException {
         if (provider.libNames.isEmpty()) {
-            String jndiName = "java:module/" + name + "!" + c.getName();
+            String jndiName = "java:module/" + name + "!" + rawType.getName();
             return ic.lookup(jndiName);
         } else {
             NamingException ne = null;
             for (String moduleName : provider.libNames) {
-                String jndiName = "java:app/" + moduleName + "/" + name + "!" + c.getName();
+                String jndiName = "java:app/" + moduleName + "/" + name + "!" + rawType.getName();
                 Object result;
                 try {
                     result = ic.lookup(jndiName);
                     if (result != null) {
-                        return result;
+                        if (rawType.isInstance(result)
+                                || remoteAndLocalIfaces(rawType)
+                                        .stream()
+                                        .filter(iFaces -> iFaces.isInstance(result))
+                                        .findAny()
+                                        .isPresent()) {
+                            return result;
+                        }
                     }
                 } catch (NamingException e) {
                     ne = e;
