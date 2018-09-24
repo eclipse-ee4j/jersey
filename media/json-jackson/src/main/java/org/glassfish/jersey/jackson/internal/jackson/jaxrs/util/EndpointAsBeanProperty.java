@@ -50,7 +50,7 @@ public class EndpointAsBeanProperty
         if (_type == type) {
             return this;
         }
-        return new Std(_name, type, _wrapperName, _contextAnnotations, _member, _metadata);
+        return new Std(_name, type, _wrapperName, _member, _metadata);
     }
 
     @Override
