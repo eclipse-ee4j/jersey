@@ -282,10 +282,7 @@ public final class SslConfigurator {
     }
 
     /**
-     * Get a new & initialized SSL configurator instance.
-     *
-     * The instance {@link #retrieve(java.util.Properties) retrieves} the initial configuration from
-     * {@link System#getProperties() system properties}.
+     * Get a new & initialized SSL configurator instance. The the instantiated configurator will be empty.
      *
      * @return new & initialized SSL configurator instance.
      */
@@ -296,9 +293,9 @@ public final class SslConfigurator {
     /**
      * Get a new SSL configurator instance.
      *
-     * @param readSystemProperties if {@code true}, {@link #retrieve(java.util.Properties) Retrieves}
-     *                             the initial configuration from {@link System#getProperties()},
-     *                             otherwise the instantiated configurator will be empty.
+     * @param readSystemProperties if {@code true}, {@link #retrieve() Retrieves} the initial configuration from
+     *                             {@link System#getProperty(String)}}, otherwise the instantiated configurator will
+     *                             be empty.
      * @return new SSL configurator instance.
      */
     public static SslConfigurator newInstance(boolean readSystemProperties) {
@@ -307,7 +304,7 @@ public final class SslConfigurator {
 
     private SslConfigurator(boolean readSystemProperties) {
         if (readSystemProperties) {
-            retrieve(AccessController.doPrivileged(PropertiesHelper.getSystemProperties()));
+            retrieve();
         }
     }
 
@@ -809,6 +806,55 @@ public final class SslConfigurator {
 
         trustStoreFile = props.getProperty(TRUST_STORE_FILE);
         keyStoreFile = props.getProperty(KEY_STORE_FILE);
+
+        trustStoreBytes = null;
+        keyStoreBytes = null;
+
+        trustStore = null;
+        keyStore = null;
+
+        securityProtocol = "TLS";
+
+        return this;
+    }
+
+    /**
+     * Retrieve the SSL context configuration from the system properties.
+     *
+     * @return updated SSL configurator instance.
+     */
+    public SslConfigurator retrieve() {
+        trustStoreProvider = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(TRUST_STORE_PROVIDER));
+        keyStoreProvider = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(KEY_STORE_PROVIDER));
+
+        trustManagerFactoryProvider = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(TRUST_MANAGER_FACTORY_PROVIDER));
+        keyManagerFactoryProvider = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(KEY_MANAGER_FACTORY_PROVIDER));
+
+        trustStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_TYPE));
+        keyStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_TYPE));
+
+        final String trustStorePassword = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(TRUST_STORE_PASSWORD));
+        if (trustStorePassword != null) {
+            trustStorePass = trustStorePassword.toCharArray();
+        } else {
+            trustStorePass = null;
+        }
+
+        final String keyStorePassword = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty(KEY_STORE_PASSWORD));
+        if (keyStorePassword != null) {
+            keyStorePass = keyStorePassword.toCharArray();
+        } else {
+            keyStorePass = null;
+        }
+
+        trustStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_FILE));
+        keyStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_FILE));
 
         trustStoreBytes = null;
         keyStoreBytes = null;
