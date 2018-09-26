@@ -52,7 +52,7 @@ keystore-example_com-server
 truststore-example_com-client
 truststore-localhost-client
 truststore-server
-/examples/bookmark-em
+/examples/bookstore-webapp
 /examples/reload/resources
 /examples/bean-validation-webapp/src/main/webapp/fonts
 /core-server/etc
