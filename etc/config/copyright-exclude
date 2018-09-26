@@ -52,7 +52,9 @@ keystore-example_com-server
 truststore-example_com-client
 truststore-localhost-client
 truststore-server
+/examples/bookmark-em
 /examples/reload/resources
+/examples/bean-validation-webapp/src/main/webapp/fonts
 /core-server/etc
 bootstrap
 build.readme
@@ -75,6 +77,5 @@ build.readme
 /core-server/src/main/java/org/glassfish/jersey/server/internal/monitoring/core/UniformTimeValuesSnapshot.java
 /core-server/src/main/java/jersey/repackaged
 /media/json-jackson/src/main/java/org/glassfish/jersey/jackson/internal/jackson
-/examples/bean-validation-webapp/src/main/webapp/fonts
 /META-INF/NOTICE.md
 NOTICE.md
