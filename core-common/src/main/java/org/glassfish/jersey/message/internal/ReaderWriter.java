@@ -134,7 +134,19 @@ public final class ReaderWriter {
      * @throws IOException if there is an error reading from the input stream.
      */
     public static String readFromAsString(InputStream in, MediaType type) throws IOException {
-        return readFromAsString(new InputStreamReader(in, getCharset(type)));
+        return readFromAsString(getReader(in, type));
+    }
+
+    /**
+     * Create a {@link Reader} for the given media stream.
+     *
+     * @param in   the input stream to read from.
+     * @param type the media type that determines the character set defining
+     *             how to decode bytes to characters.
+     * @return a stream reader.
+     */
+    public static Reader getReader(InputStream in, MediaType type) {
+        return new InputStreamReader(in, getCharset(type));
     }
 
     /**
@@ -165,9 +177,21 @@ public final class ReaderWriter {
      * @throws IOException in case of a write failure.
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
-        Writer osw = new OutputStreamWriter(out, getCharset(type));
+        Writer osw = getWriter(out, type);
         osw.write(s, 0, s.length());
         osw.flush();
+    }
+
+    /**
+     * Create a {@link Writer} for the given media stream.
+     *
+     * @param out  the output stream to write to.
+     * @param type the media type that determines the character set defining
+     *             how to decode bytes to characters.
+     * @return a stream reader.
+     */
+    public static Writer getWriter(OutputStream out, MediaType type) {
+        return new OutputStreamWriter(out, getCharset(type));
     }
 
     /**
