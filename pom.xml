@@ -157,7 +157,13 @@
             <name>EDL 1.0</name>
             <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
             <distribution>repo</distribution>
-            <comments>The examples</comments>
+            <comments>The examples except bookstore-webapp example</comments>
+        </license>
+        <license>
+            <name>BSD 2-Clause</name>
+            <url>https://opensource.org/licenses/BSD-2-Clause</url>
+            <distribution>repo</distribution>
+            <comments>The bookstore-webapp example</comments>
         </license>
         <license>
             <name>Apache License, 2.0</name>
