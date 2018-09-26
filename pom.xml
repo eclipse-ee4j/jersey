@@ -1998,7 +1998,7 @@
         <servlet4.version>4.0.1</servlet4.version>
         <simple.version>6.0.1</simple.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <spring4.version>4.3.4.RELEASE</spring4.version>
+        <spring4.version>4.3.8.RELEASE</spring4.version>
         <validation.impl.version>6.0.11.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>

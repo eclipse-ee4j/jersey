@@ -44,7 +44,7 @@
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
-            <version>1.1</version>
+            <version>${jta.api.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
