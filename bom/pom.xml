@@ -371,31 +371,13 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.glassfish.copyright</groupId>
-                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>1.28</version>
-                    <configuration>
-                        <excludeFile>etc/config/copyright-exclude</excludeFile>
-                        <!--svn|mercurial|git - defaults to svn-->
-                        <scm>git</scm>
-                        <!-- turn on/off debugging -->
-                        <debug>false</debug>
-                        <!-- skip files not under SCM-->
-                        <scmOnly>true</scmOnly>
-                        <!-- turn off warnings -->
-                        <warn>true</warn>
-                        <!-- for use with repair -->
-                        <update>false</update>
-                        <!-- check that year is correct -->
-                        <ignoreYear>false</ignoreYear>
-                        <templateFile>etc/config/copyright.txt</templateFile>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.glassfish.copyright</groupId>
+                <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                <inherited>true</inherited>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
