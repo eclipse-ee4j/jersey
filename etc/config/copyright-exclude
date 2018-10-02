@@ -24,6 +24,8 @@
 .zip
 .dat
 .lua
+travis.sh
+.travis.yml
 /docs/src/main/docbook/inc/modules_table_footer.src
 /docs/src/main/docbook/inc/modules_table_header.src
 /docs/src/main/docbook/inc/modules_table_row.src
