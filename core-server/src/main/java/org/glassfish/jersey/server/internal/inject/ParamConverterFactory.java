@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.inject.Singleton;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
-
-import javax.inject.Singleton;
 
 /**
  * An aggregate {@link ParamConverterProvider param converter provider} that loads all
