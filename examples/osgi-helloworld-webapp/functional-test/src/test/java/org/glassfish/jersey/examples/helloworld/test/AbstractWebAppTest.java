@@ -143,7 +143,7 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
                 // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject(),
                 // validation - required by jersey-container-servlet-core
                 mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
                 // Jersey bundles

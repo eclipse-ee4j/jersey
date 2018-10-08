@@ -159,7 +159,7 @@ public class Helper {
         if (includeJerseyJaxRsLibs) {
             options.addAll(expandedList(
                     // JAX-RS API
-                    mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                    mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject(),
 
                     // Jersey bundles
                     mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
