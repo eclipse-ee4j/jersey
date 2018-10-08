@@ -161,7 +161,7 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 
                 // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject(),
 
                 // Those two bundles have different (unique) maven coordinates, but represent the same OSGi bundle in two
                 // different versions.
