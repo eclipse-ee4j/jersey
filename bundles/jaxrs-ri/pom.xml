@@ -44,8 +44,8 @@
     <dependencies>
         <!-- JAX-RS API Sources-->
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jaxrs.api.impl.version}</version>
             <classifier>sources</classifier>
             <optional>true</optional>
