@@ -52,6 +52,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
@@ -142,8 +143,13 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("javax.inject").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
-                // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                //JAXB-API
+                mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject(),
+                //SUN JAXB IMPL OSGI
+                mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                systemPackage("com.sun.source.tree"),
+                systemPackage("com.sun.source.util"),
+
                 // validation - required by jersey-container-servlet-core
                 mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
                 // Jersey bundles
@@ -153,6 +159,10 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                         .versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // JAX-RS API
+                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+
                 // Those two bundles have different (unique) maven coordinates, but represent the same OSGi bundle in two
                 // different versions.
                 // (see the maven bundle plugin configuration in each of the two pom.xml files

@@ -112,19 +112,6 @@ public class ExtendedWadlWebappOsgiTest {
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
 
-                // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
-
-                // Jersey bundles
-                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-jaxb").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-server").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
-
-                // jettison
-                mavenBundle().groupId("org.codehaus.jettison").artifactId("jettison").versionAsInProject(),
-
                 // validation
                 mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
 
@@ -138,9 +125,31 @@ public class ExtendedWadlWebappOsgiTest {
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-http")
                         .versionAsInProject(),
 
+                //JAXB-API
+                mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject(),
+                //SUN JAXB IMPL OSGI
+                mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                systemPackage("com.sun.source.tree"),
+                systemPackage("com.sun.source.util"),
+
+
                 // tinybundles + required dependencies
                 mavenBundle().groupId("org.ops4j.pax.tinybundles").artifactId("tinybundles").versionAsInProject(),
                 mavenBundle().groupId("biz.aQute.bnd").artifactId("bndlib").versionAsInProject(),
+
+                // JAX-RS API
+                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+
+                // Jersey bundles
+                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-jaxb").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-server").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // jettison
+                mavenBundle().groupId("org.codehaus.jettison").artifactId("jettison").versionAsInProject(),
+
 
                 // create ad-hoc bundle
                 provision(

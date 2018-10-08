@@ -43,7 +43,7 @@
 
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
+            <artifactId>jaxb-osgi</artifactId>
         </dependency>
 
         <dependency>
