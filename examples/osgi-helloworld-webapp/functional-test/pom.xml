@@ -137,6 +137,11 @@
             <artifactId>org.apache.felix.framework.security</artifactId>
             <scope>test</scope>
          </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
          <!-- uncomment the following dependency to get ability
               to run felix console in the test -->
          <!--dependency>

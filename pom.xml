@@ -603,7 +603,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.5.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -1536,12 +1536,16 @@
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb.api.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.ri.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-osgi</artifactId>
                 <version>${jaxb.ri.version}</version>
             </dependency>
 
@@ -1966,8 +1970,8 @@
         <javax.interceptor.version>1.2.2</javax.interceptor.version>
         <javax.persistence.version>1.0.2</javax.persistence.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
-        <jaxb.api.version>2.2.7</jaxb.api.version>
-        <jaxb.ri.version>2.2.7</jaxb.ri.version>
+        <jaxb.api.version>2.3.1</jaxb.api.version>
+        <jaxb.ri.version>2.3.1</jaxb.ri.version>
         <jsonb.api.version>1.0</jsonb.api.version>
         <jaxrs.api.spec.version>2.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>2.1.1</jaxrs.api.impl.version>

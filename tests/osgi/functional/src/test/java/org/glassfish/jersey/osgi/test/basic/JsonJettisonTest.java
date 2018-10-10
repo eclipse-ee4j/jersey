@@ -27,6 +27,7 @@ import org.glassfish.jersey.osgi.test.util.Helper;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 
 /**
  * @author Michal Gajdos
@@ -41,8 +42,12 @@ public class JsonJettisonTest extends AbstractJsonOsgiIntegrationTest {
         options.addAll(Helper.expandedList(
                 // jersey-json dependencies
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-json-jettison").versionAsInProject(),
-                mavenBundle().groupId("org.codehaus.jettison").artifactId("jettison").versionAsInProject()
-        ));
+                mavenBundle().groupId("org.codehaus.jettison").artifactId("jettison").versionAsInProject(),
+                //SUN JAXB IMPL OSGI
+                mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                systemPackage("com.sun.source.tree"),
+                systemPackage("com.sun.source.util")
+                ));
 
         return Helper.asArray(options);
     }

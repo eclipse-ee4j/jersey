@@ -168,7 +168,9 @@ public class Helper {
                     mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
 
                     // Jersey Injection provider
-                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject()
+                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+//                     Jaxb - api
+                    mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject().versionAsInProject()
             ));
         }
 
