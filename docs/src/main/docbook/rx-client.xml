@@ -803,7 +803,7 @@ ListenableFuture&lt;Response&gt; response = client.target("http://jersey.java.ne
 
             <programlisting language="java" linenumbering="numbered">public static class CompletionStageRxInvokerProvider implements RxInvokerProvider&lt;CompletionStageRxInvoker&gt; {
     @Override
-    public boolean isProviderFor(Class&lt;?%gt; clazz) {
+    public boolean isProviderFor(Class&lt;?&gt; clazz) {
         return CompletionStage.class.equals(clazz);
     }
 
