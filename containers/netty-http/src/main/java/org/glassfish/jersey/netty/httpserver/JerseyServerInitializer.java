@@ -113,7 +113,8 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
             @Override
             public HttpServerUpgradeHandler.UpgradeCodec newUpgradeCodec(CharSequence protocol) {
                 if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
-                    return new Http2ServerUpgradeCodec(Http2MultiplexCodecBuilder.forServer(new JerseyHttp2ServerHandler(baseUri, container)).build());
+                    return new Http2ServerUpgradeCodec(Http2MultiplexCodecBuilder.forServer(
+                            new JerseyHttp2ServerHandler(baseUri, container)).build());
                 } else {
                     return null;
                 }
