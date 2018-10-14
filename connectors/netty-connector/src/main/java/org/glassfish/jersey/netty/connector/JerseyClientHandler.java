@@ -101,7 +101,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                     }
                 });
 
-                jerseyResponse.setEntityStream(new NettyInputStream(isList));
+                jerseyResponse.setEntityStream(new NettyInputStream(isList, ctx));
             } else {
                 jerseyResponse.setEntityStream(new InputStream() {
                     @Override

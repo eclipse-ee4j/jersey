@@ -29,6 +29,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.ws.rs.core.SecurityContext;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
@@ -88,7 +89,14 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
      * Process incoming data.
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        isList.add(new ByteBufInputStream(data.content()));
+        ByteBuf content = data.content();
+        if (content.isReadable()) {
+            // releaseOnClose: supported since 4.1.7
+            isList.add(new ByteBufInputStream(content, true));
+        } else {
+            // discard empty frame
+            data.release();
+        }
         if (data.isEndStream()) {
             isList.add(NettyInputStream.END_OF_INPUT);
         }
@@ -163,7 +171,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
                 }
             });
 
-            requestContext.setEntityStream(new NettyInputStream(isList));
+            requestContext.setEntityStream(new NettyInputStream(isList, ctx));
         } else {
             requestContext.setEntityStream(new InputStream() {
                 @Override

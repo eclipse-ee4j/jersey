@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.netty.connector.internal;
 
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.ChannelHandlerContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -64,8 +67,11 @@ public class NettyInputStream extends InputStream {
 
     private final LinkedBlockingDeque<InputStream> isList;
 
-    public NettyInputStream(LinkedBlockingDeque<InputStream> isList) {
+    private final ChannelHandlerContext ctx;
+
+    public NettyInputStream(LinkedBlockingDeque<InputStream> isList, ChannelHandlerContext ctx) {
         this.isList = isList;
+        this.ctx = ctx;
     }
 
     @Override
@@ -87,6 +93,14 @@ public class NettyInputStream extends InputStream {
 
             if (take.available() > 0) {
                 isList.addFirst(take);
+            } else {
+                // Must run on channel's eventloop thread
+                ctx.executor().submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        releaseBuffer(take);
+                    }
+                });
             }
 
             return read;
@@ -113,6 +127,13 @@ public class NettyInputStream extends InputStream {
 
             if (take.available() > 0) {
                 isList.addFirst(take);
+            } else {
+                ctx.executor().submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        releaseBuffer(take);
+                    }
+                });
             }
 
             return read;
@@ -141,4 +162,15 @@ public class NettyInputStream extends InputStream {
         }
         return false;
     }
+
+    private void releaseBuffer(InputStream stream) {
+        if (stream instanceof ByteBufInputStream) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                // should not happen
+            }
+        }
+    }
+
 }

@@ -1978,7 +1978,7 @@
         <mockito.version>1.10.19</mockito.version>
         <moxy.version>2.6.4</moxy.version>
         <mustache.version>0.8.17</mustache.version>
-        <netty.version>4.1.5.Final</netty.version>
+        <netty.version>4.1.30.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
         <opentracing.version>0.30.0</opentracing.version>
         <osgi.version>4.2.0</osgi.version>
