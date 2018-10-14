@@ -27,7 +27,9 @@ import static org.junit.Assert.fail;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -43,7 +45,11 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
+import org.glassfish.jersey.internal.guava.Iterators;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.spi.Configurator;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
@@ -215,6 +221,72 @@ public class RuntimeDelegateImplTest {
 
         // when
         final JAXRS.Configuration configuration = configurationBuilder.from(propertiesProvider).build();
+
+        // then
+        assertThat(configuration, is(notNullValue()));
+        assertThat(configuration.protocol(), is("HTTPS"));
+        assertThat(configuration.host(), is("hostname"));
+        assertThat(configuration.port(), is(8080));
+        assertThat(configuration.rootPath(), is("path"));
+        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
+        assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
+        assertThat(configuration.property(ServerProperties.HTTP_SERVER_CLASS), is(theInstance(mockServerClass)));
+        assertThat(configuration.property(ServerProperties.AUTO_START), is(FALSE));
+    }
+
+    @Test
+    public final void shouldBuildCustomConfigurationFromExternalConfiguration(@Mocked final SSLContext mockSslContext,
+            @Mocked final InjectionManager mockInjectionManager) {
+        // given
+        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final Class<Server> mockServerClass = Server.class;
+        final Map<String, Object> externalConfiguration = new HashMap<>();
+        externalConfiguration.put(JAXRS.Configuration.PROTOCOL, "HTTPS");
+        externalConfiguration.put(JAXRS.Configuration.HOST, "hostname");
+        externalConfiguration.put(JAXRS.Configuration.PORT, 8080);
+        externalConfiguration.put(JAXRS.Configuration.ROOT_PATH, "path");
+        externalConfiguration.put(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION,
+                JAXRS.Configuration.SSLClientAuthentication.OPTIONAL);
+        externalConfiguration.put(JAXRS.Configuration.SSL_CONTEXT, mockSslContext);
+        externalConfiguration.put(ServerProperties.HTTP_SERVER_CLASS, mockServerClass);
+        externalConfiguration.put(ServerProperties.AUTO_START, FALSE);
+        final Configurator mockConfigurator = new Configurator() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public final void configure(final JAXRS.Configuration.Builder configurationBuilder,
+                    final Object configuration) {
+                if (configuration instanceof Map) {
+                    final Map<String, Object> valueNamePairs = (Map<String, Object>) configuration;
+                    valueNamePairs.forEach(configurationBuilder::property);
+                }
+            }
+        };
+        ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
+            @Override
+            public final <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
+                    final ClassLoader loader,
+                    final boolean ignoreOnClassNotFound) {
+                return Iterators.singletonIterator(
+                        service.cast(
+                                service == Configurator.class ? mockConfigurator
+                                        : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
+                                    @Override
+                                    public final InjectionManager create(final Object parent) {
+                                        return mockInjectionManager;
+                                    };
+                                } : null));
+            }
+
+            @Override
+            public final <T> Iterator<Class<T>> createClassIterator(final Class<T> service, final String serviceName,
+                    final ClassLoader loader,
+                    final boolean ignoreOnClassNotFound) {
+                throw new UnsupportedOperationException();
+            }
+        });
+
+        // when
+        final JAXRS.Configuration configuration = configurationBuilder.from(externalConfiguration).build();
 
         // then
         assertThat(configuration, is(notNullValue()));

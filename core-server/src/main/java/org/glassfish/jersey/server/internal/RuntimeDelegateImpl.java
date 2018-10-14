@@ -40,6 +40,7 @@ import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ServerFactory;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.spi.ConfiguratorFactory;
 import org.glassfish.jersey.server.spi.Server;
 
 /**
@@ -115,6 +116,12 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
                 PROPERTY_TYPES.forEach(
                         (propertyName, propertyType) -> configProvider.apply(propertyName, (Class<T>) propertyType)
                                 .ifPresent(propertyValue -> this.properties.put(propertyName, propertyValue)));
+                return this;
+            }
+
+            @Override
+            public final Builder from(final Object externalConfig) {
+                ConfiguratorFactory.configure(this, externalConfig);
                 return this;
             }
 
