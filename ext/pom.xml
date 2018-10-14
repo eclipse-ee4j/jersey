@@ -54,6 +54,7 @@
         <module>servlet-portability</module>
         <module>spring4</module>
         <module>wadl-doclet</module>
+        <module>microprofile-config-javase</module>
     </modules>
 
     <dependencies>
