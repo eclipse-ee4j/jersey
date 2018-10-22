@@ -24,6 +24,7 @@
 .zip
 .dat
 .lua
+.travis.yml
 /docs/src/main/docbook/inc/modules_table_footer.src
 /docs/src/main/docbook/inc/modules_table_header.src
 /docs/src/main/docbook/inc/modules_table_row.src
@@ -36,6 +37,8 @@ jaxb.index
 /etc/config/copyright-exclude
 /etc/config/copyright.txt
 /etc/config/edl-copyright.txt
+/etc/jenkins/
+/etc/travis/
 /LICENSE.md
 /third-party-license-readme.txt
 nb-configuration.xml
@@ -78,3 +81,5 @@ build.readme
 /examples/bean-validation-webapp/src/main/webapp/fonts
 /META-INF/NOTICE.md
 NOTICE.md
+/ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessAllAnnotatedTypes.java 
+/ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessJAXRSAnnotatedTypes.java

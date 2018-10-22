@@ -21,4 +21,4 @@ env:
 install: true
 
 script:
-  - bash travis.sh $TEST_SET
+  - bash etc/travis/travis.sh $TEST_SET
