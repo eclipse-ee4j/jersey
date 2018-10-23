@@ -8,11 +8,14 @@ node {
     def   RELEASE_VERSION=RELEASE_VERSION
     def   NEXT_VERSION=NEXT_VERSION
     def   RELEASE_TAG=''
-    def   OVERWRITE='false'
+    def   OVERWRITE=OVERWRITE
     def   PROJECT_NAME='Jersey'
     def   LOGIN='jersey-bot'
     def   EMAIL = 'jersey-bot@eclipse.org'
     def   REPO='git@github.com:eclipse-ee4j/jersey.git'
+    def   SECRET_FILE_ID='6474d9ed-eadc-47a0-8f60-43277c1cad52'
+    def   SECURITY_FILE_ID='8e6103e6-a03e-44fe-bd9a-a4ed070d9b56'
+    def   CONFIG_FILE_ID='c88e58d9-97bd-4f06-af82-fd469abcedea'
     def   CREDENTIALS_ID='f5848e71-9994-45e3-8214-137ce91ddbcf'
     def   GIT_ORIGIN='origin'
     def   RELEASE_FOLDER='.'
@@ -67,11 +70,15 @@ node {
                 echo '-[ Dry run turned on ]----------------------------------------------------------'
                 TARGET = 'install'
             }
+            echo '-[ Configure git user ]--------------------------------------------------------'
+            sh "git config --local user.email \"${EMAIL}\""
+            sh "git config --local user.name \"$LOGIN\""
+
         }
 
     }
     stage ('Prepare GPG') {
-        withCredentials([file(credentialsId: '6474d9ed-eadc-47a0-8f60-43277c1cad52', variable: 'KEYRING')]) {
+        withCredentials([file(credentialsId: SECRET_FILE_ID, variable: 'KEYRING')]) {
             //# Workaround: GPG initialization
             sh("gpg --batch --import ${KEYRING}")
             sh '''
@@ -90,7 +97,9 @@ node {
         if (BRANCH_CHECK) {
             if ( OVERWRITE == 'true' ) {
                 echo "${GIT_ORIGIN}/${RELEASE_VERSION} branch already exists, deleting"
-                sh 'git push --delete ${GIT_ORIGIN} ${RELEASE_VERSION} && true'
+                sshagent([CREDENTIALS_ID]) {
+                    sh "git push ${GIT_ORIGIN} :${RELEASE_VERSION} && true"
+                }
             } else {
                 error "${GIT_ORIGIN}/${RELEASE_VERSION} branch already exists"
             }
@@ -108,7 +117,9 @@ node {
         if (TAG_CHECK) {
             if (OVERWRITE == 'true' ) {
                 echo "${RELEASE_TAG} tag already exists, deleting"
-                sh "git push --delete origin ${RELEASE_TAG} && true"
+                sshagent([CREDENTIALS_ID]) {
+                    sh "git push --delete origin ${RELEASE_TAG} && true"
+                }
             } else {
                 error "${RELEASE_TAG} tag already exists"
             }
@@ -130,29 +141,16 @@ node {
         """
         echo '-[ Run release build ]---------------------------------------------------------'
         dir (RELEASE_FOLDER) {
-            withCredentials([file(credentialsId: '6474d9ed-eadc-47a0-8f60-43277c1cad52', variable: 'KEYRING')]) {
-                configFileProvider([configFile(fileId: '8e6103e6-a03e-44fe-bd9a-a4ed070d9b56', targetLocation: '/home/jenkins/.m2/')]) {
+                configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
 
-                    //# Workaround: GPG initialization
-                    sh("gpg --batch --import ${KEYRING}")
-                    sh '''
-                        for fpr in $(gpg --list-keys --with-colons  | awk -F: '/fpr:/ {print $10}' | sort -u);
-                        do
-                            echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key $fpr trust;
-                        done
-                       '''
-                    configFileProvider([configFile(fileId: 'c88e58d9-97bd-4f06-af82-fd469abcedea', variable: 'MAVEN_SETTINGS_XML')]) {
+                    configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
                         sh "${MVN_HOME}/bin/mvn -q -B -s ${MAVEN_SETTINGS_XML} -DskipTests -Ddoclint=none -Dadditionalparam='-Xdoclint:none' " +
                                 " -U -C clean package source:jar javadoc:jar ${TARGET}"
                     }
                 }
-            }
         }
     }
     stage ('Prepare release') {
-        echo '-[ Configure git user ]--------------------------------------------------------'
-        sh "git config --local user.email \"${EMAIL}\""
-        sh "git config --local user.name \"$LOGIN\""
         echo '-[ Perform release commit to git ]---------------------------------------------'
         sh "git commit -a -m ${RELEASE_VERSION}"
         sh "git tag -m ${RELEASE_TAG} -a ${RELEASE_TAG}"
@@ -176,9 +174,10 @@ node {
                 sh "git push ${GIT_ORIGIN} ${RELEASE_VERSION} --dry-run"
             }
             return
-        }
-        sshagent([CREDENTIALS_ID]) {
-            sh "git push ${GIT_ORIGIN} ${RELEASE_VERSION} --follow-tags"
+        } else {
+            sshagent([CREDENTIALS_ID]) {
+                sh "git push ${GIT_ORIGIN} ${RELEASE_VERSION} --follow-tags"
+            }
         }
     }
 }
