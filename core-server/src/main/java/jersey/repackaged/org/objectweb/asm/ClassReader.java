@@ -167,7 +167,7 @@ public class ClassReader {
         this.b = b;
         // checks the class version
         // added "support" for java 11 compiled classes
-        if (readShort(off + 6) > Opcodes.V11) {
+        if (readShort(off + 6) > Opcodes.V12) {
             throw new IllegalArgumentException();
         }
         // parses the constant pool
