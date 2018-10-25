@@ -67,9 +67,13 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param beanManager current bean manager.
      */
     private void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, final BeanManager beanManager) {
-        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class));
+        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class),
+                "Jersey " + CdiInterceptorWrapper.class.getName()
+        );
         interceptorAnnotatedType = beanManager.createAnnotatedType(ValidationInterceptor.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType);
+        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType,
+                "Jersey " + ValidationInterceptor.class.getName()
+        );
     }
 
     /**
