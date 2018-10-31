@@ -19,9 +19,9 @@ package org.glassfish.jersey.message.filtering;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 import org.glassfish.jersey.message.filtering.spi.EntityGraph;
 import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
@@ -33,8 +33,8 @@ import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
  */
 final class EntityGraphProviderImpl implements EntityGraphProvider {
 
-    private final ConcurrentMap<Class<?>, EntityGraph> writerClassToGraph = DataStructures.createConcurrentMap();
-    private final ConcurrentMap<Class<?>, EntityGraph> readerClassToGraph = DataStructures.createConcurrentMap();
+    private final ConcurrentMap<Class<?>, EntityGraph> writerClassToGraph = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<?>, EntityGraph> readerClassToGraph = new ConcurrentHashMap<>();
 
     @Override
     public EntityGraph getOrCreateEntityGraph(final Class<?> entityClass, final boolean forWriter) {

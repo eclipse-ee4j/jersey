@@ -52,6 +52,7 @@ import java.util.concurrent.TimeUnit;
  * @param <E> the type of elements held in this collection
  * @author Doug Lea
  */
+@Deprecated
 public interface TransferQueue<E> extends BlockingQueue<E> {
     /**
      * Transfers the specified element if there exists a consumer

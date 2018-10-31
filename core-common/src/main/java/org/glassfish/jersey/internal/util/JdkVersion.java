@@ -74,15 +74,20 @@ public class JdkVersion implements Comparable<JdkVersion> {
             }
             final String[] parts = versionString.split("\\.|_");
             if (parts.length == 3) {
+                // e.g. "1.8.0" or "9.0.1"
                 return new JdkVersion(Integer.parseInt(parts[0]),
                         Integer.parseInt(parts[1]),
                         Integer.parseInt(parts[2]),
                         0);
-            } else {
+            } else if (parts.length == 4) {
+                // e.g. "1.8.0_141"
                 return new JdkVersion(Integer.parseInt(parts[0]),
                         Integer.parseInt(parts[1]),
                         Integer.parseInt(parts[2]),
                         Integer.parseInt(parts[3]));
+            } else {
+                // e.g "11"
+                return new JdkVersion(Integer.parseInt(parts[0]), 0, 0, 0);
             }
         } catch (final Exception e) {
             return UNKNOWN_VERSION;
