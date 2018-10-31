@@ -36,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -180,19 +181,19 @@ public class MessageBodyFactory implements MessageBodyWorkers {
 
     private static final int LOOKUP_CACHE_INITIAL_CAPACITY = 32;
     private static final float LOOKUP_CACHE_LOAD_FACTOR = 0.75f;
-    private final Map<Class<?>, List<ReaderModel>> mbrTypeLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<ReaderModel>> mbrTypeLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<Class<?>, List<WriterModel>> mbwTypeLookupCache = DataStructures.createConcurrentMap(
-            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-
-    private final Map<Class<?>, List<MediaType>> typeToMediaTypeReadersCache = DataStructures.createConcurrentMap(
-            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<Class<?>, List<MediaType>> typeToMediaTypeWritersCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<WriterModel>> mbwTypeLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
 
-    private final Map<ModelLookupKey, List<ReaderModel>> mbrLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<MediaType>> typeToMediaTypeReadersCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<ModelLookupKey, List<WriterModel>> mbwLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<MediaType>> typeToMediaTypeWritersCache = new ConcurrentHashMap<>(
+            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
+
+    private final Map<ModelLookupKey, List<ReaderModel>> mbrLookupCache = new ConcurrentHashMap<>(
+            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
+    private final Map<ModelLookupKey, List<WriterModel>> mbwLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
 
     /**
