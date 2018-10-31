@@ -6,12 +6,14 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.ws.rs.core.MediaType;
@@ -620,6 +622,18 @@ public abstract class ProviderBase<
                     //    generally not the intent. Fix may require addition of functionality in databind
 
                     TypeFactory typeFactory = writer.getTypeFactory();
+
+                    //If return type is an instance of CompletionStage like CompletionStage<List<String>>,
+                    // consider first type argument as Entity type which in itself could be a generic type like
+                    // List<String> or custom object like Person
+                    if (genericType instanceof ParameterizedType) {
+                        Type rawType = ((ParameterizedType) genericType).getRawType();
+                        if (rawType instanceof Class && CompletionStage.class.isAssignableFrom((Class)rawType)) {
+                            // CompletionStage has only one parameterized type. So pick the first
+                            genericType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                        }
+                    }
+
                     JavaType baseType = typeFactory.constructType(genericType);
                     rootType = typeFactory.constructSpecializedType(baseType, type);
                     /* 26-Feb-2011, tatu: To help with [JACKSON-518], we better recognize cases where
