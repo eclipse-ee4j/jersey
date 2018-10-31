@@ -28,12 +28,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.xml.bind.JAXBElement;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 
 /**
  * SPI utility methods for entity filtering.
@@ -47,7 +47,7 @@ public final class FilteringHelper {
      */
     public static final Annotation[] EMPTY_ANNOTATIONS = new Annotation[0];
 
-    private static final ConcurrentMap<Type, Class<?>> ENTITY_CLASSES = DataStructures.createConcurrentMap();
+    private static final ConcurrentMap<Type, Class<?>> ENTITY_CLASSES = new ConcurrentHashMap<>();
 
     /**
      * Determine whether given class is filterable by entity-filtering. Filterable classes are all classes that are not primitives
