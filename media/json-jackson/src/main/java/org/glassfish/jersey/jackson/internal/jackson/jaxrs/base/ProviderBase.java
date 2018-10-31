@@ -623,7 +623,7 @@ public abstract class ProviderBase<
 
                     TypeFactory typeFactory = writer.getTypeFactory();
 
-                    //If return type is an instance of CompletionStage like CompletionStage<List<String>>,
+                    //If return type is an instance/sub-type of CompletionStage like CompletableFuture<List<String>>,
                     // consider first type argument as Entity type which in itself could be a generic type like
                     // List<String> or custom object like Person
                     if (genericType instanceof ParameterizedType) {
