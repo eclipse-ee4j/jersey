@@ -29,8 +29,7 @@ public class NettySecurityContext implements SecurityContext {
         this.ctx = ctx;
     }
 
-    public ChannelHandlerContext getNettyContext()
-    {
+    public ChannelHandlerContext getNettyContext() {
         return this.ctx;
     }
 
