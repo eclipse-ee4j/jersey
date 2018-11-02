@@ -43,6 +43,7 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
+import org.glassfish.jersey.netty.httpserver.NettySecurityContext;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 
@@ -121,7 +122,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
         URI requestUri = URI.create(baseUri + ContainerUtils.encodeUnsafeCharacters(s));
 
         ContainerRequest requestContext = new ContainerRequest(
-                baseUri, requestUri, req.method().name(), getSecurityContext(),
+                baseUri, requestUri, req.method().name(), getSecurityContext(ctx),
                 new PropertiesDelegate() {
 
                     private final Map<String, Object> properties = new HashMap<>();
@@ -176,29 +177,8 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
         return requestContext;
     }
 
-    private SecurityContext getSecurityContext() {
-        return new SecurityContext() {
-
-            @Override
-            public boolean isUserInRole(final String role) {
-                return false;
-            }
-
-            @Override
-            public boolean isSecure() {
-                return false;
-            }
-
-            @Override
-            public Principal getUserPrincipal() {
-                return null;
-            }
-
-            @Override
-            public String getAuthenticationScheme() {
-                return null;
-            }
-        };
+    private NettySecurityContext getSecurityContext(ChannelHandlerContext ctx) {
+        return new NettySecurityContext(ctx);
     }
 
     @Override
