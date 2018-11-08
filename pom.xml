@@ -1997,7 +1997,7 @@
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
-        <yasson.version>1.0.1</yasson.version>
+        <yasson.version>1.0.2</yasson.version>
         <skip.e2e>false</skip.e2e>
     </properties>
 </project>
