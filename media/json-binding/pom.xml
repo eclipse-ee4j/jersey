@@ -70,7 +70,8 @@
 
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
+            <artifactId>jakarta.json</artifactId>
+            <version>${jsonp.ri.version}</version>
         </dependency>
 
         <!-- TODO - remove snapshot dependencies (will need yasson & API release, as there only is 2 month old M1 version -->
@@ -83,12 +84,17 @@
                     <groupId>javax.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>javax.json.bind</groupId>
-            <artifactId>javax.json.bind-api</artifactId>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <version>${jsonb.api.version}</version>
         </dependency>
 
         <dependency>
