@@ -1992,7 +1992,7 @@
         <kryo.version>4.0.1</kryo.version>
         <mimepull.version>1.9.7</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
-        <moxy.version>2.6.4</moxy.version>
+        <moxy.version>2.7.3</moxy.version>
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.5.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
