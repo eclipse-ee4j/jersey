@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -291,6 +292,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
 
         final boolean isJaxRsResource = jaxRsResourceCache.apply(clazz);
+
+        if (isJaxRsResource && !Resource.isAcceptable(clazz)) {
+            LOGGER.warning(LocalizationMessages.CDI_NON_INSTANTIABLE_COMPONENT(clazz));
+            return false;
+        }
 
         final Class<? extends Annotation> beanScopeAnnotation = CdiUtil.getBeanScope(clazz, beanManager);
         final boolean isRequestScoped = beanScopeAnnotation == RequestScoped.class
