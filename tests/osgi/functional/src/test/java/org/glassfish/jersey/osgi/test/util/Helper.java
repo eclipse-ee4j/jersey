@@ -129,7 +129,7 @@ public class Helper {
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
 
                 // javax.annotation has to go first!
-                mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
                 junitBundles(),
 
@@ -170,7 +170,7 @@ public class Helper {
                     // Jersey Injection provider
                     mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject().versionAsInProject()
+                    mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject().versionAsInProject()
             ));
         }
 
