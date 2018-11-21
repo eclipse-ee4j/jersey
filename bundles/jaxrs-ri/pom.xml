@@ -48,7 +48,7 @@
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jaxrs.api.impl.version}</version>
             <classifier>sources</classifier>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- JAX-RS RI Binaries -->
