@@ -170,7 +170,7 @@ public class Helper {
                     // Jersey Injection provider
                     mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject().versionAsInProject()
+                    mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject()
             ));
         }
 
