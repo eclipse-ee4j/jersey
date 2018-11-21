@@ -251,7 +251,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>javax.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
+                            <includeGroupIds>jakarta.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
                             <includeClassifiers>sources</includeClassifiers>
                             <outputDirectory>${generated.src.dir}</outputDirectory>
                             <excludes>**/NOTICE.md</excludes>
