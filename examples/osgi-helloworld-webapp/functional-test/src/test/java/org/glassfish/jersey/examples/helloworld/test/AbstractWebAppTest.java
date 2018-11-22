@@ -113,7 +113,7 @@ public abstract class AbstractWebAppTest {
                 systemProperty(org.osgi.framework.Constants.FRAMEWORK_SECURITY)
                         .value(org.osgi.framework.Constants.FRAMEWORK_SECURITY_OSGI),
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 // systemProperty(BundleLocationProperty).value(bundleLocation),
 
@@ -130,7 +130,7 @@ public abstract class AbstractWebAppTest {
                 //                 mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
                 // javax.annotation must go first!
-                mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 // pax exam dependencies
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),
                 junitBundles(), // adds junit classes to the OSGi context
@@ -144,7 +144,7 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
                 //JAXB-API
-                mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 //SUN JAXB IMPL OSGI
                 mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
                 systemPackage("com.sun.source.tree"),
