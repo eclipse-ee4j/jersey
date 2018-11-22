@@ -44,11 +44,11 @@
     <dependencies>
         <!-- JAX-RS API Sources-->
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jaxrs.api.impl.version}</version>
             <classifier>sources</classifier>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- JAX-RS RI Binaries -->
@@ -251,7 +251,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>javax.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
+                            <includeGroupIds>jakarta.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
                             <includeClassifiers>sources</includeClassifiers>
                             <outputDirectory>${generated.src.dir}</outputDirectory>
                             <excludes>**/NOTICE.md</excludes>
