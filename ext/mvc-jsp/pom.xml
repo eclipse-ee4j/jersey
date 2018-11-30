@@ -53,7 +53,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            javax.servlet.jsp.*;version="${range;[==,+);${jsp.version}}",
+                            javax.servlet.jsp*;version="[2.0,3.0)",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.jsp.*;version=${project.version}</Export-Package>
