@@ -111,6 +111,10 @@
                     <groupId>javax.json</groupId>
                     <artifactId>javax.json-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.json</groupId>
+                    <artifactId>jakarta.json-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
