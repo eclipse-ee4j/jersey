@@ -273,8 +273,8 @@
                 </plugin>
                 <plugin>
                     <groupId>com.sun.istack</groupId>
-                    <artifactId>maven-istack-commons-plugin</artifactId>
-                    <version>2.6.1</version>
+                    <artifactId>istack-commons-maven-plugin</artifactId>
+                    <version>3.0.8</version>
                     <executions>
                         <execution>
                             <phase>generate-sources</phase>
