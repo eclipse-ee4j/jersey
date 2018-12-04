@@ -129,7 +129,7 @@ public class Helper {
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
 
                 // javax.annotation has to go first!
-                mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
                 junitBundles(),
 
@@ -138,7 +138,7 @@ public class Helper {
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("osgi-resource-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-utils").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("javax.inject").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("jakarta.inject").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
 
@@ -170,7 +170,8 @@ public class Helper {
                     // Jersey Injection provider
                     mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    mavenBundle().groupId("javax.xml.bind").artifactId("jaxb-api").versionAsInProject().versionAsInProject()
+                    mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject(),
+                    mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject()
             ));
         }
 

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-       <version>1.0.5</version>
+        <version>1.0.5</version>
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -1365,8 +1365,8 @@
                 <version>${jaxrs.api.impl.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
                 <version>${javax.annotation.version}</version>
             </dependency>
 
@@ -1377,8 +1377,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.transaction</groupId>
-                <artifactId>javax.transaction-api</artifactId>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jta.api.version}</version>
             </dependency>
 
@@ -1418,7 +1418,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>javax.inject</artifactId>
+                <artifactId>jakarta.inject</artifactId>
                 <version>${hk2.version}</version>
                 <exclusions>
                     <exclusion>
@@ -1533,8 +1533,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jaxb.api.version}</version>
             </dependency>
 
@@ -1556,15 +1556,15 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
                 <version>${javax.persistence.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>javax.ejb</groupId>
-                <artifactId>javax.ejb-api</artifactId>
+                <groupId>jakarta.ejb</groupId>
+                <artifactId>jakarta.ejb-api</artifactId>
                 <version>${ejb.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -1672,19 +1672,19 @@
                 <version>${fasterxml.classmate.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>javax.el-api</artifactId>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
                 <version>${javax.el.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
+                <artifactId>jakarta.el</artifactId>
                 <version>${javax.el.impl.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.json</artifactId>
+                <artifactId>jakarta.json</artifactId>
                 <version>${jsonp.ri.version}</version>
             </dependency>
             <dependency>
@@ -1880,8 +1880,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.json.bind</groupId>
-                <artifactId>javax.json.bind-api</artifactId>
+                <groupId>jakarta.json.bind</groupId>
+                <artifactId>jakarta.json.bind-api</artifactId>
                 <version>${jsonb.api.version}</version>
             </dependency>
 
@@ -1944,7 +1944,7 @@
         <checkstyle.mvn.plugin.version>2.16</checkstyle.mvn.plugin.version>
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
-        <ejb.version>3.2.2</ejb.version>
+        <ejb.version>3.2.3</ejb.version>
         <gf.impl.version>5.0</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
@@ -1953,26 +1953,26 @@
         <gae.version>1.9.59</gae.version>
         <gpg.mvn.plugin.version>1.6</gpg.mvn.plugin.version>
         <grizzly.client.version>1.13</grizzly.client.version>
-        <grizzly2.version>2.4.0</grizzly2.version>
+        <grizzly2.version>2.4.4</grizzly2.version>
         <guava.version>18.0</guava.version>
         <hamcrest.version>1.3</hamcrest.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>2.5.0-b62</hk2.version>
-        <hk2.config.version>2.5.0-b56</hk2.config.version>
+        <hk2.version>2.5.0</hk2.version>
+        <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
         <jackson.version>2.9.6</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.22.0-GA</javassist.version>
-        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <javax.annotation.version>1.3.4</javax.annotation.version>
         <javax.annotation.bundle.version>1.3.2</javax.annotation.bundle.version>
-        <javax.el.version>3.0.1-b06</javax.el.version>
-        <javax.el.impl.version>3.0.1-b09</javax.el.impl.version>
-        <javax.interceptor.version>1.2.2</javax.interceptor.version>
-        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <javax.el.version>3.0.2</javax.el.version>
+        <javax.el.impl.version>3.0.2</javax.el.impl.version>
+        <javax.interceptor.version>1.2.3</javax.interceptor.version>
+        <javax.persistence.version>2.2.2</javax.persistence.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
-        <jaxb.api.version>2.3.1</jaxb.api.version>
-        <jaxb.ri.version>2.3.1</jaxb.ri.version>
-        <jsonb.api.version>1.0</jsonb.api.version>
+        <jaxb.api.version>2.3.2</jaxb.api.version>
+        <jaxb.ri.version>2.3.2</jaxb.ri.version>
+        <jsonb.api.version>1.0.1</jsonb.api.version>
         <jaxrs.api.spec.version>2.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>2.1.3</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
@@ -1984,15 +1984,15 @@
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.41</jmockit.version>
-        <jsonp.ri.version>1.1</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.2</jsonp.jaxrs.version>
-        <jsp.version>2.3.3</jsp.version>
-        <jstl.version>1.2</jstl.version>
-        <jta.api.version>1.3</jta.api.version>
+        <jsonp.ri.version>1.1.5</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
+        <jsp.version>2.3.4</jsp.version>
+        <jstl.version>1.2.3</jstl.version>
+        <jta.api.version>1.3.1</jta.api.version>
         <kryo.version>4.0.1</kryo.version>
         <mimepull.version>1.9.7</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
-        <moxy.version>2.6.4</moxy.version>
+        <moxy.version>2.7.3</moxy.version>
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.5.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -2005,7 +2005,7 @@
         <rxjava2.version>2.0.4</rxjava2.version>
         <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
-        <servlet4.version>4.0.1</servlet4.version>
+        <servlet4.version>4.0.2</servlet4.version>
         <simple.version>6.0.1</simple.version>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.8.RELEASE</spring4.version>
@@ -2013,7 +2013,7 @@
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
-        <yasson.version>1.0.1</yasson.version>
+        <yasson.version>1.0.3</yasson.version>
         <skip.e2e>false</skip.e2e>
     </properties>
 </project>
