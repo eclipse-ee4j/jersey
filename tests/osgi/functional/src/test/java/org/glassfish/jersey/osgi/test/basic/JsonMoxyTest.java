@@ -63,7 +63,7 @@ public class JsonMoxyTest extends AbstractJsonOsgiIntegrationTest {
                 mavenBundle().groupId("org.hibernate.validator").artifactId("hibernate-validator").versionAsInProject(),
                 mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml").artifactId("classmate").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("javax.el").versionAsInProject()
+                mavenBundle().groupId("org.glassfish").artifactId("jakarta.el").versionAsInProject()
         ));
 
         return Helper.asArray(options);
