@@ -53,7 +53,8 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            javax.servlet.jsp*;version="[2.0,3.0)",
+                            javax.servlet.jsp.*;version="[2.0,3.0)",
+                            javax.servlet.*;version="!",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.jsp.*;version=${project.version}</Export-Package>
@@ -67,7 +68,7 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
