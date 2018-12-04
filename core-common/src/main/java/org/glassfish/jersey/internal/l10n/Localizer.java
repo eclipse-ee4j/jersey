@@ -88,7 +88,8 @@ public class Localizer {
                         } catch (MissingResourceException e2) {
                             //try context classloader
                             try {
-                                bundle = ResourceBundle.getBundle(bundlename, _locale, Thread.currentThread().getContextClassLoader());
+                                bundle = ResourceBundle.getBundle(bundlename, _locale,
+                                        Thread.currentThread().getContextClassLoader());
                             } catch (MissingResourceException e3) {
                                 // try OSGi
                                 OsgiRegistry osgiRegistry = ReflectionHelper.getOsgiRegistryInstance();
