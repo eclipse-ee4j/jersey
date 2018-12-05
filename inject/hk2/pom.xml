@@ -87,6 +87,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
+                            javax.annotation.*;version="!",
                             *
                         </Import-Package>
                     </instructions>

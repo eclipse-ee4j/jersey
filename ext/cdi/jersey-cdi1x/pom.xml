@@ -82,6 +82,7 @@
                             org.glassfish.jersey.ext.cdi1x.spi,org.glassfish.jersey.ext.cdi1x.internal,
                             org.glassfish.jersey.ext.cdi1x.internal.spi
                         </Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                         <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
                         <_nodefaultversion>false</_nodefaultversion>
                     </instructions>

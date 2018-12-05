@@ -100,6 +100,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.validation.internal;version=${project.version}</Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                 </configuration>
                 <executions>

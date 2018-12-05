@@ -76,7 +76,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.message.filtering.*;version=${project.version}</Export-Package>
-                        <Import-Package>*</Import-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

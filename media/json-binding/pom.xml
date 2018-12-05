@@ -54,6 +54,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.jackson.*</Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

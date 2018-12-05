@@ -88,6 +88,15 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            javax.annotation.*;version="!",
+                            *
+                        </Import-Package>
+                        <unpackBundle>true</unpackBundle>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -126,6 +126,8 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jaxrs-ri/pom.xml. -->
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
+                            javax.activation.*;version="!",
+                            javax.annotation.*;version="!",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>

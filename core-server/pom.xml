@@ -94,6 +94,7 @@
                             com.sun.research.ws.wadl.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            javax.annotation.*;version="!",
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             *
                         </Import-Package>

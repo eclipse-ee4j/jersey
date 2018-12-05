@@ -56,6 +56,7 @@
                         <Export-Package>org.glassfish.jersey.jsonp.*;version=${project.version}</Export-Package>
                         <!-- TODO: change to ${range;[==,+);${jsonp.api.version}} once the version is final-->
                         <Import-Package>
+                            javax.annotation.*;version="!",
                             javax.json.*;version="[0,2)",
                             org.glassfish.json.*;version="[0,2)",
                             *
