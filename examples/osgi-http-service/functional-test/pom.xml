@@ -108,10 +108,10 @@
 
         <!-- Grizzly dependencies-->
         <dependency>
-            <groupId>com.sun.grizzly.osgi</groupId>
+            <groupId>org.glassfish.grizzly.osgi</groupId>
             <artifactId>grizzly-httpservice-bundle</artifactId>
             <scope>test</scope>
-            <version>1.9.45</version>
+            <version>${grizzly2.version}</version>
         </dependency>
 
 

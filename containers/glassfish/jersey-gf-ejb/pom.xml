@@ -97,7 +97,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -114,6 +114,7 @@
                         <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
                         <Import-Package>
                             com.sun.*;version="[4.0,6)",
+                            javax.annotation.*;version="!",
                             org.glassfish.ejb.*;version="[4.0,6)",
                             org.glassfish.internal.*;version="[4.0,6)",
                             *

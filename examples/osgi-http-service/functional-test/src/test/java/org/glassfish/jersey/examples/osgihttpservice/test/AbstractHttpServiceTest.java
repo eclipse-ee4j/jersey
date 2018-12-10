@@ -141,7 +141,7 @@ public abstract class AbstractHttpServiceTest {
 
     public List<Option> grizzlyOptions() {
         return Arrays.asList(options(
-                mavenBundle().groupId("com.sun.grizzly.osgi").artifactId("grizzly-httpservice-bundle").versionAsInProject()
+                mavenBundle().groupId("org.glassfish.grizzly.osgi").artifactId("grizzly-httpservice-bundle").versionAsInProject()
         ));
     }
 

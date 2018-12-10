@@ -64,7 +64,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -82,6 +82,7 @@
                             org.glassfish.jersey.ext.cdi1x.spi,org.glassfish.jersey.ext.cdi1x.internal,
                             org.glassfish.jersey.ext.cdi1x.internal.spi
                         </Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                         <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
                         <_nodefaultversion>false</_nodefaultversion>
                     </instructions>

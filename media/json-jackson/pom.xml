@@ -61,7 +61,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -77,6 +77,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.jackson.*</Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

@@ -73,7 +73,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -94,6 +94,7 @@
                             com.sun.research.ws.wadl.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            javax.annotation.*;version="!",
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             *
                         </Import-Package>

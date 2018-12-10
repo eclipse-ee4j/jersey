@@ -37,7 +37,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -54,7 +54,11 @@
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Export-Package>org.glassfish.jersey.server.validation.*;version=${project.version}</Export-Package>
-                        <Import-Package>javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}", *</Import-Package>
+                        <Import-Package>
+                            javax.annotation.*;version="!",
+                            javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            *
+                        </Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

@@ -273,8 +273,8 @@
                 </plugin>
                 <plugin>
                     <groupId>com.sun.istack</groupId>
-                    <artifactId>maven-istack-commons-plugin</artifactId>
-                    <version>2.6.1</version>
+                    <artifactId>istack-commons-maven-plugin</artifactId>
+                    <version>3.0.8</version>
                     <executions>
                         <execution>
                             <phase>generate-sources</phase>
@@ -581,7 +581,7 @@
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>1.49</version>
+                    <version>1.50</version>
                     <configuration>
                         <excludeFile>etc/config/copyright-exclude</excludeFile>
                         <!--svn|mercurial|git - defaults to svn-->
@@ -1945,7 +1945,7 @@
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
         <ejb.version>3.2.3</ejb.version>
-        <gf.impl.version>5.0</gf.impl.version>
+        <gf.impl.version>5.1.0</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <findbugs.version>3.0.3</findbugs.version>
@@ -1990,7 +1990,7 @@
         <jstl.version>1.2.3</jstl.version>
         <jta.api.version>1.3.1</jta.api.version>
         <kryo.version>4.0.1</kryo.version>
-        <mimepull.version>1.9.7</mimepull.version>
+        <mimepull.version>1.9.11</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
         <moxy.version>2.7.3</moxy.version>
         <mustache.version>0.8.17</mustache.version>
