@@ -103,6 +103,31 @@ public class JacksonTest extends JerseyTest {
         assertNotNull(responseMsg);
     }
 
+    @Test
+    public void testEmptyArrayBeanAsCompletableFuture() {
+        WebTarget target = target();
+        EmptyArrayBean responseMsg = target.path("completableFutureResource").path("bean").request(MediaType.APPLICATION_JSON)
+                .get(EmptyArrayBean.class);
+        assertNotNull(responseMsg);
+    }
+
+    @Test
+    public void testEmptyListAsCompletableFuture() {
+        WebTarget target = target();
+        String responseMsg = target.path("completableFutureResource").path("emptyList").request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        assertTrue(responseMsg.replaceAll("[ \t]*", "").contains("[]"));
+    }
+
+
+    @Test
+    public void testListAsCompletableFuture() {
+        WebTarget target = target();
+        String responseMsg = target.path("completableFutureResource").path("list").request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        assertTrue(responseMsg.replaceAll("[ \t]*", "").contains("[\"dummy\"]"));
+    }
+
     /**
      * Test if a WADL document is available at the relative path
      * "application.wadl".
