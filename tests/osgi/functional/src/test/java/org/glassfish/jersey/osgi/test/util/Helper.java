@@ -130,7 +130,7 @@ public class Helper {
 
                 // javax.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
-
+                mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 junitBundles(),
 
                 // HK2
@@ -170,8 +170,7 @@ public class Helper {
                     // Jersey Injection provider
                     mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject(),
-                    mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject()
+                    mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
             ));
         }
 
