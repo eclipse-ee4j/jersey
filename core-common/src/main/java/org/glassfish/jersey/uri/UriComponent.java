@@ -403,7 +403,9 @@ public class UriComponent {
 
         tables[Type.QUERY_PARAM_SPACE_ENCODED.ordinal()] = tables[Type.QUERY_PARAM.ordinal()];
 
-        tables[Type.FRAGMENT.ordinal()] = tables[Type.QUERY.ordinal()];
+        l.add("?");
+
+        tables[Type.FRAGMENT.ordinal()] = initEncodingTable(l);
 
         return tables;
     }
