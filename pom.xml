@@ -1960,7 +1960,7 @@
         <hk2.version>2.5.0</hk2.version>
         <hk2.config.version>2.5.0-b56</hk2.config.version>
         <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.9.8</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.22.0-GA</javassist.version>
         <javax.annotation.version>1.3.4</javax.annotation.version>
