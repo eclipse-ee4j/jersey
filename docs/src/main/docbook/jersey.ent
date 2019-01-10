@@ -54,7 +54,7 @@
 <!ENTITY jaxb.release.uri "http://jaxb.java.net/nonav/&jaxb-api-jar.version;">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
 <!ENTITY jaxrs.release.uri "http://jax-rs-spec.java.net/nonav/&jax-rs.version;">
-<!ENTITY jaxrs.javadoc.uri "https://jersey.github.io/apidocs-javax.jax-rs/&jax-rs.version;/javax/ws/rs">
+<!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/&jax-rs.version;/javax/ws/rs">
 <!ENTITY jaxrs21.javadoc.uri "#/javax/ws/rs">   <!-- TODO - once we have published javadocs to link here -->
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
