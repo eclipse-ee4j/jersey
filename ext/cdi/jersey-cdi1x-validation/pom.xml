@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -96,6 +96,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -103,15 +104,6 @@
                         <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
