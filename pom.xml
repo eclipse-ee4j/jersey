@@ -2016,7 +2016,7 @@
         <checkstyle.mvn.plugin.version>2.16</checkstyle.mvn.plugin.version>
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
-        <ejb.version>3.2.4</ejb.version>
+        <ejb.version>3.2.5</ejb.version>
         <gf.impl.version>5.0</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
