@@ -67,7 +67,7 @@ public class JarFileScannerTest {
 
     @Test
     public void testRecursiveResourceEnumerationOfAllPackages() throws IOException {
-        final int actualEntries = countJarEntriesByPattern(Pattern.compile(".*\\.(class|properties|xml)"));
+        final int actualEntries = countJarEntriesByPattern(Pattern.compile(".*\\.(class|properties|xml|md)"));
         final int scannedEntries = countJarEntriesUsingScanner("", true);
         assertThat("Failed to enumerate all contents of javax.ws.rs-api", scannedEntries, equalTo(actualEntries));
     }
