@@ -25,5 +25,6 @@ is the first release of the Eclipse Tyrus project.
 # <a name="Links"></a>Links
 
 - [Jersey project page](https://projects.eclipse.org/projects/ee4j.jersey)
+- [jersey.github.io](https://jersey.github.io)
 - [JSR-370 page on JCP site](https://jcp.org/en/jsr/detail?id=370)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/jersey)
