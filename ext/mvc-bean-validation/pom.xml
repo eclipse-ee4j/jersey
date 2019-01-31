@@ -64,11 +64,6 @@
                     <artifactId>javax.el-api</artifactId>
                 </exclusion>
                 <exclusion>
-<<<<<<< HEAD
-                    <groupId>org.glassfish</groupId>
-                    <artifactId>javax.el</artifactId>
-                </exclusion>
-=======
                     <groupId>jakarta.el</groupId>
                     <artifactId>jakarta.el-api</artifactId>
                 </exclusion>
@@ -80,7 +75,6 @@
                     <groupId>org.glassfish</groupId>
                     <artifactId>jakarta.el</artifactId>
                 </exclusion>
->>>>>>> MSTR/EE4J_8
             </exclusions>
         </dependency>
     </dependencies>
