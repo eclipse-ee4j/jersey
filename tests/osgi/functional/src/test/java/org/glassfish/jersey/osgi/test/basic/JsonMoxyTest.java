@@ -57,13 +57,13 @@ public class JsonMoxyTest extends AbstractJsonOsgiIntegrationTest {
                 mavenBundle().groupId("org.eclipse.persistence").artifactId("org.eclipse.persistence.moxy").versionAsInProject(),
                 mavenBundle().groupId("org.eclipse.persistence").artifactId("org.eclipse.persistence.core").versionAsInProject(),
                 mavenBundle().groupId("org.eclipse.persistence").artifactId("org.eclipse.persistence.asm").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("javax.json").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish").artifactId("jakarta.json").versionAsInProject(),
 
                 // validation
                 mavenBundle().groupId("org.hibernate.validator").artifactId("hibernate-validator").versionAsInProject(),
                 mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml").artifactId("classmate").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("javax.el").versionAsInProject()
+                mavenBundle().groupId("org.glassfish").artifactId("jakarta.el").versionAsInProject()
         ));
 
         return Helper.asArray(options);

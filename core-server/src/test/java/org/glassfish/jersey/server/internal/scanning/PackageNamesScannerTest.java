@@ -59,14 +59,14 @@ public class PackageNamesScannerTest {
         final String[] entries = classPath.split(System.getProperty("path.separator"));
 
         for (final String entry : entries) {
-            if (entry.contains("javax.ws.rs-api")) {
+            if (entry.contains("jakarta.ws.rs-api")) {
                 jaxRsApiPath = entry;
                 break;
             }
         }
 
         if (jaxRsApiPath == null) {
-            fail("Could not find javax.ws.rs-api.");
+            fail("Could not find jakarta.ws.rs-api.");
         }
     }
 

@@ -35,13 +35,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -135,8 +135,8 @@
                     <scope>compile</scope>
                 </dependency>
                 <dependency>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>javax.ws.rs-api</artifactId>
+                    <groupId>jakarta.ws.rs</groupId>
+                    <artifactId>jakarta.ws.rs-api</artifactId>
                     <scope>compile</scope>
                 </dependency>
                 <dependency>
@@ -146,7 +146,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.hk2.external</groupId>
-                    <artifactId>javax.inject</artifactId>
+                    <artifactId>jakarta.inject</artifactId>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -166,7 +166,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.weld.servlet</groupId>
-                    <artifactId>weld-servlet</artifactId>
+                    <artifactId>weld-servlet-core</artifactId>
                 </dependency>
             </dependencies>
         </profile>

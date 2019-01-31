@@ -38,7 +38,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
 
@@ -56,6 +56,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.moxy.*</Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>
@@ -92,8 +93,30 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${jsonp.ri.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>${jsonp.ri.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.json</groupId>
+                    <artifactId>javax.json-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.json</groupId>
+                    <artifactId>jakarta.json-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

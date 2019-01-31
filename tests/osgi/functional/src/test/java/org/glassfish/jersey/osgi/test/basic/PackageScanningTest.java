@@ -67,7 +67,7 @@ public class PackageScanningTest {
 
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-sse").versionAsInProject(),
 
-                mavenBundle().groupId("javax.servlet").artifactId("javax.servlet-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.servlet").artifactId("jakarta.servlet-api").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-servlet").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                         .versionAsInProject(),
@@ -75,7 +75,7 @@ public class PackageScanningTest {
                         .versionAsInProject(),
 
                 // MBR/MBW for JSON-P is on the classpath.
-                mavenBundle().groupId("org.glassfish").artifactId("javax.json").versionAsInProject()
+                mavenBundle().groupId("org.glassfish").artifactId("jakarta.json").versionAsInProject()
         ));
 
         options = Helper.addPaxExamMavenLocalRepositoryProperty(options);

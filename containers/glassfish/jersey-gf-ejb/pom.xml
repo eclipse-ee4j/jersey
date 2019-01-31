@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,20 +40,20 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
             <version>${ejb.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
             <version>${javax.interceptor.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -73,8 +73,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2</groupId>
+            <groupId>org.glassfish.main.hk2</groupId>
             <artifactId>hk2-config</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -97,7 +98,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -108,29 +109,20 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
                         <Import-Package>
                             com.sun.*;version="[4.0,6)",
+                            javax.annotation.*;version="!",
                             org.glassfish.ejb.*;version="[4.0,6)",
                             org.glassfish.internal.*;version="[4.0,6)",
                             *
                         </Import-Package>
-                        <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
-                        <_nodefaultversion>false</_nodefaultversion>
                     </instructions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

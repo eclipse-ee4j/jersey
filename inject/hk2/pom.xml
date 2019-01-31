@@ -67,7 +67,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -87,6 +87,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
+                            javax.annotation.*;version="!",
                             *
                         </Import-Package>
                     </instructions>

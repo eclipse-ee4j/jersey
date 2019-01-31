@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,10 @@
                     <groupId>javax.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -81,7 +85,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -92,21 +96,14 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.validation.internal;version=${project.version}</Export-Package>
+                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
                     </instructions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
