@@ -20,7 +20,7 @@ Goals of Jersey project can be summarized in the following points:
 ## January 25, 2019 - Eclipse Jersey Final Release ##
 
 The [2.28 release](https://github.com/eclipse-ee4j/jersey/releases/tag/2.28)
-is the first release of the Eclipse Tyrus project.
+is the first release of the Eclipse Jersey project.
 
 # <a name="Links"></a>Links
 
