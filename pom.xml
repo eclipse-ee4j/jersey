@@ -484,27 +484,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.4</version>
-                    <!--
-                        mvn release:prepare -DreleaseVersion=<release-version> -DdevelopmentVersion=<next-dev-version> -Dtag=<release-version> \
-                            -Prelease
-
-                        mvn release:perform -DconnectionUrl="scm:git:file://<path-to-local-repo>" \
-                            -Prelease,testsSkip
-                    -->
-                    <configuration>
-                        <mavenExecutorId>forked-path</mavenExecutorId>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <preparationGoals>${release.preparationGoals}</preparationGoals>
-                        <pushChanges>false</pushChanges>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <arguments>${release.tests.args} ${release.arguments}</arguments>
-                    </configuration>
-                </plugin>
-
-                <plugin>
                     <groupId>org.ops4j.pax.exam</groupId>
                     <artifactId>maven-paxexam-plugin</artifactId>
                     <version>${paxexam.mvn.plugin.version}</version>
@@ -918,7 +897,7 @@
             </modules>
         </profile>
         <profile>
-            <id>release</id>
+            <id>pre-release</id>
             <modules>
                 <module>docs</module>
             </modules>
@@ -926,20 +905,6 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.sonatype.plugins</groupId>
-                            <artifactId>nexus-staging-maven-plugin</artifactId>
-                            <version>${nexus-staging.mvn.plugin.version}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-gpg-plugin</artifactId>
-                            <version>${gpg.mvn.plugin.version}</version>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -947,31 +912,9 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-deploy</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>deploy</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <serverId>jvnet-nexus-staging</serverId>
-                            <nexusUrl>https://maven.java.net/</nexusUrl>
-                            <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -2023,7 +1966,6 @@
         <findbugs.version>3.0.3</findbugs.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
-        <gpg.mvn.plugin.version>1.6</gpg.mvn.plugin.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <grizzly2.version>2.4.4</grizzly2.version>
         <guava.version>18.0</guava.version>
@@ -2067,7 +2009,6 @@
         <moxy.version>2.7.4</moxy.version>
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.5.Final</netty.version>
-        <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
         <opentracing.version>0.30.0</opentracing.version>
         <osgi.version>4.2.0</osgi.version>
         <pax.exam.version>4.9.1</pax.exam.version>
