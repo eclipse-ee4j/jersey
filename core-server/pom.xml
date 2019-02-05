@@ -73,7 +73,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -94,6 +94,7 @@
                             com.sun.research.ws.wadl.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            javax.annotation.*;version="!",
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             *
                         </Import-Package>
@@ -111,8 +112,8 @@
                 <artifactId>maven-jaxb-plugin</artifactId>
                 <dependencies>
                     <dependency>
-                        <groupId>javax.xml.bind</groupId>
-                        <artifactId>jaxb-api</artifactId>
+                        <groupId>jakarta.xml.bind</groupId>
+                        <artifactId>jakarta.xml.bind-api</artifactId>
                         <version>${jaxb.api.version}</version>
                     </dependency>
                     <dependency>
@@ -167,8 +168,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
         </dependency>
 
         <dependency>
@@ -178,13 +179,13 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
         </dependency>
 
         <dependency>

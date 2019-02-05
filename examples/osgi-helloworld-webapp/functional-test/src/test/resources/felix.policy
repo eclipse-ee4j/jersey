@@ -12,7 +12,7 @@ allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*System*"] (org
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*System*"] (org.osgi.framework.PackagePermission) } "packageToSystem";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*additional-bundle*"] (java.security.AllPermission) } "allToAdditional";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*javassist*"] (java.security.AllPermission) } "allToJavassist";
-allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*javax.ws.rs*"] (java.security.AllPermission) } "allToJavaxWsRs";
+allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jakarta.ws.rs*"] (java.security.AllPermission) } "allToJavaxWsRs";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jetty*"] (java.security.AllPermission) } "allToJetty";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*hk2*"] (java.security.AllPermission) } "allToHk2";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*osgi*"] (java.security.AllPermission) } "allToOsgi";

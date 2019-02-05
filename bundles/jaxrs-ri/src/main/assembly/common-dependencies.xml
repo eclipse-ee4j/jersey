@@ -27,7 +27,7 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <excludes>
-                <exclude>javax.ws.rs:*</exclude>
+                <exclude>jakarta.ws.rs:*</exclude>
                 <exclude>org.glassfish.jersey.*:*</exclude>
                 <!-- CDI API dependencies come from yasson, cdi is optional there -->
                 <exclude>javax.enterprise:cdi-api:jar:*</exclude>

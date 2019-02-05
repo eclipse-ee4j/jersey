@@ -98,4 +98,11 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.build.directory}/legal</directory>
+            </resource>
+        </resources>
+    </build>
 </project>

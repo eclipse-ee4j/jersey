@@ -69,7 +69,7 @@ public class JsonProcessingTest {
                 // JSON processing.
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-json-processing")
                         .versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("javax.json").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish").artifactId("jakarta.json").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish").artifactId("jsonp-jaxrs").versionAsInProject()
         ));
 

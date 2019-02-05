@@ -35,7 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
         </dependency>
 
         <dependency>
@@ -56,7 +56,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>

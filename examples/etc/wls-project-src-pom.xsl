@@ -74,8 +74,8 @@
                 <artifactId>javax.inject</artifactId>
             </exclusion>
             <exclusion>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
             </exclusion>
         </exclusions>
     </xsl:template>
@@ -101,8 +101,8 @@
                         <artifactId>javax.inject</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>javax.ws.rs</groupId>
-                        <artifactId>javax.ws.rs-api</artifactId>
+                        <groupId>jakarta.ws.rs</groupId>
+                        <artifactId>jakarta.ws.rs-api</artifactId>
                     </exclusion>
                 </exclusions>
             </xsl:if>
