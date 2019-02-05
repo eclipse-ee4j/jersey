@@ -1,2 +1,0 @@
-org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory
-org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory
