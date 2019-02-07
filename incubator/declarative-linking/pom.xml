@@ -86,24 +86,6 @@
 
     <profiles>
         <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <links>
-                                <link>https://jsr311.java.net/nonav/releases/1.1</link>
-                                <link>https://jersey.java.net/nonav/apidocs/latest/jersey/</link>
-                            </links>
-                            <notimestamp>true</notimestamp>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>cobertura</id>
             <activation>
                 <property>
