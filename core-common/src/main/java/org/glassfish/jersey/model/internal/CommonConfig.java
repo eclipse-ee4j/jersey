@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -106,15 +106,20 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
 
         private final Class<? extends Feature> featureClass;
         private final Feature feature;
+        private final RuntimeType runtimeType;
 
         private FeatureRegistration(final Class<? extends Feature> featureClass) {
             this.featureClass = featureClass;
             this.feature = null;
+            final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
+            this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
         }
 
         private FeatureRegistration(final Feature feature) {
             this.featureClass = feature.getClass();
             this.feature = feature;
+            final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
+            this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
         }
 
         /**
@@ -122,7 +127,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
          *
          * @return registered feature class.
          */
-        Class<? extends Feature> getFeatureClass() {
+        private Class<? extends Feature> getFeatureClass() {
             return featureClass;
         }
 
@@ -133,8 +138,19 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
          * @return the registered feature instance or {@code null} if this is a
          *         class based feature registration.
          */
-        public Feature getFeature() {
+        private Feature getFeature() {
             return feature;
+        }
+
+        /**
+         * Get the {@code RuntimeType} constraint given by {@code ConstrainedTo} annotated
+         * the Feature or {@code null} if not annotated.
+         *
+         * @return the {@code RuntimeType} constraint given by {@code ConstrainedTo} annotated
+         *         the Feature or {@code null} if not annotated.
+         */
+        private RuntimeType getFeatureRuntimeType() {
+            return runtimeType;
         }
 
         @Override
@@ -674,13 +690,17 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 // init lazily
                 featureContextWrapper = new FeatureContextWrapper(this, injectionManager);
             }
-            final boolean success = feature.configure(featureContextWrapper);
 
-            if (success) {
-                processed.add(registration);
-                configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
-                enabledFeatureClasses.add(registration.getFeatureClass());
-                enabledFeatures.add(feature);
+            final RuntimeType runtimeTypeConstraint = registration.getFeatureRuntimeType();
+            if (runtimeTypeConstraint == null || type.equals(runtimeTypeConstraint)) {
+                final boolean success = feature.configure(featureContextWrapper);
+
+                if (success) {
+                    processed.add(registration);
+                    configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
+                    enabledFeatureClasses.add(registration.getFeatureClass());
+                    enabledFeatures.add(feature);
+                }
             }
         }
     }
