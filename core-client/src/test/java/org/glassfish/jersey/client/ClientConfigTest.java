@@ -158,7 +158,7 @@ public class ClientConfigTest {
     }
 
     /**
-     * Copied from DefaultConfigTest.
+     * Copied from CommonConfigTest.
      */
     @Test
     public void testGetFeatures() {

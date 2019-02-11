@@ -71,8 +71,6 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
     private final LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>> shutdownHooks =
                                         new LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>>();
     private final ReferenceQueue<JerseyClient.ShutdownHook> shReferenceQueue = new ReferenceQueue<JerseyClient.ShutdownHook>();
-    private final ExecutorService executorService;
-    private final ScheduledExecutorService scheduledExecutorService;
 
     /**
      * Client instance shutdown hook.
@@ -138,39 +136,6 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
      * Create a new Jersey client instance.
      *
      * @param config                    jersey client configuration.
-     * @param sslContext                jersey client SSL context.
-     * @param verifier                  jersey client host name verifier.
-     * @param defaultSslContextProvider default SSL context provider.
-     */
-    protected JerseyClient(final Configuration config,
-                           final SSLContext sslContext,
-                           final HostnameVerifier verifier,
-                           final DefaultSslContextProvider defaultSslContextProvider,
-                           ExecutorService executorService,
-                           ScheduledExecutorService scheduledExecutorService) {
-        this(config, sslContext == null ? null : Values.unsafe(sslContext), verifier,
-             defaultSslContextProvider, executorService, scheduledExecutorService);
-    }
-
-    /**
-     * Create a new Jersey client instance.
-     *
-     * @param config             jersey client configuration.
-     * @param sslContextProvider jersey client SSL context provider.
-     * @param verifier           jersey client host name verifier.
-     */
-    protected JerseyClient(final Configuration config,
-                           final UnsafeValue<SSLContext, IllegalStateException> sslContextProvider,
-                           final HostnameVerifier verifier,
-                           ExecutorService executorService,
-                           ScheduledExecutorService scheduledExecutorService) {
-        this(config, sslContextProvider, verifier, null, executorService, scheduledExecutorService);
-    }
-
-    /**
-     * Create a new Jersey client instance.
-     *
-     * @param config                    jersey client configuration.
      * @param sslContextProvider        jersey client SSL context provider. Non {@code null} provider is expected to
      *                                  return non-default value.
      * @param verifier                  jersey client host name verifier.
@@ -180,15 +145,6 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
                            final UnsafeValue<SSLContext, IllegalStateException> sslContextProvider,
                            final HostnameVerifier verifier,
                            final DefaultSslContextProvider defaultSslContextProvider) {
-        this(config, sslContextProvider, verifier, defaultSslContextProvider, null, null);
-    }
-
-    protected JerseyClient(final Configuration config,
-                           final UnsafeValue<SSLContext, IllegalStateException> sslContextProvider,
-                           final HostnameVerifier verifier,
-                           final DefaultSslContextProvider defaultSslContextProvider,
-                           ExecutorService executorService,
-                           ScheduledExecutorService scheduledExecutorService) {
         this.config = config == null ? new ClientConfig(this) : new ClientConfig(this, config);
 
         if (sslContextProvider == null) {
@@ -216,8 +172,6 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
         }
 
         this.hostnameVerifier = verifier;
-        this.executorService = executorService;
-        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     @Override
@@ -430,11 +384,11 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
     }
 
     public ExecutorService getExecutorService() {
-        return executorService;
+        return config.getExecutorService();
     }
 
     public ScheduledExecutorService getScheduledExecutorService() {
-        return scheduledExecutorService;
+        return config.getScheduledExecutorService();
     }
 
     @Override

@@ -24,6 +24,8 @@ import org.glassfish.jersey.tests.integration.servlet_25_mvc_3.resource.Book;
 
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -64,7 +66,7 @@ public class ItemITCase extends TestSupport {
 
         assertItemHtmlResponse(htmlIso);
         assertFalse("Response shouldn't contain Ha\u0161ek but was: " + htmlIso, htmlIso.contains("Ha\u0161ek"));
-        assertResponseContains(htmlIso, new String("Ha\u0161ek".getBytes(), "ISO-8859-2"));
+        assertResponseContains(htmlIso, new String("Ha\u0161ek".getBytes(Charset.forName("UTF-8")), "ISO-8859-2"));
     }
 
     @Test

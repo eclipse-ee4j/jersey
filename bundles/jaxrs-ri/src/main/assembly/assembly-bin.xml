@@ -41,10 +41,10 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <includes>
-                <include>javax.ws.rs:*</include>
+                <include>jakarta.ws.rs:*</include>
             </includes>
             <excludes>
-                <exclude>javax.ws.rs:*:*:sources:*</exclude>
+                <exclude>jakarta.ws.rs:*:*:sources:*</exclude>
             </excludes>
         </dependencySet>
         <!-- JAX-RS RI Binaries-->

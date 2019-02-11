@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.bundles</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-examples</artifactId>
@@ -32,6 +32,7 @@
     <packaging>pom</packaging>
 
     <dependencies>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>bean-validation-webapp</artifactId>
@@ -46,6 +47,7 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>bookmark</artifactId>
@@ -434,6 +436,7 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>monitoring-webapp</artifactId>
@@ -441,6 +444,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>multipart-webapp</artifactId>
@@ -462,6 +466,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
            <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>oauth2-client-google-webapp</artifactId>
@@ -469,6 +474,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>osgi-helloworld-webapp</artifactId>
@@ -553,6 +559,7 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>shortener-webapp</artifactId>
@@ -567,6 +574,7 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>simple-console</artifactId>
@@ -574,6 +582,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>sparklines</artifactId>
@@ -581,6 +590,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>sse-item-store-jersey-webapp</artifactId>
@@ -623,6 +633,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>tone-generator</artifactId>
@@ -630,6 +641,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>xml-moxy</artifactId>

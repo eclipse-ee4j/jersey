@@ -43,7 +43,7 @@ import javax.interceptor.Interceptor;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor;
+import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
 
 /**
  * CDI extension to register {@link CdiInterceptorWrapper}.
@@ -67,9 +67,13 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param beanManager current bean manager.
      */
     private void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, final BeanManager beanManager) {
-        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class));
+        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class),
+                "Jersey " + CdiInterceptorWrapper.class.getName()
+        );
         interceptorAnnotatedType = beanManager.createAnnotatedType(ValidationInterceptor.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType);
+        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType,
+                "Jersey " + ValidationInterceptor.class.getName()
+        );
     }
 
     /**
@@ -78,7 +82,7 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param afterTypeDiscovery CDI bootstrap event.
      */
     private void afterTypeDiscovery(@Observes final AfterTypeDiscovery afterTypeDiscovery) {
-        afterTypeDiscovery.getInterceptors().remove(ValidationInterceptor.class);
+        afterTypeDiscovery.getInterceptors().removeIf(ValidationInterceptor.class::equals);
     }
 
     /**

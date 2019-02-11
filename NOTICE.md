@@ -70,10 +70,6 @@ Javassist Version 3.22.0-CR2
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Java(TM) EE Interceptors 1.1 API Version 1.0.0.Beta1
-* License: LGPL 2.1
-* Copyright 2005, JBoss Inc., and individual contributors as indicated by the @authors tag.
-
 Jackson JAX-RS Providers Version 2.8.10
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
@@ -111,3 +107,7 @@ org.glassfish.jersey.server.internal.monitoring.core
 * License: Apache License, 2.0
 * Copyright (c) 2015-2018 Oracle and/or its affiliates. All rights reserved.
 * Copyright 2010-2013 Coda Hale and Yammer, Inc.
+
+W3.org documents
+* License: W3C License
+* Copyright: Copyright (c) 1994-2001 World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/
