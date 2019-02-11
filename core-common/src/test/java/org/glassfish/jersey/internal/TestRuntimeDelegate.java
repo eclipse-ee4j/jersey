@@ -16,6 +16,10 @@
 
 package org.glassfish.jersey.internal;
 
+import java.util.concurrent.CompletionStage;
+
+import javax.ws.rs.JAXRS;
+import javax.ws.rs.JAXRS.Instance;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Link;
@@ -44,6 +48,16 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
     public <T> T createEndpoint(Application application, Class<T> endpointType)
             throws IllegalArgumentException, UnsupportedOperationException {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JAXRS.Configuration.Builder createConfigurationBuilder() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CompletionStage<Instance> bootstrap(Application application, JAXRS.Configuration configuration) {
+        throw new UnsupportedOperationException();
     }
 
     public void testMediaType() {

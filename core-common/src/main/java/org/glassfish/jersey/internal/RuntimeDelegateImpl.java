@@ -16,6 +16,10 @@
 
 package org.glassfish.jersey.internal;
 
+import java.util.concurrent.CompletionStage;
+
+import javax.ws.rs.JAXRS;
+import javax.ws.rs.JAXRS.Instance;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.message.internal.MessagingBinders;
@@ -43,4 +47,15 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
             throws IllegalArgumentException, UnsupportedOperationException {
         throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
     }
+
+    @Override
+    public JAXRS.Configuration.Builder createConfigurationBuilder() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CompletionStage<Instance> bootstrap(Application application, JAXRS.Configuration configuration) {
+        throw new UnsupportedOperationException();
+    }
+
 }
