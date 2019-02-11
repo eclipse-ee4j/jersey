@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,11 @@
 
 package org.glassfish.jersey.server.internal;
 
+import java.util.concurrent.CompletionStage;
+
 import javax.ws.rs.core.Application;
+import javax.ws.rs.JAXRS;
+import javax.ws.rs.JAXRS.Instance;
 
 import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
@@ -46,4 +50,15 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
         }
         return ContainerFactory.createContainer(endpointType, application);
     }
+
+    @Override
+    public JAXRS.Configuration.Builder createConfigurationBuilder() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CompletionStage<Instance> bootstrap(Application application, JAXRS.Configuration configuration) {
+        throw new UnsupportedOperationException();
+    }
+
 }
