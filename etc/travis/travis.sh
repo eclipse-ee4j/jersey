@@ -25,7 +25,11 @@ trap 'error_handler' ERR
 bash -c "while true; do tail -5 $BUILD_OUTPUT; sleep $PING_SLEEP; done" &
 PING_LOOP_PID=$!
 
-mvn -e -U -B -Peclipse_repo clean install $1 >> $BUILD_OUTPUT 2>&1
+if [ "$1" = "glassfish-copyright:copyright" ]; then
+    mvn glassfish-copyright:copyright
+else
+    mvn -e -U -B -Peclipse_repo clean install $1 >> $BUILD_OUTPUT 2>&1
+fi
 
 # The build finished without returning an error so dump a tail of the output
 dump_output

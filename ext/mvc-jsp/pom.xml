@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.ext</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-mvc-jsp</artifactId>
@@ -37,7 +37,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -53,7 +53,8 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            javax.servlet.jsp.*;version="${range;[==,+);${jsp.version}}",
+                            javax.servlet.jsp.*;version="[2.0,3.0)",
+                            javax.servlet.*;version="!",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.jsp.*;version=${project.version}</Export-Package>
@@ -67,7 +68,7 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -81,14 +82,14 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet2.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet4.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <version>${jsp.version}</version>
             <scope>provided</scope>
         </dependency>

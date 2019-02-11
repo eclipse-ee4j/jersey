@@ -43,6 +43,8 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class ClientCloseTest extends JerseyTest {
 
+    private static final int LATCH_WAIT_TIMEOUT = 16;
+
     /**
      * The test test that SSE connection is really closed when EventSource.close() is called.
      * <p/>
@@ -66,7 +68,7 @@ public class ClientCloseTest extends JerseyTest {
         // Server sends 3 events we are interested in.
         IntStream.range(0, 3).forEach((i) -> assertEquals("OK",
                 target("sse/send").request().get().readEntity(String.class)));
-        assertTrue(eventLatch.await(5, TimeUnit.SECONDS));
+        assertTrue(eventLatch.await(LATCH_WAIT_TIMEOUT, TimeUnit.SECONDS));
 
         // After receiving the 3 events, we try to close.
         eventSource.close();
@@ -74,7 +76,7 @@ public class ClientCloseTest extends JerseyTest {
         // Unfortunately the HTTPURLConnection is blocked in read() method, so it will close only after receiving the next event.
         assertEquals("OK", target("sse/send").request().get().readEntity(String.class));
         // Wait for the event that will unblock the HTTPURLConnection and result in sending FIN.
-        assertTrue(eventLatch2.await(5, TimeUnit.SECONDS));
+        assertTrue(eventLatch2.await(LATCH_WAIT_TIMEOUT, TimeUnit.SECONDS));
         // Now it is interesting. Client has sent FIN, but Grizzly does not listen for client input (selector READ key is
         // disabled), while streaming the response. For some reason we need to send 2 more events for Grizzly to notice
         // that the client is gone.

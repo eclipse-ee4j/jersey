@@ -7,6 +7,7 @@ services:
 
 jdk:
   - oraclejdk8
+  - openjdk8
 
 cache:
   directories:
@@ -15,8 +16,9 @@ env:
   matrix:
     - TEST_SET="-Ptravis_e2e_skip"
     - TEST_SET="-Ptravis_e2e"
+    - TEST_SET="glassfish-copyright:copyright"
 
 install: true
 
 script:
-  - bash travis.sh $TEST_SET
+  - bash etc/travis/travis.sh $TEST_SET

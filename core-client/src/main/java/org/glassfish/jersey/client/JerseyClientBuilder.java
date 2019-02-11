@@ -44,8 +44,6 @@ public class JerseyClientBuilder extends ClientBuilder {
     private HostnameVerifier hostnameVerifier;
     private SslConfigurator sslConfigurator;
     private SSLContext sslContext;
-    private ExecutorService executorService;
-    private ScheduledExecutorService scheduledExecutorService;
 
     /**
      * Create a new custom-configured {@link JerseyClient} instance.
@@ -124,13 +122,13 @@ public class JerseyClientBuilder extends ClientBuilder {
 
     @Override
     public ClientBuilder executorService(ExecutorService executorService) {
-        this.executorService = executorService;
+        config.executorService(executorService);
         return this;
     }
 
     @Override
     public ClientBuilder scheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
-        this.scheduledExecutorService = scheduledExecutorService;
+        config.scheduledExecutorService(scheduledExecutorService);
         return this;
     }
 
@@ -157,8 +155,7 @@ public class JerseyClientBuilder extends ClientBuilder {
     @Override
     public JerseyClient build() {
         if (sslContext != null) {
-            return new JerseyClient(config, sslContext, hostnameVerifier, null, executorService,
-                                    scheduledExecutorService);
+            return new JerseyClient(config, sslContext, hostnameVerifier, null);
         } else if (sslConfigurator != null) {
             final SslConfigurator sslConfiguratorCopy = sslConfigurator.copy();
             return new JerseyClient(
@@ -169,10 +166,9 @@ public class JerseyClientBuilder extends ClientBuilder {
                             return sslConfiguratorCopy.createSSLContext();
                         }
                     }),
-                    hostnameVerifier, executorService, scheduledExecutorService);
+                    hostnameVerifier);
         } else {
-            return new JerseyClient(config, (UnsafeValue<SSLContext, IllegalStateException>) null, hostnameVerifier,
-                                    executorService, scheduledExecutorService);
+            return new JerseyClient(config, (UnsafeValue<SSLContext, IllegalStateException>) null, hostnameVerifier);
         }
     }
 

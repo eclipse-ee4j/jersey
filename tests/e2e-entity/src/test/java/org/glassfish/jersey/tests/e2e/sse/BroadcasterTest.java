@@ -16,11 +16,13 @@
 
 package org.glassfish.jersey.tests.e2e.sse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Assert;
+import org.junit.Test;
 
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,19 +30,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-
-import javax.inject.Singleton;
-
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.test.JerseyTest;
-
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * JAX-RS {@link javax.ws.rs.sse.SseBroadcaster} test.
@@ -53,11 +51,14 @@ public class BroadcasterTest extends JerseyTest {
     static final CountDownLatch txLatch = new CountDownLatch(4);
     private static boolean isSingleton = false;
 
+    private static int ASYNC_WAIT_TIMEOUT = 1000; //timeout for asynchronous events to complete activities
+
     @Path("sse")
     @Singleton
     public static class SseResource {
         private final Sse sse;
         private SseBroadcaster broadcaster;
+        private OutboundSseEvent.Builder builder;
 
         public SseResource(@Context final Sse sse) {
             this.sse = sse;
@@ -69,9 +70,10 @@ public class BroadcasterTest extends JerseyTest {
         @Path("events")
         public void getServerSentEvents(@Context final SseEventSink eventSink, @Context final Sse sse) {
             isSingleton = this.sse == sse;
-            eventSink.send(sse.newEventBuilder().data("Event1").build());
-            eventSink.send(sse.newEventBuilder().data("Event2").build());
-            eventSink.send(sse.newEventBuilder().data("Event3").build());
+            builder = sse.newEventBuilder();
+            eventSink.send(builder.data("Event1").build());
+            eventSink.send(builder.data("Event2").build());
+            eventSink.send(builder.data("Event3").build());
             broadcaster.register(eventSink);
             broadcaster.onClose((subscriber) -> {
                 if (subscriber == eventSink) {
@@ -82,9 +84,10 @@ public class BroadcasterTest extends JerseyTest {
         }
 
         @Path("push/{msg}")
+        @Produces(MediaType.SERVER_SENT_EVENTS)
         @GET
         public String pushMessage(@PathParam("msg") final String msg) {
-            broadcaster.broadcast(sse.newEventBuilder().data(msg).build());
+            broadcaster.broadcast(builder.data(msg).build());
             txLatch.countDown();
             return "Broadcasting message: " + msg;
         }
@@ -97,6 +100,55 @@ public class BroadcasterTest extends JerseyTest {
         }
     }
 
+    /**
+     * Wrapper to hold results coming from events (including broadcast)
+     *
+     * @param <T> type of expected results
+     */
+    public static class EventListWrapper<T> {
+        private final List<T> data; //event results
+        private final CountDownLatch eventCountDown; //count down delay for expected results
+        private final CountDownLatch broadcastLag = new CountDownLatch(1); //broadcast lag
+        // which shall be hold until thread is ready to process events from broadcast
+        private static final int LAG_INTERVAL = 1000; //broadcast lag timeout - in milliseconds (1s)
+        private static final int EXPECTED_REGULAR_EVENTS_COUNT = 3; //expected regular outbound events
+
+        public EventListWrapper(List<T> data, CountDownLatch eventCountDown) {
+            this.data = data;
+            this.eventCountDown = eventCountDown;
+        }
+
+        public void add(T msg) {
+            data.add(msg);
+            eventCountDown.countDown();
+            if (eventCountDown.getCount() == EXPECTED_REGULAR_EVENTS_COUNT) { //all regular events are received,
+                                                                              //ready for broadcast
+                broadcastLag.countDown();
+            }
+        }
+
+        public CountDownLatch getEventCountDown() {
+            return eventCountDown;
+        }
+
+        public T get(int pos) {
+            return data.get(pos);
+        }
+
+        public int size() {
+            return data.size();
+        }
+
+        /**
+         * makes current thread to wait for predefined interval until broadcast is ready
+         *
+         * @throws InterruptedException in case of something went wrong
+         */
+        public boolean waitBroadcast() throws InterruptedException {
+            return broadcastLag.await(LAG_INTERVAL, TimeUnit.MILLISECONDS);
+        }
+    }
+
     @Override
     protected Application configure() {
         final ResourceConfig rc = new ResourceConfig(SseResource.class);
@@ -106,50 +158,42 @@ public class BroadcasterTest extends JerseyTest {
 
     @Test
     public void test() throws InterruptedException {
-        SseEventSource eventSourceA = SseEventSource.target(target().path("sse/events")).build();
-        List<String> resultsA1 = new ArrayList<>();
-        List<String> resultsA2 = new ArrayList<>();
-        CountDownLatch a1Latch = new CountDownLatch(5);
-        CountDownLatch a2Latch = new CountDownLatch(5);
-        eventSourceA.register((event) -> {
-            resultsA1.add(event.readData());
-            a1Latch.countDown();
-        });
-        eventSourceA.register((event) -> {
-            resultsA2.add(event.readData());
-            a2Latch.countDown();
-        });
+        final SseEventSource eventSourceA = SseEventSource.target(target().path("sse/events")).build();
+        final EventListWrapper<String> resultsA1 = new EventListWrapper(new ArrayList(), new CountDownLatch(5));
+        final EventListWrapper<String> resultsA2 = new EventListWrapper(new ArrayList(), new CountDownLatch(5));
+
+        eventSourceA.register(event -> resultsA1.add(event.readData()));
+        eventSourceA.register(event -> resultsA2.add(event.readData()));
         eventSourceA.open();
+
+        Assert.assertTrue(resultsA1.waitBroadcast()); //some delay is required to process consumer and producer
+        Assert.assertTrue(resultsA2.waitBroadcast()); //some delay is required to process consumer and producer
 
         target().path("sse/push/firstBroadcast").request().get(String.class);
 
 
-        SseEventSource eventSourceB = SseEventSource.target(target().path("sse/events")).build();
-        List<String> resultsB1 = new ArrayList<>();
-        List<String> resultsB2 = new ArrayList<>();
-        CountDownLatch b1Latch = new CountDownLatch(4);
-        CountDownLatch b2Latch = new CountDownLatch(4);
-        eventSourceB.register((event) -> {
-            resultsB1.add(event.readData());
-            b1Latch.countDown();
-        });
-        eventSourceB.register((event) -> {
-            resultsB2.add(event.readData());
-            b2Latch.countDown();
-        });
+        final SseEventSource eventSourceB = SseEventSource.target(target().path("sse/events")).build();
+        final EventListWrapper<String> resultsB1 = new EventListWrapper(new ArrayList(), new CountDownLatch(4));
+        final EventListWrapper<String> resultsB2 = new EventListWrapper(new ArrayList(), new CountDownLatch(4));
+
+        eventSourceB.register(event -> resultsB1.add(event.readData()));
+        eventSourceB.register(event -> resultsB2.add(event.readData()));
         eventSourceB.open();
+
+        Assert.assertTrue(resultsB1.waitBroadcast()); //some delay is required to process consumer and producer
+        Assert.assertTrue(resultsB2.waitBroadcast()); //some delay is required to process consumer and producer
 
         target().path("sse/push/secondBroadcast").request().get(String.class);
 
         Assert.assertTrue("Waiting for resultsA1 to be complete failed.",
-                a1Latch.await(3000, TimeUnit.MILLISECONDS));
+                resultsA1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsA2 to be complete failed.",
-                a2Latch.await(3000, TimeUnit.MILLISECONDS));
+                resultsA2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue("Waiting for resultsB1 to be complete failed.",
-                b1Latch.await(3000, TimeUnit.MILLISECONDS));
+                resultsB1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
         Assert.assertTrue("Waiting for resultsB2 to be complete failed.",
-                b2Latch.await(3000, TimeUnit.MILLISECONDS));
+                resultsB2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
 
         Assert.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
 
@@ -184,7 +228,7 @@ public class BroadcasterTest extends JerseyTest {
                         && resultsB2.get(2).equals("Event3")
                         && resultsB2.get(3).equals("secondBroadcast"));
         target().path("sse/close").request().get();
-        Assert.assertTrue(closeLatch.await(3000, TimeUnit.MILLISECONDS));
+        closeLatch.await();
         Assert.assertTrue("Sse instances injected into resource and constructor differ. Sse should have been injected"
                 + "as a singleton", isSingleton);
     }

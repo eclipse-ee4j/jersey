@@ -44,6 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
@@ -83,7 +84,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(BundleLocationProperty).value(bundleLocation),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
 
                 // do not remove the following line
@@ -94,7 +95,7 @@ public abstract class AbstractHttpServiceTest {
                 // mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
                 // javax.annotation has to go first!
-                mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),
                 junitBundles(),
@@ -104,12 +105,16 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("osgi-resource-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-utils").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("javax.inject").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("jakarta.inject").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
 
-                // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                //JAXB-API
+                mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
+                //SUN JAXB IMPL OSGI
+                mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                systemPackage("com.sun.source.tree"),
+                systemPackage("com.sun.source.util"),
 
                 // validation
                 mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
@@ -120,7 +125,11 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                 .versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject()
+                mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // JAX-RS API
+                mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject()
+
                 ));
 
         final String localRepository = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("localRepository"));
@@ -134,7 +143,7 @@ public abstract class AbstractHttpServiceTest {
 
     public List<Option> grizzlyOptions() {
         return Arrays.asList(options(
-                mavenBundle().groupId("com.sun.grizzly.osgi").artifactId("grizzly-httpservice-bundle").versionAsInProject()
+                mavenBundle().groupId("org.glassfish.grizzly.osgi").artifactId("grizzly-httpservice-bundle").versionAsInProject()
         ));
     }
 

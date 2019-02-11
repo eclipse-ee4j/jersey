@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -121,7 +122,7 @@ public class JerseySseEventSource implements SseEventSource {
                            final Consumer<Throwable> onError,
                            final Runnable onComplete) {
         if (onSubscribe == null || onEvent == null || onError == null || onComplete == null) {
-            throw new IllegalStateException(LocalizationMessages.PARAMS_NULL());
+            throw new IllegalArgumentException(LocalizationMessages.PARAMS_NULL());
         }
 
         publisher.subscribe(new Flow.Subscriber<InboundSseEvent>() {
@@ -203,6 +204,7 @@ public class JerseySseEventSource implements SseEventSource {
 
         @Override
         protected Builder target(final WebTarget endpoint) {
+            Objects.requireNonNull(endpoint);
             this.endpoint = endpoint;
             return this;
         }

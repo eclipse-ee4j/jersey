@@ -29,8 +29,9 @@ public final class EntityStore {
 
     static {
         // Projects.
-        final Project project = createProject("Jersey", "Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 "
-                + "(JSR 370) production quality Reference Implementation for building RESTful Web services.");
+        final Project project = createProject("Jersey", "Jersey is the open source (see NOTICE.md for license "
+                + "information) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web "
+                + "services.");
 
         // Users.
         final User robot = createUser("Jersey Robot", "very@secret.com");
