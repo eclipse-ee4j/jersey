@@ -379,7 +379,7 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
-            <version>1.2.1</version>
+            <version>${jakarta.activation.version}</version>
             <scope>test</scope>
         </dependency>
 
