@@ -12,6 +12,8 @@ jdk:
 cache:
   directories:
     - .autoconf
+    - $HOME/.m2
+
 env:
   matrix:
     - TEST_SET="-Ptravis_e2e_skip"
