@@ -25,8 +25,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,14 +43,16 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
-import org.glassfish.jersey.server.ApplicationHandler;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 
 /**
  * Unit tests for {@link RuntimeDelegate}.
@@ -60,6 +60,7 @@ import org.junit.Test;
  * @author Martin Matula
  * @author Markus KARG (markus@headcrashing.eu)
  */
+@RunWith(JMockit.class)
 public class RuntimeDelegateImplTest {
 
     @Test
@@ -134,11 +135,10 @@ public class RuntimeDelegateImplTest {
     }
 
     @Test
-    public final void shouldBuildCustomConfigurationUsingNamedStandardProperties() throws NoSuchAlgorithmException {
+    public final void shouldBuildCustomConfigurationUsingNamedStandardProperties(@Mocked final SSLContext mockSslContext)
+            throws NoSuchAlgorithmException {
         // given
         final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
-        final SSLContext mockSslContext = new SSLContext(null, null, null) {
-        };
 
         // when
         final JAXRS.Configuration configuration = configurationBuilder.property(JAXRS.Configuration.PROTOCOL, "HTTPS")
@@ -159,11 +159,10 @@ public class RuntimeDelegateImplTest {
     }
 
     @Test
-    public final void shouldBuildCustomConfigurationUsingConvenienceMethods() throws NoSuchAlgorithmException {
+    public final void shouldBuildCustomConfigurationUsingConvenienceMethods(@Mocked final SSLContext mockSslContext)
+            throws NoSuchAlgorithmException {
         // given
         final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
-        final SSLContext mockSslContext = new SSLContext(null, null, null) {
-        };
 
         // when
         final JAXRS.Configuration configuration = configurationBuilder.protocol("HTTPS").host("hostname").port(8080)
@@ -181,11 +180,9 @@ public class RuntimeDelegateImplTest {
     }
 
     @Test
-    public final void shouldBuildCustomConfigurationFromPropertiesProvider() {
+    public final void shouldBuildCustomConfigurationFromPropertiesProvider(@Mocked final SSLContext mockSslContext) {
         // given
         final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
-        final SSLContext mockSslContext = new SSLContext(null, null, null) {
-        };
         final Class<Server> mockServerClass = Server.class;
         final BiFunction<String, Class<Object>, Optional<Object>> propertiesProvider = (propertyName, propertyType) -> {
             if (JAXRS.Configuration.PROTOCOL.equals(propertyName) && String.class.equals(propertyType)) {
@@ -232,27 +229,10 @@ public class RuntimeDelegateImplTest {
     }
 
     @Test
-    public final void shouldBootstrapApplication() throws InterruptedException, ExecutionException, TimeoutException {
+    public final void shouldBootstrapApplication(@Mocked final Container mockContainer,
+            @Mocked final Application mockApplication, @Mocked final SSLContext mockSslContext) throws InterruptedException,
+            ExecutionException, TimeoutException {
         // given
-        final Container mockContainer = new Container() {
-            @Override
-            public final ResourceConfig getConfiguration() {
-                return null;
-            }
-
-            @Override
-            public final ApplicationHandler getApplicationHandler() {
-                return null;
-            }
-
-            @Override
-            public final void reload() {
-            }
-
-            @Override
-            public final void reload(final ResourceConfig configuration) {
-            }
-        };
         final Server mockServer = new Server() {
             @Override
             public final Container container() {
@@ -280,9 +260,6 @@ public class RuntimeDelegateImplTest {
             }
         };
         final RuntimeDelegate runtimeDelegate = new RuntimeDelegateImpl();
-        final Application mockApplication = new Application();
-        final SSLContext mockSslContext = new SSLContext(null, null, null) {
-        };
         final JAXRS.Configuration mockConfiguration = name -> {
             switch (name) {
             case JAXRS.Configuration.PROTOCOL:

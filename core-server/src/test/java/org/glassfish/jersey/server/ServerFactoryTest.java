@@ -20,11 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.theInstance;
 import static org.junit.Assert.assertThat;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CompletionStage;
 
 import javax.ws.rs.JAXRS;
 import javax.ws.rs.JAXRS.Configuration;
@@ -33,17 +29,16 @@ import javax.ws.rs.core.Application;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.guava.Iterators;
-import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
-import org.glassfish.jersey.internal.inject.ServiceHolder;
-import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 
 /**
  * Unit tests for {@link ServerFactory}.
@@ -51,40 +46,13 @@ import org.junit.Test;
  * @author Markus KARG (markus@headcrashing.eu)
  * @since 2.28
  */
+@RunWith(JMockit.class)
 public final class ServerFactoryTest {
 
     @Test
-    public final void shouldBuildServer() {
+    public final void shouldBuildServer(@Mocked final Application mockApplication, @Mocked final Server mockServer,
+            @Mocked final JAXRS.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
         // given
-        final Application mockApplication = new Application();
-        final JAXRS.Configuration mockConfiguration = name -> null;
-        final Server mockServer = new Server() {
-
-            @Override
-            public final Container container() {
-                return null;
-            }
-
-            @Override
-            public final int port() {
-                return 0;
-            }
-
-            @Override
-            public final CompletionStage<?> start() {
-                return null;
-            }
-
-            @Override
-            public final CompletionStage<?> stop() {
-                return null;
-            }
-
-            @Override
-            public final <T> T unwrap(final Class<T> nativeClass) {
-                return null;
-            }
-        };
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
             @Override
             public final <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
@@ -102,95 +70,7 @@ public final class ServerFactoryTest {
                                 : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
                                     @Override
                                     public final InjectionManager create(final Object parent) {
-                                        return new InjectionManager() {
-
-                                            @Override
-                                            public void completeRegistration() {
-                                            }
-
-                                            @Override
-                                            public void shutdown() {
-                                            }
-
-                                            @Override
-                                            public void register(Binding binding) {
-                                            }
-
-                                            @Override
-                                            public void register(Iterable<Binding> descriptors) {
-                                            }
-
-                                            @Override
-                                            public void register(Binder binder) {
-                                            }
-
-                                            @Override
-                                            public void register(Object provider) throws IllegalArgumentException {
-                                            }
-
-                                            @Override
-                                            public boolean isRegistrable(Class<?> clazz) {
-                                                return false;
-                                            }
-
-                                            @Override
-                                            public <T> T createAndInitialize(Class<T> createMe) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> List<ServiceHolder<T>> getAllServiceHolders(Class<T> contractOrImpl,
-                                                    Annotation... qualifiers) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> T getInstance(Class<T> contractOrImpl, Annotation... qualifiers) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> T getInstance(Class<T> contractOrImpl, String classAnalyzer) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> T getInstance(Class<T> contractOrImpl) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> T getInstance(Type contractOrImpl) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public Object getInstance(ForeignDescriptor foreignDescriptor) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public ForeignDescriptor createForeignDescriptor(Binding binding) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public <T> List<T> getAllInstances(Type contractOrImpl) {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public void inject(Object injectMe) {
-                                            }
-
-                                            @Override
-                                            public void inject(Object injectMe, String classAnalyzer) {
-                                            }
-
-                                            @Override
-                                            public void preDestroy(Object preDestroyMe) {
-                                            }
-                                        };
+                                        return mockInjectionManager;
                                     }
                                 }
                                         : null));
