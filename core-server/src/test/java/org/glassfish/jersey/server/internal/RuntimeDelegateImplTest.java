@@ -25,6 +25,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,6 +51,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -345,6 +348,11 @@ public class RuntimeDelegateImplTest {
         assertThat(server, is(theInstance(mockServer)));
         assertThat(container, is(theInstance(mockContainer)));
         assertThat(stopResult, is(notNullValue()));
+    }
+
+    @After
+    public final void resetServiceFinder() {
+        ServiceFinder.setIteratorProvider(null);
     }
 
 }

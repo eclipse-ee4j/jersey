@@ -20,8 +20,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.theInstance;
 import static org.junit.Assert.assertThat;
 
-import java.util.Collections;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 import javax.ws.rs.JAXRS;
@@ -30,9 +32,17 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
+import org.glassfish.jersey.internal.guava.Iterators;
+import org.glassfish.jersey.internal.inject.Binder;
+import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.internal.inject.ForeignDescriptor;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
+import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -76,20 +86,114 @@ public final class ServerFactoryTest {
             }
         };
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
-
             @Override
             public final <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
                     final ClassLoader loader, final boolean ignoreOnClassNotFound) {
-                return Collections.singleton(service.cast(new ServerProvider() {
+                return Iterators.singletonIterator(service.cast(
+                        service == ServerProvider.class ? new ServerProvider() {
+                            @Override
+                            public final <U extends Server> U createServer(final Class<U> type, final Application application,
+                                    final Configuration configuration) {
+                                return application == mockApplication && configuration == mockConfiguration
+                                        ? type.cast(mockServer)
+                                        : null;
+                            }
+                        }
+                                : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
+                                    @Override
+                                    public final InjectionManager create(final Object parent) {
+                                        return new InjectionManager() {
 
-                    @Override
-                    public final <U extends Server> U createServer(final Class<U> type, final Application application,
-                            final Configuration configuration) {
-                        return application == mockApplication && configuration == mockConfiguration
-                                ? type.cast(mockServer)
-                                : null;
-                    }
-                })).iterator();
+                                            @Override
+                                            public void completeRegistration() {
+                                            }
+
+                                            @Override
+                                            public void shutdown() {
+                                            }
+
+                                            @Override
+                                            public void register(Binding binding) {
+                                            }
+
+                                            @Override
+                                            public void register(Iterable<Binding> descriptors) {
+                                            }
+
+                                            @Override
+                                            public void register(Binder binder) {
+                                            }
+
+                                            @Override
+                                            public void register(Object provider) throws IllegalArgumentException {
+                                            }
+
+                                            @Override
+                                            public boolean isRegistrable(Class<?> clazz) {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public <T> T createAndInitialize(Class<T> createMe) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> List<ServiceHolder<T>> getAllServiceHolders(Class<T> contractOrImpl,
+                                                    Annotation... qualifiers) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> T getInstance(Class<T> contractOrImpl, Annotation... qualifiers) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> T getInstance(Class<T> contractOrImpl, String classAnalyzer) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> T getInstance(Class<T> contractOrImpl) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> T getInstance(Type contractOrImpl) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public Object getInstance(ForeignDescriptor foreignDescriptor) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public ForeignDescriptor createForeignDescriptor(Binding binding) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public <T> List<T> getAllInstances(Type contractOrImpl) {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public void inject(Object injectMe) {
+                                            }
+
+                                            @Override
+                                            public void inject(Object injectMe, String classAnalyzer) {
+                                            }
+
+                                            @Override
+                                            public void preDestroy(Object preDestroyMe) {
+                                            }
+                                        };
+                                    }
+                                }
+                                        : null));
             }
 
             @Override
@@ -104,6 +208,11 @@ public final class ServerFactoryTest {
 
         // then
         assertThat(server, is(theInstance(mockServer)));
+    }
+
+    @After
+    public final void resetServiceFinder() {
+        ServiceFinder.setIteratorProvider(null);
     }
 
 }
