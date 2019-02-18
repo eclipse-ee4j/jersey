@@ -159,8 +159,8 @@ public class FeatureConstraintTest extends JerseyTest {
                         .request().get().readEntity(boolean.class),
                 is(true));
 
-        assertThat("Server Features should not have been configured the Client", clientEnvironmentHitCount.get(), is(0));
-        assertThat("Client Features should not have been configured the Server", serverEnvironmentHitCount.get(), is(0));
+        assertThat("Server Features should not have been configured on Client", clientEnvironmentHitCount.get(), is(0));
+        assertThat("Client Features should not have been configured on Server", serverEnvironmentHitCount.get(), is(0));
         assertThat("ClientSever Features should have been configured", clientServerEnvironmentHitCount.get(), is(11110));
         clientServerEnvironmentHitCount.set(0); //reset configuration invoked on a server, it won't happen again
 
@@ -168,8 +168,8 @@ public class FeatureConstraintTest extends JerseyTest {
                 target("isInherited").request().get().readEntity(boolean.class),
                 is(true));
 
-        assertThat("Server Features should not have been configured the Client", clientEnvironmentHitCount.get(), is(0));
-        assertThat("Client Features should not have been configured the Server", serverEnvironmentHitCount.get(), is(0));
+        assertThat("Server Features should not have been configured on Client", clientEnvironmentHitCount.get(), is(0));
+        assertThat("Client Features should not have been configured on Server", serverEnvironmentHitCount.get(), is(0));
         assertThat("ClientSever Features should not have been configured", clientServerEnvironmentHitCount.get(), is(0));
 
         assertThat("ServerConstrainedFeature must be in an application classes set",
@@ -183,8 +183,8 @@ public class FeatureConstraintTest extends JerseyTest {
                         .request().get().readEntity(boolean.class),
                 is(true));
 
-        assertThat("Server Features should not have been configured the Client", clientEnvironmentHitCount.get(), is(0));
-        assertThat("Client Features should not have been configured the Server", serverEnvironmentHitCount.get(), is(0));
+        assertThat("Server Features should not have been configured on Client", clientEnvironmentHitCount.get(), is(0));
+        assertThat("Client Features should not have been configured on Server", serverEnvironmentHitCount.get(), is(0));
         assertThat("ClientSever Features should have been configured", clientServerEnvironmentHitCount.get(), is(22000));
     }
 

@@ -669,6 +669,13 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 continue;
             }
 
+            final RuntimeType runtimeTypeConstraint = registration.getFeatureRuntimeType();
+            if (runtimeTypeConstraint != null && !type.equals(runtimeTypeConstraint)) {
+                LOGGER.config(LocalizationMessages.FEATURE_CONSTRAINED_TO_IGNORED(
+                        registration.getFeatureClass(), registration.runtimeType, type));
+                continue;
+            }
+
             Feature feature = registration.getFeature();
             if (feature == null) {
                 feature = injectionManager.createAndInitialize(registration.getFeatureClass());
@@ -690,17 +697,13 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 // init lazily
                 featureContextWrapper = new FeatureContextWrapper(this, injectionManager);
             }
+            final boolean success = feature.configure(featureContextWrapper);
 
-            final RuntimeType runtimeTypeConstraint = registration.getFeatureRuntimeType();
-            if (runtimeTypeConstraint == null || type.equals(runtimeTypeConstraint)) {
-                final boolean success = feature.configure(featureContextWrapper);
-
-                if (success) {
-                    processed.add(registration);
-                    configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
-                    enabledFeatureClasses.add(registration.getFeatureClass());
-                    enabledFeatures.add(feature);
-                }
+            if (success) {
+                processed.add(registration);
+                configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
+                enabledFeatureClasses.add(registration.getFeatureClass());
+                enabledFeatures.add(feature);
             }
         }
     }
