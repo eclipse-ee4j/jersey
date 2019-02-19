@@ -441,7 +441,7 @@
                             <link>http://hk2.java.net/nonav/hk2-api/apidocs</link>
                         </links>
                         <excludePackageNames>
-                            *.internal.*:*.tests.*
+                            *.internal.*:*.tests.*:sun.*
                         </excludePackageNames>
                         <sourceFileExcludes>
                             <exclude>bundles/**</exclude>

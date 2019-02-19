@@ -1011,6 +1011,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T>,
      */
     @SuppressWarnings("serial")
     @sun.misc.Contended
+    @jdk.internal.vm.annotation.Contended
     private static final class BufferedSubscription<T>
             implements Flow.Subscription, ForkJoinPool.ManagedBlocker {
         // Order-sensitive field declarations
