@@ -34,7 +34,7 @@ import org.junit.Test;
  * Unit tests for {@link MicroprofileConfigurator}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.28
+ * @since 2.29
  */
 public class MicroprofileConfiguratorTest {
 

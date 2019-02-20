@@ -26,7 +26,7 @@ import org.glassfish.jersey.server.spi.Configurator;
  * Configurator for Microprofile Config configurations.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.28
+ * @since 2.29
  */
 public class MicroprofileConfigurator implements Configurator {
 

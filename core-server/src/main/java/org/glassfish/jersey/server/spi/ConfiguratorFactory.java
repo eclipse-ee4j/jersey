@@ -25,7 +25,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
  * Factory for configuring configuration builders using provided configuration instances.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.28
+ * @since 2.29
  */
 public final class ConfiguratorFactory {
 
