@@ -44,31 +44,31 @@ The latest stable release of Jersey is [${latestVersion}][dwnld].
 
 <h3>Latest Articles</h3>
 
-<a class="article" href="http://blog.supol.info/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>
 <br/>
 Jan 28, 2019 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=131" target="_blank">Glassfish 5.1.0.RC2 is to be released!</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=131" target="_blank">Glassfish 5.1.0.RC2 is to be released!</a>
 <br/>
 Jan 26, 2019 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=126" target="_blank">Jersey 2.28-RC4 has been released</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=126" target="_blank">Jersey 2.28-RC4 has been released</a>
 <br/>
 Jan 22, 2019 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=108" target="_blank">Glassfish 5.1.0 is to be released!</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=108" target="_blank">Glassfish 5.1.0 is to be released!</a>
 <br/>
 Jan 20, 2019 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=104" target="_blank">Happy New Year: But Where Are the Christmas Presents?</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=104" target="_blank">Happy New Year: But Where Are the Christmas Presents?</a>
 <br/>
 Dec 26, 2018 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=28" target="_blank">Jersey 2.27 Has Been Released</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=28" target="_blank">Jersey 2.27 Has Been Released</a>
 <br/>
 Apr 13, 2018 | Jan Supol
 
-<a class="article" href="http://blog.supol.info/?p=13" target="_blank">What’s going on with Jersey</a>
+<a class="article" href="{{ site.links.honzablog }}/?p=13" target="_blank">What’s going on with Jersey</a>
 <br/>
 Apr 03, 2018 | Jan Supol
 
@@ -76,14 +76,14 @@ Apr 03, 2018 | Jan Supol
 
 ---
 
-<h2><a class="headerlink" href="https://jersey.github.io/documentation/latest/getting-started.html">
+<h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
     <var class="icon-compass"></var> Get Started
 </a></h2>
 
 [Learn][quick] how to use Jersey in your projects.
 
 
-<h2><a class="headerlink" href="https://jersey.github.io/documentation/latest/index.html">
+<h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
 </a></h2>
 
@@ -126,13 +126,13 @@ List of projects related to Jersey.
 Find out what our developers [blog][bloggers] about.
 
 [jax-rs]: http://jax-rs-spec.java.net/
-[jersey-api]: https://jersey.github.io/apidocs/latest/jersey/index.html
-[jersey-1.x-api]: https://jersey.github.io/apidocs/1.19.1/jersey/index.html
+[jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
+[jersey-1.x-api]: {{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html
 [contpage]: contribute.html
-[quick]: https://jersey.github.io/documentation/latest/getting-started.html
+[quick]: {{ site.links.newJerseyURL }}/documentation/latest/getting-started.html
 [dwnld]: download.html
-[deps]: https://jersey.github.io/documentation/latest/modules-and-dependencies.html
-[docindex]: https://jersey.github.io/documentation/latest/index.html
-[docindex-1.x]: https://jersey.github.io/documentation/1.19.1/index.html
+[deps]: {{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html
+[docindex]: {{ site.links.newJerseyURL }}/documentation/latest/index.html
+[docindex-1.x]: {{ site.links.newJerseyURL }}/documentation/1.19.1/index.html
 [bloggers]: bloggers.html
 [older-articles]: older-articles.html
