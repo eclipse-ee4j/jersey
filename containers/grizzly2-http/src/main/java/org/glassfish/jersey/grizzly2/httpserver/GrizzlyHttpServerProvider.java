@@ -27,7 +27,7 @@ import org.glassfish.jersey.server.spi.ServerProvider;
  * Server provider for servers based on Grizzly {@link HttpServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.28
+ * @since 2.29
  */
 public final class GrizzlyHttpServerProvider implements ServerProvider {
 

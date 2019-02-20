@@ -28,7 +28,7 @@ import com.sun.net.httpserver.HttpServer;
  * Server provider for servers based on JDK {@link HttpServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.28
+ * @since 2.29
  */
 public final class JdkHttpServerProvider implements ServerProvider {
 
