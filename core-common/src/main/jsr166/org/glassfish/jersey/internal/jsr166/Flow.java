@@ -6,6 +6,8 @@
 
 package org.glassfish.jersey.internal.jsr166;
 
+import java.util.concurrent.Executor;
+
 /**
  * Interrelated interfaces and static methods for establishing
  * flow-controlled components in which {@link Publisher Publishers}

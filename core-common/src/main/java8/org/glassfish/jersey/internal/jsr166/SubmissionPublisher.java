@@ -134,7 +134,7 @@ import java.util.function.Consumer;
  * @author Doug Lea
  * @since 9
  */
-public class SubmissionPublisher<T> implements Flow.Publisher<T>,
+public class SubmissionPublisher<T> implements Flow.Publisher<T>, SubmittableFlowPublisher<T>,
         AutoCloseable {
     /*
      * Most mechanics are handled by BufferedSubscription. This class
