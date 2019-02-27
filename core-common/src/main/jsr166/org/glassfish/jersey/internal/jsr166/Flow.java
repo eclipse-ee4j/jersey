@@ -6,8 +6,6 @@
 
 package org.glassfish.jersey.internal.jsr166;
 
-import java.util.concurrent.Executor;
-
 /**
  * Interrelated interfaces and static methods for establishing
  * flow-controlled components in which {@link Publisher Publishers}
@@ -28,7 +26,7 @@ import java.util.concurrent.Executor;
  * {@link Subscription} implementation; constructing one in method
  * {@code subscribe} and issuing it to the calling {@link
  * Subscriber}. It publishes items to the subscriber asynchronously,
- * normally using an {@link Executor}.  For example, here is a very
+ * normally using an {@link java.util.concurrent.Executor}.  For example, here is a very
  * simple publisher that only issues (when requested) a single {@code
  * TRUE} item to a single subscriber.  Because the subscriber receives
  * only a single item, this class does not use buffering and ordering
