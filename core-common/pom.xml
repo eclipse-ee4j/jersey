@@ -292,15 +292,23 @@
         </profile>
 
         <profile>
-            <id>jdk9+</id>
+            <id>jdk11+</id>
+            <!--
+                JDK 9 & 10 is unsupported (as well as <release>9</release>)
+                module-info for java.xml.bind is taken from JDK (lib/ct.sym/9-modules)
+                and it depends on java.activation which clashes with javax.activation
+            -->
             <activation>
-                <jdk>[9,12)</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <dependencies>
                 <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </dependency>
+                <dependency>
                     <groupId>com.sun.activation</groupId>
                     <artifactId>jakarta.activation</artifactId>
-                    <version>${jakarta.activation.version}</version>
                 </dependency>
             </dependencies>
             <build>
@@ -372,66 +380,22 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.8.0</version>
-                        <inherited>false</inherited>
                         <executions>
                             <execution>
                                 <id>default-compile</id>
                                 <configuration>
                                     <!-- compile everything to ensure module-info contains right entries -->
-                                    <release>9</release>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>base-compile</id>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <!-- recompile everything for target VM except the module-info.java -->
-                                <configuration>
-                                    <excludes>
-                                        <exclude>module-info.java</exclude>
-                                    </excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <!-- defaults for compile and testCompile -->
-                        <configuration>
-                            <!-- jdkToolchain required when JAVA_HOME is JDK 9 or above -->
-                            <jdkToolchain>
-                                <version>[1.8,9)</version>
-                            </jdkToolchain>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <id>copy-jdk9-classes-to-meta-inf</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${java9.build.outputDirectory}</directory>
-                                        </resource>
-                                    </resources>
+                                    <release>11</release>
+                                    <compilerArgs>
+                                        <arg>--add-reads</arg>
+                                        <arg>org.glassfish.jersey.core.common=ALL-UNNAMED</arg>
+                                    </compilerArgs>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
-            <properties>
-                <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
-            </properties>
         </profile>
         <profile>
             <id>copyJDK8FilesToMultiReleaseJar</id>
@@ -440,7 +404,7 @@
                     <!-- ${java8.build.outputDirectory} does not work here -->
                     <exists>target/classes-java8/org/glassfish/jersey/internal/jsr166/UnsafeAccessor.class</exists>
                 </file>
-                <jdk>[9,12)</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -564,6 +528,21 @@
                                     </resources>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>copy-jdk9-classes-to-meta-inf</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java9.build.outputDirectory}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -633,6 +612,7 @@
         <jsr166.sourceDirectory>${project.basedir}/src/main/jsr166</jsr166.sourceDirectory>
         <java8.build.outputDirectory>${project.build.directory}/classes-java8</java8.build.outputDirectory>
         <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
+        <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
         <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
     </properties>
 
