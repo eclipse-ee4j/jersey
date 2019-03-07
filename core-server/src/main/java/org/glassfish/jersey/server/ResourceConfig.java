@@ -38,6 +38,7 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Feature;
 
 import org.glassfish.jersey.internal.Errors;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactoryFeature;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
@@ -713,6 +714,7 @@ public class ResourceConfig extends Application implements Configurable<Resource
         final State current = state;
         if (!(current instanceof ImmutableState)) {
             setupApplicationName();
+            configure();
             state = new ImmutableState(current);
         }
     }
@@ -1296,5 +1298,9 @@ public class ResourceConfig extends Application implements Configurable<Resource
         if (appName != null && getApplicationName() == null) {
             setApplicationName(appName);
         }
+    }
+
+    private void configure() {
+        ExternalPropertiesConfigurationFactoryFeature.getFactory().configure(state);
     }
 }
