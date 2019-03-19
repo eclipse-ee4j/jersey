@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,6 +48,7 @@ import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import static org.junit.Assert.assertEquals;
+import static org.ops4j.pax.exam.CoreOptions.bootDelegationPackage;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 
@@ -69,6 +70,8 @@ public class WebResourceFactoryTest {
         List<Option> options = Helper.getCommonOsgiOptions();
 
         options.addAll(Helper.expandedList(
+                bootDelegationPackage("javax.xml.bind"),
+                bootDelegationPackage("javax.xml.bind.*"),
                 // jersey-multipart dependencies
                 mavenBundle().groupId("org.glassfish.jersey.ext").artifactId("jersey-proxy-client").versionAsInProject(),
                 //SUN JAXB IMPL OSGI
