@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,13 @@
 
 package org.glassfish.jersey.client;
 
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.TimeUnit;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import javax.annotation.Priority;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
@@ -29,16 +30,18 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Priority;
-import javax.net.ssl.SSLContext;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -185,6 +188,7 @@ public class JerseyClientBuilderTest {
         _testCreateClientWithAnotherConfig(true);
     }
 
+
     public void _testCreateClientWithAnotherConfig(final boolean clientInFilter) throws Exception {
         final Client client = ClientBuilder.newBuilder().register(new ClientFeature()).build();
         Response response = client.target("http://localhost")
@@ -206,6 +210,43 @@ public class JerseyClientBuilderTest {
 
         assertThat(response.getStatus(), equalTo(200));
         assertThat(response.readEntity(String.class), equalTo("ok"));
+    }
+
+    @Test
+    public void testRegisterIrrelevantContractsMap() {
+        final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        final Map<Class<?>, Integer> contracts = new HashMap<>();
+        contracts.put(Object.class, 500);
+        contracts.put(String.class, 501);
+        int sizeBeforeRegister = contracts.size();
+        clientBuilder.register(ClientConfigTest.MyProvider.class, contracts);
+        int sizeAfterRegister = contracts.size();
+
+        assertThat(sizeBeforeRegister, equalTo(sizeAfterRegister));
+    }
+
+    @Test
+    public void testRegisterNullMap() {
+        final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        final Map<Class<?>, Integer> contracts = null;
+        clientBuilder.register(ClientConfigTest.MyProvider.class, contracts);
+
+        assertNull(contracts);
+    }
+
+    @Test(expected = Test.None.class) //no exception shall be thrown
+    public void testRegisterIrrelevantImmutableContractsMap() {
+        final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        final Map<Class<?>, Integer> contracts = new HashMap<>();
+        contracts.put(Object.class, 500);
+        contracts.put(String.class, 501);
+        final Map<Class<?>, Integer> immutableContracts = Collections.unmodifiableMap(contracts);
+        int sizeBeforeRegister = immutableContracts.size();
+        clientBuilder.register(ClientConfigTest.MyProvider.class, immutableContracts);
+        int sizeAfterRegister = immutableContracts.size(); //that just proves everything passed OK
+        // otherwise exception already would been thrown
+
+        assertThat(sizeBeforeRegister, equalTo(sizeAfterRegister));
     }
 
     @Test
