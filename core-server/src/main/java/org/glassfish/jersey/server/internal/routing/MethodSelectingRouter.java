@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.internal.guava.Primitives;
+import org.glassfish.jersey.internal.routing.ContentTypeDeterminer;
+import org.glassfish.jersey.internal.routing.CombinedMediaType;
+import org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.ReaderModel;
 import org.glassfish.jersey.message.WriterModel;
@@ -67,7 +70,7 @@ import org.glassfish.jersey.server.model.ResourceMethod;
  * @author Jakub Podlesak (jakub.podlesak at oracle.com)
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
-final class MethodSelectingRouter implements Router {
+final class MethodSelectingRouter extends ContentTypeDeterminer implements Router {
 
     private static final Logger LOGGER = Logger.getLogger(MethodSelectingRouter.class.getName());
 
@@ -109,8 +112,6 @@ final class MethodSelectingRouter implements Router {
                 }
             };
 
-    private final MessageBodyWorkers workers;
-
     private final Map<String, List<ConsumesProducesAcceptor>> consumesProducesAcceptors;
     private final Router router;
 
@@ -124,7 +125,7 @@ final class MethodSelectingRouter implements Router {
      * @param methodRoutings [method model, method methodAcceptorPair] pairs.
      */
     MethodSelectingRouter(MessageBodyWorkers workers, List<MethodRouting> methodRoutings) {
-        this.workers = workers;
+        super(workers);
 
         this.consumesProducesAcceptors = new HashMap<>();
 
@@ -253,72 +254,25 @@ final class MethodSelectingRouter implements Router {
     }
 
     /**
-     * The same as above ConsumesProducesAcceptor,
-     * only concrete request content-type and accept header info is included in addition.
-     *
-     * @see CombinedMediaType
-     */
-    @SuppressWarnings("ComparableImplementedButEqualsNotOverridden")
-    private static final class RequestSpecificConsumesProducesAcceptor implements Comparable {
-
-        final CombinedMediaType consumes;
-        final CombinedMediaType produces;
-        final MethodRouting methodRouting;
-
-        final boolean producesFromProviders;
-
-        RequestSpecificConsumesProducesAcceptor(final CombinedMediaType consumes,
-                                                final CombinedMediaType produces,
-                                                final boolean producesFromProviders,
-                                                final MethodRouting methodRouting) {
-
-            this.methodRouting = methodRouting;
-            this.consumes = consumes;
-            this.produces = produces;
-
-            this.producesFromProviders = producesFromProviders;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%s->%s:%s", consumes, produces, methodRouting);
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            if (o == null) {
-                return -1;
-            }
-            if (!(o instanceof RequestSpecificConsumesProducesAcceptor)) {
-                return -1;
-            }
-            RequestSpecificConsumesProducesAcceptor other = (RequestSpecificConsumesProducesAcceptor) o;
-            final int consumedComparison = CombinedMediaType.COMPARATOR.compare(consumes, other.consumes);
-            return (consumedComparison != 0)
-                    ? consumedComparison : CombinedMediaType.COMPARATOR.compare(produces, other.produces);
-        }
-    }
-
-    /**
      * Helper class to select matching resource method to be invoked.
      */
     private static class MethodSelector {
 
-        RequestSpecificConsumesProducesAcceptor selected;
+        RequestSpecificConsumesProducesAcceptor<MethodRouting> selected;
         List<RequestSpecificConsumesProducesAcceptor> sameFitnessAcceptors;
 
-        MethodSelector(RequestSpecificConsumesProducesAcceptor i) {
+        MethodSelector(RequestSpecificConsumesProducesAcceptor<MethodRouting> i) {
             selected = i;
             sameFitnessAcceptors = null;
         }
 
-        void consider(RequestSpecificConsumesProducesAcceptor i) {
+        void consider(RequestSpecificConsumesProducesAcceptor<MethodRouting> i) {
             final int theLessTheBetter = i.compareTo(selected);
             if (theLessTheBetter < 0) {
                 selected = i;
                 sameFitnessAcceptors = null;
             } else {
-                if (theLessTheBetter == 0 && (selected.methodRouting != i.methodRouting)) {
+                if (theLessTheBetter == 0 && (selected.getMethodRouting() != i.getMethodRouting())) {
                     getSameFitnessList().add(i);
                 }
             }
@@ -463,7 +417,7 @@ final class MethodSelectingRouter implements Router {
                 differentInvokableMethods.size() == 1);
 
         if (methodSelector.selected != null) {
-            final RequestSpecificConsumesProducesAcceptor selected = methodSelector.selected;
+            final RequestSpecificConsumesProducesAcceptor<MethodRouting> selected = methodSelector.selected;
 
             if (methodSelector.sameFitnessAcceptors != null) {
                 reportMethodSelectionAmbiguity(acceptableMediaTypes, methodSelector.selected,
@@ -499,7 +453,7 @@ final class MethodSelectingRouter implements Router {
                     return responseContext;
                 }
             });
-            return selected.methodRouting.routers;
+            return selected.getMethodRouting().routers;
         }
 
         throw new NotAcceptableException();
@@ -518,15 +472,15 @@ final class MethodSelectingRouter implements Router {
     private MediaType determineResponseMediaType(
             final Class<?> entityClass,
             final Type entityType,
-            final RequestSpecificConsumesProducesAcceptor selectedMethod,
+            final RequestSpecificConsumesProducesAcceptor<MethodRouting> selectedMethod,
             final List<AcceptableMediaType> acceptableMediaTypes) {
 
         // Return pre-selected MediaType.
         if (usePreSelectedMediaType(selectedMethod, acceptableMediaTypes)) {
-            return selectedMethod.produces.combinedType;
+            return selectedMethod.getProduces().getCombinedType();
         }
 
-        final ResourceMethod resourceMethod = selectedMethod.methodRouting.method;
+        final ResourceMethod resourceMethod = selectedMethod.getMethodRouting().method;
         final Invocable invocable = resourceMethod.getInvocable();
 
         // Entity class can be null when considering HEAD method || empty entity.
@@ -536,65 +490,16 @@ final class MethodSelectingRouter implements Router {
         // Media types producible by method.
         final List<MediaType> methodProducesTypes = !resourceMethod.getProducedTypes().isEmpty()
                 ? resourceMethod.getProducedTypes() : Collections.singletonList(MediaType.WILDCARD_TYPE);
-        // Applicable entity providers
-        final List<WriterModel> writersForEntityType = workers.getWritersModelsForType(responseEntityClass);
 
-        CombinedMediaType selected = null;
-        for (final MediaType acceptableMediaType : acceptableMediaTypes) {
-            for (final MediaType methodProducesType : methodProducesTypes) {
-                if (!acceptableMediaType.isCompatible(methodProducesType)) {
-                    // no need to go deeper if acceptable and method produces type are incompatible
-                    continue;
-                }
-
-                // Use writers suitable for entity class to determine the media type.
-                for (final WriterModel model : writersForEntityType) {
-                    for (final MediaType writerProduces : model.declaredTypes()) {
-                        if (!writerProduces.isCompatible(acceptableMediaType)
-                                || !methodProducesType.isCompatible(writerProduces)) {
-                            continue;
-                        }
-
-                        final CombinedMediaType.EffectiveMediaType effectiveProduces =
-                                new CombinedMediaType.EffectiveMediaType(
-                                        MediaTypes.mostSpecific(methodProducesType, writerProduces),
-                                        false);
-
-                        final CombinedMediaType candidate =
-                                CombinedMediaType.create(acceptableMediaType, effectiveProduces);
-
-                        if (candidate != CombinedMediaType.NO_MATCH) {
-                            // Look for a better compatible worker.
-                            if (selected == null || CombinedMediaType.COMPARATOR.compare(candidate, selected) < 0) {
-                                if (model.isWriteable(
-                                        responseEntityClass,
-                                        entityType,
-                                        handlingMethod.getDeclaredAnnotations(),
-                                        candidate.combinedType)) {
-                                    selected = candidate;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Found media type for current writer.
-        if (selected != null) {
-            return selected.combinedType;
-        }
-
-        // If the media type couldn't be determined, choose pre-selected one and wait whether interceptors change the mediaType
-        // so it can be written.
-        return selectedMethod.produces.combinedType;
+        return super.determineResponseMediaType(responseEntityClass, entityType, selectedMethod, acceptableMediaTypes,
+                methodProducesTypes, handlingMethod.getDeclaredAnnotations());
     }
 
-    private static boolean usePreSelectedMediaType(final RequestSpecificConsumesProducesAcceptor selectedMethod,
+    private static boolean usePreSelectedMediaType(final RequestSpecificConsumesProducesAcceptor<MethodRouting> selectedMethod,
                                                    final List<AcceptableMediaType> acceptableMediaTypes) {
         // Resource method is annotated with @Produces and this annotation contains only one MediaType.
-        if (!selectedMethod.producesFromProviders
-                && selectedMethod.methodRouting.method.getProducedTypes().size() == 1) {
+        if (!selectedMethod.producesFromProviders()
+                && selectedMethod.getMethodRouting().method.getProducedTypes().size() == 1) {
             return true;
         }
 
@@ -603,8 +508,8 @@ final class MethodSelectingRouter implements Router {
         return acceptableMediaTypes.size() == 1 && !MediaTypes.isWildcard(acceptableMediaTypes.get(0));
     }
 
-    private boolean isWriteable(final RequestSpecificConsumesProducesAcceptor candidate) {
-        final Invocable invocable = candidate.methodRouting.method.getInvocable();
+    private boolean isWriteable(final RequestSpecificConsumesProducesAcceptor<MethodRouting> candidate) {
+        final Invocable invocable = candidate.getMethodRouting().method.getInvocable();
         final Class<?> responseType = Primitives.wrap(invocable.getRawRoutingResponseType());
 
         if (Response.class.isAssignableFrom(responseType)
@@ -622,7 +527,7 @@ final class MethodSelectingRouter implements Router {
                     responseType,
                     genericReturnType,
                     invocable.getHandlingMethod().getDeclaredAnnotations(),
-                    candidate.produces.combinedType)) {
+                    candidate.getProduces().getCombinedType())) {
                 return true;
             }
         }
@@ -630,8 +535,8 @@ final class MethodSelectingRouter implements Router {
         return false;
     }
 
-    private boolean isReadable(final RequestSpecificConsumesProducesAcceptor candidate) {
-        final Invocable invocable = candidate.methodRouting.method.getInvocable();
+    private boolean isReadable(final RequestSpecificConsumesProducesAcceptor<MethodRouting> candidate) {
+        final Invocable invocable = candidate.getMethodRouting().method.getInvocable();
         final Method handlingMethod = invocable.getHandlingMethod();
         final Parameter entityParam = getEntityParam(invocable);
 
@@ -645,7 +550,7 @@ final class MethodSelectingRouter implements Router {
                         entityType,
                         entityParam.getType(),
                         handlingMethod.getDeclaredAnnotations(),
-                        candidate.consumes.combinedType)) {
+                        candidate.getConsumes().getCombinedType())) {
                     return true;
                 }
             }
@@ -684,7 +589,8 @@ final class MethodSelectingRouter implements Router {
                 if (produces != CombinedMediaType.NO_MATCH) {
                     final CombinedMediaType consumes =
                             CombinedMediaType.create(effectiveContentType, satisfiable.consumes);
-                    final RequestSpecificConsumesProducesAcceptor candidate = new RequestSpecificConsumesProducesAcceptor(
+                    final RequestSpecificConsumesProducesAcceptor<MethodRouting> candidate =
+                            new RequestSpecificConsumesProducesAcceptor<>(
                             consumes,
                             produces,
                             satisfiable.produces.isDerived(),
@@ -696,7 +602,7 @@ final class MethodSelectingRouter implements Router {
                     } else if (candidate.compareTo(method.selected) < 0) {
                         // Candidate is better than the previous one.
                         if (method.selected == null
-                                || candidate.methodRouting.method != method.selected.methodRouting.method) {
+                                || candidate.getMethodRouting().method != method.selected.getMethodRouting().method) {
                             // No candidate so far or better candidate.
                             if (isReadable(candidate) && isWriteable(candidate)) {
                                 method.consider(candidate);
@@ -716,19 +622,19 @@ final class MethodSelectingRouter implements Router {
     }
 
     private void reportMethodSelectionAmbiguity(List<AcceptableMediaType> acceptableTypes,
-                                                RequestSpecificConsumesProducesAcceptor selected,
+                                                RequestSpecificConsumesProducesAcceptor<MethodRouting> selected,
                                                 List<RequestSpecificConsumesProducesAcceptor> sameFitnessAcceptors) {
         if (LOGGER.isLoggable(Level.WARNING)) {
             StringBuilder msgBuilder =
                     new StringBuilder(LocalizationMessages.AMBIGUOUS_RESOURCE_METHOD(acceptableTypes)).append('\n');
-            msgBuilder.append('\t').append(selected.methodRouting.method).append('\n');
+            msgBuilder.append('\t').append(selected.getMethodRouting().method).append('\n');
             final Set<ResourceMethod> reportedMethods = new HashSet<>();
-            reportedMethods.add(selected.methodRouting.method);
-            for (RequestSpecificConsumesProducesAcceptor i : sameFitnessAcceptors) {
-                if (!reportedMethods.contains(i.methodRouting.method)) {
-                    msgBuilder.append('\t').append(i.methodRouting.method).append('\n');
+            reportedMethods.add(selected.getMethodRouting().method);
+            for (RequestSpecificConsumesProducesAcceptor<MethodRouting> i : sameFitnessAcceptors) {
+                if (!reportedMethods.contains(i.getMethodRouting().method)) {
+                    msgBuilder.append('\t').append(i.getMethodRouting().method).append('\n');
                 }
-                reportedMethods.add(i.methodRouting.method);
+                reportedMethods.add(i.getMethodRouting().method);
             }
             LOGGER.log(Level.WARNING, msgBuilder.toString());
         }

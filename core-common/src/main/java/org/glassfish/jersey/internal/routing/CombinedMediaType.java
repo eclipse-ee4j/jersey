@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.routing;
+package org.glassfish.jersey.internal.routing;
 
 import java.util.Comparator;
 
@@ -33,12 +33,12 @@ import org.glassfish.jersey.message.internal.QualitySourceMediaType;
  * @author Jakub Podlesak
  * @author Miroslav Fuksa
  */
-final class CombinedMediaType {
+public final class CombinedMediaType {
 
     /**
      * Constant combined type representing no match.
      */
-    static final CombinedMediaType NO_MATCH = new CombinedMediaType(null, 0, 0, 0);
+    public static final CombinedMediaType NO_MATCH = new CombinedMediaType(null, 0, 0, 0);
 
     private static int matchedWildcards(MediaType clientMt, EffectiveMediaType serverMt) {
         return b2i(clientMt.isWildcardType() ^ serverMt.isWildcardType())
@@ -85,6 +85,14 @@ final class CombinedMediaType {
     }
 
     /**
+     *  Get combined client/server {@link MediaType}, stripped of q and qs parameters.
+     * @return Combined client/server media type, stripped of q and qs parameters.
+     */
+    public MediaType getCombinedType() {
+        return combinedType;
+    }
+
+    /**
      * Create combined client/server media type.
      *
      * if the two types are not compatible, {@link #NO_MATCH} is returned.
@@ -93,7 +101,7 @@ final class CombinedMediaType {
      * @param serverType server-side media type.
      * @return combined client/server media type.
      */
-    static CombinedMediaType create(MediaType clientType, EffectiveMediaType serverType) {
+    public static CombinedMediaType create(MediaType clientType, EffectiveMediaType serverType) {
         if (!clientType.isCompatible(serverType.getMediaType())) {
             return NO_MATCH;
         }
@@ -112,7 +120,7 @@ final class CombinedMediaType {
      * Comparator used to compare {@link CombinedMediaType}. The comparator sorts the elements of list
      * in the ascending order from the most appropriate to the least appropriate combined media type.
      */
-    static final Comparator<CombinedMediaType> COMPARATOR = new Comparator<CombinedMediaType>() {
+    public static final Comparator<CombinedMediaType> COMPARATOR = new Comparator<CombinedMediaType>() {
 
         @Override
         public int compare(CombinedMediaType c1, CombinedMediaType c2) {
@@ -149,7 +157,7 @@ final class CombinedMediaType {
      * obtained from user annotations {@link Consumes} or {@link Produces} or has no
      * annotation and therefore was derived from {@link MessageBodyWorkers}.
      */
-    static class EffectiveMediaType {
+    public static class EffectiveMediaType {
 
         /**
          * True if the MediaType was not defined by annotation and therefore was
@@ -227,7 +235,7 @@ final class CombinedMediaType {
          * @return {@code true} if the {@code MediaType} was not defined by annotation and therefore was derived from
          * Message Body Providers, {@code false} otherwise.
          */
-        boolean isDerived() {
+        public boolean isDerived() {
             return derived;
         }
 
