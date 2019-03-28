@@ -56,7 +56,7 @@ import io.netty.channel.Channel;
  * Unit tests for {@link NettyHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 public final class NettyHttpServerProviderTest {
 

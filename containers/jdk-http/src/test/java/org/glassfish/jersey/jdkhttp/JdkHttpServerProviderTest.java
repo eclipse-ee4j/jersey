@@ -55,7 +55,7 @@ import com.sun.net.httpserver.HttpServer;
  * Unit tests for {@link JdkHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 public final class JdkHttpServerProviderTest {
 

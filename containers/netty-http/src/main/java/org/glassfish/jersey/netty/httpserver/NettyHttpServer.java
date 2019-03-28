@@ -41,7 +41,7 @@ import io.netty.handler.ssl.JdkSslContext;
  * Jersey {@code Server} implementation based on Netty {@link Channel}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 public final class NettyHttpServer implements Server {
 

@@ -44,7 +44,7 @@ import mockit.integration.junit4.JMockit;
  * Unit tests for {@link ServerFactory}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 @RunWith(JMockit.class)
 public final class ServerFactoryTest {

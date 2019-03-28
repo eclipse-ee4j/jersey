@@ -53,7 +53,7 @@ import org.junit.Test;
  * Unit tests for {@link JettyHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 public final class JettyHttpServerProviderTest {
 

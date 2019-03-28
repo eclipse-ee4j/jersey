@@ -38,7 +38,7 @@ import com.sun.net.httpserver.HttpServer;
  * Jersey {@code Server} implementation based on JDK {@link HttpServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.29
+ * @since 2.30
  */
 public final class JdkHttpServer implements Server {
 
