@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -286,7 +286,7 @@ public class EventListenerTest extends JerseyTest {
         final Response response = target().path("resource/locator").request().get();
         assertEquals(200, response.getStatus());
         assertEquals("sub", response.readEntity(String.class));
-        assertEquals("[1:locator]", response.getHeaderString("R.MATCHED_LOCATOR"));
+        assertEquals("1:locator", response.getHeaderString("R.MATCHED_LOCATOR"));
     }
 
     @Test
@@ -294,8 +294,8 @@ public class EventListenerTest extends JerseyTest {
         final Response response = target().path("resource").request().get();
         assertEquals(200, response.getStatus());
         assertEquals("get", response.readEntity(String.class));
-        assertEquals("[getMethod]", response.getHeaderString("R.RESOURCE_METHOD_START.method"));
-        assertEquals("[ok]", response.getHeaderString("R.RESOURCE_METHOD_FINISHED"));
+        assertEquals("getMethod", response.getHeaderString("R.RESOURCE_METHOD_START.method"));
+        assertEquals("ok", response.getHeaderString("R.RESOURCE_METHOD_FINISHED"));
     }
 
     @Test
@@ -303,7 +303,7 @@ public class EventListenerTest extends JerseyTest {
         final Response response = target().path("resource/locator/exception").request().get();
         assertEquals(200, response.getStatus());
         assertEquals("mapped", response.readEntity(String.class));
-        assertEquals("[org.glassfish.jersey.tests.e2e.server.monitoring.EventListenerTest$MyMappableException: test-error]",
+        assertEquals("org.glassfish.jersey.tests.e2e.server.monitoring.EventListenerTest$MyMappableException: test-error",
                 response.getHeaderString("R.EXCEPTION_MAPPER_FOUND.exception"));
     }
 
@@ -318,12 +318,12 @@ public class EventListenerTest extends JerseyTest {
 
         int i = 1;
         System.out.println(response.getHeaders());
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESP_FILTERS_START.order"));
-        assertEquals("[" + i + "]", response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESP_FILTERS_START.order"));
+        assertEquals(String.valueOf(i), response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
     }
 
 
@@ -337,14 +337,14 @@ public class EventListenerTest extends JerseyTest {
 
         int i = 1;
         System.out.println(response.getHeaders());
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.MATCHED_LOCATOR.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.MATCHED_SUB_RESOURCE.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESP_FILTERS_START.order"));
-        assertEquals("[" + i + "]", response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.MATCHED_LOCATOR.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.MATCHED_SUB_RESOURCE.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESP_FILTERS_START.order"));
+        assertEquals(String.valueOf(i), response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
     }
 
     @Test
@@ -357,15 +357,15 @@ public class EventListenerTest extends JerseyTest {
 
         int i = 1;
         System.out.println(response.getHeaders());
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.MATCHED_LOCATOR.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.MATCHED_SUB_RESOURCE.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.EXCEPTION_MAPPER_FOUND.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESP_FILTERS_START.order"));
-        assertEquals("[" + i + "]", response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.MATCHED_LOCATOR.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.MATCHED_SUB_RESOURCE.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.EXCEPTION_MAPPER_FOUND.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESP_FILTERS_START.order"));
+        assertEquals(String.valueOf(i), response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
     }
 
     @Test
@@ -376,11 +376,11 @@ public class EventListenerTest extends JerseyTest {
 
         int i = 1;
         System.out.println(response.getHeaders());
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESP_FILTERS_START.order"));
-        assertEquals("[" + i + "]", response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESP_FILTERS_START.order"));
+        assertEquals(String.valueOf(i), response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
         final boolean success = applicationEventListener.finishedCalled.await(3 * getAsyncTimeoutMultiplier(),
                 TimeUnit.SECONDS);
         Assert.assertTrue(success);
@@ -394,11 +394,11 @@ public class EventListenerTest extends JerseyTest {
 
         int i = 1;
         System.out.println(response.getHeaders());
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESOURCE_METHOD_START.order"));
-        assertEquals("[" + i++ + "]", response.getHeaderString("R.RESP_FILTERS_START.order"));
-        assertEquals("[" + i + "]", response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.REQ_FILTERS_FINISHED.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESOURCE_METHOD_START.order"));
+        assertEquals(String.valueOf(i++), response.getHeaderString("R.RESP_FILTERS_START.order"));
+        assertEquals(String.valueOf(i), response.getHeaderString("R.RESP_FILTERS_FINISHED.order"));
 
         final boolean success = applicationEventListener.finishedCalled.await(3 * getAsyncTimeoutMultiplier(),
                 TimeUnit.SECONDS);
