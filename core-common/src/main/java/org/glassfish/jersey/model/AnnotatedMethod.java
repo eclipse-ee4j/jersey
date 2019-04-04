@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.model;
+package org.glassfish.jersey.model;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.security.AccessController;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -41,15 +31,24 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-
-import org.glassfish.jersey.internal.util.ReflectionHelper;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.security.AccessController;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Annotated method representation.
  *
  * @author Paul Sandoz
  */
-public final class AnnotatedMethod implements AnnotatedElement {
+public class AnnotatedMethod implements AnnotatedElement {
 
     @SuppressWarnings("unchecked")
     private static final Set<Class<? extends Annotation>> METHOD_META_ANNOTATIONS = getSet(
@@ -115,7 +114,7 @@ public final class AnnotatedMethod implements AnnotatedElement {
      *
      * @return the underlying declared Java method.
      */
-    Method getDeclaredMethod() {
+    public Method getDeclaredMethod() {
         return m;
     }
 
