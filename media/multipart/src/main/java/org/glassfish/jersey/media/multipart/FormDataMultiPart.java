@@ -107,6 +107,7 @@ public class FormDataMultiPart extends MultiPart {
             }
             if (name.equals(((FormDataBodyPart) bodyPart).getName())) {
                 result = (FormDataBodyPart) bodyPart;
+                break; // Break to return first result found.
             }
         }
         return result;

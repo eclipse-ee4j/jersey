@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.5</version>
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <version>2.28-SNAPSHOT</version>
+    <version>2.29-SNAPSHOT</version>
     <name>jersey</name>
     <description>
         Eclipse Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370)
@@ -157,7 +157,13 @@
             <name>EDL 1.0</name>
             <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
             <distribution>repo</distribution>
-            <comments>The examples</comments>
+            <comments>The examples except bookstore-webapp example</comments>
+        </license>
+        <license>
+            <name>BSD 2-Clause</name>
+            <url>https://opensource.org/licenses/BSD-2-Clause</url>
+            <distribution>repo</distribution>
+            <comments>The bookstore-webapp example</comments>
         </license>
         <license>
             <name>Apache License, 2.0</name>
@@ -192,6 +198,12 @@
             <comments>AngularJS, Bootstrap v3.3.7,
                       jQuery Barcode plugin 0.3, KineticJS v4.7.1</comments>
         </license>
+        <license>
+            <name>W3C license</name>
+            <url>https://www.w3.org/Consortium/Legal/copyright-documents-19990405</url>
+            <distribution>repo</distribution>
+            <comments>Content of core-server/etc</comments>
+        </license>
     </licenses>
 
     <scm>    
@@ -202,8 +214,8 @@
     </scm>
 
     <organization>
-        <name>Oracle Corporation</name>
-        <url>http://www.oracle.com/</url>
+        <name>Eclipse Foundation</name>
+        <url>https://www.eclipse.org/org/foundation/</url>
     </organization>
 
     <build>
@@ -217,7 +229,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4.1</version>
+                    <version>3.0.0-M2</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -237,7 +249,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>3.0.0</version>
                     <executions>
                         <execution>
                             <phase>generate-sources</phase>
@@ -261,8 +273,8 @@
                 </plugin>
                 <plugin>
                     <groupId>com.sun.istack</groupId>
-                    <artifactId>maven-istack-commons-plugin</artifactId>
-                    <version>2.6.1</version>
+                    <artifactId>istack-commons-maven-plugin</artifactId>
+                    <version>3.0.8</version>
                     <executions>
                         <execution>
                             <phase>generate-sources</phase>
@@ -290,7 +302,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.8.0</version>
                     <inherited>true</inherited>
                     <configuration>
                         <source>${java.version}</source>
@@ -321,16 +333,97 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.6</version>
+                    <!-- Add legal information, NOTICE.md and LINCENSE.md to jars -->
+                    <executions>
+                        <execution>
+                            <!-- copy the files to classes folder for maven-jar/war-plugin to grab it -->
+                            <id>copy-legaldocs</id>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${legal.source.folder}</directory>
+                                        <targetPath>META-INF/</targetPath>
+                                        <includes>
+                                            <include>NOTICE.md</include>
+                                            <include>LICENSE.md</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <!-- copy the files to source folder for maven-source-plugin to grab it -->
+                            <id>copy-legaldocs-to-sources</id>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${legal.source.folder}</directory>
+                                        <targetPath>META-INF/</targetPath>
+                                        <includes>
+                                            <include>NOTICE.md</include>
+                                            <include>LICENSE.md</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <!-- copy the files to legal folder for felix plugin to grab it -->
+                            <id>copy-legaldocs-to-osgi-bundles</id>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/legal</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${legal.source.folder}</directory>
+                                        <targetPath>META-INF/</targetPath>
+                                        <includes>
+                                            <include>NOTICE.md</include>
+                                            <include>LICENSE.md</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.18.1</version>
+                    <version>3.0.0-M3</version>
                     <configuration>
                         <!-- for convenience reasons, 'argLine' should not be overridden in child poms. if needed, a property should be declared and used here -->
                         <argLine>-Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}</argLine>
                         <skipTests>${skip.tests}</skipTests>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-logger-api</artifactId>
+                            <version>3.0.0-M3</version>
+                            <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
+                            <optional>true</optional>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-api</artifactId>
+                            <version>3.0.0-M3</version>
+                            <optional>true</optional>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -353,7 +446,7 @@
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
                         <bottom>
-                            <![CDATA[Copyright &#169; 2007-2017,
+                            <![CDATA[Copyright &#169; 2007-2019,
                                 <a href="http://www.oracle.com">Oracle</a>
                                 and/or its affiliates.
                                 All Rights Reserved. Use is subject to license terms.]]>
@@ -386,7 +479,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>3.0.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -405,27 +498,6 @@
                         <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.4</version>
-                    <!--
-                        mvn release:prepare -DreleaseVersion=<release-version> -DdevelopmentVersion=<next-dev-version> -Dtag=<release-version> \
-                            -Prelease
-
-                        mvn release:perform -DconnectionUrl="scm:git:file://<path-to-local-repo>" \
-                            -Prelease,testsSkip
-                    -->
-                    <configuration>
-                        <mavenExecutorId>forked-path</mavenExecutorId>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <preparationGoals>${release.preparationGoals}</preparationGoals>
-                        <pushChanges>false</pushChanges>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <arguments>${release.tests.args} ${release.arguments}</arguments>
-                    </configuration>
-                </plugin>
-
                 <plugin>
                     <groupId>org.ops4j.pax.exam</groupId>
                     <artifactId>maven-paxexam-plugin</artifactId>
@@ -569,7 +641,7 @@
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>1.49</version>
+                    <version>2.0</version>
                     <configuration>
                         <excludeFile>etc/config/copyright-exclude</excludeFile>
                         <!--svn|mercurial|git - defaults to svn-->
@@ -591,12 +663,13 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.5.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
                             <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
                             <_nodefaultversion>false</_nodefaultversion>
+                            <Include-Resource>{maven-resources},${project.build.directory}/legal</Include-Resource>
                         </instructions>
                     </configuration>
                     <executions>
@@ -739,6 +812,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
         </plugins>
         <extensions>
             <extension>
@@ -835,7 +912,7 @@
             </modules>
         </profile>
         <profile>
-            <id>release</id>
+            <id>pre-release</id>
             <modules>
                 <module>docs</module>
             </modules>
@@ -843,20 +920,6 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.sonatype.plugins</groupId>
-                            <artifactId>nexus-staging-maven-plugin</artifactId>
-                            <version>${nexus-staging.mvn.plugin.version}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-gpg-plugin</artifactId>
-                            <version>${gpg.mvn.plugin.version}</version>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -864,31 +927,9 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-deploy</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>deploy</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <serverId>jvnet-nexus-staging</serverId>
-                            <nexusUrl>https://maven.java.net/</nexusUrl>
-                            <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -1027,6 +1068,7 @@
                                     <consoleOutput>true</consoleOutput>
                                     <failOnViolation>true</failOnViolation>
                                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                    <excludes>**/module-info.java</excludes>
                                 </configuration>
                             </execution>
                         </executions>
@@ -1348,13 +1390,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
                 <version>${jaxrs.api.impl.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
                 <version>${javax.annotation.version}</version>
             </dependency>
 
@@ -1365,8 +1407,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.transaction</groupId>
-                <artifactId>javax.transaction-api</artifactId>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jta.api.version}</version>
             </dependency>
 
@@ -1400,13 +1442,13 @@
                 <version>1.0.1</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.hk2</groupId>
+                <groupId>org.glassfish.main.hk2</groupId>
                 <artifactId>hk2-config</artifactId>
                 <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>javax.inject</artifactId>
+                <artifactId>jakarta.inject</artifactId>
                 <version>${hk2.version}</version>
                 <exclusions>
                     <exclusion>
@@ -1521,15 +1563,19 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jaxb.api.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.ri.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-osgi</artifactId>
                 <version>${jaxb.ri.version}</version>
             </dependency>
 
@@ -1540,15 +1586,15 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
                 <version>${javax.persistence.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>javax.ejb</groupId>
-                <artifactId>javax.ejb-api</artifactId>
+                <groupId>jakarta.ejb</groupId>
+                <artifactId>jakarta.ejb-api</artifactId>
                 <version>${ejb.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -1656,19 +1702,19 @@
                 <version>${fasterxml.classmate.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>javax.el-api</artifactId>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
                 <version>${javax.el.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
+                <artifactId>jakarta.el</artifactId>
                 <version>${javax.el.impl.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.json</artifactId>
+                <artifactId>jakarta.json</artifactId>
                 <version>${jsonp.ri.version}</version>
             </dependency>
             <dependency>
@@ -1864,8 +1910,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.json.bind</groupId>
-                <artifactId>javax.json.bind-api</artifactId>
+                <groupId>jakarta.json.bind</groupId>
+                <artifactId>jakarta.json.bind-api</artifactId>
                 <version>${jsonb.api.version}</version>
             </dependency>
 
@@ -1903,6 +1949,7 @@
         </findbugs.glassfish.logging.validLoggerPrefixes>
         <java.version>1.8</java.version>
         <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>
+        <legal.source.folder>${maven.multiModuleProjectDirectory}</legal.source.folder>
         <netbeans.hint.license>gf-cddl-gpl</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -1928,37 +1975,36 @@
         <checkstyle.mvn.plugin.version>2.16</checkstyle.mvn.plugin.version>
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
-        <ejb.version>3.2.2</ejb.version>
-        <gf.impl.version>5.0</gf.impl.version>
+        <ejb.version>3.2.5</ejb.version>
+        <gf.impl.version>5.1.0-RC2</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <findbugs.version>3.0.3</findbugs.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
-        <gpg.mvn.plugin.version>1.6</gpg.mvn.plugin.version>
-        <grizzly.client.version>1.13</grizzly.client.version>
-        <grizzly2.version>2.4.0</grizzly2.version>
+        <grizzly.client.version>1.16</grizzly.client.version>
+        <grizzly2.version>2.4.4</grizzly2.version>
         <guava.version>18.0</guava.version>
         <hamcrest.version>1.3</hamcrest.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>2.5.0-b62</hk2.version>
-        <hk2.config.version>2.5.0-b56</hk2.config.version>
+        <hk2.version>2.5.0</hk2.version>
+        <hk2.config.version>5.1.0-RC2</hk2.config.version>
         <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.9.8</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
+        <jakarta.activation.version>1.2.1</jakarta.activation.version>
         <javassist.version>3.22.0-GA</javassist.version>
-        <javax.annotation.version>1.3.2</javax.annotation.version>
-        <javax.annotation.bundle.version>1.3.2</javax.annotation.bundle.version>
-        <javax.el.version>3.0.1-b06</javax.el.version>
-        <javax.el.impl.version>3.0.1-b09</javax.el.impl.version>
-        <javax.interceptor.version>1.2.2</javax.interceptor.version>
-        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <javax.annotation.version>1.3.4</javax.annotation.version>
+        <javax.el.version>3.0.2</javax.el.version>
+        <javax.el.impl.version>3.0.2</javax.el.impl.version>
+        <javax.interceptor.version>1.2.4</javax.interceptor.version>
+        <javax.persistence.version>2.2.2</javax.persistence.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
-        <jaxb.api.version>2.2.7</jaxb.api.version>
-        <jaxb.ri.version>2.2.7</jaxb.ri.version>
-        <jsonb.api.version>1.0</jsonb.api.version>
+        <jaxb.api.version>2.3.2</jaxb.api.version>
+        <jaxb.ri.version>2.3.2</jaxb.ri.version>
+        <jsonb.api.version>1.0.1</jsonb.api.version>
         <jaxrs.api.spec.version>2.1</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>2.1</jaxrs.api.impl.version>
+        <jaxrs.api.impl.version>2.1.5</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
@@ -1968,15 +2014,15 @@
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.41</jmockit.version>
-        <jsonp.ri.version>1.1</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.2</jsonp.jaxrs.version>
-        <jsp.version>2.3.3</jsp.version>
-        <jstl.version>1.2</jstl.version>
-        <jta.api.version>1.3</jta.api.version>
+        <jsonp.ri.version>1.1.5</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
+        <jsp.version>2.3.5</jsp.version>
+        <jstl.version>1.2.4</jstl.version>
+        <jta.api.version>1.3.2</jta.api.version>
         <kryo.version>4.0.1</kryo.version>
-        <mimepull.version>1.9.7</mimepull.version>
+        <mimepull.version>1.9.11</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
-        <moxy.version>2.6.4</moxy.version>
+        <moxy.version>2.7.4</moxy.version>
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.31.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -1989,7 +2035,7 @@
         <rxjava2.version>2.0.4</rxjava2.version>
         <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
-        <servlet4.version>4.0.1</servlet4.version>
+        <servlet4.version>4.0.2</servlet4.version>
         <simple.version>6.0.1</simple.version>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
@@ -1997,7 +2043,7 @@
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
-        <yasson.version>1.0.1</yasson.version>
+        <yasson.version>1.0.3</yasson.version>
         <skip.e2e>false</skip.e2e>
     </properties>
 </project>

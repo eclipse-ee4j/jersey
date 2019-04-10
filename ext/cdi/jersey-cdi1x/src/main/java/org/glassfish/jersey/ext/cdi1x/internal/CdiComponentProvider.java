@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,6 +75,7 @@ import org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.internal.inject.ForeignRequestScopeBridge;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
@@ -292,6 +294,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         final boolean isJaxRsResource = jaxRsResourceCache.apply(clazz);
 
+        if (isJaxRsResource && !Resource.isAcceptable(clazz)) {
+            LOGGER.warning(LocalizationMessages.CDI_NON_INSTANTIABLE_COMPONENT(clazz));
+            return false;
+        }
+
         final Class<? extends Annotation> beanScopeAnnotation = CdiUtil.getBeanScope(clazz, beanManager);
         final boolean isRequestScoped = beanScopeAnnotation == RequestScoped.class
                                         || (beanScopeAnnotation == Dependent.class && isJaxRsResource);
@@ -300,7 +307,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 ? new RequestScopedCdiBeanSupplier(clazz, injectionManager, beanManager, isCdiManaged)
                 : new GenericCdiBeanSupplier(clazz, injectionManager, beanManager, isCdiManaged);
 
-        SupplierInstanceBinding<AbstractCdiBeanSupplier> builder = Bindings.supplier(beanFactory).to(clazz);
+        SupplierInstanceBinding<AbstractCdiBeanSupplier> builder = Bindings.supplier(beanFactory)
+                .to(clazz).qualifiedBy(CustomAnnotationLiteral.INSTANCE);
         for (final Class contract : providerContracts) {
             builder.to(contract);
         }

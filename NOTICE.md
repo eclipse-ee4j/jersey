@@ -107,3 +107,7 @@ org.glassfish.jersey.server.internal.monitoring.core
 * License: Apache License, 2.0
 * Copyright (c) 2015-2018 Oracle and/or its affiliates. All rights reserved.
 * Copyright 2010-2013 Coda Hale and Yammer, Inc.
+
+W3.org documents
+* License: W3C License
+* Copyright: Copyright (c) 1994-2001 World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/

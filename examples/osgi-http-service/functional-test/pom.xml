@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>osgi-http-service</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.jersey.examples.osgi-http-service</groupId>
@@ -41,8 +41,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -108,10 +108,10 @@
 
         <!-- Grizzly dependencies-->
         <dependency>
-            <groupId>com.sun.grizzly.osgi</groupId>
+            <groupId>org.glassfish.grizzly.osgi</groupId>
             <artifactId>grizzly-httpservice-bundle</artifactId>
             <scope>test</scope>
-            <version>1.9.45</version>
+            <version>${grizzly2.version}</version>
         </dependency>
 
 
@@ -129,6 +129,16 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

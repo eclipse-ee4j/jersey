@@ -54,7 +54,7 @@ public class JaxRsRiBundleTest {
 
     @Configuration
     public static Option[] configuration() {
-        List<Option> options = Helper.getCommonOsgiOptions(false);
+        List<Option> options = Helper.getCommonOsgiOptions();
 
         options.addAll(Helper.expandedList(
                 // vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
