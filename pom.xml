@@ -1442,7 +1442,7 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
@@ -1678,7 +1678,7 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.compendium</artifactId>
-                <version>${osgi.version}</version>
+                <version>${osgi.compendium.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -1894,7 +1894,8 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>4.2.1</version>
+                <!--5.2.0+ does not work with moxy osgi functional tests-->
+                <version>5.0.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2030,7 +2031,8 @@
         <netty.version>4.1.31.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
         <opentracing.version>0.30.0</opentracing.version>
-        <osgi.version>4.2.0</osgi.version>
+        <osgi.version>6.0.0</osgi.version>
+        <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <pax.exam.version>4.9.1</pax.exam.version>
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
