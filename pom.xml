@@ -406,7 +406,10 @@
                     <version>3.0.0-M3</version>
                     <configuration>
                         <!-- for convenience reasons, 'argLine' should not be overridden in child poms. if needed, a property should be declared and used here -->
-                        <argLine>-Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}</argLine>
+                        <argLine>
+                            -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                            -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}
+                        </argLine>
                         <skipTests>${skip.tests}</skipTests>
                     </configuration>
                     <dependencies>
@@ -2013,7 +2016,7 @@
         <jetty.version>9.4.12.v20180830</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jmh.version>1.10.2</jmh.version>
-        <jmockit.version>1.41</jmockit.version>
+        <jmockit.version>1.44</jmockit.version>
         <jsonp.ri.version>1.1.5</jsonp.ri.version>
         <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
         <jsp.version>2.3.5</jsp.version>
