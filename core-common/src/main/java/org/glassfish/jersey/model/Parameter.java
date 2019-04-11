@@ -15,6 +15,7 @@
  */
 package org.glassfish.jersey.model;
 
+import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.guava.Lists;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -46,6 +47,7 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Parameter implements AnnotatedElement {
     private static final Logger LOGGER = Logger.getLogger(Parameter.class.getName());
@@ -105,16 +107,22 @@ public class Parameter implements AnnotatedElement {
         UNKNOWN
     }
 
-    private static final List<ParameterServiceProvider> PARAMETER_SERVICE_PROVIDERS = Collections
-            .unmodifiableList(Lists.newArrayList(ServiceFinder.find(ParameterServiceProvider.class)));
-    private static final List<ParamCreationFactory> PARAM_CREATION_FACTORIES = Collections.unmodifiableList(
-            PARAMETER_SERVICE_PROVIDERS.stream().map(a -> a.getParameterCreationFactory()).collect(Collectors.toList())
-    );
-
-    private static final Map<Class, ParamAnnotationHelper> ANNOTATION_HELPER_MAP = Collections.unmodifiableMap(
-            PARAMETER_SERVICE_PROVIDERS.stream().map(a -> a.getParameterAnnotationHelperMap())
-                    .collect(WeakHashMap::new, Map::putAll, Map::putAll)
-    );
+    static {
+        List<ParameterServiceProvider> PARAMETER_SERVICE_PROVIDERS = Lists
+                .newArrayList(ServiceFinder.find(ParameterServiceProvider.class));
+        PARAMETER_SERVICE_PROVIDERS.add(new ParameterService());
+        PARAM_CREATION_FACTORIES = Collections.unmodifiableList(
+                PARAMETER_SERVICE_PROVIDERS.stream().map(a -> a.getParameterCreationFactory())
+                        .collect(Collectors.toList())
+        );
+        ANNOTATION_HELPER_MAP = Collections.unmodifiableMap(
+                PARAMETER_SERVICE_PROVIDERS.stream()
+                        .map(a -> a.getParameterAnnotationHelperMap())
+                        .collect(WeakHashMap::new, Map::putAll, Map::putAll)
+        );
+    };
+    private static final List<ParamCreationFactory> PARAM_CREATION_FACTORIES;
+    private static final Map<Class, ParamAnnotationHelper> ANNOTATION_HELPER_MAP;
 
     public interface ParamAnnotationHelper<T extends Annotation> {
 
@@ -307,7 +315,11 @@ public class Parameter implements AnnotatedElement {
                         defaultValue);
             }
         }
-        return null;
+
+        if (LOGGER.isLoggable(Level.FINER)) {
+            LOGGER.log(Level.FINER, LocalizationMessages.PARAM_CREATION_FACTORY_NOT_FOUND(parameterClass.getName()));
+        }
+        throw new IllegalStateException(LocalizationMessages.PARAM_CREATION_FACTORY_NOT_FOUND(parameterClass.getName()));
     }
 
     private static <PARAMETER extends Parameter> PARAMETER createParameter(Annotation[] markers, Annotation marker,
@@ -320,7 +332,11 @@ public class Parameter implements AnnotatedElement {
                         defaultValue);
             }
         }
-        return null;
+
+        if (LOGGER.isLoggable(Level.FINER)) {
+            LOGGER.log(Level.FINER, LocalizationMessages.PARAM_CREATION_FACTORY_NOT_FOUND(parameterClass.getName()));
+        }
+        throw new IllegalStateException(LocalizationMessages.PARAM_CREATION_FACTORY_NOT_FOUND(parameterClass.getName()));
     }
 
     /**
