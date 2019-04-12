@@ -24,6 +24,7 @@ import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
+import org.glassfish.jersey.server.spi.Server;
 
 
 /**
@@ -36,6 +37,23 @@ import org.glassfish.jersey.internal.util.PropertyAlias;
  */
 @PropertiesClass
 public final class ServerProperties {
+
+    /**
+     * Defines the implementation of {@link Server} to bootstrap.
+     * <p>
+     * By default auto-selects the first server provider found.
+     * </p>
+     */
+    public static final String HTTP_SERVER_CLASS = "jersey.config.server.httpServerClass";
+
+    /**
+     * Whether to automatically startup {@link Server} at bootstrap.
+     * <p>
+     * By default, servers are immediately listening to connections after bootstrap,
+     * so no explicit invocation of {@link Server#start()} is needed.
+     * </p>
+     */
+    public static final String AUTO_START = "jersey.config.server.autoStart";
 
     /**
      * Defines one or more packages that contain application-specific resources and
