@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -32,10 +33,9 @@ import javax.ws.rs.ext.ParamConverterProvider;
 
 import javax.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
  * Container of several different {@link ParamConverterProvider param converter providers}
@@ -46,7 +46,7 @@ import org.glassfish.jersey.server.internal.LocalizationMessages;
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
 @Singleton
-class ParamConverters {
+public class ParamConverters {
 
     private abstract static class AbstractStringReader<T> implements ParamConverter<T> {
 

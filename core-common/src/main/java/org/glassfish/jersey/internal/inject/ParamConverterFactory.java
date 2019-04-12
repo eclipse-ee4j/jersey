@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -22,11 +23,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.inject.Singleton;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
-
-import javax.inject.Singleton;
 
 /**
  * An aggregate {@link ParamConverterProvider param converter provider} that loads all
@@ -42,12 +41,13 @@ import javax.inject.Singleton;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Miroslav Fuksa
  */
+
 @Singleton
 public class ParamConverterFactory implements ParamConverterProvider {
 
     private final List<ParamConverterProvider> converterProviders;
 
-    ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
+    public ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
 
         Set<ParamConverterProvider> copyProviders = new LinkedHashSet<>(providers);
         converterProviders = new ArrayList<>();
