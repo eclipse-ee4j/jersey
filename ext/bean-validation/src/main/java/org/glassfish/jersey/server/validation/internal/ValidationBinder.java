@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -256,8 +257,9 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorContext getDefaultValidatorContext(final ValidateOnExecutionHandler handler) {
             final ValidatorContext context = factory.usingContext();
 
-            // Default Configuration.
-            context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            // Composite Configuration - due to PAYARA-2491
+            // https://github.com/payara/Payara/issues/2245
+            context.constraintValidatorFactory(resourceContext.getResource(CompositeInjectingConstraintValidatorFactory.class));
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
