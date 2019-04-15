@@ -94,8 +94,7 @@
                     <calloutsExtension>true</calloutsExtension>
                     <highlightDefaultLanguage />
                     <highlightSource>true</highlightSource>
-                    <htmlStylesheet>/jersey.github.io/documentation.css</htmlStylesheet>
-                    <!--<htmlStylesheet>https://jersey.java.net/documentation.css</htmlStylesheet>-->
+                    <htmlStylesheet>https://jersey.github.io/documentation.css</htmlStylesheet>
                     <linenumberingExtension>true</linenumberingExtension>
                     <linenumberingEveryNth>1</linenumberingEveryNth>
                     <partAutolabel>true</partAutolabel>
