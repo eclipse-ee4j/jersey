@@ -17,6 +17,8 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -257,9 +259,17 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorContext getDefaultValidatorContext(final ValidateOnExecutionHandler handler) {
             final ValidatorContext context = factory.usingContext();
 
-            // Composite Configuration - due to PAYARA-2491
-            // https://github.com/payara/Payara/issues/2245
-            context.constraintValidatorFactory(resourceContext.getResource(CompositeInjectingConstraintValidatorFactory.class));
+            // if CDI is available use composite factiry
+            if (AccessController.doPrivileged(
+                    ReflectionHelper.classForNamePA("javax.enterprise.inject.spi.BeanManager")) != null) {
+                // Composite Configuration - due to PAYARA-2491
+                // https://github.com/payara/Payara/issues/2245
+                context.constraintValidatorFactory(resourceContext.getResource(
+                        CompositeInjectingConstraintValidatorFactory.class));
+            } else {
+                // Default Configuration.
+                context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            }
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
