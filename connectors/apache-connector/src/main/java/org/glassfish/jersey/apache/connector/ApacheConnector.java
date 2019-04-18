@@ -280,6 +280,13 @@ class ApacheConnector implements Connector {
             this.cookieStore = null;
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
+
+        final boolean useSystemProperties = PropertiesHelper
+                .isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
+        if (useSystemProperties) {
+            clientBuilder.useSystemProperties();
+        }
+
         this.client = clientBuilder.build();
     }
 

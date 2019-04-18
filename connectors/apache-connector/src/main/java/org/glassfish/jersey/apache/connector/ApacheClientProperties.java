@@ -134,6 +134,8 @@ public final class ApacheClientProperties {
      */
     public static final String RETRY_HANDLER = "jersey.config.apache.client.retryHandler";
 
+    public static final String USE_SYSTEM_PROPERTIES = "jersey.config.apache.client.useSystemProperties";
+
     /**
      * Get the value of the specified property.
      *
