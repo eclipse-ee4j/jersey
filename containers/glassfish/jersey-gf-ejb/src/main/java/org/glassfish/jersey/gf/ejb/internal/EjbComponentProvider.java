@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 [Payara Foundation and/or its affiliates].
+ * Copyright (c) [2018-2019] [Payara Foundation and/or its affiliates].
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -383,17 +383,9 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 Object result;
                 try {
                     result = ic.lookup(jndiName);
-                    if (result != null) {
-                        if (rawType.isInstance(result)
-                                || remoteAndLocalIfaces(rawType)
-                                        .stream()
-                                        .filter(iface -> iface.isInstance(result))
-                                        .findAny()
-                                        .isPresent()) {
-                            return result;
-                        }
+                    if (result != null && isLookupInstanceValid(rawType, result)) {
+                        return result;
                     }
-
                 } catch (NamingException e) {
                     ne = e;
                 }
@@ -417,15 +409,8 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 Object result;
                 try {
                     result = ic.lookup(jndiName);
-                    if (result != null) {
-                        if (rawType.isInstance(result)
-                                || remoteAndLocalIfaces(rawType)
-                                        .stream()
-                                        .filter(iface -> iface.isInstance(result))
-                                        .findAny()
-                                        .isPresent()) {
-                            return result;
-                        }
+                    if (result != null && isLookupInstanceValid(rawType, result)) {
+                        return result;
                     }
                 } catch (NamingException e) {
                     ne = e;
@@ -433,5 +418,14 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
             }
             throw (ne != null) ? ne : new NamingException();
         }
+    }
+
+    private static boolean isLookupInstanceValid(Class<?> rawType, Object result){
+        return rawType.isInstance(result)
+                                || remoteAndLocalIfaces(rawType)
+                                        .stream()
+                                        .filter(iface -> iface.isInstance(result))
+                                        .findAny()
+                                        .isPresent();
     }
 }
