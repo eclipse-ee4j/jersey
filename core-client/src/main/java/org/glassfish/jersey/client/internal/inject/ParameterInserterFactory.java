@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -15,55 +15,54 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.client.internal.inject;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
-
 import javax.inject.Singleton;
-
-import org.glassfish.jersey.internal.inject.ExtractorException;
+import org.glassfish.jersey.internal.inject.InserterException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 
 /**
- * Implementation of {@link MultivaluedParameterExtractorProvider}. For each
- * parameter, the implementation obtains a {@link ParamConverter param converter} instance via
+ * Implementation of {@link ParameterInserterProvider}. For each
+ * parameter, the implementation obtains a
+ * {@link ParamConverter param converter} instance via
  * {@link ParamConverterFactory} and creates the proper
- * {@link MultivaluedParameterExtractor multivalued parameter extractor}.
+ * {@link ParameterInserter parameter inserter}.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 @Singleton
-final class MultivaluedParameterExtractorFactory implements MultivaluedParameterExtractorProvider {
+final class ParameterInserterFactory implements ParameterInserterProvider {
 
     private final LazyValue<ParamConverterFactory> paramConverterFactory;
 
     /**
-     * Create new multivalued map parameter extractor factory.
+     * Create new parameter inserter factory.
      *
      * @param paramConverterFactory string readers factory.
      */
-    public MultivaluedParameterExtractorFactory(LazyValue<ParamConverterFactory> paramConverterFactory) {
+    public ParameterInserterFactory(LazyValue<ParamConverterFactory> paramConverterFactory) {
         this.paramConverterFactory = paramConverterFactory;
     }
 
     @Override
-    public MultivaluedParameterExtractor<?> get(final Parameter p) {
+    public ParameterInserter<?, ?> get(final Parameter p) {
         return process(
                 paramConverterFactory.get(),
                 p.getDefaultValue(),
@@ -74,7 +73,7 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
     }
 
     @SuppressWarnings("unchecked")
-    private MultivaluedParameterExtractor<?> process(
+    private ParameterInserter<?, ?> process(
             final ParamConverterFactory paramConverterFactory,
             final String defaultValue,
             final Class<?> rawType,
@@ -87,8 +86,8 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
         ParamConverter<?> converter = paramConverterFactory.getConverter(rawType, type, annotations);
         if (converter != null) {
             try {
-                return new SingleValueExtractor(converter, parameterName, defaultValue);
-            } catch (final ExtractorException e) {
+                return new SingleValueInserter(converter, parameterName, defaultValue);
+            } catch (final InserterException e) {
                 throw e;
             } catch (final Exception e) {
                 throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
@@ -101,20 +100,17 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
             final List<ClassTypePair> typePairs = ReflectionHelper.getTypeArgumentAndClass(type);
             final ClassTypePair typePair = (typePairs.size() == 1) ? typePairs.get(0) : null;
 
-            if (typePair == null || typePair.rawClass() == String.class) {
-                return StringCollectionExtractor.getInstance(rawType, parameterName, defaultValue);
-            } else {
-                converter = paramConverterFactory.getConverter(typePair.rawClass(),
+            if (typePair != null) {
+                converter = paramConverterFactory.getConverter(
+                        typePair.rawClass(),
                         typePair.type(),
-                        annotations);
-
-                if (converter == null) {
-                    return null;
-                }
-
+                        annotations
+                );
+            }
+            if (converter != null) {
                 try {
-                    return CollectionExtractor.getInstance(rawType, converter, parameterName, defaultValue);
-                } catch (final ExtractorException e) {
+                    return CollectionInserter.getInstance(rawType, converter, parameterName, defaultValue);
+                } catch (final InserterException e) {
                     throw e;
                 } catch (final Exception e) {
                     throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
@@ -124,9 +120,9 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
 
         // Check primitive types.
         if (rawType == String.class) {
-            return new SingleStringValueExtractor(parameterName, defaultValue);
+            return new SingleStringValueInserter(parameterName, defaultValue);
         } else if (rawType == Character.class) {
-            return new PrimitiveCharacterExtractor(parameterName,
+            return new PrimitiveCharacterInserter(parameterName,
                     defaultValue,
                     PrimitiveMapper.primitiveToDefaultValueMap.get(rawType));
         } else if (rawType.isPrimitive()) {
@@ -138,24 +134,15 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
             }
 
             if (wrappedRaw == Character.class) {
-                return new PrimitiveCharacterExtractor(parameterName,
+                return new PrimitiveCharacterInserter(parameterName,
                         defaultValue,
                         PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
             }
 
-            // Check for static valueOf(String)
-            final Method valueOf = AccessController.doPrivileged(ReflectionHelper.getValueOfStringMethodPA(wrappedRaw));
-            if (valueOf != null) {
-                try {
-                    return new PrimitiveValueOfExtractor(valueOf,
-                            parameterName,
-                            defaultValue,
-                            PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
-                } catch (final Exception e) {
-                    throw new ProcessingException(LocalizationMessages.DEFAULT_COULD_NOT_PROCESS_METHOD(defaultValue, valueOf));
-                }
-            }
-
+            return new PrimitiveValueOfInserter(
+                    parameterName,
+                    defaultValue,
+                    PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
         }
 
         return null;

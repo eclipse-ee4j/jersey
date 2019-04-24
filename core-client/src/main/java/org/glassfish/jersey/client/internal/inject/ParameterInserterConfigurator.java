@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -15,9 +15,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.client.internal.inject;
 
 import javax.ws.rs.ext.ParamConverterProvider;
+import org.glassfish.jersey.client.ClientBootstrapBag;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
@@ -28,30 +29,30 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
-import org.glassfish.jersey.server.ServerBootstrapBag;
+import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 
 /**
- * Configurator which initializes and register {@link MultivaluedParameterExtractorProvider} instance into
+ * Configurator which initializes and register {@link ParameterInserterProvider} instance into
  * {@link InjectionManager}.
  *
  * @author Petr Bouda
+ * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-public class ParamExtractorConfigurator implements BootstrapConfigurator {
+public class ParameterInserterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        ServerBootstrapBag serverBag = (ServerBootstrapBag) bootstrapBag;
+        ClientBootstrapBag clientBag = (ClientBootstrapBag) bootstrapBag;
 
-        // Param Converters must be initialized Lazy and created at the time of the call on extractor
+        // Param Converters must be initialized Lazy and created at the time of the call on inserter
         LazyValue<ParamConverterFactory> lazyParamConverterFactory =
                 Values.lazy((Value<ParamConverterFactory>) () -> new ParamConverterFactory(
                         Providers.getProviders(injectionManager, ParamConverterProvider.class),
                         Providers.getCustomProviders(injectionManager, ParamConverterProvider.class)));
 
-        MultivaluedParameterExtractorFactory multiExtractor = new MultivaluedParameterExtractorFactory(lazyParamConverterFactory);
-        serverBag.setMultivaluedParameterExtractorProvider(multiExtractor);
-        injectionManager.register(
-                Bindings.service(multiExtractor)
-                        .to(MultivaluedParameterExtractorProvider.class));
+        ParameterInserterFactory parameterInserter = new ParameterInserterFactory(lazyParamConverterFactory);
+        clientBag.setParameterInserterProvider(parameterInserter);
+        injectionManager.register(Bindings.service(parameterInserter)
+                        .to(ParameterInserterProvider.class));
     }
 }
