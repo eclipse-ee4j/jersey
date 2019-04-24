@@ -89,6 +89,7 @@
         <module>jersey-780</module>
         <module>jersey-3670</module>
         <module>jersey-3992</module>
+        <module>jersey-4099</module>
         <module>portability-jersey-1</module>
         <module>portability-jersey-2</module>
         <module>property-check</module>
