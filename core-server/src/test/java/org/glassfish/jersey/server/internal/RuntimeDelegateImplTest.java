@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.server.internal;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -41,6 +42,8 @@ import javax.ws.rs.JAXRS.Configuration;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
 
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.server.ServerProperties;
@@ -106,6 +109,12 @@ public class RuntimeDelegateImplTest {
 
         // then
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
         assertThat(configuration.property(JAXRS.Configuration.PROTOCOL), is("HTTP"));
         assertThat(configuration.property(JAXRS.Configuration.HOST), is("localhost"));
         assertThat(configuration.property(JAXRS.Configuration.PORT), is(JAXRS.Configuration.DEFAULT_PORT));
@@ -131,6 +140,7 @@ public class RuntimeDelegateImplTest {
 
         // then
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty("property"));
         assertThat(configuration.property("property"), is("value"));
     }
 
@@ -150,6 +160,12 @@ public class RuntimeDelegateImplTest {
 
         // then
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
@@ -171,6 +187,12 @@ public class RuntimeDelegateImplTest {
 
         // then
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
@@ -218,6 +240,14 @@ public class RuntimeDelegateImplTest {
 
         // then
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(ServerProperties.HTTP_SERVER_CLASS));
+        assertThat(configuration, hasProperty(ServerProperties.AUTO_START));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
@@ -315,6 +345,13 @@ public class RuntimeDelegateImplTest {
         // then
         assertThat(instance, is(notNullValue()));
         assertThat(configuration, is(notNullValue()));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(ServerProperties.HTTP_SERVER_CLASS));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8888));
@@ -332,4 +369,21 @@ public class RuntimeDelegateImplTest {
         ServiceFinder.setIteratorProvider(null);
     }
 
+   /**
+    * Creates a matcher that matches any examined object whose <code>hasProperty</code> method
+    * returns {@code true} for the provided property name.
+    * For example:
+    * <pre>assertThat(configuration, hasProperty("HOST"))</pre>
+    *
+    * @param propertyName
+    *     the property name to check
+    */
+    private static final Matcher<Configuration> hasProperty(final String propertyName) {
+        return new FeatureMatcher<Configuration, Boolean>(is(TRUE), "hasProperty", "hasProperty") {
+            @Override
+            protected final Boolean featureValueOf(final Configuration actual) {
+                return actual.hasProperty(propertyName);
+            }
+        };
+    }
 }

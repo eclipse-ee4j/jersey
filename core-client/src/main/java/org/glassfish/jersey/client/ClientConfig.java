@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -322,6 +322,11 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
         @Override
         public Map<String, Object> getProperties() {
             return commonConfig.getConfiguration().getProperties();
+        }
+
+        @Override
+        public boolean hasProperty(final String name) {
+            return commonConfig.getConfiguration().hasProperty(name);
         }
 
         @Override
