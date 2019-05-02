@@ -56,7 +56,6 @@ public class HK2AbstractBinderTest extends JerseyTest {
     @Test
     public void testInjectableInjection() {
         String response = target().request().get(String.class);
-        System.out.println(response);
         assertThat(response, is(InjectableImpl.class.getName()));
     }
 
