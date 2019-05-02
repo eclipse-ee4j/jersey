@@ -34,5 +34,6 @@
 
     <modules>
         <module>cdi2-se</module>
+        <module>hk2</module>
     </modules>
 </project>
