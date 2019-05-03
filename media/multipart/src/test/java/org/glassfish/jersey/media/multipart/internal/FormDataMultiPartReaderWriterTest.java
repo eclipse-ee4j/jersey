@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,10 +68,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
 
 /**
  * Tests for multipart {@code MessageBodyReader} and {@code MessageBodyWriter} as well as {@code FormDataMultiPart} and {@code
@@ -667,36 +663,6 @@ public class FormDataMultiPartReaderWriterTest extends MultiPartJerseyTest {
     }
 
     /**
-     * JERSEY-2663 reproducer. Make sure that temporary file created by MIMEPull is not copied into new temporary file created
-     * by Jersey.
-     */
-    @Test
-    public void testInjectedFileNotCopied(@Mocked final BodyPartEntity entity) throws Exception {
-        final FormDataMultiPart multipart = new FormDataMultiPart();
-        final FormDataBodyPart bodypart = new FormDataBodyPart(FormDataContentDisposition.name("file").fileName("file").build(),
-                "CONTENT");
-        multipart.bodyPart(bodypart);
-
-        final Response response = target().path("FileResource").path("InjectedFileNotCopied")
-                .request()
-                .post(Entity.entity(multipart, MediaType.MULTIPART_FORM_DATA));
-
-        // Make sure that the Mimepull temp file has been moved to specific file.
-        new Verifications() {{
-            entity.moveTo(withInstanceOf(File.class));
-            times = 1;
-        }};
-
-        // Make sure that the temp file has been removed.
-        final String pathname = response.readEntity(String.class);
-        // Wait a second to make sure the file doesn't exist.
-        Thread.sleep(1000);
-
-        assertThat("Temporary file, " + pathname + ", on the server has not been removed",
-                new File(pathname).exists(), is(false));
-    }
-
-    /**
      * JERSEY-2846 reproducer. Make sure that temporary file created by MIMEPull deleted after a successful request.
      */
     @Test
@@ -770,59 +736,6 @@ public class FormDataMultiPartReaderWriterTest extends MultiPartJerseyTest {
         public String put(@FormDataParam("submit") final InputStream stream) {
             return "OK";
         }
-    }
-
-    /**
-     * Mocked JERSEY-2794 reproducer. Real test is under integration tests.
-     */
-    @Test
-    public void mimeTempFileRemovedAfterAbortedUpload(@Mocked final MIMEMessage message) throws Exception {
-        new Expectations() {{
-            message.getAttachments();
-            result = new MIMEParsingException();
-        }};
-
-        final URL url = new URL(getBaseUri().toString() + "MediaTypeWithBoundaryResource");
-        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setRequestMethod("PUT");
-        connection.setRequestProperty("Accept", "text/plain");
-        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=XXXX_YYYY");
-
-        connection.setDoOutput(true);
-        connection.connect();
-
-        final OutputStream outputStream = connection.getOutputStream();
-        outputStream.write("--XXXX_YYYY".getBytes());
-        outputStream.write('\n');
-        outputStream.write("Content-Type: text/plain".getBytes());
-        outputStream.write('\n');
-        outputStream.write("Content-Disposition: form-data; name=\"big-part\"".getBytes());
-        outputStream.write('\n');
-        outputStream.write('\n');
-
-        // Send big chunk of data.
-        for (int i = 0; i < 16 * 4096; i++) {
-            outputStream.write('E');
-            if (i % 1024 == 0) {
-                outputStream.flush();
-            }
-        }
-
-        // Do NOT send end of the MultiPart message to simulate the issue.
-
-        // Get Response ...
-        final int response = connection.getResponseCode();
-        // ... Disconnect.
-        connection.disconnect();
-
-        assertThat("Bad Request expected", response, is(400));
-
-        // Make sure that the Mimepull message and it's parts have been closed and temporary files deleted.
-        new Verifications() {{
-            message.close();
-            times = 1;
-        }};
     }
 
     private void checkEntity(final String expected, final BodyPartEntity entity) throws IOException {

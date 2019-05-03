@@ -87,6 +87,19 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- for convenience reasons, 'argLine' should not be overridden in child poms. if needed, a property should be declared and used here -->
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                        -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline}
+                        ${surefire.coverage.argline}
+                    </argLine>
+                    <skipTests>${skip.tests}</skipTests>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
