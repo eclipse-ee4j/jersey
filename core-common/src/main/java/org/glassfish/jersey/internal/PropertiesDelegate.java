@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,21 @@ public interface PropertiesDelegate {
      */
     public Object getProperty(String name);
 
+    /**
+     * Returns {@code true} if the property with the given name registered in the current request/response
+     * exchange context, or {@code false} if there is no property by that name.
+     * <p>
+     * Use the {@link #getProperty} method with a property name to get the value of
+     * a property.
+     * </p>
+     *
+     * @return {@code true} if a property matching the given name exists, or
+     *         {@code false} otherwise.
+     * @see #getProperty
+     */
+    public default boolean hasProperty(String name) {
+        return getProperty(name) != null;
+    }
 
     /**
      * Returns an immutable {@link java.util.Collection collection} containing the property

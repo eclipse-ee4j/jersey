@@ -120,7 +120,17 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
 
             @Override
             public final JAXRS.Configuration build() {
-                return this.properties::get;
+                return new JAXRS.Configuration() {
+                    @Override
+                    public final boolean hasProperty(final String name) {
+                        return properties.containsKey(name);
+                    }
+
+                    @Override
+                    public final Object property(final String name) {
+                        return properties.get(name);
+                    }
+                };
             }
         };
     }
@@ -138,14 +148,28 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
 
                 @Override
                 public final Configuration configuration() {
-                    return name -> {
-                        switch (name) {
-                        case JAXRS.Configuration.PORT:
-                            return server.port();
-                        case ServerProperties.HTTP_SERVER_CLASS:
-                            return server.getClass();
-                        default:
-                            return configuration.property(name);
+                    return new Configuration() {
+                        @Override
+                        public final boolean hasProperty(final String name) {
+                            switch (name) {
+                            case JAXRS.Configuration.PORT:
+                            case ServerProperties.HTTP_SERVER_CLASS:
+                                return true;
+                            default:
+                                return configuration.hasProperty(name);
+                            }
+                        }
+
+                        @Override
+                        public final Object property(final String name) {
+                            switch (name) {
+                            case JAXRS.Configuration.PORT:
+                                return server.port();
+                            case ServerProperties.HTTP_SERVER_CLASS:
+                                return server.getClass();
+                            default:
+                                return configuration.property(name);
+                            }
                         }
                     };
                 }
