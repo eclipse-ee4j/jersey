@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server.internal.scanning;
+package org.glassfish.jersey.tests.jmockit.server.internal.scanning;
 
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Tested;
 import mockit.Verifications;
+import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
+import org.glassfish.jersey.server.internal.scanning.ResourceFinderException;
 import org.junit.Before;
 import org.junit.Test;
 
