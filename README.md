@@ -44,13 +44,15 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 [Older Articles &hellip;][older-articles]
 
 ---
-
+<table>
+<tr>
+<td>
 <h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
     <var class="icon-compass"></var> Get Started
 </a></h2>
 
 [Learn][quick] how to use Jersey in your projects.
-
+</td><td>
 
 <h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
@@ -59,7 +61,7 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 Read  [latest Jersey User Guide][docindex] or browse [latest Jersey API][jersey-api].
 
 Jersey 1.x users may access the [Jersey 1.19.1 User Guide][docindex-1.x] and [Jersey 1.19.1 API][jersey-1.x-api].
-
+</td><td>
 
 <h2><a class="headerlink" href="download.html">
     <var class="icon-cloud-download"></var> Download
@@ -67,15 +69,15 @@ Jersey 1.x users may access the [Jersey 1.19.1 User Guide][docindex-1.x] and [Je
 
 Jersey is distributed mainly via Maven and it offers some extra modules.
 Check the [How to Download][dwnld] page or see our list of [dependencies][deps] for details.
-
-
+</td></tr>
+<tr><td>
 <h2><a class="headerlink" href="related.html">
     <var class="icon-tags"></var> Related Projects
 </a></h2>
 
 List of projects related to Jersey.
 
-
+</td><td>
 <h2><a class="headerlink" href="contribute.html">
     <var class="icon-group"></var> Contribute
 </a></h2>
@@ -87,12 +89,14 @@ List of projects related to Jersey.
     <li><var class="icon-li icon-eye-open"></var> Reviewing code</li>
 </ul>
 
-
+</td><td>
 <h2><a class="headerlink" href="bloggers.html">
     <var class="icon-rss"></var> Developer Blogs
 </a></h2>
 
 Find out what our developers [blog][bloggers] about.
+</td></tr>
+</table>
 
 [jax-rs]: http://jax-rs-spec.java.net/
 [jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
