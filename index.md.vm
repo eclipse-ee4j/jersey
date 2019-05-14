@@ -44,33 +44,15 @@ The latest stable release of Jersey is [${latestVersion}][dwnld].
 
 <h3>Latest Articles</h3>
 
-<a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>
-<br/>
-Jan 28, 2019 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=131" target="_blank">Glassfish 5.1.0.RC2 is to be released!</a>
-<br/>
-Jan 26, 2019 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=126" target="_blank">Jersey 2.28-RC4 has been released</a>
-<br/>
-Jan 22, 2019 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=108" target="_blank">Glassfish 5.1.0 is to be released!</a>
-<br/>
-Jan 20, 2019 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=104" target="_blank">Happy New Year: But Where Are the Christmas Presents?</a>
-<br/>
-Dec 26, 2018 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=28" target="_blank">Jersey 2.27 Has Been Released</a>
-<br/>
-Apr 13, 2018 | Jan Supol
-
-<a class="article" href="{{ site.links.honzablog }}/?p=13" target="_blank">What’s going on with Jersey</a>
-<br/>
-Apr 03, 2018 | Jan Supol
+<table>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>                         </td><td> Jan 28, 2019 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=131" target="_blank">Glassfish 5.1.0.RC2 is to be released!</a>                </td><td> Jan 26, 2019 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=126" target="_blank">Jersey 2.28-RC4 has been released</a>                     </td><td> Jan 22, 2019 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=108" target="_blank">Glassfish 5.1.0 is to be released!</a>                    </td><td> Jan 20, 2019 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=104" target="_blank">Happy New Year: But Where Are the Christmas Presents?</a> </td><td> Dec 26, 2018 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=28" target="_blank">Jersey 2.27 Has Been Released</a>                          </td><td> Apr 13, 2018 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=13" target="_blank">What’s going on with Jersey</a>                            </td><td> Apr 03, 2018 </td><td> Jan Supol </td> </tr>
+</table>
 
 [Older Articles &hellip;][older-articles]
 
