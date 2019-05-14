@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates.
+ * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,10 @@ import org.glassfish.jersey.client.inject.ParameterInserter;
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
+ * @author Patrik Dudits
  *
  */
-final class PrimitiveValueOfInserter implements ParameterInserter<Number, String> {
+final class PrimitiveValueOfInserter implements ParameterInserter<Object, String> {
 
     private final String parameter;
     private final String defaultValue;
@@ -61,7 +62,7 @@ final class PrimitiveValueOfInserter implements ParameterInserter<Number, String
     }
 
     @Override
-    public String insert(Number value) {
+    public String insert(Object value) {
         if (value != null) {
             return value.toString();
         } else if (defaultValue != null) {

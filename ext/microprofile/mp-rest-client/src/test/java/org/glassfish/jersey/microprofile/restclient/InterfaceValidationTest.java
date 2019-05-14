@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +30,7 @@ public class InterfaceValidationTest {
     @Test
     public void testValidInterface() {
         RestClientModel.from(CorrectInterface.class, new HashSet<>(), new HashSet<>(), new ArrayList<>(),
-                             null);
+                             null, null);
     }
 
 }

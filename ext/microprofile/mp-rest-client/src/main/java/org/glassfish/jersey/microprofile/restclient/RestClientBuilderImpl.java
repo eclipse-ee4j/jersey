@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +37,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -55,7 +61,6 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactor
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.Initializable;
-import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -64,6 +69,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  * Rest client builder implementation. Creates proxy instance of requested interface.
  *
  * @author David Kral
+ * @author Patrik Dudits
  */
 public class RestClientBuilderImpl implements RestClientBuilder {
 
@@ -183,13 +189,39 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
                                                                asyncInterceptors,
-                                                               injectionManagerExposer.injectionManager);
+                                                               injectionManagerExposer.injectionManager,
+                                                               lookupBeanManager());
 
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass},
                                           new ProxyInvocationHandler(webTarget, restClientModel)
         );
+    }
+
+    private BeanManager lookupBeanManager() {
+        Context initialContext = null;
+        try {
+            initialContext = new InitialContext();
+            return (BeanManager) initialContext.lookup("java:comp/BeanManager");
+        } catch (NamingException e) {
+            // no bean manager in JNDI
+        } finally {
+            if (initialContext != null) {
+                try {
+                    initialContext.close();
+                } catch (NamingException e) {
+                }
+            }
+        }
+        try {
+            if (CDI.current() != null) {
+                return CDI.current().getBeanManager();
+            }
+        } catch (IllegalStateException e) {
+            // CDI unavailable
+        }
+        return null;
     }
 
     private void processConfigProviders(Class<?> restClientInterface, String[] providerArray) {

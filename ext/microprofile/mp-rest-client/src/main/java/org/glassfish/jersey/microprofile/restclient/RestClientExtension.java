@@ -72,63 +72,13 @@ public class RestClientExtension implements Extension {
     }
 
     /**
-     * Iterates over all {@link ProcessInjectionPoint} to find only those annotated
-     * with {@link RestClient} and configures their proper injection.
-     *
-     * @param pip processed injection point
-     */
-    public void collectClientProducer(@Observes ProcessInjectionPoint<?, ?> pip) {
-        RestClient restClient = pip.getInjectionPoint().getAnnotated().getAnnotation(RestClient.class);
-        if (restClient != null) {
-            InjectionPoint ip = pip.getInjectionPoint();
-            Class<?> type = (Class<?>) ip.getType();
-
-            RestClientLiteral q = new RestClientLiteral(type);
-
-            pip.configureInjectionPoint().addQualifier(q);
-        }
-    }
-
-    /**
      * Creates new producers based on collected interfaces.
      *
      * @param abd after bean discovery instance
      * @param bm bean manager instance
      */
     public void restClientRegistration(@Observes AfterBeanDiscovery abd, BeanManager bm) {
-        interfaces.forEach(type -> abd.addBean(new RestClientProducer(new RestClientLiteral(type), type, bm)));
-        interfaces.forEach(type -> abd.addBean(new RestClientProducer(null, type, bm)));
-    }
-
-    @Qualifier
-    @Retention(RUNTIME)
-    @Target({METHOD, FIELD})
-    @interface MpRestClientQualifier {
-
-        Class<?> interfaceType();
-
-    }
-
-    private static class RestClientLiteral extends AnnotationLiteral<MpRestClientQualifier> implements MpRestClientQualifier {
-
-        private final Class<?> interfaceType;
-
-        RestClientLiteral(Class<?> interfaceType) {
-            this.interfaceType = interfaceType;
-        }
-
-        @Override
-        public Class<?> interfaceType() {
-            return interfaceType;
-        }
-
-        @Override
-        public String toString() {
-            return "RestClientLiteral{"
-                    + "interfaceType=" + interfaceType
-                    + '}';
-        }
-
+        interfaces.forEach(type -> abd.addBean(new RestClientProducer(type, bm)));
     }
 
 }

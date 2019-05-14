@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,6 +51,7 @@ import org.glassfish.jersey.model.Parameter;
  * Model of interface and its annotation.
  *
  * @author David Kral
+ * @author Patrik Dudits
  */
 class InterfaceModel {
 
@@ -66,6 +68,7 @@ class InterfaceModel {
     private final Set<ResponseExceptionMapper> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
     private final Set<Annotation> interceptorAnnotations;
+    private final BeanManager beanManager;
 
     /**
      * Creates new model based on interface class. Interface is parsed according to specific annotations.
@@ -81,12 +84,14 @@ class InterfaceModel {
                                Set<ResponseExceptionMapper> responseExceptionMappers,
                                Set<ParamConverterProvider> paramConverterProviders,
                                List<AsyncInvocationInterceptor> asyncInterceptors,
-                               InjectionManager injectionManager) {
+                               InjectionManager injectionManager,
+                               BeanManager beanManager) {
         return new Builder(restClientClass,
                            responseExceptionMappers,
                            paramConverterProviders,
                            asyncInterceptors,
-                           injectionManager)
+                           injectionManager,
+                           beanManager)
                 .pathValue(restClientClass.getAnnotation(Path.class))
                 .produces(restClientClass.getAnnotation(Produces.class))
                 .consumes(restClientClass.getAnnotation(Consumes.class))
@@ -108,6 +113,7 @@ class InterfaceModel {
         this.interceptorAnnotations = builder.interceptorAnnotations;
         this.creationalContext = builder.creationalContext;
         this.asyncInterceptors = builder.asyncInterceptors;
+        this.beanManager = builder.beanManager;
     }
 
     /**
@@ -237,11 +243,16 @@ class InterfaceModel {
         return arg;
     }
 
+    BeanManager getBeanManager() {
+        return beanManager;
+    }
+
     private static class Builder {
 
         private final Class<?> restClientClass;
 
         private final InjectionManager injectionManager;
+        private final BeanManager beanManager;
         private String pathValue;
         private String[] produces;
         private String[] consumes;
@@ -257,30 +268,27 @@ class InterfaceModel {
                         Set<ResponseExceptionMapper> responseExceptionMappers,
                         Set<ParamConverterProvider> paramConverterProviders,
                         List<AsyncInvocationInterceptor> asyncInterceptors,
-                        InjectionManager injectionManager) {
+                        InjectionManager injectionManager,
+                        BeanManager beanManager) {
             this.injectionManager = injectionManager;
             this.restClientClass = restClientClass;
             this.responseExceptionMappers = responseExceptionMappers;
             this.paramConverterProviders = paramConverterProviders;
             this.asyncInterceptors = asyncInterceptors;
+            this.beanManager = beanManager;
             filterAllInterceptorAnnotations();
         }
 
         private void filterAllInterceptorAnnotations() {
             creationalContext = null;
             interceptorAnnotations = new HashSet<>();
-            try {
-                if (CDI.current() != null) {
-                    BeanManager beanManager = CDI.current().getBeanManager();
-                    creationalContext = beanManager.createCreationalContext(null);
-                    for (Annotation annotation : restClientClass.getAnnotations()) {
-                        if (beanManager.isInterceptorBinding(annotation.annotationType())) {
-                            interceptorAnnotations.add(annotation);
-                        }
+            if (beanManager != null) {
+                creationalContext = beanManager.createCreationalContext(null);
+                for (Annotation annotation : restClientClass.getAnnotations()) {
+                    if (beanManager.isInterceptorBinding(annotation.annotationType())) {
+                        interceptorAnnotations.add(annotation);
                     }
                 }
-            } catch (IllegalStateException ignored) {
-                //CDI not present. Ignore.
             }
         }
 
