@@ -41,7 +41,7 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 </table>
 
 
-[Older Articles &hellip;][older-articles]
+[Older Articles &hellip;](older-articles)
 
 ---
 <table>
@@ -51,16 +51,16 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
     <var class="icon-compass"></var> Get Started
 </a></h2>
 
-[Learn][quick] how to use Jersey in your projects.
+[Learn](quick) how to use Jersey in your projects.
 </td><td>
 
 <h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
 </a></h2>
 
-Read  [latest Jersey User Guide][docindex] or browse [latest Jersey API][jersey-api].
+Read  [latest Jersey User Guide](docindex) or browse [latest Jersey API](jersey-api).
 
-Jersey 1.x users may access the [Jersey 1.19.1 User Guide][docindex-1.x] and [Jersey 1.19.1 API][jersey-1.x-api].
+Jersey 1.x users may access the [Jersey 1.19.1 User Guide](docindex-1.x) and [Jersey 1.19.1 API](jersey-1.x-api).
 </td><td>
 
 <h2><a class="headerlink" href="download.html">
@@ -68,7 +68,7 @@ Jersey 1.x users may access the [Jersey 1.19.1 User Guide][docindex-1.x] and [Je
 </a></h2>
 
 Jersey is distributed mainly via Maven and it offers some extra modules.
-Check the [How to Download][dwnld] page or see our list of [dependencies][deps] for details.
+Check the [How to Download](dwnld) page or see our list of [dependencies](deps) for details.
 </td></tr>
 <tr><td>
 <h2><a class="headerlink" href="related.html">
@@ -82,7 +82,7 @@ List of projects related to Jersey.
     <var class="icon-group"></var> Contribute
 </a></h2>
 
-[Learn][contpage] how you can contribute to the project by:
+[Learn](contpage) how you can contribute to the project by:
 <ul class="icons-ul">
     <li><var class="icon-li icon-bug"></var> Reporting issues</li>
     <li><var class="icon-li icon-code-fork"></var> Submitting patches</li>
@@ -94,7 +94,7 @@ List of projects related to Jersey.
     <var class="icon-rss"></var> Developer Blogs
 </a></h2>
 
-Find out what our developers [blog][bloggers] about.
+Find out what our developers [blog](bloggers) about.
 </td></tr>
 </table>
 
