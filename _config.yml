@@ -7,7 +7,7 @@ latestVersion: 2.28
 
 links:
   source: https://github.com/eclipse-ee4j/jersey
-  #docs: documentation
+  docs: https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/index.html
   javadocs: https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/index.html
   download: https://github.com/eclipse-ee4j/jersey/releases
   mailinglist: https://accounts.eclipse.org/mailing-list/jersey-dev
