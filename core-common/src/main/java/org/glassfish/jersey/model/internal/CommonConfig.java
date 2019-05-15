@@ -28,11 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.Priorities;
@@ -44,11 +42,11 @@ import javax.ws.rs.core.FeatureContext;
 import javax.annotation.Priority;
 
 import org.glassfish.jersey.ExtendedConfig;
+import org.glassfish.jersey.inject.spi.BinderConfigurationFactory;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.CompositeBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.JerseyBinderConfigurationFactory;
 import org.glassfish.jersey.internal.inject.ProviderBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
@@ -66,7 +64,6 @@ import org.glassfish.jersey.process.Inflector;
 public class CommonConfig implements FeatureContext, ExtendedConfig {
 
     private static final Logger LOGGER = Logger.getLogger(CommonConfig.class.getName());
-    private static final Function<Object, Binder> CAST_TO_BINDER = Binder.class::cast;
 
     /**
      * Configuration runtime type.
@@ -99,6 +96,42 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
      * Flag determining whether the configuration of meta-providers (excl. binders) should be disabled.
      */
     private boolean disableMetaProviderConfiguration;
+
+    /**
+     * A utility class that binds binders on all {@link BinderConfigurationFactory.BinderConfiguration BinderConfiguration}
+     * created upon creation of this BinderConfigurations from all {@link BinderConfigurationFactory BinderConfigurationFactories}
+     */
+    private static final class BinderConfigurations {
+        private static final List<BinderConfigurationFactory> BINDER_CONFIGURATION_FACTORIES;
+        static {
+            final ServiceFinder<BinderConfigurationFactory> factoriesFinder =
+                    ServiceFinder.find(BinderConfigurationFactory.class);
+            final List<BinderConfigurationFactory> configurationFactories = new LinkedList<>();
+            configurationFactories.add(new JerseyBinderConfigurationFactory());
+            for (BinderConfigurationFactory configurationFactory : factoriesFinder) {
+                configurationFactories.add(configurationFactory);
+            }
+            BINDER_CONFIGURATION_FACTORIES = Collections.unmodifiableList(configurationFactories);
+        }
+
+        private final List<BinderConfigurationFactory.BinderConfiguration> binderConfigurations;
+
+        private BinderConfigurations(ComponentBag componentBag) {
+            binderConfigurations = new LinkedList<>();
+            for (BinderConfigurationFactory factory : BINDER_CONFIGURATION_FACTORIES) {
+                BinderConfigurationFactory.BinderConfiguration configuration =
+                        factory.createBinderConfiguration(componentBag::getInstances);
+                binderConfigurations.add(configuration);
+            }
+        }
+
+        private void configureBinders(InjectionManager injectionManager) {
+            for (BinderConfigurationFactory.BinderConfiguration configuration : binderConfigurations) {
+                configuration.configureBinders(injectionManager);
+            }
+        }
+
+    }
 
     /**
      * A single feature registration record.
@@ -619,7 +652,8 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
      */
     public void configureMetaProviders(InjectionManager injectionManager, ManagedObjectsFinalizer finalizer) {
         // First, configure existing binders
-        Set<Binder> configuredBinders = configureBinders(injectionManager, Collections.emptySet());
+        BinderConfigurations binderConfigurations = new BinderConfigurations(componentBag);
+        binderConfigurations.configureBinders(injectionManager);
 
         // Check whether meta providers have been initialized for a config this config has been loaded from.
         if (!disableMetaProviderConfiguration) {
@@ -628,29 +662,8 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             // Next, configure all features
             configureFeatures(injectionManager, new HashSet<>(), resetRegistrations(), finalizer);
             // At last, configure any new binders added by features
-            configureBinders(injectionManager, configuredBinders);
+            binderConfigurations.configureBinders(injectionManager);
         }
-    }
-
-    private Set<Binder> configureBinders(InjectionManager injectionManager, Set<Binder> configured) {
-        Set<Binder> allConfigured = Collections.newSetFromMap(new IdentityHashMap<>());
-        allConfigured.addAll(configured);
-
-        Collection<Binder> binders = getBinder(configured);
-        if (!binders.isEmpty()) {
-            injectionManager.register(CompositeBinder.wrap(binders));
-            allConfigured.addAll(binders);
-        }
-
-        return allConfigured;
-    }
-
-    private Collection<Binder> getBinder(Set<Binder> configured) {
-        return componentBag.getInstances(ComponentBag.BINDERS_ONLY)
-                .stream()
-                .map(CAST_TO_BINDER)
-                .filter(binder -> !configured.contains(binder))
-                .collect(Collectors.toList());
     }
 
     private void configureExternalObjects(InjectionManager injectionManager) {
