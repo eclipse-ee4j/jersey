@@ -51,16 +51,16 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
     <var class="icon-compass"></var> Get Started
 </a></h2>
 
-[Learn](quick) how to use Jersey in your projects.
+<a href ="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">Learn</a> how to use Jersey in your projects.
 </td><td>
 
 <h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
 </a></h2>
 
-Read  [latest Jersey User Guide](docindex) or browse [latest Jersey API](jersey-api).
+Read  <a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey User Guide</a> or browse <a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey API</a>.
 
-Jersey 1.x users may access the [Jersey 1.19.1 User Guide](docindex-1.x) and [Jersey 1.19.1 API](jersey-1.x-api).
+Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a> and <a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a>.
 </td><td>
 
 <h2><a class="headerlink" href="download.html">
@@ -68,7 +68,7 @@ Jersey 1.x users may access the [Jersey 1.19.1 User Guide](docindex-1.x) and [Je
 </a></h2>
 
 Jersey is distributed mainly via Maven and it offers some extra modules.
-Check the [How to Download](dwnld) page or see our list of [dependencies](deps) for details.
+Check the <a href="download.html">How to Download</a> page or see our list of <a href="{{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html">dependencies</a> for details.
 </td></tr>
 <tr><td>
 <h2><a class="headerlink" href="related.html">
@@ -82,7 +82,7 @@ List of projects related to Jersey.
     <var class="icon-group"></var> Contribute
 </a></h2>
 
-[Learn](contpage) how you can contribute to the project by:
+<a href="contribute.html">Learn</a> how you can contribute to the project by:
 <ul class="icons-ul">
     <li><var class="icon-li icon-bug"></var> Reporting issues</li>
     <li><var class="icon-li icon-code-fork"></var> Submitting patches</li>
@@ -94,20 +94,13 @@ List of projects related to Jersey.
     <var class="icon-rss"></var> Developer Blogs
 </a></h2>
 
-Find out what our developers [blog](bloggers) about.
+Find out what our developers <a href="bloggers.html">blog</a> about.
 </td></tr>
 </table>
 
-[jax-rs]: http://jax-rs-spec.java.net/
 [jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
-[jersey-1.x-api]: {{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html
-[contpage]: contribute.html
-[quick]: {{ site.links.newJerseyURL }}/documentation/latest/getting-started.html
 [dwnld]: download.html
-[deps]: {{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html
-[docindex]: {{ site.links.newJerseyURL }}/documentation/latest/index.html
-[docindex-1.x]: {{ site.links.newJerseyURL }}/documentation/1.19.1/index.html
-[bloggers]: bloggers.html
+[jax-rs]: http://jax-rs-spec.java.net/
 [older-articles]: older-articles.html
 
 # <a name="Links"></a>Links
