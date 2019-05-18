@@ -156,6 +156,10 @@ final class MethodSelectingRouter extends ContentTypeDeterminer implements Route
         }
     }
 
+    Set<String> getHttpMethods() {
+        return consumesProducesAcceptors.keySet();
+    }
+
     /**
      * Represents a 1-1-1 relation between input and output media type and an methodAcceptorPair.
      * <p>E.g. for a single resource method

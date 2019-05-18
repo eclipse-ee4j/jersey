@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,19 +56,31 @@ final class PathMatchingRouter implements Router {
         tracingLogger.log(ServerTraceEvent.MATCH_PATH_FIND, path);
 
         Router.Continuation result = null;
+        MatchResult matchResultCandidate = null;
+        Route acceptedRouteCandidate = null;
+
         final Iterator<Route> iterator = acceptedRoutes.iterator();
         while (iterator.hasNext()) {
             final Route acceptedRoute = iterator.next();
             final PathPattern routePattern = acceptedRoute.routingPattern();
-            final MatchResult m = routePattern.match(path);
-            if (m != null) {
-                // Push match result information and rest of path to match
-                rc.pushMatchResult(m);
-                result = Router.Continuation.of(context, acceptedRoute.next());
-
-                //tracing
-                tracingLogger.log(ServerTraceEvent.MATCH_PATH_SELECTED, routePattern.getRegex());
-                break;
+            final MatchResult matchResult = routePattern.match(path);
+            if (matchResult != null) {
+                if (acceptedRoute.getHttpMethods() == null  && matchResultCandidate != null) {
+                    // acceptedRoute matches the path but it is a locator
+                    // sub-resource locator shall not be found by the Spec if sub-resource was found first
+                    // need to use the sub-resource to return correct HTTP Status
+                    // TODO configuration option not to fail and continue with acceptedRoute locator?
+                    result = matchPathSelected(context, acceptedRouteCandidate, matchResultCandidate, tracingLogger);
+                    break;
+                } else if (!designatorMismatch(acceptedRoute, context)) {
+                    result = matchPathSelected(context, acceptedRoute, matchResult, tracingLogger);
+                    break;
+                } else if (matchResultCandidate == null) {
+                    // store the first matched candidate with unmatched method designator
+                    // maybe there won't be a better sub-resource
+                    matchResultCandidate = matchResult;
+                    acceptedRouteCandidate = acceptedRoute;
+                }
             } else {
                 tracingLogger.log(ServerTraceEvent.MATCH_PATH_NOT_MATCHED, routePattern.getRegex());
             }
@@ -80,11 +92,42 @@ final class PathMatchingRouter implements Router {
             }
         }
 
+        if (result == null && acceptedRouteCandidate != null) {
+            //method designator mismatched, but still go the route to get the proper status code
+            result = matchPathSelected(context, acceptedRouteCandidate, matchResultCandidate, tracingLogger);
+        }
+
         if (result == null) {
             // No match
             return Router.Continuation.of(context);
         }
 
         return result;
+    }
+
+    private Router.Continuation matchPathSelected(final RequestProcessingContext context, final Route acceptedRoute,
+                                                  final MatchResult matchResult, final TracingLogger tracingLogger) {
+        // Push match result information and rest of path to match
+        context.routingContext().pushMatchResult(matchResult);
+        final Router.Continuation result = Router.Continuation.of(context, acceptedRoute.next());
+
+        // tracing
+        tracingLogger.log(ServerTraceEvent.MATCH_PATH_SELECTED, acceptedRoute.routingPattern().getRegex());
+
+        return result;
+    }
+
+    /**
+     * Return true iff the method is a sub-resource and not a locator and http method designator does not match
+     * the request http method designator
+     * @param route current route representing resource method / locator
+     * @param context Contains Request to check the http method
+     * @return false if method designator matches
+     */
+    private boolean designatorMismatch(final Route route, final RequestProcessingContext context) {
+        final String httpMethod = context.request().getMethod();
+        return !"HEAD".equals(httpMethod)
+                && route.getHttpMethods() != null
+                && !route.getHttpMethods().contains(httpMethod);
     }
 }
