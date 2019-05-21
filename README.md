@@ -88,9 +88,12 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 [dwnld]: download.html
 [jax-rs]: http://jax-rs-spec.java.net/
 
-<table>
+<table style="border:none">
 <tr>
-<td style="width:50%">
+<td style="width: 30%;
+               text-align: start;
+               vertical-align: top;
+               border:none;">
 <h3> <a name="Links"></a>Links</h3>
 
 - <a href="https://projects.eclipse.org/projects/ee4j.jersey">Jersey project page</a><br/>
@@ -98,7 +101,7 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 - <a href="https://jcp.org/en/jsr/detail?id=370">JSR-370 page on JCP site</a><br/>
 - <a href="https://stackoverflow.com/questions/tagged/jersey">Stack Overflow</a><br/>
 </td>
- <td>
+ <td style="border:none;width:70%">
  <h3>Latest Articles</h3>
 
 <table>
