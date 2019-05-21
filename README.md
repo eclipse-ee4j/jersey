@@ -28,7 +28,79 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 
 ---
 
-<h3>Latest Articles</h3>
+<table>
+<tr>
+<td>
+<h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
+    <var class="icon-compass"></var> Get Started
+</a></h3>
+
+<a href ="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">Learn</a> how to use Jersey in your projects.
+</td><td>
+
+<h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
+    <var class="icon-book"></var> Documentation
+</a></h3>
+
+Read  <a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey User Guide</a> or browse <a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey API</a>.
+
+Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a> and <a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a>.
+</td><td>
+
+<h3><a class="headerlink" href="download.html">
+    <var class="icon-cloud-download"></var> Download
+</a></h3>
+
+Jersey is distributed mainly via Maven and it offers some extra modules.
+Check the <a href="download.html">How to Download</a> page or see our list of <a href="{{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html">dependencies</a> for details.
+</td></tr>
+<tr><td>
+<h3><a class="headerlink" href="related.html">
+    <var class="icon-tags"></var> Related Projects
+</a></h3>
+
+List of projects related to Jersey.
+
+</td><td>
+<h3><a class="headerlink" href="contribute.html">
+    <var class="icon-group"></var> Contribute
+</a></h3>
+
+<a href="contribute.html">Learn</a> how you can contribute to the project by:
+<ul class="icons-ul">
+    <li><var class="icon-li icon-bug"></var> Reporting issues</li>
+    <li><var class="icon-li icon-code-fork"></var> Submitting patches</li>
+    <li><var class="icon-li icon-eye-open"></var> Reviewing code</li>
+</ul>
+
+</td><td>
+<h3><a class="headerlink" href="bloggers.html">
+    <var class="icon-rss"></var> Developer Blogs
+</a></h3>
+
+Find out what our developers <a href="bloggers.html">blog</a> about.
+</td></tr>
+</table>
+
+---
+
+[jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
+[dwnld]: download.html
+[jax-rs]: http://jax-rs-spec.java.net/
+[older-articles]: older-articles.html
+
+<table>
+<tr>
+<td>
+# <a name="Links"></a>Links
+
+- [Jersey project page](https://projects.eclipse.org/projects/ee4j.jersey)
+- [jersey.github.io]({{ site.links.newJerseyURL }})
+- [JSR-370 page on JCP site](https://jcp.org/en/jsr/detail?id=370)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/jersey)
+</td>
+ <td>
+ <h3>Latest Articles</h3>
 
 <table>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>                         </td><td> Jan 28, 2019 </td><td> Jan Supol </td> </tr>
@@ -43,69 +115,5 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 
 [Older Articles &hellip;](older-articles)
 
----
-<table>
-<tr>
-<td>
-<h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
-    <var class="icon-compass"></var> Get Started
-</a></h2>
-
-<a href ="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">Learn</a> how to use Jersey in your projects.
-</td><td>
-
-<h2><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
-    <var class="icon-book"></var> Documentation
-</a></h2>
-
-Read  <a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey User Guide</a> or browse <a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey API</a>.
-
-Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a> and <a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a>.
-</td><td>
-
-<h2><a class="headerlink" href="download.html">
-    <var class="icon-cloud-download"></var> Download
-</a></h2>
-
-Jersey is distributed mainly via Maven and it offers some extra modules.
-Check the <a href="download.html">How to Download</a> page or see our list of <a href="{{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html">dependencies</a> for details.
-</td></tr>
-<tr><td>
-<h2><a class="headerlink" href="related.html">
-    <var class="icon-tags"></var> Related Projects
-</a></h2>
-
-List of projects related to Jersey.
-
-</td><td>
-<h2><a class="headerlink" href="contribute.html">
-    <var class="icon-group"></var> Contribute
-</a></h2>
-
-<a href="contribute.html">Learn</a> how you can contribute to the project by:
-<ul class="icons-ul">
-    <li><var class="icon-li icon-bug"></var> Reporting issues</li>
-    <li><var class="icon-li icon-code-fork"></var> Submitting patches</li>
-    <li><var class="icon-li icon-eye-open"></var> Reviewing code</li>
-</ul>
-
-</td><td>
-<h2><a class="headerlink" href="bloggers.html">
-    <var class="icon-rss"></var> Developer Blogs
-</a></h2>
-
-Find out what our developers <a href="bloggers.html">blog</a> about.
-</td></tr>
-</table>
-
-[jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
-[dwnld]: download.html
-[jax-rs]: http://jax-rs-spec.java.net/
-[older-articles]: older-articles.html
-
-# <a name="Links"></a>Links
-
-- [Jersey project page](https://projects.eclipse.org/projects/ee4j.jersey)
-- [jersey.github.io]({{ site.links.newJerseyURL }})
-- [JSR-370 page on JCP site](https://jcp.org/en/jsr/detail?id=370)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/jersey)
+ </td></tr>
+    </table>
