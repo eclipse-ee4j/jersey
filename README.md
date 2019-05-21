@@ -30,7 +30,7 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 
 <table>
 <tr>
-<td>
+<td  style="width:30%">
 <h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
     <var class="icon-compass"></var> Get Started
 </a></h3>
@@ -87,17 +87,16 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 [jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
 [dwnld]: download.html
 [jax-rs]: http://jax-rs-spec.java.net/
-[older-articles]: older-articles.html
 
 <table>
 <tr>
-<td>
-# <a name="Links"></a>Links
+<td style="width:50%">
+<h3> <a name="Links"></a>Links</h3>
 
-- [Jersey project page](https://projects.eclipse.org/projects/ee4j.jersey)
-- [jersey.github.io]({{ site.links.newJerseyURL }})
-- [JSR-370 page on JCP site](https://jcp.org/en/jsr/detail?id=370)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/jersey)
+- <a href="https://projects.eclipse.org/projects/ee4j.jersey">Jersey project page</a><br/>
+- <a href="{{ site.links.newJerseyURL }}">jersey.github.io</a><br/>
+- <a href="https://jcp.org/en/jsr/detail?id=370">JSR-370 page on JCP site</a><br/>
+- <a href="https://stackoverflow.com/questions/tagged/jersey">Stack Overflow</a><br/>
 </td>
  <td>
  <h3>Latest Articles</h3>
@@ -113,7 +112,7 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 </table>
 
 
-[Older Articles &hellip;](older-articles)
+<a href="older-articles.html">Older Articles &hellip</a>
 
  </td></tr>
     </table>
