@@ -30,13 +30,13 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 
 <table style="border:none;">
 <tr>
-<td  style="width:30%;border:none;">
+<td  style="width:30%;border:none;vertical-align: top;">
 <h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
     <var class="icon-compass"></var> Get Started
 </a></h3>
 
 <a href ="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">Learn</a> how to use Jersey in your projects.
-</td><td style="border:none;">
+</td><td style="border:none;vertical-align: top;">
 
 <h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
@@ -45,7 +45,7 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 Read  <a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey User Guide</a> or browse <a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey API</a>.
 
 Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a> and <a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a>.
-</td><td style="border:none;">
+</td><td style="border:none;vertical-align: top;">
 
 <h3><a class="headerlink" href="download.html">
     <var class="icon-cloud-download"></var> Download
@@ -54,14 +54,14 @@ Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documenta
 Jersey is distributed mainly via Maven and it offers some extra modules.
 Check the <a href="download.html">How to Download</a> page or see our list of <a href="{{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html">dependencies</a> for details.
 </td></tr>
-<tr><td style="border:none;">
+<tr><td style="border:none;vertical-align: top;">
 <h3><a class="headerlink" href="related.html">
     <var class="icon-tags"></var> Related Projects
 </a></h3>
 
 List of projects related to Jersey.
 
-</td><td style="border:none;">
+</td><td style="border:none;vertical-align: top;">
 <h3><a class="headerlink" href="contribute.html">
     <var class="icon-group"></var> Contribute
 </a></h3>
@@ -73,7 +73,7 @@ List of projects related to Jersey.
     <li><var class="icon-li icon-eye-open"></var> Reviewing code</li>
 </ul>
 
-</td><td style="border:none;">
+</td><td style="border:none;vertical-align: top;">
 <h3><a class="headerlink" href="bloggers.html">
     <var class="icon-rss"></var> Developer Blogs
 </a></h3>
