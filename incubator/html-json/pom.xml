@@ -42,14 +42,6 @@
         <net.java.html.version>1.5.1</net.java.html.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>netbeans</id>
-            <name>NetBeans</name>
-            <url>http://bits.netbeans.org/maven2/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -63,7 +55,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE80</version>
+            <version>RELEASE110</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
