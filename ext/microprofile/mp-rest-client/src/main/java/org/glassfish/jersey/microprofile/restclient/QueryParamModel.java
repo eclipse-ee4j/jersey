@@ -30,9 +30,9 @@ class QueryParamModel extends ParamModel<Map<String, Object[]>> {
 
     private final String queryParamName;
 
-    QueryParamModel(Builder builder) {
+    QueryParamModel(Builder builder, QueryParam annotation) {
         super(builder);
-        queryParamName = builder.queryParamName();
+        queryParamName = annotation.value();
     }
 
     @Override

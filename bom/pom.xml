@@ -249,7 +249,7 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jersey.ext</groupId>
+                <groupId>org.glassfish.jersey.ext.microprofile</groupId>
                 <artifactId>jersey-mp-rest-client</artifactId>
                 <version>${project.version}</version>
             </dependency>

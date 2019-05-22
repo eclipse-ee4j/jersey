@@ -52,16 +52,11 @@ class BeanClassModel {
      * Create new instance of bean annotated parameter.
      *
      * @param interfaceModel rest client interface model
-     * @param beanClass bean annotated parameter class
+     * @param beanClass      bean annotated parameter class
      * @return new instance
      */
     static BeanClassModel fromClass(InterfaceModel interfaceModel, Class<?> beanClass) {
         return new Builder(interfaceModel, beanClass)
-                .processPathFields()
-                .processHeaderFields()
-                .processCookieFields()
-                .processQueryFields()
-                .processMatrixFields()
                 .build();
     }
 
@@ -83,7 +78,7 @@ class BeanClassModel {
      * Resolves bean path parameters.
      *
      * @param webTarget web target path
-     * @param instance actual method parameter value
+     * @param instance  actual method parameter value
      * @return updated web target path
      */
     @SuppressWarnings("unchecked")
@@ -103,7 +98,7 @@ class BeanClassModel {
     /**
      * Resolves bean header parameters.
      *
-     * @param headers headers
+     * @param headers  headers
      * @param instance actual method parameter value
      * @return updated headers
      */
@@ -124,7 +119,7 @@ class BeanClassModel {
     /**
      * Resolves bean cookie parameters.
      *
-     * @param cookies cookies
+     * @param cookies  cookies
      * @param instance actual method parameter value
      * @return updated cookies
      */
@@ -145,13 +140,13 @@ class BeanClassModel {
     /**
      * Resolves bean query parameters.
      *
-     * @param query queries
+     * @param query    queries
      * @param instance actual method parameter value
      * @return updated queries
      */
     @SuppressWarnings("unchecked")
     Map<String, Object[]> resolveQuery(Map<String, Object[]> query,
-                                              Object instance) {
+                                       Object instance) {
         parameterModels.stream()
                 .filter(paramModel -> paramModel.handles(QueryParam.class))
                 .forEach(parameterModel -> {
@@ -167,12 +162,12 @@ class BeanClassModel {
      * Resolves bean matrix parameters.
      *
      * @param webTarget web target path
-     * @param instance actual method parameter value
+     * @param instance  actual method parameter value
      * @return updated web target path
      */
     @SuppressWarnings("unchecked")
     WebTarget resolveMatrix(WebTarget webTarget,
-                                       Object instance) {
+                            Object instance) {
         AtomicReference<WebTarget> toReturn = new AtomicReference<>(webTarget);
         parameterModels.stream()
                 .filter(paramModel -> paramModel.handles(MatrixParam.class))
@@ -185,17 +180,16 @@ class BeanClassModel {
         return toReturn.get();
     }
 
-
     /**
      * Resolves bean form parameters.
      *
-     * @param form web form
+     * @param form     web form
      * @param instance actual method parameter value
      * @return updated web form
      */
     @SuppressWarnings("unchecked")
     Form resolveForm(Form form,
-                          Object instance) {
+                     Object instance) {
         parameterModels.stream()
                 .filter(paramModel -> paramModel.handles(FormParam.class))
                 .forEach(parameterModel -> {
@@ -235,52 +229,27 @@ class BeanClassModel {
             this.beanClass = beanClass;
         }
 
-        /**
-         * Parses all {@link PathParam} annotated fields from bean class.
-         *
-         * @return updated builder instance
-         */
-        Builder processPathFields() {
-            return processFieldsByParameterClass(PathParam.class);
+        private void processPathFields() {
+            processFieldsByParameterClass(PathParam.class);
         }
 
-        /**
-         * Parses all {@link HeaderParam} annotated fields from bean class.
-         *
-         * @return updated builder instance
-         */
-        Builder processHeaderFields() {
-            return processFieldsByParameterClass(HeaderParam.class);
+        private void processHeaderFields() {
+            processFieldsByParameterClass(HeaderParam.class);
         }
 
-        /**
-         * Parses all {@link CookieParam} annotated fields from bean class.
-         *
-         * @return updated builder instance
-         */
-        Builder processCookieFields() {
-            return processFieldsByParameterClass(CookieParam.class);
+        private void processCookieFields() {
+            processFieldsByParameterClass(CookieParam.class);
         }
 
-        /**
-         * Parses all {@link QueryParam} annotated fields from bean class.
-         *
-         * @return updated builder instance
-         */
-        Builder processQueryFields() {
-            return processFieldsByParameterClass(QueryParam.class);
+        private void processQueryFields() {
+            processFieldsByParameterClass(QueryParam.class);
         }
 
-        /**
-         * Parses all {@link MatrixParam} annotated fields from bean class.
-         *
-         * @return updated builder instance
-         */
-        Builder processMatrixFields() {
-            return processFieldsByParameterClass(MatrixParam.class);
+        private void processMatrixFields() {
+            processFieldsByParameterClass(MatrixParam.class);
         }
 
-        private Builder processFieldsByParameterClass(Class<? extends Annotation> parameterClass) {
+        private void processFieldsByParameterClass(Class<? extends Annotation> parameterClass) {
             for (Field field : beanClass.getDeclaredFields()) {
                 if (field.isAnnotationPresent(parameterClass)) {
                     Parameter parameter = Parameter.create(parameterClass, parameterClass, false,
@@ -290,7 +259,6 @@ class BeanClassModel {
                                                         parameter, -1));
                 }
             }
-            return this;
         }
 
         /**
@@ -299,6 +267,11 @@ class BeanClassModel {
          * @return new instance
          */
         BeanClassModel build() {
+            processPathFields();
+            processHeaderFields();
+            processCookieFields();
+            processQueryFields();
+            processMatrixFields();
             return new BeanClassModel(this);
         }
     }

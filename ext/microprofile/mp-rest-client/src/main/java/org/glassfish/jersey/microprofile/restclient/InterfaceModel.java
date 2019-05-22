@@ -73,10 +73,10 @@ class InterfaceModel {
     /**
      * Creates new model based on interface class. Interface is parsed according to specific annotations.
      *
-     * @param restClientClass interface class
+     * @param restClientClass          interface class
      * @param responseExceptionMappers registered exception mappers
-     * @param paramConverterProviders registered parameter providers
-     * @param asyncInterceptors async interceptors
+     * @param paramConverterProviders  registered parameter providers
+     * @param asyncInterceptors        async interceptors
      * @param injectionManager
      * @return new model instance
      */
@@ -91,13 +91,7 @@ class InterfaceModel {
                            paramConverterProviders,
                            asyncInterceptors,
                            injectionManager,
-                           beanManager)
-                .pathValue(restClientClass.getAnnotation(Path.class))
-                .produces(restClientClass.getAnnotation(Produces.class))
-                .consumes(restClientClass.getAnnotation(Consumes.class))
-                .clientHeaders(restClientClass.getAnnotationsByType(ClientHeaderParam.class))
-                .clientHeadersFactory(restClientClass.getAnnotation(RegisterClientHeaders.class))
-                .build();
+                           beanManager).build();
     }
 
     private InterfaceModel(Builder builder) {
@@ -216,8 +210,6 @@ class InterfaceModel {
     }
 
     /**
-     *
-     *
      * @return
      */
     public InjectionManager getInjectionManager() {
@@ -355,6 +347,11 @@ class InterfaceModel {
          * @return new instance
          */
         InterfaceModel build() {
+            pathValue(restClientClass.getAnnotation(Path.class));
+            produces(restClientClass.getAnnotation(Produces.class));
+            consumes(restClientClass.getAnnotation(Consumes.class));
+            clientHeaders(restClientClass.getAnnotationsByType(ClientHeaderParam.class));
+            clientHeadersFactory(restClientClass.getAnnotation(RegisterClientHeaders.class));
             validateHeaderDuplicityNames();
             return new InterfaceModel(this);
         }

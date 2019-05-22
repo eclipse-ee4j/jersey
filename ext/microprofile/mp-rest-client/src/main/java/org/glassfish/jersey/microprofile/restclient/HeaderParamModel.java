@@ -31,9 +31,9 @@ class HeaderParamModel extends ParamModel<MultivaluedMap<String, Object>> {
 
     private String headerParamName;
 
-    HeaderParamModel(Builder builder) {
+    HeaderParamModel(Builder builder, HeaderParam annotation) {
         super(builder);
-        this.headerParamName = builder.headerParamName();
+        this.headerParamName = annotation.value();
     }
 
     @Override

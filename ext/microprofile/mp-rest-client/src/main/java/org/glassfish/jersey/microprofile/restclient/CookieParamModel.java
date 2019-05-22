@@ -30,10 +30,10 @@ class CookieParamModel extends ParamModel<Map<String, String>> {
 
     private final String cookieParamName;
 
-    CookieParamModel(Builder builder) {
+    CookieParamModel(Builder builder, CookieParam annotation) {
         super(builder);
-        cookieParamName = builder.cookieParamName();
-    }
+        cookieParamName = annotation.value();
+}
 
     @Override
     Map<String, String> handleParameter(Map<String, String> requestPart, Class<?> annotationClass, Object instance) {

@@ -14,28 +14,33 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.microprofile.restclient;
+package org.glassfish.jersey.restclient;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by David Kral.
  */
-
-@Path("resource")
-public interface ApplicationResource {
-
-    @GET
-    String getValue();
-
-    @POST
-    String postAppendValue(String value);
-
-    default String sayHi() {
-        return "Hi";
+public class ApplicationResourceImpl implements ApplicationResource {
+    @Override
+    public List<String> getValue() {
+        return Arrays.asList("This is default value!", "Test");
     }
 
+    @Override
+    public Map<String, String> getTestMap() {
+        Map<String, String> testMap = new HashMap<>();
+        testMap.put("firstKey", "firstValue");
+        testMap.put("secondKey", "secondValue");
+        return testMap;
+    }
+
+    @Override
+    public String postAppendValue(String value) {
+        return null;
+    }
 
 }

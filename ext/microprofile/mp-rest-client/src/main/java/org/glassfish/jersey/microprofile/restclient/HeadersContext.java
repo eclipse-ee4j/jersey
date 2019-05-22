@@ -25,7 +25,7 @@ import javax.ws.rs.core.MultivaluedMap;
  *
  * @author David Kral
  */
-public final class HeadersContext {
+final class HeadersContext {
 
     /**
      * Headers context thread local, used by internal implementations of header filters.
@@ -38,7 +38,7 @@ public final class HeadersContext {
      * The instance associated with the current thread.
      * @return context for current thread or {@code empty} if none associated
      */
-    public static Optional<HeadersContext> get() {
+    static Optional<HeadersContext> get() {
         return Optional.ofNullable(HEADERS_CONTEXT.get());
     }
 
@@ -49,7 +49,7 @@ public final class HeadersContext {
      * @param contextSupplier supplier for header context to be associated with the thread if none is
      * @return an instance associated with the current context, either from other provider, or from contextSupplier
      */
-    public static HeadersContext compute(Supplier<HeadersContext> contextSupplier) {
+    static HeadersContext compute(Supplier<HeadersContext> contextSupplier) {
         HeadersContext headersContext = HEADERS_CONTEXT.get();
         if (null == headersContext) {
             set(contextSupplier.get());
@@ -63,14 +63,14 @@ public final class HeadersContext {
      *
      * @param context context to associate
      */
-    public static void set(HeadersContext context) {
+    static void set(HeadersContext context) {
         HEADERS_CONTEXT.set(context);
     }
 
     /**
      * Remove the header context associated with current thread.
      */
-    public static void remove() {
+    static void remove() {
         HEADERS_CONTEXT.remove();
     }
 
@@ -81,11 +81,11 @@ public final class HeadersContext {
      * @return a new header context (not associated with current thread)
      * @see #set(HeadersContext)
      */
-    public static HeadersContext create(MultivaluedMap<String, String> inboundHeaders) {
+    static HeadersContext create(MultivaluedMap<String, String> inboundHeaders) {
         return new HeadersContext(inboundHeaders);
     }
 
-    public HeadersContext(MultivaluedMap<String, String> inboundHeaders) {
+    private HeadersContext(MultivaluedMap<String, String> inboundHeaders) {
         this.inboundHeaders = inboundHeaders;
     }
 
@@ -95,7 +95,7 @@ public final class HeadersContext {
      *
      * @return map of inbound headers
      */
-    public MultivaluedMap<String, String> inboundHeaders() {
+    MultivaluedMap<String, String> inboundHeaders() {
         return inboundHeaders;
     }
 

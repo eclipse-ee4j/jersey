@@ -26,7 +26,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
  *
  * @author David Kral
  */
-public class DefaultResponseExceptionMapper implements ResponseExceptionMapper {
+class DefaultResponseExceptionMapper implements ResponseExceptionMapper {
     @Override
     public Throwable toThrowable(Response response) {
         return new WebApplicationException("Unknown error, status code " + response.getStatus(), response);

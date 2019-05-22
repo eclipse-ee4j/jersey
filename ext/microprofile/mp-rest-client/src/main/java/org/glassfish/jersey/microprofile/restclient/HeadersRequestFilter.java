@@ -16,10 +16,14 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
+import java.io.IOException;
+
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
 
 /**
  * Server side request filter used for propagation of request headers to server client request.
@@ -27,11 +31,15 @@ import javax.ws.rs.container.ContainerRequestFilter;
  * @author David Kral
  */
 @ConstrainedTo(RuntimeType.SERVER)
-public class HeadersRequestFilter implements ContainerRequestFilter {
+public class HeadersRequestFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
         HeadersContext.compute(() -> HeadersContext.create(requestContext.getHeaders()));
     }
 
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+        HeadersContext.remove();
+    }
 }

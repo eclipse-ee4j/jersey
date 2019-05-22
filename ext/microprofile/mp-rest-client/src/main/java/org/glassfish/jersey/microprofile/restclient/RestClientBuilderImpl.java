@@ -37,11 +37,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -61,6 +56,7 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactor
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.Initializable;
+import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -71,7 +67,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  * @author David Kral
  * @author Patrik Dudits
  */
-public class RestClientBuilderImpl implements RestClientBuilder {
+class RestClientBuilderImpl implements RestClientBuilder {
 
     private static final String CONFIG_DISABLE_DEFAULT_MAPPER = "microprofile.rest.client.disable.default.mapper";
     private static final String CONFIG_PROVIDERS = "/mp-rest/providers";
@@ -137,21 +133,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         }
 
         //Provider registration part
-        Object providersFromJerseyConfig = clientBuilder.getConfiguration()
-                .getProperty(interfaceClass.getName() + CONFIG_PROVIDERS);
-        if (providersFromJerseyConfig instanceof String && !((String) providersFromJerseyConfig).isEmpty()) {
-            String[] providerArray = ((String) providersFromJerseyConfig).split(PROVIDER_SEPARATOR);
-            processConfigProviders(interfaceClass, providerArray);
-        }
-        Optional<String> providersFromConfig = config.getOptionalValue(interfaceClass.getName() + CONFIG_PROVIDERS, String.class);
-        if (providersFromConfig.isPresent() && !providersFromConfig.get().isEmpty()) {
-            String[] providerArray = providersFromConfig.get().split(PROVIDER_SEPARATOR);
-            processConfigProviders(interfaceClass, providerArray);
-        }
-        RegisterProvider[] registerProviders = interfaceClass.getAnnotationsByType(RegisterProvider.class);
-        for (RegisterProvider registerProvider : registerProviders) {
-            register(registerProvider.value(), registerProvider.priority() < 0 ? Priorities.USER : registerProvider.priority());
-        }
+        processProviders(interfaceClass);
         InjectionManagerExposer injectionManagerExposer = new InjectionManagerExposer();
         register(injectionManagerExposer);
 
@@ -160,16 +142,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         }
 
         //We need to check first if default exception mapper was not disabled by property on builder.
-        Object disableDefaultMapperJersey = clientBuilder.getConfiguration().getProperty(CONFIG_DISABLE_DEFAULT_MAPPER);
-        if (disableDefaultMapperJersey != null && disableDefaultMapperJersey.equals(Boolean.FALSE)) {
-            register(new DefaultResponseExceptionMapper());
-        } else if (disableDefaultMapperJersey == null) {
-            //If property was not set on Jersey ClientBuilder, we need to check config.
-            Optional<Boolean> disableDefaultMapperConfig = config.getOptionalValue(CONFIG_DISABLE_DEFAULT_MAPPER, boolean.class);
-            if (!disableDefaultMapperConfig.isPresent() || !disableDefaultMapperConfig.get()) {
-                register(new DefaultResponseExceptionMapper());
-            }
-        }
+        registerExceptionMapper();
 
         //AsyncInterceptors initialization
         List<AsyncInvocationInterceptor> asyncInterceptors = asyncInterceptorFactories.stream()
@@ -190,8 +163,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                                                                paramConverterProviders,
                                                                asyncInterceptors,
                                                                injectionManagerExposer.injectionManager,
-                                                               lookupBeanManager());
-
+                                                               CdiUtil.getBeanManager());
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass},
@@ -199,29 +171,37 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         );
     }
 
-    private BeanManager lookupBeanManager() {
-        Context initialContext = null;
-        try {
-            initialContext = new InitialContext();
-            return (BeanManager) initialContext.lookup("java:comp/BeanManager");
-        } catch (NamingException e) {
-            // no bean manager in JNDI
-        } finally {
-            if (initialContext != null) {
-                try {
-                    initialContext.close();
-                } catch (NamingException e) {
-                }
+    private void registerExceptionMapper() {
+        Object disableDefaultMapperJersey = clientBuilder.getConfiguration().getProperty(CONFIG_DISABLE_DEFAULT_MAPPER);
+        if (disableDefaultMapperJersey != null && disableDefaultMapperJersey.equals(Boolean.FALSE)) {
+            register(new DefaultResponseExceptionMapper());
+        } else if (disableDefaultMapperJersey == null) {
+            //If property was not set on Jersey ClientBuilder, we need to check config.
+            Optional<Boolean> disableDefaultMapperConfig = config.getOptionalValue(CONFIG_DISABLE_DEFAULT_MAPPER, boolean.class);
+            if (!disableDefaultMapperConfig.isPresent() || !disableDefaultMapperConfig.get()) {
+                register(new DefaultResponseExceptionMapper());
             }
         }
-        try {
-            if (CDI.current() != null) {
-                return CDI.current().getBeanManager();
-            }
-        } catch (IllegalStateException e) {
-            // CDI unavailable
+    }
+
+    private <T> void processProviders(Class<T> interfaceClass) {
+        Object providersFromJerseyConfig = clientBuilder.getConfiguration()
+                .getProperty(interfaceClass.getName() + CONFIG_PROVIDERS);
+        if (providersFromJerseyConfig instanceof String && !((String) providersFromJerseyConfig).isEmpty()) {
+            String[] providerArray = ((String) providersFromJerseyConfig).split(PROVIDER_SEPARATOR);
+            processConfigProviders(interfaceClass, providerArray);
         }
-        return null;
+        Optional<String> providersFromConfig = config.getOptionalValue(interfaceClass.getName() + CONFIG_PROVIDERS, String.class);
+        providersFromConfig.ifPresent(providers -> {
+            if (!providers.isEmpty()) {
+                String[] providerArray = providersFromConfig.get().split(PROVIDER_SEPARATOR);
+                processConfigProviders(interfaceClass, providerArray);
+            }
+        });
+        RegisterProvider[] registerProviders = interfaceClass.getAnnotationsByType(RegisterProvider.class);
+        for (RegisterProvider registerProvider : registerProviders) {
+            register(registerProvider.value(), registerProvider.priority() < 0 ? Priorities.USER : registerProvider.priority());
+        }
     }
 
     private void processConfigProviders(Class<?> restClientInterface, String[] providerArray) {
@@ -264,86 +244,86 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     }
 
     @Override
-    public RestClientBuilder register(Class<?> aClass) {
-        if (isSupportedCustomProvider(aClass)) {
-            register(ReflectionUtil.createInstance(aClass));
+    public RestClientBuilder register(Class<?> componentClass) {
+        if (isSupportedCustomProvider(componentClass)) {
+            register(ReflectionUtil.createInstance(componentClass));
         } else {
-            clientBuilder.register(aClass);
+            clientBuilder.register(componentClass);
         }
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Class<?> aClass, int i) {
-        if (isSupportedCustomProvider(aClass)) {
-            register(ReflectionUtil.createInstance(aClass), i);
+    public RestClientBuilder register(Class<?> componentClass, int priority) {
+        if (isSupportedCustomProvider(componentClass)) {
+            register(ReflectionUtil.createInstance(componentClass), priority);
         } else {
-            clientBuilder.register(aClass, i);
+            clientBuilder.register(componentClass, priority);
         }
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Class<?> aClass, Class<?>... classes) {
-        if (isSupportedCustomProvider(aClass)) {
-            register(ReflectionUtil.createInstance(aClass), classes);
+    public RestClientBuilder register(Class<?> componentClass, Class<?>... contracts) {
+        if (isSupportedCustomProvider(componentClass)) {
+            register(ReflectionUtil.createInstance(componentClass), contracts);
         } else {
-            clientBuilder.register(aClass, classes);
+            clientBuilder.register(componentClass, contracts);
         }
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Class<?> aClass, Map<Class<?>, Integer> map) {
-        if (isSupportedCustomProvider(aClass)) {
-            register(ReflectionUtil.createInstance(aClass), map);
+    public RestClientBuilder register(Class<?> componentClass, Map<Class<?>, Integer> contracts) {
+        if (isSupportedCustomProvider(componentClass)) {
+            register(ReflectionUtil.createInstance(componentClass), contracts);
         } else {
-            clientBuilder.register(aClass, map);
+            clientBuilder.register(componentClass, contracts);
         }
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Object o) {
-        if (o instanceof ResponseExceptionMapper) {
-            ResponseExceptionMapper mapper = (ResponseExceptionMapper) o;
-            registerCustomProvider(o, -1);
+    public RestClientBuilder register(Object component) {
+        if (component instanceof ResponseExceptionMapper) {
+            ResponseExceptionMapper mapper = (ResponseExceptionMapper) component;
+            registerCustomProvider(component, -1);
             clientBuilder.register(mapper, mapper.getPriority());
         } else {
-            clientBuilder.register(o);
-            registerCustomProvider(o, -1);
+            clientBuilder.register(component);
+            registerCustomProvider(component, -1);
         }
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Object o, int i) {
-        clientBuilder.register(o, i);
-        registerCustomProvider(o, i);
+    public RestClientBuilder register(Object component, int priority) {
+        clientBuilder.register(component, priority);
+        registerCustomProvider(component, priority);
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Object o, Class<?>... classes) {
-        for (Class<?> clazz : classes) {
-            if (isSupportedCustomProvider(clazz)) {
-                register(o);
+    public RestClientBuilder register(Object component, Class<?>... contracts) {
+        for (Class<?> contract : contracts) {
+            if (isSupportedCustomProvider(contract)) {
+                register(component);
             }
         }
-        clientBuilder.register(o, classes);
+        clientBuilder.register(component, contracts);
         return this;
     }
 
     @Override
-    public RestClientBuilder register(Object o, Map<Class<?>, Integer> map) {
-        if (isSupportedCustomProvider(o.getClass())) {
-            if (o instanceof ResponseExceptionMapper) {
-                registerCustomProvider(o, map.get(ResponseExceptionMapper.class));
-            } else if (o instanceof ParamConverterProvider) {
-                registerCustomProvider(o, map.get(ParamConverterProvider.class));
+    public RestClientBuilder register(Object component, Map<Class<?>, Integer> contracts) {
+        if (isSupportedCustomProvider(component.getClass())) {
+            if (component instanceof ResponseExceptionMapper) {
+                registerCustomProvider(component, contracts.get(ResponseExceptionMapper.class));
+            } else if (component instanceof ParamConverterProvider) {
+                registerCustomProvider(component, contracts.get(ParamConverterProvider.class));
             }
         }
-        clientBuilder.register(o, map);
+        clientBuilder.register(component, contracts);
         return this;
     }
 

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.microprofile.restclient;
+package org.glassfish.jersey.restclient;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
@@ -43,7 +43,8 @@ public interface CorrectInterface {
     void secondMethod(@PathParam("first") String first, String second);
 
     @POST
-    @ClientHeaderParam(name = "test", value = "org.glassfish.jersey.restclient.CustomHeaderGenerator.customHeader")
+    @ClientHeaderParam(name = "test",
+                       value = "org.glassfish.jersey.org.glassfish.jersey.restclient.CustomHeaderGenerator.customHeader")
     void thirdMethod(@PathParam("first") String first);
 
     @GET

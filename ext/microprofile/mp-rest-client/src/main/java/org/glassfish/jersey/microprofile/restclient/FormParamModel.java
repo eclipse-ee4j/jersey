@@ -31,9 +31,9 @@ class FormParamModel extends ParamModel<Form> {
 
     private final String formParamName;
 
-    FormParamModel(Builder builder) {
+    FormParamModel(Builder builder, FormParam annotation) {
         super(builder);
-        formParamName = builder.formParamName();
+        formParamName = annotation.value();
     }
 
     @Override

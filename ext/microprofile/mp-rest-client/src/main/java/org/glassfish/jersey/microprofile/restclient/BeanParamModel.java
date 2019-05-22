@@ -17,6 +17,7 @@
 package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,6 +40,26 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 class BeanParamModel extends ParamModel<Object> {
 
+    private static final Map<Class<?>, ParamHandler> PARAM_HANDLERS = new IdentityHashMap<>();
+
+    static {
+        PARAM_HANDLERS.put(PathParam.class,
+                           (model, requestPart, instance) -> model.resolvePath((WebTarget) requestPart, instance));
+        PARAM_HANDLERS.put(HeaderParam.class,
+                           (model, requestPart, instance) -> model.resolveHeaders((MultivaluedMap<String, Object>) requestPart,
+                                                                                  instance));
+        PARAM_HANDLERS.put(CookieParam.class,
+                           (model, requestPart, instance) -> model.resolveCookies((Map<String, String>) requestPart, instance));
+        PARAM_HANDLERS.put(QueryParam.class,
+                           (model, requestPart, instance) -> model.resolveQuery((Map<String, Object[]>) requestPart,
+                                                                                  instance));
+        PARAM_HANDLERS.put(MatrixParam.class,
+                           (model, requestPart, instance) -> model.resolveMatrix((WebTarget) requestPart, instance));
+        PARAM_HANDLERS.put(FormParam.class,
+                           (model, requestPart, instance) -> model.resolveForm((Form) requestPart,
+                                                                                  instance));
+    }
+
     private BeanClassModel beanClassModel;
 
     BeanParamModel(Builder builder) {
@@ -48,30 +69,18 @@ class BeanParamModel extends ParamModel<Object> {
 
     @Override
     public Object handleParameter(Object requestPart, Class<?> annotationClass, Object instance) {
-        if (PathParam.class.equals(annotationClass)) {
-            return beanClassModel.resolvePath((WebTarget) requestPart, instance);
-        } else if (HeaderParam.class.equals(annotationClass)) {
-            return beanClassModel.resolveHeaders((MultivaluedMap<String, Object>) requestPart, instance);
-        } else if (CookieParam.class.equals(annotationClass)) {
-            return beanClassModel.resolveCookies((Map<String, String>) requestPart, instance);
-        } else if (QueryParam.class.equals(annotationClass)) {
-            return beanClassModel.resolveQuery((Map<String, Object[]>) requestPart, instance);
-        } else if (MatrixParam.class.equals(annotationClass)) {
-            return beanClassModel.resolveMatrix((WebTarget) requestPart, instance);
-        } else if (FormParam.class.equals(annotationClass)) {
-            return beanClassModel.resolveForm((Form) requestPart, instance);
+        ParamHandler handler = PARAM_HANDLERS.get(annotationClass);
+
+        if (null == handler) {
+            throw new UnsupportedOperationException(annotationClass.getName() + " is not supported!");
         }
-        throw new UnsupportedOperationException(annotationClass.getName() + " is not supported!");
+
+        return handler.handle(beanClassModel, requestPart, instance);
     }
 
     @Override
     public boolean handles(Class<Annotation> annotation) {
-        return PathParam.class.equals(annotation)
-                || HeaderParam.class.equals(annotation)
-                || CookieParam.class.equals(annotation)
-                || QueryParam.class.equals(annotation)
-                || MatrixParam.class.equals(annotation)
-                || FormParam.class.equals(annotation);
+        return PARAM_HANDLERS.containsKey(annotation);
     }
 
     /**

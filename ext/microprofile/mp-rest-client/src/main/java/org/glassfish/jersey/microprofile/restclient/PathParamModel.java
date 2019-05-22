@@ -30,9 +30,9 @@ class PathParamModel extends ParamModel<WebTarget> {
 
     private final String pathParamName;
 
-    PathParamModel(Builder builder) {
+    PathParamModel(Builder builder, PathParam annotation) {
         super(builder);
-        pathParamName = builder.pathParamName();
+        pathParamName = annotation.value();
     }
 
     public String getPathParamName() {

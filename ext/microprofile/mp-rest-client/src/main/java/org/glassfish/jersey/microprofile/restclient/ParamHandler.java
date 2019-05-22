@@ -16,21 +16,22 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.FeatureContext;
-
-import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
-
 /**
- * Auto discoverable feature to bind into jersey runtime.
+ * Handles behavior for each JAX-RS annotated element.
+ *
+ * @author David Kral
  */
-@ConstrainedTo(RuntimeType.SERVER)
-public class RequestHeaderAutoDiscoverable implements ForcedAutoDiscoverable {
-    @Override
-    public void configure(FeatureContext context) {
-        if (!context.getConfiguration().isRegistered(HeadersRequestFilter.class)) {
-            context.register(HeadersRequestFilter.class);
-        }
-    }
+@FunctionalInterface
+interface ParamHandler {
+
+    /**
+     * Handles behavior for specific annotated element.
+     *
+     * @param beanClassModel bean class model
+     * @param requestPart part of the request
+     * @param instance actual value
+     * @return updated request part
+     */
+    Object handle(BeanClassModel beanClassModel, Object requestPart, Object instance);
+
 }

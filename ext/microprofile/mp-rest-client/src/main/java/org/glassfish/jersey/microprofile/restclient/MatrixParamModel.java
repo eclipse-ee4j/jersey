@@ -35,10 +35,11 @@ class MatrixParamModel extends ParamModel<WebTarget> {
      * Creates new matrix model.
      *
      * @param builder
+     * @param annotation
      */
-    MatrixParamModel(Builder builder) {
+    MatrixParamModel(Builder builder, MatrixParam annotation) {
         super(builder);
-        matrixParamName = builder.matrixParamName();
+        matrixParamName = annotation.value();
     }
 
     @Override

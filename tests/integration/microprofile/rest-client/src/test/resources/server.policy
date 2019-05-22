@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,22 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.microprofile.restclient;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import org.junit.Test;
-
-/**
- * @author David Kral
- */
-public class InterfaceValidationTest {
-
-    @Test
-    public void testValidInterface() {
-        RestClientModel.from(CorrectInterface.class, new HashSet<>(), new HashSet<>(), new ArrayList<>(),
-                             null, null);
-    }
-
-}
+grant {
+  permission java.security.AllPermission;
+};
