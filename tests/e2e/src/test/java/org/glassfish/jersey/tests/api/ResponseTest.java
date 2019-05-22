@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,7 @@ public class ResponseTest {
         MediaType mt = new MediaType("text", "plain");
         List<Variant> vts = Variant.VariantListBuilder.newInstance().mediaTypes(mt)
                 .languages(new Locale("en", "US"), new Locale("en", "GB"),
-                        new Locale("zh", "CN")).encodings((String[]) encoding.toArray())
+                        new Locale("zh", "CN")).encodings(encoding.toArray(new String[0]))
                 .add().build();
 
         String tmp;
@@ -151,7 +151,7 @@ public class ResponseTest {
         MediaType mt2 = new MediaType("text", "html");
         List<Variant> vts = Variant.VariantListBuilder.newInstance().mediaTypes(mt1, mt2)
                 .languages(new Locale("en", "US"), new Locale("en", "GB"),
-                        new Locale("zh", "CN")).encodings((String[]) encoding.toArray())
+                        new Locale("zh", "CN")).encodings(encoding.toArray(new String[0]))
                 .add().build();
 
         String tmp;
@@ -214,7 +214,7 @@ public class ResponseTest {
         MediaType mt = new MediaType("text", "plain");
         List<Variant> vts = Variant.VariantListBuilder.newInstance().mediaTypes(mt)
                 .languages(new Locale("en", "US"), new Locale("en", "GB"),
-                        new Locale("zh", "CN")).encodings((String[]) encoding.toArray())
+                        new Locale("zh", "CN")).encodings(encoding.toArray(new String[0]))
                 .add().build();
 
         String tmp;
