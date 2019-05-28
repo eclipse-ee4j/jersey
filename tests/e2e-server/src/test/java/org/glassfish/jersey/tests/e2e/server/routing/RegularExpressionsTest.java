@@ -33,9 +33,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RegularExpressionsTest extends JerseyTest {
-    public static String GET_VALUE = "get value";
-    public static String POST_VALUE = "post value";
-    public static String PUT_VALUE = "put value";
+    private static final String GET_VALUE = "get value";
+    private static final String POST_VALUE = "post value";
+    private static final String PUT_VALUE = "put value";
 
 
     @Path("one")

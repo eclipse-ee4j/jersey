@@ -129,18 +129,18 @@ public class RuntimeResource implements ResourceModelComponent {
         @Override
         public int compare(RuntimeResource o1, RuntimeResource o2) {
             final int cmp = PathPattern.COMPARATOR.compare(o1.getPathPattern(), o2.getPathPattern());
-            int locatorCmp = 0;
-            return cmp != 0
-                    ? cmp
-                    // quaternary key sorting those derived from
-                    // sub-resource methods ahead of those derived from sub-resource locators
-                    : (locatorCmp = o1.resourceLocators.size() - o2.resourceLocators.size()) != 0
-                        ? locatorCmp
-                        // compare the regexes then
-                        : o2.regex.compareTo(o1.regex);
+            if (cmp == 0) {
+                // quaternary key sorting those derived from
+                // sub-resource methods ahead of those derived from sub-resource locators
+                final int locatorCmp = o1.resourceLocators.size() - o2.resourceLocators.size();
+
+                // compare the regexes if still equal
+                return (locatorCmp == 0) ? o2.regex.compareTo(o1.regex) : locatorCmp;
+            } else {
+                return cmp;
+            }
         }
     };
-
 
     private final String regex;
     private final List<ResourceMethod> resourceMethods;

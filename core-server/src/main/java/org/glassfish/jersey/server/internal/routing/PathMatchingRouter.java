@@ -65,14 +65,14 @@ final class PathMatchingRouter implements Router {
             final PathPattern routePattern = acceptedRoute.routingPattern();
             final MatchResult matchResult = routePattern.match(path);
             if (matchResult != null) {
-                if (acceptedRoute.getHttpMethods() == null  && matchResultCandidate != null) {
+                if (isLocator(acceptedRoute) && matchResultCandidate != null) {
                     // acceptedRoute matches the path but it is a locator
                     // sub-resource locator shall not be found by the Spec if sub-resource was found first
                     // need to use the sub-resource to return correct HTTP Status
                     // TODO configuration option not to fail and continue with acceptedRoute locator?
                     result = matchPathSelected(context, acceptedRouteCandidate, matchResultCandidate, tracingLogger);
                     break;
-                } else if (!designatorMismatch(acceptedRoute, context)) {
+                } else if (isLocator(acceptedRoute) || designatorMatch(acceptedRoute, context)) {
                     result = matchPathSelected(context, acceptedRoute, matchResult, tracingLogger);
                     break;
                 } else if (matchResultCandidate == null) {
@@ -118,16 +118,21 @@ final class PathMatchingRouter implements Router {
     }
 
     /**
-     * Return true iff the method is a sub-resource and not a locator and http method designator does not match
-     * the request http method designator
+     * Return {@code true} iff the sub-resource method designator does match the request http method designator
      * @param route current route representing resource method / locator
      * @param context Contains Request to check the http method
-     * @return false if method designator matches
+     * @return false if method designator does not match
      */
-    private boolean designatorMismatch(final Route route, final RequestProcessingContext context) {
+    private static boolean designatorMatch(final Route route, final RequestProcessingContext context) {
         final String httpMethod = context.request().getMethod();
-        return !"HEAD".equals(httpMethod)
-                && route.getHttpMethods() != null
-                && !route.getHttpMethods().contains(httpMethod);
+
+        if (route.getHttpMethods().contains(httpMethod)) {
+            return true;
+        }
+        return ("HEAD".equals(httpMethod) && route.getHttpMethods().contains("GET"));
+    }
+
+    private static boolean isLocator(final Route route) {
+        return route.getHttpMethods() == null;
     }
 }
