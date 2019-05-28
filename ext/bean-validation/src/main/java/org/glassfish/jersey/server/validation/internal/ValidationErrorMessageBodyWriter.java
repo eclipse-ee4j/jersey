@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,19 +48,17 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
         return isSupportedMediaType(mediaType) && isSupportedType(type, genericType);
     }
 
-    private boolean isSupportedType(final Class<?> type, final Type genericType) {
+    private static boolean isSupportedType(final Class<?> type, final Type genericType) {
         if (ValidationError.class.isAssignableFrom(type)) {
             return true;
-        } else if (Collection.class.isAssignableFrom(type)) {
-            if (genericType instanceof ParameterizedType) {
-                return ValidationError.class
-                        .isAssignableFrom((Class) ((ParameterizedType) genericType).getActualTypeArguments()[0]);
-            }
+        } else if (Collection.class.isAssignableFrom(type) && (genericType instanceof ParameterizedType)) {
+            return ValidationError.class
+                    .isAssignableFrom((Class) ((ParameterizedType) genericType).getActualTypeArguments()[0]);
         }
         return false;
     }
 
-    private boolean isSupportedMediaType(final MediaType mediaType) {
+    private static boolean isSupportedMediaType(final MediaType mediaType) {
         return MediaType.TEXT_HTML_TYPE.equals(mediaType) || MediaType.TEXT_PLAIN_TYPE.equals(mediaType);
     }
 
@@ -118,7 +116,9 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
 
             // Invalid value.
             builder.append(isPlain ? "invalidValue = " : ("<span class=\"invalid-value\"><strong>invalidValue</strong> = "));
-            builder.append(isPlain ? error.getInvalidValue() : (error.getInvalidValue() + "</span>"));
+            builder.append(isPlain ? error.getInvalidValue()
+                            : escapeHtml(error.getInvalidValue()).concat("</span>")
+            );
 
             builder.append(')');
 
@@ -136,5 +136,13 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
 
         entityStream.write(builder.toString().getBytes(MessageUtils.getCharset(mediaType)));
         entityStream.flush();
+    }
+
+    private static final String escapeHtml(String origin) {
+        return origin == null ? ""
+                : origin.replaceAll("&", "&amp;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
     }
 }
