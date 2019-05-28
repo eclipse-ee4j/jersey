@@ -151,7 +151,7 @@
     </dependencies>
 
     <properties>
-        <spring5.version>5.1.7.RELEASE</spring5.version>
+        <spring5.version>5.1.5.RELEASE</spring5.version>
     </properties>
 
     <build>
