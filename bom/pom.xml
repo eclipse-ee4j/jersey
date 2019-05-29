@@ -150,7 +150,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>
-                <artifactId>config</artifactId>
+                <artifactId>jersey-mp-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

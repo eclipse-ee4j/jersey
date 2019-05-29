@@ -36,7 +36,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 
-public class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<Void> {
+class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<Void> {
 
     private static final Logger log = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
 

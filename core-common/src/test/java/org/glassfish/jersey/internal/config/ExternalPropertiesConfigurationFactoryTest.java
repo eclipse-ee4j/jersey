@@ -17,15 +17,16 @@
 package org.glassfish.jersey.internal.config;
 
 import org.glassfish.jersey.CommonProperties;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory.getConfig;
+import static org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory.readExternalPropertiesMap;
 
 public class ExternalPropertiesConfigurationFactoryTest {
 
@@ -50,24 +51,22 @@ public class ExternalPropertiesConfigurationFactoryTest {
 
     @Test
     public void readSystemPropertiesTest() {
-        final ExternalPropertiesConfigurationFactoryFeature factory = ExternalPropertiesConfigurationFactoryFeature.getFactory();
         final Object result =
-                factory.readExternalPropertiesMap().get("jersey.config.server.provider.scanning.recursive");
+                readExternalPropertiesMap().get("jersey.config.server.provider.scanning.recursive");
         Assert.assertNull(result);
         Assert.assertEquals(Boolean.TRUE,
-                factory.getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Boolean.class));
+                getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Boolean.class));
         Assert.assertEquals(Boolean.FALSE,
-                factory.getConfig().as("jersey.config.client.readTimeout", Boolean.class));
+                getConfig().as("jersey.config.client.readTimeout", Boolean.class));
         Assert.assertEquals(1,
-                factory.getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Integer.class));
+                getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Integer.class));
         Assert.assertEquals(10,
-                factory.getConfig().as("jersey.config.client.readTimeout", Integer.class));
+                getConfig().as("jersey.config.client.readTimeout", Integer.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void unsupportedMapperTest() {
-        ExternalPropertiesConfigurationFactoryFeature.getFactory()
-                .getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Double.class);
+        getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Double.class);
     }
 
     @Test
@@ -75,11 +74,10 @@ public class ExternalPropertiesConfigurationFactoryTest {
         final Map<String, Object> inputProperties = new HashMap<>();
         inputProperties.put("jersey.config.server.provider.scanning.recursive", "MODIFIED");
         inputProperties.put("org.jersey.microprofile.config.added", "ADDED");
-        final ExternalPropertiesConfigurationFactoryFeature factory = ExternalPropertiesConfigurationFactoryFeature.getFactory();
-        factory.getConfig().mergeProperties(inputProperties);
-        final Object result = factory.readExternalPropertiesMap().get("jersey.config.server.provider.scanning.recursive");
+        getConfig().mergeProperties(inputProperties);
+        final Object result = readExternalPropertiesMap().get("jersey.config.server.provider.scanning.recursive");
         Assert.assertNull(result);
-        Assert.assertNull(factory.readExternalPropertiesMap().get("org.jersey.microprofile.config.added"));
+        Assert.assertNull(readExternalPropertiesMap().get("org.jersey.microprofile.config.added"));
     }
 
 }

@@ -28,9 +28,9 @@ import javax.ws.rs.core.FeatureContext;
 public class ExternalPropertiesAutoDiscoverable implements AutoDiscoverable {
     @Override
     public void configure(FeatureContext context) {
-        if (!context.getConfiguration().isRegistered(ExternalPropertiesConfigurationFactoryFeature.class)) {
-            ExternalPropertiesConfigurationFactoryFeature.getFactory().configure(context);
-            context.register(ExternalPropertiesConfigurationFactoryFeature.getFactory());
+        if (!context.getConfiguration().isRegistered(ExternalPropertiesConfigurationFeature.class)) {
+            ExternalPropertiesConfigurationFactory.configure(context);
+            context.register(ExternalPropertiesConfigurationFeature.class);
         }
     }
 }

@@ -38,7 +38,7 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Feature;
 
 import org.glassfish.jersey.internal.Errors;
-import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactoryFeature;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
@@ -56,6 +56,7 @@ import org.glassfish.jersey.server.internal.scanning.AnnotationAcceptingListener
 import org.glassfish.jersey.server.internal.scanning.FilesScanner;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.model.Resource;
+
 
 /**
  * The resource configuration for configuring a web application.
@@ -714,7 +715,7 @@ public class ResourceConfig extends Application implements Configurable<Resource
         final State current = state;
         if (!(current instanceof ImmutableState)) {
             setupApplicationName();
-            configure();
+            ExternalPropertiesConfigurationFactory.configure(state);
             state = new ImmutableState(current);
         }
     }
@@ -1300,7 +1301,4 @@ public class ResourceConfig extends Application implements Configurable<Resource
         }
     }
 
-    private void configure() {
-        ExternalPropertiesConfigurationFactoryFeature.getFactory().configure(state);
-    }
 }

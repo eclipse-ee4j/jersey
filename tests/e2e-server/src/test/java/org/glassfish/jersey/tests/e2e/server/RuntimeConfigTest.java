@@ -98,7 +98,7 @@ public class RuntimeConfigTest extends JerseyTest {
             assertThat(config.getProperty(InternalProperties.JSON_FEATURE_CLIENT), notNullValue());
 
             // MetaInfAutoDiscoverable
-            assertThat(config.getInstances().size(), is(2));
+            assertThat(config.getInstances().size(), is(1));
             assertTrue(config.isEnabled(ClientFeature.class));
 
             context.getHeaders().add("CustomHeader", "ClientReaderInterceptor");

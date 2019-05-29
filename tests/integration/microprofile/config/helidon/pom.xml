@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>config</artifactId>
+            <artifactId>jersey-mp-config</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

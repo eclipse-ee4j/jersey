@@ -16,27 +16,14 @@
 
 package org.glassfish.jersey.internal.config;
 
-import org.glassfish.jersey.spi.ExternalConfigurationModel;
-import org.glassfish.jersey.spi.ExternalConfigurationProvider;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.FeatureContext;
 
-import java.util.Map;
-
-class SystemPropertiesConfigurationProvider implements ExternalConfigurationProvider {
-
-    private final SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
-    @Override
-    public Map<String, Object> getProperties() {
-        return model.getProperties();
-    }
+public class ExternalPropertiesConfigurationFeature implements Feature {
 
     @Override
-    public ExternalConfigurationModel getConfiguration() {
-        return model;
-    }
-
-    @Override
-    public ExternalConfigurationModel merge(ExternalConfigurationModel input) {
-        return input == null ? model : model.mergeProperties(input.getProperties());
+    public boolean configure(FeatureContext configurableContext) {
+        return ExternalPropertiesConfigurationFactory.configure(configurableContext);
     }
 
 }

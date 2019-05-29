@@ -21,11 +21,11 @@ import org.glassfish.jersey.spi.ExternalConfigurationModel;
 import org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
 import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,26 +38,20 @@ import java.util.TreeSet;
  * Offers methods to work with properties loaded from providers or
  * just configure Jersey's Configurables with loaded properties from providers
  */
-public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
+public class ExternalPropertiesConfigurationFactory {
 
-    private ExternalPropertiesConfigurationFactoryFeature() {
-    }
+    private static final List<ExternalConfigurationProvider> EXTERNAL_CONFIGURATION_PROVIDERS =
+            getExternalConfigurations();
 
-    private static final ExternalPropertiesConfigurationFactoryFeature factory
-            = new ExternalPropertiesConfigurationFactoryFeature();
-
-    public static ExternalPropertiesConfigurationFactoryFeature getFactory() {
-        return factory;
-    }
 
     /**
      * Map of merged properties from all found providers
      *
      * @return map of merged properties from all found/plugged providers
      */
-    public Map<String, Object> readExternalPropertiesMap() {
+    protected static Map<String, Object> readExternalPropertiesMap() {
 
-        final ExternalConfigurationProvider provider = mergeConfigs(getExternalConfigurations());
+        final ExternalConfigurationProvider provider = mergeConfigs(EXTERNAL_CONFIGURATION_PROVIDERS);
         return provider == null ? Collections.emptyMap() : provider.getProperties();
     }
 
@@ -69,7 +63,7 @@ public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
      * @return true if configured false otherwise
      */
 
-    public boolean configure(Configurable config) {
+    public static boolean configure(Configurable config) {
 
         if (config instanceof ExternalConfigurationModel) {
             return false; //shall not configure itself
@@ -82,17 +76,12 @@ public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
         return true;
     }
 
-    @Override
-    public boolean configure(FeatureContext configurableContext) {
-        return configure((Configurable) configurableContext);
-    }
-
     /**
      * Merged config model from all found configuration models
      *
      * @return merged Model object with all properties
      */
-    public ExternalConfigurationModel getConfig() {
+    protected static ExternalConfigurationModel getConfig() {
         final ExternalConfigurationProvider provider = mergeConfigs(getExternalConfigurations());
         return provider == null ? null : provider.getConfiguration();
     }
@@ -102,7 +91,7 @@ public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
      *
      * @return list of models (or empty list)
      */
-    public List<ExternalConfigurationProvider> getExternalConfigurations() {
+    private static List<ExternalConfigurationProvider> getExternalConfigurations() {
         final List<ExternalConfigurationProvider> providers = new ArrayList<>();
         final ServiceFinder<ExternalConfigurationProvider> finder =
                 ServiceFinder.find(ExternalConfigurationProvider.class);
@@ -114,7 +103,7 @@ public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
         return providers;
     }
 
-    private ExternalConfigurationProvider mergeConfigs(List<ExternalConfigurationProvider> configurations) {
+    private static ExternalConfigurationProvider mergeConfigs(List<ExternalConfigurationProvider> configurations) {
         final Set<ExternalConfigurationProvider> orderedConfigurations = orderConfigs(configurations);
         final Iterator<ExternalConfigurationProvider> configurationIterator = orderedConfigurations.iterator();
         if (!configurationIterator.hasNext()) {
@@ -129,25 +118,35 @@ public class ExternalPropertiesConfigurationFactoryFeature implements Feature {
         return firstConfig;
     }
 
-    private Set<ExternalConfigurationProvider> orderConfigs(List<ExternalConfigurationProvider> configurations) {
+    private static Set<ExternalConfigurationProvider> orderConfigs(List<ExternalConfigurationProvider> configurations) {
 
-        final SortedSet<ExternalConfigurationProvider> sortedSet = new TreeSet<>((config1, config2) -> {
-
-            if (
-                    config1.getClass().isAnnotationPresent(Priority.class)
-                           && config2.getClass().isAnnotationPresent(Priority.class)
-            ) {
-                int priority1 = config1.getClass().getAnnotation(Priority.class).value();
-                int priority2 = config2.getClass().getAnnotation(Priority.class).value();
-                if (priority1 == priority2) {
-                    return config1.getClass().getName().compareTo(config2.getClass().getName());
-                }
-                return Integer.compare(priority1, priority2);
-            }
-            return config1.getClass().getName().compareTo(config2.getClass().getName());
-        });
+        final SortedSet<ExternalConfigurationProvider> sortedSet = new TreeSet<>(new ConfigComparator());
         sortedSet.addAll(configurations);
         return Collections.unmodifiableSortedSet(sortedSet);
     }
 
+    private static class ConfigComparator implements Comparator<ExternalConfigurationProvider> {
+
+        @Override
+        public int compare(ExternalConfigurationProvider config1, ExternalConfigurationProvider config2) {
+
+            boolean config1PriorityPresent = config1.getClass().isAnnotationPresent(Priority.class);
+            boolean config2PriorityPresent = config2.getClass().isAnnotationPresent(Priority.class);
+
+            int priority1 = Priorities.USER;
+            int priority2 = Priorities.USER;
+
+            if (config1PriorityPresent) {
+                priority1 = config1.getClass().getAnnotation(Priority.class).value();
+            }
+            if (config2PriorityPresent) {
+                priority2 = config2.getClass().getAnnotation(Priority.class).value();
+            }
+
+            if (priority1 == priority2) {
+                return config1.getClass().getName().compareTo(config2.getClass().getName());
+            }
+            return Integer.compare(priority1, priority2);
+        }
+    }
 }
