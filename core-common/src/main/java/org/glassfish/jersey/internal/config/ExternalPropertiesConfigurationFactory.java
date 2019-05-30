@@ -49,7 +49,7 @@ public class ExternalPropertiesConfigurationFactory {
      *
      * @return map of merged properties from all found/plugged providers
      */
-    protected static Map<String, Object> readExternalPropertiesMap() {
+    static Map<String, Object> readExternalPropertiesMap() {
 
         final ExternalConfigurationProvider provider = mergeConfigs(EXTERNAL_CONFIGURATION_PROVIDERS);
         return provider == null ? Collections.emptyMap() : provider.getProperties();
@@ -81,7 +81,7 @@ public class ExternalPropertiesConfigurationFactory {
      *
      * @return merged Model object with all properties
      */
-    protected static ExternalConfigurationModel getConfig() {
+    static ExternalConfigurationModel getConfig() {
         final ExternalConfigurationProvider provider = mergeConfigs(getExternalConfigurations());
         return provider == null ? null : provider.getConfiguration();
     }

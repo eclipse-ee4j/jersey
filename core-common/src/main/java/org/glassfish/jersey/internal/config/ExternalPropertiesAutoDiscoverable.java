@@ -29,7 +29,6 @@ public class ExternalPropertiesAutoDiscoverable implements AutoDiscoverable {
     @Override
     public void configure(FeatureContext context) {
         if (!context.getConfiguration().isRegistered(ExternalPropertiesConfigurationFeature.class)) {
-            ExternalPropertiesConfigurationFactory.configure(context);
             context.register(ExternalPropertiesConfigurationFeature.class);
         }
     }
