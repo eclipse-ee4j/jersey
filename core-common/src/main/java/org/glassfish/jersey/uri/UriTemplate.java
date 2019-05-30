@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -102,10 +102,10 @@ public class UriTemplate {
             }
 
             // If the number of explicit characters and template variables
-            // are equal then comapre the regexes
-            // The order does not matter as long as templates with different
+            // are equal then
+            // the order does not matter as long as templates with different
             // explicit characters are distinguishable
-            return o2.pattern.getRegex().compareTo(o1.pattern.getRegex());
+            return 0;
         }
     };
 
