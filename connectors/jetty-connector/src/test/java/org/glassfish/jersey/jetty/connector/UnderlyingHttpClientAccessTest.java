@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,11 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test of access to the underlying HTTP client instance used by the connector.
@@ -53,5 +56,19 @@ public class UnderlyingHttpClientAccessTest {
                         + "(provided the target instance has not been further configured).",
                 hcOnClient, hcOnTarget
         );
+    }
+
+    @Test
+    public void testGetProvidedClientInstance() {
+        final HttpClient httpClient = new HttpClient();
+        final ClientConfig clientConfig = new ClientConfig()
+                .connectorProvider(new JettyConnectorProvider())
+                .register(new JettyHttpClientSupplier(httpClient));
+        final Client client = ClientBuilder.newClient(clientConfig);
+        final WebTarget target = client.target("http://localhost/");
+        final HttpClient hcOnTarget = JettyConnectorProvider.getHttpClient(target);
+
+        assertThat("Instance provided to a ClientConfig differs from instance provided by JettyProvider",
+                httpClient, is(hcOnTarget));
     }
 }
