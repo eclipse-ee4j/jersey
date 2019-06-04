@@ -2048,6 +2048,8 @@
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
         <yasson.version>1.0.3</yasson.version>
+        <helidon.version>1.0.3</helidon.version>
+        <config.version>1.2.1</config.version>
         <skip.e2e>false</skip.e2e>
     </properties>
 </project>
