@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.jdk.connector.internal;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ class HttpRequestEncoder {
         chunkBuffer.put(startBytes);
         chunkBuffer.put(data);
         chunkBuffer.put(LINE_SEPARATOR_BYTES);
-        chunkBuffer.flip();
+        ((Buffer) chunkBuffer).flip();
 
         return chunkBuffer;
     }

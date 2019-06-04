@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.glassfish.jersey.SslConfigurator;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import org.junit.After;
@@ -85,6 +86,10 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
     public void testCreateHttpsServerNoSslContext() throws Exception {
         server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, false);
         assertThat(server, instanceOf(HttpsServer.class));
+
+        if (JdkVersion.getJdkVersion().getMajor() > 8) {
+            server.start(); // Address already in bind otherwise
+        }
     }
 
     /**

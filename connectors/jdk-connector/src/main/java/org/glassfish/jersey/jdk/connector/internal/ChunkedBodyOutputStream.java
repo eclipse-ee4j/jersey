@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.jdk.connector.internal;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -97,17 +98,17 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
             }
         } else {
             // if the data overflow the buffer, send a multiple of the buffer size and buffer the remainder
-            int currentDataLength = dataBuffer.position() + len;
+            int currentDataLength = ((Buffer) dataBuffer).position() + len;
             int remainder = currentDataLength % dataBuffer.capacity();
             // buffer that will be send
             ByteBuffer buffer = ByteBuffer.allocate(currentDataLength - remainder);
-            dataBuffer.flip();
+            ((Buffer) dataBuffer).flip();
             // put currently buffered data
             buffer.put(dataBuffer);
             // fill the rest with passed data
             buffer.put(b, off, len - remainder);
-            buffer.flip();
-            dataBuffer.clear();
+            ((Buffer) buffer).flip();
+            ((Buffer) dataBuffer).clear();
             // buffer remaining data
             dataBuffer.put(b, off + len - remainder, remainder);
             // send the to-be-written buffer
@@ -127,12 +128,12 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
             assertValidState();
         }
 
-        if (dataBuffer.position() == 0) {
+        if (((Buffer) dataBuffer).position() == 0) {
             // there is nothing buffered, so don't bother
             return;
         }
 
-        dataBuffer.flip();
+        ((Buffer) dataBuffer).flip();
         write(dataBuffer);
     }
 
@@ -145,7 +146,7 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
         dataBuffer.put((byte) b);
         if (!dataBuffer.hasRemaining()) {
             // send the buffer if we have just filled it.
-            dataBuffer.flip();
+            ((Buffer) dataBuffer).flip();
             write(dataBuffer);
         }
     }
@@ -200,7 +201,7 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
                 throw new IOException(LocalizationMessages.WRITING_FAILED(), e);
             }
 
-            byteBuffer.clear();
+            ((Buffer) byteBuffer).clear();
 
             Throwable t = error.get();
             // check fo any errors
@@ -214,7 +215,7 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
                 @Override
                 public void completed(ByteBuffer result) {
                     ready = true;
-                    byteBuffer.clear();
+                    ((Buffer) byteBuffer).clear();
                     if (callListener) {
                         callOnWritePossible();
                     }
@@ -315,13 +316,13 @@ class ChunkedBodyOutputStream extends BodyOutputStream {
         ByteBuffer encodedChunks = ByteBuffer.allocate(numberOfChunks * encodedFullChunkSize);
 
         for (int i = 0; i < numberOfChunks; i++) {
-            byteBuffer.position(i * chunkSize);
-            byteBuffer.limit(i * chunkSize + chunkSize);
+            ((Buffer) byteBuffer).position(i * chunkSize);
+            ((Buffer) byteBuffer).limit(i * chunkSize + chunkSize);
             ByteBuffer encodeChunk = HttpRequestEncoder.encodeChunk(byteBuffer);
             encodedChunks.put(encodeChunk);
         }
 
-        encodedChunks.flip();
+        ((Buffer) encodedChunks).flip();
         return encodedChunks;
     }
 
