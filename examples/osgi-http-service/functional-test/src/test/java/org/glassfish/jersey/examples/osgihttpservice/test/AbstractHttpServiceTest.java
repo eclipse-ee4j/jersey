@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -66,6 +66,7 @@ public abstract class AbstractHttpServiceTest {
     private static final URI baseUri = UriBuilder.fromUri("http://localhost").port(port).path(CONTEXT).build();
     private static final String BundleLocationProperty = "jersey.bundle.location";
     private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_CLIENT_BUILDER = "javax.ws.rs.client.ClientBuilder";
 
     private static final Logger LOGGER = Logger.getLogger(AbstractHttpServiceTest.class.getName());
 
@@ -86,6 +87,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // do not remove the following line
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
