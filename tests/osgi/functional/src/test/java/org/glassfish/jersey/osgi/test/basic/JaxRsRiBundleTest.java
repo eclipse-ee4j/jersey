@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,6 +59,7 @@ public class JaxRsRiBundleTest {
         options.addAll(Helper.expandedList(
                 // vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
 
+                mavenBundle().groupId("jakarta.servlet").artifactId("jakarta.servlet-api").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.bundles").artifactId("jaxrs-ri").versionAsInProject(),
 
                 mavenBundle().groupId("org.mortbay.jetty").artifactId("servlet-api-2.5").versionAsInProject(),

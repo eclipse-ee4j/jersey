@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,16 @@ public class Helper {
      * Jersey HTTP port.
      */
     private static final int port = getEnvVariable(TestProperties.CONTAINER_PORT, 8080);
+
+    /**
+     * JAX-RS delegate property.
+     */
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+
+    /**
+     * JAX-RS Client Builder property
+     */
+    private static final String JAXRS_CLIENT_BUILDER = "javax.ws.rs.client.ClientBuilder";
 
     /**
      * Returns an integer value of given system property, or a default value
@@ -127,6 +137,8 @@ public class Helper {
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(TestProperties.CONTAINER_PORT).value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // javax.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +16,14 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.sse.SseEventSource;
 
 public class JerseySseEventSourceTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNPEOnNull() {
-        thrown.expect(NullPointerException.class);
         SseEventSource.target(null);
     }
 }

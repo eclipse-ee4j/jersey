@@ -187,6 +187,12 @@
             <version>4.4.6</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>4.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-osgi</artifactId>
             <scope>test</scope>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -79,6 +79,8 @@ public class ExtendedWadlWebappOsgiTest {
     BundleContext bundleContext;
 
     private static final Logger LOGGER = Logger.getLogger(ExtendedWadlWebappOsgiTest.class.getName());
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_CLIENT_BUILDER = "javax.ws.rs.client.ClientBuilder";
 
     // we want to re-use the port number as set for Jersey test container to avoid CT port number clashes
     private static final String testContainerPort = System.getProperty(TestProperties.CONTAINER_PORT);
@@ -95,6 +97,8 @@ public class ExtendedWadlWebappOsgiTest {
         List<Option> options = Arrays.asList(options(
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
                 systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // javax.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
