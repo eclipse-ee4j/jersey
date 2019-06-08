@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Provider;
 
+import org.glassfish.jersey.client.internal.ClientExceptionMapperUtil;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
@@ -52,6 +53,7 @@ import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.process.internal.Stage;
 import org.glassfish.jersey.process.internal.Stages;
+import org.glassfish.jersey.spi.ExceptionMappers;
 
 /**
  * Client-side request processing runtime.
@@ -77,6 +79,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final ManagedObjectsFinalizer managedObjectsFinalizer;
     private final InjectionManager injectionManager;
+    private final ExceptionMappers exceptionMappers;
 
     /**
      * Create new client request processing runtime.
@@ -117,6 +120,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
         this.injectionManager = injectionManager;
         this.lifecycleListeners = Providers.getAllProviders(injectionManager, ClientLifecycleListener.class);
+        this.exceptionMappers = bootstrapBag.getExceptionMappers();
 
         for (final ClientLifecycleListener listener : lifecycleListeners) {
             try {
@@ -254,6 +258,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
                 response = connector.apply(addUserAgent(Stages.process(request, requestProcessingRoot), connector.getName()));
             } catch (final AbortException aborted) {
                 response = aborted.getAbortResponse();
+            } catch (final Throwable throwable) {
+                response = processExceptionMappers(request, throwable);
             }
 
             return Stages.process(response, responseProcessingRoot);
@@ -262,6 +268,16 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
         } catch (final Throwable t) {
             throw new ProcessingException(t.getMessage(), t);
         }
+    }
+
+    private <T extends Throwable> ClientResponse processExceptionMappers(final ClientRequest request, final T throwable)
+            throws Throwable {
+        final ClientExceptionMapperUtil.ExceptionCauseMapper mapper = ClientExceptionMapperUtil
+                .findMappingIncludingCause(exceptionMappers, throwable);
+        if (mapper != null) {
+            return new ClientResponse(request, mapper.exceptionMapper.toResponse(mapper.exception));
+        }
+        throw throwable;
     }
 
     /**
@@ -280,6 +296,14 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      */
     public ClientConfig getConfig() {
         return config;
+    }
+
+    /**
+     * Get exception mappers instance
+     * @return exception mappers
+     */
+    ExceptionMappers getExceptionMappers() {
+        return exceptionMappers;
     }
 
     /**

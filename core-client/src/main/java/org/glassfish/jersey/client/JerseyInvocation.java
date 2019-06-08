@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.internal.ClientExceptionMapperUtil;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -837,6 +838,15 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
     private <T> T translate(final ClientResponse response, final RequestScope scope, final Class<T> responseType)
             throws ProcessingException {
+        try {
+            return _translate(response, scope, responseType);
+        } catch (ProcessingException exception) {
+            return _translate(processExceptionMappers(exception), scope, responseType);
+        }
+    }
+
+    private <T> T _translate(final ClientResponse response, final RequestScope scope, final Class<T> responseType)
+            throws ProcessingException {
         if (responseType == Response.class) {
             return responseType.cast(new InboundJaxrsResponse(response, scope));
         }
@@ -902,6 +912,15 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
     private <T> T translate(final ClientResponse response, final RequestScope scope, final GenericType<T> responseType)
             throws ProcessingException {
+        try {
+           return _translate(response, scope, responseType);
+        } catch (ProcessingException exception) {
+           return _translate(processExceptionMappers(exception), scope, responseType);
+        }
+    }
+
+    private <T> T _translate(final ClientResponse response, final RequestScope scope, final GenericType<T> responseType)
+            throws ProcessingException {
         if (responseType.getRawType() == Response.class) {
             //noinspection unchecked
             return (T) new InboundJaxrsResponse(response, scope);
@@ -923,6 +942,15 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
         } else {
             throw convertToException(new InboundJaxrsResponse(response, scope));
         }
+    }
+
+    private ClientResponse processExceptionMappers(final ProcessingException exception) {
+        final ClientExceptionMapperUtil.ExceptionCauseMapper mapper = ClientExceptionMapperUtil
+                .findMappingIncludingCause(request().getClientRuntime().getExceptionMappers(), exception);
+        if (mapper != null) {
+            return new ClientResponse(requestContext, mapper.exceptionMapper.toResponse(mapper.exception));
+        }
+        throw exception;
     }
 
     @Override
