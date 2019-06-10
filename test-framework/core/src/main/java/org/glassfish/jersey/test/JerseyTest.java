@@ -182,6 +182,7 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = getTestContainerFactory();
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -203,6 +204,7 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = testContainerFactory;
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -227,6 +229,7 @@ public abstract class JerseyTest {
     public JerseyTest(final Application jaxrsApplication) {
         this.context = DeploymentContext.newInstance(jaxrsApplication);
         this.testContainerFactory = getTestContainerFactory();
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -577,10 +580,6 @@ public abstract class JerseyTest {
      */
     @Before
     public void setUp() throws Exception {
-        if (isLogRecordingEnabled()) {
-            registerLogHandler();
-        }
-
         final TestContainer testContainer = createTestContainer(context);
 
         // Set current instance of test container and start it.
@@ -793,6 +792,16 @@ public abstract class JerseyTest {
         }
 
         return rootLoggers;
+    }
+
+    /**
+     * Register {@link Handler log handler} to the list of root loggers
+     * if log recording is enabled.
+     */
+    private void registerLogHandlerIfEnabled() {
+        if (isLogRecordingEnabled()) {
+            registerLogHandler();
+        }
     }
 
     /**
