@@ -183,8 +183,10 @@ final class IntrospectionModeller {
                     method.getGenericParameterTypes()[0],
                     method.getAnnotations());
             if (null != p) {
-                ResourceMethodValidator.validateParameter(p, method.getMethod(), method.getMethod().toGenericString(), "1",
+                if (!disableValidation) {
+                    ResourceMethodValidator.validateParameter(p, method.getMethod(), method.getMethod().toGenericString(), "1",
                         InvocableValidator.isSingleton(handlerClass));
+                }
 
                 // we do not inject entity parameters into class instance fields and properties.
                 if (p.getSource() != Parameter.Source.ENTITY) {
@@ -208,8 +210,11 @@ final class IntrospectionModeller {
                         field.getGenericType(),
                         field.getAnnotations());
                 if (null != p) {
-                    ResourceMethodValidator.validateParameter(p, field, field.toGenericString(), field.getName(),
+                    if (!disableValidation) {
+                        ResourceMethodValidator.validateParameter(p, field, field.toGenericString(), field.getName(),
                             isInSingleton);
+                    }
+
                     // we do not inject entity and unknown parameters into class instance fields and properties.
                     if (p.getSource() != Parameter.Source.ENTITY) {
                         injectableParameters.add(p);
