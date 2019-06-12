@@ -131,6 +131,7 @@
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
+                        <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>
@@ -282,6 +283,20 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-compile</id>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>**/META-INF/versions/9/org/glassfish/jersey/internal/jsr166/*.java</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -375,6 +390,88 @@
                                 </configuration>
                             </execution>
                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK11FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java9.build.outputDirectory} does not work here -->
+                    <exists>target/classes-java9/org/glassfish/jersey/internal/jsr166/SubmissionPublisher.class</exists>
+                </file>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk11-classes-ouputDirectory</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java9.build.outputDirectory}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-jdk11-sources</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/9/org/glassfish/jersey/internal/jsr166</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java9.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-jdk11-classes-to-meta-inf</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java9.build.outputDirectory}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
                     </plugin>
                 </plugins>
             </build>
