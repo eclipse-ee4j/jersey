@@ -267,7 +267,7 @@
                             </execution>
                             <execution>
                                 <!-- Compile these files with jdk 8 and put them aside to be included in multirelase jar -->
-                                <!-- Multi-release jar is built by jdk 9+, but these classes are buildable by jdk 8 only -->
+                                <!-- Multi-release jar is built by jdk 11+, but these classes are buildable by jdk 8 only -->
                                 <id>compile-2-java8</id>
                                 <phase>process-resources</phase>
                                 <configuration>
@@ -280,20 +280,6 @@
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-compile</id>
-                                <configuration>
-                                    <excludes>
-                                        <exclude>**/META-INF/versions/9/org/glassfish/jersey/internal/jsr166/*.java</exclude>
-                                    </excludes>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -325,7 +311,7 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <echo>Building for JDK9+</echo>
+                                        <echo>Building for JDK 11+</echo>
                                     </target>
                                 </configuration>
                             </execution>
@@ -343,13 +329,13 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <!-- build these java 9 specific classes to be put to META-INF/versions/9 later -->
-                                <id>compile-2-java9</id>
+                                <!-- build these java 11 specific classes to be put to META-INF/versions/11 later -->
+                                <id>compile-2-java11</id>
                                 <phase>process-resources</phase>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${java9.build.outputDirectory}" />
-                                        <javac srcdir="${java9.sourceDirectory}" destdir="${java9.build.outputDirectory}"
+                                        <mkdir dir="${java11.build.outputDirectory}" />
+                                        <javac srcdir="${java11.sourceDirectory}" destdir="${java11.build.outputDirectory}"
                                                classpath="${project.build.outputDirectory}" includeantruntime="false" />
                                     </target>
                                 </configuration>
@@ -372,7 +358,7 @@
                                 <configuration>
                                     <sources>
                                         <source>src/main/jsr166</source>
-                                        <source>src/main/java9</source>
+                                        <source>src/main/java11</source>
                                     </sources>
                                 </configuration>
                             </execution>
@@ -398,8 +384,8 @@
             <id>copyJDK11FilesToMultiReleaseJar</id>
             <activation>
                 <file>
-                    <!-- ${java9.build.outputDirectory} does not work here -->
-                    <exists>target/classes-java9/org/glassfish/jersey/internal/jsr166/SubmissionPublisher.class</exists>
+                    <!-- ${java11.build.outputDirectory} does not work here -->
+                    <exists>target/classes-java11/org/glassfish/jersey/internal/jsr166/SubmissionPublisher.class</exists>
                 </file>
                 <jdk>1.8</jdk>
             </activation>
@@ -417,25 +403,46 @@
                         </configuration>
                     </plugin>
                     <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <!-- only one file set per execution works -->
+                        <executions>
+                            <execution>
+                                <id>remove-jdk11-generated-sources</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${project.build.directory}/generated-sources</directory>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>remove-jdk11-classes</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${project.build.directory}/classes</directory>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <inherited>true</inherited>
                         <executions>
-                            <execution>
-                                <id>copy-jdk11-classes-ouputDirectory</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${java9.build.outputDirectory}</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>copy-jdk11-sources</id>
                                 <phase>prepare-package</phase>
@@ -443,10 +450,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/9/org/glassfish/jersey/internal/jsr166</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/11/org/glassfish/jersey/internal/jsr166</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${java9.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
+                                            <directory>${java11.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -458,20 +465,15 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/11</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${java9.build.outputDirectory}</directory>
+                                            <directory>${java11.build.outputDirectory}</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
                     </plugin>
                 </plugins>
             </build>
@@ -503,7 +505,7 @@
                         <!-- only one file set per execution works -->
                         <executions>
                             <execution>
-                                <id>remove-jdk9-jsr166-sources</id>
+                                <id>remove-jdk11-jsr166-sources</id>
                                 <phase>initialize</phase>
                                 <goals>
                                     <goal>clean</goal>
@@ -518,7 +520,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>remove-jdk9-jsr166-META-INF-sources</id>
+                                <id>remove-jdk11-jsr166-META-INF-sources</id>
                                 <phase>initialize</phase>
                                 <goals>
                                     <goal>clean</goal>
@@ -533,7 +535,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>remove-jdk9-jsr166-classes</id>
+                                <id>remove-jdk11-jsr166-classes</id>
                                 <phase>prepare-package</phase>
                                 <goals>
                                     <goal>clean</goal>
@@ -593,31 +595,31 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>copy-jdk9-sources</id>
+                                <id>copy-jdk11-sources</id>
                                 <phase>prepare-package</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/9/org/glassfish/jersey/internal/jsr166</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/11/org/glassfish/jersey/internal/jsr166</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${java9.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
+                                            <directory>${java11.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>copy-jdk9-classes-to-meta-inf</id>
+                                <id>copy-jdk11-classes-to-meta-inf</id>
                                 <phase>prepare-package</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/11</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${java9.build.outputDirectory}</directory>
+                                            <directory>${java11.build.outputDirectory}</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -691,8 +693,8 @@
         <jsr166.sourceDirectory>${project.basedir}/src/main/jsr166</jsr166.sourceDirectory>
         <java8.build.outputDirectory>${project.build.directory}/classes-java8</java8.build.outputDirectory>
         <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
-        <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
-        <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
+        <java11.build.outputDirectory>${project.build.directory}/classes-java11</java11.build.outputDirectory>
+        <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
     </properties>
 
 </project>
