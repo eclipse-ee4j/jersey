@@ -30,6 +30,7 @@ package jersey.repackaged.org.objectweb.asm;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * A parser to make a {@link ClassVisitor} visit a ClassFile structure, as defined in the Java
@@ -42,6 +43,8 @@ import java.io.InputStream;
  * @author Eugene Kuleshov
  */
 public class ClassReader {
+
+  private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
 
   /**
    * A flag to skip the Code attributes. If this flag is set the Code attributes are neither parsed
@@ -190,7 +193,10 @@ public class ClassReader {
     this.b = classFileBuffer;
     // Check the class' major_version. This field is after the magic and minor_version fields, which
     // use 4 and 2 bytes respectively.
-    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V13) {
+    if (checkClassVersion && readShort(classFileOffset + 6) == Opcodes.V14) {
+      LOGGER.warning("Unsupported class file major version " + readShort(classFileOffset + 6));
+    }
+    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V14) {
       throw new IllegalArgumentException(
           "Unsupported class file major version " + readShort(classFileOffset + 6));
     }

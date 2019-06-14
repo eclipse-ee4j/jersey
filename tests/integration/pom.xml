@@ -33,6 +33,7 @@
     <name>jersey-tests-integration</name>
 
     <modules>
+        <module>asm</module>
         <module>async-jersey-filter</module>
         <module>cdi-beanvalidation-webapp</module>
         <module>cdi-ejb-test-webapp</module>
