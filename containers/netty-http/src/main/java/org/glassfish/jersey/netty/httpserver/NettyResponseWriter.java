@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -119,11 +119,7 @@ class NettyResponseWriter implements ContainerResponseWriter {
 
             JerseyChunkedInput jerseyChunkedInput = new JerseyChunkedInput(ctx.channel());
 
-            if (HttpUtil.isTransferEncodingChunked(response)) {
-                ctx.write(new HttpChunkedInput(jerseyChunkedInput)).addListener(FLUSH_FUTURE);
-            } else {
-                ctx.write(new HttpChunkedInput(jerseyChunkedInput)).addListener(FLUSH_FUTURE);
-            }
+            ctx.write(new HttpChunkedInput(jerseyChunkedInput)).addListener(FLUSH_FUTURE);
             return jerseyChunkedInput;
 
         } else {
