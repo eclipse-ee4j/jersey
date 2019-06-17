@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,12 +35,12 @@ import com.sun.research.ws.wadl.Application;
 public class ApplicationDescription {
 
     private Application _application;
-    private WadlGenerator.ExternalGrammarDefinition _externalGrammarDefiniton;
+    private WadlGenerator.ExternalGrammarDefinition _externalGrammarDefinition;
 
-    ApplicationDescription(Application application, WadlGenerator.ExternalGrammarDefinition externalGrammarDefiniton) {
+    ApplicationDescription(Application application, WadlGenerator.ExternalGrammarDefinition externalGrammarDefinition) {
         super();
         this._application = application;
-        this._externalGrammarDefiniton = externalGrammarDefiniton;
+        this._externalGrammarDefinition = externalGrammarDefinition;
     }
 
     /**
@@ -55,7 +55,7 @@ public class ApplicationDescription {
      * @return the QName for the given Class in the grammar.
      */
     public QName resolve(Class type) {
-        return _externalGrammarDefiniton.resolve(type);
+        return _externalGrammarDefinition.resolve(type);
     }
 
     /**
@@ -64,14 +64,14 @@ public class ApplicationDescription {
      *         or the root application.wadl.
      */
     public ExternalGrammar getExternalGrammar(String path) {
-        return _externalGrammarDefiniton.map.get(path);
+        return _externalGrammarDefinition.map.get(path);
     }
 
     /**
      * @return A set of all the external metadata keys
      */
     public Set<String> getExternalMetadataKeys() {
-        return _externalGrammarDefiniton.map.keySet();
+        return _externalGrammarDefinition.map.keySet();
     }
 
     /**
