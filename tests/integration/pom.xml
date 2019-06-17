@@ -136,7 +136,7 @@
         <module>tracing-support</module>
         <module>microprofile/config/helidon</module>
         <module>microprofile/config/webapp</module>
-<!--        <module>microprofile/rest-client</module>-->
+        <module>microprofile/rest-client</module>
     </modules>
 
     <profiles>
