@@ -179,15 +179,16 @@ public final class Providers {
      * @return iterable of all available ranked service providers for the contract. Return value is never {@code null}.
      */
     public static <T> Iterable<RankedProvider<T>> getAllRankedProviders(InjectionManager injectionManager, Class<T> contract) {
-        List<ServiceHolder<T>> providers = getServiceHolders(injectionManager, contract, CustomAnnotationLiteral.INSTANCE);
+        final List<ServiceHolder<T>> providers = getServiceHolders(injectionManager, contract, CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHolders(injectionManager, contract));
 
-        LinkedHashMap<ServiceHolder<T>, RankedProvider<T>> providerMap = new LinkedHashMap<>();
+        final LinkedHashMap<Class<T>, RankedProvider<T>> providerMap = new LinkedHashMap<>();
 
-        for (ServiceHolder<T> provider : providers) {
-            if (!providerMap.containsKey(provider)) {
+        for (final ServiceHolder<T> provider : providers) {
+            final Class<T> implClass = getImplementationClass(contract, provider);
+            if (!providerMap.containsKey(implClass)) {
                 Set<Type> contracts = isProxyGenerated(contract, provider) ? provider.getContractTypes() : null;
-                providerMap.put(provider, new RankedProvider<>(provider.getInstance(), provider.getRank(), contracts));
+                providerMap.put(implClass, new RankedProvider<>(provider.getInstance(), provider.getRank(), contracts));
             }
         }
 
@@ -281,14 +282,16 @@ public final class Providers {
                                                              CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHolders(injectionManager, contract));
 
-        LinkedHashSet<ServiceHolder<T>> providersSet = new LinkedHashSet<>();
-        for (ServiceHolder<T> provider : providers) {
-            if (!providersSet.contains(provider)) {
-                providersSet.add(provider);
+        final LinkedHashMap<Class<T>, ServiceHolder<T>> providerMap = new LinkedHashMap<>();
+
+        for (final ServiceHolder<T> provider : providers) {
+            final Class<T> implClass = getImplementationClass(contract, provider);
+            if (!providerMap.containsKey(implClass)) {
+                providerMap.put(implClass, provider);
             }
         }
 
-        return providersSet;
+        return providerMap.values();
     }
 
     private static <T> List<ServiceHolder<T>> getServiceHolders(
