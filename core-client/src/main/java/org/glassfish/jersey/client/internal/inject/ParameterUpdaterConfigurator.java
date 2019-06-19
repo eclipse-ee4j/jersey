@@ -29,30 +29,30 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
-import org.glassfish.jersey.client.inject.ParameterInserterProvider;
+import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
 
 /**
- * Configurator which initializes and register {@link ParameterInserterProvider} instance into
+ * Configurator which initializes and register {@link ParameterUpdaterProvider} instance into
  * {@link InjectionManager}.
  *
  * @author Petr Bouda
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-public class ParameterInserterConfigurator implements BootstrapConfigurator {
+public class ParameterUpdaterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         ClientBootstrapBag clientBag = (ClientBootstrapBag) bootstrapBag;
 
-        // Param Converters must be initialized Lazy and created at the time of the call on inserter
+        // Param Converters must be initialized Lazy and created at the time of the call on updater
         LazyValue<ParamConverterFactory> lazyParamConverterFactory =
                 Values.lazy((Value<ParamConverterFactory>) () -> new ParamConverterFactory(
                         Providers.getProviders(injectionManager, ParamConverterProvider.class),
                         Providers.getCustomProviders(injectionManager, ParamConverterProvider.class)));
 
-        ParameterInserterFactory parameterInserter = new ParameterInserterFactory(lazyParamConverterFactory);
-        clientBag.setParameterInserterProvider(parameterInserter);
-        injectionManager.register(Bindings.service(parameterInserter)
-                        .to(ParameterInserterProvider.class));
+        ParameterUpdaterFactory parameterUpdaterFactory = new ParameterUpdaterFactory(lazyParamConverterFactory);
+        clientBag.setParameterUpdaterProvider(parameterUpdaterFactory);
+        injectionManager.register(Bindings.service(parameterUpdaterFactory)
+                        .to(ParameterUpdaterProvider.class));
     }
 }

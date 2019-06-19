@@ -29,35 +29,35 @@ import static java.util.stream.Collectors.toList;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
-import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
 
 /**
- * Insert parameter value as a typed collection.
+ * Update parameter value as a typed collection.
  *
  * @param <T> parameter value type.
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
-        implements ParameterInserter<Collection<T>, Collection<String>> {
+abstract class CollectionUpdater<T> extends AbstractParamValueUpdater<T>
+        implements ParameterUpdater<Collection<T>, Collection<String>> {
 
     /**
-     * Create new collection parameter inserter.
+     * Create new collection parameter updater.
      *
      * @param converter          parameter converter to be used to convert parameter from a custom Java type.
      * @param parameterName      parameter name.
      * @param defaultValue default parameter String value.
      */
-    protected CollectionInserter(final ParamConverter<T> converter,
-                                  final String parameterName,
-                                  final String defaultValue) {
+    protected CollectionUpdater(final ParamConverter<T> converter,
+                                final String parameterName,
+                                final String defaultValue) {
         super(converter, parameterName, defaultValue);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<String> insert(final Collection<T> values) {
+    public Collection<String> update(final Collection<T> values) {
         Collection<String> results = Collections.EMPTY_LIST;
         if (values != null) {
             results = values
@@ -71,7 +71,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
     }
 
     /**
-     * Get a new collection instance that will be used to store the inserted parameters.
+     * Get a new collection instance that will be used to store the updated parameters.
      * <p/>
      * The method is overridden by concrete implementations to return an instance
      * of a proper collection sub-type.
@@ -80,7 +80,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
      */
     protected abstract Collection<String> newCollection();
 
-    private static final class ListValueOf<T> extends CollectionInserter<T> {
+    private static final class ListValueOf<T> extends CollectionUpdater<T> {
 
         ListValueOf(final ParamConverter<T> converter, final String parameter, final String defaultValue) {
             super(converter, parameter, defaultValue);
@@ -92,7 +92,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
         }
     }
 
-    private static final class SetValueOf<T> extends CollectionInserter<T> {
+    private static final class SetValueOf<T> extends CollectionUpdater<T> {
 
         SetValueOf(final ParamConverter<T> converter, final String parameter, final String defaultValue) {
             super(converter, parameter, defaultValue);
@@ -104,7 +104,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
         }
     }
 
-    private static final class SortedSetValueOf<T> extends CollectionInserter<T> {
+    private static final class SortedSetValueOf<T> extends CollectionUpdater<T> {
 
         SortedSetValueOf(final ParamConverter<T> converter, final String parameter, final String defaultValue) {
             super(converter, parameter, defaultValue);
@@ -117,7 +117,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
     }
 
     /**
-     * Get a new {@code CollectionInserter} instance.
+     * Get a new {@code CollectionUpdater} instance.
      *
      * @param collectionType     raw collection type.
      * @param converter          parameter converter to be used to convert parameter Java type values into
@@ -125,12 +125,12 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
      * @param parameterName      parameter name.
      * @param defaultValue default parameter string value.
      * @param <T>                converted parameter Java type.
-     * @return new collection parameter inserter instance.
+     * @return new collection parameter updated instance.
      */
-    public static <T> CollectionInserter getInstance(final Class<?> collectionType,
-                                                      final ParamConverter<T> converter,
-                                                      final String parameterName,
-                                                      final String defaultValue) {
+    public static <T> CollectionUpdater getInstance(final Class<?> collectionType,
+                                                    final ParamConverter<T> converter,
+                                                    final String parameterName,
+                                                    final String defaultValue) {
         if (List.class == collectionType) {
             return new ListValueOf<>(converter, parameterName, defaultValue);
         } else if (Set.class == collectionType) {
@@ -138,7 +138,7 @@ abstract class CollectionInserter<T> extends AbstractParamValueInserter<T>
         } else if (SortedSet.class == collectionType) {
             return new SortedSetValueOf<>(converter, parameterName, defaultValue);
         } else {
-            throw new ProcessingException(LocalizationMessages.COLLECTION_INSERTER_TYPE_UNSUPPORTED());
+            throw new ProcessingException(LocalizationMessages.COLLECTION_UPDATER_TYPE_UNSUPPORTED());
         }
     }
 }

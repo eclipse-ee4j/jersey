@@ -28,12 +28,12 @@ package org.glassfish.jersey.client.inject;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-public interface ParameterInserter<T, R> {
+public interface ParameterUpdater<T, R> {
 
     /**
-     * Name of the parameter to be inserted
+     * Name of the parameter to be udpated
      *
-     * @return name of the inserted parameter.
+     * @return name of the updated parameter.
      */
     String getName();
 
@@ -45,11 +45,11 @@ public interface ParameterInserter<T, R> {
     String getDefaultValueString();
 
     /**
-     * Insert the value using ParamConverter#toString (and using
+     * Update the value using ParamConverter#toString (and using
      * the configured {@link #getDefaultValueString() default value})
      *
      * @param parameters custom Java type instance value.
      * @return converted value.
      */
-    R insert(T parameters);
+    R update(T parameters);
 }

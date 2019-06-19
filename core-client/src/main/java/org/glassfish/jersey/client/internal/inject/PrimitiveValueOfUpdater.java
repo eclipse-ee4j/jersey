@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015, 2017 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates.
+ * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,22 +17,35 @@
 
 package org.glassfish.jersey.client.internal.inject;
 
-import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
 
 /**
- * Value inserter for {@link java.lang.Character} and {@code char} parameters.
+ * Update String value using {@code toString()} methods
+ * on the primitive Java type wrapper classes.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Paul Sandoz
+ * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
+ * @author Patrik Dudits
  *
  */
-class PrimitiveCharacterInserter implements ParameterInserter<Character, String> {
+final class PrimitiveValueOfUpdater implements ParameterUpdater<Object, String> {
 
     private final String parameter;
     private final String defaultValue;
     private final Object defaultPrimitiveTypeValue;
 
-    public PrimitiveCharacterInserter(String parameter, String defaultValue, Object defaultPrimitiveTypeValue) {
+    /**
+     * Create new primitive parameter value updater.
+     *
+     * @param valueOf {@code valueOf()} method handler.
+     * @param parameter string parameter value.
+     * @param defaultValue default string value.
+     * @param defaultPrimitiveTypeValue default primitive type value.
+     */
+    public PrimitiveValueOfUpdater(String parameter,
+                                   String defaultValue,
+                                   Object defaultPrimitiveTypeValue) {
         this.parameter = parameter;
         this.defaultValue = defaultValue;
         this.defaultPrimitiveTypeValue = defaultPrimitiveTypeValue;
@@ -49,7 +62,7 @@ class PrimitiveCharacterInserter implements ParameterInserter<Character, String>
     }
 
     @Override
-    public String insert(Character value) {
+    public String update(Object value) {
         if (value != null) {
             return value.toString();
         } else if (defaultValue != null) {

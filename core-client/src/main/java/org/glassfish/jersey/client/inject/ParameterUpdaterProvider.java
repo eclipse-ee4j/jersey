@@ -20,22 +20,22 @@ package org.glassfish.jersey.client.inject;
 import org.glassfish.jersey.model.Parameter;
 
 /**
- * Provider of parameter inserter.
+ * Provider of parameter updater.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-public interface ParameterInserterProvider {
+public interface ParameterUpdaterProvider {
 
     /**
-     * Get the inserter configured to insert value of given {@link Parameter parameter}.
+     * Get the updater configured to update value of given {@link Parameter parameter}.
      * <p />
      * If the default value has been set on the parameter, it will be configured
-     * in the inserter.
+     * in the updater.
      *
      * @param parameter client model parameter.
-     * @return inserter for the method parameter.
+     * @return updater for the method parameter.
      */
-    ParameterInserter<?, ?> get(Parameter parameter);
+    ParameterUpdater<?, ?> get(Parameter parameter);
 }

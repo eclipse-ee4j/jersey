@@ -20,12 +20,12 @@ package org.glassfish.jersey.client.internal.inject;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.ext.ParamConverter;
-import org.glassfish.jersey.internal.inject.InserterException;
-import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.internal.inject.UpdaterException;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
 
 
 /**
- * Insert value of the parameter using a single parameter value and the underlying
+ * Update value of the parameter using a single parameter value and the underlying
  * {@link ParamConverter param converter}.
  *
  * @param <T> custom Java type.
@@ -33,31 +33,31 @@ import org.glassfish.jersey.client.inject.ParameterInserter;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-final class SingleValueInserter<T> extends AbstractParamValueInserter<T> implements ParameterInserter<T, String> {
+final class SingleValueUpdater<T> extends AbstractParamValueUpdater<T> implements ParameterUpdater<T, String> {
 
     /**
-     * Create new single value inserter.
+     * Create new single value updater.
      *
      * @param converter          string value reader.
      * @param parameterName      string parameter name.
      * @param defaultValue       default value.
      */
-    public SingleValueInserter(final ParamConverter<T> converter, final String parameterName, final String defaultValue) {
+    public SingleValueUpdater(final ParamConverter<T> converter, final String parameterName, final String defaultValue) {
         super(converter, parameterName, defaultValue);
     }
 
     /**
      * {@inheritDoc}
      * <p/>
-     * This implementation inserts the value of the parameter applying the underlying
+     * This implementation updates the value of the parameter applying the underlying
      * {@link ParamConverter param converter} to the first value found in the list of potential multiple
      * parameter values. Any other values in the multi-value list will be ignored.
      *
      * @param parameters map of parameters.
-     * @return inserted single parameter value.
+     * @return updated single parameter value.
      */
     @Override
-    public String insert(final T value){
+    public String update(final T value){
         try {
             if (value == null && isDefaultValueRegistered()) {
                 return getDefaultValueString();
@@ -69,7 +69,7 @@ final class SingleValueInserter<T> extends AbstractParamValueInserter<T> impleme
         } catch (final IllegalArgumentException ex) {
             return defaultValue();
         } catch (final Exception ex) {
-            throw new InserterException(ex);
+            throw new UpdaterException(ex);
         }
     }
 }

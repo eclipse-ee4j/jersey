@@ -35,7 +35,7 @@ import javax.ws.rs.core.Feature;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.ExtendedConfig;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
-import org.glassfish.jersey.client.internal.inject.ParameterInserterConfigurator;
+import org.glassfish.jersey.client.internal.inject.ParameterUpdaterConfigurator;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
@@ -416,7 +416,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
             List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(new RequestScope.RequestScopeConfigurator(),
                     new ParamConverterConfigurator(),
-                    new ParameterInserterConfigurator(),
+                    new ParameterUpdaterConfigurator(),
                     new RuntimeConfigConfigurator(runtimeCfgState),
                     new ContextResolverFactory.ContextResolversConfigurator(),
                     new MessageBodyFactory.MessageBodyWorkersConfigurator(),
