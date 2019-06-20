@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonValue;
+
 /**
  * Created by David Kral.
  */
@@ -40,6 +42,16 @@ public class ApplicationResourceImpl implements ApplicationResource {
 
     @Override
     public String postAppendValue(String value) {
+        return null;
+    }
+
+    @Override
+    public JsonValue someJsonOperation(JsonValue jsonValue) {
+        return null;
+    }
+
+    @Override
+    public JsonValue jsonValue() {
         return null;
     }
 

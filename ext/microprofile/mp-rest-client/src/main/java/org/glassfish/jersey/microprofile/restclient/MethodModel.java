@@ -608,10 +608,11 @@ class MethodModel {
             Optional<ParamModel> entity = parameterModels.stream()
                     .filter(ParamModel::isEntity)
                     .findFirst();
-            if (returnType.getType() instanceof Class && JsonValue.class.isAssignableFrom((Class<?>) returnType.getType())
-                    || (
-                    entity.isPresent() && entity.get().getType() instanceof Class
-                            && JsonValue.class.isAssignableFrom((Class<?>) entity.get().getType()))) {
+            if (returnType.getType() instanceof Class && JsonValue.class.isAssignableFrom((Class<?>) returnType.getType())) {
+                this.produces = new String[] {MediaType.APPLICATION_JSON};
+            }
+            if (entity.isPresent() && entity.get().getType() instanceof Class
+                    && JsonValue.class.isAssignableFrom((Class<?>) entity.get().getType())) {
                 this.consumes = new String[] {MediaType.APPLICATION_JSON};
             }
             return new MethodModel(this);
