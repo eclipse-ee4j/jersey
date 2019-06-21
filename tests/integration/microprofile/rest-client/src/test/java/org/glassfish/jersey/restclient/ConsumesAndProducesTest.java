@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 /**
  * Created by David Kral.
@@ -64,16 +63,12 @@ public class ConsumesAndProducesTest extends JerseyTest {
         public void filter(ClientRequestContext requestContext) {
             assertTrue(requestContext.getHeaders().containsKey("Accept"));
             List<Object> accept = requestContext.getHeaders().get("Accept");
-            if (!accept.contains(expectedAccept) && !accept.contains(MediaType.valueOf(expectedAccept))) {
-                fail();
-            }
+            assertTrue(accept.contains(expectedAccept) || accept.contains(MediaType.valueOf(expectedAccept)));
 
             assertTrue(requestContext.getHeaders().containsKey("Content-Type"));
             List<Object> contentType = requestContext.getHeaders().get("Content-Type");
             assertEquals(contentType.size(), 1);
-            if (!contentType.contains(expectedContentType) && !contentType.contains(MediaType.valueOf(expectedContentType))) {
-                fail();
-            }
+            assertTrue(contentType.contains(expectedContentType) || contentType.contains(MediaType.valueOf(expectedContentType)));
 
             requestContext.abortWith(Response.ok().build());
         }
