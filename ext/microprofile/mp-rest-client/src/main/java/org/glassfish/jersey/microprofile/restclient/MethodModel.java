@@ -605,15 +605,13 @@ class MethodModel {
             validateParameters();
             validateHeaderDuplicityNames();
 
-            if (isClass(returnType.getType()) && isJsonValue((Class<?>) returnType.getType())) {
+            if (isJsonValue(returnType.getType())) {
                 this.produces = new String[] {MediaType.APPLICATION_JSON};
             }
 
             parameterModels.stream()
                     .filter(ParamModel::isEntity)
                     .map(ParamModel::getType)
-                    .filter(this::isClass)
-                    .map(Class.class::cast)
                     .filter(this::isJsonValue)
                     .findFirst()
                     .ifPresent(paramModel -> this.consumes = new String[] {MediaType.APPLICATION_JSON});
@@ -674,12 +672,8 @@ class MethodModel {
             }
         }
 
-        private boolean isClass(Type type) {
-            return type instanceof Class;
-        }
-
-        private boolean isJsonValue(Class<?> aClass) {
-            return JsonValue.class.isAssignableFrom(aClass);
+        private boolean isJsonValue(Type type) {
+            return type instanceof Class && JsonValue.class.isAssignableFrom((Class<?>) type);
         }
     }
 }
