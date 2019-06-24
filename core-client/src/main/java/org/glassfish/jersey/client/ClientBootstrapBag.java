@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +18,7 @@ package org.glassfish.jersey.client;
 
 
 import org.glassfish.jersey.internal.BootstrapBag;
-import org.glassfish.jersey.client.inject.ParameterInserterProvider;
+import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
 
 /**
  * {@inheritDoc}
@@ -28,14 +29,14 @@ import org.glassfish.jersey.client.inject.ParameterInserterProvider;
  */
 public class ClientBootstrapBag extends BootstrapBag {
 
-    private ParameterInserterProvider parameterInserterProvider;
+    private ParameterUpdaterProvider parameterUpdaterProvider;
 
-    public ParameterInserterProvider getParameterInserterProvider() {
-        requireNonNull(parameterInserterProvider, ParameterInserterProvider.class);
-        return parameterInserterProvider;
+    public ParameterUpdaterProvider getParameterUpdaterProvider() {
+        requireNonNull(parameterUpdaterProvider, ParameterUpdaterProvider.class);
+        return parameterUpdaterProvider;
     }
 
-    public void setParameterInserterProvider(ParameterInserterProvider provider) {
-        this.parameterInserterProvider = provider;
+    public void setParameterUpdaterProvider(ParameterUpdaterProvider provider) {
+        this.parameterUpdaterProvider = provider;
     }
 }

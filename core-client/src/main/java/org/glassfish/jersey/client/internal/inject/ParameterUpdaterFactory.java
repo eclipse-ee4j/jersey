@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,7 @@ import java.util.SortedSet;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
 import javax.inject.Singleton;
-import org.glassfish.jersey.internal.inject.InserterException;
+import org.glassfish.jersey.internal.inject.UpdaterException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
@@ -33,36 +33,36 @@ import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.internal.inject.PrimitiveMapper;
-import org.glassfish.jersey.client.inject.ParameterInserter;
-import org.glassfish.jersey.client.inject.ParameterInserterProvider;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
+import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
 
 /**
- * Implementation of {@link ParameterInserterProvider}. For each
+ * Implementation of {@link ParameterUpdaterProvider}. For each
  * parameter, the implementation obtains a
  * {@link ParamConverter param converter} instance via
  * {@link ParamConverterFactory} and creates the proper
- * {@link ParameterInserter parameter inserter}.
+ * {@link ParameterUpdater parameter updater}.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 @Singleton
-final class ParameterInserterFactory implements ParameterInserterProvider {
+final class ParameterUpdaterFactory implements ParameterUpdaterProvider {
 
     private final LazyValue<ParamConverterFactory> paramConverterFactory;
 
     /**
-     * Create new parameter inserter factory.
+     * Create new parameter updater factory.
      *
      * @param paramConverterFactory string readers factory.
      */
-    public ParameterInserterFactory(LazyValue<ParamConverterFactory> paramConverterFactory) {
+    public ParameterUpdaterFactory(LazyValue<ParamConverterFactory> paramConverterFactory) {
         this.paramConverterFactory = paramConverterFactory;
     }
 
     @Override
-    public ParameterInserter<?, ?> get(final Parameter p) {
+    public ParameterUpdater<?, ?> get(final Parameter p) {
         return process(
                 paramConverterFactory.get(),
                 p.getDefaultValue(),
@@ -73,7 +73,7 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
     }
 
     @SuppressWarnings("unchecked")
-    private ParameterInserter<?, ?> process(
+    private ParameterUpdater<?, ?> process(
             final ParamConverterFactory paramConverterFactory,
             final String defaultValue,
             final Class<?> rawType,
@@ -86,8 +86,8 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
         ParamConverter<?> converter = paramConverterFactory.getConverter(rawType, type, annotations);
         if (converter != null) {
             try {
-                return new SingleValueInserter(converter, parameterName, defaultValue);
-            } catch (final InserterException e) {
+                return new SingleValueUpdater(converter, parameterName, defaultValue);
+            } catch (final UpdaterException e) {
                 throw e;
             } catch (final Exception e) {
                 throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
@@ -109,8 +109,8 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
             }
             if (converter != null) {
                 try {
-                    return CollectionInserter.getInstance(rawType, converter, parameterName, defaultValue);
-                } catch (final InserterException e) {
+                    return CollectionUpdater.getInstance(rawType, converter, parameterName, defaultValue);
+                } catch (final UpdaterException e) {
                     throw e;
                 } catch (final Exception e) {
                     throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
@@ -120,9 +120,9 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
 
         // Check primitive types.
         if (rawType == String.class) {
-            return new SingleStringValueInserter(parameterName, defaultValue);
+            return new SingleStringValueUpdater(parameterName, defaultValue);
         } else if (rawType == Character.class) {
-            return new PrimitiveCharacterInserter(parameterName,
+            return new PrimitiveCharacterUpdater(parameterName,
                     defaultValue,
                     PrimitiveMapper.primitiveToDefaultValueMap.get(rawType));
         } else if (rawType.isPrimitive()) {
@@ -134,12 +134,12 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
             }
 
             if (wrappedRaw == Character.class) {
-                return new PrimitiveCharacterInserter(parameterName,
+                return new PrimitiveCharacterUpdater(parameterName,
                         defaultValue,
                         PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
             }
 
-            return new PrimitiveValueOfInserter(
+            return new PrimitiveValueOfUpdater(
                     parameterName,
                     defaultValue,
                     PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));

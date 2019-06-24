@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -17,39 +17,25 @@
 
 package org.glassfish.jersey.client.inject;
 
+import org.glassfish.jersey.model.Parameter;
+
 /**
- * Provider that converts the an object of a custom Java type
- * values to String / Collection&lt;String>&gt; type
- *
- * @param <T> custom Java type
- * @param <R> String / Collection&lt;String>&gt; type
+ * Provider of parameter updater.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-public interface ParameterInserter<T, R> {
+public interface ParameterUpdaterProvider {
 
     /**
-     * Name of the parameter to be inserted
+     * Get the updater configured to update value of given {@link Parameter parameter}.
+     * <p />
+     * If the default value has been set on the parameter, it will be configured
+     * in the updater.
      *
-     * @return name of the inserted parameter.
+     * @param parameter client model parameter.
+     * @return updater for the method parameter.
      */
-    String getName();
-
-    /**
-     * Default value (string) that will be used in case input value is not available.
-     *
-     * @return default (back-up) value.
-     */
-    String getDefaultValueString();
-
-    /**
-     * Insert the value using ParamConverter#toString (and using
-     * the configured {@link #getDefaultValueString() default value})
-     *
-     * @param parameters custom Java type instance value.
-     * @return converted value.
-     */
-    R insert(T parameters);
+    ParameterUpdater<?, ?> get(Parameter parameter);
 }

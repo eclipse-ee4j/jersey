@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,7 @@ import javax.ws.rs.WebApplicationException;
  * @author Gaurav Gupta
  *
  */
-public class InserterException extends ProcessingException {
+public class UpdaterException extends ProcessingException {
     private static final long serialVersionUID = -4918023257104413981L;
 
     /**
@@ -36,7 +36,7 @@ public class InserterException extends ProcessingException {
      *
      * @param message exception message.
      */
-    public InserterException(String message) {
+    public UpdaterException(String message) {
         super(message);
     }
 
@@ -46,7 +46,7 @@ public class InserterException extends ProcessingException {
      * @param message exception message.
      * @param cause   exception cause.
      */
-    public InserterException(String message, Throwable cause) {
+    public UpdaterException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -55,7 +55,7 @@ public class InserterException extends ProcessingException {
      *
      * @param cause exception cause.
      */
-    public InserterException(Throwable cause) {
+    public UpdaterException(Throwable cause) {
         super(cause);
     }
 }

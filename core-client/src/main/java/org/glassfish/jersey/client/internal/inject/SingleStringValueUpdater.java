@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -17,30 +17,30 @@
 
 package org.glassfish.jersey.client.internal.inject;
 
-import org.glassfish.jersey.client.inject.ParameterInserter;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
 
 /**
- * Insert value of the parameter by returning the first string parameter value
+ * Update value of the parameter by returning the first string parameter value
  * found in the list of string parameter values.
  * <p />
- * This class can be seen as a special, optimized, case of {@link SingleValueInserter}.
+ * This class can be seen as a special, optimized, case of {@link SingleValueUpdater}.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-final class SingleStringValueInserter implements ParameterInserter<String, String> {
+final class SingleStringValueUpdater implements ParameterUpdater<String, String> {
 
     private final String paramName;
     private final String defaultValue;
 
     /**
-     * Create new single string value inserter.
+     * Create new single string value updater.
      *
      * @param parameterName string parameter name.
      * @param defaultValue  default value.
      */
-    public SingleStringValueInserter(String parameterName, String defaultValue) {
+    public SingleStringValueUpdater(String parameterName, String defaultValue) {
         this.paramName = parameterName;
         this.defaultValue = defaultValue;
     }
@@ -63,10 +63,10 @@ final class SingleStringValueInserter implements ParameterInserter<String, Strin
      * list will be ignored.
      *
      * @param parameters map of parameters.
-     * @return inserted single string parameter value.
+     * @return updated single string parameter value.
      */
     @Override
-    public String insert(String value) {
+    public String update(String value) {
         return (value != null) ? value : defaultValue;
     }
 }

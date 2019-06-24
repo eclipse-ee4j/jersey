@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -20,19 +20,19 @@ package org.glassfish.jersey.client.internal.inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.ext.ParamConverter;
 
-import org.glassfish.jersey.internal.inject.InserterException;
+import org.glassfish.jersey.internal.inject.UpdaterException;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Values;
 
 /**
- * Abstract base class for implementing parameter value inserter
+ * Abstract base class for implementing parameter value updater
  * logic supplied using {@link ParamConverter parameter converters}.
  *
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
-abstract class AbstractParamValueInserter<T> {
+abstract class AbstractParamValueUpdater<T> {
 
     private final ParamConverter<T> paramConverter;
     private final String parameterName;
@@ -40,13 +40,13 @@ abstract class AbstractParamValueInserter<T> {
     private final UnsafeValue<String, RuntimeException> convertedDefaultValue;
 
     /**
-     * Constructor that initializes parameter inserter.
+     * Constructor that initializes parameter updater.
      *
      * @param converter          parameter converter.
      * @param parameterName      name of the parameter.
      * @param defaultValueString default parameter value string.
      */
-    protected AbstractParamValueInserter(ParamConverter<T> converter, String parameterName, final String defaultValue) {
+    protected AbstractParamValueUpdater(ParamConverter<T> converter, String parameterName, final String defaultValue) {
         this.paramConverter = converter;
         this.parameterName = parameterName;
         this.defaultValue = defaultValue;
@@ -69,7 +69,7 @@ abstract class AbstractParamValueInserter<T> {
     }
 
     /**
-     * Get the name of the parameter this inserter belongs to.
+     * Get the name of the parameter this updater belongs to.
      *
      * @return parameter name.
      */
@@ -87,17 +87,17 @@ abstract class AbstractParamValueInserter<T> {
     }
 
     /**
-     * Insert parameter value to string using the configured {@link ParamConverter parameter converter}.
+     * Update parameter value to string using the configured {@link ParamConverter parameter converter}.
      *
      * A {@link WebApplicationException} / {@link IllegalArgumentException} thrown
      * from the converter is propagated unchanged. Any other exception throws by
-     * the converter is wrapped in a new {@link InserterException} before rethrowing.
+     * the converter is wrapped in a new {@link UpdaterException} before rethrowing.
      *
-     * @param value parameter value to be converted/inserted.
-     * @return inserted value of a given Java type.
+     * @param value parameter value to be converted/updated.
+     * @return updated value of a given Java type.
      * @throws WebApplicationException in case the underlying parameter converter throws
      * a {@code WebApplicationException}. The exception is rethrown without a change.
-     * @throws InserterException wrapping any other exception thrown by the parameter converter.
+     * @throws UpdaterException wrapping any other exception thrown by the parameter converter.
      */
     protected final String toString(T value) {
         String result = convert(value);
@@ -113,7 +113,7 @@ abstract class AbstractParamValueInserter<T> {
         } catch (WebApplicationException | IllegalArgumentException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new InserterException(ex);
+            throw new UpdaterException(ex);
         }
     }
 
