@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,10 +22,17 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.client.ResponseProcessingException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ReaderInterceptor;
 
+import org.glassfish.jersey.client.internal.routing.AbortedRequestMediaTypeDeterminer;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
+import org.glassfish.jersey.message.internal.HeaderUtils;
+import org.glassfish.jersey.message.internal.InboundMessageContext;
+import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.model.internal.RankedComparator;
 import org.glassfish.jersey.process.internal.AbstractChainableStage;
 import org.glassfish.jersey.process.internal.ChainableStage;
@@ -84,6 +91,21 @@ class ClientFilteringStages {
                     filter.filter(requestContext);
                     final Response abortResponse = requestContext.getAbortResponse();
                     if (abortResponse != null) {
+                        if (abortResponse.hasEntity() && abortResponse.getMediaType() == null) {
+                            final InboundMessageContext headerContext = new InboundMessageContext() {
+                                @Override
+                                protected Iterable<ReaderInterceptor> getReaderInterceptors() {
+                                    return null;
+                                }
+                            };
+                            headerContext.headers(HeaderUtils.asStringHeaders(abortResponse.getHeaders()));
+
+                            final AbortedRequestMediaTypeDeterminer determiner = new AbortedRequestMediaTypeDeterminer(
+                                    requestContext.getWorkers());
+                            final MediaType mediaType = determiner.determineResponseMediaType(abortResponse.getEntity(),
+                                    headerContext.getQualifiedAcceptableMediaTypes());
+                            abortResponse.getHeaders().add(HttpHeaders.CONTENT_TYPE, mediaType);
+                        }
                         throw new AbortException(new ClientResponse(requestContext, abortResponse));
                     }
                 } catch (IOException ex) {

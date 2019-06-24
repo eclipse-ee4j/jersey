@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.jdk.connector.internal;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 
 /**
  * @author Petr Janouch (petr.janouch at oracle.com)
@@ -35,26 +36,26 @@ public class Utils {
      */
     static ByteBuffer appendBuffers(ByteBuffer buffer, ByteBuffer buffer1, int incomingBufferSize, int BUFFER_STEP_SIZE) {
 
-        final int limit = buffer.limit();
-        final int capacity = buffer.capacity();
-        final int remaining = buffer.remaining();
-        final int len = buffer1.remaining();
+        final int limit = ((Buffer) buffer).limit();
+        final int capacity = ((Buffer) buffer).capacity();
+        final int remaining = ((Buffer) buffer).remaining();
+        final int len = ((Buffer) buffer1).remaining();
 
         // buffer1 will be appended to buffer
         if (len < (capacity - limit)) {
 
-            buffer.mark();
-            buffer.position(limit);
-            buffer.limit(capacity);
+            ((Buffer) buffer).mark();
+            ((Buffer) buffer).position(limit);
+            ((Buffer) buffer).limit(capacity);
             buffer.put(buffer1);
-            buffer.limit(limit + len);
-            buffer.reset();
+            ((Buffer) buffer).limit(limit + len);
+            ((Buffer) buffer).reset();
             return buffer;
             // Remaining data is moved to left. Then new data is appended
         } else if (remaining + len < capacity) {
             buffer.compact();
             buffer.put(buffer1);
-            buffer.flip();
+            ((Buffer) buffer).flip();
             return buffer;
             // create new buffer
         } else {
@@ -67,14 +68,14 @@ public class Utils {
                 final ByteBuffer result = ByteBuffer.allocate(roundedSize > incomingBufferSize ? newSize : roundedSize);
                 result.put(buffer);
                 result.put(buffer1);
-                result.flip();
+                ((Buffer) result).flip();
                 return result;
             }
         }
     }
 
     static ByteBuffer split(ByteBuffer buffer, int position) {
-        int bytesLength = position - buffer.position();
+        int bytesLength = position - ((Buffer) buffer).position();
         byte[] bytes = new byte[bytesLength];
         buffer.get(bytes);
         return ByteBuffer.wrap(bytes);

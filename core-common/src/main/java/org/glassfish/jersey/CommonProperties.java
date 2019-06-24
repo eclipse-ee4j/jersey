@@ -217,6 +217,17 @@ public final class CommonProperties {
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER = "jersey.config.server.contentLength.buffer";
 
     /**
+     * Property which allows (if true) default System properties configuration provider.
+     *
+     * Effective if there are no any external properties providers
+     *
+     * Shall be set (if used) in system properties.
+     * @since 2.29
+     */
+
+    public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
+
+    /**
      * Prevent instantiation.
      */
     private CommonProperties() {

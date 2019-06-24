@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.bundles</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaxrs-ri</artifactId>
@@ -44,11 +44,11 @@
     <dependencies>
         <!-- JAX-RS API Sources-->
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jaxrs.api.impl.version}</version>
             <classifier>sources</classifier>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- JAX-RS RI Binaries -->
@@ -166,13 +166,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <scope>provided</scope>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -181,14 +180,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet3.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet4.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -252,10 +251,10 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>javax.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
+                            <includeGroupIds>jakarta.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
                             <includeClassifiers>sources</includeClassifiers>
                             <outputDirectory>${generated.src.dir}</outputDirectory>
-                            <excludes>**/NOTICE.md</excludes>
+                            <excludes>**/NOTICE.md,**/NOTICE.markdown</excludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -282,6 +281,7 @@
                             javax.servlet.annotation.*;resolution:=optional;version="[2.4,5.0)",
                             javax.servlet.descriptor.*;resolution:=optional;version="[2.4,5.0)",
                             javax.servlet.*;version="[2.4,5.0)",
+                            ${javax.annotation.osgi.version},
                             javax.persistence.*;resolution:=optional,
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             sun.misc.*;resolution:=optional,
@@ -311,6 +311,7 @@
                                     <artifact>*:*</artifact> <!-- jersey artifacts -->
                                     <excludes>
                                         <exclude>META-INF/NOTICE.md</exclude>
+                                        <exclude>META-INF/NOTICE.markdown</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,17 +21,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
  * Test for the request scoped resource.
  *
  * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Patrik Dudits
  */
 @RunWith(Parameterized.class)
 public class PerRequestBeanTest extends CdiTest {
@@ -66,4 +72,18 @@ public class PerRequestBeanTest extends CdiTest {
         assertThat(s, containsString(target.getUri().toString()));
         assertThat(s, containsString(String.format("queryParam=%s", x)));
     }
+
+    @Test
+    public void testSingleResponseFilterInvocation() {
+
+        final WebTarget target = target().path("jcdibean/per-request").queryParam("x", x);
+
+        Response response = target.request().get();
+
+        List<Object> invocationIds = response.getHeaders().get("Filter-Invoked");
+
+        assertNotNull("Filter-Invoked header should be set by ResponseFilter", invocationIds);
+        assertEquals("ResponseFilter should be invoked only once", 1, invocationIds.size());
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -179,24 +179,16 @@ public final class Providers {
      * @return iterable of all available ranked service providers for the contract. Return value is never {@code null}.
      */
     public static <T> Iterable<RankedProvider<T>> getAllRankedProviders(InjectionManager injectionManager, Class<T> contract) {
-        List<ServiceHolder<T>> providers = getServiceHolders(injectionManager, contract, CustomAnnotationLiteral.INSTANCE);
+        final List<ServiceHolder<T>> providers = getServiceHolders(injectionManager, contract, CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHolders(injectionManager, contract));
 
-        LinkedHashMap<ServiceHolder<T>, RankedProvider<T>> providerMap = new LinkedHashMap<>();
+        final LinkedHashMap<Class<T>, RankedProvider<T>> providerMap = new LinkedHashMap<>();
 
-        for (ServiceHolder<T> provider : providers) {
-            if (!providerMap.containsKey(provider)) {
-                Set<Type> contractTypes = provider.getContractTypes();
-                Class<?> implementationClass = provider.getImplementationClass();
-                boolean proxyGenerated = true;
-                for (Type ct : contractTypes) {
-                    if (((Class<?>) ct).isAssignableFrom(implementationClass)) {
-                        proxyGenerated = false;
-                        break;
-                    }
-                }
-                Set<Type> contracts = proxyGenerated ? contractTypes : null;
-                providerMap.put(provider, new RankedProvider<>(provider.getInstance(), provider.getRank(), contracts));
+        for (final ServiceHolder<T> provider : providers) {
+            final Class<T> implClass = getImplementationClass(contract, provider);
+            if (!providerMap.containsKey(implClass)) {
+                Set<Type> contracts = isProxyGenerated(contract, provider) ? provider.getContractTypes() : null;
+                providerMap.put(implClass, new RankedProvider<>(provider.getInstance(), provider.getRank(), contracts));
             }
         }
 
@@ -290,14 +282,16 @@ public final class Providers {
                                                              CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHolders(injectionManager, contract));
 
-        LinkedHashSet<ServiceHolder<T>> providersSet = new LinkedHashSet<>();
-        for (ServiceHolder<T> provider : providers) {
-            if (!providersSet.contains(provider)) {
-                providersSet.add(provider);
+        final LinkedHashMap<Class<T>, ServiceHolder<T>> providerMap = new LinkedHashMap<>();
+
+        for (final ServiceHolder<T> provider : providers) {
+            final Class<T> implClass = getImplementationClass(contract, provider);
+            if (!providerMap.containsKey(implClass)) {
+                providerMap.put(implClass, provider);
             }
         }
 
-        return providersSet;
+        return providerMap.values();
     }
 
     private static <T> List<ServiceHolder<T>> getServiceHolders(
@@ -311,7 +305,9 @@ public final class Providers {
                                                                 Annotation... qualifiers) {
 
         List<ServiceHolder<T>> serviceHolders = injectionManager.getAllServiceHolders(contract, qualifiers);
-        serviceHolders.sort((o1, o2) -> objectComparator.compare(o1.getImplementationClass(), o2.getImplementationClass()));
+        serviceHolders.sort((o1, o2) -> objectComparator.compare(
+                getImplementationClass(contract, o1), getImplementationClass(contract, o2))
+        );
         return serviceHolders;
     }
 
@@ -368,6 +364,17 @@ public final class Providers {
 
         // default priority
         return Priorities.USER;
+    }
+
+    private static <T> Class<T> getImplementationClass(Class<T> contract, ServiceHolder<T> serviceHolder) {
+        return isProxyGenerated(contract, serviceHolder)
+                ? serviceHolder.getContractTypes().stream().filter(a -> Class.class.isInstance(a))
+                    .map(a -> (Class) a).reduce(contract, (a, b) -> a.isAssignableFrom(b) ? b : a)
+                : serviceHolder.getImplementationClass();
+    }
+
+    private static <T> boolean isProxyGenerated(Class<T> contract, ServiceHolder<T> serviceHolder) {
+        return !contract.isAssignableFrom(serviceHolder.getImplementationClass());
     }
 
     /**

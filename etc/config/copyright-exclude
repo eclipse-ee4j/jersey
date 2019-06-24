@@ -24,6 +24,8 @@
 .zip
 .dat
 .lua
+travis.sh
+.travis.yml
 /docs/src/main/docbook/inc/modules_table_footer.src
 /docs/src/main/docbook/inc/modules_table_header.src
 /docs/src/main/docbook/inc/modules_table_row.src
@@ -36,6 +38,8 @@ jaxb.index
 /etc/config/copyright-exclude
 /etc/config/copyright.txt
 /etc/config/edl-copyright.txt
+/etc/jenkins/
+/etc/travis/
 /LICENSE.md
 /third-party-license-readme.txt
 nb-configuration.xml
@@ -52,7 +56,9 @@ keystore-example_com-server
 truststore-example_com-client
 truststore-localhost-client
 truststore-server
+/examples/bookstore-webapp
 /examples/reload/resources
+/examples/bean-validation-webapp/src/main/webapp/fonts
 /core-server/etc
 bootstrap
 build.readme
@@ -75,6 +81,7 @@ build.readme
 /core-server/src/main/java/org/glassfish/jersey/server/internal/monitoring/core/UniformTimeValuesSnapshot.java
 /core-server/src/main/java/jersey/repackaged
 /media/json-jackson/src/main/java/org/glassfish/jersey/jackson/internal/jackson
-/examples/bean-validation-webapp/src/main/webapp/fonts
 /META-INF/NOTICE.md
 NOTICE.md
+/ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessAllAnnotatedTypes.java 
+/ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessJAXRSAnnotatedTypes.java

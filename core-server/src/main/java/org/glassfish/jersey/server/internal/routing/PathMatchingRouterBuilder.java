@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,6 @@ import java.util.List;
 import org.glassfish.jersey.uri.PathPattern;
 
 /**
- /**
  * A request path pattern matching router hierarchy builder entry point.
  *
  * @author Paul Sandoz
@@ -66,13 +65,16 @@ final class PathMatchingRouterBuilder implements PathToRouterBuilder {
 
     @Override
     public PathMatchingRouterBuilder to(final Router router) {
+        if (MethodSelectingRouter.class.isInstance(router)) {
+            acceptedRoutes.get(acceptedRoutes.size() - 1).setHttpMethods(((MethodSelectingRouter) router).getHttpMethods());
+        }
         currentRouters.add(router);
         return this;
     }
 
     /**
      * Complete the currently built unfinished sub-route (if any) and start building a new one.
-     *
+     * <p>
      * The completed sub-route is added to the list of the routes accepted by the router that is being built.
      *
      * @param pattern routing pattern for the new sub-route.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.containers</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-container-servlet-core</artifactId>
@@ -34,18 +34,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet2.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet4.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
+            <artifactId>jakarta.inject</artifactId>
         </dependency>
     </dependencies>
 
@@ -53,7 +53,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -72,7 +72,7 @@
                         <Import-Package>
                             javax.persistence.*;resolution:=optional,
                             javax.servlet.*;version="[2.4,5.0)",
-                            javax.annotation.*;version=!,
+                            ${javax.annotation.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.servlet.*</Export-Package>

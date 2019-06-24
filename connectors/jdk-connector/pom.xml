@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.connectors</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.29-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-jdk-connector</artifactId>
@@ -56,7 +56,7 @@
         <plugins>
             <plugin>
                 <groupId>com.sun.istack</groupId>
-                <artifactId>maven-istack-commons-plugin</artifactId>
+                <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -75,5 +75,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jdk11+</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <properties>
+                <!-- https://bugs.openjdk.java.net/browse/JDK-8211426 -->
+                <surefire.security.argline>-Djdk.tls.server.protocols=TLSv1.2</surefire.security.argline>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

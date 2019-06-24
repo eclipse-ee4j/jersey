@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -104,6 +104,9 @@ public final class EncodingFilter implements ContainerResponseFilter {
         // convert encodings from String to Encoding objects
         List<ContentEncoding> encodings = new ArrayList<>();
         for (String input : acceptEncoding) {
+            if (input.isEmpty()) {
+                continue;
+            }
             String[] tokens = input.split(",");
             for (String token : tokens) {
                 try {

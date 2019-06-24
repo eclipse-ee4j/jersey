@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.jettison.JettisonConfig;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
@@ -211,9 +212,8 @@ public abstract class AbstractJsonTest extends JerseyTest {
 
     private static boolean runningOnJdk7AndLater() {
         final String javaVersion = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("java.version"));
-        final int version = Integer.valueOf(javaVersion.split("\\.")[1]);
-
-        return version >= 7;
+        final JdkVersion jdkVersion = JdkVersion.parseVersion(javaVersion);
+        return (jdkVersion.getMajor() == 1 && jdkVersion.getMinor() >= 7) || (jdkVersion.getMajor() > 8);
     }
 
     private static boolean moxyJaxbProvider() {

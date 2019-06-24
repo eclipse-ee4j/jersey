@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,19 +27,21 @@ import java.util.function.Consumer;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.jsr166.Flow;
 import org.glassfish.jersey.internal.jsr166.SubmissionPublisher;
+import org.glassfish.jersey.internal.jsr166.SubmissionPublisherFactory;
+import org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher;
 
 
 /**
  * Implementation of {@link Flow.Publisher} corresponding to reactive streams specification.
  * <p>
- * Delegates to {@link SubmissionPublisher} repackaged from jsr166.
+ * Delegates to {@link SubmissionPublisher} repackaged from jsr166 on JDK 8 or to JDK {@code SubmissionPublisher}.
  *
  * @author Adam Lindenthal (adam.lindenthal at oracle.com)
  */
 public class JerseyPublisher<T> implements Flow.Publisher<T> {
 
     private static final int DEFAULT_BUFFER_CAPACITY = 256;
-    private SubmissionPublisher<T> submissionPublisher = new SubmissionPublisher<>();
+    private SubmittableFlowPublisher<T> submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher();
 
     private final PublisherStrategy strategy;
 
@@ -90,7 +92,7 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
      */
     public JerseyPublisher(final Executor executor, final PublisherStrategy strategy) {
         this.strategy = strategy;
-        submissionPublisher = new SubmissionPublisher<>(executor, DEFAULT_BUFFER_CAPACITY);
+        submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher(executor, DEFAULT_BUFFER_CAPACITY);
     }
 
 
@@ -128,7 +130,7 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
      */
     public JerseyPublisher(final Executor executor, final int maxBufferCapacity, PublisherStrategy strategy) {
         this.strategy = strategy;
-        submissionPublisher = new SubmissionPublisher<>(executor, maxBufferCapacity);
+        submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher(executor, maxBufferCapacity);
     }
 
     @Override

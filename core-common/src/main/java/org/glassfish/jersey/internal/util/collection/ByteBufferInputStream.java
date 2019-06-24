@@ -19,6 +19,7 @@ package org.glassfish.jersey.internal.util.collection;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -70,7 +71,7 @@ public final class ByteBufferInputStream extends NonBlockingInputStream {
      * to be read.
      */
     public ByteBufferInputStream() {
-        this.buffers = DataStructures.createLinkedTransferQueue();
+        this.buffers = new LinkedTransferQueue<>();
         this.current = null;
     }
 
