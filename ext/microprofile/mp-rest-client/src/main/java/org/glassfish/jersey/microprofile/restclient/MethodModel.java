@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -605,16 +604,20 @@ class MethodModel {
 
             validateParameters();
             validateHeaderDuplicityNames();
-            Optional<ParamModel> entity = parameterModels.stream()
-                    .filter(ParamModel::isEntity)
-                    .findFirst();
-            if (returnType.getType() instanceof Class && JsonValue.class.isAssignableFrom((Class<?>) returnType.getType())) {
+
+            if (isClass(returnType.getType()) && isJsonValue((Class<?>) returnType.getType())) {
                 this.produces = new String[] {MediaType.APPLICATION_JSON};
             }
-            if (entity.isPresent() && entity.get().getType() instanceof Class
-                    && JsonValue.class.isAssignableFrom((Class<?>) entity.get().getType())) {
-                this.consumes = new String[] {MediaType.APPLICATION_JSON};
-            }
+
+            parameterModels.stream()
+                    .filter(ParamModel::isEntity)
+                    .map(ParamModel::getType)
+                    .filter(this::isClass)
+                    .map(Class.class::cast)
+                    .filter(this::isJsonValue)
+                    .findFirst()
+                    .ifPresent(paramModel -> this.consumes = new String[] {MediaType.APPLICATION_JSON});
+
             return new MethodModel(this);
         }
 
@@ -669,6 +672,14 @@ class MethodModel {
                 }
                 names.add(headerName);
             }
+        }
+
+        private boolean isClass(Type type) {
+            return type instanceof Class;
+        }
+
+        private boolean isJsonValue(Class<?> aClass) {
+            return JsonValue.class.isAssignableFrom(aClass);
         }
     }
 }
