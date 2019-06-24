@@ -19,9 +19,12 @@ package org.glassfish.jersey.restclient;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonValue;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Created by David Kral.
@@ -40,6 +43,15 @@ public interface ApplicationResource {
 
     @POST
     String postAppendValue(String value);
+
+    @POST
+    @Path("getJson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    JsonValue someJsonOperation(JsonValue jsonValue);
+
+    @GET
+    @Path("stringEntity")
+    JsonValue jsonValue();
 
     default String sayHi() {
         return "Hi";
