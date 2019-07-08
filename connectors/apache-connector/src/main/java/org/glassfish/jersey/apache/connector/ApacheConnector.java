@@ -247,10 +247,12 @@ class ApacheConnector implements Connector {
         clientBuilder.setConnectionManagerShared(
                 PropertiesHelper.getValue(config.getProperties(), ApacheClientProperties.CONNECTION_MANAGER_SHARED, false, null));
         clientBuilder.setSSLContext(sslContext);
-        if (keepAliveStrategy != null)
+        if (keepAliveStrategy != null) {
             clientBuilder.setKeepAliveStrategy((ConnectionKeepAliveStrategy) keepAliveStrategy);
-        if (reuseStrategy != null)
+        }
+        if (reuseStrategy != null) {
             clientBuilder.setConnectionReuseStrategy((ConnectionReuseStrategy) reuseStrategy);
+        }
 
         final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
