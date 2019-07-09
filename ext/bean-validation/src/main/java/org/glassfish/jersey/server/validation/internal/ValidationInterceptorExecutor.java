@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.glassfish.jersey.server.spi.ValidationInterceptorContext;
  * Validation executor for resource method validation processing. It is intended for a one-off usage
  * when the executor instance serves also as a {@link org.glassfish.jersey.server.spi.ValidationInterceptorContext}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 final class ValidationInterceptorExecutor implements ValidationInterceptorContext {
 

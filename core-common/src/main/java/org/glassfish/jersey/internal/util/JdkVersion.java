@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ package org.glassfish.jersey.internal.util;
  * JDK Version related utilities. Ported from Grizzly project.
  *
  * @author Ryan Lubke (ryan.lubke at oracle.com)
- * @author Alexey Stashok (oleksiy.stashok at oracle.com)
+ * @author Alexey Stashok
  * @since 2.3
  */
 public class JdkVersion implements Comparable<JdkVersion> {

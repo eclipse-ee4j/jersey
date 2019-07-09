@@ -25,7 +25,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * A request path pattern matching router hierarchy builder entry point.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 final class PathMatchingRouterBuilder implements PathToRouterBuilder {
 

@@ -29,7 +29,7 @@ import org.glassfish.jersey.internal.util.collection.Values;
  * logic supplied using {@link ParamConverter parameter converters}.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 abstract class AbstractParamValueUpdater<T> {

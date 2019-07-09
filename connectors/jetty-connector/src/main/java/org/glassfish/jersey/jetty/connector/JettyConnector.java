@@ -121,7 +121,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * </p>
  *
  * @author Arul Dhesiaseelan (aruld at acm.org)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class JettyConnector implements Connector {
 

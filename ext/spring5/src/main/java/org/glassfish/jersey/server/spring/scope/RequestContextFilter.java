@@ -40,8 +40,8 @@ import org.springframework.web.context.request.RequestContextHolder;
  * Spring filter to provide a bridge between JAX-RS and Spring request attributes.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 @Provider
 @PreMatching

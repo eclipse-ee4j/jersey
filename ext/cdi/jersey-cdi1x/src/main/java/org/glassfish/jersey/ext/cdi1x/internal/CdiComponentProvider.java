@@ -103,7 +103,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * To properly inject JAX-RS/Jersey managed beans into CDI, it also
  * serves as a {@link Extension CDI Extension}, that intercepts CDI injection targets.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Priority(200)
 public class CdiComponentProvider implements ComponentProvider, Extension {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
  * Jersey implementation of HK2 Error Service to provide improved reporting
  * of HK2 issues, that may be otherwise hidden (ignored).
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class JerseyErrorService implements ErrorService {
 

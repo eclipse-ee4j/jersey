@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
  * against a single Grizzly instance. This is to ensure server side external request scope
  * binding does not mix different request data.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @RunWith(ConcurrentParameterizedRunner.class)
 public class RequestScopedResourceTest extends JerseyTest {

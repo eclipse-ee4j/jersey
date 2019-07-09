@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import io.reactivex.Flowable;
  * Requests are by default invoked on a separate thread (as JAX-RS Async client requests). This behavior can be overridden by
  * providing a {@link java.util.concurrent.ExecutorService executor service} when client extension is being created.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Michal Gajdos
  * @since 2.26
  */

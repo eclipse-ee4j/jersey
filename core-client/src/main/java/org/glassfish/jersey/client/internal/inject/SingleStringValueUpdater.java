@@ -26,7 +26,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdater;
  * This class can be seen as a special, optimized, case of {@link SingleValueUpdater}.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 final class SingleStringValueUpdater implements ParameterUpdater<String, String> {

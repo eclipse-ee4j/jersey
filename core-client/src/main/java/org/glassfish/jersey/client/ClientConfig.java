@@ -64,9 +64,9 @@ import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
  * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable
  * configurable} contract.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Martin Matula
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig {

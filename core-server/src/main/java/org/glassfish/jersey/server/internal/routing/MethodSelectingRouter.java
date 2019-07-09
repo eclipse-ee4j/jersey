@@ -67,8 +67,8 @@ import org.glassfish.jersey.server.model.ResourceMethod;
  * method name, requested media type as well as defined resource method media type
  * capabilities.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 final class MethodSelectingRouter extends ContentTypeDeterminer implements Router {
 

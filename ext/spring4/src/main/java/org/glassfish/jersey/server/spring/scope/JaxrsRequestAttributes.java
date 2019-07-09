@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,7 @@ import org.springframework.web.context.request.AbstractRequestAttributes;
  * JAX-RS based Spring RequestAttributes implementation.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class JaxrsRequestAttributes extends AbstractRequestAttributes {
 

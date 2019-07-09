@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@ import org.glassfish.jersey.media.sse.LocalizationMessages;
  * <p>
  * JAX-RS 2.1 {@link SseBroadcaster} implementation.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 class JerseySseBroadcaster extends JerseyPublisher<OutboundSseEvent> implements SseBroadcaster {
 

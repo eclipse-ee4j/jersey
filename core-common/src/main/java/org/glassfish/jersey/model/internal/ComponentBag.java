@@ -68,7 +68,7 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
  * </ul>
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ComponentBag {
     /**
@@ -681,7 +681,7 @@ public class ComponentBag {
     /**
      * Immutable version of {@link org.glassfish.jersey.model.internal.ComponentBag}.
      *
-     * @author Marek Potociar (marek.potociar at oracle.com)
+     * @author Marek Potociar
      */
     private static class ImmutableComponentBag extends ComponentBag {
         ImmutableComponentBag(ComponentBag original) {

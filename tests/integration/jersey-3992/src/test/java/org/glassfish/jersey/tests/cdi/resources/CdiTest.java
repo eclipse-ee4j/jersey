@@ -32,7 +32,7 @@ import org.jboss.weld.environment.se.Weld;
  * $AS_HOME/bin/asadmin deploy target/cdi-test-webapp
  * mvn -DskipTests=false test</pre>
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public class CdiTest extends JerseyTest {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,7 @@ import javax.ws.rs.core.Application;
 /**
  * JAX-RS application to configure resources.
  *
- * @author Jonathan Benoit (jonathan.benoit at oracle.com)
+ * @author Jonathan Benoit
  */
 @ApplicationPath("main")
 @ApplicationScoped

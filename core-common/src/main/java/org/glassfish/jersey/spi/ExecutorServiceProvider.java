@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -63,7 +63,7 @@ import java.util.concurrent.ExecutorService;
  * &#64;Inject &#64;Named("my-executor") ExecutorService myExecutor;
  * </pre>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @see ScheduledExecutorServiceProvider
  * @see ThreadPoolExecutorProvider
  * @since 2.18

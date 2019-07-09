@@ -53,7 +53,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 /**
  * Value supplier provider supporting the {@link Uri} injection annotation.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 final class WebTargetValueParamProvider extends AbstractValueParamProvider {
 

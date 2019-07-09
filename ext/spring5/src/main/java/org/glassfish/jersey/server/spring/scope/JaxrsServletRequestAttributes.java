@@ -24,7 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * JAX-RS based Spring RequestAttributes implementation for Servlet-based applications.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class JaxrsServletRequestAttributes extends ServletRequestAttributes {
 

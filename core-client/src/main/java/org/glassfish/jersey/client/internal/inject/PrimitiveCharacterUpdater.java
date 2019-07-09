@@ -22,7 +22,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdater;
 /**
  * Value updater for {@link java.lang.Character} and {@code char} parameters.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  *
  */

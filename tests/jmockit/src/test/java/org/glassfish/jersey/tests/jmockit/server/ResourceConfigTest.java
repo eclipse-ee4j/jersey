@@ -26,7 +26,7 @@ import org.glassfish.jersey.tests.jmockit.server.toplevelinnerstatic.PublicRootR
 import org.junit.Test;
 
 /**
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 public class ResourceConfigTest {
 

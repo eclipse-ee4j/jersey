@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,7 @@ import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerP
  * are available, or if none of the providers returns a non-null invocation handler,
  * in such case a default invocation handler provided by the factory is returned.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @Singleton
 public final class ResourceMethodInvocationHandlerFactory implements ResourceMethodInvocationHandlerProvider {

@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Class used for {@link ApplicationHandler} initialization and for executing {@link Request}s.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 public abstract class AbstractTest {
 

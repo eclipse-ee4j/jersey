@@ -40,7 +40,7 @@ import org.glassfish.jersey.server.Uri;
 /**
  * Method parameter model.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class Parameter extends org.glassfish.jersey.model.Parameter implements AnnotatedElement {
 

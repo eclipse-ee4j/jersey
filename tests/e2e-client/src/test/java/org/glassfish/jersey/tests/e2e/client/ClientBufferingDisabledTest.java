@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
  * {@link org.glassfish.jersey.client.HttpUrlConnectorProvider}.
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @RunWith(ConcurrentRunner.class)
 public class ClientBufferingDisabledTest extends JerseyTest {

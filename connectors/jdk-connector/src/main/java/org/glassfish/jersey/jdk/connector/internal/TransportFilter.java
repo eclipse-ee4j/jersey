@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  * another one is started only after the previous one has completed. Blocking in {@link #onRead(Object)}
  * or {@link #onConnect()} method will result in data not being read from a socket until these methods have completed.
  *
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class TransportFilter extends Filter<ByteBuffer, ByteBuffer, Void, ByteBuffer> {
 

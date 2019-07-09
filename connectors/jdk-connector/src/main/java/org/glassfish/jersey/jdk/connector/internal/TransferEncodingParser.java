@@ -25,7 +25,7 @@ import static org.glassfish.jersey.jdk.connector.internal.HttpParserUtils.isSpac
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 abstract class TransferEncodingParser {
 

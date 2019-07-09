@@ -24,7 +24,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdater;
  * on the primitive Java type wrapper classes.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  * @author Patrik Dudits
  *

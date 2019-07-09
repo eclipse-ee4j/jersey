@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,7 +40,7 @@ import org.glassfish.jersey.spi.Contract;
  * method on provided interceptor context as part of interception processing.
  * </p>
  *
- * @author Jakub Podlesak (jakub.podleak at oracle.com)
+ * @author Jakub Podlesak
  * @since 2.18
  */
 @Contract

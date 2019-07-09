@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -129,10 +129,10 @@ import org.glassfish.jersey.server.spi.ContainerResponseWriter;
  * application-specific {@link InjectionManager injection manager}.
  * </p>
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Pavel Bucek
+ * @author Jakub Podlesak
+ * @author Marek Potociar
+ * @author Libor Kramolis
  * @see ResourceConfig
  * @see javax.ws.rs.core.Configuration
  * @see org.glassfish.jersey.server.spi.ContainerProvider

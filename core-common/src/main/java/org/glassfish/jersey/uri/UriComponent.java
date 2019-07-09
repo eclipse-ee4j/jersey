@@ -39,7 +39,7 @@ import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
  * of a URI.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class UriComponent {
 

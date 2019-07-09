@@ -39,9 +39,9 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 /**
  * Registers all binders necessary for {@link Client} runtime.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
+ * @author Libor Kramolis
  */
 class ClientBinder extends AbstractBinder {
 

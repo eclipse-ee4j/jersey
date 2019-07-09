@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) [2018-2019] [Payara Foundation and/or its affiliates].
  *
  * This program and the accompanying materials are made available under the
@@ -72,7 +72,7 @@ import com.sun.enterprise.config.serverbeans.Applications;
  * EJB component provider.
  *
  * @author Paul Sandoz
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Priority(300)
 @SuppressWarnings("UnusedDeclaration")
