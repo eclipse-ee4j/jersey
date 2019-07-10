@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import org.apache.http.client.HttpClient;
  * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link ApacheClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link ApacheClientProperties#DISABLE_COOKIES}</li>
+ * <li>{@link ApacheClientProperties#KEEPALIVE_STRATEGY}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
@@ -44,6 +45,7 @@ import org.apache.http.client.HttpClient;
  * - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
  * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link ApacheClientProperties#RETRY_HANDLER}</li>
+ * <li>{@link ApacheClientProperties#REUSE_STRATEGY}</li>
  * </ul>
  * </p>
  * <p>
