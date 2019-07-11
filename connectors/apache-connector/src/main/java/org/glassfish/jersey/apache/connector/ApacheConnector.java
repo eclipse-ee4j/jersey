@@ -200,7 +200,7 @@ class ApacheConnector implements Connector {
             }
         }
 
-        final Object keepAliveStrategy = config.getProperties().get(ApacheClientProperties.KEEPALIVE_STRATEGY);
+        Object keepAliveStrategy = config.getProperties().get(ApacheClientProperties.KEEPALIVE_STRATEGY);
         if (keepAliveStrategy != null) {
             if (!(keepAliveStrategy instanceof ConnectionKeepAliveStrategy)) {
                 LOGGER.log(
@@ -210,10 +210,11 @@ class ApacheConnector implements Connector {
                                 keepAliveStrategy.getClass().getName(),
                                 ConnectionKeepAliveStrategy.class.getName())
                 );
+                keepAliveStrategy = null;
             }
         }
 
-        final Object reuseStrategy = config.getProperties().get(ApacheClientProperties.REUSE_STRATEGY);
+        Object reuseStrategy = config.getProperties().get(ApacheClientProperties.REUSE_STRATEGY);
         if (reuseStrategy != null) {
             if (!(reuseStrategy instanceof ConnectionReuseStrategy)) {
                 LOGGER.log(
@@ -223,6 +224,7 @@ class ApacheConnector implements Connector {
                                 reuseStrategy.getClass().getName(),
                                 ConnectionReuseStrategy.class.getName())
                 );
+                reuseStrategy = null;
             }
         }
 
