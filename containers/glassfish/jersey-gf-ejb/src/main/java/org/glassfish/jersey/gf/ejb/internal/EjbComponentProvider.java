@@ -16,6 +16,8 @@
  */
 package org.glassfish.jersey.gf.ejb.internal;
 
+import java.io.Externalizable;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +44,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.annotation.Priority;
 import javax.ejb.Local;
 import javax.ejb.Remote;
+import javax.ejb.Stateless;
 import javax.inject.Singleton;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -92,23 +95,43 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
 
         final InitialContext ctx;
         final Class<T> clazz;
+        final String beanName;
         final EjbComponentProvider ejbProvider;
 
         @SuppressWarnings("unchecked")
         @Override
         public T get() {
             try {
-                return (T) lookup(ctx, clazz, clazz.getSimpleName(), ejbProvider);
+                return (T) lookup(ctx, clazz, beanName, ejbProvider);
             } catch (NamingException ex) {
                 Logger.getLogger(ApplicationHandler.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
         }
 
+        private static <T> String getBeanName(final Class<T> clazz) {
+            final Stateless stateless = clazz.getAnnotation(Stateless.class);
+            if (stateless != null) {
+                if (stateless.name().isEmpty()) {
+                    return clazz.getSimpleName();
+                }
+                return stateless.name();
+            }
+            final javax.ejb.Singleton singleton = clazz.getAnnotation(javax.ejb.Singleton.class);
+            if (singleton != null) {
+                if (singleton.name().isEmpty()) {
+                    return clazz.getSimpleName();
+                }
+                return singleton.name();
+            }
+            return clazz.getSimpleName();
+        }
+
         public EjbFactory(Class<T> rawType, InitialContext ctx, EjbComponentProvider ejbProvider) {
             this.clazz = rawType;
             this.ctx = ctx;
             this.ejbProvider = ejbProvider;
+            this.beanName = getBeanName(rawType);
         }
     }
 
@@ -346,7 +369,21 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 allLocalOrRemoteIfaces.add(i);
             }
         }
+        if (allLocalOrRemoteIfaces.isEmpty()) {
+            for (Class<?> i : resourceClass.getInterfaces()) {
+                if (isAcceptableLocalInterface(i)) {
+                    allLocalOrRemoteIfaces.add(i);
+                }
+            }
+        }
         return allLocalOrRemoteIfaces;
+    }
+
+    private static boolean isAcceptableLocalInterface(final Class<?> iface) {
+        if ("javax.ejb".equals(iface.getPackage().getName())) {
+            return false;
+        }
+        return !Serializable.class.equals(iface) && !Externalizable.class.equals(iface);
     }
 
     private static InitialContext getInitialContext() {
