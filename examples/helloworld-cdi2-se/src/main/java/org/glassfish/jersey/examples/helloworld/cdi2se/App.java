@@ -25,7 +25,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/base/");
+    private static final URI BASE_URI = URI.create("http://localhost:8080/");
     public static final String ROOT_HELLO_PATH = "helloworld";
     public static final String ROOT_COUNTER_PATH = "counter";
 

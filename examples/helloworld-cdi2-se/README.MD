@@ -31,4 +31,4 @@ Run the example as follows:
 
 This deploys the example using [Grizzly](http://grizzly.java.net/) container.
 
--   <http://localhost:8080/helloworld>
+-   <http://localhost:8080/helloworld/Some%20Name>

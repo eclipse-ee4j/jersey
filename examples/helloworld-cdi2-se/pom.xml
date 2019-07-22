@@ -63,7 +63,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>java.org.glassfish.jersey.examples.helloworld.cdi2se.App</mainClass>
+                    <mainClass>org.glassfish.jersey.examples.helloworld.cdi2se.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>
