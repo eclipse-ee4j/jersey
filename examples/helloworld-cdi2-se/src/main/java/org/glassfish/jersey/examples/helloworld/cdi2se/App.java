@@ -40,7 +40,7 @@ public class App {
             server.start();
 
             System.out.println("Application started.\nTry out");
-            System.out.println(String.format("%s%s", BASE_URI, ROOT_HELLO_PATH));
+            System.out.println(String.format("%s%s%s", BASE_URI, ROOT_HELLO_PATH, "/Some%Name"));
             System.out.println(String.format("%s%s%s", BASE_URI, ROOT_COUNTER_PATH, "/request"));
             System.out.println(String.format("%s%s%s", BASE_URI, ROOT_COUNTER_PATH, "/application"));
             System.out.println("Stop the application using CTRL+C");
