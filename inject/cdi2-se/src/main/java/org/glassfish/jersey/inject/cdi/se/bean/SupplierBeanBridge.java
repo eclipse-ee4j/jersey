@@ -143,4 +143,9 @@ class SupplierBeanBridge extends JerseyBean<Object> {
     public Class<? extends Annotation> getScope() {
         return binding.getScope() == null ? Dependent.class : transformScope(binding.getScope());
     }
+
+    @Override
+    public Class<?> getBeanClass() {
+        return (Class<?>) this.binding.getContracts().iterator().next();
+    }
 }
