@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import static org.glassfish.jersey.message.internal.HeaderUtils.copyEndToEndHeaders;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
@@ -71,7 +72,7 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         } else {
             final StatusType status = response.getStatusInfo();
             final OutboundMessageContext context = new OutboundMessageContext();
-            context.getHeaders().putAll(response.getMetadata());
+            copyEndToEndHeaders(response.getHeaders(), context.getHeaders());
             context.setEntity(response.getEntity());
             return new OutboundJaxrsResponse(status, context);
         }
