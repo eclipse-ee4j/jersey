@@ -10,13 +10,19 @@
 
 package org.glassfish.jersey.examples.helloworld.cdi2se;
 
+import java.security.Principal;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import static java.util.Optional.ofNullable;
 
 /**
  * Singleton-scoped resource.
@@ -33,7 +39,17 @@ public class HelloWorldResource {
     @GET
     @Path("{name}")
     @Produces("text/plain")
-    public String getHello(@PathParam("name") String name) {
-        return helloBean.hello(name);
+    public String getHello(@PathParam("name") @NotNull String name, @Context SecurityContext sc) {
+        final StringBuilder sb = new StringBuilder(this.helloBean.hello(name));
+
+        ofNullable(sc.getUserPrincipal())
+                .map(Principal::getName)
+                .ifPresent(p -> {
+                    sb.append("(");
+                    sb.append(p);
+                    sb.append(")");
+                });
+
+        return sb.toString();
     }
 }
