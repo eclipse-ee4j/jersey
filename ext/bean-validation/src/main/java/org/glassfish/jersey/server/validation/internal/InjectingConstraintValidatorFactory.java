@@ -17,8 +17,6 @@
 package org.glassfish.jersey.server.validation.internal;
 
 import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 
@@ -27,10 +25,13 @@ import javax.validation.ConstraintValidatorFactory;
  *
  * @author Michal Gajdos
  */
-public class InjectingConstraintValidatorFactory implements ConstraintValidatorFactory {
+final class InjectingConstraintValidatorFactory implements ConstraintValidatorFactory {
 
-    @Context
-    private ResourceContext resourceContext;
+    private final ResourceContext resourceContext;
+
+    InjectingConstraintValidatorFactory(ResourceContext resourceContext) {
+        this.resourceContext = resourceContext;
+    }
 
     @Override
     public <T extends ConstraintValidator<?, ?>> T getInstance(final Class<T> key) {

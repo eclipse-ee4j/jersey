@@ -257,7 +257,7 @@ public final class ValidationBinder extends AbstractBinder {
             final ValidatorContext context = factory.usingContext();
 
             // Default Configuration.
-            context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            context.constraintValidatorFactory(new InjectingConstraintValidatorFactory(resourceContext));
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
