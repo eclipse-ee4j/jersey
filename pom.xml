@@ -1502,11 +1502,15 @@
 
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
-                <artifactId>hk2-bom</artifactId>
+                <artifactId>hk2-locator</artifactId>
                 <version>${hk2.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-utils</artifactId>
+                <version>${hk2.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-api</artifactId>
@@ -2125,6 +2129,7 @@
         <simple.version>6.0.1</simple.version>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
+        <spring5.version>5.1.5.RELEASE</spring5.version>
         <validation.impl.version>6.0.17.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
