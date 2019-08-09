@@ -194,6 +194,7 @@ public class HeaderUtilsTest {
                 new Header(true, "keep-alive", "foo"),
                 new Header(true, "proxy-authenticate", "foo"),
                 new Header(true, "proxy-authorization", "foo"),
+                new Header(true, "public", "foo"),
                 new Header(true, "te", "foo"),
                 new Header(true, "trailer", "foo"),
                 new Header(true, "transfer-encoding", "foo"),

@@ -61,6 +61,7 @@ public final class HeaderUtils {
         HOP_BY_HOP_HEADERS.add("keep-alive");
         HOP_BY_HOP_HEADERS.add("proxy-authenticate");
         HOP_BY_HOP_HEADERS.add("proxy-authorization");
+        HOP_BY_HOP_HEADERS.add("public");
         HOP_BY_HOP_HEADERS.add("te");
         HOP_BY_HOP_HEADERS.add("trailer");
         HOP_BY_HOP_HEADERS.add("transfer-encoding");
