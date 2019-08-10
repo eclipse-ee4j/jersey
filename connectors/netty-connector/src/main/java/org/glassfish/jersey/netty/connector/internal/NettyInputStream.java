@@ -87,6 +87,8 @@ public class NettyInputStream extends InputStream {
 
             if (take.available() > 0) {
                 isList.addFirst(take);
+            } else {
+                take.close();
             }
 
             return read;

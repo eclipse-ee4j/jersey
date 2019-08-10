@@ -100,7 +100,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
             ByteBuf content = httpContent.content();
 
             if (content.isReadable()) {
-                isList.add(new ByteBufInputStream(content));
+                isList.add(new ByteBufInputStream(content, true));
             }
 
             if (msg instanceof LastHttpContent) {
