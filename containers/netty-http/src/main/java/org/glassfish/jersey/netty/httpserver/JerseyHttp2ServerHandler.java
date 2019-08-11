@@ -88,7 +88,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
      * Process incoming data.
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        isList.add(new ByteBufInputStream(data.content()));
+        isList.add(new ByteBufInputStream(data.content(), true));
         if (data.isEndStream()) {
             isList.add(NettyInputStream.END_OF_INPUT);
         }
