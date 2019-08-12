@@ -158,7 +158,7 @@ import org.apache.http.util.VersionInfo;
  *
  * @author jorgeluisw@mac.com
  * @author Paul Sandoz
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @see ApacheClientProperties#CONNECTION_MANAGER
  */

@@ -26,7 +26,7 @@ import org.springframework.web.context.request.AbstractRequestAttributes;
  * JAX-RS based Spring RequestAttributes implementation.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class JaxrsRequestAttributes extends AbstractRequestAttributes {
 

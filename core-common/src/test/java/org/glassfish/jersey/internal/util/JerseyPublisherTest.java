@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test Jersey {@link Flow.Publisher} implementation, {@link JerseyPublisher}.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class JerseyPublisherTest {
 

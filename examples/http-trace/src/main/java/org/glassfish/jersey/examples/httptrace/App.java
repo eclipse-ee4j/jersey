@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -31,8 +31,8 @@ import org.glassfish.grizzly.http.server.HttpServer;
  * This is the example entry point, where Jersey application gets populated and published
  * using the Grizzly 2 HTTP container.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 public class App {
 

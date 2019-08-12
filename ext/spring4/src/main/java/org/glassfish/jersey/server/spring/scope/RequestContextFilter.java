@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,8 @@ import org.springframework.web.context.request.RequestContextHolder;
  * Spring filter to provide a bridge between JAX-RS and Spring request attributes.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 @Provider
 @PreMatching

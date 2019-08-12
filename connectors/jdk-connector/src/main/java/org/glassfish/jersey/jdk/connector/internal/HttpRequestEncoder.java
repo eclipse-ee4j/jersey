@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class HttpRequestEncoder {
 

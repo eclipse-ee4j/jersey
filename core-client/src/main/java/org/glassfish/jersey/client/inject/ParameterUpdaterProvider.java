@@ -23,7 +23,7 @@ import org.glassfish.jersey.model.Parameter;
  * Provider of parameter updater.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 public interface ParameterUpdaterProvider {

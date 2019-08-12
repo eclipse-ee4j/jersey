@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import org.glassfish.jersey.process.Inflector;
  * registered in {@link org.glassfish.jersey.client.ClientConfig}.
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 // Must not be annotated with @Contract
 public interface Connector extends Inflector<ClientRequest, ClientResponse> {

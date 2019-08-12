@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@ import com.google.common.io.LineProcessor;
  * <p/>
  * This is equivalent to shell pseudo-script: {code grep PATTERN FILE && 'raise error'}
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public class PatternNotMatchedInFileRule extends AbstractNonCacheableEnforcerRule {
 

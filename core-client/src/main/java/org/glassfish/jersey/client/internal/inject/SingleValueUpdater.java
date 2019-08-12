@@ -30,7 +30,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdater;
  *
  * @param <T> custom Java type.
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 final class SingleValueUpdater<T> extends AbstractParamValueUpdater<T> implements ParameterUpdater<T, String> {

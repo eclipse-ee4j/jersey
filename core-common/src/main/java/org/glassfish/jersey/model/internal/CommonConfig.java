@@ -59,7 +59,7 @@ import org.glassfish.jersey.process.Inflector;
  * server and client.
  *
  * @author Michal Gajdos
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class CommonConfig implements FeatureContext, ExtendedConfig {
 

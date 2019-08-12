@@ -33,7 +33,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  * additional method information.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class MethodList implements Iterable<AnnotatedMethod> {
 

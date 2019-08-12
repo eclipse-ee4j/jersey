@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ import javax.annotation.PreDestroy;
  * Subclasses may override the respective methods to customize the parameters of the provisioned thread pool executor.
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @since 2.18
  */
 public class ThreadPoolExecutorProvider extends AbstractThreadPoolProvider<ThreadPoolExecutor>

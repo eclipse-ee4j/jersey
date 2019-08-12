@@ -51,7 +51,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Jdk Https Server tests.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
 

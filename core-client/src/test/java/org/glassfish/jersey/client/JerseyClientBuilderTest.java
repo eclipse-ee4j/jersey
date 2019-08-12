@@ -49,7 +49,7 @@ import static org.junit.Assert.fail;
 /**
  * {@link JerseyClient} unit test.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Michal Gajdos
  */
 public class JerseyClientBuilderTest {

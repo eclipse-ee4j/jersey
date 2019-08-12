@@ -56,7 +56,7 @@ import org.glassfish.jersey.message.internal.OutboundMessageContext;
 /**
  * Jersey client request context.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ClientRequest extends OutboundMessageContext implements ClientRequestContext, HttpHeaders, InjectionManagerSupplier {
 

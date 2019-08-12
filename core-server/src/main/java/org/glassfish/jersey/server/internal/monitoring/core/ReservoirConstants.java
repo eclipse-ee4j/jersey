@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.internal.monitoring.core;
 /**
  * The constants that determine the behaviour of sliding windows and their trimmers.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public final class ReservoirConstants {
 

@@ -29,7 +29,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * Matches the un-matched right-hand request path to the configured collection of path pattern matching routes.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 final class PathMatchingRouter implements Router {
 

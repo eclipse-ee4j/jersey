@@ -33,7 +33,7 @@ import static org.junit.Assert.assertThat;
  * Combined media type tests.
  *
  * @author Jakub Podlesak
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class CombinedMediaTypeTest {
 

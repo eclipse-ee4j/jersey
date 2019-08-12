@@ -30,7 +30,7 @@ import javax.net.ssl.SSLParameters;
 
 
 /**
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 

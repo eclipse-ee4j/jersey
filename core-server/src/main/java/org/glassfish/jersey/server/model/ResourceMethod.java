@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +45,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * Model of a method available on a resource. Covers resource method, sub-resource
  * method and sub-resource locator.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class ResourceMethod implements ResourceModelComponent, Producing, Consuming, Suspendable, NameBound {
 

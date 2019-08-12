@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +46,7 @@ import org.glassfish.jersey.internal.inject.PrimitiveMapper;
  * {@link MultivaluedParameterExtractor multivalued parameter extractor}.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @Singleton
 final class MultivaluedParameterExtractorFactory implements MultivaluedParameterExtractorProvider {

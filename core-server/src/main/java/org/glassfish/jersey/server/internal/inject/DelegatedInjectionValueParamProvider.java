@@ -38,8 +38,8 @@ import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 /**
  * Value factory provider that delegates the injection target lookup to the underlying injection provider.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
  */
 @Singleton
 class DelegatedInjectionValueParamProvider implements ValueParamProvider {

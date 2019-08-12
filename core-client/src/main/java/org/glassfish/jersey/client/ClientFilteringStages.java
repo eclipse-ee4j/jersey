@@ -40,7 +40,7 @@ import org.glassfish.jersey.process.internal.ChainableStage;
 /**
  * Client filtering stage factory.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class ClientFilteringStages {
 

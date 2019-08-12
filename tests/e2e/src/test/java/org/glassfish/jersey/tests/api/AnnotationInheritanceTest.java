@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
  *
  * The annotations on a super-class should take precedence over annotations on an interface.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class AnnotationInheritanceTest extends JerseyTest {
     @Override

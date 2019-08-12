@@ -44,7 +44,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
  * {@link ParameterUpdater parameter updater}.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 @Singleton

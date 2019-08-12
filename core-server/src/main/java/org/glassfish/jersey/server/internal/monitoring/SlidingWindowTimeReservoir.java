@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Sliding window time reservoir implementation that stores data of type {@link Long}.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 class SlidingWindowTimeReservoir extends AbstractSlidingWindowTimeReservoir<Long> {
 

@@ -26,7 +26,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * and a {@link #next() list of next-level stages} to be processed in case the
  * routing pattern successfully matches the un-matched right-hand part of the request.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 final class Route {
     private final PathPattern routingPattern;

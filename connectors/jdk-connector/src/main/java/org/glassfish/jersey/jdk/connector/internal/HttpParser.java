@@ -25,7 +25,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class HttpParser {
 

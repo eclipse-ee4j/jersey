@@ -52,7 +52,7 @@ import org.glassfish.jersey.spi.Contract;
  * Utility class providing a set of utility methods for easier and more type-safe
  * interaction with an injection layer.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Miroslav Fuksa
  */
 public final class Providers {

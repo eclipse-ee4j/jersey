@@ -33,7 +33,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Test of access to the underlying HTTP client instance used by the connector.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class UnderlyingHttpClientAccessTest {
 

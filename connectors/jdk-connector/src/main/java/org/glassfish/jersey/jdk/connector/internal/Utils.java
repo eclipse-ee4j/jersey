@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.Buffer;
 
 /**
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 public class Utils {
 

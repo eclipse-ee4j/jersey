@@ -80,10 +80,10 @@ import org.apache.http.client.HttpClient;
  * The following methods are currently supported: HEAD, GET, POST, PUT, DELETE, OPTIONS, PATCH and TRACE.
  * <p/>
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author jorgeluisw at mac.com
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Paul Sandoz
  * @author Maksim Mukosey (mmukosey at gmail.com)
  * @since 2.5

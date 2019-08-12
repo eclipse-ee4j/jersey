@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,9 +46,9 @@ import org.glassfish.grizzly.utils.Charsets;
  * When the {@code start} parameter is not present, the factory method returns an already started instance.
  * </p>
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Pavel Bucek
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  * @see HttpServer
  * @see GrizzlyHttpContainer
  */

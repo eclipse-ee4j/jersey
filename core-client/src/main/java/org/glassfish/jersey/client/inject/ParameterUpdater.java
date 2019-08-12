@@ -25,7 +25,7 @@ package org.glassfish.jersey.client.inject;
  * @param <R> String / Collection&lt;String>&gt; type
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 public interface ParameterUpdater<T, R> {

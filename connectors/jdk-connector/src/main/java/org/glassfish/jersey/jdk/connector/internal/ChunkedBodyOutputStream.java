@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Body stream that can operate either synchronously or asynchronously. See {@link BodyOutputStream} for details.
  *
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class ChunkedBodyOutputStream extends BodyOutputStream {
 

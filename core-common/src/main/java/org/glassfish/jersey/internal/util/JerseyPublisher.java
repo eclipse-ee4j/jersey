@@ -36,7 +36,7 @@ import org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher;
  * <p>
  * Delegates to {@link SubmissionPublisher} repackaged from jsr166 on JDK 8 or to JDK {@code SubmissionPublisher}.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class JerseyPublisher<T> implements Flow.Publisher<T> {
 

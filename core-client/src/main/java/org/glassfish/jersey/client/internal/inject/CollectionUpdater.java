@@ -36,7 +36,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdater;
  *
  * @param <T> parameter value type.
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
 abstract class CollectionUpdater<T> extends AbstractParamValueUpdater<T>

@@ -21,7 +21,7 @@ import java.nio.Buffer;
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class HttpParserUtils {
 

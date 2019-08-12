@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  * To revert this case to the simple one (the original one), change the {@link #threadLocal} instance should be static and than no
  * {@link StaticReferenceClass#STATIC_HOLDER} is needed. The memory leak occurs without any other special actions.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public class ThreadLocalMemoryLeakServlet extends HttpServlet {
 

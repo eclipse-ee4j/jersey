@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,7 @@ import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
  * <em>at most once</em> during the lifetime of any particular provider instance.
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @since 2.18
  */
 public abstract class AbstractThreadPoolProvider<E extends ThreadPoolExecutor> implements AutoCloseable {
