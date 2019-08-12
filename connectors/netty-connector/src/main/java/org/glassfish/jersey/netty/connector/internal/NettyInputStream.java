@@ -72,7 +72,7 @@ public class NettyInputStream extends InputStream {
         int readFrom(InputStream take) throws IOException;
     }
 
-    private int readInternal(ISReader takeRead) throws IOException {
+    private int readInternal(ISReader isReader) throws IOException {
         if (end) {
             return -1;
         }
@@ -85,7 +85,7 @@ public class NettyInputStream extends InputStream {
                 return -1;
             }
 
-            int read = takeRead.readFrom(take);
+            int read = isReader.readFrom(take);
 
             if (take.available() > 0) {
                 isList.addFirst(take);
