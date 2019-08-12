@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,4 +66,15 @@ public interface EntityGraphProvider {
      * @return an entity-filtering object graph instance.
      */
     public ObjectGraph createObjectGraph(final Class<?> entityClass, final Set<String> filteringScopes, final boolean forWriter);
+
+    /**
+     * Store an {@code EntityGraph} for a given entity if not already stored
+     * @param entityClass entity class which the object graph should be created for.
+     * @param entityGraph an entity graph to be stored
+     * @param forWriter flag determining whether the graph should be created for writer/reader.
+     * @return the previous value associated with the {@code entityClass, forWriter} key,
+     *         or {@code null} if there was no previous mapping for the key. This behavior is inherited from
+     *         {@link java.util.Map#putIfAbsent(Object, Object)}.
+     */
+    public EntityGraph putIfAbsent(final Class<?> entityClass, EntityGraph entityGraph, final boolean forWriter);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,6 @@ import org.glassfish.jersey.model.internal.RankedComparator;
  */
 @Singleton
 final class EntityInspectorImpl implements EntityInspector {
-
     private final List<EntityProcessor> entityProcessors;
 
     @Inject
@@ -71,21 +70,26 @@ final class EntityInspectorImpl implements EntityInspector {
     @Override
     public void inspect(final Class<?> entityClass, final boolean forWriter) {
         if (!graphProvider.containsEntityGraph(entityClass, forWriter)) {
-            final EntityGraph graph = graphProvider.getOrCreateEntityGraph(entityClass, forWriter);
+            final EntityGraph graph = new EntityGraphImpl(entityClass);
             final Set<Class<?>> inspect = new HashSet<>();
 
             // Class.
             if (!inspectEntityClass(entityClass, graph, forWriter)) {
                 // Properties.
-                final Map<String, Method> unmatchedAccessors = inspectEntityProperties(entityClass, graph, inspect, forWriter);
+                final Map<String, Method> unmatchedAccessors =
+                        inspectEntityProperties(entityClass, graph, inspect, forWriter);
 
                 // Setters/Getters without fields.
                 inspectStandaloneAccessors(unmatchedAccessors, graph, forWriter);
+
+                graphProvider.putIfAbsent(entityClass, graph, forWriter);
 
                 // Inspect new classes.
                 for (final Class<?> clazz : inspect) {
                     inspect(clazz, forWriter);
                 }
+            } else {
+                graphProvider.putIfAbsent(entityClass, graph, forWriter);
             }
         }
     }
