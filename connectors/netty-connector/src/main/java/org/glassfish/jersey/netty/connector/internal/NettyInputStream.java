@@ -68,9 +68,11 @@ public class NettyInputStream extends InputStream {
         this.isList = isList;
     }
 
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    private interface ISReader {
+        int readFrom(InputStream take) throws IOException;
+    }
 
+    private int readInternal(ISReader isReader) throws IOException {
         if (end) {
             return -1;
         }
@@ -83,10 +85,12 @@ public class NettyInputStream extends InputStream {
                 return -1;
             }
 
-            int read = take.read(b, off, len);
+            int read = isReader.readFrom(take);
 
             if (take.available() > 0) {
                 isList.addFirst(take);
+            } else {
+                take.close();
             }
 
             return read;
@@ -96,29 +100,13 @@ public class NettyInputStream extends InputStream {
     }
 
     @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        return readInternal(take -> take.read(b, off, len));
+    }
+
+    @Override
     public int read() throws IOException {
-
-        if (end) {
-            return -1;
-        }
-
-        try {
-            InputStream take = isList.take();
-
-            if (checkEndOfInput(take)) {
-                return -1;
-            }
-
-            int read = take.read();
-
-            if (take.available() > 0) {
-                isList.addFirst(take);
-            }
-
-            return read;
-        } catch (InterruptedException e) {
-            throw new IOException("Interrupted.", e);
-        }
+        return readInternal(InputStream::read);
     }
 
     @Override
