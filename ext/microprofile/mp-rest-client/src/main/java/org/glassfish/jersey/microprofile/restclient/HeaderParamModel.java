@@ -26,6 +26,7 @@ import javax.ws.rs.core.MultivaluedMap;
  * Contains information about method parameter or class field which is annotated by {@link HeaderParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class HeaderParamModel extends ParamModel<MultivaluedMap<String, Object>> {
 
@@ -38,14 +39,14 @@ class HeaderParamModel extends ParamModel<MultivaluedMap<String, Object>> {
 
     @Override
     MultivaluedMap<String, Object> handleParameter(MultivaluedMap<String, Object> requestPart,
-                                                          Class<?> annotationClass, Object instance) {
+                                                          Class<? extends Annotation> annotationClass, Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         requestPart.put(headerParamName, Collections.singletonList(resolvedValue));
         return requestPart;
     }
 
     @Override
-    boolean handles(Class<Annotation> annotation) {
+    boolean handles(Class<? extends Annotation> annotation) {
         return HeaderParam.class.equals(annotation);
     }
 }

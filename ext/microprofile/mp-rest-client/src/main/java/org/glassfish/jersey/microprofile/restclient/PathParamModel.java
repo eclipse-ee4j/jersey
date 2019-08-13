@@ -25,6 +25,7 @@ import javax.ws.rs.client.WebTarget;
  * Contains information about method parameter or class field which is annotated by {@link PathParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class PathParamModel extends ParamModel<WebTarget> {
 
@@ -40,13 +41,13 @@ class PathParamModel extends ParamModel<WebTarget> {
     }
 
     @Override
-    public WebTarget handleParameter(WebTarget requestPart, Class<?> annotationClass, Object instance) {
+    public WebTarget handleParameter(WebTarget requestPart, Class<? extends Annotation> annotationClass, Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         return requestPart.resolveTemplate(pathParamName, resolvedValue);
     }
 
     @Override
-    public boolean handles(Class<Annotation> annotation) {
+    public boolean handles(Class<? extends Annotation> annotation) {
         return PathParam.class.equals(annotation);
     }
 

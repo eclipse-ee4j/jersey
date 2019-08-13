@@ -25,6 +25,7 @@ import javax.ws.rs.QueryParam;
  * Model which contains information about query parameter
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class QueryParamModel extends ParamModel<Map<String, Object[]>> {
 
@@ -37,7 +38,7 @@ class QueryParamModel extends ParamModel<Map<String, Object[]>> {
 
     @Override
     public Map<String, Object[]> handleParameter(Map<String, Object[]> requestPart,
-                                                 Class<?> annotationClass,
+                                                 Class<? extends Annotation> annotationClass,
                                                  Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         if (resolvedValue instanceof Object[]) {
@@ -49,7 +50,7 @@ class QueryParamModel extends ParamModel<Map<String, Object[]>> {
     }
 
     @Override
-    public boolean handles(Class<Annotation> annotation) {
+    public boolean handles(Class<? extends Annotation> annotation) {
         return QueryParam.class.equals(annotation);
     }
 

@@ -16,27 +16,13 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<suite name="microprofile-rest-client-TCK" verbose="2" configfailurepolicy="continue" >
+<suite name="microprofile-rest-client-TCK" verbose="2" configfailurepolicy="continue">
 
     <test name="microprofile-rest-client TCK">
         <packages>
             <package name="org.eclipse.microprofile.rest.client.tck.*">
             </package>
         </packages>
-        <classes>
-            <class name="org.eclipse.microprofile.rest.client.tck.InvokeWithJsonBProviderTest">
-                <methods>
-                    <exclude name="testGetExecutesForBothClients"/> <!-- Json in this test is malformed -->
-                </methods>
-            </class>
-        </classes>
-<!--        <classes>-->
-<!--            <class name="org.eclipse.microprofile.rest.client.tck.asynctests.AsyncMethodTest">-->
-<!--                <methods>-->
-<!--                    <include name="testAsyncInvocationInterceptorProvider"/>-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
     </test>
 
 </suite>

@@ -22,17 +22,19 @@ import java.lang.reflect.Proxy;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.glassfish.jersey.internal.util.ReflectionHelper;
-
 /**
- * Created by David Kral.
+ * @author David Kral
+ * @author Tomas Langer
  */
-class ReflectionUtil {
+final class ReflectionUtil {
+
+    private ReflectionUtil() {
+    }
 
     static <T> T createInstance(Class<T> tClass) {
         return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
             try {
-                return tClass.newInstance();
+                return tClass.getConstructor().newInstance();
             } catch (Throwable t) {
                 throw new RuntimeException("No default constructor in class " + tClass + " present. Class cannot be created!", t);
             }

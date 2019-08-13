@@ -17,11 +17,13 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
+import java.io.Closeable;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.AccessController;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +39,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -66,6 +70,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  *
  * @author David Kral
  * @author Patrik Dudits
+ * @author Tomas Langer
  */
 class RestClientBuilderImpl implements RestClientBuilder {
 
@@ -82,6 +87,11 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private URI uri;
     private ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
+    private HostnameVerifier sslHostnameVerifier;
+    private SSLContext sslContext;
+    private KeyStore sslTrustStore;
+    private KeyStore sslKeyStore;
+    private char[] sslKeyStorePassword;
 
     RestClientBuilderImpl() {
         clientBuilder = ClientBuilder.newBuilder();
@@ -152,6 +162,22 @@ class RestClientBuilderImpl implements RestClientBuilder {
 
         clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get(), asyncInterceptors));
 
+        if (null != sslContext) {
+            clientBuilder.sslContext(sslContext);
+        }
+
+        if (null != sslHostnameVerifier) {
+            clientBuilder.hostnameVerifier(sslHostnameVerifier);
+        }
+
+        if (null != sslTrustStore) {
+            clientBuilder.trustStore(sslTrustStore);
+        }
+
+        if (null != sslKeyStore) {
+            clientBuilder.keyStore(sslKeyStore, sslKeyStorePassword);
+        }
+
         Client client = clientBuilder.build();
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();
@@ -166,9 +192,34 @@ class RestClientBuilderImpl implements RestClientBuilder {
                                                                CdiUtil.getBeanManager());
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                                          new Class[] {interfaceClass},
-                                          new ProxyInvocationHandler(webTarget, restClientModel)
+                                          new Class[] {interfaceClass, AutoCloseable.class, Closeable.class},
+                                          new ProxyInvocationHandler(client, webTarget, restClientModel)
         );
+    }
+
+    @Override
+    public RestClientBuilder sslContext(SSLContext sslContext) {
+        this.sslContext = sslContext;
+        return this;
+    }
+
+    @Override
+    public RestClientBuilder trustStore(KeyStore keyStore) {
+        this.sslTrustStore = keyStore;
+        return this;
+    }
+
+    @Override
+    public RestClientBuilder keyStore(KeyStore keyStore, String password) {
+        this.sslKeyStore = keyStore;
+        this.sslKeyStorePassword = ((null == password) ? new char[0] : password.toCharArray());
+        return this;
+    }
+
+    @Override
+    public RestClientBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.sslHostnameVerifier = hostnameVerifier;
+        return this;
     }
 
     private void registerExceptionMapper() {

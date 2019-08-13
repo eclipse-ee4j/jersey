@@ -18,29 +18,54 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
  * Invocation handler for interface proxy.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class ProxyInvocationHandler implements InvocationHandler {
-
+    private final Client client;
     private final WebTarget target;
     private final RestClientModel restClientModel;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
 
-    ProxyInvocationHandler(WebTarget target,
+    // top level
+    ProxyInvocationHandler(Client client,
+                           WebTarget target,
                            RestClientModel restClientModel) {
+
+        this.client = client;
         this.target = target;
         this.restClientModel = restClientModel;
     }
 
+    // used for sub-resources
+    ProxyInvocationHandler(WebTarget target,
+                           RestClientModel restClientModel) {
+        this(null, target, restClientModel);
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        if (method.getName().contains("toString") && (args == null || args.length == 0)) {
+        if (method.getName().equals("toString") && (args == null || args.length == 0)) {
             return restClientModel.toString();
+        }
+        if (method.getName().equals("close") && (args == null || args.length == 0)) {
+            closed.set(true);
+            if (null != client) {
+                client.close();
+            }
+            return null;
+        }
+
+        if (closed.get()) {
+            throw new IllegalStateException("Attempting to invoke a method on a closed client.");
         }
         return restClientModel.invokeMethod(target, method, args);
     }
