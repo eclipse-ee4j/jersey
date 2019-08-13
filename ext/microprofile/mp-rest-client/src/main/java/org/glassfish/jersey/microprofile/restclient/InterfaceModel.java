@@ -51,6 +51,7 @@ import org.glassfish.jersey.model.Parameter;
  *
  * @author David Kral
  * @author Patrik Dudits
+ * @author Tomas Langer
  */
 class InterfaceModel {
 
@@ -298,25 +299,25 @@ class InterfaceModel {
 
         /**
          * Extracts MediaTypes from {@link Produces} annotation.
-         * If annotation is null, new String array with {@link MediaType#WILDCARD} is set.
+         * If annotation is null, new String array with {@link MediaType#APPLICATION_JSON} is set.
          *
          * @param produces {@link Produces} annotation
          * @return updated Builder instance
          */
         Builder produces(Produces produces) {
-            this.produces = produces != null ? produces.value() : new String[] {MediaType.WILDCARD};
+            this.produces = produces != null ? produces.value() : new String[] {MediaType.APPLICATION_JSON};
             return this;
         }
 
         /**
          * Extracts MediaTypes from {@link Consumes} annotation.
-         * If annotation is null, new String array with {@link MediaType#WILDCARD} is set.
+         * If annotation is null, new String array with {@link MediaType#APPLICATION_JSON} is set.
          *
          * @param consumes {@link Consumes} annotation
          * @return updated Builder instance
          */
         Builder consumes(Consumes consumes) {
-            this.consumes = consumes != null ? consumes.value() : new String[] {MediaType.WILDCARD};
+            this.consumes = consumes != null ? consumes.value() : new String[] {MediaType.APPLICATION_JSON};
             return this;
         }
 

@@ -37,6 +37,7 @@ import org.glassfish.jersey.model.Parameter;
  * Abstract model for all elements with parameter annotation.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 abstract class ParamModel<T> {
 
@@ -129,7 +130,7 @@ abstract class ParamModel<T> {
      * @param instance        actual method parameter value
      * @return updated request part
      */
-    abstract T handleParameter(T requestPart, Class<?> annotationClass, Object instance);
+    abstract T handleParameter(T requestPart, Class<? extends Annotation> annotationClass, Object instance);
 
     /**
      * Evaluates if the annotation passed in parameter is supported by this parameter.
@@ -137,7 +138,7 @@ abstract class ParamModel<T> {
      * @param annotation checked annotation
      * @return if annotation is supported
      */
-    abstract boolean handles(Class<Annotation> annotation);
+    abstract boolean handles(Class<? extends Annotation> annotation);
 
     protected static class Builder {
 
@@ -174,14 +175,14 @@ abstract class ParamModel<T> {
             }
 
             entity = true;
-            return new ParamModel(this) {
+            return new ParamModel<Object>(this) {
                 @Override
-                public Object handleParameter(Object requestPart, Class annotationClass, Object instance) {
+                public Object handleParameter(Object requestPart, Class<? extends Annotation> annotationClass, Object instance) {
                     return requestPart;
                 }
 
                 @Override
-                public boolean handles(Class annotation) {
+                public boolean handles(Class<? extends Annotation> annotation) {
                     return false;
                 }
             };

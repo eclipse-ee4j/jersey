@@ -76,6 +76,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
  *
  * @author David Kral
  * @author Patrik Dudits
+ * @author Tomas Langer
  */
 class MethodModel {
 
@@ -445,7 +446,8 @@ class MethodModel {
             throw new RestClientDefinitionException("Method can't have more then one annotation of @HttpMethod type. "
                                                             + "See " + classModel.getRestClientClass().getName()
                                                             + "::" + method.getName());
-        } else if (httpAnnotations.isEmpty()) {
+        }
+        if (httpAnnotations.isEmpty()) {
             //Sub resource method
             return "";
         }
@@ -453,7 +455,7 @@ class MethodModel {
     }
 
     private static List<ParamModel> parameterModels(InterfaceModel classModel, Method method) {
-        ArrayList<ParamModel> parameterModels = new ArrayList<>();
+        List<ParamModel> parameterModels = new ArrayList<>();
         final List<org.glassfish.jersey.model.Parameter> jerseyParameters = org.glassfish.jersey.model.Parameter
                 .create(classModel.getRestClientClass(), classModel.getRestClientClass(),
                         method, false);

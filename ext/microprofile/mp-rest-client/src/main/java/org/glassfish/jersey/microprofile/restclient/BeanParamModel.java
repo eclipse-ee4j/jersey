@@ -37,6 +37,7 @@ import javax.ws.rs.core.MultivaluedMap;
  * Contains information about method parameter or class field which is annotated by {@link BeanParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class BeanParamModel extends ParamModel<Object> {
 
@@ -68,7 +69,7 @@ class BeanParamModel extends ParamModel<Object> {
     }
 
     @Override
-    public Object handleParameter(Object requestPart, Class<?> annotationClass, Object instance) {
+    public Object handleParameter(Object requestPart, Class<? extends Annotation> annotationClass, Object instance) {
         ParamHandler handler = PARAM_HANDLERS.get(annotationClass);
 
         if (null == handler) {
@@ -79,7 +80,7 @@ class BeanParamModel extends ParamModel<Object> {
     }
 
     @Override
-    public boolean handles(Class<Annotation> annotation) {
+    public boolean handles(Class<? extends Annotation> annotation) {
         return PARAM_HANDLERS.containsKey(annotation);
     }
 

@@ -26,6 +26,7 @@ import javax.ws.rs.client.WebTarget;
  * Contains information to method parameter which is annotated by {@link MatrixParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class MatrixParamModel extends ParamModel<WebTarget> {
 
@@ -43,7 +44,7 @@ class MatrixParamModel extends ParamModel<WebTarget> {
     }
 
     @Override
-    public WebTarget handleParameter(WebTarget requestPart, Class<?> annotationClass, Object instance) {
+    public WebTarget handleParameter(WebTarget requestPart, Class<? extends Annotation> annotationClass, Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         if (resolvedValue instanceof Collection) {
             return requestPart.matrixParam(matrixParamName, ((Collection) resolvedValue).toArray());
@@ -53,7 +54,7 @@ class MatrixParamModel extends ParamModel<WebTarget> {
     }
 
     @Override
-    public boolean handles(Class<Annotation> annotation) {
+    public boolean handles(Class<? extends Annotation> annotation) {
         return MatrixParam.class.equals(annotation);
     }
 

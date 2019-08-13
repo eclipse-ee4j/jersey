@@ -26,6 +26,7 @@ import javax.ws.rs.core.Form;
  * Contains information about method parameter or class field which is annotated by {@link FormParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class FormParamModel extends ParamModel<Form> {
 
@@ -37,7 +38,7 @@ class FormParamModel extends ParamModel<Form> {
     }
 
     @Override
-    Form handleParameter(Form form, Class<?> annotationClass, Object instance) {
+    Form handleParameter(Form form, Class<? extends Annotation> annotationClass, Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         if (resolvedValue instanceof Collection) {
             for (final Object v : ((Collection) resolvedValue)) {
@@ -50,7 +51,7 @@ class FormParamModel extends ParamModel<Form> {
     }
 
     @Override
-    boolean handles(Class<Annotation> annotation) {
+    boolean handles(Class<? extends Annotation> annotation) {
         return FormParam.class.equals(annotation);
     }
 

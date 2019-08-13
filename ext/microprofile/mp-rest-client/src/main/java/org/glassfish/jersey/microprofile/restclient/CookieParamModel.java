@@ -25,6 +25,7 @@ import javax.ws.rs.CookieParam;
  * Contains information about method parameter or class field which is annotated by {@link CookieParam}.
  *
  * @author David Kral
+ * @author Tomas Langer
  */
 class CookieParamModel extends ParamModel<Map<String, String>> {
 
@@ -36,14 +37,16 @@ class CookieParamModel extends ParamModel<Map<String, String>> {
 }
 
     @Override
-    Map<String, String> handleParameter(Map<String, String> requestPart, Class<?> annotationClass, Object instance) {
+    Map<String, String> handleParameter(Map<String, String> requestPart,
+                                        Class<? extends Annotation> annotationClass,
+                                        Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         requestPart.put(cookieParamName, (String) resolvedValue);
         return requestPart;
     }
 
     @Override
-    boolean handles(Class<Annotation> annotation) {
+    boolean handles(Class<? extends Annotation> annotation) {
         return CookieParam.class.equals(annotation);
     }
 
