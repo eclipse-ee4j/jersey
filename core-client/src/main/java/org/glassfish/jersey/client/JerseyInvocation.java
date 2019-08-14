@@ -451,18 +451,12 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         @Override
         public CompletionStageRxInvoker rx() {
-            ExecutorServiceProvider instance = this.requestContext.getInjectionManager()
-                                                                  .getInstance(ExecutorServiceProvider.class);
-
-            return new JerseyCompletionStageRxInvoker(this, instance.getExecutorService());
+            return new JerseyCompletionStageRxInvoker(this, executorService());
         }
 
         @Override
         public <T extends RxInvoker> T rx(Class<T> clazz) {
-            ExecutorServiceProvider instance = this.requestContext.getInjectionManager()
-                                                                  .getInstance(ExecutorServiceProvider.class);
-
-            return createRxInvoker(clazz, instance.getExecutorService());
+            return createRxInvoker(clazz, executorService());
         }
 
         private <T extends RxInvoker> T rx(Class<T> clazz, ExecutorService executorService) {
@@ -471,6 +465,19 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
             }
 
             return createRxInvoker(clazz, executorService);
+        }
+
+        // get executor service from explicit configuration; if not available, get executor service from provider
+        private ExecutorService executorService() {
+            final ExecutorService result = request().getClientConfig().getExecutorService();
+
+            if (result != null) {
+                return result;
+            }
+
+            return this.requestContext.getInjectionManager()
+                    .getInstance(ExecutorServiceProvider.class)
+                    .getExecutorService();
         }
 
         /**
