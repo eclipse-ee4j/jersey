@@ -64,7 +64,7 @@ public class JsonWithoutExceptionMapperTest extends JerseyTest {
     public void testZullBooleanValue() {
         String response = target().request(MediaType.APPLICATION_JSON)
                 .buildPost(Entity.entity("zull", MediaType.APPLICATION_JSON_TYPE)).invoke().readEntity(String.class);
-        Assert.assertFalse(response.contains("Unrecognized token 'zull'"));
+        Assert.assertFalse(response.contains("zull"));
         Assert.assertTrue(response.equals(LowPriorityExceptionMapper.class.getSimpleName()));
     }
 }
