@@ -3,14 +3,14 @@ TCK Results
 
  As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
-the following is a summary of the TCK results for releas of Jakarta RESTful Web Services 2.1.
+the following is a summary of the TCK results for release of Jakarta RESTful Web Services 2.1.
 
  # Jakarta RESTful Web Services API 2.1.6 Certification Request
 
- - [x] Organization Name ("Organization") and, if applicable, URL
- * Eclipse Foundation
-- [x] Product Name, Version and download URL (if applicable)
- * Jersey 2.28
+ - [x] Organization Name ("Organization") and, if applicable, URL\
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Eclipse Foundation
+ - [x] Product Name, Version and download URL (if applicable)\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jersey 2.28
    * [jersey-bean-validation](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/ext/jersey-bean-validation/2.28/jersey-bean-validation-2.28.jar)
    * [jersey-cdi1x](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/ext/cdi/jersey-cdi1x/2.28/jersey-cdi1x-2.28.jar)
    * [jersey-cdi1x-servlet](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/ext/cdi/jersey-cdi1x-servlet/2.28/jersey-cdi1x-servlet-2.28.jar)
@@ -34,19 +34,19 @@ the following is a summary of the TCK results for releas of Jakarta RESTful Web 
    * [jersey-mvc](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/ext/jersey-mvc/2.28/jersey-mvc-2.28.jar)
    * [jersey-mvc-jsp](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/ext/jersey-mvc-jsp/2.28/jersey-mvc-jsp-2.28.jar)
    * [jersey-server](https://oss.sonatype.org/content/groups/public/org/glassfish/jersey/core/jersey-server/2.28/jersey-server-2.28.jar)
-- [x] Specification Name, Version and download URL
- * [Jakarta RESTful Web Services 2.1](https://oss.sonatype.org/content/groups/public/jakarta/ws/rs/jakarta.ws.rs-api/2.1.6/jakarta.ws.rs-api-2.1.6.jar)
-- [x] TCK Version, digital SHA-256 fingerprint and download URL
- * [Jakarta RESTful Web Services TCK 2.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-restful-ws-tck-2.1.0.zip) 
- * SHA-256: 64846e2297e5efad03e02c1ff9003b4e7705088699c513e425b7290c66a42630
-- [x] Public URL of TCK Results Summary
- * [TCK results summary](jakarta-restful-web-services-2.1-summary.md)
-- [x] Any Additional Specification Certification Requirements
- * None
-- [x] Java runtime used to run the implementation
- * Oracle JDK 1.8.0_191
-- [x] Summary of the information for the certification environment, operating system, cloud, ...
- * CentOS 7
+- [x] Specification Name, Version and download URL\
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services 2.1](https://oss.sonatype.org/content/groups/public/jakarta/ws/rs/jakarta.ws.rs-api/2.1.6/jakarta.ws.rs-api-2.1.6.jar)
+- [x] TCK Version, digital SHA-256 fingerprint and download URL\
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services TCK 2.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-restful-ws-tck-2.1.0.zip)\
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SHA-256: 64846e2297e5efad03e02c1ff9003b4e7705088699c513e425b7290c66a42630
+- [x] Public URL of TCK Results Summary\
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [TCK results summary](https://eclipse-ee4j.github.io/jersey/tck/jakarta-restful-web-services-2.1-summary)
+- [x] Any Additional Specification Certification Requirements\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None
+- [x] Java runtime used to run the implementation\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oracle JDK 1.8.0_191
+- [x] Summary of the information for the certification environment, operating system, cloud, ...\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NAME="Alpine Linux" ID=alpine VERSION_ID=3.8.1 PRETTY_NAME="Alpine Linux v3.8"
 - [x] By checking this box I acknowledge that the Organization I represent accepts the terms of the [EFTL](https://www.eclipse.org/legal/tck.php).
 - [x] By checking this box I attest that all TCK requirements have been met, including any compatibility rules.
 
