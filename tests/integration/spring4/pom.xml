@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
         <artifactId>project</artifactId>
-        <version>2.26-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring4</artifactId>
@@ -55,7 +55,20 @@
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-spring4</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- TODO Use spring-context 4 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>3.2.16.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -81,7 +94,6 @@
             <artifactId>commons-logging</artifactId>
             <scope>runtime</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -95,12 +107,12 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
                     <webApp>
                         <contextPath>/</contextPath>
-                        <webInfIncludeJarPattern>.*\.jar$</webInfIncludeJarPattern>
+                        <webInfIncludeJarPattern>.*$</webInfIncludeJarPattern>
                     </webApp>
                 </configuration>
             </plugin>
