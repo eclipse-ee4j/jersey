@@ -113,6 +113,12 @@ public class OsgiRegistryTest {
     }
 
     @Test
+    public void testDotClassInPackageName() {
+        String className = OsgiRegistry.bundleEntryPathToClassName("/", "com/classification/Test");
+        Assert.assertEquals("com.classification.Test", className);
+    }
+
+    @Test
     public void testRootWebInfClassesBundleEntryPathEsTranslation() {
         String className = OsgiRegistry.bundleEntryPathToClassName("es", "/WEB-INF/classes/es/a/Test.class");
         Assert.assertEquals("es.a.Test", className);

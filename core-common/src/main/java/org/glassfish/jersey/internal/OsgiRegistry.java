@@ -307,7 +307,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                 : packagePath + bundleEntryPath.substring(bundleEntryPath.lastIndexOf('/') + 1);
 
         return (normalizedClassNamePath.startsWith("/") ? normalizedClassNamePath.substring(1) : normalizedClassNamePath)
-                .replace('/', '.').replace(".class", "");
+                .replace(".class", "").replace('/', '.');
     }
 
     /**
