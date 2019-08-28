@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -142,5 +142,12 @@ class SupplierBeanBridge extends JerseyBean<Object> {
     @SuppressWarnings("unchecked")
     public Class<? extends Annotation> getScope() {
         return binding.getScope() == null ? Dependent.class : transformScope(binding.getScope());
+    }
+
+    @Override
+    public Class<?> getBeanClass() {
+        return this.binding.getContracts().isEmpty()
+                ? super.getBeanClass()
+                : (Class<?>) this.binding.getContracts().iterator().next();
     }
 }
