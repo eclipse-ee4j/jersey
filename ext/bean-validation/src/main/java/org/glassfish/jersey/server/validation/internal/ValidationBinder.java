@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import javax.ws.rs.ext.Providers;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.Configuration;
+import javax.validation.ConstraintValidatorFactory;
 import javax.validation.TraversableResolver;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
@@ -72,6 +73,8 @@ public final class ValidationBinder extends AbstractBinder {
         bindFactory(DefaultValidatorProvider.class, Singleton.class).to(Validator.class).in(Singleton.class);
 
         bindFactory(ConfiguredValidatorProvider.class, Singleton.class).to(ConfiguredValidator.class);
+
+        bind(InjectingConstraintValidatorFactory.class).to(ConstraintValidatorFactory.class).in(Singleton.class);
 
         // Custom Exception Mapper and Writer - registering in binder to make possible for users register their own providers.
         bind(ValidationExceptionMapper.class).to(ExceptionMapper.class).in(Singleton.class);
@@ -257,7 +260,7 @@ public final class ValidationBinder extends AbstractBinder {
             final ValidatorContext context = factory.usingContext();
 
             // Default Configuration.
-            context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            context.constraintValidatorFactory(resourceContext.getResource(ConstraintValidatorFactory.class));
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
