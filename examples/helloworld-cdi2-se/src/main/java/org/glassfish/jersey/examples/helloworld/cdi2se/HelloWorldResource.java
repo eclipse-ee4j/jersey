@@ -15,11 +15,15 @@ import java.security.Principal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import static java.util.Optional.ofNullable;
@@ -40,16 +44,28 @@ public class HelloWorldResource {
     @Path("{name}")
     @Produces("text/plain")
     public String getHello(@PathParam("name") String name, @Context SecurityContext sc) {
+        return hello(sc, name);
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String postHello(@NotNull @Size(min = 1) String name, @Context SecurityContext sc) {
+        return hello(sc, name);
+    }
+
+    private String hello(SecurityContext sc, String name) {
         final StringBuilder sb = new StringBuilder(this.helloBean.hello(name));
 
         ofNullable(sc.getUserPrincipal())
-                .map(Principal::getName)
-                .ifPresent(p -> {
-                    sb.append("(");
-                    sb.append(p);
-                    sb.append(")");
-                });
+            .map(Principal::getName)
+            .ifPresent(p -> {
+                sb.append("(");
+                sb.append(p);
+                sb.append(")");
+            });
 
         return sb.toString();
     }
+
 }
