@@ -72,6 +72,12 @@ import org.apache.http.client.HttpClient;
  * connection-based resources.
  * </p>
  * <p>
+ * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
+ * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
+ * configuration set by using the properties.
+ * </p>
+ * <p>
  * If a response entity is obtained that is an instance of {@link java.io.Closeable}
  * then the instance MUST be closed after processing the entity to release
  * connection-based resources.
