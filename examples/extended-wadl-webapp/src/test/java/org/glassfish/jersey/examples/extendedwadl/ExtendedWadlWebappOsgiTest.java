@@ -115,7 +115,7 @@ public class ExtendedWadlWebappOsgiTest {
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
 
                 // validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // Grizzly
                 systemPackage("sun.misc"),       // required by grizzly-framework
