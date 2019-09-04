@@ -178,10 +178,11 @@ class MethodModel {
         webTarget = addQueryParams(webTarget, args);
         webTarget = addMatrixParams(webTarget, args);
 
+        MultivaluedMap<String, Object> customHeaders = addCustomHeaders(args);
         Invocation.Builder builder = webTarget
                 .request(produces)
                 .property(INVOKED_METHOD, method)
-                .headers(addCustomHeaders(args));
+                .headers(customHeaders);
         builder = addCookies(builder, args);
 
         Object entityToUse = entity.get();
@@ -192,9 +193,9 @@ class MethodModel {
         Object response;
 
         if (CompletionStage.class.isAssignableFrom(method.getReturnType())) {
-            response = asynchronousCall(builder, entityToUse, method);
+            response = asynchronousCall(builder, entityToUse, method, customHeaders);
         } else {
-            response = synchronousCall(builder, entityToUse, method);
+            response = synchronousCall(builder, entityToUse, method, customHeaders);
         }
         return response;
     }
@@ -210,13 +211,17 @@ class MethodModel {
         return form;
     }
 
-    private Object synchronousCall(Invocation.Builder builder, Object entity, Method method) {
+    private Object synchronousCall(Invocation.Builder builder,
+                                   Object entity,
+                                   Method method,
+                                   MultivaluedMap<String, Object> customHeaders) {
         Response response;
 
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            response = builder.method(httpMethod, Entity.entity(entity, consumes[0]));
+            String contentType = (String) customHeaders.get(HttpHeaders.CONTENT_TYPE).get(0);
+            response = builder.method(httpMethod, Entity.entity(entity, contentType));
         } else {
             response = builder.method(httpMethod);
         }
@@ -231,13 +236,17 @@ class MethodModel {
         return response.readEntity(returnType);
     }
 
-    private CompletableFuture asynchronousCall(Invocation.Builder builder, Object entity, Method method) {
+    private CompletableFuture asynchronousCall(Invocation.Builder builder,
+                                               Object entity,
+                                               Method method,
+                                               MultivaluedMap<String, Object> customHeaders) {
         CompletableFuture<Object> result = new CompletableFuture<>();
         Future<Response> theFuture;
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            theFuture = builder.async().method(httpMethod, Entity.entity(entity, consumes[0]));
+            String contentType = (String) customHeaders.get(HttpHeaders.CONTENT_TYPE).get(0);
+            theFuture = builder.async().method(httpMethod, Entity.entity(entity, contentType));
         } else {
             theFuture = builder.async().method(httpMethod);
         }
@@ -320,13 +329,13 @@ class MethodModel {
 
     private MultivaluedMap<String, Object> addCustomHeaders(Object[] args) {
         MultivaluedMap<String, Object> result = new MultivaluedHashMap<>();
-        for (Map.Entry<String, List<String>> entry : resolveCustomHeaders(args).entrySet()) {
-            entry.getValue().forEach(val -> result.add(entry.getKey(), val));
-        }
         for (String produce : produces) {
             result.add(HttpHeaders.ACCEPT, produce);
         }
-        result.add(HttpHeaders.CONTENT_TYPE, consumes[0]);
+        result.putSingle(HttpHeaders.CONTENT_TYPE, consumes[0]);
+        for (Map.Entry<String, List<String>> entry : resolveCustomHeaders(args).entrySet()) {
+            entry.getValue().forEach(val -> result.putSingle(entry.getKey(), val));
+        }
         return result;
     }
 
