@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
 
 import javax.inject.Singleton;
 
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.authentication.ResponseAuthenticationException;
@@ -570,6 +571,25 @@ public class AuthTest extends JerseyTest {
                 .queryParam("param1", "value1")
                 .queryParam("param2", "value2");
         assertEquals("GET 3", r.request().get(String.class));
+    }
 
+    @Test
+    public void testAuthGetWithConfigurator() {
+        CredentialsProvider credentialsProvider = new org.apache.http.impl.client.BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                AuthScope.ANY,
+                new UsernamePasswordCredentials("name", "password")
+        );
+        ApacheHttpClientBuilderConfigurator apacheHttpClientBuilderConfigurator = (httpClientBuilder) -> {
+            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+        };
+
+        ClientConfig cc = new ClientConfig();
+        cc.register(apacheHttpClientBuilderConfigurator);
+        cc.connectorProvider(new ApacheConnectorProvider());
+        Client client = ClientBuilder.newClient(cc);
+        WebTarget r = client.target(getBaseUri()).path("test");
+
+        assertEquals("GET", r.request().get(String.class));
     }
 }

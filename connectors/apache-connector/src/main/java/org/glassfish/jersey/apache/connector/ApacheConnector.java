@@ -28,6 +28,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
@@ -136,6 +137,12 @@ import org.apache.http.util.VersionInfo;
  * is disabled (chunked encoding is used) then the property
  * {@link org.glassfish.jersey.apache.connector.ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION} must
  * be set to {@code true}.
+ * </p>
+ * <p>
+ * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
+ * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
+ * configuration set by using the properties.
  * </p>
  * <p>
  * If a {@link org.glassfish.jersey.client.ClientResponse} is obtained and an
@@ -317,7 +324,15 @@ class ApacheConnector implements Connector {
             this.cookieStore = null;
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
-        this.client = clientBuilder.build();
+
+        Optional<Object> contract = config.getInstances().stream()
+                .filter(a -> ApacheHttpClientBuilderConfigurator.class.isInstance(a)).findFirst();
+
+        final HttpClientBuilder configuredBuilder = contract.isPresent()
+                ? ((ApacheHttpClientBuilderConfigurator) contract.get()).configure(clientBuilder)
+                : null;
+
+        this.client = configuredBuilder != null ? configuredBuilder.build() : clientBuilder.build();
     }
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
