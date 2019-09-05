@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Feature;
 
 import org.glassfish.jersey.internal.Errors;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
@@ -56,13 +57,14 @@ import org.glassfish.jersey.server.internal.scanning.FilesScanner;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.model.Resource;
 
+
 /**
  * The resource configuration for configuring a web application.
  *
  * @author Paul Sandoz
  * @author Martin Matula
  * @author Michal Gajdos
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ResourceConfig extends Application implements Configurable<ResourceConfig>, ServerConfig {
 
@@ -713,6 +715,7 @@ public class ResourceConfig extends Application implements Configurable<Resource
         final State current = state;
         if (!(current instanceof ImmutableState)) {
             setupApplicationName();
+            ExternalPropertiesConfigurationFactory.configure(state);
             state = new ImmutableState(current);
         }
     }
@@ -1297,4 +1300,5 @@ public class ResourceConfig extends Application implements Configurable<Resource
             setApplicationName(appName);
         }
     }
+
 }

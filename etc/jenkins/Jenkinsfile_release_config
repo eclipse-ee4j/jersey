@@ -1,0 +1,25 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+    agent any
+    parameters {
+        string(name: 'RELEASE_VERSION', description: 'Optional version to release. Default value is taken from POM snapshot.')
+
+        string(name: 'NEXT_VERSION', description: 'Optional next snapshot version to set (e.g. 1.2.3-SNAPSHOT). Default value is taken from POM snapshot with last component incremented by 1.')
+
+        choice(name: 'BRANCH', choices: ['master', 'EE4J_8'], description: 'Mandatory release branch (master, EE4J_8)')
+
+        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Do not publish artifacts to OSSRH and code changes to GitHub.')
+
+        booleanParam(name: 'OVERWRITE', defaultValue: false, description: 'Allows to overwrite existing version in git and OSSRH staging repositories.')
+
+    }
+    stages {
+        stage('config') {
+            steps {
+                echo 'config'
+            }
+        }
+    }
+}

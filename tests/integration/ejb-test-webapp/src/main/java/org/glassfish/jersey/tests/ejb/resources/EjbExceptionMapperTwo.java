@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import javax.ws.rs.core.UriInfo;
  * to an ordinary response. We make sure the mapper gets injected properly
  * by both Jersey runtime and EJB container.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Stateless
 public class EjbExceptionMapperTwo extends EjbExceptionMapperBase<CustomExceptionTwo> {

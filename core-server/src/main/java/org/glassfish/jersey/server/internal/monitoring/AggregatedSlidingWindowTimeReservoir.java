@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * determines the granularity of the data the snapshot provides. In other words, the aggregated value object is either included in
  * the resulting measurements or not depending whether it was trimmed or not.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 class AggregatedSlidingWindowTimeReservoir extends AbstractSlidingWindowTimeReservoir<AggregatedValueObject> {
 

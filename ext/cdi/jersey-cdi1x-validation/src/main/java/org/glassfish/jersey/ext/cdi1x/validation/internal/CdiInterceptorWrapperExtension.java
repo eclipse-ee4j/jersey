@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
 /**
  * CDI extension to register {@link CdiInterceptorWrapper}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Priority(value = Interceptor.Priority.PLATFORM_BEFORE + 199)
 public class CdiInterceptorWrapperExtension implements Extension {
@@ -67,9 +67,13 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param beanManager current bean manager.
      */
     private void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, final BeanManager beanManager) {
-        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class));
+        beforeBeanDiscoveryEvent.addAnnotatedType(beanManager.createAnnotatedType(CdiInterceptorWrapper.class),
+                "Jersey " + CdiInterceptorWrapper.class.getName()
+        );
         interceptorAnnotatedType = beanManager.createAnnotatedType(ValidationInterceptor.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType);
+        beforeBeanDiscoveryEvent.addAnnotatedType(interceptorAnnotatedType,
+                "Jersey " + ValidationInterceptor.class.getName()
+        );
     }
 
     /**

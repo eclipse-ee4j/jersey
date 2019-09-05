@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import org.apache.http.client.HttpClient;
  * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link ApacheClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link ApacheClientProperties#DISABLE_COOKIES}</li>
+ * <li>{@link ApacheClientProperties#KEEPALIVE_STRATEGY}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
@@ -44,6 +45,7 @@ import org.apache.http.client.HttpClient;
  * - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
  * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link ApacheClientProperties#RETRY_HANDLER}</li>
+ * <li>{@link ApacheClientProperties#REUSE_STRATEGY}</li>
  * </ul>
  * </p>
  * <p>
@@ -70,6 +72,12 @@ import org.apache.http.client.HttpClient;
  * connection-based resources.
  * </p>
  * <p>
+ * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
+ * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
+ * configuration set by using the properties.
+ * </p>
+ * <p>
  * If a response entity is obtained that is an instance of {@link java.io.Closeable}
  * then the instance MUST be closed after processing the entity to release
  * connection-based resources.
@@ -78,10 +86,10 @@ import org.apache.http.client.HttpClient;
  * The following methods are currently supported: HEAD, GET, POST, PUT, DELETE, OPTIONS, PATCH and TRACE.
  * <p/>
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author jorgeluisw at mac.com
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Paul Sandoz
  * @author Maksim Mukosey (mmukosey at gmail.com)
  * @since 2.5

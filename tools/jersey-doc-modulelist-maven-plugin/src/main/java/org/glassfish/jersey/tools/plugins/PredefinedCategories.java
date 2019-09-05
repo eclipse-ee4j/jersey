@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ package org.glassfish.jersey.tools.plugins;
  * Jersey module categories definition.
  * The categories are based on maven groupId, this enum assigns to each "known" groupId a human-readable caption
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public enum PredefinedCategories {
     CORE("org.glassfish.jersey.core", "Jersey Core"),

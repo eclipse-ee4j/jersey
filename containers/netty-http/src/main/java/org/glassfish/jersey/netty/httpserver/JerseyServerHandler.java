@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,7 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
+import org.glassfish.jersey.netty.httpserver.NettySecurityContext;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 
@@ -50,7 +51,7 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
  * {@link io.netty.channel.ChannelInboundHandler} which servers as a bridge
  * between Netty and Jersey.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
@@ -124,7 +125,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
         URI requestUri = URI.create(baseUri + ContainerUtils.encodeUnsafeCharacters(s));
 
         ContainerRequest requestContext = new ContainerRequest(
-                baseUri, requestUri, req.method().name(), getSecurityContext(),
+                baseUri, requestUri, req.method().name(), getSecurityContext(ctx),
                 new PropertiesDelegate() {
 
                     private final Map<String, Object> properties = new HashMap<>();
@@ -179,29 +180,8 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
         return requestContext;
     }
 
-    private SecurityContext getSecurityContext() {
-        return new SecurityContext() {
-
-            @Override
-            public boolean isUserInRole(final String role) {
-                return false;
-            }
-
-            @Override
-            public boolean isSecure() {
-                return false;
-            }
-
-            @Override
-            public Principal getUserPrincipal() {
-                return null;
-            }
-
-            @Override
-            public String getAuthenticationScheme() {
-                return null;
-            }
-        };
+    private NettySecurityContext getSecurityContext(ChannelHandlerContext ctx) {
+        return new NettySecurityContext(ctx);
     }
 
     @Override

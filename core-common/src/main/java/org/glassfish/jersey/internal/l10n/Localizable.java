@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.internal.l10n;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * Localizable message.
  *
@@ -54,4 +57,11 @@ public interface Localizable {
      * @return the localization messages resource bundle name.
      */
     public String getResourceBundleName();
+
+    /**
+     * Get the resource bundle of the given localization.
+     * @param locale the given {@code Locale}
+     * @return the localization messages resource bundle for given locale.
+     */
+    public ResourceBundle getResourceBundle(Locale locale);
 }

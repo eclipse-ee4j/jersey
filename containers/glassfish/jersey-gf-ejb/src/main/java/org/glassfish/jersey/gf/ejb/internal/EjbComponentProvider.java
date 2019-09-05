@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) [2018-2019] [Payara Foundation and/or its affiliates].
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.jersey.gf.ejb.internal;
 
 import java.lang.annotation.Annotation;
@@ -72,7 +72,7 @@ import com.sun.enterprise.config.serverbeans.Applications;
  * EJB component provider.
  *
  * @author Paul Sandoz
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Priority(300)
 @SuppressWarnings("UnusedDeclaration")
@@ -166,24 +166,26 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         throw new NamingException("Application Information Not Found");
     }
 
-    private void registerEjbInterceptor() {
+    private void registerEjbInterceptor(Class<?> component) {
         try {
             final Object interceptor = new EjbComponentInterceptor(injectionManager);
             initialContext = getInitialContext();
             final EjbContainerUtil ejbUtil = EjbContainerUtilImpl.getInstance();
             final ApplicationInfo appInfo = getApplicationInfo(ejbUtil);
-            final List<String> tempLibNames = new LinkedList<>();
             for (ModuleInfo moduleInfo : appInfo.getModuleInfos()) {
                 final String jarName = moduleInfo.getName();
                 if (jarName.endsWith(".jar") || jarName.endsWith(".war")) {
                     final String moduleName = jarName.substring(0, jarName.length() - 4);
-                    tempLibNames.add(moduleName);
                     final Object bundleDescriptor = moduleInfo.getMetaData(EjbBundleDescriptorImpl.class.getName());
                     if (bundleDescriptor instanceof EjbBundleDescriptorImpl) {
                         final Collection<EjbDescriptor> ejbs = ((EjbBundleDescriptorImpl) bundleDescriptor).getEjbs();
 
                         for (final EjbDescriptor ejb : ejbs) {
                             final BaseContainer ejbContainer = EjbContainerUtilImpl.getInstance().getContainer(ejb.getUniqueId());
+                            if (ejbContainer.getEJBClass() != component) {
+                                continue;
+                            }
+                            libNames.add(moduleName);
                             try {
                                 AccessController.doPrivileged(new PrivilegedExceptionAction() {
                                     @Override
@@ -206,7 +208,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                     }
                 }
             }
-            libNames.addAll(tempLibNames);
+
             final Object interceptorBinder = initialContext.lookup("java:org.glassfish.ejb.container.interceptor_binding_spi");
             // Some implementations of InitialContext return null instead of
             // throwing NamingException if there is no Object associated with
@@ -257,7 +259,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
 
         if (!ejbInterceptorRegistered) {
-            registerEjbInterceptor();
+            registerEjbInterceptor(component);
         }
 
         Binding binding = Bindings.supplier(new EjbFactory(component, initialContext, EjbComponentProvider.this))
@@ -331,7 +333,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 LocalizationMessages.EJB_INTERFACE_HANDLING_METHOD_LOOKUP_EXCEPTION(method, component, iFace), ex);
     }
 
-    private List<Class> remoteAndLocalIfaces(final Class<?> resourceClass) {
+    private static List<Class> remoteAndLocalIfaces(final Class<?> resourceClass) {
         final List<Class> allLocalOrRemoteIfaces = new LinkedList<>();
         if (resourceClass.isAnnotationPresent(Remote.class)) {
             allLocalOrRemoteIfaces.addAll(Arrays.asList(resourceClass.getAnnotation(Remote.class).value()));
@@ -357,18 +359,22 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
     }
 
-    private static Object lookup(InitialContext ic, Class<?> c, String name, EjbComponentProvider provider)
+    private static Object lookup(InitialContext ic, Class<?> rawType, String name, EjbComponentProvider provider)
             throws NamingException {
         try {
-            return lookupSimpleForm(ic, name, provider);
+            return lookupSimpleForm(ic, rawType, name, provider);
         } catch (NamingException ex) {
-            LOGGER.log(Level.WARNING, LocalizationMessages.EJB_CLASS_SIMPLE_LOOKUP_FAILED(c.getName()), ex);
+            LOGGER.log(Level.WARNING, LocalizationMessages.EJB_CLASS_SIMPLE_LOOKUP_FAILED(rawType.getName()), ex);
 
-            return lookupFullyQualifiedForm(ic, c, name, provider);
+            return lookupFullyQualifiedForm(ic, rawType, name, provider);
         }
     }
 
-    private static Object lookupSimpleForm(InitialContext ic, String name, EjbComponentProvider provider) throws NamingException {
+    private static Object lookupSimpleForm(
+            InitialContext ic,
+            Class<?> rawType,
+            String name,
+            EjbComponentProvider provider) throws NamingException {
         if (provider.libNames.isEmpty()) {
             String jndiName = "java:module/" + name;
             return ic.lookup(jndiName);
@@ -379,7 +385,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 Object result;
                 try {
                     result = ic.lookup(jndiName);
-                    if (result != null) {
+                    if (result != null && isLookupInstanceValid(rawType, result)) {
                         return result;
                     }
                 } catch (NamingException e) {
@@ -390,19 +396,22 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
     }
 
-    private static Object lookupFullyQualifiedForm(InitialContext ic, Class<?> c, String name, EjbComponentProvider provider)
-            throws NamingException {
+    private static Object lookupFullyQualifiedForm(
+            InitialContext ic,
+            Class<?> rawType,
+            String name,
+            EjbComponentProvider provider) throws NamingException {
         if (provider.libNames.isEmpty()) {
-            String jndiName = "java:module/" + name + "!" + c.getName();
+            String jndiName = "java:module/" + name + "!" + rawType.getName();
             return ic.lookup(jndiName);
         } else {
             NamingException ne = null;
             for (String moduleName : provider.libNames) {
-                String jndiName = "java:app/" + moduleName + "/" + name + "!" + c.getName();
+                String jndiName = "java:app/" + moduleName + "/" + name + "!" + rawType.getName();
                 Object result;
                 try {
                     result = ic.lookup(jndiName);
-                    if (result != null) {
+                    if (result != null && isLookupInstanceValid(rawType, result)) {
                         return result;
                     }
                 } catch (NamingException e) {
@@ -411,5 +420,14 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
             }
             throw (ne != null) ? ne : new NamingException();
         }
+    }
+
+    private static boolean isLookupInstanceValid(Class<?> rawType, Object result){
+        return rawType.isInstance(result)
+                                || remoteAndLocalIfaces(rawType)
+                                        .stream()
+                                        .filter(iface -> iface.isInstance(result))
+                                        .findAny()
+                                        .isPresent();
     }
 }

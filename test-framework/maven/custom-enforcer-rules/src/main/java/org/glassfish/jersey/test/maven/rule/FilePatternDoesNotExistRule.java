@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,7 @@ import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
  * Maven enforcer rule to enforce that given set of files does not exist.<br/>
  * This rule is similar to apache {@code requireFilesDontExist} with a support for wildcards.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public class FilePatternDoesNotExistRule extends AbstractNonCacheableEnforcerRule {
 

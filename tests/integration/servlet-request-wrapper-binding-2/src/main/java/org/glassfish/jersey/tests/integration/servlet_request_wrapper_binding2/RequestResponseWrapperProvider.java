@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.ws.rs.core.GenericType;
 
 import javax.inject.Inject;
@@ -82,7 +83,7 @@ import org.jvnet.hk2.internal.ServiceHandleImpl;
  * The request wrapper contains a direct reference to the underlying container request
  * in case it gets injected into a request scoped component.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public class RequestResponseWrapperProvider extends NoOpServletContainerProvider {
 
@@ -399,6 +400,11 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                 @Override
                 public void setContentLength(int i) {
                     getHttpServletResponse().setContentLength(i);
+                }
+
+                @Override
+                public void setContentLengthLong(long length) {
+                    getHttpServletResponse().setContentLengthLong(length);
                 }
 
                 @Override
@@ -824,6 +830,21 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
         @Override
         public void login(String u, String p) throws ServletException {
             getHttpServletRequest().login(u, p);
+        }
+
+        @Override
+        public String changeSessionId() {
+            return getHttpServletRequest().changeSessionId();
+        }
+
+        @Override
+        public long getContentLengthLong() {
+            return getHttpServletRequest().getContentLengthLong();
+        }
+
+        @Override
+        public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException {
+            return getHttpServletRequest().upgrade(aClass);
         }
     }
 

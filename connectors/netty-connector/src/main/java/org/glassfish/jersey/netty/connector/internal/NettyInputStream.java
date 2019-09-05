@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * Converts Netty NIO buffers to an input streams and stores them in the queue,
  * waiting for Jersey to process it.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 public class NettyInputStream extends InputStream {
 
@@ -74,9 +74,11 @@ public class NettyInputStream extends InputStream {
         this.ctx = ctx;
     }
 
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    private interface ISReader {
+        int readFrom(InputStream take) throws IOException;
+    }
 
+    private int readInternal(ISReader isReader) throws IOException {
         if (end) {
             return -1;
         }
@@ -89,7 +91,7 @@ public class NettyInputStream extends InputStream {
                 return -1;
             }
 
-            int read = take.read(b, off, len);
+            int read = isReader.readFrom(take);
 
             if (take.available() > 0) {
                 isList.addFirst(take);
@@ -110,36 +112,13 @@ public class NettyInputStream extends InputStream {
     }
 
     @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        return readInternal(take -> take.read(b, off, len));
+    }
+
+    @Override
     public int read() throws IOException {
-
-        if (end) {
-            return -1;
-        }
-
-        try {
-            InputStream take = isList.take();
-
-            if (checkEndOfInput(take)) {
-                return -1;
-            }
-
-            int read = take.read();
-
-            if (take.available() > 0) {
-                isList.addFirst(take);
-            } else {
-                ctx.executor().submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        releaseBuffer(take);
-                    }
-                });
-            }
-
-            return read;
-        } catch (InterruptedException e) {
-            throw new IOException("Interrupted.", e);
-        }
+        return readInternal(InputStream::read);
     }
 
     @Override

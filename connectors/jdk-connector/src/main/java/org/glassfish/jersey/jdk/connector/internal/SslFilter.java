@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,7 +30,7 @@ import javax.net.ssl.SSLParameters;
 
 
 /**
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
@@ -148,7 +149,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
     private void handleWrite(final ByteBuffer applicationData, final CompletionHandler<ByteBuffer> completionHandler) {
         try {
             // transport buffer always writes all data, so there are not leftovers in the networkOutputBuffer
-            networkOutputBuffer.clear();
+            ((Buffer) networkOutputBuffer).clear();
             SSLEngineResult result = sslEngine.wrap(applicationData, networkOutputBuffer);
 
             switch (result.getStatus()) {
@@ -178,7 +179,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
                         state = State.REHANDSHAKING;
                     }
 
-                    networkOutputBuffer.flip();
+                    ((Buffer) networkOutputBuffer).flip();
                     // write only if something was written to the output buffer
                     if (networkOutputBuffer.hasRemaining()) {
                         writeQueue.write(networkOutputBuffer, new CompletionHandler<ByteBuffer>() {
@@ -273,7 +274,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
             if (lazyBuffer.isAllocated()) {
                 ByteBuffer buffer = lazyBuffer.get();
-                buffer.flip();
+                ((Buffer) buffer).flip();
                 writeQueue.write(buffer, new CompletionHandler<ByteBuffer>() {
 
                     @Override
@@ -321,7 +322,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
                 case CLOSED: {
                     // drop any data that arrive after the SSL has been closed
-                    networkData.clear();
+                    ((Buffer) networkData).clear();
                     readMore = false;
                 }
             }
@@ -332,7 +333,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
     private boolean handleRead(ByteBuffer networkData) {
         try {
-            applicationInputBuffer.clear();
+            ((Buffer) applicationInputBuffer).clear();
             SSLEngineResult result = sslEngine.unwrap(networkData, applicationInputBuffer);
 
             switch (result.getStatus()) {
@@ -352,7 +353,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
                 case CLOSED:
                 case OK: {
                     if (result.bytesProduced() > 0) {
-                        applicationInputBuffer.flip();
+                        ((Buffer) applicationInputBuffer).flip();
                         upstreamFilter.onRead(applicationInputBuffer);
                         applicationInputBuffer.compact();
                     }
@@ -460,7 +461,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
                             SSLEngineResult result = sslEngine.unwrap(networkData, applicationInputBuffer);
 
-                            applicationInputBuffer.flip();
+                            ((Buffer) applicationInputBuffer).flip();
                             if (applicationInputBuffer.hasRemaining()) {
                                 // data can flow during re-handshake
                                 inputBuffer.append(applicationInputBuffer);
@@ -510,7 +511,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
                 // now write the stored wrap() results
                 if (outputBuffer.isAllocated()) {
                     ByteBuffer buffer = outputBuffer.get();
-                    buffer.flip();
+                    ((Buffer) buffer).flip();
                     writeQueue.write(buffer, null);
                 }
 
@@ -630,20 +631,20 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
         void resize() {
             int increment = sslEngine.getSession().getPacketBufferSize();
-            int newSize = buffer.position() + increment;
+            int newSize = ((Buffer) buffer).position() + increment;
             ByteBuffer newBuffer = ByteBuffer.allocate(newSize);
-            buffer.flip();
-            newBuffer.flip();
-            buffer = Utils.appendBuffers(newBuffer, buffer, newBuffer.limit(), 50);
+            ((Buffer) buffer).flip();
+            ((Buffer) newBuffer).flip();
+            buffer = Utils.appendBuffers(newBuffer, buffer, ((Buffer) newBuffer).limit(), 50);
             buffer.compact();
         }
 
         void append(ByteBuffer b) {
             if (buffer == null) {
                 buffer = ByteBuffer.allocate(b.remaining());
-                buffer.flip();
+                ((Buffer) buffer).flip();
             }
-            int newSize = buffer.limit() + b.remaining();
+            int newSize = ((Buffer) buffer).limit() + b.remaining();
             buffer = Utils.appendBuffers(buffer, b, newSize, 50);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
@@ -56,7 +57,7 @@ import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.message.internal.Statuses;
-
+import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -76,6 +77,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.ManagedHttpClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
@@ -111,12 +113,14 @@ import org.apache.http.util.VersionInfo;
  * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link ApacheClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link ApacheClientProperties#DISABLE_COOKIES}</li>
- * <li>{@link ClientProperties#PROXY_URI}</li>
- * <li>{@link ClientProperties#PROXY_USERNAME}</li>
- * <li>{@link ClientProperties#PROXY_PASSWORD}</li>
- * <li>{@link ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link RequestEntityProcessing#CHUNKED}</li>
+ * <li>{@link ApacheClientProperties#KEEPALIVE_STRATEGY}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
  * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link ApacheClientProperties#RETRY_HANDLER}</li>
+ * <li>{@link ApacheClientProperties#REUSE_STRATEGY}</li>
  * </ul>
  * <p>
  * This connector uses {@link RequestEntityProcessing#CHUNKED chunked encoding} as a default setting. This can
@@ -133,6 +137,12 @@ import org.apache.http.util.VersionInfo;
  * is disabled (chunked encoding is used) then the property
  * {@link org.glassfish.jersey.apache.connector.ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION} must
  * be set to {@code true}.
+ * </p>
+ * <p>
+ * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
+ * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
+ * configuration set by using the properties.
  * </p>
  * <p>
  * If a {@link org.glassfish.jersey.client.ClientResponse} is obtained and an
@@ -155,7 +165,7 @@ import org.apache.http.util.VersionInfo;
  *
  * @author jorgeluisw@mac.com
  * @author Paul Sandoz
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @see ApacheClientProperties#CONNECTION_MANAGER
  */
@@ -197,6 +207,34 @@ class ApacheConnector implements Connector {
             }
         }
 
+        Object keepAliveStrategy = config.getProperties().get(ApacheClientProperties.KEEPALIVE_STRATEGY);
+        if (keepAliveStrategy != null) {
+            if (!(keepAliveStrategy instanceof ConnectionKeepAliveStrategy)) {
+                LOGGER.log(
+                        Level.WARNING,
+                        LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                ApacheClientProperties.KEEPALIVE_STRATEGY,
+                                keepAliveStrategy.getClass().getName(),
+                                ConnectionKeepAliveStrategy.class.getName())
+                );
+                keepAliveStrategy = null;
+            }
+        }
+
+        Object reuseStrategy = config.getProperties().get(ApacheClientProperties.REUSE_STRATEGY);
+        if (reuseStrategy != null) {
+            if (!(reuseStrategy instanceof ConnectionReuseStrategy)) {
+                LOGGER.log(
+                        Level.WARNING,
+                        LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                ApacheClientProperties.REUSE_STRATEGY,
+                                reuseStrategy.getClass().getName(),
+                                ConnectionReuseStrategy.class.getName())
+                );
+                reuseStrategy = null;
+            }
+        }
+
         Object reqConfig = config.getProperties().get(ApacheClientProperties.REQUEST_CONFIG);
         if (reqConfig != null) {
             if (!(reqConfig instanceof RequestConfig)) {
@@ -217,7 +255,13 @@ class ApacheConnector implements Connector {
         clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext));
         clientBuilder.setConnectionManagerShared(
                 PropertiesHelper.getValue(config.getProperties(), ApacheClientProperties.CONNECTION_MANAGER_SHARED, false, null));
-        clientBuilder.setSslcontext(sslContext);
+        clientBuilder.setSSLContext(sslContext);
+        if (keepAliveStrategy != null) {
+            clientBuilder.setKeepAliveStrategy((ConnectionKeepAliveStrategy) keepAliveStrategy);
+        }
+        if (reuseStrategy != null) {
+            clientBuilder.setConnectionReuseStrategy((ConnectionReuseStrategy) reuseStrategy);
+        }
 
         final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
@@ -280,7 +324,15 @@ class ApacheConnector implements Connector {
             this.cookieStore = null;
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
-        this.client = clientBuilder.build();
+
+        Optional<Object> contract = config.getInstances().stream()
+                .filter(a -> ApacheHttpClientBuilderConfigurator.class.isInstance(a)).findFirst();
+
+        final HttpClientBuilder configuredBuilder = contract.isPresent()
+                ? ((ApacheHttpClientBuilderConfigurator) contract.get()).configure(clientBuilder)
+                : null;
+
+        this.client = configuredBuilder != null ? configuredBuilder.build() : clientBuilder.build();
     }
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
@@ -462,7 +514,7 @@ class ApacheConnector implements Connector {
             }
 
             try {
-                responseContext.setEntityStream(new HttpClientResponseInputStream(getInputStream(response)));
+                responseContext.setEntityStream(getInputStream(response));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -601,18 +653,6 @@ class ApacheConnector implements Connector {
         return stringHeaders;
     }
 
-    private static final class HttpClientResponseInputStream extends FilterInputStream {
-
-        HttpClientResponseInputStream(final InputStream inputStream) throws IOException {
-            super(inputStream);
-        }
-
-        @Override
-        public void close() throws IOException {
-            super.close();
-        }
-    }
-
     private static InputStream getInputStream(final CloseableHttpResponse response) throws IOException {
 
         final InputStream inputStream;
@@ -631,8 +671,13 @@ class ApacheConnector implements Connector {
         return new FilterInputStream(inputStream) {
             @Override
             public void close() throws IOException {
-                response.close();
-                super.close();
+                try {
+                    super.close();
+                } catch (IOException ex) {
+                    // Ignore
+                } finally {
+                    response.close();
+                }
             }
         };
     }

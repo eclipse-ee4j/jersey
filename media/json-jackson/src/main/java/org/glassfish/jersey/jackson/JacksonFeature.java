@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,6 +40,39 @@ import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
  */
 public class JacksonFeature implements Feature {
 
+    /**
+     * Define whether to use Jackson's exception mappers ore not
+     * Using them can provide a useful information to the user, but it can expose unnecessary information, too.
+     */
+    private final boolean registerExceptionMappers;
+
+    /**
+     * Default constructor enables registering Jackson's exception mappers
+     */
+    public JacksonFeature() {
+        this(true);
+    }
+
+    private JacksonFeature(boolean registerExceptionMappers) {
+        this.registerExceptionMappers = registerExceptionMappers;
+    }
+
+    /**
+     * Create JacksonFeature with working Jackson's exception mappers
+     * @return JacksonFeature with working Jackson's exception mappers
+     */
+    public static JacksonFeature withExceptionMappers() {
+        return new JacksonFeature();
+    }
+
+    /**
+     * Create JacksonFeature without registered Jackson's exception mappers
+     * @return JacksonFeature without registered Jackson's exception mappers
+     */
+    public static JacksonFeature withoutExceptionMappers() {
+        return new JacksonFeature(false);
+    }
+
     private static final String JSON_FEATURE = JacksonFeature.class.getSimpleName();
 
     @Override
@@ -59,9 +92,12 @@ public class JacksonFeature implements Feature {
 
         // Register Jackson.
         if (!config.isRegistered(JacksonJaxbJsonProvider.class)) {
-            // add the default Jackson exception mappers
-            context.register(JsonParseExceptionMapper.class);
-            context.register(JsonMappingExceptionMapper.class);
+
+            if (registerExceptionMappers) {
+                // add the default Jackson exception mappers
+                context.register(JsonParseExceptionMapper.class);
+                context.register(JsonMappingExceptionMapper.class);
+            }
 
             if (EntityFilteringFeature.enabled(config)) {
                 context.register(JacksonFilteringFeature.class);

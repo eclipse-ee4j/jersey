@@ -86,7 +86,12 @@ public class Localizer {
                                     alternateBundleName,
                                     _locale);
                         } catch (MissingResourceException e2) {
-                            // try OSGi
+                            //try context classloader
+                            try {
+                                bundle = ResourceBundle.getBundle(bundlename, _locale,
+                                        Thread.currentThread().getContextClassLoader());
+                            } catch (MissingResourceException e3) {
+                                // try OSGi
                                 OsgiRegistry osgiRegistry = ReflectionHelper.getOsgiRegistryInstance();
                                 if (osgiRegistry != null) {
                                     bundle = osgiRegistry.getResourceBundle(bundlename);
@@ -101,6 +106,7 @@ public class Localizer {
                                         }
                                     }
                                 }
+                            }
                         }
                     }
                 }

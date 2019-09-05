@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  * If no such a factory is registered via the {@code META-INF/services} mechanism
  * a default factory for Servlet versions prior to 3.0 will be utilized with no async support.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public interface AsyncContextDelegateProvider {
 

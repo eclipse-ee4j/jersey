@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@ import org.glassfish.jersey.model.internal.ComponentBag;
  * </p>
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Michal Gajdos
  */
 public class ProviderBinder {
@@ -72,8 +72,53 @@ public class ProviderBinder {
      * @param providerClass provider class.
      * @param model         contract provider model.
      */
-    public static void bindProvider(Class<?> providerClass, ContractProvider model, InjectionManager injectionManager) {
-        injectionManager.register(CompositeBinder.wrap(createProviderBinders(providerClass, model)));
+    public static <T> void bindProvider(Class<T> providerClass, ContractProvider model, InjectionManager injectionManager) {
+        final T instance  = injectionManager.getInstance(providerClass);
+        if (instance != null) {
+            injectionManager.register(createInstanceBinder(instance, model));
+        } else {
+            injectionManager.register(createClassBinder(model));
+        }
+    }
+
+    private static <T> Binder createInstanceBinder(T instance, ContractProvider model) {
+
+        return new AbstractBinder() {
+
+            @Override
+            protected void configure() {
+                final InstanceBinding binding = bind(instance)
+                        .in(model.getScope())
+                        .qualifiedBy(CustomAnnotationLiteral.INSTANCE);
+                binding.to(model.getContracts());
+                int priority = model.getPriority(model.getImplementationClass());
+                if (priority > ContractProvider.NO_PRIORITY) {
+                    binding.ranked(priority);
+                }
+
+            }
+        };
+
+    }
+
+    private static Binder createClassBinder(ContractProvider model) {
+
+        return new AbstractBinder() {
+
+            @Override
+            protected void configure() {
+                final ClassBinding binding = bind(model.getImplementationClass())
+                        .in(model.getScope())
+                        .qualifiedBy(CustomAnnotationLiteral.INSTANCE);
+                binding.to(model.getContracts());
+                int priority = model.getPriority(model.getImplementationClass());
+                if (priority > ContractProvider.NO_PRIORITY) {
+                    binding.ranked(priority);
+                }
+
+            }
+        };
+
     }
 
     private static Collection<Binder> createProviderBinders(Class<?> providerClass, ContractProvider model) {
@@ -110,7 +155,7 @@ public class ProviderBinder {
      * @param model            contract provider model.
      */
     public static void bindProvider(Object providerInstance, ContractProvider model, InjectionManager injectionManager) {
-        injectionManager.register(CompositeBinder.wrap(createProviderBinders(providerInstance, model)));
+        injectionManager.register(createInstanceBinder(providerInstance, model));
     }
 
     private static Collection<Binder> createProviderBinders(Object providerInstance, ContractProvider model) {

@@ -16,17 +16,30 @@
 
 package org.glassfish.jersey.internal.l10n;
 
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * @author WS Development Team
  */
 public final class LocalizableMessage implements Localizable {
 
     private final String _bundlename;
+    private final LocalizableMessageFactory.ResourceBundleSupplier _rbSupplier;
+
     private final String _key;
     private final Object[] _args;
 
+    @Deprecated
     public LocalizableMessage(String bundlename, String key, Object... args) {
+        this(bundlename, null, key, args);
+    }
+
+    public LocalizableMessage(String bundlename, LocalizableMessageFactory.ResourceBundleSupplier rbSupplier,
+                              String key, Object... args) {
         _bundlename = bundlename;
+        _rbSupplier = rbSupplier;
         _key = key;
         if (args == null) {
             args = new Object[0];
@@ -41,11 +54,20 @@ public final class LocalizableMessage implements Localizable {
 
     @Override
     public Object[] getArguments() {
-        return _args.clone();
+        return Arrays.copyOf(_args, _args.length);
     }
 
     @Override
     public String getResourceBundleName() {
         return _bundlename;
+    }
+
+    @Override
+    public ResourceBundle getResourceBundle(Locale locale) {
+        if (_rbSupplier == null) {
+            return null;
+        }
+
+        return _rbSupplier.getResourceBundle(locale);
     }
 }
