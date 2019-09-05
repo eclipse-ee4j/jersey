@@ -151,7 +151,7 @@ public abstract class AbstractWebAppTest {
                 systemPackage("com.sun.source.util"),
 
                 // validation - required by jersey-container-servlet-core
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
                 // Jersey bundles
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-server").versionAsInProject(),
