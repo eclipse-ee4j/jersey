@@ -338,7 +338,7 @@ class MethodModel {
             result.add(HttpHeaders.ACCEPT, produce);
         }
         result.putIfAbsent(HttpHeaders.CONTENT_TYPE, Collections.singletonList(consumes[0]));
-        return result;
+        return new MultivaluedHashMap<String, Object>(result);
     }
 
     @SuppressWarnings("unchecked") //I am checking the type of parameter and I know it should handle instance I am sending
