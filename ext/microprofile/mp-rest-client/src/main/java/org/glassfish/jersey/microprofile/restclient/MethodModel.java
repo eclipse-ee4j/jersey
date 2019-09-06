@@ -220,8 +220,7 @@ class MethodModel {
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            String contentType = (String) customHeaders.get(HttpHeaders.CONTENT_TYPE).get(0);
-            response = builder.method(httpMethod, Entity.entity(entity, contentType));
+            response = builder.method(httpMethod, Entity.entity(entity, getContentType(customHeaders)));
         } else {
             response = builder.method(httpMethod);
         }
@@ -245,8 +244,7 @@ class MethodModel {
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            String contentType = (String) customHeaders.get(HttpHeaders.CONTENT_TYPE).get(0);
-            theFuture = builder.async().method(httpMethod, Entity.entity(entity, contentType));
+            theFuture = builder.async().method(httpMethod, Entity.entity(entity, getContentType(customHeaders)));
         } else {
             theFuture = builder.async().method(httpMethod);
         }
@@ -273,6 +271,10 @@ class MethodModel {
         });
 
         return result;
+    }
+
+    private String getContentType(MultivaluedMap<String, Object> customHeaders) {
+        return (String) customHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
     }
 
     @SuppressWarnings("unchecked")
@@ -329,13 +331,13 @@ class MethodModel {
 
     private MultivaluedMap<String, Object> addCustomHeaders(Object[] args) {
         MultivaluedMap<String, Object> result = new MultivaluedHashMap<>();
+        for (Map.Entry<String, List<String>> entry : resolveCustomHeaders(args).entrySet()) {
+            entry.getValue().forEach(val -> result.add(entry.getKey(), val));
+        }
         for (String produce : produces) {
             result.add(HttpHeaders.ACCEPT, produce);
         }
-        result.putSingle(HttpHeaders.CONTENT_TYPE, consumes[0]);
-        for (Map.Entry<String, List<String>> entry : resolveCustomHeaders(args).entrySet()) {
-            entry.getValue().forEach(val -> result.putSingle(entry.getKey(), val));
-        }
+        result.putIfAbsent(HttpHeaders.CONTENT_TYPE, Collections.singletonList(consumes[0]));
         return result;
     }
 
