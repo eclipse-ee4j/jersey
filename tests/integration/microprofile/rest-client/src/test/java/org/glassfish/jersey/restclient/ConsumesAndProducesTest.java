@@ -7,6 +7,7 @@ import java.util.List;
 import javax.json.Json;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -43,10 +44,20 @@ public class ConsumesAndProducesTest extends JerseyTest {
     public void testWithoutEntity() throws URISyntaxException {
         ApplicationResource app = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:9998"))
-                .register(new TestClientRequestFilter(MediaType.APPLICATION_JSON, MediaType.WILDCARD))
+                .register(new TestClientRequestFilter(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON))
                 .build(ApplicationResource.class);
 
         app.jsonValue();
+    }
+
+    @Test
+    public void testMethodContentType() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:9998"))
+                .register(new TestClientRequestFilter(MediaType.TEXT_PLAIN, MediaType.TEXT_XML))
+                .build(ApplicationResource.class);
+
+        app.methodContentType(MediaType.TEXT_XML_TYPE, "something");
     }
 
     private class TestClientRequestFilter implements ClientRequestFilter {
@@ -61,12 +72,12 @@ public class ConsumesAndProducesTest extends JerseyTest {
 
         @Override
         public void filter(ClientRequestContext requestContext) {
-            assertTrue(requestContext.getHeaders().containsKey("Accept"));
-            List<Object> accept = requestContext.getHeaders().get("Accept");
+            assertTrue(requestContext.getHeaders().containsKey(HttpHeaders.ACCEPT));
+            List<Object> accept = requestContext.getHeaders().get(HttpHeaders.ACCEPT);
             assertTrue(accept.contains(expectedAccept) || accept.contains(MediaType.valueOf(expectedAccept)));
 
-            assertTrue(requestContext.getHeaders().containsKey("Content-Type"));
-            List<Object> contentType = requestContext.getHeaders().get("Content-Type");
+            assertTrue(requestContext.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE));
+            List<Object> contentType = requestContext.getHeaders().get(HttpHeaders.CONTENT_TYPE);
             assertEquals(contentType.size(), 1);
             assertTrue(contentType.contains(expectedContentType) || contentType.contains(MediaType.valueOf(expectedContentType)));
 

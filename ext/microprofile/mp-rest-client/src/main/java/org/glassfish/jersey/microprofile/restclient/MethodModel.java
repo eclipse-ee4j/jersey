@@ -178,10 +178,11 @@ class MethodModel {
         webTarget = addQueryParams(webTarget, args);
         webTarget = addMatrixParams(webTarget, args);
 
+        MultivaluedMap<String, Object> customHeaders = addCustomHeaders(args);
         Invocation.Builder builder = webTarget
                 .request(produces)
                 .property(INVOKED_METHOD, method)
-                .headers(addCustomHeaders(args));
+                .headers(customHeaders);
         builder = addCookies(builder, args);
 
         Object entityToUse = entity.get();
@@ -192,9 +193,9 @@ class MethodModel {
         Object response;
 
         if (CompletionStage.class.isAssignableFrom(method.getReturnType())) {
-            response = asynchronousCall(builder, entityToUse, method);
+            response = asynchronousCall(builder, entityToUse, method, customHeaders);
         } else {
-            response = synchronousCall(builder, entityToUse, method);
+            response = synchronousCall(builder, entityToUse, method, customHeaders);
         }
         return response;
     }
@@ -210,13 +211,16 @@ class MethodModel {
         return form;
     }
 
-    private Object synchronousCall(Invocation.Builder builder, Object entity, Method method) {
+    private Object synchronousCall(Invocation.Builder builder,
+                                   Object entity,
+                                   Method method,
+                                   MultivaluedMap<String, Object> customHeaders) {
         Response response;
 
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            response = builder.method(httpMethod, Entity.entity(entity, consumes[0]));
+            response = builder.method(httpMethod, Entity.entity(entity, getContentType(customHeaders)));
         } else {
             response = builder.method(httpMethod);
         }
@@ -231,13 +235,16 @@ class MethodModel {
         return response.readEntity(returnType);
     }
 
-    private CompletableFuture asynchronousCall(Invocation.Builder builder, Object entity, Method method) {
+    private CompletableFuture asynchronousCall(Invocation.Builder builder,
+                                               Object entity,
+                                               Method method,
+                                               MultivaluedMap<String, Object> customHeaders) {
         CompletableFuture<Object> result = new CompletableFuture<>();
         Future<Response> theFuture;
         if (entity != null
                 && !httpMethod.equals(GET.class.getSimpleName())
                 && !httpMethod.equals(DELETE.class.getSimpleName())) {
-            theFuture = builder.async().method(httpMethod, Entity.entity(entity, consumes[0]));
+            theFuture = builder.async().method(httpMethod, Entity.entity(entity, getContentType(customHeaders)));
         } else {
             theFuture = builder.async().method(httpMethod);
         }
@@ -264,6 +271,10 @@ class MethodModel {
         });
 
         return result;
+    }
+
+    private String getContentType(MultivaluedMap<String, Object> customHeaders) {
+        return (String) customHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
     }
 
     @SuppressWarnings("unchecked")
@@ -326,8 +337,8 @@ class MethodModel {
         for (String produce : produces) {
             result.add(HttpHeaders.ACCEPT, produce);
         }
-        result.add(HttpHeaders.CONTENT_TYPE, consumes[0]);
-        return result;
+        result.putIfAbsent(HttpHeaders.CONTENT_TYPE, Collections.singletonList(consumes[0]));
+        return new MultivaluedHashMap<String, Object>(result);
     }
 
     @SuppressWarnings("unchecked") //I am checking the type of parameter and I know it should handle instance I am sending

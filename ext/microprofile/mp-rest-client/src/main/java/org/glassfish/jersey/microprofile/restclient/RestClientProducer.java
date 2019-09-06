@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -336,7 +337,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
             }
             return result;
         } else if (location.startsWith(FILE_LOCATION)) {
-            return Files.newInputStream(Paths.get(location.substring(FILE_LOCATION.length())));
+            return Files.newInputStream(Paths.get(URI.create(location)));
         } else {
             throw new IllegalStateException("Location of keystore must start with either classpath: or file:, but is: "
                                                     + location
