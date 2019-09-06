@@ -45,8 +45,9 @@ class HttpVersionChooser extends ApplicationProtocolNegotiationHandler {
     @Override
     protected void configurePipeline(ChannelHandlerContext ctx, String protocol) throws Exception {
         if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
+            // Http2Codec is removed in version 4.1.15.Final
             ctx.pipeline().addLast(Http2MultiplexCodecBuilder.forServer(
-                        new JerseyHttp2ServerHandler(baseUri, container)).build());
+                    new JerseyHttp2ServerHandler(baseUri, container)).build());
             return;
         }
 
