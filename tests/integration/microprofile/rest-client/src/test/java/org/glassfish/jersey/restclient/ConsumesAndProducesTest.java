@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.json.Json;
+import javax.json.JsonValue;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -18,12 +19,16 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
  * Created by David Kral.
  */
 public class ConsumesAndProducesTest extends JerseyTest {
+
+    static final JsonValue EXPECTED_JSON_VALUE = Json.createObjectBuilder().add("someKey", "Some value").build();
+
     @Override
     protected ResourceConfig configure() {
         enable(TestProperties.LOG_TRAFFIC);
@@ -44,10 +49,20 @@ public class ConsumesAndProducesTest extends JerseyTest {
     public void testWithoutEntity() throws URISyntaxException {
         ApplicationResource app = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:9998"))
-                .register(new TestClientRequestFilter(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON))
+                .register(new TestClientRequestFilter(MediaType.APPLICATION_JSON, null))
                 .build(ApplicationResource.class);
 
         app.jsonValue();
+    }
+
+    @Test
+    public void testWithoutEntityActualValue() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:9998"))
+                .build(ApplicationResource.class);
+
+        JsonValue json = app.jsonValue();
+        assertEquals(json, EXPECTED_JSON_VALUE);
     }
 
     @Test
@@ -60,7 +75,7 @@ public class ConsumesAndProducesTest extends JerseyTest {
         app.methodContentType(MediaType.TEXT_XML_TYPE, "something");
     }
 
-    private class TestClientRequestFilter implements ClientRequestFilter {
+    private static class TestClientRequestFilter implements ClientRequestFilter {
 
         private final String expectedAccept;
         private final String expectedContentType;
@@ -76,10 +91,15 @@ public class ConsumesAndProducesTest extends JerseyTest {
             List<Object> accept = requestContext.getHeaders().get(HttpHeaders.ACCEPT);
             assertTrue(accept.contains(expectedAccept) || accept.contains(MediaType.valueOf(expectedAccept)));
 
-            assertTrue(requestContext.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE));
-            List<Object> contentType = requestContext.getHeaders().get(HttpHeaders.CONTENT_TYPE);
-            assertEquals(contentType.size(), 1);
-            assertTrue(contentType.contains(expectedContentType) || contentType.contains(MediaType.valueOf(expectedContentType)));
+            if (expectedContentType != null) {
+                assertTrue(requestContext.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE));
+                List<Object> contentType = requestContext.getHeaders().get(HttpHeaders.CONTENT_TYPE);
+                assertEquals(contentType.size(), 1);
+                assertTrue(contentType.contains(expectedContentType) || contentType
+                        .contains(MediaType.valueOf(expectedContentType)));
+            } else {
+                assertFalse(requestContext.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE));
+            }
 
             requestContext.abortWith(Response.ok().build());
         }
