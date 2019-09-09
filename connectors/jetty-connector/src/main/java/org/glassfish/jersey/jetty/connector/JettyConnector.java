@@ -45,7 +45,6 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
-import org.eclipse.jetty.client.AuthenticationProtocolHandler;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -213,7 +212,7 @@ class JettyConnector implements Connector {
         } else if (proxy instanceof String) {
             return URI.create((String) proxy);
         } else {
-            throw new ProcessingException(ClientProperties.PROXY_URI);
+            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
         }
     }
 

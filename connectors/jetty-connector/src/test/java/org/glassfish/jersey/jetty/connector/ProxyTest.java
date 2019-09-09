@@ -22,6 +22,9 @@ import java.util.Base64;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * @author Marcelo Rubim
+\ */
 public class ProxyTest extends JerseyTest {
     private static final Charset CHARACTER_SET = Charset.forName("iso-8859-1");
     private static final String PROXY_URI = "http://127.0.0.1:9997";
