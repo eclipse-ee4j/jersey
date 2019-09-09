@@ -179,16 +179,20 @@ class MethodModel {
         webTarget = addMatrixParams(webTarget, args);
 
         MultivaluedMap<String, Object> customHeaders = addCustomHeaders(args);
-        Invocation.Builder builder = webTarget
-                .request(produces)
-                .property(INVOKED_METHOD, method)
-                .headers(customHeaders);
-        builder = addCookies(builder, args);
 
         Object entityToUse = entity.get();
         if (entityToUse == null && !form.asMap().isEmpty()) {
             entityToUse = form;
         }
+        if (entityToUse == null) {
+            customHeaders.remove(HttpHeaders.CONTENT_TYPE);
+        }
+
+        Invocation.Builder builder = webTarget
+                .request(produces)
+                .property(INVOKED_METHOD, method)
+                .headers(customHeaders);
+        builder = addCookies(builder, args);
 
         Object response;
 
