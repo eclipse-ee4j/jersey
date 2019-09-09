@@ -119,6 +119,7 @@
                             ${javax.annotation.osgi.version},
                             org.glassfish.ejb.*;version="[4.0,6)",
                             org.glassfish.internal.*;version="[4.0,6)",
+                            ${hk2.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

@@ -88,6 +88,8 @@
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
                             ${javax.annotation.osgi.version},
+                            ${hk2.jvnet.osgi.version},
+                            ${hk2.osgi.version},
                             *
                         </Import-Package>
                     </instructions>
