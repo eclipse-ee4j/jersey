@@ -45,6 +45,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
+import org.eclipse.jetty.client.AuthenticationProtocolHandler;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -184,6 +185,13 @@ class JettyConnector implements Connector {
             final URI u = getProxyUri(proxyUri);
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
             proxyConfig.getProxies().add(new HttpProxy(u.getHost(), u.getPort()));
+
+            final Object proxyUsername = config.getProperties().get(ClientProperties.PROXY_USERNAME);
+            if (proxyUsername != null) {
+                final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
+                auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>", proxyUsername.toString(), proxyPassword.toString()));
+            }
+
         }
 
         if (disableCookies) {
@@ -205,7 +213,7 @@ class JettyConnector implements Connector {
         } else if (proxy instanceof String) {
             return URI.create((String) proxy);
         } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
+            throw new ProcessingException(ClientProperties.PROXY_URI);
         }
     }
 

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+  Configuration file for FindBugs exclusion filter.
+
+  When a file, class or rule (detector) is matched, it is not reported as a potential problem by FindBugs.
+
+  Note that this configuration file is not used by default in the maven build (mvn site), as FindBugs maven plugin
+  handles the paths as relative to a module root and would require to have such file in each module separately.
+  To use this exclusion configuration, run build with:
+  mvn site -Dfindbugs.exclude=[jersey_project_root]/etc/config/findbugs-exclude.xml
+  -->
+<FindBugsFilter>
+    <!-- skip FindBugs analysis in examples -->
+    <Match>
+        <Package name="~org\.glassfish\.jersey\.examples.*" />
+    </Match>
+
+    <!-- skip FindBugs analysis in tests -->
+    <Match>
+        <Package name="~org\.glassfish\.jersey\.tests.*" />
+    </Match>
+    <Match>
+        <Class name="~.*\.*Test" />
+    </Match>
+
+    <!-- skip analysis in repackaged libraries -->
+    <Match>
+        <Package name="~jersey\.repackaged.*" />
+    </Match>
+
+    <!-- skip analysis in the spec package -->
+    <Match>
+        <Package name="~javax\.ws\.rs.*" />
+    </Match>
+
+    <!-- do not report issues found in bundles -->
+    <Match>
+        <Source name="~.*bundles.*" />
+    </Match>
+
+    <!--
+    ignore warnings coming from VO_VOLATILE_INCREMENT, there is a known bug which causes false positives:
+    http://sourceforge.net/p/findbugs/bugs/1032/
+    -->
+    <Match>
+        <Bug pattern="VO_VOLATILE_INCREMENT" />
+    </Match>
+
+    <!-- ignore irrelevant additional GlassFish logging detectors -->
+    <Match>
+        <Bug pattern="GF_INVALID_MSG_ID_PATTERN,GF_MISSING_LOGGER_INFO_ANNOTATION,GF_MISSING_LOGMESSAGE_INFO_ANNOTATION" />
+    </Match>
+
+    <!-- individual ad-hoc ignores -->
+    <!-- ServerScopeProvider.getFilteringScopes() - returned object would be identical -->
+    <Match>
+        <Class name="org.glassfish.jersey.message.filtering.ServerScopeProvider" />
+        <Method name="getFilteringScopes" />
+        <Bug pattern="RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED" />
+    </Match>
+
+    <!-- used as fallback, can be ignored here -->
+    <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING" />
+        <Class name="~.*.Base64" />
+    </Match>
+
+    <!-- There are few cases in the codebase -->
+    <Match>
+        <Bug pattern="CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE" />
+    </Match>
+
+    <Match>
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+        <Class name="~.*.VfsSchemeResourceFinderFactory" />
+    </Match>
+
+    <!-- TODOs - those are the FindBugs warnings not resolved yet -->
+    <!-- Those exclusions should either be fixed or, after evaluation moved outside of this "TODO" section -->
+    <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING" />
+        <Or>
+            <Class name="~.*.AbstractTemplateProcessor" />
+            <Class name="~.*.HmaSha1Method" />
+            <Class name="~.*.RsaSha1Method" />
+            <Class name="~.*.ConsumerCredentials" />
+            <Class name="~.*.AccessToken" />
+            <Class name="~.*.ClientIdentifier" />
+            <Class name="~.*.ChunkedInput" />
+            <Class name="~.*.ChunkedOutput" />
+        </Or>
+    </Match>
+
+    <Match>
+        <Class name="org.glassfish.jersey.apache.connector.ApacheConnector" />
+    </Match>
+
+    <!-- CDI extension observer methods are called by CDI bean manager at runtime -->
+    <Match>
+        <Class name="org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider" />
+        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
+        <Or>
+          <Method name="processAnnotatedType" />
+          <Method name="afterTypeDiscovery" />
+          <Method name="beforeTypeDiscovery" />
+          <Method name="processInjectionTarget" />
+          <Method name="afterDiscoveryObserver" />
+        </Or>
+    </Match>
+
+</FindBugsFilter>
