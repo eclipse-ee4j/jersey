@@ -189,7 +189,7 @@ class JettyConnector implements Connector {
             if (proxyUsername != null) {
                 final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
                 auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>",
-                        proxyUsername.toString(), proxyPassword.toString()));
+                        String.valueOf(proxyUsername), String.valueOf(proxyPassword)));
             }
         }
 
