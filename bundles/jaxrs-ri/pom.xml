@@ -285,6 +285,7 @@
                             javax.persistence.*;resolution:=optional,
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             sun.misc.*;resolution:=optional,
+                            ${hk2.osgi.version},
                             *
                         ]]></Import-Package>
                         <Private-Package>
