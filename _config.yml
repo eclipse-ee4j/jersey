@@ -3,7 +3,7 @@ remote_theme: jakartaee/jekyll-theme-jakarta-ee
 title: [Jersey]
 description: [Eclipse Jersey is a REST framework that provides a JAX-RS (JSR-370) implementation and more]
 
-latestVersion: 2.28
+latestVersion: 2.29.1
 
 links:
   source: https://github.com/eclipse-ee4j/jersey
