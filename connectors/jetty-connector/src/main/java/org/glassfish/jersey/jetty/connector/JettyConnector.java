@@ -184,6 +184,13 @@ class JettyConnector implements Connector {
             final URI u = getProxyUri(proxyUri);
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
             proxyConfig.getProxies().add(new HttpProxy(u.getHost(), u.getPort()));
+
+            final Object proxyUsername = config.getProperties().get(ClientProperties.PROXY_USERNAME);
+            if (proxyUsername != null) {
+                final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
+                auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>",
+                        String.valueOf(proxyUsername), String.valueOf(proxyPassword)));
+            }
         }
 
         if (disableCookies) {
