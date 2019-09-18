@@ -42,7 +42,8 @@ public class WebAppFelixTest extends AbstractWebAppTest {
                 mavenBundle()
                         .groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin")
                         .versionAsInProject(),
-                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"))
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"))
         );
     }
 

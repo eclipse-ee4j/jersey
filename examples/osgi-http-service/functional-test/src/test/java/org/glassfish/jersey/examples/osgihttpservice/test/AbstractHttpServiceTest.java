@@ -86,6 +86,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // do not remove the following line
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
@@ -126,6 +127,9 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                 .versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // validation
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // JAX-RS API
                 mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject()

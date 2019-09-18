@@ -50,6 +50,11 @@ public class Helper {
     private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
 
     /**
+     * JAX-RS Client Builder property
+     */
+    private static final String JAXRS_CLIENT_BUILDER = "javax.ws.rs.client.ClientBuilder";
+
+    /**
      * Returns an integer value of given system property, or a default value
      * as defined by the other method parameter, if the system property can
      * not be used.
@@ -133,6 +138,7 @@ public class Helper {
                 systemProperty(TestProperties.CONTAINER_PORT).value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // javax.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
