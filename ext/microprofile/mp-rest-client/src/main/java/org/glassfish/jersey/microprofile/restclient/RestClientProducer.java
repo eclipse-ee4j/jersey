@@ -329,11 +329,14 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
 
         if (location.startsWith(CLASSPATH_LOCATION)) {
             String resource = location.substring(CLASSPATH_LOCATION.length());
-            // first try to read from teh same classloader as the rest client interface
+            // first try to read from the same classloader as the rest client interface
             InputStream result = interfaceType.getResourceAsStream(resource);
             if (null == result) {
                 // and if not found, use the context classloader (for example in TCK, this is needed)
                 result = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+                if (result == null && resource.startsWith("/")) {
+                    result = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource.substring(1));
+                }
             }
             return result;
         } else if (location.startsWith(FILE_LOCATION)) {
