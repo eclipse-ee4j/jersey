@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import javax.ws.rs.core.Application;
  * And there is no {@code ApplicationPath} annotation on the class.
  * The application does NOT explicitly register any JAX-RS resource. All available resources are automatically registered.
  *
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 public class Servlet3Init8App5 extends Application {
 

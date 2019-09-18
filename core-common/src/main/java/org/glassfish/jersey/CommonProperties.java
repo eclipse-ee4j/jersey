@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
  * Common (server/client) Jersey configuration properties.
  *
  * @author Michal Gajdos
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 @PropertiesClass
 public final class CommonProperties {
@@ -215,6 +215,17 @@ public final class CommonProperties {
      * @since 2.8
      */
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER = "jersey.config.server.contentLength.buffer";
+
+    /**
+     * Property which allows (if true) default System properties configuration provider.
+     *
+     * Effective if there are no any external properties providers
+     *
+     * Shall be set (if used) in system properties.
+     * @since 2.29
+     */
+
+    public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
 
     /**
      * Prevent instantiation.

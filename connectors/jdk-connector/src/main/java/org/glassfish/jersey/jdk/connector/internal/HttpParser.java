@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,13 +18,14 @@ package org.glassfish.jersey.jdk.connector.internal;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class HttpParser {
 
@@ -57,8 +58,9 @@ class HttpParser {
     void reset(boolean expectContent) {
         this.expectContent = expectContent;
         headerParsed = false;
-        buffer.clear();
-        buffer.flip();
+        // see https://jira.mongodb.org/browse/JAVA-2559 for the casts
+        ((Buffer) buffer).clear();
+        ((Buffer) buffer).flip();
         complete = false;
         headerParsingState.recycle();
     }
@@ -109,25 +111,25 @@ class HttpParser {
     private void saveRemaining(ByteBuffer input) {
 
         // some of the fields use 0 nad -1 as a special state -> if the field is <= 0, just let it be
-        headerParsingState.start =
-                headerParsingState.start > 0 ? headerParsingState.start - input.position() : headerParsingState.start;
-        headerParsingState.offset =
-                headerParsingState.offset > 0 ? headerParsingState.offset - input.position() : headerParsingState.offset;
-        headerParsingState.packetLimit = headerParsingState.packetLimit > 0 ? headerParsingState.packetLimit - input.position()
-                : headerParsingState.packetLimit;
-        headerParsingState.checkpoint = headerParsingState.checkpoint > 0 ? headerParsingState.checkpoint - input.position()
-                : headerParsingState.checkpoint;
-        headerParsingState.checkpoint2 = headerParsingState.checkpoint2 > 0 ? headerParsingState.checkpoint2 - input.position()
-                : headerParsingState.checkpoint2;
+        headerParsingState.start = headerParsingState.start > 0
+                ? headerParsingState.start - ((Buffer) input).position() : headerParsingState.start;
+        headerParsingState.offset = headerParsingState.offset > 0
+                ? headerParsingState.offset - ((Buffer) input).position() : headerParsingState.offset;
+        headerParsingState.packetLimit = headerParsingState.packetLimit > 0
+                ? headerParsingState.packetLimit - ((Buffer) input).position() : headerParsingState.packetLimit;
+        headerParsingState.checkpoint = headerParsingState.checkpoint > 0
+                ? headerParsingState.checkpoint - ((Buffer) input).position() : headerParsingState.checkpoint;
+        headerParsingState.checkpoint2 = headerParsingState.checkpoint2 > 0
+                ? headerParsingState.checkpoint2 - ((Buffer) input).position() : headerParsingState.checkpoint2;
 
         if (input.hasRemaining()) {
             if (input != buffer) {
-                buffer.clear();
-                buffer.flip();
+                ((Buffer) buffer).clear();
+                ((Buffer) buffer).flip();
                 buffer = Utils.appendBuffers(buffer, input, bufferMaxSize, BUFFER_STEP_SIZE);
             } else {
                 buffer.compact();
-                buffer.flip();
+                ((Buffer) buffer).flip();
             }
         }
     }
@@ -159,7 +161,7 @@ class HttpParser {
                 }
 
                 case 2: { // Headers are ready
-                    input.position(headerParsingState.offset);
+                    ((Buffer) input).position(headerParsingState.offset);
                     // if headers get parsed - set the flag
                     headerParsed = true;
                     decideTransferEncoding();
@@ -189,7 +191,7 @@ class HttpParser {
                     final int spaceIdx =
                             findSpace(input, headerParsingState.offset, packetLimit);
                     if (spaceIdx == -1) {
-                        headerParsingState.offset = input.limit();
+                        headerParsingState.offset = ((Buffer) input).limit();
                         return false;
                     }
 
@@ -206,7 +208,7 @@ class HttpParser {
                     final int nonSpaceIdx =
                             HttpParserUtils.skipSpaces(input, headerParsingState.offset, packetLimit);
                     if (nonSpaceIdx == -1) {
-                        headerParsingState.offset = input.limit();
+                        headerParsingState.offset = ((Buffer) input).limit();
                         return false;
                     }
 
@@ -217,7 +219,7 @@ class HttpParser {
                 }
 
                 case 2: { // parse the status code
-                    if (headerParsingState.offset + 3 > input.limit()) {
+                    if (headerParsingState.offset + 3 > ((Buffer) input).limit()) {
                         return false;
                     }
 
@@ -233,7 +235,7 @@ class HttpParser {
                     final int nonSpaceIdx =
                             HttpParserUtils.skipSpaces(input, headerParsingState.offset, packetLimit);
                     if (nonSpaceIdx == -1) {
-                        headerParsingState.offset = input.limit();
+                        headerParsingState.offset = ((Buffer) input).limit();
                         return false;
                     }
 
@@ -245,7 +247,7 @@ class HttpParser {
 
                 case 4: { // HTTP response reason-phrase
                     if (!findEOL(input)) {
-                        headerParsingState.offset = input.limit();
+                        headerParsingState.offset = ((Buffer) input).limit();
                         return false;
                     }
 
@@ -263,7 +265,7 @@ class HttpParser {
                         // 100-Continue.
                         headerParsingState.offset += 2;
                         headerParsingState.start = 0;
-                        input.position(headerParsingState.offset);
+                        ((Buffer) input).position(headerParsingState.offset);
                         input.compact();
                         headerParsingState.offset = 0;
                         return false;
@@ -323,7 +325,7 @@ class HttpParser {
                     final int nonSpaceIdx = HttpParserUtils
                             .skipSpaces(input, headerParsingState.offset, headerParsingState.packetLimit);
                     if (nonSpaceIdx == -1) {
-                        headerParsingState.offset = input.limit();
+                        headerParsingState.offset = ((Buffer) input).limit();
                         return false;
                     }
 
@@ -364,7 +366,7 @@ class HttpParser {
     // Taken with small modifications from Grizzly HttpCodecFilter.parseHeaderName
     // (change: Grizzly also initializes value store)
     private boolean parseHeaderName(final ByteBuffer input) throws ParseException {
-        final int limit = Math.min(input.limit(), headerParsingState.packetLimit);
+        final int limit = Math.min(((Buffer) input).limit(), headerParsingState.packetLimit);
         final int start = headerParsingState.start;
         int offset = headerParsingState.offset;
 
@@ -392,7 +394,7 @@ class HttpParser {
     // (change: Grizzly saves teh value as a buffer, we split it and add to response)
     private int parseHeaderValue(ByteBuffer input, boolean parsingTrailerHeaders) throws ParseException {
 
-        final int limit = Math.min(input.limit(), headerParsingState.packetLimit);
+        final int limit = Math.min(((Buffer) input).limit(), headerParsingState.packetLimit);
 
         int offset = headerParsingState.offset;
 
@@ -518,7 +520,7 @@ class HttpParser {
 
     // Taken unmodified from Grizzly HttpCodecUtils.findSpace
     private int findSpace(final ByteBuffer input, int offset, final int packetLimit) {
-        final int limit = Math.min(input.limit(), packetLimit);
+        final int limit = Math.min(((Buffer) input).limit(), packetLimit);
         while (offset < limit) {
             final byte b = input.get(offset);
             if (HttpParserUtils.isSpaceOrTab(b)) {
@@ -534,7 +536,7 @@ class HttpParser {
     // Taken unmodified from Grizzly HttpCodecUtils.findEOL
     private boolean findEOL(final ByteBuffer input) {
         int offset = headerParsingState.offset;
-        final int limit = Math.min(input.limit(), headerParsingState.packetLimit);
+        final int limit = Math.min(((Buffer) input).limit(), headerParsingState.packetLimit);
 
         while (offset < limit) {
             final byte b = input.get(offset);
@@ -560,7 +562,7 @@ class HttpParser {
     // Taken unmodified from Grizzly HttpCodecUtils.checkEOL
     private int checkEOL(final ByteBuffer input) {
         final int offset = headerParsingState.offset;
-        final int avail = input.limit() - offset;
+        final int avail = ((Buffer) input).limit() - offset;
 
         final byte b1;
         final byte b2;
@@ -602,7 +604,7 @@ class HttpParser {
 
     private String parseString(ByteBuffer input, int startIdx, int endIdx) throws ParseException {
         byte[] bytes = new byte[endIdx - startIdx];
-        input.position(startIdx);
+        ((Buffer) input).position(startIdx);
         input.get(bytes, 0, endIdx - startIdx);
         try {
             return new String(bytes, ENCODING);

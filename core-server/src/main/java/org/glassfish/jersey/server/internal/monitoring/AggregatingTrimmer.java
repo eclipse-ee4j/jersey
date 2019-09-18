@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,7 @@ import static org.glassfish.jersey.server.internal.monitoring.core.ReservoirCons
  * An aggregating trimmer for sliding window measurements. This trimmer updates registered time reservoirs with the aggregated
  * measurements for the values it trimmed.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 class AggregatingTrimmer implements SlidingWindowTrimmer<Long> {
 

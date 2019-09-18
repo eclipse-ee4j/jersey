@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.containers.glassfish</groupId>
         <artifactId>project</artifactId>
-        <version>2.29-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-gf-ejb</artifactId>
@@ -116,9 +116,10 @@
                         <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
                         <Import-Package>
                             com.sun.*;version="[4.0,6)",
-                            javax.annotation.*;version="!",
+                            ${javax.annotation.osgi.version},
                             org.glassfish.ejb.*;version="[4.0,6)",
                             org.glassfish.internal.*;version="[4.0,6)",
+                            ${hk2.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -92,10 +92,10 @@ import org.glassfish.jersey.uri.UriComponent;
  * Filter implementation, or encapsulated by a Servlet or Filter implementation.
  *
  * @author Paul Sandoz
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  * @author Martin Matula
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 public class WebComponent {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.MessageBodyReader;
 
 import javax.inject.Inject;
@@ -38,9 +39,9 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 /**
  * Registers all binders necessary for {@link Client} runtime.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
+ * @author Libor Kramolis
  */
 class ClientBinder extends AbstractBinder {
 
@@ -89,6 +90,9 @@ class ClientBinder extends AbstractBinder {
         bindFactory(RequestContextInjectionFactory.class)
                 .to(ClientRequest.class)
                 .in(RequestScoped.class);
+
+        bindFactory(RequestContextInjectionFactory.class).to(HttpHeaders.class)
+                .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
 
         bindFactory(ReferencingFactory.referenceFactory()).to(new GenericType<Ref<ClientRequest>>() {
         }).in(RequestScoped.class);

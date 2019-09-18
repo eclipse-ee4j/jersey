@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.net.URI;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http2.Http2Codec;
+import io.netty.handler.codec.http2.Http2MultiplexCodecBuilder;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -28,7 +28,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 /**
  * Choose the handler implementation based on Http protocol.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 class HttpVersionChooser extends ApplicationProtocolNegotiationHandler {
 
@@ -45,7 +45,8 @@ class HttpVersionChooser extends ApplicationProtocolNegotiationHandler {
     @Override
     protected void configurePipeline(ChannelHandlerContext ctx, String protocol) throws Exception {
         if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
-            ctx.pipeline().addLast(new Http2Codec(true, new JerseyHttp2ServerHandler(baseUri, container)));
+            ctx.pipeline().addLast(Http2MultiplexCodecBuilder.forServer(
+                        new JerseyHttp2ServerHandler(baseUri, container)).build());
             return;
         }
 

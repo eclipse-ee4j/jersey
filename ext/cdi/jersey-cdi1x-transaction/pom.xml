@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.ext.cdi</groupId>
         <artifactId>project</artifactId>
-        <version>2.29-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-cdi1x-transaction</artifactId>
@@ -91,7 +91,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.transaction.internal</Export-Package>
-                        <Import-Package>javax.annotation.*;version="!",*</Import-Package>
+                        <Import-Package>${javax.annotation.osgi.version},*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

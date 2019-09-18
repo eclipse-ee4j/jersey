@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ import static org.glassfish.jersey.internal.guava.Preconditions.checkState;
  * Jersey implementation of {@link javax.ws.rs.client.Client JAX-RS Client}
  * contract.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class JerseyClient implements javax.ws.rs.client.Client, Initializable<JerseyClient> {
     private static final Logger LOG = Logger.getLogger(JerseyClient.class.getName());

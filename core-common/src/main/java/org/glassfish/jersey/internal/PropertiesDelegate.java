@@ -21,7 +21,7 @@ import java.util.Collection;
 /**
  * TODO: javadoc.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public interface PropertiesDelegate {
     /**

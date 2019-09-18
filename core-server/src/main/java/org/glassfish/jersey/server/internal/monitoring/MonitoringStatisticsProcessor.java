@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -194,7 +194,7 @@ final class MonitoringStatisticsProcessor {
      * The purpose of this flooding logger facility is to warn about disability to decrease the size of given collection which
      * leads to never ending looping while trying to empty that collection in a loop.
      *
-     * @author Stepan Vavra (stepan.vavra at oracle.com)
+     * @author Stepan Vavra
      */
     private static class FloodingLogger {
 

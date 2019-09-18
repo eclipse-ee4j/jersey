@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,7 @@ import org.glassfish.jersey.server.spi.ComponentProvider;
  * {@link TransactionalException}. Jersey will try to restore the original
  * JAX-RS exception using {@link TransactionalExceptionMapper}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @Priority(value = Interceptor.Priority.PLATFORM_BEFORE + 199)
 public class TransactionalExceptionInterceptorProvider implements ComponentProvider, Extension {

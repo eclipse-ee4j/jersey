@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  * additional method information.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class MethodList implements Iterable<AnnotatedMethod> {
 
@@ -45,7 +45,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
      * The method list contains {@link Class#getMethods() all methods} available
      * on the class.
      *
-     * The {@link Method#isBridge() bridge methods} and methods declared directly
+     * The {@link Method#isSynthetic() synthetic methods} and methods declared directly
      * on the {@link Object} class are filtered out.
      *
      * @param c class from which the method list is created.
@@ -61,7 +61,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
      * on the class or {@link Class#getDeclaredMethods() declared methods} only,
      * depending on the value of the {@code declaredMethods} parameter.
      *
-     * The {@link Method#isBridge() bridge methods} and methods declared directly
+     * The {@link Method#isSynthetic() synthetic methods} and methods declared directly
      * on the {@link Object} class are filtered out.
      *
      * @param c class from which the method list is created.
@@ -89,7 +89,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
     /**
      * Create new method list from the given collection of methods.
      *
-     * The {@link Method#isBridge() bridge methods} and methods declared directly
+     * The {@link Method#isSynthetic() synthetic methods} and methods declared directly
      * on the {@link Object} class are filtered out.
      *
      * @param methods methods to be included in the method list.
@@ -97,7 +97,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
     public MethodList(Collection<Method> methods) {
         List<AnnotatedMethod> l = new ArrayList<>(methods.size());
         for (Method m : methods) {
-            if (!m.isBridge() && m.getDeclaringClass() != Object.class) {
+            if (!m.isSynthetic() && m.getDeclaringClass() != Object.class) {
                 l.add(new AnnotatedMethod(m));
             }
         }
@@ -109,7 +109,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
     /**
      * Create new method list from the given array of methods.
      *
-     * The {@link Method#isBridge() bridge methods} and methods declared directly
+     * The {@link Method#isSynthetic() synthetic methods} and methods declared directly
      * on the {@link Object} class are filtered out.
      *
      * @param methods methods to be included in the method list.

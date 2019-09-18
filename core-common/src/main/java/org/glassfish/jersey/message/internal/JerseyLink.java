@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 /**
  * Jersey implementation of {@link javax.ws.rs.core.Link JAX-RS Link} contract.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class JerseyLink extends javax.ws.rs.core.Link {
     /**

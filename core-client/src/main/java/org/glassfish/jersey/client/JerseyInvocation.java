@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -70,7 +70,7 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
  * Jersey implementation of {@link javax.ws.rs.client.Invocation JAX-RS client-side
  * request invocation} contract.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
@@ -451,18 +451,12 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         @Override
         public CompletionStageRxInvoker rx() {
-            ExecutorServiceProvider instance = this.requestContext.getInjectionManager()
-                                                                  .getInstance(ExecutorServiceProvider.class);
-
-            return new JerseyCompletionStageRxInvoker(this, instance.getExecutorService());
+            return new JerseyCompletionStageRxInvoker(this, executorService());
         }
 
         @Override
         public <T extends RxInvoker> T rx(Class<T> clazz) {
-            ExecutorServiceProvider instance = this.requestContext.getInjectionManager()
-                                                                  .getInstance(ExecutorServiceProvider.class);
-
-            return createRxInvoker(clazz, instance.getExecutorService());
+            return createRxInvoker(clazz, executorService());
         }
 
         private <T extends RxInvoker> T rx(Class<T> clazz, ExecutorService executorService) {
@@ -471,6 +465,19 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
             }
 
             return createRxInvoker(clazz, executorService);
+        }
+
+        // get executor service from explicit configuration; if not available, get executor service from provider
+        private ExecutorService executorService() {
+            final ExecutorService result = request().getClientConfig().getExecutorService();
+
+            if (result != null) {
+                return result;
+            }
+
+            return this.requestContext.getInjectionManager()
+                    .getInstance(ExecutorServiceProvider.class)
+                    .getExecutorService();
         }
 
         /**

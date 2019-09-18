@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ package org.glassfish.jersey.internal.inject;
  * in method calls that require use of annotation instances.
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @SuppressWarnings("ClassExplicitlyAnnotation")
 public final class CustomAnnotationLiteral extends AnnotationLiteral<Custom> implements Custom {

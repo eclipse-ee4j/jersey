@@ -24,7 +24,7 @@ import org.glassfish.jersey.internal.PropertiesDelegate;
  * Delegating properties delegate backed by another {@code PropertiesDelegate} with implemented "cache" or direct reference to
  * tracing support related classes (e.g. {@code TracingLogger}) to improve performance of lookup tracing context instance.
  *
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  * @since 2.3
  */
 public final class TracingAwarePropertiesDelegate implements PropertiesDelegate {

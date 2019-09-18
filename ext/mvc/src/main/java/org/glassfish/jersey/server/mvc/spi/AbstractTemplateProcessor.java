@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -45,7 +46,6 @@ import javax.servlet.ServletContext;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.server.mvc.MvcFeature;
 import org.glassfish.jersey.server.mvc.internal.LocalizationMessages;
@@ -116,7 +116,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
         if (cacheEnabled == null) {
             cacheEnabled = PropertiesHelper.getValue(properties, MvcFeature.CACHE_TEMPLATES, false, null);
         }
-        this.cache = cacheEnabled ? DataStructures.<String, T>createConcurrentMap() : null;
+        this.cache = cacheEnabled ? new ConcurrentHashMap<>() : null;
         this.encoding = TemplateHelper.getTemplateOutputEncoding(config, suffix);
     }
 
