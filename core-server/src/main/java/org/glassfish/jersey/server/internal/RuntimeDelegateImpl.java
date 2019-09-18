@@ -51,7 +51,7 @@ import org.glassfish.jersey.server.spi.Server;
  * method.
  *
  * @author Jakub Podlesak
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Martin Matula
  */
 public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {

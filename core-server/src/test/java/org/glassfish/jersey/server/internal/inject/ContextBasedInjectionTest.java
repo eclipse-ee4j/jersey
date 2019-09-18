@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ import static org.junit.Assert.assertEquals;
  * Unit test for creating an application with asynchronously handled request processing
  * via {@link Resource}'s programmatic API.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @RunWith(Parameterized.class)
 public class ContextBasedInjectionTest {

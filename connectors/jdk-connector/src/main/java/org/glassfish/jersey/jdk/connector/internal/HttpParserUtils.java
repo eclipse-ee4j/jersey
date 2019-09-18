@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,11 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 class HttpParserUtils {
 
@@ -37,7 +38,7 @@ class HttpParserUtils {
     static final byte LC_OFFSET = A - a;
 
     static int skipSpaces(ByteBuffer input, int offset, int packetLimit) {
-        final int limit = Math.min(input.limit(), packetLimit);
+        final int limit = Math.min(((Buffer) input).limit(), packetLimit);
         while (offset < limit) {
             final byte b = input.get(offset);
             if (isNotSpaceAndTab(b)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ import static org.junit.Assert.assertThat;
  * On my laptop, 1000 iterations was sufficient to cause
  * a memory leak until JERSEY-2688 got fixed.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @RunWith(Parameterized.class)
 public class ShutdownHookMemoryLeakTest extends JerseyTest {

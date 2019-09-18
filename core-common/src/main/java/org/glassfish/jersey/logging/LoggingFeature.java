@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT}</li>
  * </ul>
  *
- * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
+ * @author Ondrej Kosatka
  * @since 2.23
  */
 public class LoggingFeature implements Feature {

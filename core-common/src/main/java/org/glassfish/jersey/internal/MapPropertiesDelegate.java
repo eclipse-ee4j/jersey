@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Properties delegate backed by a {@code Map}.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class MapPropertiesDelegate implements PropertiesDelegate {
 

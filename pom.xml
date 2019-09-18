@@ -29,7 +29,7 @@
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <version>2.29-SNAPSHOT</version>
+    <version>2.30-SNAPSHOT</version>
     <name>jersey</name>
     <description>
         Eclipse Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370)
@@ -302,7 +302,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.8.0</version>
                     <inherited>true</inherited>
                     <configuration>
                         <source>${java.version}</source>
@@ -403,12 +403,29 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.18.1</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <!-- for convenience reasons, 'argLine' should not be overridden in child poms. if needed, a property should be declared and used here -->
-                        <argLine>-Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}</argLine>
+                        <argLine>
+                            -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}
+                        </argLine>
                         <skipTests>${skip.tests}</skipTests>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-logger-api</artifactId>
+                            <version>3.0.0-M3</version>
+                            <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
+                            <optional>true</optional>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-api</artifactId>
+                            <version>3.0.0-M3</version>
+                            <optional>true</optional>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -504,7 +521,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
+                    <version>3.7.1</version>
                     <configuration>
                         <generateProjectInfo>false</generateProjectInfo>
                         <generateReports>true</generateReports>
@@ -590,7 +607,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.16</version>
+                    <version>3.0.0-M3</version>
                     <configuration>
                         <skipTests>${skip.tests}</skipTests>
                         <skipITs>${skip.tests}</skipITs>
@@ -812,6 +829,86 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <inherited>true</inherited>
+                            <configuration>
+                                <source>${java.version}</source>
+                                <target>${java.version}</target>
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk11+</id>
+            <!--
+                JDK 9 & 10 is unsupported (as well as <release>9</release>)
+                module-info for java.xml.bind is taken from JDK (lib/ct.sym/9-modules)
+                and it depends on java.activation which clashes with javax.activation
+            -->
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun.activation</groupId>
+                        <artifactId>jakarta.activation</artifactId>
+                        <version>${jakarta.activation.version}</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <inherited>true</inherited>
+                            <executions>
+<!-- when module.info
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        compile everything to ensure module-info contains right entries
+                                        <release>11</release>
+                                    </configuration>
+                                </execution>
+-->
+                                <execution>
+                                    <id>base-compile</id>
+                                    <goals>
+                                        <goal>compile</goal>
+                                    </goals>
+                                    <!-- recompile everything for target VM except the module-info.java -->
+                                    <configuration>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                        <source>1.8</source>
+                                        <target>1.8</target>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
         <profile>
             <!-- Use it with release-perform goal to skip another test run. -->
             <id>testsSkip</id>
@@ -1053,6 +1150,7 @@
                                     <consoleOutput>true</consoleOutput>
                                     <failOnViolation>true</failOnViolation>
                                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                    <excludes>**/module-info.java</excludes>
                                 </configuration>
                             </execution>
                         </executions>
@@ -1418,11 +1516,15 @@
 
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
-                <artifactId>hk2-bom</artifactId>
+                <artifactId>hk2-locator</artifactId>
                 <version>${hk2.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-utils</artifactId>
+                <version>${hk2.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-api</artifactId>
@@ -1437,7 +1539,12 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.main.hk2</groupId>
+                <artifactId>hk2-config</artifactId>
+                <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
@@ -1673,7 +1780,7 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.compendium</artifactId>
-                <version>${osgi.version}</version>
+                <version>${osgi.compendium.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -1778,8 +1885,8 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
                 <version>${javax.validation.api.version}</version>
             </dependency>
 
@@ -1889,7 +1996,8 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>4.2.1</version>
+                <!--5.2.0+ does not work with moxy osgi functional tests-->
+                <version>5.0.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -1966,10 +2074,11 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>5.0.4</asm.version>
+        <asm.version>7.1</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
         <cdi.api.version>1.1</cdi.api.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
+        <config.version>1.2.1</config.version>
         <checkstyle.mvn.plugin.version>2.16</checkstyle.mvn.plugin.version>
         <checkstyle.version>6.8.1</checkstyle.version>
         <easymock.version>3.3</easymock.version>
@@ -1977,53 +2086,61 @@
         <gf.impl.version>5.1.0-RC2</gf.impl.version>
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
-        <findbugs.version>3.0.3</findbugs.version>
+        <findbugs.version>3.0.4</findbugs.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <grizzly2.version>2.4.4</grizzly2.version>
         <guava.version>18.0</guava.version>
         <hamcrest.version>1.3</hamcrest.version>
+        <helidon.version>1.0.3</helidon.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>2.5.0</hk2.version>
-        <hk2.config.version>5.1.0-RC2</hk2.config.version>
-        <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
-        <jackson.version>2.9.8</jackson.version>
+        <hk2.version>2.6.1</hk2.version>
+        <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,3)"</hk2.osgi.version>
+        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,3)"</hk2.jvnet.osgi.version>
+        <hk2.config.version>5.1.0</hk2.config.version>
+        <httpclient.version>4.5.9</httpclient.version>
+        <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
+        <jackson.version>2.9.9</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
-        <javassist.version>3.22.0-GA</javassist.version>
-        <javax.annotation.version>1.3.4</javax.annotation.version>
-        <javax.el.version>3.0.2</javax.el.version>
+        <jakarta.activation.version>1.2.1</jakarta.activation.version>
+        <javassist.version>3.25.0-GA</javassist.version>
+        <javax.annotation.osgi.version>javax.annotation.*;version="[1.2,3)"</javax.annotation.osgi.version>
+        <javax.annotation.version>1.3.5</javax.annotation.version>
+        <javax.el.version>3.0.3</javax.el.version>
         <javax.el.impl.version>3.0.2</javax.el.impl.version>
-        <javax.interceptor.version>1.2.4</javax.interceptor.version>
-        <javax.persistence.version>2.2.2</javax.persistence.version>
-        <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
+        <javax.interceptor.version>1.2.5</javax.interceptor.version>
+        <javax.persistence.version>2.2.3</javax.persistence.version>
+        <javax.validation.api.version>2.0.2</javax.validation.api.version>
         <jaxb.api.version>2.3.2</jaxb.api.version>
         <jaxb.ri.version>2.3.2</jaxb.ri.version>
-        <jsonb.api.version>1.0.1</jsonb.api.version>
-        <jaxrs.api.spec.version>2.2-SNAPSHOT</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>2.2-SNAPSHOT</jaxrs.api.impl.version>
+        <jsonb.api.version>1.0.2</jsonb.api.version>
+        <jaxrs.api.spec.version>2.2</jaxrs.api.spec.version>
+        <jaxrs.api.impl.version>2.2-20190531.094237-24</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
-        <jetty.version>9.4.12.v20180830</jetty.version>
+        <jetty.version>9.4.17.v20190418</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jmh.version>1.10.2</jmh.version>
-        <jmockit.version>1.41</jmockit.version>
+        <jmockit.version>1.44</jmockit.version>
         <jsonp.ri.version>1.1.5</jsonp.ri.version>
         <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
-        <jsp.version>2.3.5</jsp.version>
-        <jstl.version>1.2.4</jstl.version>
-        <jta.api.version>1.3.2</jta.api.version>
+        <jsp.version>2.3.6</jsp.version>
+        <jstl.version>1.2.7</jstl.version>
+        <jta.api.version>1.3.3</jta.api.version>
         <kryo.version>4.0.1</kryo.version>
         <mimepull.version>1.9.11</mimepull.version>
         <mockito.version>1.10.19</mockito.version>
         <moxy.version>2.7.4</moxy.version>
         <mustache.version>0.8.17</mustache.version>
-        <netty.version>4.1.5.Final</netty.version>
+        <netty.version>4.1.31.Final</netty.version>
+        <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
         <opentracing.version>0.30.0</opentracing.version>
-        <osgi.version>4.2.0</osgi.version>
+        <osgi.version>6.0.0</osgi.version>
+        <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <pax.exam.version>4.9.1</pax.exam.version>
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
@@ -2031,15 +2148,17 @@
         <rxjava2.version>2.0.4</rxjava2.version>
         <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
-        <servlet4.version>4.0.2</servlet4.version>
+        <servlet4.version>4.0.3</servlet4.version>
         <simple.version>6.0.1</simple.version>
+        <skip.e2e>false</skip.e2e>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
-        <validation.impl.version>6.0.11.Final</validation.impl.version>
+        <spring5.version>5.1.5.RELEASE</spring5.version>
+        <surefire.version>3.0.0-M3</surefire.version>
+        <validation.impl.version>6.0.17.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.0.0.Final</weld3.version>
         <xerces.version>2.11.0</xerces.version>
         <yasson.version>1.0.3</yasson.version>
-        <skip.e2e>false</skip.e2e>
     </properties>
 </project>

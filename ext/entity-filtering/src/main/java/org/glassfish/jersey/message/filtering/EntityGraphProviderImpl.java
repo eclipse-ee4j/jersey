@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,9 +19,9 @@ package org.glassfish.jersey.message.filtering;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 import org.glassfish.jersey.message.filtering.spi.EntityGraph;
 import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
@@ -33,8 +33,8 @@ import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
  */
 final class EntityGraphProviderImpl implements EntityGraphProvider {
 
-    private final ConcurrentMap<Class<?>, EntityGraph> writerClassToGraph = DataStructures.createConcurrentMap();
-    private final ConcurrentMap<Class<?>, EntityGraph> readerClassToGraph = DataStructures.createConcurrentMap();
+    private final ConcurrentMap<Class<?>, EntityGraph> writerClassToGraph = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<?>, EntityGraph> readerClassToGraph = new ConcurrentHashMap<>();
 
     @Override
     public EntityGraph getOrCreateEntityGraph(final Class<?> entityClass, final boolean forWriter) {
@@ -81,5 +81,11 @@ final class EntityGraphProviderImpl implements EntityGraphProvider {
         return entityGraph == null
                 ? new EmptyObjectGraph(entityClass)
                 : new ObjectGraphImpl(classToGraph, entityGraph, filteringScopes);
+    }
+
+    @Override
+    public EntityGraph putIfAbsent(Class<?> entityClass, EntityGraph entityGraph, boolean forWriter) {
+        final ConcurrentMap<Class<?>, EntityGraph> classToGraph = forWriter ? writerClassToGraph : readerClassToGraph;
+        return classToGraph.putIfAbsent(entityClass, entityGraph);
     }
 }

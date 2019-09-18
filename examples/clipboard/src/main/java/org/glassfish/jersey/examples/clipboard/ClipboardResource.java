@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -32,8 +32,8 @@ import javax.ws.rs.core.Variant;
  * A simple clipboard is simulated which is capable of handling
  * text data only.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
  */
 @Path("clipboard")
 public class ClipboardResource {

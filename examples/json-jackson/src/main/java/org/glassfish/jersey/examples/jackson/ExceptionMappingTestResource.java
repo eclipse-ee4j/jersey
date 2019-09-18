@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Testing bean that accepts JSON for the PUT method.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 @Path("parseExceptionTest")
 public class ExceptionMappingTestResource {

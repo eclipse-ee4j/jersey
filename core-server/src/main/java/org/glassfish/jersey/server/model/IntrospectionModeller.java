@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,7 @@ import org.glassfish.jersey.server.model.internal.ModelHelper;
 /**
  * Utility class for constructing resource model from JAX-RS annotated POJO.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 final class IntrospectionModeller {
 
@@ -183,8 +183,10 @@ final class IntrospectionModeller {
                     method.getGenericParameterTypes()[0],
                     method.getAnnotations());
             if (null != p) {
-                ResourceMethodValidator.validateParameter(p, method.getMethod(), method.getMethod().toGenericString(), "1",
+                if (!disableValidation) {
+                    ResourceMethodValidator.validateParameter(p, method.getMethod(), method.getMethod().toGenericString(), "1",
                         InvocableValidator.isSingleton(handlerClass));
+                }
 
                 // we do not inject entity parameters into class instance fields and properties.
                 if (p.getSource() != Parameter.Source.ENTITY) {
@@ -208,8 +210,11 @@ final class IntrospectionModeller {
                         field.getGenericType(),
                         field.getAnnotations());
                 if (null != p) {
-                    ResourceMethodValidator.validateParameter(p, field, field.toGenericString(), field.getName(),
+                    if (!disableValidation) {
+                        ResourceMethodValidator.validateParameter(p, field, field.toGenericString(), field.getName(),
                             isInSingleton);
+                    }
+
                     // we do not inject entity and unknown parameters into class instance fields and properties.
                     if (p.getSource() != Parameter.Source.ENTITY) {
                         injectableParameters.add(p);

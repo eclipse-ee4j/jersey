@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -16,7 +16,7 @@ import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 /**
  * Spring HelloWorld Web Application configuration.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public class MyApplication extends ResourceConfig {
 

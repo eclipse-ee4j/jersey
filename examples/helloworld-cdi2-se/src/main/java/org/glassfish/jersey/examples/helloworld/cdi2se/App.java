@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -25,7 +25,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/base/");
+    private static final URI BASE_URI = URI.create("http://localhost:8080/");
     public static final String ROOT_HELLO_PATH = "helloworld";
     public static final String ROOT_COUNTER_PATH = "counter";
 
@@ -40,7 +40,7 @@ public class App {
             server.start();
 
             System.out.println("Application started.\nTry out");
-            System.out.println(String.format("%s%s", BASE_URI, ROOT_HELLO_PATH));
+            System.out.println(String.format("%s%s%s", BASE_URI, ROOT_HELLO_PATH, "/Some%Name"));
             System.out.println(String.format("%s%s%s", BASE_URI, ROOT_COUNTER_PATH, "/request"));
             System.out.println(String.format("%s%s%s", BASE_URI, ROOT_COUNTER_PATH, "/application"));
             System.out.println("Stop the application using CTRL+C");

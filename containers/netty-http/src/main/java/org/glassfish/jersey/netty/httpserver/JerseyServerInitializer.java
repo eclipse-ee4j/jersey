@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpMessage;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.HttpServerUpgradeHandler;
-import io.netty.handler.codec.http2.Http2Codec;
 import io.netty.handler.codec.http2.Http2CodecUtil;
+import io.netty.handler.codec.http2.Http2MultiplexCodecBuilder;
 import io.netty.handler.codec.http2.Http2ServerUpgradeCodec;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -38,7 +38,7 @@ import io.netty.util.AsciiString;
  * <p>
  * Adds {@link HttpServerCodec}, {@link ChunkedWriteHandler} and {@link JerseyServerHandler} to the channels pipeline.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -113,7 +113,8 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
             @Override
             public HttpServerUpgradeHandler.UpgradeCodec newUpgradeCodec(CharSequence protocol) {
                 if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
-                    return new Http2ServerUpgradeCodec(new Http2Codec(true, new JerseyHttp2ServerHandler(baseUri, container)));
+                    return new Http2ServerUpgradeCodec(Http2MultiplexCodecBuilder.forServer(
+                                new JerseyHttp2ServerHandler(baseUri, container)).build());
                 } else {
                     return null;
                 }

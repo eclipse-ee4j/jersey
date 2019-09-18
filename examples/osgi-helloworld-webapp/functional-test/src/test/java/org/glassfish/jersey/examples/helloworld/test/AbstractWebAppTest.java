@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -56,8 +56,8 @@ import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Jakub Podlesak
+ * @author Adam Lindenthal
  */
 public abstract class AbstractWebAppTest {
 
@@ -151,7 +151,7 @@ public abstract class AbstractWebAppTest {
                 systemPackage("com.sun.source.util"),
 
                 // validation - required by jersey-container-servlet-core
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
                 // Jersey bundles
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-server").versionAsInProject(),

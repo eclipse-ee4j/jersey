@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2010, 2013 Coda Hale and Yammer, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Compared to Dropwizard Reservoir, this interface adds a possibility to work with data that is associated with a specific
  * time. It may not be possible; however, to obtain a snapshot or size at some moment in past due to performance optimizations.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  * @see <a href="https://github.com/dropwizard/metrics">https://github.com/dropwizard/metrics</a>
  */
 public interface TimeReservoir<V> {

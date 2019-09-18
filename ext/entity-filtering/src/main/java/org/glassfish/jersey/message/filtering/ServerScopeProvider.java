@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.ws.rs.ConstrainedTo;
@@ -34,7 +35,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.model.ResourceMethod;
@@ -64,7 +64,7 @@ class ServerScopeProvider extends CommonScopeProvider {
     @Inject
     public ServerScopeProvider(final Configuration config, final InjectionManager injectionManager) {
         super(config, injectionManager);
-        this.uriToContexts = DataStructures.createConcurrentMap();
+        this.uriToContexts = new ConcurrentHashMap<>();
     }
 
     @Override

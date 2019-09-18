@@ -45,7 +45,7 @@ import static org.junit.Assert.fail;
 /**
  * {@link ClientConfig} unit test.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ClientConfigTest {
 

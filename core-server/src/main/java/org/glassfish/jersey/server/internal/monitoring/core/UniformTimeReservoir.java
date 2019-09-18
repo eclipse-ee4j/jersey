@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2010, 2013 Coda Hale and Yammer, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLongArray;
  * A random sampling reservoir of a stream of {@code long}s. Uses Vitter's Algorithm R to produce a statistically representative
  * sample.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  * @author Dropwizard Team
  * @see <a href="http://www.cs.umd.edu/~samir/498/vitter.pdf">Random Sampling with a Reservoir</a>
  * @see <a href="https://github.com/dropwizard/metrics">https://github.com/dropwizard/metrics</a>

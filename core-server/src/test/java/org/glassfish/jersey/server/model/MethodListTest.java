@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,10 @@ package org.glassfish.jersey.server.model;
 
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertTrue;
 
@@ -54,6 +56,33 @@ public class MethodListTest {
         private void c() {}
     }
 
+    public class CSynthetic {
+        class CWithField {
+            private int x;
+        }
+
+        public int a() {
+            return new CWithField().x;
+        }
+
+        public void b(int x) {
+            new CWithField().x = x;
+        }
+    }
+
+    public class CBridgeClass implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+    }
+
     @Test
     public void testClassPublicMethods() {
         test(CPublic.class);
@@ -74,12 +103,30 @@ public class MethodListTest {
         test(CPrivate.class, true);
     }
 
+    @Test
+    public void testSyntheticMethods() {
+        assertTrue(CSynthetic.CWithField.class.getDeclaredMethods().length == 2);
+
+        MethodList ml = new MethodList(CSynthetic.CWithField.class, true);
+        assertTrue(!ml.iterator().hasNext());
+    }
+
+    @Test
+    public void testBridgeMethods() {
+        assertTrue(CBridgeClass.class.getDeclaredMethods().length ==  3);
+
+        MethodList ml = new MethodList(CBridgeClass.class, true);
+        AtomicInteger count = new AtomicInteger(0);
+        ml.forEach(x -> count.addAndGet(1));
+        assertTrue(count.get() == 2);
+    }
+
     private void test(Class c) {
         test(c, false);
     }
 
     private void test(Class c, boolean privateMethods) {
-        MethodList ml = new MethodList(CPublic.class, privateMethods);
+        MethodList ml = new MethodList(c, privateMethods);
 
         Set<String> s = new HashSet<String>();
         for (AnnotatedMethod am : ml) {

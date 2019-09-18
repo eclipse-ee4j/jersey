@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,7 +47,7 @@ import org.glassfish.jersey.message.MessageUtils;
  * An interceptor that logs an entity if configured so and provides a common logic for {@link ClientLoggingFilter}
  * and {@link ServerLoggingFilter}.
  *
- * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
+ * @author Ondrej Kosatka
  */
 abstract class LoggingInterceptor implements WriterInterceptor {
 

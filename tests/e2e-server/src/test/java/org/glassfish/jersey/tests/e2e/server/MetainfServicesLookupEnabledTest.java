@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Property {@link org.glassfish.jersey.server.ServerProperties#METAINF_SERVICES_LOOKUP_DISABLE} is NOT set.
  *
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 public class MetainfServicesLookupEnabledTest extends AbstractDisableMetainfServicesLookupTest {
 

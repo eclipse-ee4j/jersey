@@ -76,7 +76,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
  * An instance of the request context is passed by the container to the
  * {@link ApplicationHandler} for each incoming client request.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ContainerRequest extends InboundMessageContext
         implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate {

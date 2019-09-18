@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author Naresh (srinivas.bhimisetty at oracle.com)
+ * @author Naresh (Srinivas Bhimisetty)
  */
 public class MainTest extends JerseyTest {
 

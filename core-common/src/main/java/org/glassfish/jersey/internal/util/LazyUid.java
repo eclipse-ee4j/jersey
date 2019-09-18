@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * The UUID value gets initialized with the first call to {@link #value()} method.
  * Once initialized, the UUID value stays the same.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class LazyUid implements Serializable {
     private static final long serialVersionUID = 4618609413877136867L;

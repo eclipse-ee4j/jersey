@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -113,9 +113,9 @@ import org.junit.Before;
  *
  * @author Paul Sandoz
  * @author Srinivas Bhimisetty
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Michal Gajdos
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @SuppressWarnings("UnusedDeclaration")
 public abstract class JerseyTest {
@@ -182,6 +182,7 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = getTestContainerFactory();
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -203,6 +204,7 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = testContainerFactory;
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -227,6 +229,7 @@ public abstract class JerseyTest {
     public JerseyTest(final Application jaxrsApplication) {
         this.context = DeploymentContext.newInstance(jaxrsApplication);
         this.testContainerFactory = getTestContainerFactory();
+        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -577,10 +580,6 @@ public abstract class JerseyTest {
      */
     @Before
     public void setUp() throws Exception {
-        if (isLogRecordingEnabled()) {
-            registerLogHandler();
-        }
-
         final TestContainer testContainer = createTestContainer(context);
 
         // Set current instance of test container and start it.
@@ -793,6 +792,16 @@ public abstract class JerseyTest {
         }
 
         return rootLoggers;
+    }
+
+    /**
+     * Register {@link Handler log handler} to the list of root loggers
+     * if log recording is enabled.
+     */
+    private void registerLogHandlerIfEnabled() {
+        if (isLogRecordingEnabled()) {
+            registerLogHandler();
+        }
     }
 
     /**

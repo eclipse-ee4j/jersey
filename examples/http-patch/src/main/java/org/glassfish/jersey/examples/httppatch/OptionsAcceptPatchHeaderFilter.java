@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -24,7 +24,7 @@ import javax.ws.rs.core.MultivaluedMap;
  * to any response to an {@code OPTIONS} request.
  *
  * @author Gerard Davison (gerard.davison at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class OptionsAcceptPatchHeaderFilter implements ContainerResponseFilter {
 

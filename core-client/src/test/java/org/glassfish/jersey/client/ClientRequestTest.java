@@ -51,7 +51,7 @@ import static org.mockito.Matchers.same;
 /**
  * {@code ClientRequest} unit tests.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientRequestTest {

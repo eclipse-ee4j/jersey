@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test Jersey {@link Flow.Publisher} implementation, {@link JerseyPublisher}.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class JerseyPublisherTest {
 
@@ -111,11 +111,13 @@ public class JerseyPublisherTest {
     @Test
     public void testNonBlocking() throws InterruptedException {
         final int MSG_COUNT = 300;
+        final int DATA_COUNT = Flow.defaultBufferSize() + 2;
+        final int WAIT_TIME = 20 * DATA_COUNT;
 
         final JerseyPublisher<String> publisher = new JerseyPublisher<>();
 
         final CountDownLatch openLatchActive = new CountDownLatch(1);
-        final CountDownLatch writeLatch = new CountDownLatch(MSG_COUNT);
+        final CountDownLatch writeLatch = new CountDownLatch(DATA_COUNT);
         final CountDownLatch closeLatch = new CountDownLatch(1);
 
         final CountDownLatch openLatchDead = new CountDownLatch(1);
@@ -147,9 +149,10 @@ public class JerseyPublisherTest {
             publisher.publish("MSG-" + i);
         }, 0, 10, TimeUnit.MILLISECONDS);
 
-        assertTrue(writeLatch.await(6000, TimeUnit.MILLISECONDS));
+        writeLatch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
+        assertTrue(writeLatch.getCount() <= 1);
 
-        assertEquals(MSG_COUNT, activeSubscriber.getReceivedData().size());
+        assertTrue(DATA_COUNT - activeSubscriber.getReceivedData().size() <= 1);
         assertEquals(0, deadSubscriber.getReceivedData().size());
 
         assertFalse(activeSubscriber.hasError());
@@ -157,7 +160,7 @@ public class JerseyPublisherTest {
 
         publisher.close();
 
-        assertTrue(closeLatch.await(6000, TimeUnit.MILLISECONDS));
+        assertTrue(closeLatch.await(WAIT_TIME, TimeUnit.MILLISECONDS));
         assertTrue(activeSubscriber.isCompleted());
         assertFalse(deadSubscriber.isCompleted());
     }

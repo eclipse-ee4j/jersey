@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
 /**
  * Reproducer tests for JERSEY-2335.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public class Jersey2335ITCase extends JerseyTest {
 

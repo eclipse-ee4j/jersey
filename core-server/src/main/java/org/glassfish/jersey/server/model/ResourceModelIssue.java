@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,8 @@ import org.glassfish.jersey.Severity;
  * While the non-fatal issues are merely reported as warnings in the log, the
  * fatal issues prevent the successful application deployment.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 public final class ResourceModelIssue {
 

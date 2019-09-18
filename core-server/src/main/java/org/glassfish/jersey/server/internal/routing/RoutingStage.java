@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
  * Once the routing is finished, an endpoint (if matched) is
  * {@link RoutingContext#setEndpoint stored in the routing context}.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @see MatchedEndpointExtractorStage
  */
 final class RoutingStage extends AbstractChainableStage<RequestProcessingContext> {

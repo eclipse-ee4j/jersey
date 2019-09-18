@@ -48,7 +48,7 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
  * <p>
  * Note that this implementation cannot be more experimental. Any contributions / feedback is welcomed.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 @ChannelHandler.Sharable
 class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
@@ -88,7 +88,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
      * Process incoming data.
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        isList.add(new ByteBufInputStream(data.content()));
+        isList.add(new ByteBufInputStream(data.content(), true));
         if (data.isEndStream()) {
             isList.add(NettyInputStream.END_OF_INPUT);
         }

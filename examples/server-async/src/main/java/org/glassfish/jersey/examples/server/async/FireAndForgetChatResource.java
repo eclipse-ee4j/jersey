@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -35,7 +35,7 @@ import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
  *
  * This version of the messaging resource does not block when POSTing a new message.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @Path(App.ASYNC_MESSAGING_FIRE_N_FORGET_PATH)
 @Produces(MediaType.TEXT_PLAIN)
