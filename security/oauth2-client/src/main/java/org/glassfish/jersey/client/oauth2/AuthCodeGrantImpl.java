@@ -264,10 +264,12 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
 
         setDefaultProperty(OAuth2Parameters.CLIENT_SECRET, clientIdentifier.getClientSecret(), accessTokenProperties,
                 refreshTokenProperties);
-        setDefaultProperty(OAuth2Parameters.GrantType.key, OAuth2Parameters.GrantType.AUTHORIZATION_CODE.name().toLowerCase(Locale.ROOT),
+        setDefaultProperty(OAuth2Parameters.GrantType.key,
+        		OAuth2Parameters.GrantType.AUTHORIZATION_CODE.name().toLowerCase(Locale.ROOT),
                 accessTokenProperties);
 
-        setDefaultProperty(OAuth2Parameters.GrantType.key, OAuth2Parameters.GrantType.REFRESH_TOKEN.name().toLowerCase(Locale.ROOT),
+        setDefaultProperty(OAuth2Parameters.GrantType.key,
+        		OAuth2Parameters.GrantType.REFRESH_TOKEN.name().toLowerCase(Locale.ROOT),
                 refreshTokenProperties);
     }
 
