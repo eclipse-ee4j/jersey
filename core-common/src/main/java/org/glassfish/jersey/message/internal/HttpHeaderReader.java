@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -291,7 +292,7 @@ public abstract class HttpHeaderReader {
             }
 
             // Get the parameter name
-            String name = reader.nextToken().toString().toLowerCase();
+            String name = reader.nextToken().toString().toLowerCase(Locale.ROOT);
             reader.nextSeparator('=');
             // Get the parameter value
             String value;

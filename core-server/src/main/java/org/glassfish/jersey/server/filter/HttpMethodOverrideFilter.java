@@ -17,6 +17,7 @@
 package org.glassfish.jersey.server.filter;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,7 +229,7 @@ public final class HttpMethodOverrideFilter implements ContainerRequestFilter {
             return null;
         }
         value = value.trim();
-        return value.length() == 0 ? null : value.toUpperCase();
+        return value.length() == 0 ? null : value.toUpperCase(Locale.ROOT);
     }
 
     @Override

@@ -29,6 +29,7 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -90,7 +91,7 @@ public class HttpUrlConnector implements Connector {
 
     static {
         for (String headerName : restrictedHeaders) {
-            restrictedHeaderSet.add(headerName.toLowerCase());
+            restrictedHeaderSet.add(headerName.toLowerCase(Locale.ROOT));
         }
     }
 
@@ -424,7 +425,7 @@ public class HttpUrlConnector implements Connector {
     }
 
     private boolean isHeaderRestricted(String name, String value) {
-        name = name.toLowerCase();
+        name = name.toLowerCase(Locale.ROOT);
         return name.startsWith("sec-")
                 || restrictedHeaderSet.contains(name)
                 && !("connection".equalsIgnoreCase(name) && "close".equalsIgnoreCase(value));

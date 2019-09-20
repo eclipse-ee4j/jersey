@@ -18,6 +18,7 @@ package org.glassfish.jersey.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.HttpHeaders;
@@ -36,12 +37,12 @@ public final class TracingUtils {
     private static final List<String> SUMMARY_HEADERS = new ArrayList<>();
 
     static {
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_ENCODING.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_CHARSET.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_LANGUAGE.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_TYPE.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_ENCODING.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_CHARSET.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_LANGUAGE.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_TYPE.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_LENGTH.toLowerCase(Locale.ROOT));
     }
 
     private static final TracingConfig DEFAULT_CONFIGURATION_TYPE = TracingConfig.OFF;

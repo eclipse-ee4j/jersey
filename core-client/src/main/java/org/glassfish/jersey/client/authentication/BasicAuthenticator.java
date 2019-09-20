@@ -17,6 +17,7 @@
 package org.glassfish.jersey.client.authentication;
 
 import java.util.Base64;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,7 +97,7 @@ final class BasicAuthenticator {
      */
     public boolean filterResponseAndAuthenticate(ClientRequestContext request, ClientResponseContext response) {
         final String authenticate = response.getHeaders().getFirst(HttpHeaders.WWW_AUTHENTICATE);
-        if (authenticate != null && authenticate.trim().toUpperCase().startsWith("BASIC")) {
+        if (authenticate != null && authenticate.trim().toUpperCase(Locale.ROOT).startsWith("BASIC")) {
             HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter
                     .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
 

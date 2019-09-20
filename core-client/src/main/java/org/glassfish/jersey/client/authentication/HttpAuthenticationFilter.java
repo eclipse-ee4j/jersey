@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Priority;
@@ -202,7 +203,7 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
             List<String> authStrings = response.getHeaders().get(HttpHeaders.WWW_AUTHENTICATE);
             if (authStrings != null) {
                 for (String authString : authStrings) {
-                    final String upperCaseAuth = authString.trim().toUpperCase();
+                    final String upperCaseAuth = authString.trim().toUpperCase(Locale.ROOT);
                     if (result == null && upperCaseAuth.startsWith("BASIC")) {
                         result = Type.BASIC;
                     } else if (upperCaseAuth.startsWith("DIGEST")) {

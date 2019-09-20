@@ -18,6 +18,7 @@ package org.glassfish.jersey.server.wadl.internal;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.UriInfo;
@@ -96,7 +97,7 @@ public class WadlUtils {
             }
 
             final String value = simple.get(0).trim();
-            return value.isEmpty() || value.toUpperCase().equals("TRUE");
+            return value.isEmpty() || value.toUpperCase(Locale.ROOT).equals("TRUE");
         }
         return false;
     }

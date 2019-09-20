@@ -17,6 +17,7 @@
 package org.glassfish.jersey.media.multipart.file;
 
 import java.io.File;
+import java.util.Locale;
 
 import javax.ws.rs.core.MediaType;
 
@@ -139,7 +140,7 @@ public class DefaultMediaTypePredictor implements MediaTypePredictor {
             CommonMediaTypes[] types = CommonMediaTypes.values();
             if (types != null && types.length > 0) {
                 for (CommonMediaTypes type : types) {
-                    if (fileName.toLowerCase().endsWith(type.getExtension())) {
+                    if (fileName.toLowerCase(Locale.ROOT).endsWith(type.getExtension())) {
                         return type.getMediaType();
                     }
                 }

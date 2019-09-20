@@ -125,7 +125,7 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         final String method = request.getMethod();
 
-        final EntityPresence entityPresence = METHODS.get(method.toUpperCase());
+        final EntityPresence entityPresence = METHODS.get(method.toUpperCase(Locale.ROOT));
         if (entityPresence == EntityPresence.MUST_BE_NULL && request.hasEntity()) {
             if (suppressExceptions) {
                 LOGGER.warning(LocalizationMessages.ERROR_HTTP_METHOD_ENTITY_NOT_NULL(method));

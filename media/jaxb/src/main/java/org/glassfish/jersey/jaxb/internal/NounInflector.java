@@ -19,6 +19,7 @@ package org.glassfish.jersey.jaxb.internal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -764,7 +765,7 @@ final class NounInflector {
      */
     public void addUncountable(final String word) {
 
-        uncountables.add(0, word.toLowerCase());
+        uncountables.add(0, word.toLowerCase(Locale.ROOT));
 
     }
 

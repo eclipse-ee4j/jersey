@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -96,7 +97,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
         this.supportedExtensions =
                 Arrays.stream(supportedExtensions)
                       .map(input -> {
-                          input = input.toLowerCase();
+                          input = input.toLowerCase(Locale.ROOT);
                           return input.startsWith(".") ? input : "." + input;
                       })
                       .collect(Collectors.toSet());
@@ -221,7 +222,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
      * @return collection of possible template paths.
      */
     private Collection<String> getTemplatePaths(final String name) {
-        final String lowerName = name.toLowerCase();
+        final String lowerName = name.toLowerCase(Locale.ROOT);
         final String templatePath = basePath.endsWith("/") ? basePath + name.substring(1) : basePath + name;
 
         // Check whether the given name ends with supported suffix.

@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -147,7 +148,7 @@ class WadlGeneratorLoader {
                                         final Class<?> osgiConfigClass) throws Exception {
         Callback result = null;
 
-        final String methodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+        final String methodName = "set" + propertyName.substring(0, 1).toUpperCase(Locale.ROOT) + propertyName.substring(1);
         final Method method = getMethodByName(methodName, generator.getClass());
         if (method.getParameterTypes().length != 1) {
             throw new RuntimeException(

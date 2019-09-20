@@ -19,6 +19,7 @@ package org.glassfish.jersey.netty.httpserver;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -74,7 +75,7 @@ class NettyHttp2ResponseWriter implements ContainerResponseWriter {
         response.status(Integer.toString(responseContext.getStatus()));
 
         for (final Map.Entry<String, List<String>> e : responseContext.getStringHeaders().entrySet()) {
-            response.add(e.getKey().toLowerCase(), e.getValue());
+            response.add(e.getKey().toLowerCase(Locale.ROOT), e.getValue());
         }
 
         response.set(HttpHeaderNames.CONTENT_LENGTH, Long.toString(contentLength));

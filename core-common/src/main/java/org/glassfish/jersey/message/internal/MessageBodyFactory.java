@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -131,7 +132,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
                 @Override
                 public int hash(final MediaType mt) {
                     // treat compatible types as equal
-                    return mt.getType().toLowerCase().hashCode() + mt.getSubtype().toLowerCase().hashCode();
+                    return mt.getType().toLowerCase(Locale.ROOT).hashCode() + mt.getSubtype().toLowerCase(Locale.ROOT).hashCode();
                 }
             };
     /**
