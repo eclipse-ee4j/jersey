@@ -1,0 +1,97 @@
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>Managed client sample</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=MacRoman">
+
+    <style>
+        table, tr, th, td {
+            border: 1px solid;
+            border-collapse: collapse;
+            padding: 2px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Managed client simple sample</h1>
+    <p>This sample shows using client injected by @Uri into the resource methods. The following table contains description
+    of all accessible resource.</p>
+    <table>
+        <tr>
+            <td>uri</td>
+            <td>http method</td>
+            <td>description</td>
+        </tr>
+        <tr>
+            <td>/index.html</td>
+            <td>GET</td>
+            <td>this page</td>
+        </tr>
+        <tr>
+            <td>/app/*</td>
+            <td></td>
+            <td>rest application is deployed under this path</td>
+        </tr>
+        <tr>
+            <td>/app/resource/*</td>
+            <td></td>
+            <td>standard sample resource with sub resource methods</td>
+        </tr>
+        <tr>
+            <td><a href="./app/resource/dog">./app/resource/dog</a></td>
+            <td>GET</td>
+            <td>resource (plain/text)</td>
+        </tr>
+        <tr>
+            <td><a href="./app/resource/cat">./app/resource/cat</a></td>
+            <td>GET</td>
+            <td>resource (plain/text)</td>
+        </tr>
+        <tr>
+            <td><a href="./app/resource/elefant">./app/resource/elefant</a></td>
+            <td>GET</td>
+            <td>resource (plain/text)</td>
+        </tr>
+        <tr>
+            <td><a href="./app/resource/car/80">./app/resource/car/{id}</a></td>
+            <td>GET</td>
+            <td>resource with path param (plain/text). {id} is a string path parameter. Example: ./app/resource/car/80</td>
+        </tr>
+
+        <tr>
+            <td>/app/client/*</td>
+            <td></td>
+            <td>Resource with sub resources that use injected clients to query sub resources of <b>/app/resource/*</b> and other resources</td>
+        </tr>
+        <tr>
+            <td><a href="./app/client/glassfish">./app/client/glassfish</a></td>
+            <td>GET</td>
+            <td>Queries by GET <a href="http://glassfish.java.net">http://glassfish.java.net</a> and returns target html page.</td>
+        </tr>
+        <tr>
+            <td><a href="./app/client/animals">./app/client/animals</a></td>
+            <td>GET</td>
+            <td>Queries <a href="./app/resource/dog">./app/resource/dog</a>, <a href="./app/resource/cat">./app/resource/cat</a> and <a href="./app/resource/elefant">./app/resource/elefant</a> and returns merged result</td>
+        </tr>
+        <tr>
+        <td><a href="./app/client/car/15">./app/client/car/{id}</a></td>
+            <td>GET</td>
+            <td>Queries /app/resource/car/{id} and returns result. {id} is a string path parameter. Example: ./app/resource/client/car/15</td>
+        </tr>
+    </table>
+</body>
+</html>

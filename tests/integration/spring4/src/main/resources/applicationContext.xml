@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor">
+        <property name="autowiredAnnotationTypes">
+            <set>
+                <value>org.springframework.beans.factory.annotation.Autowired</value>
+                <value>org.springframework.beans.factory.annotation.Value</value>
+            </set>
+        </property>
+    </bean>
+
+    <bean name="AccountService-singleton" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" />
+
+    <bean name="AccountService-request-1" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" scope="request">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean name="AccountService-request-2" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" scope="request"/>
+
+    <bean name="AccountService-prototype-1" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" scope="prototype">
+        <property name="defaultAccountBalance" value="987.65"/>
+    </bean>
+
+    <bean name="AccountService-prototype-2" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" scope="prototype"/>
+
+    <!-- Spring managed JAX-RS resources -->
+    <bean class="org.glassfish.jersey.server.spring.test.AccountSpringResource"/>
+
+    <bean class="org.glassfish.jersey.server.spring.test.ServiceResource"/>
+
+    <bean class="org.glassfish.jersey.server.spring.test.ControllerResource"/>
+
+    <bean class="org.glassfish.jersey.server.spring.test.RepositoryResource"/>
+
+    <bean class="org.glassfish.jersey.server.spring.test.EndpointResource"/>
+
+</beans>

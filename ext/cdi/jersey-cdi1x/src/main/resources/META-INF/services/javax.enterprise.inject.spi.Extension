@@ -1,0 +1,2 @@
+org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider
+org.glassfish.jersey.ext.cdi1x.internal.ProcessAllAnnotatedTypes

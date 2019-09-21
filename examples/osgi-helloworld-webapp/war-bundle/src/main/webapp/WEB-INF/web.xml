@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <listener>
+        <listener-class>org.glassfish.jersey.examples.osgi.helloworld.WebAppContextListener</listener-class>
+    </listener>
+    <!-- We do not really need the welcome files, but the jetty bundled with pax exam requires it -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- Jersey APP that has enabled recursive scanning (the default value) -->
+    <servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                    org.glassfish.jersey.examples.osgi.helloworld.resource,
+                    org.glassfish.jersey.examples.osgi.helloworld.additional.resource,
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/webresources/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Jersey APP with disabled recursive scanning -->
+    <servlet>
+        <servlet-name>Jersey Web Non-recursive Application</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                org.glassfish.jersey.examples.osgi.helloworld.resource,
+                org.glassfish.jersey.examples.osgi.helloworld.additional.resource,
+                <!-- 'package' package path prevents regression in matching packages implemented in OsgiRegistry as it matches
+                string 'org.glassfish.jersey.examples.osgi.helloworld.resource.sub[package]' -->
+                package
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.scanning.recursive</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Web Non-recursive Application</servlet-name>
+        <url-pattern>/n-webresources/*</url-pattern>
+    </servlet-mapping>
+</web-app>

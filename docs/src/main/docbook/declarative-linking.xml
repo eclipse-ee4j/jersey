@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent" > %ents; ]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="declarative-linking">
+
+    <title>Declarative Hyperlinking</title>
+
+    <para>
+        <link xlink:href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">RESTful APIs must be
+            hypertext-driven</link>. JAX-RS currently offers &jaxrs.core.UriBuilder; to simplify URI
+        creation but Jersey adds an additional annotation-based alternative that is described here.
+    </para>
+    <important>
+        <para>
+            This API is currently under development and experimental so it is subject to change at any time.
+        </para>
+    </important>
+
+    <section>
+        <title>Dependency</title>
+
+        <para>
+            To use Declarative Linking you need to add &lit.jersey-declarative-linking; module to your &lit.pom.xml; file:
+
+            <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.ext&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-declarative-linking&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
+            Additionally you will need to add the following dependencies, if you are not deploying
+            into a container that is already including them:
+
+            <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
+    &lt;groupId&gt;javax.el&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.el-api&lt;/artifactId&gt;
+    &lt;version&gt;&javax-el.version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
+            <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.web&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.el&lt;/artifactId&gt;
+    &lt;version&gt;&javax-el-impl.version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
+            If you're not using Maven make sure to have all needed dependencies (see &jersey.ext.declarative-linking.deps.link;) on
+            the classpath.
+        </para>
+    </section>
+
+
+    <section>
+        <title>Links in Representations</title>
+
+        <para>
+            Links are added to representations using the <literal>@InjectLink</literal> annotation on
+            entity class fields. The Jersey runtime is responsible for injecting the appropriate URI
+            into the field prior to serialization by a message body writer. E.g. consider the
+            following resource and entity classes:
+        </para>
+
+        <programlisting language="java">@Path("widgets")
+public class WidgetsResource {
+    @GET
+    public Widgets get() {
+        return new Widgets();
+    }
+}
+
+public class Widgets {
+    @InjectLink(resource=WidgetsResource.class)
+    URI u;
+}</programlisting>
+
+        <para>
+            After a call to<literal>WidgetsResource#get</literal>, the Jersey runtime will inject the value
+            <literal>"/context/widgets"</literal>
+            <footnote>
+                <para>
+                    Where <literal>/context</literal> is the application deployment context.
+                </para>
+            </footnote>
+            into the returned <literal>Widgets</literal> instance. If an absolute URI is
+            desired instead of an absolute path then the annotation can be changed to
+            <literal>@InjectLink(resource=WidgetsResource.class, style=ABSOLUTE)</literal>.
+        </para>
+        <para>
+            The above usage works nicely when there's already a URI template on a class that you
+            want to reuse. If there's no such template available then you can use a literal value
+            instead of a reference. E.g. the following is equivalent to the earlier example:
+            <literal>@InjectLink(value="widgets", style=ABSOLUTE)</literal>.
+        </para>
+    </section>
+
+    <section>
+        <title>List of Link Injection</title>
+        <para>
+            You can inject multiple links into an array or a List collection type. E.g.:
+            <programlisting language="java">@InjectLinks({@InjectLink(resource=WidgetsResource.class, rel = "self")})
+List&lt;Link&gt; links</programlisting>
+
+            The field doesn't need to be initialized. However, if it already contains a collection with manually created links,
+            then it will merge those with the generated links into a new collection which then replaces the field value.
+        </para>
+    </section>
+
+    <section>
+        <title>Links from Resources</title>
+
+        <para>
+            As an alternative to defining the links in the entity class, they can also be defined in the resource classes by
+            annotating the resource methods with <literal>@ProvideLink</literal>. This has the benefit, that the target
+            method is already known and doesn't need to be referenced. Other than that it has the same parameters and behaviors
+            as <literal>@InjectLink</literal>. The entity classes need to have a field annotated with
+            <literal>@InjectLinks</literal>, which can be empty.
+        </para>
+
+        <para>
+            The <literal>@ProvideLink</literal> annotation can be repeated to add links to different entities using different
+            options. Entities are defined via the <literal>value</literal> property. If the entities are similar in structure they
+            can also declared as an array. <literal>@ProvideLink</literal> also works with class hierarchies, e.g., contributions
+            defined for a superclass will also be injected into the derived classes (interfaces are not supported).
+
+            <programlisting language="java">@ProvideLink(value = Order.class,rel = "self",
+     bindings = @Binding(name = "orderId", value = "${instance.id}"))
+@ProvideLink(value = PaymentConfirmation.class, rel = "order",
+     bindings = @Binding(name = "orderId", value = "${instance.orderId}"))
+@GET
+@Path("/{orderId}")
+public Response get(@PathParam("orderId") String orderId)</programlisting>
+        </para>
+    </section>
+
+    <section>
+        <title>Binding Template Parameters</title>
+
+        <para>
+            Referenced or literal templates may contain parameters. Two forms of parameters are
+            supported:
+            <itemizedlist>
+                <listitem><para>
+                    URI template parameters, e.g. <literal>widgets/{id}</literal> where <literal>{id}</literal> represents
+                    a variable part of the URI.
+                </para></listitem>
+                <listitem><para>
+                    EL expressions, e.g. <literal>widgets/${instance.id}</literal> where <literal>${instance.id}</literal>
+                    is an EL expression.
+                </para></listitem>
+            </itemizedlist>
+        </para>
+
+        <para>
+            Parameter values can be extracted from three implicit beans:
+            <variablelist>
+                <varlistentry>
+                    <term>
+                        <literal>instance</literal>
+                    </term>
+                    <listitem>
+                        <para>Represents the instance of the class that contains the annotated field.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>
+                        <literal>entity</literal>
+                    </term>
+                    <listitem>
+                        <para>Represents the entity class instance returned by the resource method.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>
+                        <literal>resource</literal>
+                    </term>
+                    <listitem>
+                        <para>Represents the resource class instance that returned the entity.</para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+
+        <para>
+            By default URI template parameter values are extracted from the implicit <literal>instance</literal> bean,
+            i.e. the following two annotations are equivalent:
+
+            <programlisting language="java">@InjectLink("widgets/{id}")
+
+@InjectLink("widgets/${instance.id}")</programlisting>
+        </para>
+
+        <para>
+            The source for URI template parameter values can be changed using the <literal>@Binding</literal>
+            annotation, E.g. the following three annotations are equivalent:
+            <programlisting language="java">@InjectLink(value="widgets/{id}", bindings={
+    @Binding(name="id" value="${resource.id}"}
+)
+
+@InjectLink(value="widgets/{value}", bindings={
+    @Binding("${resource.id}")})
+@InjectLink("widgets/${resource.id}")</programlisting>
+        </para>
+
+    </section>
+
+    <section>
+        <title>Conditional Link Injection</title>
+        <para>
+            Link value injection can be made conditional by use of the <literal>condition</literal> property.
+            The value of this property is a boolean EL expression and a link will only be injected if the condition
+            expression evaluates to true. E.g.:
+
+            <programlisting language="java">@InjectLink(value="widgets/${instance.id}/offers",
+    condition="${instance.offers}")
+URI offers;</programlisting>
+        </para>
+
+        <para>
+            In the above, a URI will only be injected into the <literal>offers</literal> field if the
+            <literal>offers</literal> property of the instance is <literal>true</literal>.
+        </para>
+    </section>
+
+    <section>
+        <title>Link Headers</title>
+        <para>
+            <link xlink:href="http://tools.ietf.org/html/rfc5988#section-5">HTTP Link headers</link> can also be added
+            to responses using annotations. Instead of annotating the fields of an entity class with
+            <literal>@InjectLink</literal>, you instead annotate the entity class itself with
+            <literal>@InjectLinks</literal>. E.g.:
+            <programlisting language="java">@InjectLinks(
+    @InjectLink(value="widgets/${resource.nextId}", rel="next")
+)</programlisting>
+        </para>
+
+        <para>
+            The above would insert a HTTP Link header into any response whose entity was thus annotated.
+            The <literal>@InjectLink</literal> annotation contains properties that map to the parameters
+            of the HTTP Link header. The above specifies the link relation as <literal>next</literal>.
+            All properties of the <literal>@InjectLink</literal> annotation may be used as described above.
+        </para>
+
+        <para>
+            Multiple link headers can be added by use of the <literal>@InjectLinks</literal> annotation
+            which can contain multiple <literal>@InjectLink</literal> annotations.
+        </para>
+
+        <para>
+            Resource links via <literal>@ProvideLink</literal> are currently not supported for link headers.
+        </para>
+    </section>
+
+    <section>
+        <title>Prevent Recursive Injection</title>
+        <para>
+            By default, Jersey will try to recursively find all <literal>@InjectionLink</literal> annotations in
+            the members of your object unless this member is annotated with <literal>@XmlTransient</literal>.
+
+            But in some cases, you might want to control which member will be introspected regardless of the
+            <literal>@XmlTransient</literal> annotation.
+
+            You can prevent Jersey to look into an object by adding <literal>@InjectLinkNoFollow</literal> to a field.
+
+            <programlisting language="java">@InjectLinkNoFollow
+Context context;</programlisting>
+        </para>
+    </section>
+
+
+    <section>
+        <title>Meta-annotation support</title>
+        <para>
+            The <literal>@ProvideLink</literal> annotation can be used as a meta-annotation, i.e., annotating your own annotation.
+            This enables you to create custom annotations to reuse <literal>@ProvideLink</literal> configurations instead of
+            copy pasting them on each method. There is a special marker class <literal>ProvideLink.InheritFromAnnotation</literal>
+            that can be used in place of the actual entity class, this indicates that the <literal>Class&lt;?> value()</literal>
+            from the custom annotation should be used instead.
+
+            Repeated annotations are currently unsupported for this feature. Also the  <literal>Class&lt;?> value()</literal>
+            method must return a single class and not an array of classes.
+        </para>
+
+        <para>
+
+            Here is an example (getter/setter omitted for brevity) of how a meta annotation can be used.
+            The example app uses a <literal>Page</literal> class as a base class for all entities that contain paged data.
+
+            <programlisting language="java">public class Page {
+    private int number;
+
+    private int size;
+
+    private boolean isPreviousPageAvailable;
+
+    private boolean isNextPageAvailable;
+
+    @InjectLinks
+    private List&lt;Link> links;
+}</programlisting>
+
+            Instead of duplicating the <literal>@ProvideLink</literal> annotations for the  next and previous links on every
+            method, we create the following <literal>@PageLinks</literal> annotation.
+
+            <programlisting language="java">@ProvideLink(value = ProvideLink.InheritFromAnnotation.class, rel = "next",
+    bindings = {
+        @Binding(name = "page", value = "${instance.number + 1}"),
+        @Binding(name = "size", value = "${instance.size}"),
+    }, condition = "${instance.nextPageAvailable}")
+@ProvideLink(value = ProvideLink.InheritFromAnnotation.class, rel = "prev",
+    bindings = {
+        @Binding(name = "page", value = "${instance.number - 1}"),
+        @Binding(name = "size", value = "${instance.size}"),
+    }, condition = "${instance.previousPageAvailable}")
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface PageLinks {
+  Class&lt;?> value();
+}</programlisting>
+
+            The annotation can the then be used on the resource methods with the actual entity class as <literal>value</literal>.
+
+            <programlisting language="java">@PageLinks(OrderPage.class)
+@GET
+public Response list(@QueryParam("page") @DefaultValue("0") int page,
+                     @QueryParam("size") @DefaultValue("20") int size)</programlisting>
+
+            The entity just extends from <literal>Page</literal> and declares its content. It is necessary to use distinct classes
+            instead of just a generic page to have a unique target for <literal>@ProvideLink</literal>, otherwise every method
+            annotated with <literal>@ProvideLink(value=Page.class)</literal> would contribute to the entity.
+
+            <programlisting language="java">public class OrderPage extends Page {
+    private List&lt;Order> orders;
+}</programlisting>
+        </para>
+    </section>
+
+    <section>
+        <title>Configure and register</title>
+
+        <para>
+            In order to add the Declarative Linking feature register &jersey.linking.DeclarativeLinkingFeature;
+
+            <example>
+                <title>Creating JAX-RS application with Declarative Linking feature enabled.</title>
+
+                <programlisting language="java">// Create JAX-RS application.
+final Application application = new ResourceConfig()
+        .packages("org.glassfish.jersey.examples.linking")
+        .register(DeclarativeLinkingFeature.class);</programlisting>
+            </example>
+        </para>
+    </section>
+</chapter>

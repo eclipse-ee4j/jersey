@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent" > %ents;]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="spring">
+    <title>Spring DI</title>
+
+    <para>
+        Jersey provides an extension to support Spring DI.
+        This enables Jersey to use Spring beans as JAX-RS components (e.g. resources and providers) and also allows
+        Spring to inject into Jersey managed components.
+    </para>
+
+    <para>
+        The Spring extension module configuration is based on annotations.
+        Spring beans are injected and JAX-RS classes are made Spring managed using annotations.
+        Injected Spring beans can have further dependencies injected using Spring XML configuration.
+        Spring singleton and request scopes are supported.
+    </para>
+
+    <para>
+        To enable JAX-RS resources to work Spring functionality that requires proxying, such as Spring transaction management
+        (with <literal>@Transactional</literal>), Spring Security and aspect oriented programming (such as <literal>@Aspect</literal>), the resources
+        must themselves be managed by Spring, by annotating with <literal>@Component</literal>, <literal>@Service</literal>,
+        <literal>@Controller</literal> or <literal>@Repository</literal>:
+
+        <programlisting language="java" linenumbering="numbered">import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import org.springframework.stereotype.Component;
+
+@Component
+@Path("/")
+public class SomeResource {
+
+    @Transactional
+    @GET
+    public void updateResource() {
+        // ...
+    }
+}
+        </programlisting>
+    </para>
+
+    <para>
+        Limitations:
+
+        <itemizedlist>
+            <listitem><para>Spring beans can't be injected directly into JAX-RS classes by using Spring XML configuration</para></listitem>
+        </itemizedlist>
+    </para>
+
+    <section>
+        <title>Dependencies</title>
+
+        <para>
+            If you want to use Jersey Spring DI support
+            you will need to add the <literal>jersey-spring4</literal> module into the list of your dependencies:
+
+            <programlisting language="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.ext&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-spring4&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+        </para>
+
+        <para>
+            The above module adds transitive dependencies on Spring modules.
+            See &jersey.ext.spring4.deps.link; module dependencies for more details about list and scope of dependencies.
+            Please note the module depends on &hk2.spring-bridge.link; that is used to inject Spring services into HK2 services
+            or inject HK2 services into Spring services.
+        </para>
+
+    </section>
+
+    <section>
+        <title>Registration and Configuration</title>
+
+        <para>
+            To use capabilities of Jersey Spring 3 DI support in your JAX-RS/Jersey application you need to have
+            the above mentioned module on your class-path.
+        </para>
+
+    </section>
+
+    <section>
+        <title>Example</title>
+
+        <para>To see an example of Spring DI support in Jersey refer to the
+            <link xlink:href='&jersey.github.examples.uri;/helloworld-spring-webapp'>Spring DI Example</link>.</para>
+    </section>
+</chapter>

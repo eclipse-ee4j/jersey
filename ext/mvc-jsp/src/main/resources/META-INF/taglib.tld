@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <description>The tag library contains tags that takes advantage of the request dispatching mechanism.</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>jersey-mvc-jsp</short-name>
+    <uri>urn:org:glassfish:jersey:servlet:mvc</uri>
+
+    <tag>
+        <name>include</name>
+        <tag-class>org.glassfish.jersey.server.mvc.jsp.Include</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>page</name>
+            <required>yes</required>
+            <rtexprvalue>yes</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>resource</name>
+            <required>no</required>
+            <rtexprvalue>yes</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
