@@ -137,6 +137,10 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     public void handle(final String target, final Request request, final HttpServletRequest httpServletRequest,
                        final HttpServletResponse httpServletResponse) throws IOException, ServletException {
 
+        if (request.isHandled()) {
+            return;
+        }
+
         final Response response = request.getResponse();
         final ResponseWriter responseWriter = new ResponseWriter(request, response, configSetStatusOverSendError);
         final URI baseUri = getBaseUri(request);
