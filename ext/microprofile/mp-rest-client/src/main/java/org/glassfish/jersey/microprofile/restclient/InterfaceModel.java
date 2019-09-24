@@ -38,6 +38,7 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
+import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.glassfish.jersey.client.inject.ParameterUpdater;
@@ -64,7 +65,7 @@ class InterfaceModel {
     private final CreationalContext<?> creationalContext;
 
     private final List<ClientHeaderParamModel> clientHeaders;
-    private final List<AsyncInvocationInterceptor> asyncInterceptors;
+    private final List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
     private final Set<ResponseExceptionMapper> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
     private final Set<Annotation> interceptorAnnotations;
@@ -73,23 +74,23 @@ class InterfaceModel {
     /**
      * Creates new model based on interface class. Interface is parsed according to specific annotations.
      *
-     * @param restClientClass          interface class
-     * @param responseExceptionMappers registered exception mappers
-     * @param paramConverterProviders  registered parameter providers
-     * @param asyncInterceptors        async interceptors
+     * @param restClientClass           interface class
+     * @param responseExceptionMappers  registered exception mappers
+     * @param paramConverterProviders   registered parameter providers
+     * @param asyncInterceptorFactories async interceptor factories
      * @param injectionManager
      * @return new model instance
      */
     static InterfaceModel from(Class<?> restClientClass,
                                Set<ResponseExceptionMapper> responseExceptionMappers,
                                Set<ParamConverterProvider> paramConverterProviders,
-                               List<AsyncInvocationInterceptor> asyncInterceptors,
+                               List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
                                InjectionManager injectionManager,
                                BeanManager beanManager) {
         return new Builder(restClientClass,
                            responseExceptionMappers,
                            paramConverterProviders,
-                           asyncInterceptors,
+                           asyncInterceptorFactories,
                            injectionManager,
                            beanManager).build();
     }
@@ -106,7 +107,7 @@ class InterfaceModel {
         this.paramConverterProviders = builder.paramConverterProviders;
         this.interceptorAnnotations = builder.interceptorAnnotations;
         this.creationalContext = builder.creationalContext;
-        this.asyncInterceptors = builder.asyncInterceptors;
+        this.asyncInterceptorFactories = builder.asyncInterceptorFactories;
         this.beanManager = builder.beanManager;
     }
 
@@ -169,8 +170,8 @@ class InterfaceModel {
      *
      * @return registered async interceptors
      */
-    List<AsyncInvocationInterceptor> getAsyncInterceptors() {
-        return asyncInterceptors;
+    List<AsyncInvocationInterceptorFactory> getAsyncInterceptorFactories() {
+        return asyncInterceptorFactories;
     }
 
     /**
@@ -251,7 +252,7 @@ class InterfaceModel {
         private ClientHeadersFactory clientHeadersFactory;
         private CreationalContext<?> creationalContext;
         private List<ClientHeaderParamModel> clientHeaders;
-        private List<AsyncInvocationInterceptor> asyncInterceptors;
+        private List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
         private Set<ResponseExceptionMapper> responseExceptionMappers;
         private Set<ParamConverterProvider> paramConverterProviders;
         private Set<Annotation> interceptorAnnotations;
@@ -259,14 +260,14 @@ class InterfaceModel {
         private Builder(Class<?> restClientClass,
                         Set<ResponseExceptionMapper> responseExceptionMappers,
                         Set<ParamConverterProvider> paramConverterProviders,
-                        List<AsyncInvocationInterceptor> asyncInterceptors,
+                        List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
                         InjectionManager injectionManager,
                         BeanManager beanManager) {
             this.injectionManager = injectionManager;
             this.restClientClass = restClientClass;
             this.responseExceptionMappers = responseExceptionMappers;
             this.paramConverterProviders = paramConverterProviders;
-            this.asyncInterceptors = asyncInterceptors;
+            this.asyncInterceptorFactories = asyncInterceptorFactories;
             this.beanManager = beanManager;
             filterAllInterceptorAnnotations();
         }

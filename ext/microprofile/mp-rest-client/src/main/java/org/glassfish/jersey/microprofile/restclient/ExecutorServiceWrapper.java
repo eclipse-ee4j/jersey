@@ -35,13 +35,12 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
  */
 class ExecutorServiceWrapper implements ExecutorService {
 
-    private final ExecutorService wrapped;
-    private final List<AsyncInvocationInterceptor> asyncInterceptors;
+    static final ThreadLocal<List<AsyncInvocationInterceptor>> asyncInterceptors = new ThreadLocal<>();
 
-    ExecutorServiceWrapper(ExecutorService wrapped,
-                           List<AsyncInvocationInterceptor> asyncInterceptors) {
+    private final ExecutorService wrapped;
+
+    ExecutorServiceWrapper(ExecutorService wrapped) {
         this.wrapped = wrapped;
-        this.asyncInterceptors = asyncInterceptors;
     }
 
     @Override
@@ -112,15 +111,21 @@ class ExecutorServiceWrapper implements ExecutorService {
     }
 
     private <T> Callable<T> wrap(Callable<T> task) {
+        List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
         return () -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            if (asyncInvocationInterceptors != null) {
+                asyncInvocationInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            }
             return task.call();
         };
     }
 
     private Runnable wrap(Runnable task) {
+        List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
         return () -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            if (asyncInvocationInterceptors != null) {
+                asyncInvocationInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            }
             task.run();
         };
     }

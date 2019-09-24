@@ -154,13 +154,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         //We need to check first if default exception mapper was not disabled by property on builder.
         registerExceptionMapper();
 
-        //AsyncInterceptors initialization
-        List<AsyncInvocationInterceptor> asyncInterceptors = asyncInterceptorFactories.stream()
-                .map(AsyncInvocationInterceptorFactory::newInterceptor)
-                .collect(Collectors.toList());
-        asyncInterceptors.forEach(AsyncInvocationInterceptor::prepareContext);
-
-        clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get(), asyncInterceptors));
+        clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
 
         if (null != sslContext) {
             clientBuilder.sslContext(sslContext);
@@ -187,7 +181,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
-                                                               asyncInterceptors,
+                                                               asyncInterceptorFactories,
                                                                injectionManagerExposer.injectionManager,
                                                                CdiUtil.getBeanManager());
 

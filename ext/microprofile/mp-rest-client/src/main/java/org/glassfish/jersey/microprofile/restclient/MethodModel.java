@@ -69,6 +69,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
+import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 /**
@@ -121,7 +122,7 @@ class MethodModel {
             subResourceModel = RestClientModel.from(returnType.getRawType(),
                                                     interfaceModel.getResponseExceptionMappers(),
                                                     interfaceModel.getParamConverterProviders(),
-                                                    interfaceModel.getAsyncInterceptors(),
+                                                    interfaceModel.getAsyncInterceptorFactories(),
                                                     interfaceModel.getInjectionManager(),
                                                     interfaceModel.getBeanManager());
         } else {
@@ -243,6 +244,14 @@ class MethodModel {
                                                Object entity,
                                                Method method,
                                                MultivaluedMap<String, Object> customHeaders) {
+
+        //AsyncInterceptors initialization
+        List<AsyncInvocationInterceptor> asyncInterceptors = interfaceModel.getAsyncInterceptorFactories().stream()
+                .map(AsyncInvocationInterceptorFactory::newInterceptor)
+                .collect(Collectors.toList());
+        asyncInterceptors.forEach(AsyncInvocationInterceptor::prepareContext);
+        ExecutorServiceWrapper.asyncInterceptors.set(asyncInterceptors);
+
         CompletableFuture<Object> result = new CompletableFuture<>();
         Future<Response> theFuture;
         if (entity != null
@@ -255,7 +264,7 @@ class MethodModel {
 
         CompletableFuture<Response> completableFuture = (CompletableFuture<Response>) theFuture;
         completableFuture.thenAccept(response -> {
-            interfaceModel.getAsyncInterceptors().forEach(AsyncInvocationInterceptor::removeContext);
+            asyncInterceptors.forEach(AsyncInvocationInterceptor::removeContext);
             try {
                 evaluateResponse(response, method);
                 if (returnType.getType().equals(Void.class)) {
@@ -269,7 +278,7 @@ class MethodModel {
                 result.completeExceptionally(e);
             }
         }).exceptionally(throwable -> {
-            interfaceModel.getAsyncInterceptors().forEach(AsyncInvocationInterceptor::removeContext);
+            asyncInterceptors.forEach(AsyncInvocationInterceptor::removeContext);
             result.completeExceptionally(throwable);
             return null;
         });
