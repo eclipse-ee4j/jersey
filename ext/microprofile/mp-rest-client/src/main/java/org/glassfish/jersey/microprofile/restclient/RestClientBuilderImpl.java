@@ -334,11 +334,11 @@ class RestClientBuilderImpl implements RestClientBuilder {
     public RestClientBuilder register(Object component) {
         if (component instanceof ResponseExceptionMapper) {
             ResponseExceptionMapper mapper = (ResponseExceptionMapper) component;
-            registerCustomProvider(component, -1);
+            registerCustomProvider(component, mapper.getPriority());
             clientBuilder.register(mapper, mapper.getPriority());
         } else {
             clientBuilder.register(component);
-            registerCustomProvider(component, -1);
+            registerCustomProvider(component, null);
         }
         return this;
     }
@@ -380,7 +380,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
                 || AsyncInvocationInterceptorFactory.class.isAssignableFrom(providerClass);
     }
 
-    private void registerCustomProvider(Object instance, int priority) {
+    private void registerCustomProvider(Object instance, Integer priority) {
         if (!isSupportedCustomProvider(instance.getClass())) {
             return;
         }
@@ -419,9 +419,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
             implements AsyncInvocationInterceptorFactory {
 
         private AsyncInvocationInterceptorFactory factory;
-        private int priority;
+        private Integer priority;
 
-        AsyncInvocationInterceptorFactoryPriorityWrapper(AsyncInvocationInterceptorFactory factory, int priority) {
+        AsyncInvocationInterceptorFactoryPriorityWrapper(AsyncInvocationInterceptorFactory factory, Integer priority) {
             this.factory = factory;
             this.priority = priority;
         }
@@ -431,8 +431,8 @@ class RestClientBuilderImpl implements RestClientBuilder {
             return factory.newInterceptor();
         }
 
-        int getPriority() {
-            if (priority <= 0) {
+        Integer getPriority() {
+            if (priority == null) {
                 priority = Optional.ofNullable(factory.getClass().getAnnotation(Priority.class))
                         .map(Priority::value)
                         .orElse(Priorities.USER);
