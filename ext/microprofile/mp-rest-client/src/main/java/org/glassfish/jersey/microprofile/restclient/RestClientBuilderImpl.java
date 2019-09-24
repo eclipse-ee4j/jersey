@@ -25,6 +25,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +37,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 import javax.net.ssl.HostnameVerifier;
@@ -81,7 +81,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
 
     private final Set<ResponseExceptionMapper> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
-    private final List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
+    private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
     private final Config config;
     private final ConfigWrapper configWrapper;
     private URI uri;
@@ -153,6 +153,8 @@ class RestClientBuilderImpl implements RestClientBuilder {
 
         //We need to check first if default exception mapper was not disabled by property on builder.
         registerExceptionMapper();
+        //sort all AsyncInvocationInterceptorFactory by priority
+        asyncInterceptorFactories.sort(Comparator.comparingInt(AsyncInvocationInterceptorFactoryPriorityWrapper::getPriority));
 
         clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
 
@@ -181,7 +183,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
-                                                               asyncInterceptorFactories,
+                                                               new ArrayList<>(asyncInterceptorFactories),
                                                                injectionManagerExposer.injectionManager,
                                                                CdiUtil.getBeanManager());
 
@@ -393,7 +395,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
             paramConverterProviders.add((ParamConverterProvider) instance);
         }
         if (instance instanceof AsyncInvocationInterceptorFactory) {
-            asyncInterceptorFactories.add((AsyncInvocationInterceptorFactory) instance);
+            asyncInterceptorFactories
+                    .add(new AsyncInvocationInterceptorFactoryPriorityWrapper((AsyncInvocationInterceptorFactory) instance,
+                                                                              priority));
         }
     }
 
@@ -408,6 +412,32 @@ class RestClientBuilderImpl implements RestClientBuilder {
             } else {
                 throw new IllegalArgumentException("The client needs Jersey runtime to work properly");
             }
+        }
+    }
+
+    private static class AsyncInvocationInterceptorFactoryPriorityWrapper
+            implements AsyncInvocationInterceptorFactory {
+
+        private AsyncInvocationInterceptorFactory factory;
+        private int priority;
+
+        AsyncInvocationInterceptorFactoryPriorityWrapper(AsyncInvocationInterceptorFactory factory, int priority) {
+            this.factory = factory;
+            this.priority = priority;
+        }
+
+        @Override
+        public AsyncInvocationInterceptor newInterceptor() {
+            return factory.newInterceptor();
+        }
+
+        int getPriority() {
+            if (priority <= 0) {
+                priority = Optional.ofNullable(factory.getClass().getAnnotation(Priority.class))
+                        .map(Priority::value)
+                        .orElse(Priorities.USER);
+            }
+            return priority;
         }
     }
 
