@@ -127,7 +127,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
         final ResponseWriter responseWriter = new ResponseWriter(exchange);
         final ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri,
                 exchange.getRequestMethod(), getSecurityContext(exchange.getPrincipal(), isSecure),
-                new MapPropertiesDelegate());
+                new MapPropertiesDelegate(), appHandler.getConfiguration());
         requestContext.setEntityStream(exchange.getRequestBody());
         requestContext.getHeaders().putAll(exchange.getRequestHeaders());
         requestContext.setWriter(responseWriter);

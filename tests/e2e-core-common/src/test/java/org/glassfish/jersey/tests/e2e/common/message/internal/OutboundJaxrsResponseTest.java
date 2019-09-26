@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.RuntimeDelegate;
 
@@ -97,7 +98,7 @@ public class OutboundJaxrsResponseTest {
 
     @Before
     public void setUp() {
-        rb = new OutboundJaxrsResponse.Builder(new OutboundMessageContext()).status(Response.Status.OK);
+        rb = new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null)).status(Response.Status.OK);
     }
 
 
@@ -106,7 +107,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testBufferEmptyEntity() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         assertFalse("Buffer entity should return 'false' if no entity.", r.bufferEntity());
@@ -117,7 +118,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testBufferNonStreamEntity() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         assertFalse("Buffer entity should return 'false' for non-stream entity.", r.bufferEntity());
@@ -129,7 +130,7 @@ public class OutboundJaxrsResponseTest {
     @Test
     public void testBufferStreamEntity() {
         TestInputStream tis = new TestInputStream();
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         assertTrue("Buffer entity should return 'true' for stream entity.", r.bufferEntity());
@@ -143,7 +144,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testCloseEmptyEntity() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         r.close();
@@ -161,7 +162,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testCloseNonStreamEntity() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         r.close();
@@ -180,7 +181,7 @@ public class OutboundJaxrsResponseTest {
     @Test
     public void testCloseStreamEntity() {
         TestInputStream tis = new TestInputStream();
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
         r.close();
@@ -201,7 +202,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testCloseEmptyEntityNoStreamProvider() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build(), null);
         r.close();
         try {
             r.bufferEntity();
@@ -217,7 +218,7 @@ public class OutboundJaxrsResponseTest {
      */
     @Test
     public void testCloseNonStreamEntityNoStreamProvider() {
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build(), null);
         r.close();
         try {
             r.bufferEntity();
@@ -234,7 +235,7 @@ public class OutboundJaxrsResponseTest {
     @Test
     public void testCloseStreamEntityNoStreamProvider() {
         TestInputStream tis = new TestInputStream();
-        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build());
+        final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build(), null);
         r.close();
         try {
             r.bufferEntity();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,11 +20,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.PropertiesDelegate;
@@ -46,25 +46,32 @@ public final class ContainerRequestBuilder {
      * Create new Jersey container request context builder. The builder and built request context are supposed to be used only
      * for testing purposes.
      *
-     * @param requestUri request URI.
-     * @param method     request HTTP method name.
+     * @param requestUri    request URI.
+     * @param method        request HTTP method name.
+     * @param configuration container request configuration
      * @return new builder instance.
      */
-    public static ContainerRequestBuilder from(final String requestUri, final String method) {
-        return from(null, requestUri, method);
+    public static ContainerRequestBuilder from(final String requestUri,
+                                               final String method,
+                                               final Configuration configuration) {
+        return from(null, requestUri, method, configuration);
     }
 
     /**
      * Create new Jersey container request context builder. The builder and built request context are supposed to be used only
      * for testing purposes.
      *
-     * @param baseUri    base application URI.
-     * @param requestUri request URI.
-     * @param method     request HTTP method name.
+     * @param baseUri       base application URI.
+     * @param requestUri    request URI.
+     * @param method        request HTTP method name.
+     * @param configuration container request configuration
      * @return new builder instance.
      */
-    public static ContainerRequestBuilder from(final String baseUri, final String requestUri, final String method) {
-        return from(baseUri, requestUri, method, null, null);
+    public static ContainerRequestBuilder from(final String baseUri,
+                                               final String requestUri,
+                                               final String method,
+                                               final Configuration configuration) {
+        return from(baseUri, requestUri, method, null, null, configuration);
     }
 
     /**
@@ -79,39 +86,48 @@ public final class ContainerRequestBuilder {
      *                           has not been authenticated by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate} to be used by the context, may be
      *                           {@code null}.
+     * @param configuration      container request configuration
      * @return new builder instance.
      */
     public static ContainerRequestBuilder from(final String baseUri,
                                                final String requestUri,
                                                final String method,
                                                final SecurityContext securityContext,
-                                               final PropertiesDelegate propertiesDelegate) {
-        return new ContainerRequestBuilder(baseUri, requestUri, method, securityContext, propertiesDelegate);
+                                               final PropertiesDelegate propertiesDelegate,
+                                               final Configuration configuration) {
+        return new ContainerRequestBuilder(baseUri, requestUri, method, securityContext, propertiesDelegate, configuration);
     }
 
     /**
      * Create new Jersey container request context builder. The builder and built request context are supposed to be used only
      * for testing purposes.
      *
-     * @param requestUri request URI.
-     * @param method     request HTTP method name.
+     * @param requestUri    request URI.
+     * @param method        request HTTP method name.
+     * @param configuration container request configuration
      * @return new builder instance.
      */
-    public static ContainerRequestBuilder from(final URI requestUri, final String method) {
-        return from(null, requestUri, method);
+    public static ContainerRequestBuilder from(final URI requestUri,
+                                               final String method,
+                                               final Configuration configuration) {
+        return from(null, requestUri, method, configuration);
     }
 
     /**
      * Create new Jersey container request context builder. The builder and built request context are supposed to be used only
      * for testing purposes.
      *
-     * @param baseUri    base application URI.
-     * @param requestUri request URI.
-     * @param method     request HTTP method name.
+     * @param baseUri       base application URI.
+     * @param requestUri    request URI.
+     * @param method        request HTTP method name.
+     * @param configuration container request configuration
      * @return new builder instance.
      */
-    public static ContainerRequestBuilder from(final URI baseUri, final URI requestUri, final String method) {
-        return from(baseUri, requestUri, method, null, null);
+    public static ContainerRequestBuilder from(final URI baseUri,
+                                               final URI requestUri,
+                                               final String method,
+                                               final Configuration configuration) {
+        return from(baseUri, requestUri, method, null, null, configuration);
     }
 
     /**
@@ -126,14 +142,16 @@ public final class ContainerRequestBuilder {
      *                           has not been authenticated by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate} to be used by the context, may be
      *                           {@code null}.
+     * @param configuration      container request configuration
      * @return new builder instance.
      */
     public static ContainerRequestBuilder from(final URI baseUri,
                                                final URI requestUri,
                                                final String method,
                                                final SecurityContext securityContext,
-                                               final PropertiesDelegate propertiesDelegate) {
-        return new ContainerRequestBuilder(baseUri, requestUri, method, securityContext, propertiesDelegate);
+                                               final PropertiesDelegate propertiesDelegate,
+                                               final Configuration configuration) {
+        return new ContainerRequestBuilder(baseUri, requestUri, method, securityContext, propertiesDelegate, configuration);
     }
 
     /**
@@ -147,12 +165,11 @@ public final class ContainerRequestBuilder {
         return (uri.isAbsolute() || strUri.charAt(0) == '/') ? uri : URI.create('/' + strUri);
     }
 
-    private final RuntimeDelegate delegate = RuntimeDelegate.getInstance();
     private final TestContainerRequest request;
+    private final Configuration configuration;
 
     /**
      * Create new Jersey container request context builder.
-     *
      * @param baseUri            base application URI.
      * @param requestUri         request URI.
      * @param method             request HTTP method name.
@@ -161,17 +178,20 @@ public final class ContainerRequestBuilder {
      *                           has not been authenticated by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate} to be used by the context, may be
      *                           {@code null}.
+     * @param configuration      container request configuration
      */
     private ContainerRequestBuilder(final String baseUri,
                                     final String requestUri,
                                     final String method,
                                     final SecurityContext securityContext,
-                                    final PropertiesDelegate propertiesDelegate) {
+                                    final PropertiesDelegate propertiesDelegate,
+                                    final Configuration configuration) {
         this(baseUri == null || baseUri.isEmpty() ? null : URI.create(baseUri),
                 URI.create(requestUri),
                 method,
                 securityContext,
-                propertiesDelegate);
+                propertiesDelegate,
+                configuration);
     }
 
     /**
@@ -185,17 +205,21 @@ public final class ContainerRequestBuilder {
      *                           has not been authenticated by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate} to be used by the context, may be
      *                           {@code null}.
+     * @param configuration      container request configuration
      */
     private ContainerRequestBuilder(final URI baseUri,
                                     final URI requestUri,
                                     final String method,
                                     final SecurityContext securityContext,
-                                    final PropertiesDelegate propertiesDelegate) {
+                                    final PropertiesDelegate propertiesDelegate,
+                                    final Configuration configuration) {
+        this.configuration = configuration;
         request = new TestContainerRequest(baseUri,
                 slash(requestUri),
                 method,
                 securityContext,
-                propertiesDelegate == null ? new MapPropertiesDelegate() : propertiesDelegate);
+                propertiesDelegate == null ? new MapPropertiesDelegate() : propertiesDelegate,
+                configuration);
     }
 
     /**
@@ -305,7 +329,7 @@ public final class ContainerRequestBuilder {
      * @return the updated builder.
      */
     public ContainerRequestBuilder type(final MediaType contentType) {
-        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, delegate));
+        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, configuration));
         return this;
     }
 
@@ -353,7 +377,7 @@ public final class ContainerRequestBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.header(name, HeaderUtils.asString(value, delegate));
+        request.header(name, HeaderUtils.asString(value, configuration));
     }
 
     private void putHeaders(final String name, final Object... values) {
@@ -361,7 +385,7 @@ public final class ContainerRequestBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), delegate));
+        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), configuration));
     }
 
     private void putHeaders(final String name, final String... values) {

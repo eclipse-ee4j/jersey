@@ -147,7 +147,8 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     requestUri,
                     request.getMethod(),
                     getSecurityContext(request),
-                    new MapPropertiesDelegate());
+                    new MapPropertiesDelegate(),
+                    appHandler.getConfiguration());
             requestContext.setEntityStream(request.getInputStream());
             final Enumeration<String> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {

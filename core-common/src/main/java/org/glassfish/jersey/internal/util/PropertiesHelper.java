@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.RuntimeType;
 
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
@@ -311,6 +312,24 @@ public final class PropertiesHelper {
         }
 
         return type.cast(value);
+    }
+
+    /**
+     * Determine whether {@link CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE} does not globally
+     * disable META-INF/services lookup on client/server.
+     *
+     * @param properties  map containing application properties. May be {@code null}
+     * @param runtimeType runtime (client or server) where the service finder binder is used.
+     * @return {@code true} if the CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE is not se to true
+     */
+    public static boolean isMetaInfServicesEnabled(Map<String, Object> properties, RuntimeType runtimeType) {
+        final boolean METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT = false;
+        boolean disableMetaInfServicesLookup = METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT;
+        if (properties != null) {
+            disableMetaInfServicesLookup = CommonProperties.getValue(properties, runtimeType,
+                    CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE, METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT, Boolean.class);
+        }
+        return !disableMetaInfServicesLookup;
     }
 
     /**

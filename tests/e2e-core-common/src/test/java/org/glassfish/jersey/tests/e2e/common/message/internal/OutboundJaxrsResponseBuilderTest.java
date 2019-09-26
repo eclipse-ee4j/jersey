@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -47,7 +48,7 @@ public class OutboundJaxrsResponseBuilderTest {
      */
     @Test
     public void testMediaType() {
-        final Response r = new OutboundJaxrsResponse.Builder(new OutboundMessageContext())
+        final Response r = new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML)
                 .build();
         assertEquals(204, r.getStatus());
@@ -57,7 +58,7 @@ public class OutboundJaxrsResponseBuilderTest {
 
     @Test
     public void testIssue1297Fix() {
-        final Response response = new OutboundJaxrsResponse.Builder(new OutboundMessageContext())
+        final Response response = new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null))
                 .status(Response.Status.OK)
                 .entity("1234567890")
                 .build();

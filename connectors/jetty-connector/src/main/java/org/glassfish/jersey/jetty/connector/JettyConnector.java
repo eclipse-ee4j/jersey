@@ -129,6 +129,7 @@ class JettyConnector implements Connector {
 
     private final HttpClient client;
     private final CookieStore cookieStore;
+    private final Configuration configuration;
 
     /**
      * Create the new Jetty client connector.
@@ -137,6 +138,7 @@ class JettyConnector implements Connector {
      * @param config client configuration.
      */
     JettyConnector(final Client jaxrsClient, final Configuration config) {
+        this.configuration = config;
         HttpClient httpClient = null;
         if (config.isRegistered(JettyHttpClientSupplier.class)) {
             Optional<Object> contract = config.getInstances().stream()
@@ -248,7 +250,7 @@ class JettyConnector implements Connector {
         try {
             final ContentResponse jettyResponse = jettyRequest.send();
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
-                                           JettyConnector.this.getClass().getName());
+                                           JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
             final javax.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
                     ? Statuses.from(jettyResponse.getStatus())
@@ -306,8 +308,8 @@ class JettyConnector implements Connector {
         return request;
     }
 
-    private static Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
-        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers);
+    private Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
+        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers, configuration);
 
         // remove User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
         request.getHeaders().remove(HttpHeader.USER_AGENT);
@@ -396,7 +398,7 @@ class JettyConnector implements Connector {
                 @Override
                 public void onHeaders(final Response jettyResponse) {
                     HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
-                                                   JettyConnector.this.getClass().getName());
+                                                   JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
                     if (responseFuture.isDone()) {
                         if (!callbackInvoked.compareAndSet(false, true)) {

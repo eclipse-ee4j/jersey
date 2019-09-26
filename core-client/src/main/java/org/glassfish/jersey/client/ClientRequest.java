@@ -94,6 +94,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
      */
     protected ClientRequest(
             final URI requestUri, final ClientConfig clientConfig, final PropertiesDelegate propertiesDelegate) {
+        super(clientConfig.getConfiguration());
         clientConfig.checkClient();
 
         this.requestUri = requestUri;
@@ -273,12 +274,12 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
 
     @Override
     public List<String> getRequestHeader(String name) {
-        return HeaderUtils.asStringList(getHeaders().get(name), null);
+        return HeaderUtils.asStringList(getHeaders().get(name), clientConfig.getConfiguration());
     }
 
     @Override
     public MultivaluedMap<String, String> getRequestHeaders() {
-        return HeaderUtils.asStringHeaders(getHeaders());
+        return HeaderUtils.asStringHeaders(getHeaders(), clientConfig.getConfiguration());
     }
 
     @Override
