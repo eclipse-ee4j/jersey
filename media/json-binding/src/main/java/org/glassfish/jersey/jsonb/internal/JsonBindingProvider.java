@@ -19,6 +19,7 @@ package org.glassfish.jersey.jsonb.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PushbackInputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -29,6 +30,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.Providers;
@@ -70,7 +72,24 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
                            MediaType mediaType,
                            MultivaluedMap<String, String> httpHeaders,
                            InputStream entityStream) throws IOException, WebApplicationException {
+        if (entityStream.markSupported()) {
+            entityStream.mark(1);
+            if (entityStream.read() == -1) {
+                throw new NoContentException("JSON-B cannot process empty input stream");
+            }
+            entityStream.reset();
+        } else {
+            final PushbackInputStream buffer = new PushbackInputStream(entityStream);
+            final int firstByte = buffer.read();
+            if (firstByte == -1) {
+                throw new NoContentException("JSON-B cannot process empty input stream");
+            }
+            buffer.unread(firstByte);
+            entityStream = buffer;
+        }
+
         Jsonb jsonb = getJsonb(type);
+
         try {
             return jsonb.fromJson(entityStream, genericType);
         } catch (JsonbException e) {
