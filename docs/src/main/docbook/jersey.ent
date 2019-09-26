@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@
 <!ENTITY jackson.javadoc.version "$jackson-version">
 <!-- temporary hardcoded javadoc version - the correct one is missing at the provider's web -->
 <!ENTITY jackson.javadoc.temp.version "2.3.0">
-<!ENTITY repository "$repository">
+<!--<!ENTITY repository "$repository">-->
 <!ENTITY src.branch "$src.branch">
 <!ENTITY version "$version">
 
@@ -42,19 +42,19 @@
 <!ENTITY bv.project.link "<link xlink:href='http://beanvalidation.org/'>Bean Validation</link>">
 <!ENTITY bv11.javadoc.uri "http://docs.jboss.org/hibernate/beanvalidation/spec/1.1/api">
 <!ENTITY cloud.guide "<link xlink:href='http://docs.oracle.com/cloud/131/developer_services/CSJSU/java-develop.htm#BABHDAJH'>guide</link>">
-<!ENTITY felix.link "<link xlink:href='http://felix.apache.org/site/index.html'>Apache Felix</link>">
-<!ENTITY grizzly.link "<link xlink:href='http://grizzly.java.net/'>Grizzly</link>">
-<!ENTITY guava.javadoc.uri "http://docs.guava-libraries.googlecode.com/git-history/v&guava.version;/javadoc/">
-<!ENTITY guava.link "<link xlink:href='https://code.google.com/p/guava-libraries/'>Guava</link>">
+<!ENTITY felix.link "<link xlink:href='https://felix.apache.org/'>Apache Felix</link>">
+<!ENTITY grizzly.link "<link xlink:href='https://javaee.github.io/grizzly/'>Grizzly</link>">
+<!ENTITY guava.javadoc.uri "https://guava.dev/releases/&guava.version;/api/docs/">
+<!ENTITY guava.link "<link xlink:href='https://guava.dev/'>Guava</link>">
 <!ENTITY heroku.uri "https://www.heroku.com">
 <!ENTITY heroku.link "<link xlink:href='&heroku.uri;'>Heroku</link>">
-<!ENTITY hk2.javadoc.uri "https://hk2.java.net/apidocs">
-<!ENTITY hk2.link "<link xlink:href='http://hk2.java.net/'>HK2</link>">
-<!ENTITY hk2.spring-bridge.link "<link xlink:href='https://hk2.java.net/spring-bridge/'>The Spring/HK2 Bridge</link>">
-<!ENTITY jaxb.release.uri "http://jaxb.java.net/nonav/&jaxb-api-jar.version;">
+<!ENTITY hk2.javadoc.uri "https://javaee.github.io/hk2/apidocs/">
+<!ENTITY hk2.link "<link xlink:href='https://javaee.github.io/hk2/'>HK2</link>">
+<!ENTITY hk2.spring-bridge.link "<link xlink:href='https://javaee.github.io/hk2/spring-bridge/'>The Spring/HK2 Bridge</link>">
+<!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
-<!ENTITY jaxrs.release.uri "http://jax-rs-spec.java.net/nonav/&jax-rs.version;">
-<!ENTITY jaxrs.javadoc.uri "https://jersey.github.io/apidocs-javax.jax-rs/&jax-rs.version;/javax/ws/rs">
+<!ENTITY jaxrs.release.uri "https://github.com/jax-rs">
+<!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/&jax-rs.version;/">
 <!ENTITY jaxrs21.javadoc.uri "#/javax/ws/rs">   <!-- TODO - once we have published javadocs to link here -->
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
@@ -75,14 +75,14 @@
 <!ENTITY jersey.ext.mvc-jsp.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-mvc-jsp/dependencies.html'>jersey-mvc-jsp</link>" >
 <!ENTITY jersey.ext.mvc-mustache.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-mvc-mustache/dependencies.html'>jersey-mvc-mustache</link>" >
 <!ENTITY jersey.ext.spring4.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-spring4/dependencies.html'>jersey-spring4</link>" >
-<!ENTITY jersey.docs.root.uri "https://jersey.github.io/documentation/&docs.version;">
+<!ENTITY jersey.docs.root.uri "https://eclipse-ee4j.github.io/jersey.github.io/documentation/&docs.version;">
 <!ENTITY jersey.docs.index.uri "&jersey.docs.root.uri;/index.html">
 <!ENTITY jersey.github.examples.uri "&jersey.github.release.uri;/examples">
-<!ENTITY jersey.github.base.uri "https://github.com/jersey/jersey/tree">
+<!ENTITY jersey.github.base.uri "https://github.com/eclipse-ee4j/jersey/tree">
 <!ENTITY jersey.github.release.uri "&jersey.github.base.uri;/&src.branch;">
-<!ENTITY jersey.javadoc.root.uri "https://jersey.github.io/apidocs/&apidocs.version;/jersey">
+<!ENTITY jersey.javadoc.root.uri "https://eclipse-ee4j.github.io/jersey.github.io/apidocs/&apidocs.version;/jersey">
 <!ENTITY jersey.javadoc.uri.prefix "&jersey.javadoc.root.uri;/org/glassfish/jersey">
-<!ENTITY jersey.project-info.uri.prefix "https://jersey.github.io/project-info/&version;/jersey/project">
+<!ENTITY jersey.project-info.uri.prefix "https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project">
 <!ENTITY jee.javadoc.uri "http://docs.oracle.com/javaee/7/api">
 <!ENTITY jdk6.javadoc.uri "http://docs.oracle.com/javase/6/docs/api">
 <!ENTITY jdk7.javadoc.uri "http://docs.oracle.com/javase/7/docs/api">
@@ -99,7 +99,7 @@
 <!ENTITY rxjava.link "<link xlink:href='&rxjava.uri;'>RxJava</link>">
 <!ENTITY rxjava.uri "https://github.com/ReactiveX/RxJava">
 <!ENTITY wikipedia.uri "http://en.wikipedia.org/wiki/">
-<!ENTITY jira.uri.prefix "https://java.net/jira/browse">
+<!ENTITY jira.uri.prefix "https://github.com/eclipse-ee4j/jersey/issues">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Configuration.html'>Configuration</link>">

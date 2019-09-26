@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,6 +49,10 @@
                     <para>Since Jersey 2.26, all modules are build using Java SE 8 and there is no support for running it
                     on older Java SE distributions.</para>
                 </listitem>
+                <listitem>
+                    <para>Since Jersey 2.29, all modules can be built using Java SE 11 and all distributed modules provide support
+                        for Java SE 8+ (9,11).</para>
+                </listitem>
             </itemizedlist>
         </para>
     </section>
@@ -59,10 +63,10 @@
             Jersey is built, assembled and installed using <link xlink:href="http://maven.apache.org/">Apache Maven</link>.
             Non-snapshot Jersey releases are deployed to the
             <link xlink:href="http://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
-            <link xlink:href="http://maven.java.net/">Java.Net Maven repositories</link>, which contain also Jersey SNAPSHOT
+            <link xlink:href="https://oss.sonatype.org/">Sonatype Maven repositories</link>, which contain also Jersey SNAPSHOT
             versions. In case you would want to test the latest development builds check out the
-            <link xlink:href="https://maven.java.net/content/repositories/snapshots/org/glassfish/jersey">
-                Java.Net Snapshots Maven repository</link>.
+            <link xlink:href="https://oss.sonatype.org/content/repositories/snapshots/org/glassfish/jersey">
+                Sonatype Snapshots Maven repository</link>.
         </para>
 
         <para>
