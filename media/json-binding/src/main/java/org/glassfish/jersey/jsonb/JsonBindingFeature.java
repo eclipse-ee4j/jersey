@@ -27,7 +27,7 @@ import org.glassfish.jersey.jsonb.internal.JsonBindingAutoDiscoverable;
 import org.glassfish.jersey.jsonb.internal.JsonBindingProvider;
 
 /**
- * Feature used to register Jackson JSON providers.
+ * Feature used to register JSON-B providers.
  * <p>
  * The Feature is automatically enabled when {@link JsonBindingAutoDiscoverable} is on classpath.
  * Default JSON-B configuration obtained by calling {@code JsonbBuilder.create()} is used.
