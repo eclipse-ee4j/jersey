@@ -53,7 +53,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.jackson.*</Export-Package>
+                        <Export-Package>org.glassfish.jersey.jsonb.*</Export-Package>
                         <Import-Package>${javax.annotation.osgi.version},*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
