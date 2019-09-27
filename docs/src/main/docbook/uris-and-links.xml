@@ -63,7 +63,7 @@ public class UsersResource {
     @GET
     @Produces("application/json")
     public JSONArray getUsersAsJsonArray() {
-        JSONArray uriArray = new JSONArray  ();
+        JSONArray uriArray = new JSONArray();
         for (UserEntity userEntity : getUsers()) {
             UriBuilder ub = uriInfo.getAbsolutePathBuilder();
             URI userUri = ub.
