@@ -75,14 +75,14 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
         if (entityStream.markSupported()) {
             entityStream.mark(1);
             if (entityStream.read() == -1) {
-                throw new NoContentException("JSON-B cannot process empty input stream");
+                throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
             }
             entityStream.reset();
         } else {
             final PushbackInputStream buffer = new PushbackInputStream(entityStream);
             final int firstByte = buffer.read();
             if (firstByte == -1) {
-                throw new NoContentException("JSON-B cannot process empty input stream");
+                throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
             }
             buffer.unread(firstByte);
             entityStream = buffer;
