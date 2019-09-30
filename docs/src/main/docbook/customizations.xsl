@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@
         <xsl:element name="div">
             <xsl:attribute name="style">float:right</xsl:attribute>
             <xsl:element name="a">
-                <xsl:attribute name="href">https://jersey.github.io</xsl:attribute>
+                <xsl:attribute name="href">https://eclipse-ee4j.github.io/jersey</xsl:attribute>
                 <xsl:element name="img">
-                    <xsl:attribute name="src">https://jersey.github.io/images/jersey_logo.png</xsl:attribute>
+                    <xsl:attribute name="src">https://eclipse-ee4j.github.io/jersey.github.io/images/jersey_logo.png</xsl:attribute>
                 </xsl:element>
             </xsl:element>
         </xsl:element>
@@ -48,21 +48,21 @@
 
     <xsl:template name="user.footer.content">
         <xsl:element name="link">
-            <xsl:attribute name="href">https://jersey.github.io/sh/shCore.css</xsl:attribute>
+            <xsl:attribute name="href">https://eclipse-ee4j.github.io/jersey.github.io/sh/shCore.css</xsl:attribute>
             <xsl:attribute name="rel">stylesheet</xsl:attribute>
             <xsl:attribute name="type">text/css</xsl:attribute>
         </xsl:element>
         <xsl:element name="link">
-            <xsl:attribute name="href">https://jersey.github.io/sh/shThemeDefault.css</xsl:attribute>
+            <xsl:attribute name="href">https://eclipse-ee4j.github.io/jersey.github.io/sh/shThemeDefault.css</xsl:attribute>
             <xsl:attribute name="rel">stylesheet</xsl:attribute>
             <xsl:attribute name="type">text/css</xsl:attribute>
         </xsl:element>
         <xsl:element name="script">
-            <xsl:attribute name="src">https://jersey.github.io/sh/shCore.js</xsl:attribute>
+            <xsl:attribute name="src">https://eclipse-ee4j.github.io/jersey.github.io/sh/shCore.js</xsl:attribute>
             <xsl:attribute name="type">text/javascript</xsl:attribute>
         </xsl:element>
         <xsl:element name="script">
-            <xsl:attribute name="src">https://jersey.github.io/sh/shAutoloader.js</xsl:attribute>
+            <xsl:attribute name="src">https://eclipse-ee4j.github.io/jersey.github.io/sh/shAutoloader.js</xsl:attribute>
             <xsl:attribute name="type">text/javascript</xsl:attribute>
         </xsl:element>
         <xsl:element name="script">
@@ -73,7 +73,7 @@
                   ;
 
               for(var i = 0; i &lt; args.length; i++)
-                  result.push(args[i].replace('@', 'https://jersey.github.io/sh/'));
+                  result.push(args[i].replace('@', 'https://eclipse-ee4j.github.io/jersey.github.io/sh/'));
 
               return result
             };

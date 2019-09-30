@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@
         <title>WADL introduction</title>
         <para>
             Jersey contains support for
-            <link xlink:href='http://wadl.java.net/'>Web Application Description Language (WADL)</link>. WADL is
+            <link xlink:href='https://javaee.github.io/wadl/'>Web Application Description Language (WADL)</link>. WADL is
             a XML description of a deployed RESTful web application. It contains model of the deployed resources, their
             structure, supported media types, HTTP methods and so on. In a sense, WADL is a similar to the WSDL
             (Web Service Description Language) which describes SOAP web services. WADL is however specifically designed
@@ -559,11 +559,6 @@ public static class CustomerAddressSubResource {
             support you can enhance the generated WADL document with additional information, such as
             resource method javadoc-based documentation of your REST APIs, adding general documentation,
             adding external grammar support, or adding any custom WADL extension information.
-        </para>
-        <para>
-            The documentation of the existing extended WADL can be found here:
-            <link xlink:href="https://wikis.oracle.com/display/Jersey/WADL">Extended WADL in Jersey 1</link>. This contains
-            description of an extended WADL generation in Jersey 1.x that is currently supported also by Jersey 2.x.
         </para>
         <para>
             <emphasis role="strong">Again, note that the extended WADL in Jersey 2.x is NOT the intended final version and
