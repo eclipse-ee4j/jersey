@@ -110,7 +110,7 @@ class ExecutorServiceWrapper implements ExecutorService {
         wrapped.execute(wrap(command));
     }
 
-    private <T> Callable<T> wrap(Callable<T> task) {
+    private static <T> Callable<T> wrap(Callable<T> task) {
         List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
         return () -> {
             applyContextOnInterceptors(asyncInvocationInterceptors);
@@ -118,7 +118,7 @@ class ExecutorServiceWrapper implements ExecutorService {
         };
     }
 
-    private Runnable wrap(Runnable task) {
+    private static Runnable wrap(Runnable task) {
         List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
         return () -> {
             applyContextOnInterceptors(asyncInvocationInterceptors);
@@ -126,7 +126,7 @@ class ExecutorServiceWrapper implements ExecutorService {
         };
     }
 
-    private void applyContextOnInterceptors(List<AsyncInvocationInterceptor> asyncInvocationInterceptors) {
+    private static void applyContextOnInterceptors(List<AsyncInvocationInterceptor> asyncInvocationInterceptors) {
         if (asyncInvocationInterceptors != null) {
             //applyContext methods need to be called in reverse ordering of priority
             for (int i = asyncInvocationInterceptors.size(); i-- > 0; ) {
@@ -135,9 +135,9 @@ class ExecutorServiceWrapper implements ExecutorService {
         }
     }
 
-    private <T> Collection<? extends Callable<T>> wrap(Collection<? extends Callable<T>> tasks) {
+    private static <T> Collection<? extends Callable<T>> wrap(Collection<? extends Callable<T>> tasks) {
         return tasks.stream()
-                .map(this::wrap)
+                .map(ExecutorServiceWrapper::wrap)
                 .collect(Collectors.toList());
     }
 }
