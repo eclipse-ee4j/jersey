@@ -19,7 +19,6 @@ package org.glassfish.jersey.jsonb.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PushbackInputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -41,6 +40,7 @@ import javax.json.bind.JsonbException;
 
 import org.glassfish.jersey.jsonb.LocalizationMessages;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.EntityInputStream;
 
 /**
  * Entity provider (reader and writer) for JSONB.
@@ -72,20 +72,10 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
                            MediaType mediaType,
                            MultivaluedMap<String, String> httpHeaders,
                            InputStream entityStream) throws IOException, WebApplicationException {
-        if (entityStream.markSupported()) {
-            entityStream.mark(1);
-            if (entityStream.read() == -1) {
-                throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
-            }
-            entityStream.reset();
-        } else {
-            final PushbackInputStream buffer = new PushbackInputStream(entityStream);
-            final int firstByte = buffer.read();
-            if (firstByte == -1) {
-                throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
-            }
-            buffer.unread(firstByte);
-            entityStream = buffer;
+        final EntityInputStream entityInputStream =  new EntityInputStream(entityStream);
+        entityStream = entityInputStream;
+        if (entityInputStream.isEmpty()) {
+            throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
         }
 
         Jsonb jsonb = getJsonb(type);
