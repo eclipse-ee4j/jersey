@@ -826,7 +826,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         int skippedElements = methodsToSkip.size() + fieldsToSkip.size();
 
         ClassAnalyzer customizedClassAnalyzer = skippedElements > 0
-                ? new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip)
+                ? new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager)
                 : defaultClassAnalyzer;
 
         Binder binder = new AbstractBinder() {

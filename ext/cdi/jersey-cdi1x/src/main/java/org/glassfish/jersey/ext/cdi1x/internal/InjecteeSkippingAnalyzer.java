@@ -30,6 +30,9 @@ import org.glassfish.jersey.internal.util.collection.Views;
 import org.glassfish.hk2.api.ClassAnalyzer;
 import org.glassfish.hk2.api.MultiException;
 
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+
 /**
  * Class analyzer that ignores given injection points.
  * Used for CDI integration, where we need to avoid HK2 replacing CDI injected entities.
@@ -41,13 +44,16 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
     private final ClassAnalyzer defaultAnalyzer;
     private final Map<Class<?>, Set<Method>> methodsToSkip;
     private final Map<Class<?>, Set<Field>> fieldsToSkip;
+    private final BeanManager beanManager;
 
     public InjecteeSkippingAnalyzer(ClassAnalyzer defaultAnalyzer,
                                     Map<Class<?>, Set<Method>> methodsToSkip,
-                                    Map<Class<?>, Set<Field>> fieldsToSkip) {
+                                    Map<Class<?>, Set<Field>> fieldsToSkip,
+                                    BeanManager beanManager) {
         this.defaultAnalyzer = defaultAnalyzer;
         this.methodsToSkip = methodsToSkip;
         this.fieldsToSkip = fieldsToSkip;
+        this.beanManager = beanManager;
     }
 
     @Override
@@ -66,6 +72,7 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
     public <T> Set<Field> getFields(Class<T> type) throws MultiException {
         final Set<Field> originalFields = defaultAnalyzer.getFields(type);
         final Set<Field> skippedFields = getMembersToSkip(type, fieldsToSkip);
+        addCdiInjectedFieldsToSkip(skippedFields, originalFields);
         return Views.setDiffView(originalFields, skippedFields);
     }
 
@@ -97,5 +104,13 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
         }
 
         return compositeResult;
+    }
+
+    private void addCdiInjectedFieldsToSkip(Set<Field> skippedFields, Set<Field> originalFields) {
+        for (Field field : originalFields) {
+            if (field.getAnnotation(Inject.class) != null && !beanManager.getBeans(field.getType()).isEmpty()) {
+                skippedFields.add(field);
+            }
+        }
     }
 }
