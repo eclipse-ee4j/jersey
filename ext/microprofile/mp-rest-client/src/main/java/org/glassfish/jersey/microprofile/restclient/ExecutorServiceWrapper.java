@@ -112,6 +112,7 @@ class ExecutorServiceWrapper implements ExecutorService {
 
     private static <T> Callable<T> wrap(Callable<T> task) {
         List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
+        asyncInterceptors.remove();
         return () -> {
             applyContextOnInterceptors(asyncInvocationInterceptors);
             return task.call();
@@ -120,6 +121,7 @@ class ExecutorServiceWrapper implements ExecutorService {
 
     private static Runnable wrap(Runnable task) {
         List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
+        asyncInterceptors.remove();
         return () -> {
             applyContextOnInterceptors(asyncInvocationInterceptors);
             task.run();
