@@ -108,7 +108,7 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
 
     private void addCdiInjectedFieldsToSkip(Set<Field> skippedFields, Set<Field> originalFields) {
         for (Field field : originalFields) {
-            if (field.getAnnotation(Inject.class) != null && !beanManager.getBeans(field.getType()).isEmpty()) {
+            if (field.getAnnotation(Inject.class) != null) {
                 skippedFields.add(field);
             }
         }

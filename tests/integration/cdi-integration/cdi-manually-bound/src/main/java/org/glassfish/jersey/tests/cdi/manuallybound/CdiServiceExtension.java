@@ -19,12 +19,11 @@ package org.glassfish.jersey.tests.cdi.manuallybound;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import java.io.IOException;
 
 public class CdiServiceExtension implements Extension {
-    public void observe(@Observes AfterBeanDiscovery event, BeanManager beanManager) throws IOException, ClassNotFoundException {
+    public void observe(@Observes AfterBeanDiscovery event) throws IOException, ClassNotFoundException {
         event.addBean()
                 .addType(CdiService.class)
                 .beanClass(CdiService.class)
