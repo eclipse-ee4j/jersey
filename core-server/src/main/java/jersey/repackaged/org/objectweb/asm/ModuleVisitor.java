@@ -42,7 +42,9 @@ public abstract class ModuleVisitor {
    */
   protected final int api;
 
-  /** The module visitor to which this visitor must delegate method calls. May be null. */
+  /**
+   * The module visitor to which this visitor must delegate method calls. May be {@literal null}.
+   */
   protected ModuleVisitor mv;
 
   /**

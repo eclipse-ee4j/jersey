@@ -104,8 +104,8 @@ final class AnnotationWriter extends AnnotationVisitor {
    *     the visited content must be stored. This ByteVector must already contain all the fields of
    *     the structure except the last one (the element_value_pairs array).
    * @param previousAnnotation the previously visited annotation of the
-   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or null in
-   *     other cases (e.g. nested or array annotations).
+   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
+   *     {@literal null} in other cases (e.g. nested or array annotations).
    */
   AnnotationWriter(
       final SymbolTable symbolTable,
@@ -130,8 +130,9 @@ final class AnnotationWriter extends AnnotationVisitor {
    * @param symbolTable where the constants used in this AnnotationWriter must be stored.
    * @param descriptor the class descriptor of the annotation class.
    * @param previousAnnotation the previously visited annotation of the
-   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or null in
-   *     other cases (e.g. nested or array annotations).
+   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
+   *     {@literal null} in other cases (e.g. nested or array annotations).
+   * @return a new {@link AnnotationWriter} for the given annotation descriptor.
    */
   static AnnotationWriter create(
       final SymbolTable symbolTable,
@@ -159,8 +160,9 @@ final class AnnotationWriter extends AnnotationVisitor {
    *     'typeRef' as a whole.
    * @param descriptor the class descriptor of the annotation class.
    * @param previousAnnotation the previously visited annotation of the
-   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or null in
-   *     other cases (e.g. nested or array annotations).
+   *     Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
+   *     {@literal null} in other cases (e.g. nested or array annotations).
+   * @return a new {@link AnnotationWriter} for the given type annotation reference and descriptor.
    */
   static AnnotationWriter create(
       final SymbolTable symbolTable,
@@ -322,7 +324,7 @@ final class AnnotationWriter extends AnnotationVisitor {
    * and all its <i>predecessors</i> (see {@link #previousAnnotation}. Also adds the attribute name
    * to the constant pool of the class (if not null).
    *
-   * @param attributeName one of "Runtime[In]Visible[Type]Annotations", or null.
+   * @param attributeName one of "Runtime[In]Visible[Type]Annotations", or {@literal null}.
    * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing this
    *     annotation and all its predecessors. This includes the size of the attribute_name_index and
    *     attribute_length fields.

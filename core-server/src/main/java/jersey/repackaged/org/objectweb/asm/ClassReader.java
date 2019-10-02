@@ -193,10 +193,10 @@ public class ClassReader {
     this.b = classFileBuffer;
     // Check the class' major_version. This field is after the magic and minor_version fields, which
     // use 4 and 2 bytes respectively.
-    if (checkClassVersion && readShort(classFileOffset + 6) == Opcodes.V14) {
+    if (checkClassVersion && readShort(classFileOffset + 6) == Opcodes.V15) {
       LOGGER.warning("Unsupported class file major version " + readShort(classFileOffset + 6));
     }
-    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V14) {
+    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V15) {
       throw new IllegalArgumentException(
           "Unsupported class file major version " + readShort(classFileOffset + 6));
     }
@@ -711,7 +711,8 @@ public class ClassReader {
    *     attribute_name_index and attribute_length fields).
    * @param modulePackagesOffset the offset of the ModulePackages attribute (excluding the
    *     attribute_info's attribute_name_index and attribute_length fields), or 0.
-   * @param moduleMainClass the string corresponding to the ModuleMainClass attribute, or null.
+   * @param moduleMainClass the string corresponding to the ModuleMainClass attribute, or {@literal
+   *     null}.
    */
   private void readModuleAttributes(
       final ClassVisitor classVisitor,
@@ -2599,7 +2600,7 @@ public class ClassReader {
    * -1 if there is no such type_annotation of if it does not have a bytecode offset.
    *
    * @param typeAnnotationOffsets the offset of each 'type_annotation' entry in a
-   *     Runtime[In]VisibleTypeAnnotations attribute, or null.
+   *     Runtime[In]VisibleTypeAnnotations attribute, or {@literal null}.
    * @param typeAnnotationIndex the index a 'type_annotation' entry in typeAnnotationOffsets.
    * @return bytecode offset corresponding to the specified JVMS 'type_annotation' structure, or -1
    *     if there is no such type_annotation of if it does not have a bytecode offset.

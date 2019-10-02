@@ -142,11 +142,6 @@ public final class ConstantDynamic {
     return (firstCharOfDescriptor == 'J' || firstCharOfDescriptor == 'D') ? 2 : 1;
   }
 
-  void accept(final MethodVisitor methodVisitor) {
-    methodVisitor.visitInvokeDynamicInsn(
-        name, descriptor, bootstrapMethod, bootstrapMethodArguments);
-  }
-
   @Override
   public boolean equals(final Object object) {
     if (object == this) {
