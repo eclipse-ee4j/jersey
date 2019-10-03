@@ -89,9 +89,9 @@ package jersey.repackaged.org.objectweb.asm;
  * <p>Output frames can contain abstract types of any kind and with a positive or negative array
  * dimension (and even unassigned types, represented by 0 - which does not correspond to any valid
  * abstract type value). Input frames can only contain CONSTANT_KIND, REFERENCE_KIND or
- * UNINITIALIZED_KIND abstract types of positive or null array dimension. In all cases the type
- * table contains only internal type names (array type descriptors are forbidden - array dimensions
- * must be represented through the DIM field).
+ * UNINITIALIZED_KIND abstract types of positive or {@literal null} array dimension. In all cases
+ * the type table contains only internal type names (array type descriptors are forbidden - array
+ * dimensions must be represented through the DIM field).
  *
  * <p>The LONG and DOUBLE types are always represented by using two slots (LONG + TOP or DOUBLE +
  * TOP), for local variables as well as in the operand stack. This is necessary to be able to
@@ -1253,10 +1253,10 @@ class Frame {
    * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
    * @param sourceType the abstract type with which the abstract type array element must be merged.
    *     This type should be of {@link #CONSTANT_KIND}, {@link #REFERENCE_KIND} or {@link
-   *     #UNINITIALIZED_KIND} kind, with positive or null array dimensions.
+   *     #UNINITIALIZED_KIND} kind, with positive or {@literal null} array dimensions.
    * @param dstTypes an array of abstract types. These types should be of {@link #CONSTANT_KIND},
-   *     {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with positive or null array
-   *     dimensions.
+   *     {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with positive or {@literal
+   *     null} array dimensions.
    * @param dstIndex the index of the type that must be merged in dstTypes.
    * @return {@literal true} if the type array has been modified by this operation.
    */

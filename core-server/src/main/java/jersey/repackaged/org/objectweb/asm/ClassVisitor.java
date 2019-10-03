@@ -44,7 +44,7 @@ public abstract class ClassVisitor {
    */
   protected final int api;
 
-  /** The class visitor to which this visitor must delegate method calls. May be null. */
+  /** The class visitor to which this visitor must delegate method calls. May be {@literal null}. */
   protected ClassVisitor cv;
 
   /**

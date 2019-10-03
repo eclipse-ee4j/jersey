@@ -42,7 +42,7 @@ public abstract class FieldVisitor {
    */
   protected final int api;
 
-  /** The field visitor to which this visitor must delegate method calls. May be null. */
+  /** The field visitor to which this visitor must delegate method calls. May be {@literal null}. */
   protected FieldVisitor fv;
 
   /**

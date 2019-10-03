@@ -56,7 +56,9 @@ public abstract class MethodVisitor {
    */
   protected final int api;
 
-  /** The method visitor to which this visitor must delegate method calls. May be null. */
+  /**
+   * The method visitor to which this visitor must delegate method calls. May be {@literal null}.
+   */
   protected MethodVisitor mv;
 
   /**
@@ -92,7 +94,7 @@ public abstract class MethodVisitor {
   /**
    * Visits a parameter of this method.
    *
-   * @param name parameter name or null if none is provided.
+   * @param name parameter name or {@literal null} if none is provided.
    * @param access the parameter's access flags, only {@code ACC_FINAL}, {@code ACC_SYNTHETIC}
    *     or/and {@code ACC_MANDATED} are allowed (see {@link Opcodes}).
    */
