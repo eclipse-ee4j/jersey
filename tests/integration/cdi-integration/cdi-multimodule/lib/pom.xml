@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,17 +19,17 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>org.glassfish.jersey.tests.integration</groupId>
-        <artifactId>project</artifactId>
+        <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
+        <artifactId>cdi-integration-project</artifactId>
         <version>2.30-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>cdi-ejb-test-webapp</artifactId>
-    <packaging>war</packaging>
-    <name>jersey-tests-cdi-ejb-webapp</name>
-
-    <description>Jersey CDI/EJB test web application</description>
+    <artifactId>cdi-multimodule-lib</artifactId>
+    <packaging>jar</packaging>
+    <name>jersey-tests-integration-cdi-multimodule-lib</name>
 
     <dependencies>
         <dependency>
@@ -38,45 +38,32 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
             <scope>provided</scope>
         </dependency>
          <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <type>pom</type>
-            <scope>test</scope>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
-        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
                 <configuration>
-                    <skipTests>${skipTests}</skipTests>
-                    <systemPropertyVariables>
-                        <jersey.config.test.container.factory>${testContainerFactory}</jersey.config.test.container.factory>
-                        <jersey.config.test.container.port>${testContainerPort}</jersey.config.test.container.port>
-                    </systemPropertyVariables>
+                    <skip>false</skip>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <skipTests>true</skipTests>
-        <testContainerFactory>org.glassfish.jersey.test.external.ExternalTestContainerFactory</testContainerFactory>
-        <testContainerPort>8080</testContainerPort>
-    </properties>
+
 </project>
