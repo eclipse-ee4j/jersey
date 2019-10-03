@@ -35,13 +35,12 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
  */
 class ExecutorServiceWrapper implements ExecutorService {
 
-    private final ExecutorService wrapped;
-    private final List<AsyncInvocationInterceptor> asyncInterceptors;
+    static final ThreadLocal<List<AsyncInvocationInterceptor>> asyncInterceptors = new ThreadLocal<>();
 
-    ExecutorServiceWrapper(ExecutorService wrapped,
-                           List<AsyncInvocationInterceptor> asyncInterceptors) {
+    private final ExecutorService wrapped;
+
+    ExecutorServiceWrapper(ExecutorService wrapped) {
         this.wrapped = wrapped;
-        this.asyncInterceptors = asyncInterceptors;
     }
 
     @Override
@@ -111,24 +110,36 @@ class ExecutorServiceWrapper implements ExecutorService {
         wrapped.execute(wrap(command));
     }
 
-    private <T> Callable<T> wrap(Callable<T> task) {
+    private static <T> Callable<T> wrap(Callable<T> task) {
+        List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
+        asyncInterceptors.remove();
         return () -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            applyContextOnInterceptors(asyncInvocationInterceptors);
             return task.call();
         };
     }
 
-    private Runnable wrap(Runnable task) {
+    private static Runnable wrap(Runnable task) {
+        List<AsyncInvocationInterceptor> asyncInvocationInterceptors = asyncInterceptors.get();
+        asyncInterceptors.remove();
         return () -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::applyContext);
+            applyContextOnInterceptors(asyncInvocationInterceptors);
             task.run();
         };
     }
 
+    private static void applyContextOnInterceptors(List<AsyncInvocationInterceptor> asyncInvocationInterceptors) {
+        if (asyncInvocationInterceptors != null) {
+            //applyContext methods need to be called in reverse ordering of priority
+            for (int i = asyncInvocationInterceptors.size(); i-- > 0; ) {
+                asyncInvocationInterceptors.get(i).applyContext();
+            }
+        }
+    }
 
-    private <T> Collection<? extends Callable<T>> wrap(Collection<? extends Callable<T>> tasks) {
+    private static <T> Collection<? extends Callable<T>> wrap(Collection<? extends Callable<T>> tasks) {
         return tasks.stream()
-                .map(this::wrap)
+                .map(ExecutorServiceWrapper::wrap)
                 .collect(Collectors.toList());
     }
 }

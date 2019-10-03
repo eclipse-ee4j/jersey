@@ -28,7 +28,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.ext.ParamConverterProvider;
 
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
+import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
@@ -56,13 +56,13 @@ class RestClientModel {
     static RestClientModel from(Class<?> restClientClass,
                                 Set<ResponseExceptionMapper> responseExceptionMappers,
                                 Set<ParamConverterProvider> paramConverterProviders,
-                                List<AsyncInvocationInterceptor> asyncInterceptors,
+                                List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
                                 InjectionManager injectionManager,
                                 BeanManager beanManager) {
         InterfaceModel interfaceModel = InterfaceModel.from(restClientClass,
                                                             responseExceptionMappers,
                                                             paramConverterProviders,
-                                                            asyncInterceptors,
+                                                            asyncInterceptorFactories,
                                                             injectionManager,
                                                             beanManager);
         return new Builder()
