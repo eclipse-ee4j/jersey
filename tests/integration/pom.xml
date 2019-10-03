@@ -38,6 +38,7 @@
         <module>cdi-beanvalidation-webapp</module>
         <module>cdi-ejb-test-webapp</module>
         <module>cdi-iface-with-non-jaxrs-impl-test-webapp</module>
+        <module>cdi-integration</module>
         <module>cdi-log-check</module>
         <module>cdi-multimodule</module>
         <module>ejb-multimodule-reload</module>
