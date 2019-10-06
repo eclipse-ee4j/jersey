@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.spring.aspect4j;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import org.glassfish.jersey.server.spring.TestComponent1;
 import org.springframework.beans.factory.annotation.Autowired;

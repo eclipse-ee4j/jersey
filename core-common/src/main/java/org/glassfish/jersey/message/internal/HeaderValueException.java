@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.internal;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  * {@link ProcessingException Processing exception} indicating that an attempt to

@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.jsonb;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.InternalProperties;
@@ -32,7 +32,7 @@ import org.glassfish.jersey.jsonb.internal.JsonBindingProvider;
  * The Feature is automatically enabled when {@link JsonBindingAutoDiscoverable} is on classpath.
  * Default JSON-B configuration obtained by calling {@code JsonbBuilder.create()} is used.
  * <p>
- * Custom configuration, if required, can be achieved by implementing custom {@link javax.ws.rs.ext.ContextResolver} and
+ * Custom configuration, if required, can be achieved by implementing custom {@link jakarta.ws.rs.ext.ContextResolver} and
  * registering it as a provider into JAX-RS runtime:
  * <pre>
  * &#64;Provider

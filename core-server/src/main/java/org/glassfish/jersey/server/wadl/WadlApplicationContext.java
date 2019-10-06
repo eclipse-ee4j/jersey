@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.wadl;
 
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.xml.bind.JAXBContext;
 

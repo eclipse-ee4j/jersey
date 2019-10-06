@@ -18,7 +18,7 @@ package org.glassfish.jersey.test.netty;
 
 import java.net.URI;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 
 import io.netty.channel.Channel;
 import org.glassfish.jersey.client.ClientConfig;

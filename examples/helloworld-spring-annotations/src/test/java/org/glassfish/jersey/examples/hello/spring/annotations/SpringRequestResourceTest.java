@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.hello.spring.annotations;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 

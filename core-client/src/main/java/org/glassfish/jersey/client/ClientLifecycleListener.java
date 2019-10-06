@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.spi.Contract;
 

@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.client.connector.provider;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * @author Pavel Bucek

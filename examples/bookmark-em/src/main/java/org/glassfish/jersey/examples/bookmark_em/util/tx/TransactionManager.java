@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.bookmark_em.util.tx;
 
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;

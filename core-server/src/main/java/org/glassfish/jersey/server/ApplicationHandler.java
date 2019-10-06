@@ -36,14 +36,14 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
@@ -107,7 +107,7 @@ import org.glassfish.jersey.server.spi.ContainerResponseWriter;
  * method on a configured application  handler instance.
  * </p>
  * <p>
- * {@code ApplicationHandler} provides two implementations of {@link javax.ws.rs.core.Configuration config} that can be injected
+ * {@code ApplicationHandler} provides two implementations of {@link jakarta.ws.rs.core.Configuration config} that can be injected
  * into the application classes. The first is {@link ResourceConfig resource config} which implements {@code Configuration}
  * itself and is configured by the user. The resource config is not modified by this application handler so the future reloads of
  * the application is not disrupted by providers found on a classpath. This config can
@@ -134,7 +134,7 @@ import org.glassfish.jersey.server.spi.ContainerResponseWriter;
  * @author Marek Potociar
  * @author Libor Kramolis
  * @see ResourceConfig
- * @see javax.ws.rs.core.Configuration
+ * @see jakarta.ws.rs.core.Configuration
  * @see org.glassfish.jersey.server.spi.ContainerProvider
  */
 public final class ApplicationHandler implements ContainerLifecycleListener {

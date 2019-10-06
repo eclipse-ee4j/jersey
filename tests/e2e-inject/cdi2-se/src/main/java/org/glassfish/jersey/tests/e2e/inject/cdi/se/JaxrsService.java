@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.enterprise.context.ApplicationScoped;
 

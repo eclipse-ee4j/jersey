@@ -19,8 +19,8 @@ package org.glassfish.jersey.server;
 import java.util.List;
 import java.util.regex.MatchResult;
 
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
@@ -59,7 +59,7 @@ public interface ExtendedUriInfo extends UriInfo {
     /**
      * Get a read-only list of {@link org.glassfish.jersey.uri.UriTemplate} for matched resources.
      * Each entry is a URI template that is the value of the
-     * {@link javax.ws.rs.Path} that is a partial path that matched a resource
+     * {@link jakarta.ws.rs.Path} that is a partial path that matched a resource
      * class, a sub-resource method or a sub-resource locator.
      * Entries are ordered in reverse request URI matching order, with the
      * root resource URI template last.
@@ -170,7 +170,7 @@ public interface ExtendedUriInfo extends UriInfo {
      * itself such a locator will be already in the returned list as a first element.
      * <p>
      * The resource locator is
-     * a {@link ResourceMethod resource method} which is annotated by the {@link javax.ws.rs.Path @Path}
+     * a {@link ResourceMethod resource method} which is annotated by the {@link jakarta.ws.rs.Path @Path}
      * and returns a sub resource.
      * <p/>
      * @return List of matched resource locators.

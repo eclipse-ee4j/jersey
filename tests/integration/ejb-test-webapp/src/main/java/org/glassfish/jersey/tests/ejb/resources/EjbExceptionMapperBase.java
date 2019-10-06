@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 /**
  * JERSEY-2320 reproducer. {@link CustomBaseException} will get mapped

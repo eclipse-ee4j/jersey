@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Collections;
 
-import javax.ws.rs.POST;
+import jakarta.ws.rs.POST;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

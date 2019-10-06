@@ -15,7 +15,7 @@
  */
 package org.glassfish.jersey.server.spring.scope;
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 

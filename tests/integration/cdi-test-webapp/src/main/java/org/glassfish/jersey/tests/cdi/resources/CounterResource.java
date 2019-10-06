@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * Part of JERSEY-2461 reproducer. This one will get injected with a CDI extension.

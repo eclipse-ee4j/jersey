@@ -15,7 +15,7 @@ import java.net.URI;
 import java.security.AccessController;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.internal.util.PropertiesHelper;

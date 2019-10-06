@@ -85,7 +85,7 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * At last, on the client-side, the entity-filtering annotations are passed to the runtime via
- * {@link javax.ws.rs.client.Entity#entity(Object, javax.ws.rs.core.MediaType, java.lang.annotation.Annotation[]) Entity.entity()}
+ * {@link jakarta.ws.rs.client.Entity#entity(Object, jakarta.ws.rs.core.MediaType, java.lang.annotation.Annotation[]) Entity.entity()}
  * method and the entity-filtering scopes are then derived from the annotations:
  * <pre>
  *  ClientBuilder.newClient()

@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.oauth1;
 
 import java.security.Principal;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 import org.glassfish.jersey.oauth1.signature.OAuth1Parameters;
 

@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.sse.InboundSseEvent;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.sse.InboundSseEvent;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
@@ -73,12 +73,12 @@ public class InboundEvent implements InboundSseEvent {
          * Create new inbound event builder.
          *
          * @param workers     configured client-side {@link MessageBodyWorkers entity providers} used for
-         *                    {@link javax.ws.rs.ext.MessageBodyReader} lookup.
+         *                    {@link jakarta.ws.rs.ext.MessageBodyReader} lookup.
          * @param annotations annotations attached to the Java type to be read. Used for
-         *                    {@link javax.ws.rs.ext.MessageBodyReader} lookup.
+         *                    {@link jakarta.ws.rs.ext.MessageBodyReader} lookup.
          * @param mediaType   media type of the SSE event data.
-         *                    Used for {@link javax.ws.rs.ext.MessageBodyReader} lookup.
-         * @param headers     response headers. Used for {@link javax.ws.rs.ext.MessageBodyWriter} lookup.
+         *                    Used for {@link jakarta.ws.rs.ext.MessageBodyReader} lookup.
+         * @param headers     response headers. Used for {@link jakarta.ws.rs.ext.MessageBodyWriter} lookup.
          */
         public Builder(MessageBodyWorkers workers,
                        Annotation[] annotations,
@@ -294,7 +294,7 @@ public class InboundEvent implements InboundSseEvent {
      * Get the original event data string {@link String}.
      *
      * @return event data de-serialized into a string.
-     * @throws javax.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
+     * @throws jakarta.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
      * @since 2.3
      */
     public String readData() {
@@ -306,7 +306,7 @@ public class InboundEvent implements InboundSseEvent {
      *
      * @param type Java type to be used for event data de-serialization.
      * @return event data de-serialized as an instance of a given type.
-     * @throws javax.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
+     * @throws jakarta.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
      * @since 2.3
      */
     public <T> T readData(Class<T> type) {
@@ -318,7 +318,7 @@ public class InboundEvent implements InboundSseEvent {
      *
      * @param type generic type to be used for event data de-serialization.
      * @return event data de-serialized as an instance of a given type.
-     * @throws javax.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
+     * @throws jakarta.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
      * @since 2.3
      */
     @SuppressWarnings("unused")
@@ -332,7 +332,7 @@ public class InboundEvent implements InboundSseEvent {
      * @param messageType Java type to be used for event data de-serialization.
      * @param mediaType   {@link MediaType media type} to be used for event data de-serialization.
      * @return event data de-serialized as an instance of a given type.
-     * @throws javax.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
+     * @throws jakarta.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
      * @since 2.3
      */
     @SuppressWarnings("unused")
@@ -346,7 +346,7 @@ public class InboundEvent implements InboundSseEvent {
      * @param type      generic type to be used for event data de-serialization.
      * @param mediaType {@link MediaType media type} to be used for event data de-serialization.
      * @return event data de-serialized as an instance of a given type.
-     * @throws javax.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
+     * @throws jakarta.ws.rs.ProcessingException when provided type can't be read. The thrown exception wraps the original cause.
      * @since 2.3
      */
     public <T> T readData(GenericType<T> type, MediaType mediaType) {

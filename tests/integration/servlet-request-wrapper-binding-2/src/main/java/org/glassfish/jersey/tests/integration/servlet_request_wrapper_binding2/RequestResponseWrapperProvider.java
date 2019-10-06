@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import javax.servlet.http.HttpUpgradeHandler;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

@@ -19,7 +19,7 @@ package org.glassfish.jersey.server;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.container.ResourceContext;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

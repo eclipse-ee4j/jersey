@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.EntityTag;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 

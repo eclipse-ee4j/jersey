@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server.mvc.provider;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * @author Michal Gajdos

@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.ParamConverter;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 

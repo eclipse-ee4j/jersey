@@ -28,13 +28,13 @@ public final class InternalServerProperties {
 
 
     /**
-     * Used internally for storing {@link javax.ws.rs.core.Form} instance with original (not url-decoded) values in
+     * Used internally for storing {@link jakarta.ws.rs.core.Form} instance with original (not url-decoded) values in
      * {@link org.glassfish.jersey.server.ContainerRequest} properties.
      */
     public static final String FORM_PROPERTY = "jersey.config.server.representation.form";
 
     /**
-     * Used internally for storing {@link javax.ws.rs.core.Form} instance with url-decoded values in
+     * Used internally for storing {@link jakarta.ws.rs.core.Form} instance with url-decoded values in
      * {@link org.glassfish.jersey.server.ContainerRequest} properties.
      */
     public static final String FORM_DECODED_PROPERTY = "jersey.config.server.representation.decoded.form";

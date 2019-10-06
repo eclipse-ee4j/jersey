@@ -18,9 +18,9 @@ package org.glassfish.jersey.tests.e2e.common.internal;
 
 import java.util.Collections;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;

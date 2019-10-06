@@ -39,8 +39,8 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.Priority;
@@ -209,12 +209,12 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         static final Set<Class<? extends Annotation>> JAX_RS_STRING_PARAM_ANNOTATIONS =
                 new HashSet<Class<? extends Annotation>>() {{
-                    add(javax.ws.rs.PathParam.class);
-                    add(javax.ws.rs.QueryParam.class);
-                    add(javax.ws.rs.CookieParam.class);
-                    add(javax.ws.rs.HeaderParam.class);
-                    add(javax.ws.rs.MatrixParam.class);
-                    add(javax.ws.rs.FormParam.class);
+                    add(jakarta.ws.rs.PathParam.class);
+                    add(jakarta.ws.rs.QueryParam.class);
+                    add(jakarta.ws.rs.CookieParam.class);
+                    add(jakarta.ws.rs.HeaderParam.class);
+                    add(jakarta.ws.rs.MatrixParam.class);
+                    add(jakarta.ws.rs.FormParam.class);
                 }};
 
         /**

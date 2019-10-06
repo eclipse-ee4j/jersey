@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.helloworld;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

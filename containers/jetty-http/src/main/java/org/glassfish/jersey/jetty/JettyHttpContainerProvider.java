@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.jetty;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.spi.ContainerProvider;
 

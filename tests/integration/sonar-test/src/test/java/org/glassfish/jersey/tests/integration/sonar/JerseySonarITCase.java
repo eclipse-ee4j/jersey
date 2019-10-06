@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.sonar;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.sonar.SonarJerseyCommon;
 import org.glassfish.jersey.server.ResourceConfig;

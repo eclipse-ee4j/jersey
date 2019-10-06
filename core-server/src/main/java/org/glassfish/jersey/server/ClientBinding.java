@@ -22,11 +22,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Meta-annotation that provides a facility for creating bindings between an {@link Uri &#64;Uri}-injectable
- * {@link javax.ws.rs.client.WebTarget WebTarget} instances and clients (and their configurations) that are used to create
+ * {@link jakarta.ws.rs.client.WebTarget WebTarget} instances and clients (and their configurations) that are used to create
  * the injected web target instances.
  * <p>
  * Jersey refers to client instance configured using custom bound configurations as <em>managed clients</em>. As a first step,
@@ -79,7 +79,7 @@ import javax.ws.rs.core.Configuration;
  * </pre>
  * Note that the easiest way how to provide a custom client-side {@code Configuration} implementation in Jersey is to extend
  * the {@link org.glassfish.jersey.client.ClientConfig} class that provides reusable implementation of JAX-RS
- * {@link Configuration} as well as {@link javax.ws.rs.core.Configurable Configurable} APIs.
+ * {@link Configuration} as well as {@link jakarta.ws.rs.core.Configurable Configurable} APIs.
  * </p>
  * <p>
  * In case a managed client needs special properties, these properties can also be provided via custom {@code Configuration}
@@ -169,7 +169,7 @@ public @interface ClientBinding {
     public boolean inheritServerProviders() default true;
 
     /**
-     * Define a custom base URI for managed {@link javax.ws.rs.client.WebTarget WebTarget} instances injected using
+     * Define a custom base URI for managed {@link jakarta.ws.rs.client.WebTarget WebTarget} instances injected using
      * {@link Uri &#64;Uri} annotation with a relative web target URI value. By default, the base
      * URI is empty indicating that the current application base URI should be used.
      * <p>

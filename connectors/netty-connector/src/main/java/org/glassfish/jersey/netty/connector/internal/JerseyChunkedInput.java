@@ -35,7 +35,7 @@ import io.netty.handler.stream.ChunkedInput;
 
 /**
  * Netty {@link ChunkedInput} implementation which also serves as an output
- * stream to Jersey {@link javax.ws.rs.container.ContainerResponseContext}.
+ * stream to Jersey {@link jakarta.ws.rs.container.ContainerResponseContext}.
  *
  * @author Pavel Bucek
  */

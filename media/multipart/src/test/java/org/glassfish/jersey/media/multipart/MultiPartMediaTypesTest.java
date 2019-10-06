@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.media.multipart;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

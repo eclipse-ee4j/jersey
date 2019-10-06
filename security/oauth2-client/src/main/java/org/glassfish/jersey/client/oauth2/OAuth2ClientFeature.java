@@ -16,20 +16,20 @@
 
 package org.glassfish.jersey.client.oauth2;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * OAuth2 client filter feature registers the support for performing authenticated requests to the
  * Service Provider. The feature does not perform Authorization Flow (see {@link OAuth2CodeGrantFlow}
  * for details how to use Authorization Flow and retrieve Access Token). The feature uses access to initialize
- * the internal {@link javax.ws.rs.container.ContainerRequestFilter filter}
+ * the internal {@link jakarta.ws.rs.container.ContainerRequestFilter filter}
  * which will add {@code Authorization} http header containing OAuth 2 authorization information including (based
  * on {@code bearer} tokens).
  * <p>
  * The internal filter can be controlled by properties put into
- * the {@link javax.ws.rs.client.ClientRequestContext client request}
- * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property key
+ * the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+ * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property key
  * is defined in this class as a static variables
  * ({@link OAuth2ClientSupport#OAUTH2_PROPERTY_ACCESS_TOKEN} (see its javadoc for usage).
  * Using the property a specific

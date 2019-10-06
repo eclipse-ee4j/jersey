@@ -27,13 +27,13 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Configuration;
-import javax.ws.rs.JAXRS.Configuration.Builder;
-import javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Instance;
+import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.JAXRS.Configuration;
+import jakarta.ws.rs.JAXRS.Configuration.Builder;
+import jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.JAXRS.Instance;
 
 import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
@@ -43,11 +43,11 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Server;
 
 /**
- * Server-side implementation of JAX-RS {@link javax.ws.rs.ext.RuntimeDelegate}.
+ * Server-side implementation of JAX-RS {@link jakarta.ws.rs.ext.RuntimeDelegate}.
  * This overrides the default implementation of
- * {@link javax.ws.rs.ext.RuntimeDelegate} from jersey-common which does not
+ * {@link jakarta.ws.rs.ext.RuntimeDelegate} from jersey-common which does not
  * implement
- * {@link #createEndpoint(javax.ws.rs.core.Application, java.lang.Class)}
+ * {@link #createEndpoint(jakarta.ws.rs.core.Application, java.lang.Class)}
  * method.
  *
  * @author Jakub Podlesak

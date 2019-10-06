@@ -10,9 +10,9 @@
 
 package org.glassfish.jersey.examples.httppatch;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.json.Json;
 import javax.json.JsonArray;

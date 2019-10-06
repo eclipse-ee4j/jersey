@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.managedclient;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * Internal resource accessed from the managed client resource.

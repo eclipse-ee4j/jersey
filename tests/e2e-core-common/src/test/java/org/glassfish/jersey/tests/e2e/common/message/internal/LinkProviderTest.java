@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
-import javax.ws.rs.core.Link;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 

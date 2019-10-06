@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey;
 
-import javax.ws.rs.Priorities;
+import jakarta.ws.rs.Priorities;
 
 /**
- * Built-in Jersey-specific priority constants to be used along with {@link javax.ws.rs.Priorities} where finer-grained
+ * Built-in Jersey-specific priority constants to be used along with {@link jakarta.ws.rs.Priorities} where finer-grained
  * categorization is required.
  *
  * @author Adam Lindenthal
@@ -32,7 +32,7 @@ public class JerseyPriorities {
 
     /**
      * Priority for components that have to be called AFTER message encoders/decoders filters/interceptors.
-     * The constant has to be higher than {@link javax.ws.rs.Priorities#ENTITY_CODER} in order to force the
+     * The constant has to be higher than {@link jakarta.ws.rs.Priorities#ENTITY_CODER} in order to force the
      * processing after the components with {@code Priorities.ENTITY_CODER} are processed.
      */
     public static final int POST_ENTITY_CODER = Priorities.ENTITY_CODER + 100;

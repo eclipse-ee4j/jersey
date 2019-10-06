@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.test;
 
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestNgStrategy;

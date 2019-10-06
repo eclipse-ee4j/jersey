@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 

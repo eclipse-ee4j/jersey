@@ -18,11 +18,11 @@ package org.glassfish.jersey.spidiscovery.internal;
 
 import java.util.Map;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import javax.annotation.Priority;
 

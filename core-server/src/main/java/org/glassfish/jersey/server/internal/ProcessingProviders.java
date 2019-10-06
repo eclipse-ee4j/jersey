@@ -19,12 +19,12 @@ package org.glassfish.jersey.server.internal;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.container.DynamicFeature;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.container.DynamicFeature;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -74,7 +74,7 @@ public class ProcessingProviders {
      * @param nameBoundWriterInterceptors Name bound {@link WriterInterceptor writer interceptors}.
      * @param nameBoundWriterInterceptorsInverse Inverse map with name bound {@link WriterInterceptor writer interceptors}.
      * @param globalRequestFilters Global {@link ContainerRequestFilter request filters}.
-     * @param preMatchFilters {@link javax.ws.rs.container.PreMatching Pre-matching}
+     * @param preMatchFilters {@link jakarta.ws.rs.container.PreMatching Pre-matching}
      *                          {@link ContainerRequestFilter request filters}.
      * @param globalResponseFilters Global {@link ContainerResponseFilter response filters}.
      * @param globalReaderInterceptors Global {@link ReaderInterceptor reader interceptors}.
@@ -121,7 +121,7 @@ public class ProcessingProviders {
      * Get name bound request filters.
      *
      * @return Name bound {@link ContainerRequestFilter request filter} map. Keys are request filters and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these filters.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these filters.
      */
     public MultivaluedMap<Class<? extends Annotation>, RankedProvider<ContainerRequestFilter>> getNameBoundRequestFilters() {
         return nameBoundRequestFilters;
@@ -131,7 +131,7 @@ public class ProcessingProviders {
      * Get name bound request filter inverse map.
      *
      * @return Name bound {@link ContainerRequestFilter request filter} map. Keys are request filters and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these filters.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these filters.
      */
     public
     MultivaluedMap<RankedProvider<ContainerRequestFilter>, Class<? extends Annotation>> getNameBoundRequestFiltersInverse() {
@@ -142,7 +142,7 @@ public class ProcessingProviders {
      * Get name bound response filters.
      *
      * @return Name bound {@link ContainerResponseFilter response filter} map. Keys are response filters and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these filters.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these filters.
      */
     public MultivaluedMap<Class<? extends Annotation>, RankedProvider<ContainerResponseFilter>> getNameBoundResponseFilters() {
         return nameBoundResponseFilters;
@@ -152,7 +152,7 @@ public class ProcessingProviders {
      * Get name bound response filter inverse map.
      *
      * @return Name bound {@link ContainerRequestFilter response filter} map. Keys are response filters and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these filters.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these filters.
      */
     public
     MultivaluedMap<RankedProvider<ContainerResponseFilter>, Class<? extends Annotation>> getNameBoundResponseFiltersInverse() {
@@ -162,7 +162,7 @@ public class ProcessingProviders {
     /**
      * Get name bound reader interceptor map.
      *
-     * @return Returns Name bound {@link ReaderInterceptor reader interceptor} map. Keys are {@link javax.ws.rs.NameBinding name
+     * @return Returns Name bound {@link ReaderInterceptor reader interceptor} map. Keys are {@link jakarta.ws.rs.NameBinding name
      *         bound annotations} and values are providers which are annotated with these annotations.
      */
     public MultivaluedMap<Class<? extends Annotation>, RankedProvider<ReaderInterceptor>> getNameBoundReaderInterceptors() {
@@ -173,7 +173,7 @@ public class ProcessingProviders {
      * Get name bound reader interceptor inverse map.
      *
      * @return Name bound {@link ReaderInterceptor reader interceptor} map. Keys are reader interceptors and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these interceptors.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these interceptors.
      */
     public
     MultivaluedMap<RankedProvider<ReaderInterceptor>, Class<? extends Annotation>> getNameBoundReaderInterceptorsInverse() {
@@ -183,7 +183,7 @@ public class ProcessingProviders {
     /**
      * Get name bound writer interceptor map.
      *
-     * @return Returns Name bound {@link WriterInterceptor writer interceptor} map. Keys are {@link javax.ws.rs.NameBinding name
+     * @return Returns Name bound {@link WriterInterceptor writer interceptor} map. Keys are {@link jakarta.ws.rs.NameBinding name
      *         bound annotations} and values are interceptors which are annotated with these annotations.
      */
     public MultivaluedMap<Class<? extends Annotation>, RankedProvider<WriterInterceptor>> getNameBoundWriterInterceptors() {
@@ -194,7 +194,7 @@ public class ProcessingProviders {
      * Get name bound writer interceptor inverse map.
      *
      * @return Name bound {@link WriterInterceptor writer interceptor} map. Keys are reader interceptors and
-     *         values are {@link javax.ws.rs.NameBinding name bound annotations} attached to these interceptors.
+     *         values are {@link jakarta.ws.rs.NameBinding name bound annotations} attached to these interceptors.
      */
     public
     MultivaluedMap<RankedProvider<WriterInterceptor>, Class<? extends Annotation>> getNameBoundWriterInterceptorsInverse() {
@@ -283,7 +283,7 @@ public class ProcessingProviders {
     }
 
     /**
-     * Get {@link javax.ws.rs.container.PreMatching pre-matching} request filters.
+     * Get {@link jakarta.ws.rs.container.PreMatching pre-matching} request filters.
      * @return Pre-matching request filter ranked providers.
      */
     public List<RankedProvider<ContainerRequestFilter>> getPreMatchFilters() {

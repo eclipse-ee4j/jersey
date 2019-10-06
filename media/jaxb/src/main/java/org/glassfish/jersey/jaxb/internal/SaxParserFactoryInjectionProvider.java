@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
 import javax.xml.parsers.SAXParserFactory;

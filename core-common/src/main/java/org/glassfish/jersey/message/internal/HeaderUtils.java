@@ -26,10 +26,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.core.AbstractMultivaluedMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.RuntimeDelegate;
-import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
+import jakarta.ws.rs.core.AbstractMultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
@@ -184,8 +184,8 @@ public final class HeaderUtils {
      * {@code ','}).
      *
      * Each single header value is converted to String using a
-     * {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
-     * via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     * {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
+     * via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
      * for the header value class or using its {@code toString()} method if a header
      * delegate is not available.
      *
@@ -215,8 +215,8 @@ public final class HeaderUtils {
     /**
      * Compares two snapshots of headers from jersey {@code ClientRequest} and logs {@code WARNING} in case of difference.
      *
-     * Current container implementations does not support header modification in {@link javax.ws.rs.ext.WriterInterceptor}
-     * and {@link javax.ws.rs.ext.MessageBodyWriter}. The method checks there are some newly added headers
+     * Current container implementations does not support header modification in {@link jakarta.ws.rs.ext.WriterInterceptor}
+     * and {@link jakarta.ws.rs.ext.MessageBodyWriter}. The method checks there are some newly added headers
      * (probably by WI or MBW) and logs {@code WARNING} message about it.
      *
      * @param headersSnapshot first immutable snapshot of headers

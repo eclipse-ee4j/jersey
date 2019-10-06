@@ -17,7 +17,7 @@
 
 package org.glassfish.jersey.client.internal.inject;
 
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.client.ClientBootstrapBag;
 
 import org.glassfish.jersey.internal.BootstrapBag;

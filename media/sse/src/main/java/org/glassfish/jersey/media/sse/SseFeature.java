@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.media.sse;
 
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.util.Property;
 import org.glassfish.jersey.media.sse.internal.SseBinder;

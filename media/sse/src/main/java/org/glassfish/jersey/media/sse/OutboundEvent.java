@@ -18,10 +18,10 @@ package org.glassfish.jersey.media.sse;
 
 import java.lang.reflect.Type;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.sse.OutboundSseEvent;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
@@ -147,7 +147,7 @@ public final class OutboundEvent implements OutboundSseEvent {
         /**
          * Set event data and java type of event data.
          *
-         * Type information  will be used for {@link javax.ws.rs.ext.MessageBodyWriter} lookup.
+         * Type information  will be used for {@link jakarta.ws.rs.ext.MessageBodyWriter} lookup.
          * <p>
          * Note that multiple invocations of this method result in previous even data being replaced with new one.
          * </p>
@@ -173,7 +173,7 @@ public final class OutboundEvent implements OutboundSseEvent {
         /**
          * Set event data and a generic java type of event data.
          *
-         * Type information will be used for {@link javax.ws.rs.ext.MessageBodyWriter} lookup.
+         * Type information will be used for {@link jakarta.ws.rs.ext.MessageBodyWriter} lookup.
          * <p>
          * Note that multiple invocations of this method result in previous even data being replaced with new one.
          * </p>
@@ -205,7 +205,7 @@ public final class OutboundEvent implements OutboundSseEvent {
          * Set event data and java type of event data.
          *
          * This is a convenience method that derives the event data type information from the runtime type of
-         * the event data. The supplied event data may be represented as {@link javax.ws.rs.core.GenericEntity}.
+         * the event data. The supplied event data may be represented as {@link jakarta.ws.rs.core.GenericEntity}.
          * <p>
          * Note that multiple invocations of this method result in previous even data being replaced with new one.
          * </p>
@@ -326,7 +326,7 @@ public final class OutboundEvent implements OutboundSseEvent {
     /**
      * Get data type.
      * <p>
-     * This information is used to select a proper {@link javax.ws.rs.ext.MessageBodyWriter} to be used for
+     * This information is used to select a proper {@link jakarta.ws.rs.ext.MessageBodyWriter} to be used for
      * serializing the {@link #getData() event data}.
      * </p>
      *
@@ -339,7 +339,7 @@ public final class OutboundEvent implements OutboundSseEvent {
     /**
      * Get generic data type.
      * <p>
-     * This information is used to select a proper {@link javax.ws.rs.ext.MessageBodyWriter} to be used for
+     * This information is used to select a proper {@link jakarta.ws.rs.ext.MessageBodyWriter} to be used for
      * serializing the {@link #getData() event data}.
      * </p>
      *
@@ -353,7 +353,7 @@ public final class OutboundEvent implements OutboundSseEvent {
     /**
      * Get {@link MediaType media type} of the event data.
      * <p>
-     * This information is used to a select proper {@link javax.ws.rs.ext.MessageBodyWriter} to be used for
+     * This information is used to a select proper {@link jakarta.ws.rs.ext.MessageBodyWriter} to be used for
      * serializing the {@link #getData() event data}.
      * </p>
      *
@@ -383,7 +383,7 @@ public final class OutboundEvent implements OutboundSseEvent {
      * <p>
      * The event data, if specified, are serialized and sent as one or more SSE event {@code "data"} fields
      * (depending on the line breaks in the actual serialized data content). The data are serialized
-     * using an available {@link javax.ws.rs.ext.MessageBodyWriter} that is selected based on the event
+     * using an available {@link jakarta.ws.rs.ext.MessageBodyWriter} that is selected based on the event
      * {@link #getType() type}, {@link #getGenericType()} generic type} and {@link #getMediaType()} media type}.
      * </p>
      *

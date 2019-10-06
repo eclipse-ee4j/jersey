@@ -23,8 +23,8 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.guava.CacheBuilder;

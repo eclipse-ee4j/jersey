@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.container.ResourceContext;
 
 import org.glassfish.jersey.server.model.ResourceModel;
 

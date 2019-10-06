@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 import java.text.ParseException;
 import java.util.Set;
 
-import javax.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.EntityTag;
 
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.message.internal.MatchingEntityTag;

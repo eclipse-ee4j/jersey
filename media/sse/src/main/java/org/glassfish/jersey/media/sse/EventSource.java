@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.client.ClientExecutor;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
@@ -45,7 +45,7 @@ import org.glassfish.jersey.media.sse.internal.EventProcessor;
  * Instances of this class are thread safe. To build a new instance, you can use one of the
  * available public {@code EventSource} constructors that produce pre-configured event
  * source instances. Alternatively, you can create a new {@link EventSource.Builder} instance
- * using {@link #target(javax.ws.rs.client.WebTarget) EventSource.target(endpoint)} factory method.
+ * using {@link #target(jakarta.ws.rs.client.WebTarget) EventSource.target(endpoint)} factory method.
  * Compared to {@code EventSource} constructors, an event source builder provides greater flexibility
  * when custom-configuring a new event source builder.
  * </p>
@@ -77,12 +77,12 @@ import org.glassfish.jersey.media.sse.internal.EventProcessor;
  * <p>
  * In addition to handling the standard connection losses, Jersey {@code EventSource} automatically deals with any
  * {@code HTTP 503 Service Unavailable} responses from SSE endpoint, that contain a
- * <tt>{@value javax.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> HTTP header with a valid value. The
- * <tt>HTTP 503 + {@value javax.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> technique is often used by HTTP endpoints
+ * <tt>{@value jakarta.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> HTTP header with a valid value. The
+ * <tt>HTTP 503 + {@value jakarta.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> technique is often used by HTTP endpoints
  * as a means of connection and traffic throttling. In case a
- * <tt>HTTP 503 + {@value javax.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> response is received in return to a connection
+ * <tt>HTTP 503 + {@value jakarta.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> response is received in return to a connection
  * request, Jersey {@code EventSource} will automatically schedule a new reconnect attempt and use the received
- * <tt>{@value javax.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> HTTP header value as a one-time override of the reconnect delay.
+ * <tt>{@value jakarta.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> HTTP header value as a one-time override of the reconnect delay.
  * </p>
  * <h3>Using HTTP persistent connections</h3>
  * <p>
@@ -347,8 +347,8 @@ public class EventSource implements EventListener {
      * </p>
      * <p>
      * Note that overriding this method may be necessary to make sure no {@code InboundEvent incoming events}
-     * are lost in case the event source is constructed using {@link #EventSource(javax.ws.rs.client.WebTarget)}
-     * constructor or in case a {@code true} flag is passed to the {@link #EventSource(javax.ws.rs.client.WebTarget, boolean)}
+     * are lost in case the event source is constructed using {@link #EventSource(jakarta.ws.rs.client.WebTarget)}
+     * constructor or in case a {@code true} flag is passed to the {@link #EventSource(jakarta.ws.rs.client.WebTarget, boolean)}
      * constructor, since the connection is opened as as part of the constructor call and the event processing starts
      * immediately. Therefore any {@link EventListener}s registered later after the event source has been constructed
      * may miss the notifications about the one or more events that arrive immediately after the connection to the
@@ -484,7 +484,7 @@ public class EventSource implements EventListener {
      *
      * Event source builder provides methods that let you conveniently configure and subsequently build
      * a new {@code EventSource} instance. You can obtain a new event source builder instance using
-     * a static {@link EventSource#target(javax.ws.rs.client.WebTarget) EventSource.target(endpoint)} factory method.
+     * a static {@link EventSource#target(jakarta.ws.rs.client.WebTarget) EventSource.target(endpoint)} factory method.
      * <p>
      * For example:
      * <pre>
@@ -546,7 +546,7 @@ public class EventSource implements EventListener {
          * Set the initial reconnect delay to be used by the event source.
          * <p>
          * Note that this value may be later overridden by the SSE endpoint using either a {@code retry} SSE event field
-         * or <tt>HTTP 503 + {@value javax.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> mechanism as described
+         * or <tt>HTTP 503 + {@value jakarta.ws.rs.core.HttpHeaders#RETRY_AFTER}</tt> mechanism as described
          * in the {@link EventSource} javadoc.
          * </p>
          *

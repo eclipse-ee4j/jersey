@@ -27,10 +27,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Provider;
 
@@ -245,7 +245,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      *
      * @param request client request to be invoked.
      * @return client response.
-     * @throws javax.ws.rs.ProcessingException in case of an invocation failure.
+     * @throws jakarta.ws.rs.ProcessingException in case of an invocation failure.
      */
     public ClientResponse invoke(final ClientRequest request) {
         ClientResponse response;

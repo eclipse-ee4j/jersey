@@ -32,12 +32,12 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.annotation.Priority;
 
@@ -55,7 +55,7 @@ import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.process.Inflector;
 
 /**
- * Common immutable {@link javax.ws.rs.core.Configuration} implementation for
+ * Common immutable {@link jakarta.ws.rs.core.Configuration} implementation for
  * server and client.
  *
  * @author Michal Gajdos

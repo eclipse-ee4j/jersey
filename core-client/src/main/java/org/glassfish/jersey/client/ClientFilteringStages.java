@@ -18,14 +18,14 @@ package org.glassfish.jersey.client;
 
 import java.io.IOException;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.ClientResponseFilter;
-import javax.ws.rs.client.ResponseProcessingException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.client.ResponseProcessingException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ReaderInterceptor;
 
 import org.glassfish.jersey.client.internal.routing.AbortedRequestMediaTypeDeterminer;
 import org.glassfish.jersey.internal.inject.InjectionManager;

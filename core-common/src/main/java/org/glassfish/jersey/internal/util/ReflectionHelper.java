@@ -50,8 +50,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.OsgiRegistry;
@@ -891,11 +891,11 @@ public final class ReflectionHelper {
     }
 
     /**
-     * Create a {@link javax.ws.rs.core.GenericType generic type} information for a given
+     * Create a {@link jakarta.ws.rs.core.GenericType generic type} information for a given
      * Java {@code instance}.
      * <p>
-     * If the supplied instance is an instance of {@link javax.ws.rs.core.GenericEntity}, the generic type
-     * information will be computed using the {@link javax.ws.rs.core.GenericEntity#getType()}
+     * If the supplied instance is an instance of {@link jakarta.ws.rs.core.GenericEntity}, the generic type
+     * information will be computed using the {@link jakarta.ws.rs.core.GenericEntity#getType()}
      * information. Otherwise the {@code instance.getClass()} will be used.
      * </p>
      *

@@ -16,9 +16,9 @@ import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 /**
  * CDI based JAX-RS interceptor that re-writes the original output

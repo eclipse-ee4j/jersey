@@ -18,9 +18,9 @@ package org.glassfish.jersey.server.spi;
 
 import java.util.concurrent.CompletionStage;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.spi.Contract;
 

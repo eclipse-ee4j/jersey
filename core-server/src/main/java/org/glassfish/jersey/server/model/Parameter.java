@@ -30,8 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.Encoded;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.Encoded;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.model.internal.spi.ParameterServiceProvider;

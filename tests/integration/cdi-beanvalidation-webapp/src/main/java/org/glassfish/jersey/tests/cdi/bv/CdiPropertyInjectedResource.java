@@ -23,9 +23,9 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 
 /**
  * This CDI backed resource should get validated and validation result property injected.

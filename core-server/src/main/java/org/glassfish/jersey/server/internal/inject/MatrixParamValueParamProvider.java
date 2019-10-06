@@ -19,8 +19,8 @@ package org.glassfish.jersey.server.internal.inject;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.core.PathSegment;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.core.PathSegment;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

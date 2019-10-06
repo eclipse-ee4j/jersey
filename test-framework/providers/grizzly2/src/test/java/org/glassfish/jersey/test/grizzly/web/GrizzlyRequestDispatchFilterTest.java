@@ -19,9 +19,9 @@ package org.glassfish.jersey.test.grizzly.web;
 import java.io.IOException;
 import java.util.EnumSet;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.WebTarget;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

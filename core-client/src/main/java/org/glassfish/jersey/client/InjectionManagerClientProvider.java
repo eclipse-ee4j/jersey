@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientResponseContext;
 
 import org.glassfish.jersey.InjectionManagerProvider;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
@@ -38,8 +38,8 @@ import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 public class InjectionManagerClientProvider extends InjectionManagerProvider {
 
     /**
-     * Extract and return injection manager from {@link javax.ws.rs.client.ClientRequestContext clientRequestContext}.
-     * The method can be used to inject custom types into a {@link javax.ws.rs.client.ClientRequestFilter}.
+     * Extract and return injection manager from {@link jakarta.ws.rs.client.ClientRequestContext clientRequestContext}.
+     * The method can be used to inject custom types into a {@link jakarta.ws.rs.client.ClientRequestFilter}.
      *
      * @param clientRequestContext Client request context.
      *
@@ -47,7 +47,7 @@ public class InjectionManagerClientProvider extends InjectionManagerProvider {
      *
      * @throws java.lang.IllegalArgumentException when {@code clientRequestContext} is not a default
      * Jersey implementation provided by Jersey as argument in the
-     * {@link javax.ws.rs.client.ClientRequestFilter#filter(javax.ws.rs.client.ClientRequestContext)} method.
+     * {@link jakarta.ws.rs.client.ClientRequestFilter#filter(jakarta.ws.rs.client.ClientRequestContext)} method.
      */
     public static InjectionManager getInjectionManager(ClientRequestContext clientRequestContext) {
         if (!(clientRequestContext instanceof InjectionManagerSupplier)) {
@@ -59,8 +59,8 @@ public class InjectionManagerClientProvider extends InjectionManagerProvider {
     }
 
     /**
-     * Extract and return injection manager from {@link javax.ws.rs.client.ClientResponseContext clientResponseContext}.
-     * The method can be used to inject custom types into a {@link javax.ws.rs.client.ClientResponseFilter}.
+     * Extract and return injection manager from {@link jakarta.ws.rs.client.ClientResponseContext clientResponseContext}.
+     * The method can be used to inject custom types into a {@link jakarta.ws.rs.client.ClientResponseFilter}.
      *
      * @param clientResponseContext Client response context.
      *
@@ -68,7 +68,7 @@ public class InjectionManagerClientProvider extends InjectionManagerProvider {
      *
      * @throws java.lang.IllegalArgumentException when {@code clientResponseContext} is not a default
      * Jersey implementation provided by Jersey as argument in the
-     * {@link javax.ws.rs.client.ClientResponseFilter#filter(javax.ws.rs.client.ClientRequestContext, javax.ws.rs.client.ClientResponseContext)}
+     * {@link jakarta.ws.rs.client.ClientResponseFilter#filter(jakarta.ws.rs.client.ClientRequestContext, jakarta.ws.rs.client.ClientResponseContext)}
      * method.
      */
     public static InjectionManager getInjectionManager(ClientResponseContext clientResponseContext) {

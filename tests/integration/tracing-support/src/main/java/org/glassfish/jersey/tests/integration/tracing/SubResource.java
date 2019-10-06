@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.tracing;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 
 /**
 * @author Libor Kramolis

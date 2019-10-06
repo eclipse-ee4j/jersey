@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.jersey2878;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * A simple resource that returns a string.

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.performance.proxy.injection;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 

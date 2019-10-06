@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.memleaks.beanparam;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.memleak.common.AbstractMemoryLeakWebAppTest;
 import org.glassfish.jersey.test.memleak.common.MemoryLeakSucceedingTimeout;

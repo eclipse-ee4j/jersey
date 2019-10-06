@@ -32,10 +32,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.ReaderInterceptor;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
@@ -370,8 +370,8 @@ public class ChunkedInput<T> extends GenericType<T> implements Closeable {
      * Get chunk data media type.
      * <p/>
      * Default chunk data media type is derived from the value of the response
-     * <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_TYPE}</tt> header field.
-     * This default value may be manually overridden by {@link #setChunkType(javax.ws.rs.core.MediaType) setting}
+     * <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_TYPE}</tt> header field.
+     * This default value may be manually overridden by {@link #setChunkType(jakarta.ws.rs.core.MediaType) setting}
      * a custom non-{@code null} chunk media type value.
      * <p>
      * Note: Access to internal chunk media type is not a thread-safe operation and has to
@@ -388,11 +388,11 @@ public class ChunkedInput<T> extends GenericType<T> implements Closeable {
      * Set custom chunk data media type.
      * <p/>
      * By default, chunk data media type is derived from the value of the response
-     * <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_TYPE}</tt> header field.
+     * <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_TYPE}</tt> header field.
      * Using this methods will override the default chunk media type value and set it
      * to a custom non-{@code null} chunk media type. Once this method is invoked,
      * all subsequent {@link #read chunk reads} will use the newly set chunk media
-     * type when selecting the proper {@link javax.ws.rs.ext.MessageBodyReader} for
+     * type when selecting the proper {@link jakarta.ws.rs.ext.MessageBodyReader} for
      * chunk de-serialization.
      * <p>
      * Note: Access to internal chunk media type is not a thread-safe operation and has to
@@ -419,7 +419,7 @@ public class ChunkedInput<T> extends GenericType<T> implements Closeable {
      * @param mediaType custom chunk data media type. Must not be {@code null}.
      * @throws IllegalArgumentException in case the {@code mediaType} cannot be parsed into
      *                                  a valid {@link MediaType} instance or is {@code null}.
-     * @see #setChunkType(javax.ws.rs.core.MediaType)
+     * @see #setChunkType(jakarta.ws.rs.core.MediaType)
      */
     public void setChunkType(final String mediaType) throws IllegalArgumentException {
         this.mediaType = MediaType.valueOf(mediaType);

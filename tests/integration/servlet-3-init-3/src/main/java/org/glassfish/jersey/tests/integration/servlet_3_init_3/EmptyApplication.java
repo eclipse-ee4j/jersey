@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_init_3;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * @author Michal Gajdos

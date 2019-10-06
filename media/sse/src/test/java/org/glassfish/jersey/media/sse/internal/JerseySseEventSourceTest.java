@@ -20,7 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.ws.rs.sse.SseEventSource;
+import jakarta.ws.rs.sse.SseEventSource;
 
 public class JerseySseEventSourceTest {
 

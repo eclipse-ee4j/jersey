@@ -22,7 +22,7 @@ public enum JaxRSFeature implements ConfigFeature
      * If set to true, empty content is allowed and will be read as Java 'null': if false,
      * an {@link java.io.IOException} will be thrown.
      *<p>
-     * NOTE: in case of JAX-RS 2.0, specific exception will be <code>javax.ws.rs.core.NoContentException</code>;
+     * NOTE: in case of JAX-RS 2.0, specific exception will be <code>jakarta.ws.rs.core.NoContentException</code>;
      * but this is not defined in JAX-RS 1.x.
      */
     ALLOW_EMPTY_INPUT(true),

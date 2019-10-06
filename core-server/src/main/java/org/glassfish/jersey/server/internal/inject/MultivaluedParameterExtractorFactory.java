@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.ext.ParamConverter;
 
 import javax.inject.Singleton;
 

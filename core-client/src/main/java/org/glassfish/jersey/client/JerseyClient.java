@@ -30,9 +30,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.UriBuilder;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -48,12 +48,12 @@ import static org.glassfish.jersey.internal.guava.Preconditions.checkNotNull;
 import static org.glassfish.jersey.internal.guava.Preconditions.checkState;
 
 /**
- * Jersey implementation of {@link javax.ws.rs.client.Client JAX-RS Client}
+ * Jersey implementation of {@link jakarta.ws.rs.client.Client JAX-RS Client}
  * contract.
  *
  * @author Marek Potociar
  */
-public class JerseyClient implements javax.ws.rs.client.Client, Initializable<JerseyClient> {
+public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<JerseyClient> {
     private static final Logger LOG = Logger.getLogger(JerseyClient.class.getName());
 
     private static final DefaultSslContextProvider DEFAULT_SSL_CONTEXT_PROVIDER = new DefaultSslContextProvider() {

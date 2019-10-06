@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.grizzly2.httpserver;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.server.spi.Server;

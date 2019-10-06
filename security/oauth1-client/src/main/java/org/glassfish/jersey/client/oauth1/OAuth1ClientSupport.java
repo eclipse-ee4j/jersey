@@ -26,10 +26,10 @@ package org.glassfish.jersey.client.oauth1;
  *     by an implementation of {@link OAuth1AuthorizationFlow} interface. The result of the process is
  *     an {@link AccessToken}.</li>
  *
- *     <li><b>Authenticated Requests:</b> requests done by a {@link javax.ws.rs.client.Client client} are
+ *     <li><b>Authenticated Requests:</b> requests done by a {@link jakarta.ws.rs.client.Client client} are
  *     enhanced by an {@code Authorization} http header that contains OAuth1 authorization information
  *     based on the {@code AccessToken} received from Authorization flow. This support is provided by
- *     {@link javax.ws.rs.core.Feature oauth 1 filter feature} that is registered into client configuration.
+ *     {@link jakarta.ws.rs.core.Feature oauth 1 filter feature} that is registered into client configuration.
  *     </li>
  * </list>
  * This class contains static method that allows to build both OAuth1 features (authorization flow and client feature).
@@ -42,11 +42,11 @@ public final class OAuth1ClientSupport {
 
     /**
      * Key of the property that can be attached to the
-     * {@link javax.ws.rs.client.ClientRequestContext client request} using
-     * {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
+     * {@link jakarta.ws.rs.client.ClientRequestContext client request} using
+     * {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
      * defines {@link org.glassfish.jersey.client.oauth1.ConsumerCredentials consumer credentials} that should be used when generating OAuth {@code Authorization}
      * http header. The property will override the setting of the internal
-     * {@link javax.ws.rs.client.ClientRequestFilter filter} for the current request only.
+     * {@link jakarta.ws.rs.client.ClientRequestFilter filter} for the current request only.
      * <p>
      * The value of the property must be {@link org.glassfish.jersey.client.oauth1.ConsumerCredentials} instance.
      * </p>
@@ -55,11 +55,11 @@ public final class OAuth1ClientSupport {
 
     /**
      * Key of the property that can be attached to the
-     * {@link javax.ws.rs.client.ClientRequestContext client request} using
-     * {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
+     * {@link jakarta.ws.rs.client.ClientRequestContext client request} using
+     * {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
      * defines {@link org.glassfish.jersey.client.oauth1.AccessToken access token} that should be used when generating OAuth {@code Authorization}
      * http header. The property will override the setting of the internal
-     * {@link javax.ws.rs.client.ClientRequestFilter filter} for the current request only.
+     * {@link jakarta.ws.rs.client.ClientRequestFilter filter} for the current request only.
      * <p>
      * The value of the property must be {@link org.glassfish.jersey.client.oauth1.AccessToken} instance.
      * </p>
@@ -68,12 +68,12 @@ public final class OAuth1ClientSupport {
 
     /**
      * Key of the property that can be attached to the
-     * {@link javax.ws.rs.client.ClientRequestContext client request} using
-     * {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
+     * {@link jakarta.ws.rs.client.ClientRequestContext client request} using
+     * {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
      * defines {@link org.glassfish.jersey.oauth1.signature.OAuth1Parameters}
      * that should be used when generating OAuth {@code Authorization}
      * http header. The property will override the setting of the internal
-     * {@link javax.ws.rs.client.ClientRequestFilter filter} for the current request only.
+     * {@link jakarta.ws.rs.client.ClientRequestFilter filter} for the current request only.
      * <p>
      * The value of the property must be {@link org.glassfish.jersey.oauth1.signature.OAuth1Parameters} instance.
      * </p>
@@ -91,12 +91,12 @@ public final class OAuth1ClientSupport {
 
     /**
      * Key of the property that can be attached to the
-     * {@link javax.ws.rs.client.ClientRequestContext client request} using
-     * {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
+     * {@link jakarta.ws.rs.client.ClientRequestContext client request} using
+     * {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
      * defines {@link org.glassfish.jersey.oauth1.signature.OAuth1Secrets}
      * that should be used when generating OAuth {@code Authorization}
      * http header. The property will override the setting of the internal
-     * {@link javax.ws.rs.client.ClientRequestFilter filter} for the current request only.
+     * {@link jakarta.ws.rs.client.ClientRequestFilter filter} for the current request only.
      * <p>
      * The value of the property must be {@link org.glassfish.jersey.oauth1.signature.OAuth1Secrets} instance.
      * </p>

@@ -18,10 +18,10 @@ package org.glassfish.jersey.tests.memleaks.shutdownleak.client;
 
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.test.memleak.common.AbstractMemoryLeakSimpleTest;
 import org.glassfish.jersey.test.memleak.common.MemoryLeakSucceedingTimeout;

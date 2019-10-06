@@ -18,7 +18,7 @@ package org.glassfish.jersey.netty.httpserver;
 
 import java.security.Principal;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 import io.netty.channel.ChannelHandlerContext;
 

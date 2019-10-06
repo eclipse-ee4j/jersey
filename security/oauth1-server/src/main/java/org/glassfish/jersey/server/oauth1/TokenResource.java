@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Annotation to be placed on resource classes or resource methods
  * that should be ignored by {@link OAuth1ServerFilter OAuth server filter}.
  * Filter will not perform authentication and authorization check for resources with this annotation and will
- * leave the {@link javax.ws.rs.core.SecurityContext} unchanged. This annotation is intended to be placed
+ * leave the {@link jakarta.ws.rs.core.SecurityContext} unchanged. This annotation is intended to be placed
  * on resource providing Request and Access Token during Authorization process.
  * <p/>
  * The annotation can be placed on a resource method directly or resource class.

@@ -25,10 +25,10 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriBuilderException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilderException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -67,7 +67,7 @@ import org.glassfish.jersey.uri.UriComponent;
  * The servlet or filter may be configured to have an initialization
  * parameter {@value ServletProperties#JAXRS_APPLICATION_CLASS}
  * (see {@link org.glassfish.jersey.servlet.ServletProperties#JAXRS_APPLICATION_CLASS}) and whose value is a
- * fully qualified name of a class that implements {@link javax.ws.rs.core.Application}.
+ * fully qualified name of a class that implements {@link jakarta.ws.rs.core.Application}.
  * The class is instantiated as a singleton component
  * managed by the runtime, and injection may be performed (the artifacts that
  * may be injected are limited to injectable providers registered when
@@ -93,7 +93,7 @@ import org.glassfish.jersey.uri.UriComponent;
  * <p />
  * A new {@link org.glassfish.jersey.server.ApplicationHandler} instance will be created and configured such
  * that the following classes may be injected onto a root resource, provider
- * and {@link javax.ws.rs.core.Application} classes using {@link javax.ws.rs.core.Context
+ * and {@link jakarta.ws.rs.core.Application} classes using {@link jakarta.ws.rs.core.Context
  * &#64;Context} annotation:
  * {@link HttpServletRequest}, {@link HttpServletResponse},
  * {@link ServletContext}, {@link javax.servlet.ServletConfig} and {@link WebConfig}.

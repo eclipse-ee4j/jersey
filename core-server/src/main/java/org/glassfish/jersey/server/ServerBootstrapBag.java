@@ -18,8 +18,8 @@ package org.glassfish.jersey.server;
 
 import java.util.Collection;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.util.collection.LazyValue;

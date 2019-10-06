@@ -19,8 +19,8 @@ package org.glassfish.jersey.media.sse;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.glassfish.jersey.client.ChunkParser;
 import org.glassfish.jersey.client.ChunkedInput;

@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.java8.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * Example interface containing resource methods in form of Java8's default methods.

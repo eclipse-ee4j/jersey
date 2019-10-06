@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.internal;
 
-import javax.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.Cookie;
 
 import javax.inject.Singleton;
 

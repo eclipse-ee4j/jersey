@@ -18,8 +18,8 @@ package org.glassfish.jersey.netty.httpserver;
 
 import java.net.URI;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Application;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

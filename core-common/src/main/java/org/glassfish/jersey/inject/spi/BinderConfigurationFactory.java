@@ -54,7 +54,7 @@ public interface BinderConfigurationFactory {
     interface BinderConfiguration {
         /**
          * The provided {@code getInstances} function is used to get registered (filtered) instances in a
-         * {@link javax.ws.rs.core.Configuration}
+         * {@link jakarta.ws.rs.core.Configuration}
          *
          * @param injectionManager {@link InjectionManager} to be used to configure the {@code Binder}
          * @return {@code true} if a {@code Binder} has been configured.

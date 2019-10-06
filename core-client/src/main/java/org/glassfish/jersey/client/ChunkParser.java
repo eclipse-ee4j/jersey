@@ -34,7 +34,7 @@ import java.io.InputStream;
  * Chunk parsers are typically expected to skip any empty chunks (the chunks that do
  * not contain any data) or any control meta-data associated with chunks, however it
  * is not a hard requirement to do so. The decision depends on the knowledge of which
- * {@link javax.ws.rs.ext.MessageBodyReader} implementation is selected for de-serialization
+ * {@link jakarta.ws.rs.ext.MessageBodyReader} implementation is selected for de-serialization
  * of the chunk data.
  * </p>
  *

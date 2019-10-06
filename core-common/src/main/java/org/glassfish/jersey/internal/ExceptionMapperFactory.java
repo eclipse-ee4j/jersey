@@ -28,8 +28,8 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;

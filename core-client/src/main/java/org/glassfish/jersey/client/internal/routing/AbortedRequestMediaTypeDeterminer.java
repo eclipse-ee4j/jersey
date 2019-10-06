@@ -23,17 +23,17 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Client side {@link Response} media type determinator utility class.
  * Used for determining media type when {@link ClientRequestContext#abortWith(Response)} on
- * {@link javax.ws.rs.client.ClientRequestFilter#filter(ClientRequestContext)} is used without specifying the response
+ * {@link jakarta.ws.rs.client.ClientRequestFilter#filter(ClientRequestContext)} is used without specifying the response
  * media type.
  */
 public class AbortedRequestMediaTypeDeterminer extends ContentTypeDeterminer {
@@ -68,7 +68,7 @@ public class AbortedRequestMediaTypeDeterminer extends ContentTypeDeterminer {
     }
 
     /**
-     * An information that the routing aborted by  {@code javax.ws.rs.client.ClientRequestContext#abortWith(Response)}.
+     * An information that the routing aborted by  {@code jakarta.ws.rs.client.ClientRequestContext#abortWith(Response)}.
      */
     private static final class AbortedRouting {
 

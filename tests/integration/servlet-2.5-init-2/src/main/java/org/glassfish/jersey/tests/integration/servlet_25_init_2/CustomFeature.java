@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_init_2;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.tests.integration.servlet_25_init_2.ext.Ext1WriterInterceptor;
 import org.glassfish.jersey.tests.integration.servlet_25_init_2.ext.Ext2WriterInterceptor;

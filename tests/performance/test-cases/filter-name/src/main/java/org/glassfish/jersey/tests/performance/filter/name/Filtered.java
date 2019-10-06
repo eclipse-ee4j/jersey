@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.performance.filter.name;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-import javax.ws.rs.NameBinding;
+import jakarta.ws.rs.NameBinding;
 
 /**
  * Custom binding annotation.

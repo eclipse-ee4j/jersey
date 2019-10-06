@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.api;
 
-import javax.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.EntityTag;
 
 import org.glassfish.jersey.message.internal.EntityTagProvider;
 

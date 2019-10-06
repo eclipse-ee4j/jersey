@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.osgi.helloworld.resource;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 public class MyApplication extends Application {
 

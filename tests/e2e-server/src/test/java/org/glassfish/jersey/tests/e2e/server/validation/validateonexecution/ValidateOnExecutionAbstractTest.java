@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.server.validation.validateonexecution;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.util.runner.RunSeparately;

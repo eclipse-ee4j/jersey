@@ -18,9 +18,9 @@ package org.glassfish.jersey.tests.integration.j59.cdi.web;
 
 import java.net.URI;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.test.JerseyTest;
 

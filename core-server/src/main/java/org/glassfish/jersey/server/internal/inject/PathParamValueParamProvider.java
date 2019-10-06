@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.PathSegment;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.PathSegment;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

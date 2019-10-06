@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.integration.jersey2154;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * EJB bean to reproduce JERSEY-2154. Bellow generated {@link WebApplicationException}

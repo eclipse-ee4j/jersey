@@ -25,14 +25,14 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Injects a {@link javax.ws.rs.client.WebTarget resource target} pointing at
+ * Injects a {@link jakarta.ws.rs.client.WebTarget resource target} pointing at
  * a resource identified by the resolved URI into a method parameter,
  * class field or a bean property.
  * <p/>
- * Injected variable must be of type {@link javax.ws.rs.client.WebTarget}.
+ * Injected variable must be of type {@link jakarta.ws.rs.client.WebTarget}.
  *
  * @author Marek Potociar
- * @see javax.ws.rs.client.WebTarget
+ * @see jakarta.ws.rs.client.WebTarget
  * @since 2.0
  */
 @java.lang.annotation.Target({PARAMETER, FIELD, METHOD})
@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Uri {
 
     /**
-     * Specifies the URI of the injected {@link javax.ws.rs.client.WebTarget
+     * Specifies the URI of the injected {@link jakarta.ws.rs.client.WebTarget
      * resource target}.
      *
      * The value must be in the form of absolute URI if not used from inside of
@@ -81,7 +81,7 @@ public @interface Uri {
      * In case the annotation is used from a JAX-RS resource class, an absolute
      * or relative URI template value may be provided. The template parameter (e.g. {@code {id}})
      * values are automatically resolved in the context of the enclosing resource class
-     * {@link javax.ws.rs.Path path template} as well as the context of the processed request.
+     * {@link jakarta.ws.rs.Path path template} as well as the context of the processed request.
      * Other defined template parameters have to be resolved before invocation of managed web target.
      * For example:
      * <pre>
@@ -97,8 +97,8 @@ public @interface Uri {
      * }
      * </pre>
      *
-     * @see javax.ws.rs.client.WebTarget
-     * @see javax.ws.rs.Path
+     * @see jakarta.ws.rs.client.WebTarget
+     * @see jakarta.ws.rs.Path
      */
     String value();
 }

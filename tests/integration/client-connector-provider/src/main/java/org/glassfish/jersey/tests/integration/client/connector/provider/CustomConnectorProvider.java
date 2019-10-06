@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.integration.client.connector.provider;
 
 import java.net.HttpURLConnection;
 
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;

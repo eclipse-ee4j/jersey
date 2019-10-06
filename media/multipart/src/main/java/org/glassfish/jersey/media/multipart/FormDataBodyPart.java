@@ -18,8 +18,8 @@ package org.glassfish.jersey.media.multipart;
 
 import java.text.ParseException;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.MediaTypes;

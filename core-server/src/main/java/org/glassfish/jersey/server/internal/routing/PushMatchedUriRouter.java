@@ -20,7 +20,7 @@ import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
 
 /**
  * Terminal router that pushes the URI matched so far to the stack returned
- * by {@link javax.ws.rs.core.UriInfo#getMatchedURIs()} method.
+ * by {@link jakarta.ws.rs.core.UriInfo#getMatchedURIs()} method.
  *
  * @author Marek Potociar
  */

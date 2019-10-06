@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Marker annotation for static fields that represent property names.
  *
- * This annotation is put on static fields (typically in concrete {@link javax.ws.rs.core.Feature JAX-RS Feature} classes)
+ * This annotation is put on static fields (typically in concrete {@link jakarta.ws.rs.core.Feature JAX-RS Feature} classes)
  * to mark a recognized property name.
  * <p>
  * Jersey code should not contain overlapping nor duplicate property names. This is checked in a dedicated

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 

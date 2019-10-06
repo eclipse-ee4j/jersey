@@ -17,8 +17,8 @@
 package org.glassfish.jersey.jetty;
 
 import static java.lang.Boolean.TRUE;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.MANDATORY;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
+import static jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication.MANDATORY;
+import static jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
 
 import java.net.URI;
 import java.util.Optional;
@@ -26,9 +26,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;

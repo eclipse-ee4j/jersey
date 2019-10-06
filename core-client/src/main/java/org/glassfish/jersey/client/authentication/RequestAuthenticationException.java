@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.client.authentication;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  * Exception thrown by security request authentication.

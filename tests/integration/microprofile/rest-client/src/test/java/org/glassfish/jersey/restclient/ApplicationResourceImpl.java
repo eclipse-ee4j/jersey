@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonValue;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Created by David Kral.

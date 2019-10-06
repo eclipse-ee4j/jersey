@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;

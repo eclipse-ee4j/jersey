@@ -16,16 +16,16 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
@@ -48,7 +48,7 @@ public class PatchingInterceptor implements ReaderInterceptor {
     /**
      * {@code PatchingInterceptor} injection constructor.
      *
-     * @param uriInfo {@code javax.ws.rs.core.UriInfo} proxy instance.
+     * @param uriInfo {@code jakarta.ws.rs.core.UriInfo} proxy instance.
      * @param workers {@link org.glassfish.jersey.message.MessageBodyWorkers} message body workers.
      */
     public PatchingInterceptor(@Context UriInfo uriInfo, @Context MessageBodyWorkers workers) {

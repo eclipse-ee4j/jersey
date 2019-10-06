@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.tests.e2e.server.validation;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -165,7 +165,7 @@ public class EntityInheritanceValidationTest extends JerseyTest {
     @Test
     public void testEntityInheritance() throws Exception {
         final Entity entity = new Entity("foo", 13);
-        final Response response = target().request().post(javax.ws.rs.client.Entity.json(entity));
+        final Response response = target().request().post(jakarta.ws.rs.client.Entity.json(entity));
 
         assertThat(response.getStatus(), is(200));
         assertThat(response.readEntity(Entity.class), is(entity));
@@ -173,14 +173,14 @@ public class EntityInheritanceValidationTest extends JerseyTest {
 
     @Test
     public void testEntityInheritanceBlankText() throws Exception {
-        final Response response = target().request().post(javax.ws.rs.client.Entity.json(new Entity("", 13)));
+        final Response response = target().request().post(jakarta.ws.rs.client.Entity.json(new Entity("", 13)));
 
         assertThat(response.getStatus(), is(400));
     }
 
     @Test
     public void testEntityInheritanceInvalidNumber() throws Exception {
-        final Response response = target().request().post(javax.ws.rs.client.Entity.json(new Entity("foo", 23)));
+        final Response response = target().request().post(jakarta.ws.rs.client.Entity.json(new Entity("foo", 23)));
 
         assertThat(response.getStatus(), is(400));
     }

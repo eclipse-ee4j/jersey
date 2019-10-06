@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.oauth1;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.oauth1.signature.OAuth1Parameters;
 import org.glassfish.jersey.oauth1.signature.OAuth1Secrets;
@@ -27,13 +27,13 @@ import org.glassfish.jersey.oauth1.signature.OAuth1SignatureFeature;
  * OAuth1 client filter feature registers the support for performing authenticated requests to the
  * Service Provider. The feature does not perform Authorization Flow (see {@link OAuth1AuthorizationFlow}
  * for details how to use Authorization Flow and retrieve Access Token). The feature uses {@link ConsumerCredentials}
- * and {@link AccessToken} to initialize the internal {@link javax.ws.rs.container.ContainerRequestFilter filter}
+ * and {@link AccessToken} to initialize the internal {@link jakarta.ws.rs.container.ContainerRequestFilter filter}
  * which will add {@code Authorization} headers containing OAuth authorization information including
  * the oauth signature.
  * <p>
  * The internal filter can be controlled by properties put into
- * the {@link javax.ws.rs.client.ClientRequestContext client request}
- * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property keys
+ * the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+ * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property keys
  * are defined in this class as a static variables (see their javadocs for usage). Using these properties a specific
  * {@link AccessToken} can be defined for each request for example.
  * </p>

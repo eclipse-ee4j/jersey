@@ -16,13 +16,13 @@
 
 package org.glassfish.jersey.test.spi;
 
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 /**
  * Strategy defining how test containers and clients are stored and passed to TestNG tests.
  * <p/>
  * {@link org.glassfish.jersey.test.JerseyTestNg Jersey Test} calls {@link #testContainer(TestContainer)} /
- * {@link #client(javax.ws.rs.client.Client)} methods before {@link #testContainer()} / {@link #client()}. Strategy is not
+ * {@link #client(jakarta.ws.rs.client.Client)} methods before {@link #testContainer()} / {@link #client()}. Strategy is not
  * supposed to create instances of test container / client. It's purpose is to appropriately store given instances for different
  * TestNG approaches defined by {@code @BeforeXXX} and {@code @AfterXXX} annotations.
  *
@@ -46,7 +46,7 @@ public interface TestNgStrategy {
     public TestContainer testContainer(final TestContainer testContainer);
 
     /**
-     * Return a JAX-RS client. This method is called after {@link #client(javax.ws.rs.client.Client)}.
+     * Return a JAX-RS client. This method is called after {@link #client(jakarta.ws.rs.client.Client)}.
      *
      * @return a client instance or {@code null} if the client is not set.
      */

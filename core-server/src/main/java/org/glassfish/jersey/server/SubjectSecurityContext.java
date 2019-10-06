@@ -18,13 +18,13 @@ package org.glassfish.jersey.server;
 
 import java.security.PrivilegedAction;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * Security context that allows establishing a subject before a resource method
  * or a sub-resource locator is called. Container or filters should set an
  * implementation of this interface to the request context using
- * {@link ContainerRequest#setSecurityContext(javax.ws.rs.core.SecurityContext)}.
+ * {@link ContainerRequest#setSecurityContext(jakarta.ws.rs.core.SecurityContext)}.
  *
  * When Jersey detects this kind of context is in the request scope,
  * it will use {@link #doAsSubject(java.security.PrivilegedAction)} method to
@@ -45,7 +45,7 @@ public interface SubjectSecurityContext extends SecurityContext {
      * {@link javax.security.auth.Subject#doAs(javax.security.auth.Subject, java.security.PrivilegedAction)}.
      * <p>
      * The privileged action passed into the method may, when invoked, fail with either
-     * {@link javax.ws.rs.WebApplicationException} or {@link javax.ws.rs.ProcessingException}.
+     * {@link jakarta.ws.rs.WebApplicationException} or {@link jakarta.ws.rs.ProcessingException}.
      * Both these exceptions must be propagated to the caller without a modification.
      * </p>
      *
@@ -55,11 +55,11 @@ public interface SubjectSecurityContext extends SecurityContext {
      * @throws NullPointerException if the {@code PrivilegedAction} is {@code null}.
      * @throws SecurityException    if the caller does not have permission to invoke the
      *                              {@code Subject#doAs(Subject, PrivilegedAction)} method.
-     * @throws javax.ws.rs.WebApplicationException
+     * @throws jakarta.ws.rs.WebApplicationException
      *                              propagated exception from the privileged action. May be thrown in case the invocation
      *                              of resource or sub-resource locator method in the privileged action results in
      *                              this exception.
-     * @throws javax.ws.rs.ProcessingException
+     * @throws jakarta.ws.rs.ProcessingException
      *                              propagated exception from the privileged action. May be thrown in case the invocation
      *                              of resource or sub-resource locator method in the privileged action has failed
      *                              or resulted in a non-checked exception.

@@ -13,8 +13,8 @@ package org.glassfish.jersey.examples.entityfiltering;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.examples.entityfiltering.domain.Task;
 import org.glassfish.jersey.jackson.JacksonFeature;

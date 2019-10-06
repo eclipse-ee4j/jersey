@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.jersey2654;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * JAX-RS application to configure resources for JERSEY-2525 reproducer.

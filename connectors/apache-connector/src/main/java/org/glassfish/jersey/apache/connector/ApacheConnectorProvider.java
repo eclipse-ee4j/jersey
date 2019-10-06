@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.apache.connector;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.Connector;
@@ -73,7 +73,7 @@ import org.apache.http.client.HttpClient;
  * </p>
  * <p>
  * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
- * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link jakarta.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
  * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
  * configuration set by using the properties.
  * </p>

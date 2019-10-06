@@ -10,15 +10,15 @@
 
 package org.glassfish.jersey.examples.entityfiltering.security.resource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedEntity;
 
 /**
  * Resource not restricted with security annotations leaving security restrictions solely to {@link RestrictedEntity} and
- * {@link javax.ws.rs.core.SecurityContext}.
+ * {@link jakarta.ws.rs.core.SecurityContext}.
  *
  * @author Michal Gajdos
  */

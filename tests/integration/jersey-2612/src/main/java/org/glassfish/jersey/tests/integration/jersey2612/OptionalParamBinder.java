@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2612;
 
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import javax.inject.Singleton;
 

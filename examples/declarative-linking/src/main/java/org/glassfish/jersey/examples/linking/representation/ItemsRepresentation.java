@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.linking.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -19,8 +19,8 @@ package org.glassfish.jersey.moxy.xml;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * Feature used to register MOXy XML providers.

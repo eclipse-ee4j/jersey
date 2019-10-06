@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ExtendedResourceContext;
