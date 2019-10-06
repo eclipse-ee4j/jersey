@@ -23,8 +23,8 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Iterator;
 
-import jakarta.ws.rs.JAXRS;
-import jakarta.ws.rs.JAXRS.Configuration;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -50,7 +50,7 @@ public final class ServerFactoryTest {
 
     @Test
     public final void shouldBuildServer(@Mocked final Application mockApplication, @Mocked final Server mockServer,
-            @Mocked final JAXRS.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
+            @Mocked final SeBootstrap.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
         // given
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
             @Override

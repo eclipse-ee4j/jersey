@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.simple;
 
-import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.spi.Server;
@@ -32,7 +32,7 @@ public final class SimpleHttpServerProvider implements ServerProvider {
 
     @Override
     public final <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
+            final SeBootstrap.Configuration configuration) {
         return SimpleHttpServer.class == type || Server.class == type
                 ? type.cast(new SimpleHttpServer(application, configuration))
                 : null;

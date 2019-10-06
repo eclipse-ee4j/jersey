@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.e2e.common;
 
 import java.util.concurrent.CompletionStage;
 
-import jakarta.ws.rs.JAXRS;
-import jakarta.ws.rs.JAXRS.Instance;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Instance;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Link;
@@ -52,12 +52,12 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
     }
 
     @Override
-    public JAXRS.Configuration.Builder createConfigurationBuilder() {
+    public SeBootstrap.Configuration.Builder createConfigurationBuilder() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CompletionStage<Instance> bootstrap(Application application, JAXRS.Configuration configuration) {
+    public CompletionStage<Instance> bootstrap(Application application, SeBootstrap.Configuration configuration) {
         throw new UnsupportedOperationException();
     }
 

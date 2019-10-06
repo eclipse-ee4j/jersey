@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server;
 
-import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Application;
 
@@ -63,7 +63,7 @@ public final class ServerFactory {
      *             if no server provider supports the type.
      */
     public static <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
+            final SeBootstrap.Configuration configuration) {
         for (final ServerProvider serverProvider : ServiceFinder.find(ServerProvider.class)) {
             final T server = serverProvider.createServer(type, application, configuration);
             if (server != null) {

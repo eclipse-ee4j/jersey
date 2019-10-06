@@ -17,15 +17,15 @@
 package org.glassfish.jersey.jdkhttp;
 
 import static java.lang.Boolean.TRUE;
-import static jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication.MANDATORY;
-import static jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.MANDATORY;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL;
 
 import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.net.ssl.SSLContext;
-import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -46,13 +46,13 @@ public final class JdkHttpServer implements Server {
 
     private final HttpServer httpServer;
 
-    JdkHttpServer(final Application application, final JAXRS.Configuration configuration) {
+    JdkHttpServer(final Application application, final SeBootstrap.Configuration configuration) {
         final String protocol = configuration.protocol();
         final String host = configuration.host();
         final int port = configuration.port();
         final String rootPath = configuration.rootPath();
         final SSLContext sslContext = configuration.sslContext();
-        final JAXRS.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
+        final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
         final boolean autoStart = Optional.ofNullable((Boolean) configuration.property(ServerProperties.AUTO_START))
                 .orElse(TRUE);

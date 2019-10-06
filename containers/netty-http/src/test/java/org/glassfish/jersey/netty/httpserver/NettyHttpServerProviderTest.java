@@ -35,8 +35,8 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.JAXRS;
-import jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Application;
@@ -71,19 +71,19 @@ public final class NettyHttpServerProviderTest {
                 return Collections.singleton(resource);
             }
         };
-        final JAXRS.Configuration configuration = name -> {
+        final SeBootstrap.Configuration configuration = name -> {
             switch (name) {
-            case JAXRS.Configuration.PROTOCOL:
+            case SeBootstrap.Configuration.PROTOCOL:
                 return "HTTP";
-            case JAXRS.Configuration.HOST:
+            case SeBootstrap.Configuration.HOST:
                 return "localhost";
-            case JAXRS.Configuration.PORT:
+            case SeBootstrap.Configuration.PORT:
                 return getPort();
-            case JAXRS.Configuration.ROOT_PATH:
+            case SeBootstrap.Configuration.ROOT_PATH:
                 return "/";
-            case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
+            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
                 return SSLClientAuthentication.NONE;
-            case JAXRS.Configuration.SSL_CONTEXT:
+            case SeBootstrap.Configuration.SSL_CONTEXT:
                 try {
                     return SSLContext.getDefault();
                 } catch (final NoSuchAlgorithmException e) {
@@ -158,19 +158,19 @@ public final class NettyHttpServerProviderTest {
         // given
         final ServerProvider serverProvider = new NettyHttpServerProvider();
         final Application application = new Application();
-        final JAXRS.Configuration configuration = name -> {
+        final SeBootstrap.Configuration configuration = name -> {
             switch (name) {
-            case JAXRS.Configuration.PROTOCOL:
+            case SeBootstrap.Configuration.PROTOCOL:
                 return "HTTP";
-            case JAXRS.Configuration.HOST:
+            case SeBootstrap.Configuration.HOST:
                 return "localhost";
-            case JAXRS.Configuration.PORT:
-                return JAXRS.Configuration.FREE_PORT;
-            case JAXRS.Configuration.ROOT_PATH:
+            case SeBootstrap.Configuration.PORT:
+                return SeBootstrap.Configuration.FREE_PORT;
+            case SeBootstrap.Configuration.ROOT_PATH:
                 return "/";
-            case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
+            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
                 return SSLClientAuthentication.NONE;
-            case JAXRS.Configuration.SSL_CONTEXT:
+            case SeBootstrap.Configuration.SSL_CONTEXT:
                 try {
                     return SSLContext.getDefault();
                 } catch (final NoSuchAlgorithmException e) {

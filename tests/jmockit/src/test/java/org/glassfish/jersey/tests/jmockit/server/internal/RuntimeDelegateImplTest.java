@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import javax.net.ssl.SSLContext;
-import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 import java.security.NoSuchAlgorithmException;
@@ -62,7 +62,7 @@ public class RuntimeDelegateImplTest {
         final RuntimeDelegate runtimeDelegate = new RuntimeDelegateImpl();
 
         // when
-        final JAXRS.Configuration.Builder configurationBuilder = runtimeDelegate.createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = runtimeDelegate.createConfigurationBuilder();
 
         // then
         assertThat(configurationBuilder, is(notNullValue()));
@@ -71,41 +71,41 @@ public class RuntimeDelegateImplTest {
     @Test
     public final void shouldBuildDefaultConfiguration() throws NoSuchAlgorithmException {
         // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
 
         // when
-        final JAXRS.Configuration configuration = configurationBuilder.build();
+        final SeBootstrap.Configuration configuration = configurationBuilder.build();
 
         // then
         assertThat(configuration, is(notNullValue()));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
-        assertThat(configuration.property(JAXRS.Configuration.PROTOCOL), is("HTTP"));
-        assertThat(configuration.property(JAXRS.Configuration.HOST), is("localhost"));
-        assertThat(configuration.property(JAXRS.Configuration.PORT), is(JAXRS.Configuration.DEFAULT_PORT));
-        assertThat(configuration.property(JAXRS.Configuration.ROOT_PATH), is("/"));
-        assertThat(configuration.property(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION),
-                is(JAXRS.Configuration.SSLClientAuthentication.NONE));
-        assertThat(configuration.property(JAXRS.Configuration.SSL_CONTEXT), is(theInstance(SSLContext.getDefault())));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.HOST));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PORT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CONTEXT));
+        assertThat(configuration.property(SeBootstrap.Configuration.PROTOCOL), is("HTTP"));
+        assertThat(configuration.property(SeBootstrap.Configuration.HOST), is("localhost"));
+        assertThat(configuration.property(SeBootstrap.Configuration.PORT), is(SeBootstrap.Configuration.DEFAULT_PORT));
+        assertThat(configuration.property(SeBootstrap.Configuration.ROOT_PATH), is("/"));
+        assertThat(configuration.property(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION),
+                is(SeBootstrap.Configuration.SSLClientAuthentication.NONE));
+        assertThat(configuration.property(SeBootstrap.Configuration.SSL_CONTEXT), is(theInstance(SSLContext.getDefault())));
         assertThat(configuration.protocol(), is("HTTP"));
         assertThat(configuration.host(), is("localhost"));
-        assertThat(configuration.port(), is(JAXRS.Configuration.DEFAULT_PORT));
+        assertThat(configuration.port(), is(SeBootstrap.Configuration.DEFAULT_PORT));
         assertThat(configuration.rootPath(), is("/"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.NONE));
+        assertThat(configuration.sslClientAuthentication(), is(SeBootstrap.Configuration.SSLClientAuthentication.NONE));
         assertThat(configuration.sslContext(), is(theInstance(SSLContext.getDefault())));
     }
 
     @Test
     public final void shouldBuildConfigurationContainingCustomProperties() {
         // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
 
         // when
-        final JAXRS.Configuration configuration = configurationBuilder.property("property", "value").build();
+        final SeBootstrap.Configuration configuration = configurationBuilder.property("property", "value").build();
 
         // then
         assertThat(configuration, is(notNullValue()));
@@ -117,29 +117,29 @@ public class RuntimeDelegateImplTest {
     public final void shouldBuildCustomConfigurationUsingNamedStandardProperties(@Mocked final SSLContext mockSslContext)
             throws NoSuchAlgorithmException {
         // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
 
         // when
-        final JAXRS.Configuration configuration = configurationBuilder.property(JAXRS.Configuration.PROTOCOL, "HTTPS")
-                .property(JAXRS.Configuration.HOST, "hostname").property(JAXRS.Configuration.PORT, 8080)
-                .property(JAXRS.Configuration.ROOT_PATH, "path")
-                .property(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION,
-                        JAXRS.Configuration.SSLClientAuthentication.OPTIONAL)
-                .property(JAXRS.Configuration.SSL_CONTEXT, mockSslContext).build();
+        final SeBootstrap.Configuration configuration = configurationBuilder.property(SeBootstrap.Configuration.PROTOCOL, "HTTPS")
+                .property(SeBootstrap.Configuration.HOST, "hostname").property(SeBootstrap.Configuration.PORT, 8080)
+                .property(SeBootstrap.Configuration.ROOT_PATH, "path")
+                .property(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION,
+                        SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL)
+                .property(SeBootstrap.Configuration.SSL_CONTEXT, mockSslContext).build();
 
         // then
         assertThat(configuration, is(notNullValue()));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.HOST));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PORT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CONTEXT));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
         assertThat(configuration.rootPath(), is("path"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
+        assertThat(configuration.sslClientAuthentication(), is(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL));
         assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
     }
 
@@ -147,52 +147,52 @@ public class RuntimeDelegateImplTest {
     public final void shouldBuildCustomConfigurationUsingConvenienceMethods(@Mocked final SSLContext mockSslContext)
             throws NoSuchAlgorithmException {
         // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
 
         // when
-        final JAXRS.Configuration configuration = configurationBuilder.protocol("HTTPS").host("hostname").port(8080)
-                .rootPath("path").sslClientAuthentication(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL)
+        final SeBootstrap.Configuration configuration = configurationBuilder.protocol("HTTPS").host("hostname").port(8080)
+                .rootPath("path").sslClientAuthentication(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL)
                 .sslContext(mockSslContext).build();
 
         // then
         assertThat(configuration, is(notNullValue()));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.HOST));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PORT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CONTEXT));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
         assertThat(configuration.rootPath(), is("path"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
+        assertThat(configuration.sslClientAuthentication(), is(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL));
         assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
     }
 
     @Test
     public final void shouldBuildCustomConfigurationFromPropertiesProvider(@Mocked final SSLContext mockSslContext) {
         // given
-        final JAXRS.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
+        final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
         final Class<Server> mockServerClass = Server.class;
         final BiFunction<String, Class<Object>, Optional<Object>> propertiesProvider = (propertyName, propertyType) -> {
-            if (JAXRS.Configuration.PROTOCOL.equals(propertyName) && String.class.equals(propertyType)) {
+            if (SeBootstrap.Configuration.PROTOCOL.equals(propertyName) && String.class.equals(propertyType)) {
                 return Optional.of("HTTPS");
             }
-            if (JAXRS.Configuration.HOST.equals(propertyName) && String.class.equals(propertyType)) {
+            if (SeBootstrap.Configuration.HOST.equals(propertyName) && String.class.equals(propertyType)) {
                 return Optional.of("hostname");
             }
-            if (JAXRS.Configuration.PORT.equals(propertyName) && Integer.class.equals(propertyType)) {
+            if (SeBootstrap.Configuration.PORT.equals(propertyName) && Integer.class.equals(propertyType)) {
                 return Optional.of(8080);
             }
-            if (JAXRS.Configuration.ROOT_PATH.equals(propertyName) && String.class.equals(propertyType)) {
+            if (SeBootstrap.Configuration.ROOT_PATH.equals(propertyName) && String.class.equals(propertyType)) {
                 return Optional.of("path");
             }
-            if (JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION.equals(propertyName)
-                    && JAXRS.Configuration.SSLClientAuthentication.class.equals(propertyType)) {
-                return Optional.of(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL);
+            if (SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION.equals(propertyName)
+                    && SeBootstrap.Configuration.SSLClientAuthentication.class.equals(propertyType)) {
+                return Optional.of(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL);
             }
-            if (JAXRS.Configuration.SSL_CONTEXT.equals(propertyName) && SSLContext.class.equals(propertyType)) {
+            if (SeBootstrap.Configuration.SSL_CONTEXT.equals(propertyName) && SSLContext.class.equals(propertyType)) {
                 return Optional.of(mockSslContext);
             }
             if (ServerProperties.HTTP_SERVER_CLASS.equals(propertyName) && Class.class.equals(propertyType)) {
@@ -205,23 +205,23 @@ public class RuntimeDelegateImplTest {
         };
 
         // when
-        final JAXRS.Configuration configuration = configurationBuilder.from(propertiesProvider).build();
+        final SeBootstrap.Configuration configuration = configurationBuilder.from(propertiesProvider).build();
 
         // then
         assertThat(configuration, is(notNullValue()));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.HOST));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PORT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CONTEXT));
         assertThat(configuration, hasProperty(ServerProperties.HTTP_SERVER_CLASS));
         assertThat(configuration, hasProperty(ServerProperties.AUTO_START));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8080));
         assertThat(configuration.rootPath(), is("path"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
+        assertThat(configuration.sslClientAuthentication(), is(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL));
         assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
         assertThat(configuration.property(ServerProperties.HTTP_SERVER_CLASS), is(theInstance(mockServerClass)));
         assertThat(configuration.property(ServerProperties.AUTO_START), is(FALSE));
@@ -260,19 +260,19 @@ public class RuntimeDelegateImplTest {
             }
         };
         final RuntimeDelegate runtimeDelegate = new RuntimeDelegateImpl();
-        final JAXRS.Configuration mockConfiguration = name -> {
+        final SeBootstrap.Configuration mockConfiguration = name -> {
             switch (name) {
-                case JAXRS.Configuration.PROTOCOL:
+                case SeBootstrap.Configuration.PROTOCOL:
                     return "HTTPS";
-                case JAXRS.Configuration.HOST:
+                case SeBootstrap.Configuration.HOST:
                     return "hostname";
-                case JAXRS.Configuration.PORT:
-                    return JAXRS.Configuration.DEFAULT_PORT;
-                case JAXRS.Configuration.ROOT_PATH:
+                case SeBootstrap.Configuration.PORT:
+                    return SeBootstrap.Configuration.DEFAULT_PORT;
+                case SeBootstrap.Configuration.ROOT_PATH:
                     return "path";
-                case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
-                    return JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
-                case JAXRS.Configuration.SSL_CONTEXT:
+                case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
+                    return SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL;
+                case SeBootstrap.Configuration.SSL_CONTEXT:
                     return mockSslContext;
                 case ServerProperties.HTTP_SERVER_CLASS:
                     return Server.class;
@@ -287,7 +287,7 @@ public class RuntimeDelegateImplTest {
                 return Collections.singleton(service.cast(new ServerProvider() {
                     @Override
                     public final <U extends Server> U createServer(final Class<U> type, final Application application,
-                                                                   final JAXRS.Configuration configuration) {
+                                                                   final SeBootstrap.Configuration configuration) {
                         return application == mockApplication && configuration == mockConfiguration
                                 ? type.cast(mockServer)
                                 : null;
@@ -305,30 +305,30 @@ public class RuntimeDelegateImplTest {
         });
 
         // when
-        final CompletionStage<JAXRS.Instance> bootstrapStage = runtimeDelegate.bootstrap(mockApplication,
+        final CompletionStage<SeBootstrap.Instance> bootstrapStage = runtimeDelegate.bootstrap(mockApplication,
                 mockConfiguration);
-        final JAXRS.Instance instance = bootstrapStage.toCompletableFuture().get(15, SECONDS);
-        final JAXRS.Configuration configuration = instance.configuration();
+        final SeBootstrap.Instance instance = bootstrapStage.toCompletableFuture().get(15, SECONDS);
+        final SeBootstrap.Configuration configuration = instance.configuration();
         final Server server = instance.unwrap(Server.class);
         final Container container = server.container();
-        final CompletionStage<JAXRS.Instance.StopResult> stopStage = instance.stop();
+        final CompletionStage<SeBootstrap.Instance.StopResult> stopStage = instance.stop();
         final Object stopResult = stopStage.toCompletableFuture().get(15, SECONDS);
 
         // then
         assertThat(instance, is(notNullValue()));
         assertThat(configuration, is(notNullValue()));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PROTOCOL));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.HOST));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.PORT));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.ROOT_PATH));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION));
-        assertThat(configuration, hasProperty(JAXRS.Configuration.SSL_CONTEXT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PROTOCOL));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.HOST));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.PORT));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.ROOT_PATH));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION));
+        assertThat(configuration, hasProperty(SeBootstrap.Configuration.SSL_CONTEXT));
         assertThat(configuration, hasProperty(ServerProperties.HTTP_SERVER_CLASS));
         assertThat(configuration.protocol(), is("HTTPS"));
         assertThat(configuration.host(), is("hostname"));
         assertThat(configuration.port(), is(8888));
         assertThat(configuration.rootPath(), is("path"));
-        assertThat(configuration.sslClientAuthentication(), is(JAXRS.Configuration.SSLClientAuthentication.OPTIONAL));
+        assertThat(configuration.sslClientAuthentication(), is(SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL));
         assertThat(configuration.sslContext(), is(theInstance(mockSslContext)));
         assertThat(configuration.property(ServerProperties.HTTP_SERVER_CLASS), is(theInstance(mockServer.getClass())));
         assertThat(server, is(theInstance(mockServer)));
@@ -350,10 +350,10 @@ public class RuntimeDelegateImplTest {
      * @param propertyName
      *     the property name to check
      */
-    private static final Matcher<JAXRS.Configuration> hasProperty(final String propertyName) {
-        return new FeatureMatcher<JAXRS.Configuration, Boolean>(is(TRUE), "hasProperty", "hasProperty") {
+    private static final Matcher<SeBootstrap.Configuration> hasProperty(final String propertyName) {
+        return new FeatureMatcher<SeBootstrap.Configuration, Boolean>(is(TRUE), "hasProperty", "hasProperty") {
             @Override
-            protected final Boolean featureValueOf(final JAXRS.Configuration actual) {
+            protected final Boolean featureValueOf(final SeBootstrap.Configuration actual) {
                 return actual.hasProperty(propertyName);
             }
         };

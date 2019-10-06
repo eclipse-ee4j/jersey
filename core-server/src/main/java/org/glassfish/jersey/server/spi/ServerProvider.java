@@ -17,7 +17,7 @@
 package org.glassfish.jersey.server.spi;
 
 import jakarta.ws.rs.ConstrainedTo;
-import jakarta.ws.rs.JAXRS;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Application;
@@ -82,6 +82,6 @@ public interface ServerProvider {
      * @throws ProcessingException
      *             if there is an error creating the server.
      */
-    public <T extends Server> T createServer(Class<T> type, Application application, JAXRS.Configuration configuration)
+    public <T extends Server> T createServer(Class<T> type, Application application, SeBootstrap.Configuration configuration)
             throws ProcessingException;
 }

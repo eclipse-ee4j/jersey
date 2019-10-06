@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
-import jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
 import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;

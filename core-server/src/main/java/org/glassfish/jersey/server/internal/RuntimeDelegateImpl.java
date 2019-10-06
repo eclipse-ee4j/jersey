@@ -27,13 +27,13 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 
 import javax.net.ssl.SSLContext;
-import jakarta.ws.rs.JAXRS;
-import jakarta.ws.rs.JAXRS.Configuration;
-import jakarta.ws.rs.JAXRS.Configuration.Builder;
-import jakarta.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration;
+import jakarta.ws.rs.SeBootstrap.Configuration.Builder;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.JAXRS;
-import jakarta.ws.rs.JAXRS.Instance;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Instance;
 
 import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
@@ -72,39 +72,39 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
     private static final Map<String, Class<?>> PROPERTY_TYPES = new HashMap<>();
 
     static {
-        PROPERTY_TYPES.put(JAXRS.Configuration.PROTOCOL, String.class);
-        PROPERTY_TYPES.put(JAXRS.Configuration.HOST, String.class);
-        PROPERTY_TYPES.put(JAXRS.Configuration.PORT, Integer.class);
-        PROPERTY_TYPES.put(JAXRS.Configuration.ROOT_PATH, String.class);
-        PROPERTY_TYPES.put(JAXRS.Configuration.SSL_CONTEXT, SSLContext.class);
-        PROPERTY_TYPES.put(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION, SSLClientAuthentication.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.PROTOCOL, String.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.HOST, String.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.PORT, Integer.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.ROOT_PATH, String.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.SSL_CONTEXT, SSLContext.class);
+        PROPERTY_TYPES.put(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION, SSLClientAuthentication.class);
         PROPERTY_TYPES.put(ServerProperties.HTTP_SERVER_CLASS, Class.class);
         PROPERTY_TYPES.put(ServerProperties.AUTO_START, Boolean.class);
     }
 
     @Override
-    public JAXRS.Configuration.Builder createConfigurationBuilder() {
-        return new JAXRS.Configuration.Builder() {
+    public SeBootstrap.Configuration.Builder createConfigurationBuilder() {
+        return new SeBootstrap.Configuration.Builder() {
             private final Map<String, Object> properties = new HashMap<>();
 
             {
-                this.properties.put(JAXRS.Configuration.PROTOCOL, "HTTP");
-                this.properties.put(JAXRS.Configuration.HOST, "localhost");
-                this.properties.put(JAXRS.Configuration.PORT, -1); // Auto-select port 80 for HTTP or 443 for HTTPS
-                this.properties.put(JAXRS.Configuration.ROOT_PATH, "/");
+                this.properties.put(SeBootstrap.Configuration.PROTOCOL, "HTTP");
+                this.properties.put(SeBootstrap.Configuration.HOST, "localhost");
+                this.properties.put(SeBootstrap.Configuration.PORT, -1); // Auto-select port 80 for HTTP or 443 for HTTPS
+                this.properties.put(SeBootstrap.Configuration.ROOT_PATH, "/");
                 this.properties.put(ServerProperties.HTTP_SERVER_CLASS, Server.class); // Auto-select first provider
                 try {
-                    this.properties.put(JAXRS.Configuration.SSL_CONTEXT, SSLContext.getDefault());
+                    this.properties.put(SeBootstrap.Configuration.SSL_CONTEXT, SSLContext.getDefault());
                 } catch (final NoSuchAlgorithmException e) {
                     throw new RuntimeException(e);
                 }
-                this.properties.put(JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION,
-                        JAXRS.Configuration.SSLClientAuthentication.NONE);
+                this.properties.put(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION,
+                        SeBootstrap.Configuration.SSLClientAuthentication.NONE);
                 this.properties.put(ServerProperties.AUTO_START, TRUE);
             }
 
             @Override
-            public final JAXRS.Configuration.Builder property(final String name, final Object value) {
+            public final SeBootstrap.Configuration.Builder property(final String name, final Object value) {
                 this.properties.put(name, value);
                 return this;
             }
@@ -119,8 +119,8 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
             }
 
             @Override
-            public final JAXRS.Configuration build() {
-                return new JAXRS.Configuration() {
+            public final SeBootstrap.Configuration build() {
+                return new SeBootstrap.Configuration() {
                     @Override
                     public final boolean hasProperty(final String name) {
                         return properties.containsKey(name);
@@ -137,13 +137,13 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public CompletableFuture<JAXRS.Instance> bootstrap(final Application application,
-            final JAXRS.Configuration configuration) {
+    public CompletableFuture<SeBootstrap.Instance> bootstrap(final Application application,
+            final SeBootstrap.Configuration configuration) {
         return CompletableFuture.supplyAsync(() -> {
             final Class<Server> httpServerClass = (Class<Server>) configuration
                     .property(ServerProperties.HTTP_SERVER_CLASS);
 
-            return new JAXRS.Instance() {
+            return new SeBootstrap.Instance() {
                 private final Server server = ServerFactory.createServer(httpServerClass, application, configuration);
 
                 @Override
@@ -152,7 +152,7 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
                         @Override
                         public final boolean hasProperty(final String name) {
                             switch (name) {
-                            case JAXRS.Configuration.PORT:
+                            case SeBootstrap.Configuration.PORT:
                             case ServerProperties.HTTP_SERVER_CLASS:
                                 return true;
                             default:
@@ -163,7 +163,7 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
                         @Override
                         public final Object property(final String name) {
                             switch (name) {
-                            case JAXRS.Configuration.PORT:
+                            case SeBootstrap.Configuration.PORT:
                                 return server.port();
                             case ServerProperties.HTTP_SERVER_CLASS:
                                 return server.getClass();
