@@ -206,7 +206,7 @@
         </license>
     </licenses>
 
-    <scm>    
+    <scm>
         <connection>scm:git:git@github.com:jersey/jersey.git</connection>
         <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jersey</url>
@@ -2116,7 +2116,7 @@
         <jaxb.ri.version>2.3.2</jaxb.ri.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
         <jaxrs.api.spec.version>2.2</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>2.2-20190531.094237-24</jaxrs.api.impl.version>
+        <jaxrs.api.impl.version>2.2-SNAPSHOT</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
