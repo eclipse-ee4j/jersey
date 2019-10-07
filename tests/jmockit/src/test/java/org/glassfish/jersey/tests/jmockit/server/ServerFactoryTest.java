@@ -44,7 +44,7 @@ import mockit.Mocked;
  * Unit tests for {@link ServerFactory}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class ServerFactoryTest {
 

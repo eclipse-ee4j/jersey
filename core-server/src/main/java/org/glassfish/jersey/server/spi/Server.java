@@ -32,7 +32,7 @@ import org.glassfish.jersey.spi.Contract;
  * </p>
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 @Contract
 @ConstrainedTo(RuntimeType.SERVER)

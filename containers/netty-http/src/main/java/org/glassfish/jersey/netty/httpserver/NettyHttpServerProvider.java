@@ -28,7 +28,7 @@ import io.netty.channel.Channel;
  * Server provider for servers based on Netty {@link Channel}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class NettyHttpServerProvider implements ServerProvider {
 

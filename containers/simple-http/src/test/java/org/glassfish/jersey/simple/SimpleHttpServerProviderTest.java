@@ -53,7 +53,7 @@ import org.junit.Test;
  * Unit tests for {@link SimpleHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class SimpleHttpServerProviderTest {
 

@@ -26,7 +26,7 @@ import org.glassfish.jersey.server.spi.ServerProvider;
  * Server provider for servers based on Simple framework {@link SimpleServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class SimpleHttpServerProvider implements ServerProvider {
 

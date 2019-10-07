@@ -54,7 +54,7 @@ import org.junit.Test;
  * Unit tests for {@link GrizzlyHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class GrizzlyHttpServerProviderTest {
 

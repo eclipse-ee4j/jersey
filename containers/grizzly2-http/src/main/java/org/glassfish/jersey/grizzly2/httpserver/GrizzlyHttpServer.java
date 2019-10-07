@@ -40,7 +40,7 @@ import org.glassfish.jersey.server.spi.Server;
  * Jersey {@code Server} implementation based on Grizzly {@link HttpServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class GrizzlyHttpServer implements Server {
 

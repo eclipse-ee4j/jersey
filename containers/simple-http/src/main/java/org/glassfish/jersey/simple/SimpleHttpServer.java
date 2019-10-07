@@ -36,7 +36,7 @@ import org.glassfish.jersey.server.spi.Server;
  * {@link SimpleServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class SimpleHttpServer implements Server {
 
