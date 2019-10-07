@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.mvc.internal;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.glassfish.jersey.server.mvc.spi.ResolvedViewable;

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.test.JerseyTest;

@@ -26,7 +26,7 @@ import java.util.Collection;
  * the name bindings attached to it.
  *
  * @author Martin Matula
- * @see javax.ws.rs.NameBinding
+ * @see jakarta.ws.rs.NameBinding
  */
 public interface NameBound {
     /**

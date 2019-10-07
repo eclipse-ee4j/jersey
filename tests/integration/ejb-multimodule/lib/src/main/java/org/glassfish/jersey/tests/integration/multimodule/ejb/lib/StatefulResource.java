@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.integration.multimodule.ejb.lib;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * JAX-RS resource backed with a stateful EJB bean.

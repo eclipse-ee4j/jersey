@@ -38,10 +38,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
@@ -250,7 +250,7 @@ class JettyConnector implements Connector {
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
                                            JettyConnector.this.getClass().getName());
 
-            final javax.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
+            final jakarta.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
                     ? Statuses.from(jettyResponse.getStatus())
                     : Statuses.from(jettyResponse.getStatus(), jettyResponse.getReason());
 

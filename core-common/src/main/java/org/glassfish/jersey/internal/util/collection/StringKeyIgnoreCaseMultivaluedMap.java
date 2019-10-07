@@ -18,7 +18,7 @@ package org.glassfish.jersey.internal.util.collection;
 
 import java.util.List;
 
-import javax.ws.rs.core.AbstractMultivaluedMap;
+import jakarta.ws.rs.core.AbstractMultivaluedMap;
 
 /**
  * Multivalued map with String keys that are compared with each other using the case insensitive method.

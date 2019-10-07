@@ -23,12 +23,12 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -78,7 +78,7 @@ public class ProxyTest extends JerseyTest {
         Proxy proxy = new Proxy(authentication);
         try {
             proxy.start();
-            javax.ws.rs.core.Response response = target("resource").request().get();
+            jakarta.ws.rs.core.Response response = target("resource").request().get();
             assertEquals(200, response.getStatus());
             assertEquals("OK", response.readEntity(String.class));
             assertTrue(proxy.getProxyHit());
@@ -296,7 +296,7 @@ public class ProxyTest extends JerseyTest {
                 destinationRequest.header(headerName, request.getHeader(headerName));
             }
 
-            javax.ws.rs.core.Response destinationResponse = destinationRequest
+            jakarta.ws.rs.core.Response destinationResponse = destinationRequest
                     .method(request.getMethod().getMethodString());
 
             // translate the received response into the proxy response

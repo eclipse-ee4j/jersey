@@ -35,12 +35,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -140,7 +140,7 @@ import org.apache.http.util.VersionInfo;
  * </p>
  * <p>
  * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
- * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link jakarta.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
  * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
  * configuration set by using the properties.
  * </p>

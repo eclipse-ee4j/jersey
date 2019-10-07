@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import javax.inject.Singleton;
 
@@ -39,7 +39,7 @@ import org.glassfish.jersey.model.internal.ComponentBag;
  * Class used for registration of the custom providers into injection manager.
  * <p>
  * Custom providers are classes that implements specific JAX-RS or Jersey
- * SPI interfaces (e.g. {@link javax.ws.rs.ext.MessageBodyReader}) and are
+ * SPI interfaces (e.g. {@link jakarta.ws.rs.ext.MessageBodyReader}) and are
  * supplied by the user. These providers will be bound into the injection manager
  * annotated by a {@link Custom &#64;Custom} qualifier annotation.
  * </p>

@@ -18,8 +18,8 @@ package org.glassfish.jersey.media.sse.internal;
 
 import java.util.function.Function;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.sse.SseEventSink;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.sse.SseEventSink;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

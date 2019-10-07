@@ -19,11 +19,11 @@ package org.glassfish.jersey.tests.e2e.server.validation;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.process.Inflector;

@@ -69,21 +69,21 @@ public class JarFileScannerTest {
     public void testRecursiveResourceEnumerationOfAllPackages() throws IOException {
         final int actualEntries = countJarEntriesByPattern(Pattern.compile(".*\\.(class|properties|xml|md)"));
         final int scannedEntries = countJarEntriesUsingScanner("", true);
-        assertThat("Failed to enumerate all contents of javax.ws.rs-api", scannedEntries, equalTo(actualEntries));
+        assertThat("Failed to enumerate all contents of jakarta.ws.rs-api", scannedEntries, equalTo(actualEntries));
     }
 
     @Test
     public void testRecursiveClassEnumerationWithExistantPackage() throws IOException {
         final int actualEntries = countJarEntriesByPattern(Pattern.compile("javax/ws/rs/.*\\.class"));
         final int scannedEntries = countJarEntriesUsingScanner("javax/ws/rs", true);
-        assertThat("Failed to enumerate all contents of javax.ws.rs-api", scannedEntries, equalTo(actualEntries));
+        assertThat("Failed to enumerate all contents of jakarta.ws.rs-api", scannedEntries, equalTo(actualEntries));
     }
 
     @Test
     public void testNonRecursiveClassEnumerationWithExistantPackage() throws IOException {
         final int actualEntries = countJarEntriesByPattern(Pattern.compile("javax/ws/rs/[^/]*\\.class"));
         final int scannedEntries = countJarEntriesUsingScanner("javax/ws/rs", false);
-        assertThat("Failed to enumerate package 'javax.ws.rs' of javax.ws.rs-api", scannedEntries, equalTo(actualEntries));
+        assertThat("Failed to enumerate package 'jakarta.ws.rs' of jakarta.ws.rs-api", scannedEntries, equalTo(actualEntries));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class JarFileScannerTest {
     public void testClassEnumerationWithNonexistentPackage(final boolean recursive) throws IOException {
         try (final InputStream jaxRsApi = new FileInputStream(this.jaxRsApiPath)) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "javax/ws/r", recursive);
-            assertFalse("Unexpectedly found package 'javax.ws.r' in javax.ws.rs-api", jarFileScanner.hasNext());
+            assertFalse("Unexpectedly found package 'javax.ws.r' in jakarta.ws.rs-api", jarFileScanner.hasNext());
         }
     }
 
@@ -152,7 +152,7 @@ public class JarFileScannerTest {
     public void testClassEnumerationWithClassPrefix(final boolean recursive) throws IOException {
         try (final InputStream jaxRsApi = new FileInputStream(this.jaxRsApiPath)) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "javax/ws/rs/GE", recursive);
-            assertFalse("Unexpectedly found package 'javax.ws.rs.GE' in javax.ws.rs-api", jarFileScanner.hasNext());
+            assertFalse("Unexpectedly found package 'jakarta.ws.rs.GE' in jakarta.ws.rs-api", jarFileScanner.hasNext());
         }
     }
 }

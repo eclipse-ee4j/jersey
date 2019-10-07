@@ -19,8 +19,8 @@ package org.glassfish.jersey.linking;
 import java.net.URI;
 import java.util.Iterator;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.linking.mapping.ResourceMappingContext;
 

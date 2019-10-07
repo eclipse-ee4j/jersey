@@ -25,13 +25,13 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
  * Helper class containing convenience methods for reading
- * {@code org.glassfish.jersey.server.ResourceConfig} and {@link javax.ws.rs.core.Configuration} properties.
+ * {@code org.glassfish.jersey.server.ResourceConfig} and {@link jakarta.ws.rs.core.Configuration} properties.
  *
  * @author Martin Matula
  */

@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.ejb.resources;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * Test resource that exposes counter from the JAX-RS application subclass.

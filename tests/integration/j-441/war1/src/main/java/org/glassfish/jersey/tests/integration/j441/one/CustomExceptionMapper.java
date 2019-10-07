@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.integration.j441.one;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import javax.servlet.ServletContext;
 

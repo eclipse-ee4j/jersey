@@ -51,7 +51,7 @@ public final class MessageProperties {
      * If set to {@code true} indicates that produced XML output should be formatted
      * if possible (see below).
      * <p />
-     * A XML message entity written by a {@link javax.ws.rs.ext.MessageBodyWriter}
+     * A XML message entity written by a {@link jakarta.ws.rs.ext.MessageBodyWriter}
      * may be formatted for the purposes of human readability provided the respective
      * {@code MessageBodyWriter} supports XML output formatting. All JAXB-based message
      * body writers support this property.
@@ -91,12 +91,12 @@ public final class MessageProperties {
     public static final String DEFLATE_WITHOUT_ZLIB = "jersey.config.deflate.nozlib";
 
     /**
-     * If set to {@code true}, {@link javax.ws.rs.ext.MessageBodyReader MessageBodyReaders} and
-     * {@link javax.ws.rs.ext.MessageBodyWriter MessageBodyWriters} will be ordered by rules from JAX-RS 1.x, where custom
-     * providers have always precedence; providers are sorted by {@link javax.ws.rs.core.MediaType} and afterwards by
+     * If set to {@code true}, {@link jakarta.ws.rs.ext.MessageBodyReader MessageBodyReaders} and
+     * {@link jakarta.ws.rs.ext.MessageBodyWriter MessageBodyWriters} will be ordered by rules from JAX-RS 1.x, where custom
+     * providers have always precedence; providers are sorted by {@link jakarta.ws.rs.core.MediaType} and afterwards by
      * declaration distance - see {@link org.glassfish.jersey.message.internal.MessageBodyFactory.DeclarationDistanceComparator}.
      * Otherwise JAX-RS 2.x ordering will be used, which sorts providers firstly by declaration distance, then by
-     * {@link javax.ws.rs.core.MediaType} and by origin (custom/provided).
+     * {@link jakarta.ws.rs.core.MediaType} and by origin (custom/provided).
      * <p />
      * The default value is {@code false}.
      * <p />

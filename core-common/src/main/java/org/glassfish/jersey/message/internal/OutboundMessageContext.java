@@ -36,18 +36,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;
@@ -79,14 +79,14 @@ public class OutboundMessageContext {
     public static interface StreamProvider {
         /**
          * Get the output stream. This method will be called after all the
-         * {@link javax.ws.rs.ext.WriterInterceptor writer interceptors} are called and written entity is buffered
+         * {@link jakarta.ws.rs.ext.WriterInterceptor writer interceptors} are called and written entity is buffered
          * into the buffer or the buffer exceeds.
          *
          * @param contentLength the size of the buffered entity or -1 if the entity exceeded the maximum buffer
          *                      size or if the buffering is disabled.
          * @return the adapted output stream into which the serialized entity should be written. May return null
          * which will cause ignoring the written entity (in that case the entity will
-         * still be written by {@link javax.ws.rs.ext.MessageBodyWriter message body writers}
+         * still be written by {@link jakarta.ws.rs.ext.MessageBodyWriter message body writers}
          * but the output will be ignored).
          * @throws java.io.IOException in case of an IO error.
          */
@@ -145,8 +145,8 @@ public class OutboundMessageContext {
      * Get a message header as a single string value.
      * <p>
      * Each single header value is converted to String using a
-     * {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
-     * via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     * {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
+     * via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
      * for the header value class or using its {@code toString} method  if a header
      * delegate is not available.
      *
@@ -343,7 +343,7 @@ public class OutboundMessageContext {
     /**
      * Get any cookies that accompanied the message.
      *
-     * @return a read-only map of cookie name (String) to {@link javax.ws.rs.core.Cookie}.
+     * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
      */
     public Map<String, Cookie> getRequestCookies() {
         final List<Object> cookies = headers.get(HttpHeaders.COOKIE);
@@ -431,7 +431,7 @@ public class OutboundMessageContext {
     /**
      * Get any new cookies set on the message message.
      *
-     * @return a read-only map of cookie name (String) to a {@link javax.ws.rs.core.NewCookie new cookie}.
+     * @return a read-only map of cookie name (String) to a {@link jakarta.ws.rs.core.NewCookie new cookie}.
      */
     public Map<String, NewCookie> getResponseCookies() {
         List<Object> cookies = headers.get(HttpHeaders.SET_COOKIE);
@@ -576,7 +576,7 @@ public class OutboundMessageContext {
     }
 
     /**
-     * Convenience method that returns a {@link javax.ws.rs.core.Link.Builder Link.Builder}
+     * Convenience method that returns a {@link jakarta.ws.rs.core.Link.Builder Link.Builder}
      * for the relation.
      *
      * @param relation link relation.
@@ -623,7 +623,7 @@ public class OutboundMessageContext {
      * Set a new message message entity.
      *
      * @param entity entity object.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(Object entity) {
         setEntity(entity, ReflectionHelper.genericTypeFor(entity));
@@ -634,7 +634,7 @@ public class OutboundMessageContext {
      *
      * @param entity      entity object.
      * @param annotations annotations attached to the entity.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(Object entity, Annotation[] annotations) {
         setEntity(entity, ReflectionHelper.genericTypeFor(entity));
@@ -646,7 +646,7 @@ public class OutboundMessageContext {
      *
      * @param entity entity object.
      * @param type   entity generic type information.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     private void setEntity(Object entity, GenericType<?> type) {
         if (entity instanceof GenericEntity) {
@@ -664,7 +664,7 @@ public class OutboundMessageContext {
      * @param entity      entity object.
      * @param type        declared entity class.
      * @param annotations annotations attached to the entity.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(Object entity, Type type, Annotation[] annotations) {
         setEntity(entity, new GenericType(type));
@@ -677,7 +677,7 @@ public class OutboundMessageContext {
      * @param entity      entity object.
      * @param annotations annotations attached to the entity.
      * @param mediaType   entity media type.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(Object entity, Annotation[] annotations, MediaType mediaType) {
         setEntity(entity, annotations);

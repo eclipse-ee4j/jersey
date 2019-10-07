@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.jersey780;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * @author Michal Gajdos

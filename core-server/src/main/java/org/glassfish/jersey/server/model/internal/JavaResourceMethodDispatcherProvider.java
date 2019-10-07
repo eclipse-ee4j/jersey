@@ -23,10 +23,10 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.sse.SseEventSink;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.sse.SseEventSink;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.inject.ConfiguredValidator;

@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.AbstractServiceFinderConfigurator;
 import org.glassfish.jersey.internal.BootstrapBag;

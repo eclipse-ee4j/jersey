@@ -18,11 +18,11 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 
 import java.net.URI;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 

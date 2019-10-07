@@ -26,12 +26,12 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.NotAcceptableException;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.NotAcceptableException;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -47,7 +47,7 @@ import org.glassfish.jersey.spi.ContentEncoder;
  * {@link org.glassfish.jersey.spi.ContentEncoder encoders}) and decides what encoding should be chosen
  * based on the encodings listed in the Accept-Encoding request header and their associated quality values.
  * If none of the acceptable encodings is supported and identity encoding is explicitly forbidden by the client,
- * the filter generates {@link javax.ws.rs.core.Response.Status#NOT_ACCEPTABLE} response.
+ * the filter generates {@link jakarta.ws.rs.core.Response.Status#NOT_ACCEPTABLE} response.
  * <p>
  *     The filter also ensures Accept-Encoding is added to the Vary header, for proper interaction with web caches.
  * </p>

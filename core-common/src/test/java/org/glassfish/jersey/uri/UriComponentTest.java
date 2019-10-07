@@ -18,8 +18,8 @@ package org.glassfish.jersey.uri;
 
 import java.util.List;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.PathSegment;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

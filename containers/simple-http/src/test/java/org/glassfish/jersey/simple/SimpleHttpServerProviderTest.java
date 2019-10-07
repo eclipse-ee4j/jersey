@@ -34,13 +34,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.server.ServerProperties;
@@ -53,7 +53,7 @@ import org.junit.Test;
  * Unit tests for {@link SimpleHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class SimpleHttpServerProviderTest {
 
@@ -68,19 +68,19 @@ public final class SimpleHttpServerProviderTest {
                 return Collections.singleton(resource);
             }
         };
-        final JAXRS.Configuration configuration = name -> {
+        final SeBootstrap.Configuration configuration = name -> {
             switch (name) {
-            case JAXRS.Configuration.PROTOCOL:
+            case SeBootstrap.Configuration.PROTOCOL:
                 return "HTTP";
-            case JAXRS.Configuration.HOST:
+            case SeBootstrap.Configuration.HOST:
                 return "localhost";
-            case JAXRS.Configuration.PORT:
+            case SeBootstrap.Configuration.PORT:
                 return getPort();
-            case JAXRS.Configuration.ROOT_PATH:
+            case SeBootstrap.Configuration.ROOT_PATH:
                 return "/";
-            case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
+            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
                 return SSLClientAuthentication.NONE;
-            case JAXRS.Configuration.SSL_CONTEXT:
+            case SeBootstrap.Configuration.SSL_CONTEXT:
                 try {
                     return SSLContext.getDefault();
                 } catch (final NoSuchAlgorithmException e) {
@@ -156,19 +156,19 @@ public final class SimpleHttpServerProviderTest {
         // given
         final ServerProvider serverProvider = new SimpleHttpServerProvider();
         final Application application = new Application();
-        final JAXRS.Configuration configuration = name -> {
+        final SeBootstrap.Configuration configuration = name -> {
             switch (name) {
-            case JAXRS.Configuration.PROTOCOL:
+            case SeBootstrap.Configuration.PROTOCOL:
                 return "HTTP";
-            case JAXRS.Configuration.HOST:
+            case SeBootstrap.Configuration.HOST:
                 return "localhost";
-            case JAXRS.Configuration.PORT:
-                return JAXRS.Configuration.FREE_PORT;
-            case JAXRS.Configuration.ROOT_PATH:
+            case SeBootstrap.Configuration.PORT:
+                return SeBootstrap.Configuration.FREE_PORT;
+            case SeBootstrap.Configuration.ROOT_PATH:
                 return "/";
-            case JAXRS.Configuration.SSL_CLIENT_AUTHENTICATION:
+            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
                 return SSLClientAuthentication.NONE;
-            case JAXRS.Configuration.SSL_CONTEXT:
+            case SeBootstrap.Configuration.SSL_CONTEXT:
                 try {
                     return SSLContext.getDefault();
                 } catch (final NoSuchAlgorithmException e) {

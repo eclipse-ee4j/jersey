@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_mvc_1;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_1.resource.Book;
 

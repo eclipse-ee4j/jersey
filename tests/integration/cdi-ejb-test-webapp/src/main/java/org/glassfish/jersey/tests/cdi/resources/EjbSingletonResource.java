@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * EJB singleton session bean injected with CDI timers.

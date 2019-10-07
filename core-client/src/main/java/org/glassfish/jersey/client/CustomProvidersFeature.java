@@ -18,8 +18,8 @@ package org.glassfish.jersey.client;
 
 import java.util.Collection;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * Feature to provide the single-line registration of custom providers.

@@ -18,10 +18,10 @@ package org.glassfish.jersey.server.internal.inject;
 
 import java.util.function.Function;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.Response;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

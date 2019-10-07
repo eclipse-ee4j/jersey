@@ -39,16 +39,16 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.Function;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import javax.xml.transform.Source;
 
@@ -147,8 +147,8 @@ public abstract class InboundMessageContext {
     /**
      * Create new inbound message context.
      *
-     * @param translateNce if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
-     *                     selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     * @param translateNce if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a
+     *                     selected message body reader will be translated into a {@link jakarta.ws.rs.BadRequestException}
      *                     as required by JAX-RS specification on the server side.
      */
     public InboundMessageContext(boolean translateNce) {
@@ -247,8 +247,8 @@ public abstract class InboundMessageContext {
      * Get a message header as a single string value.
      * <p/>
      * Each single header value is converted to String using a
-     * {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
-     * via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     * {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
+     * via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
      * for the header value class or using its {@code toString} method  if a header
      * delegate is not available.
      *
@@ -510,7 +510,7 @@ public abstract class InboundMessageContext {
     /**
      * Get any cookies that accompanied the request.
      *
-     * @return a read-only map of cookie name (String) to {@link javax.ws.rs.core.Cookie}.
+     * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
      */
     public Map<String, Cookie> getRequestCookies() {
         List<String> cookies = this.headers.get(HttpHeaders.COOKIE);
@@ -548,7 +548,7 @@ public abstract class InboundMessageContext {
     /**
      * Get any new cookies set on the response message.
      *
-     * @return a read-only map of cookie name (String) to a {@link javax.ws.rs.core.NewCookie new cookie}.
+     * @return a read-only map of cookie name (String) to a {@link jakarta.ws.rs.core.NewCookie new cookie}.
      */
     public Map<String, NewCookie> getResponseCookies() {
         List<String> cookies = this.headers.get(HttpHeaders.SET_COOKIE);
@@ -695,7 +695,7 @@ public abstract class InboundMessageContext {
     }
 
     /**
-     * Convenience method that returns a {@link javax.ws.rs.core.Link.Builder Link.Builder}
+     * Convenience method that returns a {@link jakarta.ws.rs.core.Link.Builder Link.Builder}
      * for the relation.
      *
      * @param relation link relation.
@@ -878,7 +878,7 @@ public abstract class InboundMessageContext {
      * Buffer the entity stream (if not empty).
      *
      * @return {@code true} if the entity input stream was successfully buffered.
-     * @throws javax.ws.rs.ProcessingException in case of an IO error.
+     * @throws jakarta.ws.rs.ProcessingException in case of an IO error.
      */
     public boolean bufferEntity() throws ProcessingException {
         entityContent.ensureNotClosed();

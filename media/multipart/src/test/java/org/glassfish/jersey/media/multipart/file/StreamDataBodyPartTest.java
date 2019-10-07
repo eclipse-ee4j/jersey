@@ -19,7 +19,7 @@ package org.glassfish.jersey.media.multipart.file;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.BodyPartTest;
 import org.glassfish.jersey.media.multipart.ContentDisposition;

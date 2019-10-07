@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Iterator;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.core.Context;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

@@ -18,9 +18,9 @@ package org.glassfish.jersey.server.spi.internal;
 
 import java.lang.reflect.InvocationHandler;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.server.ContainerRequest;

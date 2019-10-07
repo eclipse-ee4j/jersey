@@ -68,7 +68,7 @@ public class ResourceConfigTest {
         // Scan packages.
         resourceConfig.getClasses();
 
-        resourceConfig.registerFinder(new PackageNamesScanner(new String[] {"javax.ws.rs"}, false));
+        resourceConfig.registerFinder(new PackageNamesScanner(new String[] {"jakarta.ws.rs"}, false));
 
         // Reset - we called getClasses() on ResourceConfig.
         new Verifications() {{

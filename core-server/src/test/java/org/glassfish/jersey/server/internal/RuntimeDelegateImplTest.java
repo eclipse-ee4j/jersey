@@ -19,8 +19,8 @@ package org.glassfish.jersey.server.internal;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.junit.Test;
 

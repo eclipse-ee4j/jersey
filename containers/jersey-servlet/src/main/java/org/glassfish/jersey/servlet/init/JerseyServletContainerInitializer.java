@@ -27,10 +27,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.ext.Provider;
 
 import javax.servlet.Registration;
 import javax.servlet.ServletContainerInitializer;
@@ -54,13 +54,13 @@ import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
  When using the pluggability mechanism the following conditions MUST be met:
 
  - If no Application subclass is present the added servlet MUST be
- named "javax.ws.rs.core.Application" and all root resource classes and
+ named "jakarta.ws.rs.core.Application" and all root resource classes and
  providers packaged in the web application MUST be included in the published
  JAX-RS application. The application MUST be packaged with a web.xml that
  specifies a servlet mapping for the added servlet.
 
  - If an Application subclass is present and there is already a servlet defined
- that has a servlet initialization parameter named "javax.ws.rs.Application"
+ that has a servlet initialization parameter named "jakarta.ws.rs.Application"
  whose value is the fully qualified name of the Application subclass then no
  servlet should be added by the JAX-RS implementation's ContainerInitializer
  since the application is already being handled by an existing servlet.
@@ -88,7 +88,7 @@ import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
  element of the web.xml descriptor SHOULD name the JAX-RS
  implementation-supplied Servlet or Filter class respectively. The
  application-supplied subclass of Application SHOULD be identified using an
- init-param with a param-name of javax.ws.rs.Application.
+ init-param with a param-name of jakarta.ws.rs.Application.
  */
 
 /**
@@ -154,7 +154,7 @@ public final class JerseyServletContainerInitializer implements ServletContainer
             }
         }
 
-        // check for javax.ws.rs.core.Application registration
+        // check for jakarta.ws.rs.core.Application registration
         addServletWithDefaultConfiguration(servletContext, classes);
     }
 

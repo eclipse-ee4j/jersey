@@ -12,9 +12,9 @@ package org.glassfish.jersey.examples.jaxb;
 
 import java.util.Collection;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
-import static javax.ws.rs.client.Entity.xml;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
+import static jakarta.ws.rs.client.Entity.xml;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;

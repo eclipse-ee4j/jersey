@@ -30,8 +30,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.NameBinding;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.NameBinding;
+import jakarta.ws.rs.core.Feature;
 
 import javax.annotation.Priority;
 import javax.inject.Scope;
@@ -58,7 +58,7 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
  * for the registered component type and stores it with the component registration.
  * <p>
  * The rules for managing components inside a component bag are derived from the
- * rules of JAX-RS {@link javax.ws.rs.core.Configurable} API. In short:
+ * rules of JAX-RS {@link jakarta.ws.rs.core.Configurable} API. In short:
  * <ul>
  * <li>The iteration order of registered components mirrors the registration order
  * of these components.</li>
@@ -73,7 +73,7 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 public class ComponentBag {
     /**
      * A filtering strategy that excludes all pure meta-provider models (i.e. models that only contain
-     * recognized meta-provider contracts - {@link javax.ws.rs.core.Feature} and/or {@link Binder} and/or external meta-provider
+     * recognized meta-provider contracts - {@link jakarta.ws.rs.core.Feature} and/or {@link Binder} and/or external meta-provider
      * from {@link org.glassfish.jersey.internal.inject.InjectionManager#isRegistrable(Class)}).
      * <p>
      * This filter predicate returns {@code false} for all {@link org.glassfish.jersey.model.ContractProvider contract provider models}
@@ -554,7 +554,7 @@ public class ComponentBag {
     }
 
     /**
-     * Get all registered component classes, including {@link javax.ws.rs.core.Feature features}
+     * Get all registered component classes, including {@link jakarta.ws.rs.core.Feature features}
      * and {@link Binder binders} meta-providers.
      *
      * @return all registered component classes.
@@ -564,7 +564,7 @@ public class ComponentBag {
     }
 
     /**
-     * Get all registered component instances, including {@link javax.ws.rs.core.Feature features}
+     * Get all registered component instances, including {@link jakarta.ws.rs.core.Feature features}
      * and {@link Binder binders} meta-providers.
      *
      * @return all registered component instances.

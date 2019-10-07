@@ -20,7 +20,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.InjectionException;

@@ -24,8 +24,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -52,14 +52,14 @@ final class FreemarkerViewProcessor extends AbstractTemplateProcessor<Template> 
     private final FreemarkerConfigurationFactory factory;
 
     /**
-     * Create an instance of this processor with injected {@link javax.ws.rs.core.Configuration config} and
+     * Create an instance of this processor with injected {@link jakarta.ws.rs.core.Configuration config} and
      * (optional) {@link javax.servlet.ServletContext servlet context}.
      *
      * @param config           config to configure this processor from.
      * @param injectionManager injection manager.
      */
     @Inject
-    public FreemarkerViewProcessor(javax.ws.rs.core.Configuration config, InjectionManager injectionManager) {
+    public FreemarkerViewProcessor(jakarta.ws.rs.core.Configuration config, InjectionManager injectionManager) {
         super(config, injectionManager.getInstance(ServletContext.class), "freemarker", "ftl");
 
         this.factory = getTemplateObjectFactory(injectionManager::createAndInitialize, FreemarkerConfigurationFactory.class,

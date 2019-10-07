@@ -18,14 +18,14 @@ package org.glassfish.jersey.client;
 
 import java.util.concurrent.ExecutorService;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.RxInvoker;
-import javax.ws.rs.client.SyncInvoker;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.RxInvoker;
+import jakarta.ws.rs.client.SyncInvoker;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 
 /**
- * Default implementation of {@link javax.ws.rs.client.rx.RxInvoker reactive invoker}. Extensions of this class are
+ * Default implementation of {@link jakarta.ws.rs.client.rx.RxInvoker reactive invoker}. Extensions of this class are
  * supposed to implement {@link #method(String, Entity, Class)} and
  * {@link #method(String, Entity, GenericType)} methods to which implementations of the rest
  * of the methods from the contract delegate to.

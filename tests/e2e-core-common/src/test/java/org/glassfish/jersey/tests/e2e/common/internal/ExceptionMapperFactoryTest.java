@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.common.internal;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import javax.inject.Singleton;
 

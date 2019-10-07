@@ -24,13 +24,13 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.PropertiesDelegate;
 
@@ -39,7 +39,7 @@ import org.glassfish.jersey.internal.PropertiesDelegate;
  * {@link MessageBodyWriter} instances.
  *
  * @author Paul Sandoz
- * @see javax.ws.rs.core.Context
+ * @see jakarta.ws.rs.core.Context
  * @see MessageBodyReader
  * @see MessageBodyWriter
  */
@@ -93,7 +93,7 @@ public interface MessageBodyWorkers {
      *                    annotations on that parameter returned by
      *                    {@code Class.getParameterAnnotations}.
      * @param mediaType   the media type of the data that will be read, this will be
-     *                    compared to the values of {@link javax.ws.rs.Consumes} for each
+     *                    compared to the values of {@link jakarta.ws.rs.Consumes} for each
      *                    candidate reader and only matching readers will be queried.
      * @return a MessageBodyReader that matches the supplied criteria or null if none is
      *         found.
@@ -115,7 +115,7 @@ public interface MessageBodyWorkers {
      *                           annotations on that parameter returned by
      *                           {@code Class.getParameterAnnotations}.
      * @param mediaType          the media type of the data that will be read, this will be
-     *                           compared to the values of {@link javax.ws.rs.Consumes} for each
+     *                           compared to the values of {@link jakarta.ws.rs.Consumes} for each
      *                           candidate reader and only matching readers will be queried.
      * @param propertiesDelegate request-scoped properties delegate.
      * @return a MessageBodyReader that matches the supplied criteria or null if none is
@@ -137,7 +137,7 @@ public interface MessageBodyWorkers {
      *                    field, this will be the annotations on that field returned by
      *                    {@code Field.getDeclaredAnnotations}.
      * @param mediaType   the media type of the data that will be written, this will be
-     *                    compared to the values of {@link javax.ws.rs.Produces} for each
+     *                    compared to the values of {@link jakarta.ws.rs.Produces} for each
      *                    candidate writer and only matching writers will be queried.
      * @return a MessageBodyReader that matches the supplied criteria or null if none is
      *         found.
@@ -157,7 +157,7 @@ public interface MessageBodyWorkers {
      *                           field, this will be the annotations on that field returned by
      *                           {@code Field.getDeclaredAnnotations}.
      * @param mediaType          the media type of the data that will be written, this will be
-     *                           compared to the values of {@link javax.ws.rs.Produces} for each
+     *                           compared to the values of {@link jakarta.ws.rs.Produces} for each
      *                           candidate writer and only matching writers will be queried.
      * @param propertiesDelegate request-scoped properties delegate.
      * @return a MessageBodyReader that matches the supplied criteria or null if none is
@@ -298,8 +298,8 @@ public interface MessageBodyWorkers {
      *                           closed after reading the entity.
      * @param readerInterceptors Reader interceptor that are to be used to intercept the reading of an entity. The interceptors
      *                           will be executed in the same order as given in this parameter.
-     * @param translateNce       if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a selected message body
-     *                           reader will be translated into a {@link javax.ws.rs.BadRequestException} as required by
+     * @param translateNce       if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a selected message body
+     *                           reader will be translated into a {@link jakarta.ws.rs.BadRequestException} as required by
      *                           JAX-RS specification on the server side.
      * @return the entity that was read from the {@code entityStream}.
      * @throws WebApplicationException Thrown when {@link MessageBodyReader message body
@@ -345,6 +345,6 @@ public interface MessageBodyWorkers {
                                 MultivaluedMap<String, Object> httpHeaders, PropertiesDelegate propertiesDelegate,
                                 OutputStream entityStream,
                                 Iterable<WriterInterceptor> writerInterceptors)
-            throws java.io.IOException, javax.ws.rs.WebApplicationException;
+            throws java.io.IOException, jakarta.ws.rs.WebApplicationException;
 
 }

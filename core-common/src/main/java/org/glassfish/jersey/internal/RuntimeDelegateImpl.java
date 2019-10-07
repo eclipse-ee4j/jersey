@@ -18,18 +18,18 @@ package org.glassfish.jersey.internal;
 
 import java.util.concurrent.CompletionStage;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Instance;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Instance;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.message.internal.MessagingBinders;
 
 /**
- * Default implementation of JAX-RS {@link javax.ws.rs.ext.RuntimeDelegate}.
- * The {@link javax.ws.rs.ext.RuntimeDelegate} class looks for the implementations registered
+ * Default implementation of JAX-RS {@link jakarta.ws.rs.ext.RuntimeDelegate}.
+ * The {@link jakarta.ws.rs.ext.RuntimeDelegate} class looks for the implementations registered
  * in META-INF/services. If no such implementation is found, this one is picked
  * as the default. Server injection binder should override this (using META-INF/services)
- * to provide an implementation that supports {@link #createEndpoint(javax.ws.rs.core.Application, java.lang.Class)}
+ * to provide an implementation that supports {@link #createEndpoint(jakarta.ws.rs.core.Application, java.lang.Class)}
  * method.
  *
  * @author Jakub Podlesak
@@ -49,12 +49,12 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
     }
 
     @Override
-    public JAXRS.Configuration.Builder createConfigurationBuilder() {
+    public SeBootstrap.Configuration.Builder createConfigurationBuilder() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CompletionStage<Instance> bootstrap(Application application, JAXRS.Configuration configuration) {
+    public CompletionStage<Instance> bootstrap(Application application, SeBootstrap.Configuration configuration) {
         throw new UnsupportedOperationException();
     }
 

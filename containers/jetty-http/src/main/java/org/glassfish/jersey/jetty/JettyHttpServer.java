@@ -17,8 +17,8 @@
 package org.glassfish.jersey.jetty;
 
 import static java.lang.Boolean.TRUE;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.MANDATORY;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.MANDATORY;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL;
 
 import java.net.URI;
 import java.util.Optional;
@@ -26,9 +26,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -41,7 +41,7 @@ import org.glassfish.jersey.server.spi.Server;
  * {@link org.eclipse.jetty.server.Server Server}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class JettyHttpServer implements Server {
 
@@ -49,13 +49,13 @@ public final class JettyHttpServer implements Server {
 
     private final org.eclipse.jetty.server.Server httpServer;
 
-    JettyHttpServer(final Application application, final JAXRS.Configuration configuration) {
+    JettyHttpServer(final Application application, final SeBootstrap.Configuration configuration) {
         final String protocol = configuration.protocol();
         final String host = configuration.host();
         final int port = configuration.port();
         final String rootPath = configuration.rootPath();
         final SSLContext sslContext = configuration.sslContext();
-        final JAXRS.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
+        final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
         final boolean autoStart = Optional.ofNullable((Boolean) configuration.property(ServerProperties.AUTO_START))
                 .orElse(TRUE);

@@ -19,7 +19,7 @@ package org.glassfish.jersey.internal.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

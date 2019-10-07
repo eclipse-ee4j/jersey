@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.server.spi.Server;
@@ -28,7 +28,7 @@ import org.glassfish.jersey.server.spi.ServerProvider;
  * Factory for creating specific HTTP servers.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class ServerFactory {
 
@@ -63,7 +63,7 @@ public final class ServerFactory {
      *             if no server provider supports the type.
      */
     public static <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
+            final SeBootstrap.Configuration configuration) {
         for (final ServerProvider serverProvider : ServiceFinder.find(ServerProvider.class)) {
             final T server = serverProvider.createServer(type, application, configuration);
             if (server != null) {

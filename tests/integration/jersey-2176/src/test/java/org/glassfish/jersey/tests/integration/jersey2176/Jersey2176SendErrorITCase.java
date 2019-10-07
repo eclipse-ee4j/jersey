@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.jersey2176;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 /**

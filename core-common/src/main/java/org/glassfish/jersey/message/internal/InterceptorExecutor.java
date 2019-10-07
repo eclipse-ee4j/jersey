@@ -20,10 +20,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.InterceptorContext;
-import javax.ws.rs.ext.ReaderInterceptorContext;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.InterceptorContext;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import org.glassfish.jersey.internal.PropertiesDelegate;
 

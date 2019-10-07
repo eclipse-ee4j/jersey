@@ -20,9 +20,9 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;

@@ -18,7 +18,7 @@ package org.glassfish.jersey.ext.cdi1x.transaction.internal;
 
 import java.io.Serializable;
 
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import javax.enterprise.inject.Vetoed;
 import javax.inject.Inject;

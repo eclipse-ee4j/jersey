@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.bookmark;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 import org.glassfish.jersey.examples.bookmark.resource.UsersResource;
 import org.glassfish.jersey.jettison.JettisonFeature;

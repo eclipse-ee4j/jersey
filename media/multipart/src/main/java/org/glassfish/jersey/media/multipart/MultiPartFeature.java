@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.media.multipart;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.media.multipart.internal.FormDataParamInjectionFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartReaderClientSide;

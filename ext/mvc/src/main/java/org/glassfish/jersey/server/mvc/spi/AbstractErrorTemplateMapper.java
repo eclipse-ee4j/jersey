@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.mvc.spi;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

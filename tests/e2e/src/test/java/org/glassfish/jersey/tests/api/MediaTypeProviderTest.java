@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.api;
 
 import java.util.HashMap;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.message.internal.MediaTypeProvider;
 

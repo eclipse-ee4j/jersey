@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.netty.httpserver;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.spi.Server;
 import org.glassfish.jersey.server.spi.ServerProvider;
@@ -28,13 +28,13 @@ import io.netty.channel.Channel;
  * Server provider for servers based on Netty {@link Channel}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class NettyHttpServerProvider implements ServerProvider {
 
     @Override
     public final <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
+            final SeBootstrap.Configuration configuration) {
         return NettyHttpServer.class == type || Server.class == type
                 ? type.cast(new NettyHttpServer(application, configuration))
                 : null;

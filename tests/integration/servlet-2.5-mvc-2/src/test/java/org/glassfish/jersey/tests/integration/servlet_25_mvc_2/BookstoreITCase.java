@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_mvc_2;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_2.resource.Bookstore;
 

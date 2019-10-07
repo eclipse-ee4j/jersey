@@ -19,9 +19,9 @@ package org.glassfish.jersey.server.internal.monitoring;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

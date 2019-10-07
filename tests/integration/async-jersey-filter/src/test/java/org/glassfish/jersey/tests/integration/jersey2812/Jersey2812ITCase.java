@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.core.Response;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +73,7 @@ public class Jersey2812ITCase extends AbstractAsyncJerseyTest {
      * <p/>
      * This test prevents a regression reported in JERSEY-2812.
      * <p/>
-     * When the {@link javax.ws.rs.container.AsyncResponse} was left intact in the RESTful resource (as implemented in {@link
+     * When the {@link jakarta.ws.rs.container.AsyncResponse} was left intact in the RESTful resource (as implemented in {@link
      * TestWaitResource#waitForEvent(AsyncResponse, HttpServletRequest, String)}), the server-side Jersey thread ended up in
      * {@link org.glassfish.jersey.servlet.internal.ResponseWriter#getResponseContext()} blocked because of the resolution of http
      * response status from {@link org.glassfish.jersey.servlet.ServletContainer#doFilter(HttpServletRequest, HttpServletResponse,

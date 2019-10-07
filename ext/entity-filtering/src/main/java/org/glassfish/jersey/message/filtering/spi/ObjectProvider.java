@@ -30,9 +30,9 @@ import org.glassfish.jersey.spi.Contract;
  * Methods are also accepting a list of entity annotations which entity-filtering scopes and then particular entity-filtering
  * object are determined from. Entity annotations can be passed to the runtime via:
  * <ul>
- * <li>{@link javax.ws.rs.client.Entity#entity(Object, javax.ws.rs.core.MediaType, java.lang.annotation.Annotation[])} on the
+ * <li>{@link jakarta.ws.rs.client.Entity#entity(Object, jakarta.ws.rs.core.MediaType, java.lang.annotation.Annotation[])} on the
  * client, or</li>
- * <li>{@link javax.ws.rs.core.Response.ResponseBuilder#entity(Object, java.lang.annotation.Annotation[])} on the server</li>
+ * <li>{@link jakarta.ws.rs.core.Response.ResponseBuilder#entity(Object, java.lang.annotation.Annotation[])} on the server</li>
  * </ul>
  * </p>
  * <p>

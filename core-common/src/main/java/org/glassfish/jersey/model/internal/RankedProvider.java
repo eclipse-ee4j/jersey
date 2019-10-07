@@ -19,7 +19,7 @@ package org.glassfish.jersey.model.internal;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import javax.ws.rs.Priorities;
+import jakarta.ws.rs.Priorities;
 
 import javax.annotation.Priority;
 
@@ -39,7 +39,7 @@ public class RankedProvider<T> {
 
     /**
      * Creates a new {@code RankedProvider} instance. The rank of the provider is obtained from the {@link javax.annotation.Priority}
-     * annotation or is set to {@value javax.ws.rs.Priorities#USER} if the annotation is not present.
+     * annotation or is set to {@value jakarta.ws.rs.Priorities#USER} if the annotation is not present.
      *
      * @param provider service provider to create a {@code RankedProvider} instance from.
      */

@@ -30,7 +30,7 @@ import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 /**
  * A parameter value provider that provides parameter value factories
  * which are using {@link MultivaluedParameterExtractorProvider} to extract parameter
- * values from the supplied {@link javax.ws.rs.core.MultivaluedMap multivalued
+ * values from the supplied {@link jakarta.ws.rs.core.MultivaluedMap multivalued
  * parameter map}.
  *
  * @author Paul Sandoz
@@ -57,7 +57,7 @@ public abstract class AbstractValueParamProvider implements ValueParamProvider {
      * Get a parameter extractor.
      * The extractor returned from this method will use the default value
      * set on the parameter, in case the parameter is not found in the supplied
-     * {@link javax.ws.rs.core.MultivaluedMap multivalued parameter map}.
+     * {@link jakarta.ws.rs.core.MultivaluedMap multivalued parameter map}.
      *
      * @param parameter parameter supported by the returned extractor.
      * @return extractor supporting the parameter. The returned instance ignores

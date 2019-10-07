@@ -19,8 +19,8 @@ package org.glassfish.jersey.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import org.glassfish.jersey.message.internal.TracingLogger;
 import org.glassfish.jersey.server.internal.ServerTraceEvent;

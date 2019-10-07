@@ -19,7 +19,7 @@ package org.glassfish.jersey.grizzly2.httpserver;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;

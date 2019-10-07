@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.server.ResourceConfig;
 

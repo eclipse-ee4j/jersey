@@ -26,19 +26,19 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.container.ResourceInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -51,7 +51,7 @@ import org.glassfish.jersey.server.mvc.spi.ViewableContext;
 import org.glassfish.jersey.server.mvc.spi.ViewableContextException;
 
 /**
- * {@link javax.ws.rs.ext.MessageBodyWriter Message body writer} for {@link org.glassfish.jersey.server.mvc.Viewable viewable}
+ * {@link jakarta.ws.rs.ext.MessageBodyWriter Message body writer} for {@link org.glassfish.jersey.server.mvc.Viewable viewable}
  * entities.
  *
  * @author Paul Sandoz
@@ -150,7 +150,7 @@ final class ViewableMessageBodyWriter implements MessageBodyWriter<Viewable> {
     }
 
     /**
-     * Resolve given {@link org.glassfish.jersey.server.mvc.Viewable viewable} for a list of {@link javax.ws.rs.core.MediaType mediaTypes} and a {@link Class resolvingClass}
+     * Resolve given {@link org.glassfish.jersey.server.mvc.Viewable viewable} for a list of {@link jakarta.ws.rs.core.MediaType mediaTypes} and a {@link Class resolvingClass}
      * using given {@link org.glassfish.jersey.server.mvc.spi.ViewableContext viewableContext} and a set of {@link org.glassfish.jersey.server.mvc.spi.TemplateProcessor templateProcessors}
      *
      * @param viewable viewable to be resolved.

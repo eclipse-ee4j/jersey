@@ -18,7 +18,7 @@ package org.glassfish.jersey.server;
 
 import java.util.Map;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
@@ -60,8 +60,8 @@ public final class ServerProperties {
      * providers.
      *
      * If the property is set, the specified packages will be scanned for
-     * JAX-RS root resources (annotated with {@link javax.ws.rs.Path @Path}) and
-     * providers (annotated with {@link javax.ws.rs.ext.Provider @Provider}).
+     * JAX-RS root resources (annotated with {@link jakarta.ws.rs.Path @Path}) and
+     * providers (annotated with {@link jakarta.ws.rs.ext.Provider @Provider}).
      * <p>
      * The property value MUST be an instance of {@link String} or {@code String[]}
      * array. Each {@code String} instance represents one or more package names
@@ -106,8 +106,8 @@ public final class ServerProperties {
      * providers.
      *
      * If the property is set, the specified class-path will be scanned
-     * for JAX-RS root resources (annotated with {@link javax.ws.rs.Path @Path})
-     * and providers (annotated with {@link javax.ws.rs.ext.Provider @Provider}).
+     * for JAX-RS root resources (annotated with {@link jakarta.ws.rs.Path @Path})
+     * and providers (annotated with {@link jakarta.ws.rs.ext.Provider @Provider}).
      * Each path element MUST be an absolute or relative directory, or a Jar file.
      * The contents of a directory, including Java class files, jars files
      * and sub-directories are scanned (recursively).
@@ -134,8 +134,8 @@ public final class ServerProperties {
      *
      * If the property is set, the specified classes will be instantiated
      * and registered as either application JAX-RS root resources (annotated with
-     * {@link javax.ws.rs.Path @Path}) or providers (annotated with
-     * {@link javax.ws.rs.ext.Provider @Provider}).
+     * {@link jakarta.ws.rs.Path @Path}) or providers (annotated with
+     * {@link jakarta.ws.rs.ext.Provider @Provider}).
      * <p>
      * The property value MUST be an instance of {@link String} or {@code String[]}
      * array. Each {@code String} instance represents one or more class names
@@ -287,7 +287,7 @@ public final class ServerProperties {
      *
      * If set to {@code true} and Bean Validation support has not been explicitly disabled (see
      * {@link #BV_FEATURE_DISABLE}), the validation error information will be sent in the entity of the
-     * returned {@link javax.ws.rs.core.Response}.
+     * returned {@link jakarta.ws.rs.core.Response}.
      * <p>
      * The default value is {@code false}. This means that in case of an error response caused by a Bean Validation
      * error, only a status code is sent in the server {@code Response} by default.
@@ -340,7 +340,7 @@ public final class ServerProperties {
 
     /**
      * An integer value that defines the buffer size used to buffer server-side response entity in order to
-     * determine its size and set the value of HTTP <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
+     * determine its size and set the value of HTTP <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
      * <p>
      * If the entity size exceeds the configured buffer size, the buffering would be cancelled and the entity size
      * would not be determined. Value less or equal to zero disable the buffering of the entity at all.
@@ -383,7 +383,7 @@ public final class ServerProperties {
      * If {@code true} then disable META-INF/services lookup on server.
      *
      * By default Jersey looks up SPI implementations described by META-INF/services/* files.
-     * Then you can register appropriate provider classes by {@link javax.ws.rs.core.Application}.
+     * Then you can register appropriate provider classes by {@link jakarta.ws.rs.core.Application}.
      * <p>
      * The default value is {@code false}.
      * </p>

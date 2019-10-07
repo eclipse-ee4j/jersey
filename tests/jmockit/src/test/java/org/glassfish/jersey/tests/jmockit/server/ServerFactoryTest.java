@@ -23,9 +23,9 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Iterator;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Configuration;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
@@ -44,13 +44,13 @@ import mockit.Mocked;
  * Unit tests for {@link ServerFactory}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class ServerFactoryTest {
 
     @Test
     public final void shouldBuildServer(@Mocked final Application mockApplication, @Mocked final Server mockServer,
-            @Mocked final JAXRS.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
+            @Mocked final SeBootstrap.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
         // given
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
             @Override

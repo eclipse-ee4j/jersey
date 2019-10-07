@@ -17,9 +17,9 @@
 package org.glassfish.jersey.tests.integration.servlet_3_init_provider;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
 import java.util.Enumeration;
 
 /**

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.test;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -105,7 +105,7 @@ public class DeploymentContext {
 
     /**
      * Deployment context builder for building a basic application deployment context for the JAX-RS / Jersey application
-     * defined by the associated {@link javax.ws.rs.core.Application} class or instance.
+     * defined by the associated {@link jakarta.ws.rs.core.Application} class or instance.
      * <p>
      * If properties of the builder are not modified, default values will be utilized:
      * <ul>

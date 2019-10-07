@@ -19,7 +19,7 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
-import javax.ws.rs.CookieParam;
+import jakarta.ws.rs.CookieParam;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link CookieParam}.

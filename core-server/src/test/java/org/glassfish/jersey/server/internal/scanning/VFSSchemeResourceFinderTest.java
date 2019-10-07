@@ -104,7 +104,7 @@ public class VFSSchemeResourceFinderTest {
                 }
             }
 
-            assertThat("Failed to enumerate all contents of javax.ws.rs-api.", scannedEntryCount, equalTo(actualEntries));
+            assertThat("Failed to enumerate all contents of jakarta.ws.rs-api.", scannedEntryCount, equalTo(actualEntries));
         } finally {
             executor.shutdownNow();
         }

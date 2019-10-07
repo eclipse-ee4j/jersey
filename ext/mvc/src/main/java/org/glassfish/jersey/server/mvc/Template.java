@@ -26,12 +26,12 @@ import java.lang.annotation.Target;
  * Used to annotate JAX-RS resources and resource methods to provide reference to a template for MVC support.
  * <p/>
  * In case a resource class is annotated with {@link Template} annotation then an instance of this class is considered to be
- * the model. Producible {@link javax.ws.rs.core.MediaType media types} are determined from the resource classes
- * {@link javax.ws.rs.Produces} annotation.
+ * the model. Producible {@link jakarta.ws.rs.core.MediaType media types} are determined from the resource classes
+ * {@link jakarta.ws.rs.Produces} annotation.
  * <p/>
  * In case a resource method is annotated with {@link Template} annotation then the return value of the method is the model.
  * Otherwise the processing of such a method is the same as if the  return type of the method was {@link Viewable} class.
- * Producible {@link javax.ws.rs.core.MediaType media types} are determined from the method's {@link javax.ws.rs.Produces}
+ * Producible {@link jakarta.ws.rs.core.MediaType media types} are determined from the method's {@link jakarta.ws.rs.Produces}
  * annotation.
  * <p/>
  * To see how templates are being resolved, see {@link Viewable viewable}.

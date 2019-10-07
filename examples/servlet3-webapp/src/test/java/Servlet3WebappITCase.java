@@ -16,8 +16,8 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import java.net.URI;
 

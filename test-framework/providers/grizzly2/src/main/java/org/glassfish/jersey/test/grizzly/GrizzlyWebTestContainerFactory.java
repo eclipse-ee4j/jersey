@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.UriBuilder;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;

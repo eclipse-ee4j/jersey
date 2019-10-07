@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.client;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  * Internal exception indicating that request processing has been aborted
@@ -24,7 +24,7 @@ import javax.ws.rs.ProcessingException;
  *
  * @author Marek Potociar
  *
- * @see javax.ws.rs.client.ClientRequestContext#abortWith(javax.ws.rs.core.Response)
+ * @see jakarta.ws.rs.client.ClientRequestContext#abortWith(jakarta.ws.rs.core.Response)
  */
 class AbortException extends ProcessingException {
     private final transient ClientResponse abortResponse;

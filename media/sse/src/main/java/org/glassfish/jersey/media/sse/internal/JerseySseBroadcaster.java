@@ -23,17 +23,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.ws.rs.sse.OutboundSseEvent;
-import javax.ws.rs.sse.Sse;
-import javax.ws.rs.sse.SseBroadcaster;
-import javax.ws.rs.sse.SseEventSink;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseBroadcaster;
+import jakarta.ws.rs.sse.SseEventSink;
 
 import org.glassfish.jersey.internal.jsr166.Flow;
 import org.glassfish.jersey.internal.util.JerseyPublisher;
 import org.glassfish.jersey.media.sse.LocalizationMessages;
 
 /**
- * Used for broadcasting SSE to multiple {@link javax.ws.rs.sse.SseEventSink} instances.
+ * Used for broadcasting SSE to multiple {@link jakarta.ws.rs.sse.SseEventSink} instances.
  * <p>
  * JAX-RS 2.1 {@link SseBroadcaster} implementation.
  *

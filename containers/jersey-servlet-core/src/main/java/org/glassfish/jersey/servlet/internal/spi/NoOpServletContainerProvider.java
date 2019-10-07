@@ -19,7 +19,7 @@ package org.glassfish.jersey.servlet.internal.spi;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

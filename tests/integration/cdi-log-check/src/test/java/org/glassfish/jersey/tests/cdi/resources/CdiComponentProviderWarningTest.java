@@ -27,7 +27,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.ejb.Stateful;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * EJB backed JAX-RS resource injected with CDI service providers.

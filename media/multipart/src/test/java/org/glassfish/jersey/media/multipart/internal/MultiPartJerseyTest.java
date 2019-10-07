@@ -19,7 +19,7 @@ package org.glassfish.jersey.media.multipart.internal;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;

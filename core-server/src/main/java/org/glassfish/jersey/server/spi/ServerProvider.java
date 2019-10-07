@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.spi.Contract;
@@ -58,7 +58,7 @@ import org.glassfish.jersey.spi.Contract;
  * </p>
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 @Contract
 @ConstrainedTo(RuntimeType.SERVER)
@@ -82,6 +82,6 @@ public interface ServerProvider {
      * @throws ProcessingException
      *             if there is an error creating the server.
      */
-    public <T extends Server> T createServer(Class<T> type, Application application, JAXRS.Configuration configuration)
+    public <T extends Server> T createServer(Class<T> type, Application application, SeBootstrap.Configuration configuration)
             throws ProcessingException;
 }

@@ -21,11 +21,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
@@ -105,9 +105,9 @@ public class RxObservableTest {
         } catch (final Exception expected) {
             // java.util.concurrent.ExecutionException
             throw expected
-                    // javax.ws.rs.ProcessingException
+                    // jakarta.ws.rs.ProcessingException
                     // .getCause()
-                    // javax.ws.rs.NotFoundException
+                    // jakarta.ws.rs.NotFoundException
                     .getCause();
         }
     }
@@ -129,7 +129,7 @@ public class RxObservableTest {
 
             // java.util.concurrent.ExecutionException
             throw expected
-                    // javax.ws.rs.NotFoundException
+                    // jakarta.ws.rs.NotFoundException
                     .getCause();
         }
     }

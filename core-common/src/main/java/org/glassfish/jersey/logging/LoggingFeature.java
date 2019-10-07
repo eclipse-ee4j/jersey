@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.CommonProperties;
 
@@ -30,8 +30,8 @@ import org.glassfish.jersey.CommonProperties;
  * This feature enables logging request and/or response on client-side and/or server-side depending
  * on the context's {@link RuntimeType}.
  * <p>
- * The feature may be register programmatically like other features by calling any of {@link javax.ws.rs.core.Configurable}
- * {@code register(...)} method, i.e. {@link javax.ws.rs.core.Configurable#register(Class)} or by setting any of the
+ * The feature may be register programmatically like other features by calling any of {@link jakarta.ws.rs.core.Configurable}
+ * {@code register(...)} method, i.e. {@link jakarta.ws.rs.core.Configurable#register(Class)} or by setting any of the
  * configuration property listed bellow.
  * <p>
  * Common configurable properties applies for both client and server and are following:

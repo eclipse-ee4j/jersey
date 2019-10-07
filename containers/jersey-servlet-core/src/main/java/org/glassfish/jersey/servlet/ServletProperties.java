@@ -100,20 +100,20 @@ public final class ServletProperties {
 
     /**
      * Application configuration initialization property whose value is a fully
-     * qualified class name of a class that implements {@link javax.ws.rs.core.Application}.
+     * qualified class name of a class that implements {@link jakarta.ws.rs.core.Application}.
      * <p></p>
      * A default value is not set.
      * <p></p>
      * The name of the configuration property is <tt>{@value}</tt>.
      */
     // TODO implement generic support
-    public static final String JAXRS_APPLICATION_CLASS = "javax.ws.rs.Application";
+    public static final String JAXRS_APPLICATION_CLASS = "jakarta.ws.rs.Application";
 
     /**
      * Indicates that Jersey should scan the whole web app for application-specific resources and
      * providers. If the property is present and the value is not {@code false}, the whole web app
-     * will be scanned for JAX-RS root resources (annotated with {@link javax.ws.rs.Path @Path})
-     * and providers (annotated with {@link javax.ws.rs.ext.Provider @Provider}).
+     * will be scanned for JAX-RS root resources (annotated with {@link jakarta.ws.rs.Path @Path})
+     * and providers (annotated with {@link jakarta.ws.rs.ext.Provider @Provider}).
      * <p></p>
      * The property value MUST be an instance of {@link String}. The allowed values are {@code true}
      * and {@code false}.
@@ -126,7 +126,7 @@ public final class ServletProperties {
 
     /**
      * If {@code true} then query parameters will not be treated as form parameters (e.g. injectable using
-     * {@link javax.ws.rs.FormParam}) in case a Form request is processed by server.
+     * {@link jakarta.ws.rs.FormParam}) in case a Form request is processed by server.
      * <p>
      * The default value is {@code false}.
      * </p>

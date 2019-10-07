@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.client.oauth2;
 
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 /**
  * Abstract implementation of {@link OAuth2CodeGrantFlow.Builder}.

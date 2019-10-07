@@ -17,8 +17,8 @@
 package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.inject.Qualifier;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;

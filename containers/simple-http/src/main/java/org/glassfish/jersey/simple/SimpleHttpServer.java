@@ -24,9 +24,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Server;
@@ -36,7 +36,7 @@ import org.glassfish.jersey.server.spi.Server;
  * {@link SimpleServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.0
  */
 public final class SimpleHttpServer implements Server {
 
@@ -44,13 +44,13 @@ public final class SimpleHttpServer implements Server {
 
     private final SimpleServer simpleServer;
 
-    SimpleHttpServer(final Application application, final JAXRS.Configuration configuration) {
+    SimpleHttpServer(final Application application, final SeBootstrap.Configuration configuration) {
         final String protocol = configuration.protocol();
         final String host = configuration.host();
         final int port = configuration.port();
         final String rootPath = configuration.rootPath();
         final SSLContext sslContext = configuration.sslContext();
-        final JAXRS.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
+        final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
         final boolean autoStart = Optional.ofNullable((Boolean) configuration.property(ServerProperties.AUTO_START))
                 .orElse(TRUE);

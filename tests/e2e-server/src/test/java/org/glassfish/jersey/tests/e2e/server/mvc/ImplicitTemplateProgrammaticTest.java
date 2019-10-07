@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;

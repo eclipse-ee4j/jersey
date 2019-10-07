@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
 
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link;
 
 import org.glassfish.jersey.Beta;
 
@@ -192,7 +192,7 @@ public @interface InjectLink {
 
         public static Link buildLinkFromUri(URI uri, InjectLink link) {
 
-            javax.ws.rs.core.Link.Builder builder = javax.ws.rs.core.Link.fromUri(uri);
+            jakarta.ws.rs.core.Link.Builder builder = jakarta.ws.rs.core.Link.fromUri(uri);
             if (!link.rel().isEmpty()) {
                 builder = builder.rel(link.rel());
             }

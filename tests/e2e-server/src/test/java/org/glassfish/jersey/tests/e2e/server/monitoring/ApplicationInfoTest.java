@@ -19,14 +19,14 @@ package org.glassfish.jersey.tests.e2e.server.monitoring;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Response;
 
 import javax.annotation.Priority;
 import javax.inject.Provider;

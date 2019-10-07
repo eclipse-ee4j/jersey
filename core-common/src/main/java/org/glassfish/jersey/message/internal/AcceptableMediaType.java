@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * An acceptable media type.
@@ -130,7 +130,7 @@ public class AcceptableMediaType extends MediaType implements Qualified {
 
     /**
      * Create new acceptable media type instance from the supplied
-     * {@link javax.ws.rs.core.MediaType media type}.
+     * {@link jakarta.ws.rs.core.MediaType media type}.
      *
      * @param mediaType general-purpose media type.
      * @return new acceptable media type instance.

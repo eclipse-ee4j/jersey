@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link HeaderParam}.

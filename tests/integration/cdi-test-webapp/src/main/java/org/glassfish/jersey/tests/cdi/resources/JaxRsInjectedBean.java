@@ -17,9 +17,9 @@
 package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * This is to be JAX-RS injected at runtime.

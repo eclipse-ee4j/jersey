@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.spi;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Jersey client connector provider contract.

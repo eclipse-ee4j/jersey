@@ -18,8 +18,8 @@ package org.glassfish.jersey.logging;
 
 import java.util.Map;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.annotation.Priority;
 

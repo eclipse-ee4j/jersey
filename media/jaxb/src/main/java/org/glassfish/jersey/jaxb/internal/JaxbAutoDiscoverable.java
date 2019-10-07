@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 

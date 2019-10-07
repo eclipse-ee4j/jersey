@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.internal.routing;
 import java.util.Collection;
 import java.util.function.Function;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.process.internal.ChainableStage;

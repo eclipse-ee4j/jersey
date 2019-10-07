@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  * Exception thrown by the container components in to notify Jersey runtime about

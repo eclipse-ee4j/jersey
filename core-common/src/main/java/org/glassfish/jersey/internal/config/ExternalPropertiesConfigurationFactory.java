@@ -21,8 +21,8 @@ import org.glassfish.jersey.spi.ExternalConfigurationModel;
 import org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
 import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.core.Configurable;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.core.Configurable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

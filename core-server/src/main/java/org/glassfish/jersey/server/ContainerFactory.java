@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.server.spi.ContainerProvider;

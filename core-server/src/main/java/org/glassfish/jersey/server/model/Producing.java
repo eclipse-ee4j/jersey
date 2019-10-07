@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.model;
 
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Model component that is able to produce media types.
@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
  * @author Jakub Podlesak
  * @author Marek Potociar
  *
- * @see javax.ws.rs.Produces
+ * @see jakarta.ws.rs.Produces
  * @see Consuming
  */
 public interface Producing {

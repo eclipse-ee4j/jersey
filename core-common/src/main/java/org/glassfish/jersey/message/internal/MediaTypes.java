@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Common media types and functionality.
@@ -168,7 +168,7 @@ public final class MediaTypes {
 
     /**
      * Determine if the two list of media types share a common
-     * {@link #typeEqual(javax.ws.rs.core.MediaType, javax.ws.rs.core.MediaType) type-equal}
+     * {@link #typeEqual(jakarta.ws.rs.core.MediaType, jakarta.ws.rs.core.MediaType) type-equal}
      * sub-list.
      *
      * @param ml1 first media type list.

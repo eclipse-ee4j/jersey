@@ -35,8 +35,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -198,7 +198,7 @@ public class WadlGeneratorJAXBGrammarGenerator implements WadlGenerator {
      * @param mt  media type
      * @return respresentation type
      * @see org.glassfish.jersey.server.wadl.WadlGenerator#createRequestRepresentation(org.glassfish.jersey.server.model.Resource,
-     * org.glassfish.jersey.server.model.ResourceMethod, javax.ws.rs.core.MediaType)
+     * org.glassfish.jersey.server.model.ResourceMethod, jakarta.ws.rs.core.MediaType)
      */
     public Representation createRequestRepresentation(
             final org.glassfish.jersey.server.model.Resource ar,

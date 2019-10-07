@@ -23,13 +23,13 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Providers;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -162,7 +162,7 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorFactory factory;
 
         @Context
-        private javax.ws.rs.core.Configuration jaxRsConfig;
+        private jakarta.ws.rs.core.Configuration jaxRsConfig;
         @Context
         private Providers providers;
         @Context

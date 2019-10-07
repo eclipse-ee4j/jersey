@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * A quality source media type.

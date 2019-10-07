@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.jettison;
 
 import java.util.List;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jettison.JettisonFeature;

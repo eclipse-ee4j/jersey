@@ -23,18 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.uri.UriTemplate;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 /**
- * Jersey implementation of {@link javax.ws.rs.core.Link JAX-RS Link} contract.
+ * Jersey implementation of {@link jakarta.ws.rs.core.Link JAX-RS Link} contract.
  *
  * @author Marek Potociar
  */
-public final class JerseyLink extends javax.ws.rs.core.Link {
+public final class JerseyLink extends jakarta.ws.rs.core.Link {
     /**
      * Underlying builder for link's URI.
      */
@@ -45,9 +45,9 @@ public final class JerseyLink extends javax.ws.rs.core.Link {
     private final Map<String, String> params;
 
     /**
-     * Jersey implementation of {@link javax.ws.rs.core.Link.Builder JAX-RS Link.Builder} contract.
+     * Jersey implementation of {@link jakarta.ws.rs.core.Link.Builder JAX-RS Link.Builder} contract.
      */
-    public static class Builder implements javax.ws.rs.core.Link.Builder {
+    public static class Builder implements jakarta.ws.rs.core.Link.Builder {
         /**
          * Underlying builder for link's URI.
          */
@@ -62,7 +62,7 @@ public final class JerseyLink extends javax.ws.rs.core.Link {
         private Map<String, String> params = new HashMap<String, String>();
 
         @Override
-        public Builder link(javax.ws.rs.core.Link link) {
+        public Builder link(jakarta.ws.rs.core.Link link) {
             uriBuilder.uri(link.getUri());
             params.clear();
             params.putAll(link.getParams());

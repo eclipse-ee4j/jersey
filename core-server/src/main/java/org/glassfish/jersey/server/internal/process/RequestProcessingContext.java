@@ -109,9 +109,9 @@ public final class RequestProcessingContext implements RespondingContext {
      * <p>
      * This instance is used  by {@link RequestProcessingConfigurator} to satisfy injection of multiple types, namely:
      * <ul>
-     * <li>{@link javax.ws.rs.core.UriInfo}<li>
+     * <li>{@link jakarta.ws.rs.core.UriInfo}<li>
      * </li>{@link org.glassfish.jersey.server.ExtendedUriInfo}<li>
-     * </li>{@link javax.ws.rs.container.ResourceInfo}</li>
+     * </li>{@link jakarta.ws.rs.container.ResourceInfo}</li>
      * </ul>
      * </p>
      *

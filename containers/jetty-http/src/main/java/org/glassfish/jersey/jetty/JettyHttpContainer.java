@@ -29,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -79,7 +79,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private static final Type REQUEST_TYPE = (new GenericType<Ref<Request>>() {}).getType();
     private static final Type RESPONSE_TYPE = (new GenericType<Ref<Response>>() {}).getType();
 
-    private static final int INTERNAL_SERVER_ERROR = javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    private static final int INTERNAL_SERVER_ERROR = jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
 
     /**
      * Cached value of configuration property
@@ -257,7 +257,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         public OutputStream writeResponseStatusAndHeaders(final long contentLength, final ContainerResponse context)
                 throws ContainerException {
 
-            final javax.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
+            final jakarta.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
 
             final int code = statusInfo.getStatusCode();
             final String reason = statusInfo.getReasonPhrase() == null

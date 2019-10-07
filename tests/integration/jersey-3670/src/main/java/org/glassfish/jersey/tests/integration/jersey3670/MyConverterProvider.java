@@ -17,8 +17,8 @@
 package org.glassfish.jersey.tests.integration.jersey3670;
 
 import javax.annotation.Priority;
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 

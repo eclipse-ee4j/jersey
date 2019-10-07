@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.ejb.EJBException;
 import javax.ejb.Singleton;

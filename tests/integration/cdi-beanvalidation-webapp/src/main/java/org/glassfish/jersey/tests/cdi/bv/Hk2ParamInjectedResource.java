@@ -18,10 +18,10 @@ package org.glassfish.jersey.tests.cdi.bv;
 
 import javax.enterprise.inject.Vetoed;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 
 /**
  * This HK2 managed resource should get validated and validation

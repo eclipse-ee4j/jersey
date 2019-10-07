@@ -19,7 +19,7 @@ package org.glassfish.jersey.server;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import javax.inject.Singleton;
 

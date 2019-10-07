@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

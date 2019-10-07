@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_init_8;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * The application is fully configured in {@code web.xml} ({@code servlet} as well as {@code servlet-mapping}).

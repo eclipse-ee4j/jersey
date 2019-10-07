@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.ws.rs.Encoded;
+import jakarta.ws.rs.Encoded;
 
 import javax.inject.Provider;
 

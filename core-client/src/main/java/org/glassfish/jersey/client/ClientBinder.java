@@ -19,11 +19,11 @@ package org.glassfish.jersey.client;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.ext.MessageBodyReader;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

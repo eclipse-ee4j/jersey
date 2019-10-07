@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.common.internal;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

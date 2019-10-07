@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.jaxrstypeinjection;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;

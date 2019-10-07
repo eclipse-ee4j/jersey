@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import javax.ws.rs.PathParam;
+import jakarta.ws.rs.PathParam;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

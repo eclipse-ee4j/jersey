@@ -23,15 +23,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.uri.UriComponent;
@@ -56,7 +56,7 @@ final class RequestUtil {
      * Returns the query parameters of a request as a multi-valued map.
      *
      * @param request the client request to retrieve query parameters from.
-     * @return a {@link javax.ws.rs.core.MultivaluedMap} containing the entity query parameters.
+     * @return a {@link jakarta.ws.rs.core.MultivaluedMap} containing the entity query parameters.
      */
     public static MultivaluedMap<String, String> getQueryParameters(ClientRequestContext request) {
         URI uri = request.getUri();
@@ -73,7 +73,7 @@ final class RequestUtil {
      * x-www-form-urlencoded, then null is returned.
      *
      * @param request the client request containing the entity to extract parameters from.
-     * @return a {@link javax.ws.rs.core.MultivaluedMap} containing the entity form parameters.
+     * @return a {@link jakarta.ws.rs.core.MultivaluedMap} containing the entity form parameters.
      */
     @SuppressWarnings("unchecked")
     public static MultivaluedMap<String, String> getEntityParameters(ClientRequestContext request,

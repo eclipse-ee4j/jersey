@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.oauth1;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Feature;
 
 /**
  * The interface of the OAuth 1 Authorization Flow utility.
@@ -118,7 +118,7 @@ public interface OAuth1AuthorizationFlow {
     public Client getAuthorizedClient();
 
     /**
-     * Return the {@link javax.ws.rs.core.Feature oauth filter feature} that can be used to configure
+     * Return the {@link jakarta.ws.rs.core.Feature oauth filter feature} that can be used to configure
      * {@link Client client} instances to perform authenticated requests to the Service Provider.
      * <p>
      * The authorization process must be successfully finished by instance by calling methods {@link #start()} and

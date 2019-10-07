@@ -19,12 +19,12 @@ package org.glassfish.jersey.tests.e2e.server.mvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -180,7 +180,7 @@ public class TemplateMethodSelectionTest extends JerseyTest {
     /**
      * This test makes request for text/html which is preferred. The resource defines the method
      * {@link org.glassfish.jersey.tests.e2e.server.mvc.TemplateMethodSelectionTest.TemplateAnnotatedResourceMethod#getAsHTML()}
-     * which returns {@link Map} for which there is not {@link javax.ws.rs.ext.MessageBodyWriter}. The absence of the
+     * which returns {@link Map} for which there is not {@link jakarta.ws.rs.ext.MessageBodyWriter}. The absence of the
      * writer would cause that the method would not have been selected but as the {@link Template} annotation
      * is on the method, the {@link org.glassfish.jersey.server.internal.routing.MethodSelectingRouter} considers
      * it as if this would have been {@link Viewable} instead of the {@link Map}.
@@ -252,7 +252,7 @@ public class TemplateMethodSelectionTest extends JerseyTest {
     }
 
     /**
-     * This test verifies that there is really no {@link javax.ws.rs.ext.MessageBodyWriter}
+     * This test verifies that there is really no {@link jakarta.ws.rs.ext.MessageBodyWriter}
      * for {@code Map<String,String>}}. text/html is requested but application/json is chosen there is no
      * MBW for {@code Map}.
      */
