@@ -43,11 +43,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Pavel Bucek
@@ -70,52 +70,31 @@ public class ClientExecutorTest extends JerseyTest {
         return new ResourceConfig(ClientExecutorTestResource.class);
     }
 
-    private volatile String threadName = null;
+    private volatile StringBuilder threadName;
+    private volatile CountDownLatch latch;
 
-    @Test
-    public void testCustomExecutorRx() throws InterruptedException {
-
-        ExecutorService clientExecutor =
-                Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("ClientExecutor-%d").build());
-
-        Client client = ClientBuilder.newBuilder().executorService(clientExecutor).build();
-
-        final CountDownLatch latch = new CountDownLatch(1);
-
-        testRx(client, latch);
-
-        latch.await(3, TimeUnit.SECONDS);
-
-        assertNotNull(threadName);
-        assertThat(threadName, containsString("ClientExecutor"));
+    @Before
+    public void setUpThreadNameHolder() {
+        threadName = new StringBuilder();
+        latch = new CountDownLatch(1);
     }
 
     @Test
     public void testDefaultExecutorRx() throws InterruptedException {
-
         Client client = ClientBuilder.newClient();
-
-        final CountDownLatch latch = new CountDownLatch(1);
-
         testRx(client, latch);
 
         latch.await(3, TimeUnit.SECONDS);
-        assertNotNull(threadName);
-        assertThat(threadName, containsString("jersey-client-async-executor"));
+        assertThat(threadName.toString(), containsString("jersey-client-async-executor"));
     }
 
     @Test
     public void testDefaultExecutorAsync() throws InterruptedException {
-
         Client client = ClientBuilder.newClient();
-
-        final CountDownLatch latch = new CountDownLatch(1);
-
         testAsync(client, latch);
 
         latch.await(3, TimeUnit.SECONDS);
-        assertNotNull(threadName);
-        assertThat(threadName, containsString("jersey-client-async-executor"));
+        assertThat(threadName.toString(), containsString("jersey-client-async-executor"));
     }
 
     @Test
@@ -123,37 +102,28 @@ public class ClientExecutorTest extends JerseyTest {
         Client client = ClientBuilder.newClient();
         client.register(MyExecutorProvider.class);
 
-        final CountDownLatch latch = new CountDownLatch(1);
-
         testAsync(client, latch);
 
         latch.await(3, TimeUnit.SECONDS);
-        assertNotNull(threadName);
-        assertThat(threadName, containsString("MyExecutorProvider"));
+        assertThat(threadName.toString(), containsString("MyExecutorProvider"));
+    }
+
+    @Test
+    public void testCustomExecutorRx() throws InterruptedException {
+        ExecutorService clientExecutor =
+                Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("ClientExecutor-%d").build());
+
+        Client client = ClientBuilder.newBuilder().executorService(clientExecutor).build();
+        testRx(client, latch);
+
+        latch.await(3, TimeUnit.SECONDS);
+        assertThat(threadName.toString(), containsString("ClientExecutor"));
     }
 
 
     private void testRx(Client client, CountDownLatch latch) {
         client.target(UriBuilder.fromUri(getBaseUri()).path("ClientExecutorTest"))
-              .register(new MessageBodyReader<ClientExecutorTest>() {
-                  @Override
-                  public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-                      return true;
-                  }
-
-                  @Override
-                  public ClientExecutorTest readFrom(Class<ClientExecutorTest> type, Type genericType,
-                                                     Annotation[] annotations,
-                                                     MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-                                                     InputStream entityStream) throws IOException, WebApplicationException {
-
-                      ClientExecutorTest.this.threadName = Thread.currentThread().getName();
-                      latch.countDown();
-
-                      return new ClientExecutorTest();
-
-                  }
-              })
+              .register(new ClientExecutorTestReader(threadName, latch))
               .request()
               .rx()
               .get(ClientExecutorTest.class);
@@ -161,25 +131,7 @@ public class ClientExecutorTest extends JerseyTest {
 
     private void testAsync(Client client, CountDownLatch latch) {
         client.target(UriBuilder.fromUri(getBaseUri()).path("ClientExecutorTest"))
-              .register(new MessageBodyReader<ClientExecutorTest>() {
-                  @Override
-                  public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-                      return true;
-                  }
-
-                  @Override
-                  public ClientExecutorTest readFrom(Class<ClientExecutorTest> type, Type genericType,
-                                                     Annotation[] annotations,
-                                                     MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-                                                     InputStream entityStream) throws IOException, WebApplicationException {
-
-                      ClientExecutorTest.this.threadName = Thread.currentThread().getName();
-                      latch.countDown();
-
-                      return new ClientExecutorTest();
-
-                  }
-              })
+              .register(new ClientExecutorTestReader(threadName, latch))
               .request()
               .async()
               .get(ClientExecutorTest.class);
@@ -200,6 +152,34 @@ public class ClientExecutorTest extends JerseyTest {
         @Override
         public void dispose(ExecutorService executorService) {
             executorService.shutdown();
+        }
+    }
+
+    public static class ClientExecutorTestReader implements MessageBodyReader<ClientExecutorTest> {
+        private final StringBuilder threadName;
+        private final CountDownLatch countDown;
+
+        public ClientExecutorTestReader(StringBuilder threadName, CountDownLatch countDown) {
+            this.threadName = threadName;
+            this.countDown = countDown;
+        }
+
+        @Override
+        public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+            return true;
+        }
+
+        @Override
+        public ClientExecutorTest readFrom(Class<ClientExecutorTest> type, Type genericType,
+                                           Annotation[] annotations,
+                                           MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
+                                           InputStream entityStream) throws IOException, WebApplicationException {
+
+            threadName.append(Thread.currentThread().getName());
+            countDown.countDown();
+
+            return new ClientExecutorTest();
+
         }
     }
 }

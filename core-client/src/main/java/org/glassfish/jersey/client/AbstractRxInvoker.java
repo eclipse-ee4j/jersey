@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.client;
 
+import org.glassfish.jersey.client.internal.LocalizationMessages;
+
 import java.util.concurrent.ExecutorService;
 
 import javax.ws.rs.client.Entity;
@@ -25,7 +27,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 /**
- * Default implementation of {@link javax.ws.rs.client.rx.RxInvoker reactive invoker}. Extensions of this class are
+ * Default implementation of {@link javax.ws.rs.client.RxInvoker reactive invoker}. Extensions of this class are
  * supposed to implement {@link #method(String, Entity, Class)} and
  * {@link #method(String, Entity, GenericType)} methods to which implementations of the rest
  * of the methods from the contract delegate to.
@@ -35,16 +37,15 @@ import javax.ws.rs.core.Response;
  * @author Michal Gajdos
  * @since 2.26
  */
-public abstract class AbstractRxInvoker<T> implements RxInvoker<T> {
+public abstract class AbstractRxInvoker<T> extends AbstractNonSyncInvoker<T> implements RxInvoker<T> {
 
-    private final SyncInvoker syncInvoker;
     private final ExecutorService executorService;
+    private final SyncInvoker syncInvoker;
 
     public AbstractRxInvoker(final SyncInvoker syncInvoker, final ExecutorService executor) {
         if (syncInvoker == null) {
-            throw new IllegalArgumentException("Invocation builder cannot be null.");
+            throw new IllegalArgumentException(LocalizationMessages.NULL_INVOCATION_BUILDER());
         }
-
         this.syncInvoker = syncInvoker;
         this.executorService = executor;
     }
@@ -68,101 +69,6 @@ public abstract class AbstractRxInvoker<T> implements RxInvoker<T> {
     }
 
     @Override
-    public T get() {
-        return method("GET");
-    }
-
-    @Override
-    public <R> T get(final Class<R> responseType) {
-        return method("GET", responseType);
-    }
-
-    @Override
-    public <R> T get(final GenericType<R> responseType) {
-        return method("GET", responseType);
-    }
-
-    @Override
-    public T put(final Entity<?> entity) {
-        return method("PUT", entity);
-    }
-
-    @Override
-    public <R> T put(final Entity<?> entity, final Class<R> clazz) {
-        return method("PUT", entity, clazz);
-    }
-
-    @Override
-    public <R> T put(final Entity<?> entity, final GenericType<R> type) {
-        return method("PUT", entity, type);
-    }
-
-    @Override
-    public T post(final Entity<?> entity) {
-        return method("POST", entity);
-    }
-
-    @Override
-    public <R> T post(final Entity<?> entity, final Class<R> clazz) {
-        return method("POST", entity, clazz);
-    }
-
-    @Override
-    public <R> T post(final Entity<?> entity, final GenericType<R> type) {
-        return method("POST", entity, type);
-    }
-
-    @Override
-    public T delete() {
-        return method("DELETE");
-    }
-
-    @Override
-    public <R> T delete(final Class<R> responseType) {
-        return method("DELETE", responseType);
-    }
-
-    @Override
-    public <R> T delete(final GenericType<R> responseType) {
-        return method("DELETE", responseType);
-    }
-
-    @Override
-    public T head() {
-        return method("HEAD");
-    }
-
-    @Override
-    public T options() {
-        return method("OPTIONS");
-    }
-
-    @Override
-    public <R> T options(final Class<R> responseType) {
-        return method("OPTIONS", responseType);
-    }
-
-    @Override
-    public <R> T options(final GenericType<R> responseType) {
-        return method("OPTIONS", responseType);
-    }
-
-    @Override
-    public T trace() {
-        return method("TRACE");
-    }
-
-    @Override
-    public <R> T trace(final Class<R> responseType) {
-        return method("TRACE", responseType);
-    }
-
-    @Override
-    public <R> T trace(final GenericType<R> responseType) {
-        return method("TRACE", responseType);
-    }
-
-    @Override
     public T method(final String name) {
         return method(name, Response.class);
     }
@@ -181,4 +87,5 @@ public abstract class AbstractRxInvoker<T> implements RxInvoker<T> {
     public T method(final String name, final Entity<?> entity) {
         return method(name, entity, Response.class);
     }
+
 }

@@ -451,11 +451,14 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         @Override
         public CompletionStageRxInvoker rx() {
-            return new JerseyCompletionStageRxInvoker(this, executorService());
+            return new JerseyCompletionStageRxInvoker(this);
         }
 
         @Override
         public <T extends RxInvoker> T rx(Class<T> clazz) {
+            if (clazz == JerseyCompletionStageRxInvoker.class) {
+                return (T) new JerseyCompletionStageRxInvoker(this);
+            }
             return createRxInvoker(clazz, executorService());
         }
 
@@ -520,207 +523,77 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
         }
     }
 
-    private static class AsyncInvoker implements javax.ws.rs.client.AsyncInvoker {
+    /* package */ static class AsyncInvoker extends CompletableFutureAsyncInvoker implements javax.ws.rs.client.AsyncInvoker {
 
         private final JerseyInvocation.Builder builder;
 
-        private AsyncInvoker(final JerseyInvocation.Builder request) {
+        /* package */ AsyncInvoker(final JerseyInvocation.Builder request) {
             this.builder = request;
             this.builder.requestContext.setAsynchronous(true);
         }
 
         @Override
-        public Future<Response> get() {
-            return method("GET");
-        }
-
-        @Override
-        public <T> Future<T> get(final Class<T> responseType) {
-            return method("GET", responseType);
-        }
-
-        @Override
-        public <T> Future<T> get(final GenericType<T> responseType) {
-            return method("GET", responseType);
-        }
-
-        @Override
-        public <T> Future<T> get(final InvocationCallback<T> callback) {
-            return method("GET", callback);
-        }
-
-        @Override
-        public Future<Response> put(final Entity<?> entity) {
-            return method("PUT", entity);
-        }
-
-        @Override
-        public <T> Future<T> put(final Entity<?> entity, final Class<T> responseType) {
-            return method("PUT", entity, responseType);
-        }
-
-        @Override
-        public <T> Future<T> put(final Entity<?> entity, final GenericType<T> responseType) {
-            return method("PUT", entity, responseType);
-        }
-
-        @Override
-        public <T> Future<T> put(final Entity<?> entity, final InvocationCallback<T> callback) {
-            return method("PUT", entity, callback);
-        }
-
-        @Override
-        public Future<Response> post(final Entity<?> entity) {
-            return method("POST", entity);
-        }
-
-        @Override
-        public <T> Future<T> post(final Entity<?> entity, final Class<T> responseType) {
-            return method("POST", entity, responseType);
-        }
-
-        @Override
-        public <T> Future<T> post(final Entity<?> entity, final GenericType<T> responseType) {
-            return method("POST", entity, responseType);
-        }
-
-        @Override
-        public <T> Future<T> post(final Entity<?> entity, final InvocationCallback<T> callback) {
-            return method("POST", entity, callback);
-        }
-
-        @Override
-        public Future<Response> delete() {
-            return method("DELETE");
-        }
-
-        @Override
-        public <T> Future<T> delete(final Class<T> responseType) {
-            return method("DELETE", responseType);
-        }
-
-        @Override
-        public <T> Future<T> delete(final GenericType<T> responseType) {
-            return method("DELETE", responseType);
-        }
-
-        @Override
-        public <T> Future<T> delete(final InvocationCallback<T> callback) {
-            return method("DELETE", callback);
-        }
-
-        @Override
-        public Future<Response> head() {
-            return method("HEAD");
-        }
-
-        @Override
-        public Future<Response> head(final InvocationCallback<Response> callback) {
-            return method("HEAD", callback);
-        }
-
-        @Override
-        public Future<Response> options() {
-            return method("OPTIONS");
-        }
-
-        @Override
-        public <T> Future<T> options(final Class<T> responseType) {
-            return method("OPTIONS", responseType);
-        }
-
-        @Override
-        public <T> Future<T> options(final GenericType<T> responseType) {
-            return method("OPTIONS", responseType);
-        }
-
-        @Override
-        public <T> Future<T> options(final InvocationCallback<T> callback) {
-            return method("OPTIONS", callback);
-        }
-
-        @Override
-        public Future<Response> trace() {
-            return method("TRACE");
-        }
-
-        @Override
-        public <T> Future<T> trace(final Class<T> responseType) {
-            return method("TRACE", responseType);
-        }
-
-        @Override
-        public <T> Future<T> trace(final GenericType<T> responseType) {
-            return method("TRACE", responseType);
-        }
-
-        @Override
-        public <T> Future<T> trace(final InvocationCallback<T> callback) {
-            return method("TRACE", callback);
-        }
-
-        @Override
-        public Future<Response> method(final String name) {
+        public CompletableFuture<Response> method(final String name) {
             builder.requestContext.setMethod(name);
-            return new JerseyInvocation(builder).submit();
+            return (CompletableFuture<Response>) new JerseyInvocation(builder).submit();
         }
 
         @Override
-        public <T> Future<T> method(final String name, final Class<T> responseType) {
+        public <T> CompletableFuture<T> method(final String name, final Class<T> responseType) {
             if (responseType == null) {
                 throw new IllegalArgumentException(LocalizationMessages.RESPONSE_TYPE_IS_NULL());
             }
             builder.requestContext.setMethod(name);
-            return new JerseyInvocation(builder).submit(responseType);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(responseType);
         }
 
         @Override
-        public <T> Future<T> method(final String name, final GenericType<T> responseType) {
+        public <T> CompletableFuture<T> method(final String name, final GenericType<T> responseType) {
             if (responseType == null) {
                 throw new IllegalArgumentException(LocalizationMessages.RESPONSE_TYPE_IS_NULL());
             }
             builder.requestContext.setMethod(name);
-            return new JerseyInvocation(builder).submit(responseType);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(responseType);
         }
 
         @Override
-        public <T> Future<T> method(final String name, final InvocationCallback<T> callback) {
+        public <T> CompletableFuture<T> method(final String name, final InvocationCallback<T> callback) {
             builder.requestContext.setMethod(name);
-            return new JerseyInvocation(builder).submit(callback);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(callback);
         }
 
         @Override
-        public Future<Response> method(final String name, final Entity<?> entity) {
+        public CompletableFuture<Response> method(final String name, final Entity<?> entity) {
             builder.requestContext.setMethod(name);
             builder.storeEntity(entity);
-            return new JerseyInvocation(builder).submit();
+            return (CompletableFuture<Response>) new JerseyInvocation(builder).submit();
         }
 
         @Override
-        public <T> Future<T> method(final String name, final Entity<?> entity, final Class<T> responseType) {
+        public <T> CompletableFuture<T> method(final String name, final Entity<?> entity, final Class<T> responseType) {
             if (responseType == null) {
                 throw new IllegalArgumentException(LocalizationMessages.RESPONSE_TYPE_IS_NULL());
             }
             builder.requestContext.setMethod(name);
             builder.storeEntity(entity);
-            return new JerseyInvocation(builder).submit(responseType);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(responseType);
         }
 
         @Override
-        public <T> Future<T> method(final String name, final Entity<?> entity, final GenericType<T> responseType) {
+        public <T> CompletableFuture<T> method(final String name, final Entity<?> entity, final GenericType<T> responseType) {
             if (responseType == null) {
                 throw new IllegalArgumentException(LocalizationMessages.RESPONSE_TYPE_IS_NULL());
             }
             builder.requestContext.setMethod(name);
             builder.storeEntity(entity);
-            return new JerseyInvocation(builder).submit(responseType);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(responseType);
         }
 
         @Override
-        public <T> Future<T> method(final String name, final Entity<?> entity, final InvocationCallback<T> callback) {
+        public <T> CompletableFuture<T> method(final String name, final Entity<?> entity, final InvocationCallback<T> callback) {
             builder.requestContext.setMethod(name);
             builder.storeEntity(entity);
-            return new JerseyInvocation(builder).submit(callback);
+            return (CompletableFuture<T>) new JerseyInvocation(builder).submit(callback);
         }
     }
 
