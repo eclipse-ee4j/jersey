@@ -25,6 +25,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.glassfish.jersey.internal.OsgiRegistry;
@@ -133,7 +134,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
 
     private void add(final UriSchemeResourceFinderFactory uriSchemeResourceFinderFactory) {
         for (final String scheme : uriSchemeResourceFinderFactory.getSchemes()) {
-            finderFactories.put(scheme.toLowerCase(), uriSchemeResourceFinderFactory);
+            finderFactories.put(scheme.toLowerCase(Locale.ROOT), uriSchemeResourceFinderFactory);
         }
     }
 
@@ -254,7 +255,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
     }
 
     private void addResourceFinder(final URI u) {
-        final UriSchemeResourceFinderFactory finderFactory = finderFactories.get(u.getScheme().toLowerCase());
+        final UriSchemeResourceFinderFactory finderFactory = finderFactories.get(u.getScheme().toLowerCase(Locale.ROOT));
         if (finderFactory != null) {
             compositeResourceFinder.push(finderFactory.create(u, recursive));
         } else {

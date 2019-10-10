@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -217,7 +218,7 @@ public final class PropertiesHelper {
             String runtimeAwareKey = getPropertyNameForRuntime(key, runtimeType);
             if (key.equals(runtimeAwareKey)) {
                 // legacy behaviour
-                runtimeAwareKey = key + "." + runtimeType.name().toLowerCase();
+                runtimeAwareKey = key + "." + runtimeType.name().toLowerCase(Locale.ROOT);
             }
             value = properties.get(runtimeAwareKey);
         }
@@ -251,11 +252,11 @@ public final class PropertiesHelper {
         if (runtimeType != null && key.startsWith("jersey.config")) {
             RuntimeType[] types = RuntimeType.values();
             for (RuntimeType type : types) {
-                if (key.startsWith("jersey.config." + type.name().toLowerCase())) {
+                if (key.startsWith("jersey.config." + type.name().toLowerCase(Locale.ROOT))) {
                     return key;
                 }
             }
-            return key.replace("jersey.config", "jersey.config." + runtimeType.name().toLowerCase());
+            return key.replace("jersey.config", "jersey.config." + runtimeType.name().toLowerCase(Locale.ROOT));
         }
         return key;
     }

@@ -19,6 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -133,7 +134,7 @@ public class CookiesParser {
             if (cookie == null) {
                 cookie = new MutableNewCookie(name, value);
             } else {
-                final String param = name.toLowerCase();
+                final String param = name.toLowerCase(Locale.ROOT);
 
                 if (param.startsWith("comment")) {
                     cookie.comment = value;

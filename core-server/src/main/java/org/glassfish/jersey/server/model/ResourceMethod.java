@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -578,7 +579,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
             this.managedAsync = managedAsync;
             this.type = JaxrsType.classify(httpMethod);
 
-            this.httpMethod = (httpMethod == null) ? httpMethod : httpMethod.toUpperCase();
+            this.httpMethod = (httpMethod == null) ? httpMethod : httpMethod.toUpperCase(Locale.ROOT);
 
             this.consumedTypes = Collections.unmodifiableList(new ArrayList<>(consumedTypes));
             this.producedTypes = Collections.unmodifiableList(new ArrayList<>(producedTypes));

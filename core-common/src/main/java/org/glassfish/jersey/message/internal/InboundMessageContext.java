@@ -539,7 +539,7 @@ public abstract class InboundMessageContext {
             return Collections.emptySet();
         }
         try {
-            return new HashSet<String>(HttpHeaderReader.readStringList(allowed.toUpperCase()));
+            return new HashSet<String>(HttpHeaderReader.readStringList(allowed.toUpperCase(Locale.ROOT)));
         } catch (java.text.ParseException e) {
             throw exception(HttpHeaders.ALLOW, allowed, e);
         }

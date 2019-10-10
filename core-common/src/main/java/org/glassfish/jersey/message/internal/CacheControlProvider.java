@@ -19,6 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,7 +114,7 @@ public final class CacheControlProvider implements HeaderDelegateProvider<CacheC
     private void readDirective(CacheControl cacheControl,
                                HttpHeaderReader reader) throws ParseException {
 
-        final String directiveName = reader.nextToken().toString().toLowerCase();
+        final String directiveName = reader.nextToken().toString().toLowerCase(Locale.ROOT);
         if ("private".equals(directiveName)) {
             cacheControl.setPrivate(true);
             readFieldNames(cacheControl.getPrivateFields(), reader);
