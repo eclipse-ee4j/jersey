@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,21 +20,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.glassfish.jersey.tests.integration</groupId>
-        <artifactId>project</artifactId>
+        <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
+        <artifactId>cdi-integration-project</artifactId>
         <version>2.30-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cdi-iface-with-non-jaxrs-impl-test-webapp</artifactId>
+    <artifactId>cdi-with-jersey-injection-webapp</artifactId>
     <packaging>war</packaging>
-    <name>jersey-tests-cdi-iface-with-non-jaxrs-impl-test-webapp</name>
+    <name>jersey-tests-cdi-with-jersey-injection-webapp</name>
 
-    <description>Jersey CDI using non JAX-RS implementation for CDI injection</description>
+    <description>Jersey CDI test web application, this one uses Jersey (non JAX-RS) component injection</description>
 
     <dependencies>
         <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x-transaction</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -42,15 +57,13 @@
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
-         <dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-bundle</artifactId>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -66,7 +79,6 @@
             </plugin>
         </plugins>
     </build>
-
     <properties>
         <skipTests>true</skipTests>
         <testContainerFactory>org.glassfish.jersey.test.external.ExternalTestContainerFactory</testContainerFactory>

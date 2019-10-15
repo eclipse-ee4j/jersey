@@ -35,20 +35,10 @@
     <modules>
         <module>asm</module>
         <module>async-jersey-filter</module>
-        <module>cdi-beanvalidation-webapp</module>
-        <module>cdi-ejb-test-webapp</module>
-        <module>cdi-iface-with-non-jaxrs-impl-test-webapp</module>
         <module>cdi-integration</module>
-        <module>cdi-log-check</module>
-        <module>cdi-multimodule</module>
-        <module>ejb-multimodule-reload</module>
-        <module>cdi-multipart-webapp</module>
-        <module>cdi-test-webapp</module>
-        <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
-        <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>
-        <module>cdi-with-jersey-injection-webapp</module>
         <module>client-connector-provider</module>
         <module>ejb-multimodule</module>
+        <module>ejb-multimodule-reload</module>
         <module>ejb-test-webapp</module>
         <module>j-376</module>
         <module>j-441</module>
