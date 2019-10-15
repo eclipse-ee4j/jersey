@@ -278,7 +278,15 @@ class MethodModel {
                 result.completeExceptionally(e);
             }
         }).exceptionally(throwable -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::removeContext);
+            // Since it could have been the removeContext method causing exception, we need to be more careful
+            // to assure, that the future completes
+            asyncInterceptors.forEach(interceptor -> {
+                try {
+                    interceptor.removeContext();
+                } catch (Throwable e) {
+                    throwable.addSuppressed(e);
+                }
+            });
             result.completeExceptionally(throwable);
             return null;
         });
