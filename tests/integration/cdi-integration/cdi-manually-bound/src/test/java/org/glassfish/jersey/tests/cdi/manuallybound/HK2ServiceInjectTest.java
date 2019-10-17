@@ -29,7 +29,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
-public class CdiServiceInjectTest extends JerseyTest {
+public class HK2ServiceInjectTest extends JerseyTest {
     private Weld weld;
 
     @Before
@@ -56,14 +56,14 @@ public class CdiServiceInjectTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(NoBeanDefiningAnnotationContainerFilter.class, Resource.class);
+        return new ResourceConfig(Resource.class, HK2InjectedFilter.class).register(new HK2Binder());
     }
 
     @Test
-    public void testCdiServiceIsInjected() {
+    public void testHK2ServiceIsInjected() {
         try (Response response = target().request().get()) {
-            String header = response.getStringHeaders().getFirst(NoBeanDefiningAnnotationContainerFilter.class.getSimpleName());
-            Assert.assertEquals(CdiServiceImpl.class.getSimpleName(), header);
+            String header = response.getStringHeaders().getFirst(HK2InjectedFilter.class.getSimpleName());
+            Assert.assertEquals(HK2ServiceImpl.class.getSimpleName(), header);
         }
     }
 }
