@@ -45,6 +45,7 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
     private final Map<Class<?>, Set<Method>> methodsToSkip;
     private final Map<Class<?>, Set<Field>> fieldsToSkip;
     private final BeanManager beanManager;
+    private final CdiComponentProvider cdiComponentProvider;
 
     public InjecteeSkippingAnalyzer(ClassAnalyzer defaultAnalyzer,
                                     Map<Class<?>, Set<Method>> methodsToSkip,
@@ -54,6 +55,7 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
         this.methodsToSkip = methodsToSkip;
         this.fieldsToSkip = fieldsToSkip;
         this.beanManager = beanManager;
+        this.cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
     }
 
     @Override
@@ -108,7 +110,7 @@ public final class InjecteeSkippingAnalyzer implements ClassAnalyzer {
 
     private void addCdiInjectedFieldsToSkip(Set<Field> skippedFields, Set<Field> originalFields) {
         for (Field field : originalFields) {
-            if (field.getAnnotation(Inject.class) != null) {
+            if (field.getAnnotation(Inject.class) != null && !cdiComponentProvider.isHk2ProvidedType(field.getType())) {
                 skippedFields.add(field);
             }
         }

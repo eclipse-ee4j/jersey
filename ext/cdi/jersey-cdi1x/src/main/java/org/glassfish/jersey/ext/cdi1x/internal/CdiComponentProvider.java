@@ -728,6 +728,14 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     }
 
     /**
+     * Get the types provided by HK2
+     * @return Types that HK2 is to inject
+     */
+    /* package */ boolean isHk2ProvidedType(Type type) {
+        return hk2ProvidedTypes.contains(type);
+    }
+
+    /**
      * Gets you fields to skip from a proxied instance.
      * <p/>
      * Note: Do NOT lower the visibility of this method. CDI proxies need at least this visibility.
