@@ -16,32 +16,64 @@
 
 package org.glassfish.jersey.client.internal.routing;
 
+import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.internal.routing.CombinedMediaType;
 import org.glassfish.jersey.internal.routing.ContentTypeDeterminer;
 import org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
+import org.glassfish.jersey.message.internal.HeaderUtils;
+import org.glassfish.jersey.message.internal.InboundMessageContext;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ReaderInterceptor;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Client side {@link Response} media type determinator utility class.
+ * Client side {@link Response} utility class determining the media type.
  * Used for determining media type when {@link ClientRequestContext#abortWith(Response)} on
  * {@link javax.ws.rs.client.ClientRequestFilter#filter(ClientRequestContext)} is used without specifying the response
  * media type.
  */
-public class AbortedRequestMediaTypeDeterminer extends ContentTypeDeterminer {
+public class ClientResponseMediaTypeDeterminer extends ContentTypeDeterminer {
 
     private static final AbortedRouting ABORTED_ROUTING = new AbortedRouting();
 
-    public AbortedRequestMediaTypeDeterminer(MessageBodyWorkers workers) {
+    /**
+     * Constructor providing the MessageBodyWorkers that specify the media types.
+     *
+     * @param workers MessageBodyWorkers that specify the media types.
+     */
+    public ClientResponseMediaTypeDeterminer(MessageBodyWorkers workers) {
         super(workers);
+    }
+
+    /**
+     * Set the Response media type if not correctly set by the user. The media type is determined by the entity type
+     * and provided MessageBodyWorkers.
+     *
+     * @param response The response containing the HTTP headers, entity and that is eventually updated.
+     */
+    public void setResponseMediaTypeIfNotSet(final Response response) {
+        if (response.hasEntity() && response.getMediaType() == null) {
+            final InboundMessageContext headerContext = new InboundMessageContext() {
+                @Override
+                protected Iterable<ReaderInterceptor> getReaderInterceptors() {
+                    return null;
+                }
+            };
+            headerContext.headers(HeaderUtils.asStringHeaders(response.getHeaders()));
+
+            final MediaType mediaType = determineResponseMediaType(response.getEntity(),
+                    headerContext.getQualifiedAcceptableMediaTypes());
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, mediaType);
+        }
     }
 
     /**
@@ -51,7 +83,7 @@ public class AbortedRequestMediaTypeDeterminer extends ContentTypeDeterminer {
      * @param acceptableMediaTypes  acceptable media types from request.
      * @return                      media type of the response.
      */
-    public MediaType determineResponseMediaType(
+    private MediaType determineResponseMediaType(
             final Object entity,
             final List<AcceptableMediaType> acceptableMediaTypes) {
 
