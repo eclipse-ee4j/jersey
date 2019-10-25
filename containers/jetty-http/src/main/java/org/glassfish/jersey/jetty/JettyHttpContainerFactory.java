@@ -286,6 +286,10 @@ public final class JettyHttpContainerFactory {
         return server;
     }
 
+    // TODO: Use https://www.eclipse.org/jetty/javadoc/current/org/eclipse/jetty/util/thread/QueuedThreadPool.html
+    //  #%3Cinit%3E(int,int,int,int,java.util.concurrent.BlockingQueue,java.lang.ThreadGroup,java.util.concurrent.ThreadFactory)
+    //
+    //  Keeping this for backwards compatibility for the time being
     private static final class JettyConnectorThreadPool extends QueuedThreadPool {
         private final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("jetty-http-server-%d")
@@ -293,7 +297,7 @@ public final class JettyHttpContainerFactory {
                 .build();
 
         @Override
-        protected Thread newThread(Runnable runnable) {
+        public Thread newThread(Runnable runnable) {
             return threadFactory.newThread(runnable);
         }
     }
