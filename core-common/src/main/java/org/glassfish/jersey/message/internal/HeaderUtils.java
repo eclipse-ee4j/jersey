@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.AbstractMultivaluedMap;
@@ -36,6 +37,11 @@ import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
 import org.glassfish.jersey.internal.util.collection.StringKeyIgnoreCaseMultivaluedMap;
 import org.glassfish.jersey.internal.util.collection.Views;
 
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptySet;
+import static java.util.regex.Pattern.compile;
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Utility class supporting the processing of message headers.
  *
@@ -46,6 +52,21 @@ import org.glassfish.jersey.internal.util.collection.Views;
 public final class HeaderUtils {
 
     private static final Logger LOGGER = Logger.getLogger(HeaderUtils.class.getName());
+
+    private static final Set<String> HOP_BY_HOP_HEADERS = new HashSet<>(32);
+    private static final Pattern CONNECTION_VALUE_SPLITTER = compile("\\s*+,[\\s,]*+");
+
+    static {
+        HOP_BY_HOP_HEADERS.add("connection");
+        HOP_BY_HOP_HEADERS.add("keep-alive");
+        HOP_BY_HOP_HEADERS.add("proxy-authenticate");
+        HOP_BY_HOP_HEADERS.add("proxy-authorization");
+        HOP_BY_HOP_HEADERS.add("public");
+        HOP_BY_HOP_HEADERS.add("te");
+        HOP_BY_HOP_HEADERS.add("trailer");
+        HOP_BY_HOP_HEADERS.add("transfer-encoding");
+        HOP_BY_HOP_HEADERS.add("upgrade");
+    }
 
     /**
      * Create an empty inbound message headers container. Created container is mutable.
@@ -248,6 +269,33 @@ public final class HeaderUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Copies all end-to-end headers, i.e. everything except hop-by-hop headers.
+     *
+     * @param srcHdrs the headers to copy from
+     * @param dstHdrs the target headers to copy to
+     */
+    public static void copyEndToEndHeaders(MultivaluedMap<String, Object> srcHdrs, MultivaluedMap<String, Object> dstHdrs) {
+        List<Object> connectionHeaders = srcHdrs.get("connection");
+        Set<String> extraHopByHopHeaders =
+            connectionHeaders == null
+                ? emptySet()
+                : connectionHeaders.stream()
+                .map(str -> ((String) str).toLowerCase())
+                .flatMap((hdr) -> stream(CONNECTION_VALUE_SPLITTER.split(hdr.trim())))
+                .collect(toSet());
+        //noinspection ResultOfMethodCallIgnored
+        srcHdrs.entrySet().stream()
+            .filter((entry) -> {
+                String keyLower = entry.getKey().toLowerCase();
+                return !HOP_BY_HOP_HEADERS.contains(keyLower) && !extraHopByHopHeaders.contains(keyLower);
+            })
+            .collect(Collectors.toMap(
+                Map.Entry::getKey, Map.Entry::getValue,
+                (u, v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); },
+                () -> dstHdrs));
     }
 
     /**
