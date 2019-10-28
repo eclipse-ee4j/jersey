@@ -164,6 +164,10 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
         init();
     }
 
+    public ClassLoader getClassloader() {
+        return classloader;
+    }
+
     private void init() {
         compositeResourceFinder = new CompositeResourceFinder();
 
