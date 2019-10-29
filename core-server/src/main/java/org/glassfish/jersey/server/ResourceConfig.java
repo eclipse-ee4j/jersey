@@ -907,7 +907,9 @@ public class ResourceConfig extends Application implements Configurable<Resource
             // Workaround because otherwise classes from a different classloader can't be loaded
             if (resourceFinder instanceof PackageNamesScanner) {
                 final ClassLoader classLoader = ((PackageNamesScanner) resourceFinder).getClassloader();
-                afl = AnnotationAcceptingListener.newJaxrsResourceAndProviderListener(classLoader);
+                if (!getClassLoader().equals(classLoader)) {
+                    afl = AnnotationAcceptingListener.newJaxrsResourceAndProviderListener(classLoader);
+                }
             }
 
             while (resourceFinder.hasNext()) {
@@ -928,10 +930,13 @@ public class ResourceConfig extends Application implements Configurable<Resource
                     }
                 }
 
-                result.addAll(afl.getAnnotatedClasses());
+                if (parentAfl != afl) {
+                    result.addAll(afl.getAnnotatedClasses());
+                }
             }
         }
 
+        result.addAll(parentAfl.getAnnotatedClasses());
         return result;
     }
 
