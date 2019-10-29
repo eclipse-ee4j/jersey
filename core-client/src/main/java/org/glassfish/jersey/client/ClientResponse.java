@@ -63,7 +63,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      */
     public ClientResponse(final ClientRequest requestContext, final Response response) {
         this(response.getStatusInfo(), requestContext);
-        this.headers(OutboundJaxrsResponse.from(response).getContext().getStringHeaders());
+        this.headers(OutboundJaxrsResponse.from(response, requestContext.getConfiguration()).getContext().getStringHeaders());
 
         final Object entity = response.getEntity();
         if (entity != null) {
@@ -119,6 +119,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * @param resolvedRequestUri resolved request URI (see {@link #getResolvedRequestUri()}).
      */
     public ClientResponse(Response.StatusType status, ClientRequest requestContext, URI resolvedRequestUri) {
+        super(requestContext.getConfiguration());
         this.status = status;
         this.resolvedUri = resolvedRequestUri;
         this.requestContext = requestContext;

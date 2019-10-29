@@ -62,7 +62,7 @@ public class ContainerResponse implements ContainerResponseContext {
      * @param response response instance initializing the response context.
      */
     public ContainerResponse(final ContainerRequest requestContext, final Response response) {
-        this(requestContext, OutboundJaxrsResponse.from(response));
+        this(requestContext, OutboundJaxrsResponse.from(response, requestContext.getConfiguration()));
     }
 
     /**

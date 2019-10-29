@@ -27,10 +27,12 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.AbstractMultivaluedMap;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
+import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
 import org.glassfish.jersey.internal.util.collection.StringKeyIgnoreCaseMultivaluedMap;
@@ -84,8 +86,9 @@ public final class HeaderUtils {
      * this method returns {@code null}.
      * <p>
      * This method defers to {@link RuntimeDelegate#createHeaderDelegate} to
-     * obtain a {@link HeaderDelegate} to convert the value to a {@code String}.
-     * If a {@link HeaderDelegate} is not found then the {@code toString()}
+     * obtain a {@link HeaderDelegate} or {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     * to convert the value to a {@code String}.
+     * If neither is found then the {@code toString()}
      * method on the header object is utilized.
      *
      * @param headerValue the header value represented as an object.
@@ -97,7 +100,7 @@ public final class HeaderUtils {
      *         if the supplied header value is {@code null}.
      */
     @SuppressWarnings("unchecked")
-    public static String asString(final Object headerValue, RuntimeDelegate rd) {
+    private static String asString(final Object headerValue, RuntimeDelegate rd) {
         if (headerValue == null) {
             return null;
         }
@@ -113,6 +116,29 @@ public final class HeaderUtils {
     }
 
     /**
+     * Convert a message header value, represented as a general object, to it's
+     * string representation. If the supplied header value is {@code null},
+     * this method returns {@code null}.
+     * <p>
+     * This method defers to {@link RuntimeDelegate#createHeaderDelegate} to
+     * obtain a {@link HeaderDelegate} or {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     * to convert the value to a {@code String}.
+     * If neither is found then the {@code toString()}
+     * method on the header object is utilized.
+     *
+     * @param headerValue   the header value represented as an object.
+     * @param configuration the {@link Configuration} that may contain
+     *                      {@link org.glassfish.jersey.CommonProperties#METAINF_SERVICES_LOOKUP_DISABLE}
+     *                      property preventing the {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     *                      to be used by the default {@code RuntimeDelegate} {@link RuntimeDelegate#getInstance() instance}.
+     * @return the string representation of the supplied header value or {@code null}
+     *         if the supplied header value is {@code null}.
+     */
+    public static String asString(final Object headerValue, Configuration configuration) {
+        return asString(headerValue, RuntimeDelegateDecorator.configured(configuration));
+    }
+
+    /**
      * Returns string view of list of header values. Any modifications to the underlying list are visible to the view,
      * the view also supports removal of elements. Does not support other modifications.
      *
@@ -121,21 +147,29 @@ public final class HeaderUtils {
      *                     will be called for before element conversion.
      * @return String view of header values.
      */
-    public static List<String> asStringList(final List<Object> headerValues, final RuntimeDelegate rd) {
+    private static List<String> asStringList(final List<Object> headerValues, final RuntimeDelegate rd) {
         if (headerValues == null || headerValues.isEmpty()) {
             return Collections.emptyList();
         }
 
-        final RuntimeDelegate delegate;
-        if (rd == null) {
-            delegate = RuntimeDelegate.getInstance();
-        } else {
-            delegate = rd;
-        }
-
         return Views.listView(headerValues, input -> (input == null)
                 ? "[null]"
-                : HeaderUtils.asString(input, delegate));
+                : HeaderUtils.asString(input, rd));
+    }
+
+    /**
+     * Returns string view of list of header values. Any modifications to the underlying list are visible to the view,
+     * the view also supports removal of elements. Does not support other modifications.
+     *
+     * @param headerValues header values.
+     * @param configuration the {@link Configuration} that may contain
+     *                      {@link org.glassfish.jersey.CommonProperties#METAINF_SERVICES_LOOKUP_DISABLE}
+     *                      property preventing the {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     *                      to be used by the default {@code RuntimeDelegate} {@link RuntimeDelegate#getInstance() instance}.
+     * @return String view of header values.
+     */
+    public static List<String> asStringList(final List<Object> headerValues, final Configuration configuration) {
+        return asStringList(headerValues, RuntimeDelegateDecorator.configured(configuration));
     }
 
     /**
@@ -143,14 +177,19 @@ public final class HeaderUtils {
      * supports removal of elements. Does not support other modifications.
      *
      * @param headers headers.
+     * @param configuration the {@link Configuration} that may contain
+     *                      {@link org.glassfish.jersey.CommonProperties#METAINF_SERVICES_LOOKUP_DISABLE}
+     *                      property preventing the {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     *                      to be used by the default {@code RuntimeDelegate} {@link RuntimeDelegate#getInstance() instance}.
      * @return String view of headers or {@code null} if {code headers} input parameter is {@code null}.
      */
-    public static MultivaluedMap<String, String> asStringHeaders(final MultivaluedMap<String, Object> headers) {
+    public static MultivaluedMap<String, String> asStringHeaders(
+            final MultivaluedMap<String, Object> headers, Configuration configuration) {
         if (headers == null) {
             return null;
         }
 
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
+        final RuntimeDelegate rd = RuntimeDelegateDecorator.configured(configuration);
         return new AbstractMultivaluedMap<String, String>(
                 Views.mapView(headers, input -> HeaderUtils.asStringList(input, rd))
         ) {
@@ -163,16 +202,20 @@ public final class HeaderUtils {
      * Returned map is immutable. Map values are formatted using method {@link #asHeaderString}.
      *
      * @param headers headers to be formatted
+     * @param configuration the {@link Configuration} that may contain
+     *                      {@link org.glassfish.jersey.CommonProperties#METAINF_SERVICES_LOOKUP_DISABLE}
+     *                      property preventing the {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     *                      to be used by the default {@code RuntimeDelegate} {@link RuntimeDelegate#getInstance() instance}.
      * @return immutable single {@code String} value map or
      *      {@code null} if {@code headers} input parameter is {@code null}.
      */
-    public static Map<String, String> asStringHeadersSingleValue(final MultivaluedMap<String, Object> headers) {
+    public static Map<String, String> asStringHeadersSingleValue(
+            final MultivaluedMap<String, Object> headers, Configuration configuration) {
         if (headers == null) {
             return null;
         }
 
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
-
+        final RuntimeDelegate rd = RuntimeDelegateDecorator.configured(configuration);
         return Collections.unmodifiableMap(headers.entrySet().stream()
                                            .collect(Collectors.toMap(
                                                    Map.Entry::getKey,
@@ -222,13 +265,18 @@ public final class HeaderUtils {
      * @param headersSnapshot first immutable snapshot of headers
      * @param currentHeaders  current instance of headers tobe compared to
      * @param connectorName   name of connector the method is invoked from, used just in logged message
+     * @param configuration the {@link Configuration} that may contain
+     *                      {@link org.glassfish.jersey.CommonProperties#METAINF_SERVICES_LOOKUP_DISABLE}
+     *                      property preventing the {@link org.glassfish.jersey.spi.HeaderDelegateProvider}
+     *                      to be used by the default {@code RuntimeDelegate} {@link RuntimeDelegate#getInstance() instance}.
      * @see <a href="https://java.net/jira/browse/JERSEY-2341">JERSEY-2341</a>
      */
     public static void checkHeaderChanges(final Map<String, String> headersSnapshot,
                                           final MultivaluedMap<String, Object> currentHeaders,
-                                          final String connectorName) {
+                                          final String connectorName,
+                                          final Configuration configuration) {
         if (HeaderUtils.LOGGER.isLoggable(Level.WARNING)) {
-            final RuntimeDelegate rd = RuntimeDelegate.getInstance();
+            final RuntimeDelegate rd = RuntimeDelegateDecorator.configured(configuration);
             final Set<String> changedHeaderNames = new HashSet<String>();
             for (final Map.Entry<? extends String, ? extends List<Object>> entry : currentHeaders.entrySet()) {
                 if (!headersSnapshot.containsKey(entry.getKey())) {

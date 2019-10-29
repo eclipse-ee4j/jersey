@@ -32,6 +32,7 @@ import java.util.Set;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -39,6 +40,7 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
@@ -63,14 +65,17 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
      * Get an OutboundJaxrsResponse instance for a given JAX-RS response.
      *
      * @param response response instance to from.
+     * @param configuration the related client/server side {@link Configuration}. Can be {@code null}.
      * @return corresponding {@code OutboundJaxrsResponse} instance.
      */
-    public static OutboundJaxrsResponse from(javax.ws.rs.core.Response response) {
+    public static OutboundJaxrsResponse from(Response response, Configuration configuration) {
         if (response instanceof OutboundJaxrsResponse) {
+             // RuntimeDelegate.getInstance().createResponseBuilder() does not set configuration
+            ((OutboundJaxrsResponse) response).context.setConfiguration(configuration);
             return (OutboundJaxrsResponse) response;
         } else {
             final StatusType status = response.getStatusInfo();
-            final OutboundMessageContext context = new OutboundMessageContext();
+            final OutboundMessageContext context = new OutboundMessageContext(configuration);
             context.getHeaders().putAll(response.getMetadata());
             context.setEntity(response.getEntity());
             return new OutboundJaxrsResponse(status, context);

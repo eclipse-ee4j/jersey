@@ -193,7 +193,7 @@ class InMemoryConnector implements Connector {
 
         final ContainerRequest containerRequest = new ContainerRequest(baseUri,
                 clientRequest.getUri(), clientRequest.getMethod(),
-                null, propertiesDelegate);
+                null, propertiesDelegate, appHandler.getConfiguration());
 
         containerRequest.getHeaders().putAll(clientRequest.getStringHeaders());
 

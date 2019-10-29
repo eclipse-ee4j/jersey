@@ -40,6 +40,7 @@ import java.util.StringTokenizer;
 import java.util.function.Function;
 
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.HttpHeaders;
@@ -48,7 +49,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.RuntimeDelegate;
 
 import javax.xml.transform.Source;
 
@@ -93,6 +93,7 @@ public abstract class InboundMessageContext {
     private final EntityContent entityContent;
     private final boolean translateNce;
     private MessageBodyWorkers workers;
+    private final Configuration configuration;
 
     /**
      * Input stream and its state. State is represented by the {@link Type Type enum} and
@@ -139,22 +140,27 @@ public abstract class InboundMessageContext {
 
     /**
      * Create new inbound message context.
+     *
+     * @param configuration the related client/server side {@link Configuration}
      */
-    public InboundMessageContext() {
-        this(false);
+    public InboundMessageContext(Configuration configuration) {
+        this(configuration, false);
     }
 
     /**
      * Create new inbound message context.
      *
-     * @param translateNce if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
-     *                     selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
-     *                     as required by JAX-RS specification on the server side.
+     * @param configuration the related client/server side {@link Configuration}. If {@code null},
+     *                      the default behaviour is expected.
+     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     *                      as required by JAX-RS specification on the server side.
      */
-    public InboundMessageContext(boolean translateNce) {
+    public InboundMessageContext(Configuration configuration, boolean translateNce) {
         this.headers = HeaderUtils.createInbound();
         this.entityContent = new EntityContent();
         this.translateNce = translateNce;
+        this.configuration = configuration;
     }
 
     // Message headers
@@ -167,7 +173,7 @@ public abstract class InboundMessageContext {
      * @return updated context.
      */
     public InboundMessageContext header(String name, Object value) {
-        getHeaders().add(name, HeaderUtils.asString(value, RuntimeDelegate.getInstance()));
+        getHeaders().add(name, HeaderUtils.asString(value, configuration));
         return this;
     }
 
@@ -179,7 +185,7 @@ public abstract class InboundMessageContext {
      * @return updated context.
      */
     public InboundMessageContext headers(String name, Object... values) {
-        this.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), RuntimeDelegate.getInstance()));
+        this.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), configuration));
         return this;
     }
 
@@ -232,12 +238,11 @@ public abstract class InboundMessageContext {
         return this;
     }
 
-    private static List<String> iterableToList(final Iterable<?> values) {
+    private List<String> iterableToList(final Iterable<?> values) {
         final LinkedList<String> linkedList = new LinkedList<String>();
 
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
         for (Object element : values) {
-            linkedList.add(HeaderUtils.asString(element, rd));
+            linkedList.add(HeaderUtils.asString(element, configuration));
         }
 
         return linkedList;
@@ -924,4 +929,12 @@ public abstract class InboundMessageContext {
      * @return reader interceptors bound to this context.
      */
     protected abstract Iterable<ReaderInterceptor> getReaderInterceptors();
+
+    /**
+     * The related client/server side {@link Configuration}. Can be {@code null}.
+     * @return {@link Configuration} the configuration
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 }
