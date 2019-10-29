@@ -32,6 +32,15 @@
         </property>
     </bean>
 
+    <!-- Needed since Spring Context 4, was default in Spring Context 3 -->
+    <bean id="customAutowireConfigurer" class="org.springframework.beans.factory.annotation.CustomAutowireConfigurer">
+        <property name="customQualifierTypes">
+            <set>
+                <value>org.springframework.beans.factory.annotation.Qualifier</value>
+            </set>
+        </property>
+    </bean>
+
     <bean name="AccountService-singleton" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" />
 
     <bean name="AccountService-request-1" class="org.glassfish.jersey.server.spring.test.AccountServiceImpl" scope="request">
