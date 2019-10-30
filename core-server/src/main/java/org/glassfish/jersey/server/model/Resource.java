@@ -203,7 +203,7 @@ public final class Resource implements Routed, ResourceModelComponent {
         private Builder(final Resource.Builder parentResource) {
             this.methodBuilders = new LinkedHashSet<>();
             this.childResourceBuilders = new LinkedHashSet<>();
-            this.childResources = new ArrayList<>();
+            this.childResources = new LinkedList<>();
             this.resourceMethods = new LinkedList<>();
             this.handlerClasses = Collections.newSetFromMap(new IdentityHashMap<>());
             this.handlerInstances = Collections.newSetFromMap(new IdentityHashMap<>());
