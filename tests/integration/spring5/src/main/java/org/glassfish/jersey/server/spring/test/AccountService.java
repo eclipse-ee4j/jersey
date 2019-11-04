@@ -16,33 +16,18 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import org.junit.Test;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-
-import static org.junit.Assert.assertEquals;
+import java.math.BigDecimal;
 
 /**
- * Tests for Jersey managed JAX-RS resources.
+ * Simple account service to testify injection into different scopes.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
  */
-public class JerseyManagedITCase extends AccountResourceTestBase {
+public interface AccountService {
 
-    @Override
-    protected String getResourcePath() {
-        return "/jersey/account";
-    }
+    void setAccountBalance(String accountId, BigDecimal balance);
 
-    @Test
-    public void testResourceScope() {
-        final WebTarget t = target(getResourceFullPath());
-        final String message = "hello, world";
-        final String echo = t.path("message").request().put(Entity.text(message), String.class);
-        assertEquals(message, echo);
-        final String msg = t.path("message").request().get(String.class);
-        assertEquals("n/a", msg);
-    }
+    BigDecimal getAccountBalance(String accountId);
 
+    String verifyServletRequestInjection();
 }

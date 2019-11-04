@@ -16,32 +16,19 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import org.junit.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-
-import static org.junit.Assert.assertEquals;
+import org.springframework.stereotype.Component;
 
 /**
- * Tests for Spring managed JAX-RS resources with @Controller archetype.
- *
  * @author Konrad Garus (konrad.garus at gmail.com)
  */
-public class SpringManagedControllerITCase extends ResourceTestBase {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Component
+public @interface Endpoint {
 
-    @Override
-    protected String getResourcePath() {
-        return "/spring/controller";
-    }
-
-    @Test
-    public void testResourceScope() {
-        final WebTarget t = target(getResourceFullPath());
-        final String message = "hello, world";
-        final String echo = t.path("message").request().put(Entity.text(message), String.class);
-        assertEquals(message, echo);
-        final String msg = t.path("message").request().get(String.class);
-        assertEquals(message, msg);
-    }
 }

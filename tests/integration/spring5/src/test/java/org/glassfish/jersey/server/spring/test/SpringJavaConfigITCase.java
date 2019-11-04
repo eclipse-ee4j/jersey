@@ -24,16 +24,15 @@ import javax.ws.rs.client.WebTarget;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for Spring managed JAX-RS resources with custom composite
- * annotation that derives from @Component.
+ * Tests for Spring managed JAX-RS resources with @Controller archetype.
  *
  * @author Konrad Garus (konrad.garus at gmail.com)
  */
-public class SpringManagedEndpointITCase extends ResourceTestBase {
+public class SpringJavaConfigITCase extends ResourceTestBase {
 
     @Override
     protected String getResourcePath() {
-        return "/spring/endpoint";
+        return "/spring/controller";
     }
 
     @Test
