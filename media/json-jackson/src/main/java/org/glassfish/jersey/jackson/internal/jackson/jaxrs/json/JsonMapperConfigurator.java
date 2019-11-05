@@ -2,6 +2,7 @@ package org.glassfish.jersey.jackson.internal.jackson.jaxrs.json;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase;
 
@@ -44,6 +45,8 @@ public class JsonMapperConfigurator
     public synchronized ObjectMapper getDefaultMapper() {
         if (_defaultMapper == null) {
             _defaultMapper = new ObjectMapper();
+            // We can remove this once we move to Jackson 3.0
+            _defaultMapper.registerModule(new Jdk8Module());
             _setAnnotations(_defaultMapper, _defaultAnnotationsToUse);
         }
         return _defaultMapper;
@@ -65,6 +68,8 @@ public class JsonMapperConfigurator
     {
         if (_mapper == null) {
             _mapper = new ObjectMapper();
+            // We can remove this once we move to Jackson 3.0
+            _mapper.registerModule(new Jdk8Module());
             _setAnnotations(_mapper, _defaultAnnotationsToUse);
         }
         return _mapper;
