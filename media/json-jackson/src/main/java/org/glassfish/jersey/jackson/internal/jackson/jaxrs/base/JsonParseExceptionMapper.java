@@ -1,9 +1,8 @@
 package org.glassfish.jersey.jackson.internal.jackson.jaxrs.base;
+import com.fasterxml.jackson.core.JsonParseException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-
-import com.fasterxml.jackson.core.JsonParseException;
 
 /**
  * Implementation of {@link ExceptionMapper} to send down a "400 Bad Request"
