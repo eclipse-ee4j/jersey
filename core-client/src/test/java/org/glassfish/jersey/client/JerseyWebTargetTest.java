@@ -17,9 +17,16 @@
 package org.glassfish.jersey.client;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +35,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.ext.ParamConverter;
+import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.ReaderInterceptorContext;
 
@@ -35,6 +44,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
+import static java.util.Calendar.NOVEMBER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -50,7 +60,7 @@ public class JerseyWebTargetTest {
 
     @Before
     public void setUp() {
-        this.client = (JerseyClient) ClientBuilder.newClient();
+        this.client = (JerseyClient) ClientBuilder.newClient(new ClientConfig().register(new CalendarConverter()));
         this.target = client.target("/");
     }
 
@@ -307,6 +317,22 @@ public class JerseyWebTargetTest {
     }
 
     @Test
+    // Reproducer JERSEY-4315
+    public void testQueryParams_whenGregorianCalendarIsPassed_thenUseRegisteredCalendarConverter() {
+        GregorianCalendar calendar = new GregorianCalendar(2019, NOVEMBER, 15);
+        URI uri = target.path("a").queryParam("date", calendar).getUri();
+        assertEquals("/a?date=15-11-2019", uri.toString());
+    }
+
+    @Test
+    // Reproducer JERSEY-4315
+    public void testMatrixParams_whenGregorianCalendarIsPassed_thenUseRegisteredCalendarConverter() {
+        GregorianCalendar calendar = new GregorianCalendar(2019, NOVEMBER, 15);
+        URI uri = target.path("a").matrixParam("date", calendar).getUri();
+        assertEquals("/a;date=15-11-2019", uri.toString());
+    }
+
+    @Test
     public void testMatrixParams() {
         URI uri;
 
@@ -443,6 +469,34 @@ public class JerseyWebTargetTest {
         assertEquals(target, wt);
     }
 
+    private static class CalendarConverter implements ParamConverter<Calendar>, ParamConverterProvider {
+        private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+        @Override
+        public Calendar fromString(String value) {
+            try {
+                Date date = formatter.parse(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                return calendar;
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public String toString(Calendar calendar) {
+            return formatter.format(calendar.getTime());
+        }
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            if (Calendar.class.isAssignableFrom(rawType)) {
+                return (ParamConverter<T>) this;
+            }
+            return null;
+        }
+    }
 }
 
 
