@@ -150,7 +150,7 @@ public class InvocationBuilderListenerTest {
                     .acceptLanguage(new Locale.Builder().setLanguage("sr").setScript("Latn").setRegion("RS").build())
                     .property(PROPERTY_NAME, PROPERTY_NAME)
                     .cacheControl(CacheControl.valueOf(PROPERTY_NAME))
-                    .cookie("Cookie","CookieValue")
+                    .cookie("Cookie", "CookieValue")
                     .header(HttpHeaders.CONTENT_ID, PROPERTY_NAME);
         }
     }
@@ -159,7 +159,7 @@ public class InvocationBuilderListenerTest {
 
         @Override
         public void onNewBuilder(InvocationBuilderContext context) {
-            Date date  = new Date();
+            Date date = new Date();
             RuntimeDelegate.HeaderDelegate localeDelegate = RuntimeDelegate.getInstance().createHeaderDelegate(Locale.class);
             Assert.assertThat(context.getAccepted(),
                     Matchers.containsInAnyOrder(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_PATCH_JSON));
