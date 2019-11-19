@@ -16,18 +16,28 @@
 
 package org.glassfish.jersey.client.spi;
 
+import org.glassfish.jersey.internal.PropertiesDelegate;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.annotation.Priority;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.RuntimeDelegate;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -65,6 +75,25 @@ public class InvocationBuilderListenerTest {
         }
     }
 
+    @Test
+    public void testConfigurationProperties() {
+        String value = "OTHER_VALUE";
+        try (Response r = target.property(key(ConfigurationInvocationBuilderListener.OTHER_PROPERTY), value)
+                .register(ConfigurationInvocationBuilderListener.class).request().get()) {
+            Assert.assertTrue(
+                    r.readEntity(String.class).contains(key(ConfigurationInvocationBuilderListener.OTHER_PROPERTY) + "=" + value)
+            );
+        }
+    }
+
+    @Test
+    public void testGetters() {
+        try (Response r = target.register(SetterInvocationBuilderListener.class, 100)
+                .register(GetterInvocationBuilderListener.class, 200).request().get()) {
+            assertDefault(r);
+        }
+    }
+
     private void assertDefault(Response response) {
         Assert.assertEquals(key(ONE) + "=" + ONE, response.readEntity(String.class));
     }
@@ -98,6 +127,69 @@ public class InvocationBuilderListenerTest {
                 }
             }
             requestContext.abortWith(Response.ok().entity(sb.toString()).build());
+        }
+    }
+
+    public static class ConfigurationInvocationBuilderListener implements InvocationBuilderListener {
+        static final String OTHER_PROPERTY = "OTHER_PROPERTY";
+
+        @Override
+        public void onNewBuilder(InvocationBuilderContext context) {
+            context.property(key(OTHER_PROPERTY), context.getConfiguration().getProperty(key(OTHER_PROPERTY)));
+        }
+    }
+
+    public static class SetterInvocationBuilderListener implements InvocationBuilderListener {
+
+        @Override
+        public void onNewBuilder(InvocationBuilderContext context) {
+            context.accept(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
+                    .acceptEncoding("GZIP")
+                    .acceptLanguage(Locale.GERMAN)
+                    .acceptLanguage(new Locale.Builder().setLanguage("sr").setScript("Latn").setRegion("RS").build())
+                    .property(PROPERTY_NAME, PROPERTY_NAME)
+                    .cacheControl(CacheControl.valueOf(PROPERTY_NAME))
+                    .cookie("Cookie","CookieValue")
+                    .header(HttpHeaders.CONTENT_ID, PROPERTY_NAME);
+        }
+    }
+
+    public static class GetterInvocationBuilderListener implements InvocationBuilderListener {
+
+        @Override
+        public void onNewBuilder(InvocationBuilderContext context) {
+            Date date  = new Date();
+            RuntimeDelegate.HeaderDelegate localeDelegate = RuntimeDelegate.getInstance().createHeaderDelegate(Locale.class);
+            Assert.assertThat(context.getAccepted(),
+                    Matchers.containsInAnyOrder(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_PATCH_JSON));
+            Assert.assertThat(context.getEncodings(), Matchers.contains("GZIP"));
+            Assert.assertThat(context.getAcceptedLanguages(),
+                    Matchers.containsInAnyOrder(localeDelegate.toString(Locale.GERMAN),
+                            localeDelegate.toString(
+                                    new Locale.Builder().setLanguage("sr").setScript("Latn").setRegion("RS").build()
+                            )
+                    )
+            );
+
+            Assert.assertThat(context.getHeader(HttpHeaders.CONTENT_ID), Matchers.contains(PROPERTY_NAME));
+            context.getHeaders().add(HttpHeaders.DATE, date);
+            Assert.assertThat(context.getHeader(HttpHeaders.DATE), Matchers.notNullValue());
+            Assert.assertThat(context.getHeaders().getFirst(HttpHeaders.DATE), Matchers.is(date));
+
+            Assert.assertNotNull(context.getUri());
+            Assert.assertTrue(context.getUri().toASCIIString().startsWith("http://"));
+
+            Assert.assertThat(context.getPropertyNames(), Matchers.contains(PROPERTY_NAME));
+            Assert.assertThat(context.getProperty(PROPERTY_NAME), Matchers.is(PROPERTY_NAME));
+            context.removeProperty(PROPERTY_NAME);
+            Assert.assertTrue(context.getPropertyNames().isEmpty());
+
+            Assert.assertThat(context.getCacheControls().get(0).toString(),
+                    Matchers.is(CacheControl.valueOf(PROPERTY_NAME).toString())
+            );
+            Assert.assertThat(context.getCookies().size(), Matchers.is(1));
+            Assert.assertThat(context.getCookies().get("Cookie"), Matchers.notNullValue());
         }
     }
 }

@@ -23,11 +23,17 @@ import org.glassfish.jersey.model.internal.RankedComparator;
 
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import java.net.URI;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Client request processing stage. During a request creation, when the {@link Invocation.Builder}
@@ -43,16 +49,16 @@ import java.util.Locale;
                 .getAllProviders(injectionManager, InvocationBuilderListener.class, comparator).iterator();
     }
 
-    /* package */ void invokeListener(Invocation.Builder builder) {
+    /* package */ void invokeListener(JerseyInvocation.Builder builder) {
         while (invocationBuilderListenerIterator.hasNext()) {
             invocationBuilderListenerIterator.next().onNewBuilder(new InvocationBuilderContextImpl(builder));
         }
     }
 
     private static class InvocationBuilderContextImpl implements InvocationBuilderListener.InvocationBuilderContext {
-        private final Invocation.Builder builder;
+        private final JerseyInvocation.Builder builder;
 
-        private InvocationBuilderContextImpl(Invocation.Builder builder) {
+        private InvocationBuilderContextImpl(JerseyInvocation.Builder builder) {
             this.builder = builder;
         }
 
@@ -105,6 +111,62 @@ import java.util.Locale;
         }
 
         @Override
+        public List<String> getAccepted() {
+            return getHeader(HttpHeaders.ACCEPT);
+        }
+
+        @Override
+        public List<String> getAcceptedLanguages() {
+            return getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        }
+
+        @Override
+        public List<CacheControl> getCacheControls() {
+            return (List<CacheControl>) (List<?>) builder.request().getHeaders().get(HttpHeaders.CACHE_CONTROL);
+        }
+
+        @Override
+        public Configuration getConfiguration() {
+            return builder.request().getConfiguration();
+        }
+
+        @Override
+        public Map<String, Cookie> getCookies() {
+            return builder.request().getCookies();
+        }
+
+        @Override
+        public List<String> getEncodings() {
+            return getHeader(HttpHeaders.ACCEPT_ENCODING);
+        }
+
+        @Override
+        public List<String> getHeader(String name) {
+            return builder.request().getRequestHeader(name);
+        }
+
+        @Override
+        public MultivaluedMap<String, Object> getHeaders() {
+            return builder.request().getHeaders();
+        }
+
+        @Override
+        public Object getProperty(String name) {
+            return builder.request().getProperty(name);
+        }
+
+        @Override
+        public Collection<String> getPropertyNames() {
+            return builder.request().getPropertyNames();
+        }
+
+        @Override
+        public URI getUri() {
+            return builder.request().getUri();
+        }
+
+
+        @Override
         public InvocationBuilderListener.InvocationBuilderContext header(String name, Object value) {
             builder.header(name, value);
             return this;
@@ -120,6 +182,11 @@ import java.util.Locale;
         public InvocationBuilderListener.InvocationBuilderContext property(String name, Object value) {
             builder.property(name, value);
             return this;
+        }
+
+        @Override
+        public void removeProperty(String name) {
+            builder.request().removeProperty(name);
         }
     }
 }
