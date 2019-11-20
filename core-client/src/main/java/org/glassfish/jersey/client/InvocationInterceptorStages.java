@@ -599,12 +599,15 @@ class InvocationInterceptorStages {
     }
 
     private static RuntimeException suppressExceptions(Deque<Throwable> throwables) {
-        if (throwables.size() == 1
-                && RuntimeException.class.isInstance(throwables.getFirst())) {
+        if (throwables.size() == 1 && RuntimeException.class.isInstance(throwables.getFirst())) {
             throw (RuntimeException) throwables.getFirst();
         }
         final ProcessingException processingException = createProcessingException(LocalizationMessages.EXCEPTION_SUPPRESSED());
         for (Throwable throwable : throwables) {
+            // The first throwable is also marked as the cause for visibility in logs
+            if (processingException.getCause() == null) {
+                processingException.initCause(throwable);
+            }
             processingException.addSuppressed(throwable);
         }
         return processingException;
