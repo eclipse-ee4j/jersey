@@ -280,7 +280,7 @@ public class WadlResourceTest {
 
             final ContainerResponse containerResponse = applicationHandler.apply(new ContainerRequest(
                     URI.create("/"), URI.create("/application.wadl"),
-                    "GET", null, new MapPropertiesDelegate())).get();
+                    "GET", null, new MapPropertiesDelegate(), rc)).get();
 
             assertEquals(404, containerResponse.getStatus());
         }
@@ -294,7 +294,7 @@ public class WadlResourceTest {
 
             final ContainerResponse containerResponse = applicationHandler.apply(new ContainerRequest(
                     URI.create("/"), URI.create("/application.wadl"),
-                    "GET", null, new MapPropertiesDelegate())).get();
+                    "GET", null, new MapPropertiesDelegate(), rc)).get();
 
             assertEquals(200, containerResponse.getStatus());
         }
@@ -590,7 +590,7 @@ public class WadlResourceTest {
 
             final ContainerResponse containerResponse = applicationHandler.apply(new ContainerRequest(
                     URI.create("/"), URI.create("/application.wadl"),
-                    "GET", null, new MapPropertiesDelegate())).get();
+                    "GET", null, new MapPropertiesDelegate(), rc)).get();
 
             final DocumentBuilderFactory bf = DocumentBuilderFactory.newInstance();
             bf.setNamespaceAware(true);
@@ -637,7 +637,7 @@ public class WadlResourceTest {
 
             final ContainerResponse containerResponse = applicationHandler.apply(new ContainerRequest(
                     URI.create("/"), URI.create("/application.wadl"),
-                    "GET", null, new MapPropertiesDelegate())).get();
+                    "GET", null, new MapPropertiesDelegate(), rc)).get();
 
             assertEquals(200, containerResponse.getStatus());
 

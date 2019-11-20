@@ -53,7 +53,7 @@ public class InboundMessageContextTest {
     }
 
     private static InboundMessageContext createInboundMessageContext() {
-        return new InboundMessageContext() {
+        return new InboundMessageContext(null) {
             @Override
             protected Iterable<ReaderInterceptor> getReaderInterceptors() {
                 return Collections.emptyList();

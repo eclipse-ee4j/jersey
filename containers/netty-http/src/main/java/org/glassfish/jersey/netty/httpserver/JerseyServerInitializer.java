@@ -32,6 +32,7 @@ import io.netty.handler.codec.http2.Http2ServerUpgradeCodec;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.AsciiString;
+import org.glassfish.jersey.server.ResourceConfig;
 
 /**
  * Jersey {@link ChannelInitializer}.
@@ -46,30 +47,35 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
     private final SslContext sslCtx;
     private final NettyHttpContainer container;
     private final boolean http2;
+    private final ResourceConfig resourceConfig;
 
     /**
      * Constructor.
      *
-     * @param baseUri   base {@link URI} of the container (includes context path, if any).
-     * @param sslCtx    SSL context.
-     * @param container Netty container implementation.
+     * @param baseUri         base {@link URI} of the container (includes context path, if any).
+     * @param sslCtx          SSL context.
+     * @param container       Netty container implementation.
+     * @param resourceConfig  the application {@link ResourceConfig}
      */
-    public JerseyServerInitializer(URI baseUri, SslContext sslCtx, NettyHttpContainer container) {
-        this(baseUri, sslCtx, container, false);
+    public JerseyServerInitializer(URI baseUri, SslContext sslCtx, NettyHttpContainer container, ResourceConfig resourceConfig) {
+        this(baseUri, sslCtx, container, resourceConfig, false);
     }
 
     /**
      * Constructor.
      *
-     * @param baseUri   base {@link URI} of the container (includes context path, if any).
-     * @param sslCtx    SSL context.
-     * @param container Netty container implementation.
-     * @param http2     Http/2 protocol support.
+     * @param baseUri         base {@link URI} of the container (includes context path, if any).
+     * @param sslCtx          SSL context.
+     * @param container       Netty container implementation.
+     * @param resourceConfig  the application {@link ResourceConfig}
+     * @param http2           Http/2 protocol support.
      */
-    public JerseyServerInitializer(URI baseUri, SslContext sslCtx, NettyHttpContainer container, boolean http2) {
+    public JerseyServerInitializer(URI baseUri, SslContext sslCtx, NettyHttpContainer container, ResourceConfig resourceConfig,
+                                   boolean http2) {
         this.baseUri = baseUri;
         this.sslCtx = sslCtx;
         this.container = container;
+        this.resourceConfig = resourceConfig;
         this.http2 = http2;
     }
 
@@ -90,7 +96,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
             }
             p.addLast(new HttpServerCodec());
             p.addLast(new ChunkedWriteHandler());
-            p.addLast(new JerseyServerHandler(baseUri, container));
+            p.addLast(new JerseyServerHandler(baseUri, container, resourceConfig));
         }
     }
 
@@ -98,7 +104,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
      * Configure the pipeline for TLS NPN negotiation to HTTP/2.
      */
     private void configureSsl(SocketChannel ch) {
-        ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()), new HttpVersionChooser(baseUri, container));
+        ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()), new HttpVersionChooser(baseUri, container, resourceConfig));
     }
 
     /**
@@ -114,7 +120,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
             public HttpServerUpgradeHandler.UpgradeCodec newUpgradeCodec(CharSequence protocol) {
                 if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
                     return new Http2ServerUpgradeCodec(Http2MultiplexCodecBuilder.forServer(
-                                new JerseyHttp2ServerHandler(baseUri, container)).build());
+                                new JerseyHttp2ServerHandler(baseUri, container, resourceConfig)).build());
                 } else {
                     return null;
                 }
@@ -128,7 +134,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
 
                 ChannelPipeline pipeline = ctx.pipeline();
                 ChannelHandlerContext thisCtx = pipeline.context(this);
-                pipeline.addAfter(thisCtx.name(), null, new JerseyServerHandler(baseUri, container));
+                pipeline.addAfter(thisCtx.name(), null, new JerseyServerHandler(baseUri, container, resourceConfig));
                 pipeline.replace(this, null, new ChunkedWriteHandler());
                 ctx.fireChannelRead(msg);
             }

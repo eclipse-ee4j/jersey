@@ -247,7 +247,7 @@ public class ResponseTest {
         }
 
         MultivaluedMap<String, String> mvp = HeaderUtils.asStringHeaders(
-                resp.getMetadata());
+                resp.getMetadata(), null);
 
         for (String key : mvp.keySet()) {
             sb.append(indent + "Processing Key found in response: ").append(key).append(": ").append(mvp.get(key)).append("; ")

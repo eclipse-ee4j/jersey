@@ -385,7 +385,9 @@ public class WebComponent {
 
         try {
             final ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri, servletRequest.getMethod(),
-                    getSecurityContext(servletRequest), new ServletPropertiesDelegate(servletRequest));
+                    getSecurityContext(servletRequest), new ServletPropertiesDelegate(servletRequest),
+                    appHandler.getConfiguration()
+            );
 
             initContainerRequest(requestContext, servletRequest, servletResponse, responseWriter);
 

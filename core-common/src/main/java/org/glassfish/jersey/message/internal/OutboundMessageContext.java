@@ -47,9 +47,9 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
@@ -65,11 +65,13 @@ public class OutboundMessageContext {
 
     private final MultivaluedMap<String, Object> headers;
     private final CommittingOutputStream committingOutputStream;
+    private Configuration configuration;
 
     private Object entity;
     private GenericType<?> entityType;
     private Annotation[] entityAnnotations = EMPTY_ANNOTATIONS;
     private OutputStream entityStream;
+
 
 
     /**
@@ -95,8 +97,10 @@ public class OutboundMessageContext {
 
     /**
      * Create new outbound message context.
+     * @param configuration the client/server {@link Configuration}. If {@code null}, the default behaviour is expected.
      */
-    public OutboundMessageContext() {
+    public OutboundMessageContext(Configuration configuration) {
+        this.configuration = configuration;
         this.headers = HeaderUtils.createOutbound();
         this.committingOutputStream = new CommittingOutputStream();
         this.entityStream = committingOutputStream;
@@ -117,6 +121,7 @@ public class OutboundMessageContext {
         this.entity = original.entity;
         this.entityType = original.entityType;
         this.entityAnnotations = original.entityAnnotations;
+        this.configuration = original.configuration;
     }
 
     /**
@@ -138,7 +143,7 @@ public class OutboundMessageContext {
      * @return multi-valued map of outbound message header names to their string-converted values.
      */
     public MultivaluedMap<String, String> getStringHeaders() {
-        return HeaderUtils.asStringHeaders(headers);
+        return HeaderUtils.asStringHeaders(headers, configuration);
     }
 
     /**
@@ -158,7 +163,7 @@ public class OutboundMessageContext {
      * character.
      */
     public String getHeaderString(String name) {
-        return HeaderUtils.asHeaderString(headers.get(name), RuntimeDelegate.getInstance());
+        return HeaderUtils.asHeaderString(headers.get(name), RuntimeDelegateDecorator.configured(configuration));
     }
 
     /**
@@ -269,7 +274,6 @@ public class OutboundMessageContext {
             return WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST;
         }
         final List<MediaType> result = new ArrayList<>(values.size());
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
         boolean conversionApplied = false;
         for (final Object value : values) {
             try {
@@ -279,7 +283,7 @@ public class OutboundMessageContext {
                     result.add(_value);
                 } else {
                     conversionApplied = true;
-                    result.addAll(HttpHeaderReader.readAcceptMediaType(HeaderUtils.asString(value, rd)));
+                    result.addAll(HttpHeaderReader.readAcceptMediaType(HeaderUtils.asString(value, configuration)));
                 }
             } catch (java.text.ParseException e) {
                 throw exception(HttpHeaders.ACCEPT, value, e);
@@ -311,7 +315,6 @@ public class OutboundMessageContext {
         }
 
         final List<Locale> result = new ArrayList<Locale>(values.size());
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
         boolean conversionApplied = false;
         for (final Object value : values) {
             if (value instanceof Locale) {
@@ -319,7 +322,7 @@ public class OutboundMessageContext {
             } else {
                 conversionApplied = true;
                 try {
-                    result.addAll(HttpHeaderReader.readAcceptLanguage(HeaderUtils.asString(value, rd))
+                    result.addAll(HttpHeaderReader.readAcceptLanguage(HeaderUtils.asString(value, configuration))
                                                   .stream()
                                                   .map(LanguageTag::getAsLocale)
                                                   .collect(Collectors.toList()));
@@ -352,7 +355,7 @@ public class OutboundMessageContext {
         }
 
         Map<String, Cookie> result = new HashMap<String, Cookie>();
-        for (String cookie : HeaderUtils.asStringList(cookies, RuntimeDelegate.getInstance())) {
+        for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
             if (cookie != null) {
                 result.putAll(HttpHeaderReader.readCookies(cookie));
             }
@@ -440,7 +443,7 @@ public class OutboundMessageContext {
         }
 
         Map<String, NewCookie> result = new HashMap<String, NewCookie>();
-        for (String cookie : HeaderUtils.asStringList(cookies, RuntimeDelegate.getInstance())) {
+        for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
             if (cookie != null) {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
                 result.put(newCookie.getName(), newCookie);
@@ -516,7 +519,6 @@ public class OutboundMessageContext {
         }
 
         final Set<Link> result = new HashSet<Link>(values.size());
-        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
         boolean conversionApplied = false;
         for (final Object value : values) {
             if (value instanceof Link) {
@@ -524,7 +526,7 @@ public class OutboundMessageContext {
             } else {
                 conversionApplied = true;
                 try {
-                    result.add(Link.valueOf(HeaderUtils.asString(value, rd)));
+                    result.add(Link.valueOf(HeaderUtils.asString(value, configuration)));
                 } catch (IllegalArgumentException e) {
                     throw exception(HttpHeaders.LINK, value, e);
                 }
@@ -841,5 +843,17 @@ public class OutboundMessageContext {
                 }
             }
         }
+    }
+
+    void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * The related client/server side {@link Configuration}. Can be {@code null}.
+     * @return {@link Configuration} the configuration
+     */
+    public Configuration getConfiguration() {
+        return configuration;
     }
 }

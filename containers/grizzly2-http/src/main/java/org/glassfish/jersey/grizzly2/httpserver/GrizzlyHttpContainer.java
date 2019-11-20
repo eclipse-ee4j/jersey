@@ -338,8 +338,11 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
             URI baseUri = getBaseUri(request);
             URI requestUri = getRequestUri(request);
             final ContainerRequest requestContext = new ContainerRequest(baseUri,
-                    requestUri, request.getMethod().getMethodString(),
-                    getSecurityContext(request), new GrizzlyRequestPropertiesDelegate(request));
+                    requestUri,
+                    request.getMethod().getMethodString(),
+                    getSecurityContext(request),
+                    new GrizzlyRequestPropertiesDelegate(request),
+                    appHandler.getConfiguration());
             requestContext.setEntityStream(request.getInputStream());
             for (final String headerName : request.getHeaderNames()) {
                 requestContext.headers(headerName, request.getHeaders(headerName));

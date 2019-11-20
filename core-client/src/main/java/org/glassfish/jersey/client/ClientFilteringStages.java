@@ -145,7 +145,7 @@ class ClientFilteringStages {
                     if (abortResponse != null) {
                         final ClientResponseMediaTypeDeterminer determiner = new ClientResponseMediaTypeDeterminer(
                                 requestContext.getWorkers());
-                        determiner.setResponseMediaTypeIfNotSet(abortResponse);
+                        determiner.setResponseMediaTypeIfNotSet(abortResponse, requestContext.getConfiguration());
                         throw new AbortException(new ClientResponse(requestContext, abortResponse));
                     }
                 } catch (IOException ex) {

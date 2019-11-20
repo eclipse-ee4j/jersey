@@ -251,9 +251,9 @@ class InvocationInterceptorStages {
                 exceptionContext.throwables.clear();
                 final ClientResponseMediaTypeDeterminer determiner = new ClientResponseMediaTypeDeterminer(
                         requestContext.clientRequest.getWorkers());
-                determiner.setResponseMediaTypeIfNotSet(exceptionContext.response);
-                final ClientResponse response = new ClientResponse(
-                        requestContext.clientRequest, exceptionContext.response);
+                determiner.setResponseMediaTypeIfNotSet(exceptionContext.response, requestContext.getConfiguration());
+
+                final ClientResponse response = new ClientResponse(requestContext.clientRequest, exceptionContext.response);
                 exceptionContext.responseContext = response;
                 exceptionContext.response = null;
                 return true;

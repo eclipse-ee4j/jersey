@@ -19,13 +19,10 @@ package org.glassfish.jersey.netty.httpserver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.security.Principal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
-
-import javax.ws.rs.core.SecurityContext;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -43,8 +40,8 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
-import org.glassfish.jersey.netty.httpserver.NettySecurityContext;
 import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 
 /**
@@ -58,16 +55,19 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
     private final URI baseUri;
     private final LinkedBlockingDeque<InputStream> isList = new LinkedBlockingDeque<>();
     private final NettyHttpContainer container;
+    private final ResourceConfig resourceConfig;
 
     /**
      * Constructor.
      *
      * @param baseUri   base {@link URI} of the container (includes context path, if any).
      * @param container Netty container implementation.
+     * @param resourceConfig  the application {@link ResourceConfig}
      */
-    public JerseyServerHandler(URI baseUri, NettyHttpContainer container) {
+    public JerseyServerHandler(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
         this.baseUri = baseUri;
         this.container = container;
+        this.resourceConfig = resourceConfig;
     }
 
     @Override
@@ -146,7 +146,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                     public void removeProperty(String name) {
                         properties.remove(name);
                     }
-                });
+                }, resourceConfig);
 
         // request entity handling.
         if ((req.headers().contains(HttpHeaderNames.CONTENT_LENGTH) && HttpUtil.getContentLength(req) > 0)

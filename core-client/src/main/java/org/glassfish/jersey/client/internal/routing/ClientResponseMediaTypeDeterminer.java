@@ -27,6 +27,7 @@ import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.InboundMessageContext;
 
 import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -58,17 +59,18 @@ public class ClientResponseMediaTypeDeterminer extends ContentTypeDeterminer {
      * Set the Response media type if not correctly set by the user. The media type is determined by the entity type
      * and provided MessageBodyWorkers.
      *
-     * @param response The response containing the HTTP headers, entity and that is eventually updated.
+     * @param response the response containing the HTTP headers, entity and that is eventually updated.
+     * @param configuration the runtime configuration settings.
      */
-    public void setResponseMediaTypeIfNotSet(final Response response) {
+    public void setResponseMediaTypeIfNotSet(final Response response, Configuration configuration)  {
         if (response.hasEntity() && response.getMediaType() == null) {
-            final InboundMessageContext headerContext = new InboundMessageContext() {
+            final InboundMessageContext headerContext = new InboundMessageContext(configuration) {
                 @Override
                 protected Iterable<ReaderInterceptor> getReaderInterceptors() {
                     return null;
                 }
             };
-            headerContext.headers(HeaderUtils.asStringHeaders(response.getHeaders()));
+            headerContext.headers(HeaderUtils.asStringHeaders(response.getHeaders(), configuration));
 
             final MediaType mediaType = determineResponseMediaType(response.getEntity(),
                     headerContext.getQualifiedAcceptableMediaTypes());

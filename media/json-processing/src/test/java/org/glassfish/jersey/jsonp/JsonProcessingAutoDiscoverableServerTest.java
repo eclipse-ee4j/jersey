@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -126,7 +126,8 @@ public class JsonProcessingAutoDiscoverableServerTest {
         final ApplicationHandler app = new ApplicationHandler(resourceConfig);
 
         final URI baseUri = URI.create("/");
-        assertEquals(response, app.apply(new ContainerRequest(baseUri, baseUri, "GET", null, new MapPropertiesDelegate())).get()
+        assertEquals(response, app.apply(new ContainerRequest(baseUri, baseUri, "GET", null,
+                new MapPropertiesDelegate(), resourceConfig)).get()
                 .getEntity());
     }
 }

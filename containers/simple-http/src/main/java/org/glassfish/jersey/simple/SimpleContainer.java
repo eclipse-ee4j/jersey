@@ -308,7 +308,7 @@ public final class SimpleContainer implements org.simpleframework.http.core.Cont
 
         try {
             final ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri,
-                    request.getMethod(), getSecurityContext(request), new MapPropertiesDelegate());
+                    request.getMethod(), getSecurityContext(request), new MapPropertiesDelegate(), appHandler.getConfiguration());
             requestContext.setEntityStream(request.getInputStream());
             for (final String headerName : request.getNames()) {
                 requestContext.headers(headerName, request.getValue(headerName));
