@@ -16,34 +16,25 @@
 
 package org.glassfish.jersey.client;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.glassfish.jersey.internal.inject.CalendarConverter;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.ReaderInterceptorContext;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
-
-import org.junit.Before;
-import org.junit.Test;
 import static java.util.Calendar.NOVEMBER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -137,7 +128,7 @@ public class JerseyWebTargetTest {
     @Test
     public void testResolveTemplate2() {
         final JerseyWebTarget newTarget = target.path("path/{a}").queryParam("query", "{q}").resolveTemplate("a", "param-a");
-        final JerseyUriBuilder uriBuilder = (JerseyUriBuilder) newTarget.getUriBuilder();
+        final UriBuilder uriBuilder = newTarget.getUriBuilder();
         uriBuilder.resolveTemplate("q", "param-q").resolveTemplate("a", "will-be-ignored");
         assertEquals(URI.create("/path/param-a?query=param-q"), uriBuilder.build());
 
@@ -159,11 +150,11 @@ public class JerseyWebTargetTest {
         assertEquals("/path/param-a/{b}?query=param-q", webTarget.getUriBuilder().toTemplate());
 
         // resolve b in UriBuilder
-        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), ((JerseyUriBuilder) webTarget.getUriBuilder())
+        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), webTarget.getUriBuilder()
                 .resolveTemplate("b", "param-b").build());
 
         // resolve in build method
-        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), ((JerseyUriBuilder) webTarget.getUriBuilder())
+        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), webTarget.getUriBuilder()
                 .build("param-b"));
     }
 
@@ -467,35 +458,6 @@ public class JerseyWebTargetTest {
         wt = wt.resolveTemplates(Collections.<String, Object>emptyMap(), false);
 
         assertEquals(target, wt);
-    }
-
-    private static class CalendarConverter implements ParamConverter<Calendar>, ParamConverterProvider {
-        private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-
-        @Override
-        public Calendar fromString(String value) {
-            try {
-                Date date = formatter.parse(value);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                return calendar;
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public String toString(Calendar calendar) {
-            return formatter.format(calendar.getTime());
-        }
-
-        @Override
-        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
-            if (Calendar.class.isAssignableFrom(rawType)) {
-                return (ParamConverter<T>) this;
-            }
-            return null;
-        }
     }
 }
 

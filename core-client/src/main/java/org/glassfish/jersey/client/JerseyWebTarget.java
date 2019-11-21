@@ -16,24 +16,19 @@
 
 package org.glassfish.jersey.client;
 
-import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
 
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
 
+import org.glassfish.jersey.internal.EncodedUriBuilder;
 import org.glassfish.jersey.internal.guava.Preconditions;
-import org.glassfish.jersey.internal.inject.ParamConverters.AggregatedProvider;
 
-import static java.util.stream.Stream.of;
+import static org.glassfish.jersey.internal.ParameterMarshaller.parameterMarshaller;
 
 /**
  * Jersey implementation of {@link javax.ws.rs.client.WebTarget JAX-RS client target}
@@ -43,8 +38,6 @@ import static java.util.stream.Stream.of;
  */
 public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializable<JerseyWebTarget> {
 
-    private static final Annotation[] NO_ANNOTATIONS = new Annotation[]{};
-    private static final ParamConverterProvider AGGREGATED_PROVIDER = new AggregatedProvider();
     private final ClientConfig config;
     private final UriBuilder targetUri;
 
@@ -108,7 +101,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     protected JerseyWebTarget(UriBuilder uriBuilder, ClientConfig clientConfig) {
         clientConfig.checkClient();
 
-        this.targetUri = uriBuilder;
+        this.targetUri = new EncodedUriBuilder(uriBuilder, parameterMarshaller(clientConfig));
         this.config = clientConfig.snapshot();
     }
 
@@ -150,13 +143,13 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         }
 
         checkForNullValues(name, values);
-        return new JerseyWebTarget(getUriBuilder().matrixParam(name, values(values)), this);
+        return new JerseyWebTarget(getUriBuilder().matrixParam(name, values), this);
     }
 
     @Override
     public JerseyWebTarget queryParam(String name, Object... values) throws NullPointerException {
         checkNotClosed();
-        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(getUriBuilder(), name, values(values)), this);
+        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(getUriBuilder(), name, values), this);
     }
 
     private static UriBuilder setQueryParam(UriBuilder uriBuilder, String name, Object[] values) {
@@ -193,39 +186,6 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
                     String.format("'null' %s detected for parameter '%s' on %s : %s",
                             valueTxt, name, indexTxt, indexes.toString()));
         }
-    }
-
-    private Object[] values(Object... objects) {
-        if (objects == null) {
-            return null;
-        }
-        return of(objects).map(asString()).toArray();
-    }
-
-    private Function<Object, Object> asString() {
-        return object -> {
-            if (object == null) {
-                return null;
-            }
-            ParamConverter paramConverter = getConfiguration()
-                    .getInstances()
-                    .stream()
-                    .filter(ParamConverterProvider.class::isInstance)
-                    .map(ParamConverterProvider.class::cast)
-                    .map(getParamConverter(object))
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .map(ParamConverter.class::cast)
-                    .orElse(AGGREGATED_PROVIDER.getConverter(object.getClass(), object.getClass(), NO_ANNOTATIONS));
-            if (paramConverter == null) {
-                return object;
-            }
-            return paramConverter.toString(object);
-        };
-    }
-
-    private static Function<ParamConverterProvider, ? extends ParamConverter<?>> getParamConverter(Object object) {
-        return provider -> provider.getConverter(object.getClass(), object.getClass(), NO_ANNOTATIONS);
     }
 
     @Override
