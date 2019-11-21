@@ -83,6 +83,18 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
     }
 
     /**
+     * Get an OutboundJaxrsResponse instance for a given JAX-RS response.
+     *
+     * @param response response instance to from.
+     * @return corresponding {@code OutboundJaxrsResponse} instance.
+     * @see #from(Response, Configuration)
+     */
+    @Deprecated
+    public static OutboundJaxrsResponse from(Response response) {
+        return from(response, (Configuration) null);
+    }
+
+    /**
      * Create new outbound JAX-RS response message instance.
      *
      * @param status  response status.
