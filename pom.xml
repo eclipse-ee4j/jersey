@@ -187,7 +187,7 @@
         </license>
         <license>
             <name>jQuery license</name>
-            <url>jquery.org/license</url>
+            <url>https://jquery.org/license</url>
             <distribution>repo</distribution>
             <comments>jQuery v1.12.4</comments>
         </license>
