@@ -31,12 +31,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static java.util.Arrays.asList;
+import static org.glassfish.jersey.client.proxy.MyId.myId;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -59,7 +64,12 @@ public class WebResourceFactoryTest extends JerseyTest {
         // mvn test -Djersey.config.test.container.factory=org.glassfish.jersey.test.simple.SimpleTestContainerFactory
         enable(TestProperties.LOG_TRAFFIC);
         //        enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(MyResource.class);
+        return new ResourceConfig(MyResource.class).register(MyIdParamConverter.class);
+    }
+
+    @Override
+    protected void configureClient(ClientConfig config) {
+        config.register(MyIdParamConverter.class);
     }
 
     @Override
@@ -81,21 +91,25 @@ public class WebResourceFactoryTest extends JerseyTest {
 
     @Test
     public void testPostIt() {
-        final MyBean bean = new MyBean();
-        bean.name = "Ahoj";
-        assertEquals("Ahoj", resource.postIt(Collections.singletonList(bean)).get(0).name);
+        final MyBean bean = new MyBean("Ahoj");
+        assertEquals("Ahoj", resource.postIt(Collections.singletonList(bean)).get(0).getName());
     }
 
     @Test
     public void testPostValid() {
-        final MyBean bean = new MyBean();
-        bean.name = "Ahoj";
-        assertEquals("Ahoj", resource.postValid(bean).name);
+        final MyBean bean = new MyBean("Ahoj");
+        assertEquals("Ahoj", resource.postValid(bean).getName());
     }
 
     @Test
-    public void testPathParam() {
-        assertEquals("jouda", resource.getId("jouda"));
+    public void testGetById() {
+        assertEquals(new MyBean("Ahoj"), resource.getById(myId("123")));
+    }
+
+    @Test
+    public void testGetByIds() {
+        assertArrayEquals(asList(new MyBean("Ahoj"), new MyBean("Got it!")).toArray(),
+                          resource.getByIds(asList(myId("123"), myId("456"))).toArray());
     }
 
     @Test
@@ -125,7 +139,7 @@ public class WebResourceFactoryTest extends JerseyTest {
 
     @Test
     public void testSubResource() {
-        assertEquals("Got it!", resource.getSubResource().getMyBean().name);
+        assertEquals("Got it!", resource.getSubResource().getMyBean().getName());
     }
 
     @Test

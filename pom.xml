@@ -1972,12 +1972,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.objenesis</groupId>
-                <artifactId>objenesis</artifactId>
-                <version>2.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>xmlunit</groupId>
                 <artifactId>xmlunit</artifactId>
                 <version>${xmlunit.version}</version>
