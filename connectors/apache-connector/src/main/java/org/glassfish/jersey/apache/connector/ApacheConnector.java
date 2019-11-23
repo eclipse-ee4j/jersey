@@ -515,7 +515,8 @@ class ApacheConnector implements Connector {
             }
 
             try {
-                responseContext.setEntityStream(getInputStream(response));
+                final ResponseClosingMechanism closingMechanism = new ResponseClosingMechanism(clientRequest);
+                responseContext.setEntityStream(getInputStream(response, closingMechanism));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -655,8 +656,8 @@ class ApacheConnector implements Connector {
         return stringHeaders;
     }
 
-    private static InputStream getInputStream(final CloseableHttpResponse response) throws IOException {
-
+    private static InputStream getInputStream(final CloseableHttpResponse response,
+                                              final ResponseClosingMechanism closingMechanism) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
@@ -670,18 +671,82 @@ class ApacheConnector implements Connector {
             }
         }
 
-        return new FilterInputStream(inputStream) {
-            @Override
-            public void close() throws IOException {
-                try {
-                    super.close();
-                } catch (IOException ex) {
-                    // Ignore
-                } finally {
-                    response.close();
+        return closingMechanism.getEntityStream(inputStream, response);
+    }
+
+    /*
+     * The way the Apache CloseableHttpResponse is to be closed.
+     * See https://github.com/eclipse-ee4j/jersey/issues/4321
+     * @see ApacheClientProperties#RESPONSE_CLOSING_STRATEGY
+     */
+    private final class ResponseClosingMechanism {
+        private ApacheClientProperties.ResponseClosingStrategy responseClosingStrategy = null;
+
+        ResponseClosingMechanism(ClientRequest clientRequest) {
+            Object closingStrategyProperty = clientRequest
+                    .resolveProperty(ApacheClientProperties.RESPONSE_CLOSING_STRATEGY, Object.class);
+            if (closingStrategyProperty != null) {
+                if (ApacheClientProperties.ResponseClosingStrategy.class.isInstance(closingStrategyProperty)) {
+                    responseClosingStrategy = (ApacheClientProperties.ResponseClosingStrategy) closingStrategyProperty;
+                } else if (String.class.isInstance(closingStrategyProperty)) {
+                    try {
+                        responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy
+                                .valueOf((String) closingStrategyProperty);
+                    } catch (Exception e) {
+                        // responseClosingStrategy not set
+                    }
+                }
+                if (responseClosingStrategy == null) {
+                    LOGGER.log(
+                            Level.WARNING,
+                            LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                    ApacheClientProperties.RESPONSE_CLOSING_STRATEGY,
+                                    closingStrategyProperty,
+                                    ApacheClientProperties.ResponseClosingStrategy.class.getName())
+                    );
                 }
             }
-        };
+
+            if (responseClosingStrategy == null) {
+                int readTimeout = clientRequest.resolveProperty(ClientProperties.READ_TIMEOUT, -1);
+                if (readTimeout > 0 || (vi.getRelease().compareTo("4.5") > 0)) {
+                    responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy.STREAM_RESPONSE;
+                } else {
+                    responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy.RESPONSE_STREAM;
+                }
+            }
+        }
+
+        private InputStream getEntityStream(final InputStream inputStream,
+                                            final CloseableHttpResponse response) {
+            InputStream filterStream = null;
+            switch (responseClosingStrategy) {
+                case STREAM_RESPONSE:
+                    filterStream = new FilterInputStream(inputStream) {
+                        @Override
+                        public void close() throws IOException {
+                            try {
+                                super.close();
+                            } catch (IOException ex) {
+                                // Ignore
+                            } finally {
+                                response.close();
+                            }
+                        }
+                    };
+                    break;
+                case RESPONSE_STREAM:
+                    filterStream = new FilterInputStream(inputStream) {
+                        @Override
+                        public void close() throws IOException {
+                            response.close();
+                            super.close();
+                        }
+                    };
+                    break;
+            }
+            return filterStream;
+        }
     }
 
     private static class ConnectionFactory extends ManagedHttpClientConnectionFactory {

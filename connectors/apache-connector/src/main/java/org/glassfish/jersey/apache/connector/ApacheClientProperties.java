@@ -156,6 +156,41 @@ public final class ApacheClientProperties {
      */
     public static final String KEEPALIVE_STRATEGY = "jersey.config.apache.client.keepAliveStrategy";
 
+
+    /**
+     * Strategy that defines the way the Apache connection releases resources. Apache enables closing the content stream
+     * and the response. This strategy settings allows for choosing the order.
+     * <pre>
+     *     The difference between closing the content stream and closing the response is that
+     *     the former will attempt to keep the underlying connection alive by consuming the
+     *     entity content while the latter immediately shuts down and discards the connection.
+     * </pre>
+     * While for using the Apache features it is better to close the entity stream first, and Apache response later,
+     * this order can cause the thread to hang, waiting for more data to be read from the socket. Using the
+     * {@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT} property can prevent this hanging forever.
+     * <p/>
+     * The default is to close the apache response and entity stream after ({@link ResponseClosingStrategy#RESPONSE_STREAM})
+     * for Apache HttpClient 4.5 or earlier, unless {@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT} is defined.
+     * For Apache HttpClient 4.5.1 or later, the default is to close entity stream and Apache response after
+     * (@link {@link ResponseClosingStrategy#STREAM_RESPONSE}. Since Apache Http 4.5.1 the way Apache closes the connection
+     * changed, and it does not work when using chunk transfer encoding, and {@code MalformedChunkCodingException} is thrown.
+     *
+     * @see ResponseClosingStrategy
+     * @since 2.30
+     */
+    public static final String RESPONSE_CLOSING_STRATEGY = "jersey.config.apache.client.responseClosingStrategy";
+
+    /**
+     * The strategy that defined the way the Response has been closed.
+     * {@link #STREAM_RESPONSE} was the default in 2.29,
+     * {@link #RESPONSE_STREAM} was the default pre 2.29.
+     * @see #RESPONSE_CLOSING_STRATEGY
+     */
+    public enum ResponseClosingStrategy {
+        STREAM_RESPONSE,
+        RESPONSE_STREAM;
+    }
+
     /**
      * Get the value of the specified property.
      *
