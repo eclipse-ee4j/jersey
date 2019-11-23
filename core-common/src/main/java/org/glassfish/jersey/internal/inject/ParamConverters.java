@@ -324,9 +324,10 @@ public class ParamConverters {
         @Override
         public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
             if (hasPathParam(annotations) && Collection.class.isAssignableFrom(rawType)) {
-                Class<Object> type = getType(genericType);
+                Class<T> type = getType(genericType);
                 if (type != null) {
-                    ParamConverter paramConverter = injectionManager.getAllInstances(ParamConverterProvider.class)
+                    ParamConverter<T> paramConverter = injectionManager
+                            .<T>getAllInstances(ParamConverterProvider.class)
                             .stream()
                             .filter(ParamConverterProvider.class::isInstance)
                             .filter(not(CollectionParamProvider.class::isInstance))
@@ -335,7 +336,7 @@ public class ParamConverters {
                             .filter(Objects::nonNull)
                             .findFirst()
                             .orElse(IDENTITY_CONVERTER);
-                    Supplier<Collection> collectionFactory = collectionSupplier(type);
+                    Supplier<Collection<T>> collectionFactory = collectionSupplier(type);
                     return new CollectionParamConverter(paramConverter, collectionFactory);
                 }
             }
@@ -358,7 +359,7 @@ public class ParamConverters {
             return null;
         }
 
-        private static <T> Supplier<Collection> collectionSupplier(Class<T> collectionType) {
+        private static <T> Supplier<Collection<T>> collectionSupplier(Class<T> collectionType) {
             if (Set.class.isAssignableFrom(collectionType)) {
                 return () -> new HashSet<T>();
             }
@@ -367,10 +368,10 @@ public class ParamConverters {
     }
 
     public static class CollectionParamConverter<T> implements ParamConverter<Collection<T>> {
-        private final ParamConverter paramConverter;
-        private final Supplier<Collection> collectionFactory;
+        private final ParamConverter<T> paramConverter;
+        private final Supplier<Collection<T>> collectionFactory;
 
-        public CollectionParamConverter(ParamConverter paramConverter, Supplier<Collection> collectionFactory) {
+        public CollectionParamConverter(ParamConverter<T> paramConverter, Supplier<Collection<T>> collectionFactory) {
             this.paramConverter = paramConverter;
             this.collectionFactory = collectionFactory;
         }
