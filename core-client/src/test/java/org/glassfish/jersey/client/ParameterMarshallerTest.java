@@ -6,8 +6,11 @@ import org.junit.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static java.util.Calendar.NOVEMBER;
+import static java.util.TimeZone.SHORT;
+import static java.util.TimeZone.getDefault;
 import static javax.ws.rs.client.ClientBuilder.newClient;
 import static org.glassfish.jersey.client.ParameterMarshaller.parameterMarshaller;
 import static org.junit.Assert.assertEquals;
@@ -37,10 +40,12 @@ public class ParameterMarshallerTest {
 
     @Test
     public void marshall_whenDateIsPassed() {
-        Date date = new GregorianCalendar(2019, NOVEMBER, 15).getTime();
+        GregorianCalendar calendar = new GregorianCalendar(2019, NOVEMBER, 15);
+        String timeZone = calendar.getTimeZone().getDisplayName(false, SHORT);
+        Date date = calendar.getTime();
         Object actual = parameterMarshaller(clientConfig).marshall(date);
 
-        assertEquals("Fri Nov 15 00:00:00 CET 2019", actual);
+        assertEquals("Fri Nov 15 00:00:00 " + timeZone + " 2019", actual);
     }
 
     @Test
