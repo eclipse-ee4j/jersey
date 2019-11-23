@@ -21,12 +21,26 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
@@ -36,6 +50,13 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.internal.LocalizationMessages;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.of;
+import static org.glassfish.jersey.internal.guava.Predicates.not;
 
 /**
  * Container of several different {@link ParamConverterProvider param converter providers}
@@ -47,6 +68,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  */
 @Singleton
 public class ParamConverters {
+    public static final ParamConverter IDENTITY_CONVERTER = new IdentityParamConverter();
 
     private abstract static class AbstractStringReader<T> implements ParamConverter<T> {
 
@@ -285,6 +307,113 @@ public class ParamConverters {
                 }
             }
             return null;
+        }
+    }
+
+    /**
+     * Aggregated {@link ParamConverterProvider param converter provider}.
+     */
+    @Singleton
+    public static class CollectionParamProvider<T> implements ParamConverterProvider {
+        private final InjectionManager injectionManager;
+
+        CollectionParamProvider(InjectionManager injectionManager) {
+            this.injectionManager = injectionManager;
+        }
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            if (hasPathParam(annotations) && Collection.class.isAssignableFrom(rawType)) {
+                Class<Object> type = getType(genericType);
+                if (type != null) {
+                    ParamConverter paramConverter = injectionManager.getAllInstances(ParamConverterProvider.class)
+                            .stream()
+                            .filter(ParamConverterProvider.class::isInstance)
+                            .filter(not(CollectionParamProvider.class::isInstance))
+                            .map(ParamConverterProvider.class::cast)
+                            .map(provider -> provider.getConverter(type, type, annotations))
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(IDENTITY_CONVERTER);
+                    Supplier<Collection> collectionFactory = collectionSupplier(type);
+                    return new CollectionParamConverter(paramConverter, collectionFactory);
+                }
+            }
+            return null;
+        }
+
+        private static boolean hasPathParam(Annotation[] annotations) {
+            for (Annotation annotation : annotations) {
+                if (annotation.annotationType().equals(PathParam.class)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static <T> Class<T> getType(Type genericType) {
+            if (ParameterizedType.class.isInstance(genericType)) {
+               return (Class<T>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+            }
+            return null;
+        }
+
+        private static <T> Supplier<Collection> collectionSupplier(Class<T> collectionType) {
+            if (Set.class.isAssignableFrom(collectionType)) {
+                return () -> new HashSet<T>();
+            }
+            return () -> new ArrayList<T>();
+        }
+    }
+
+    public static class CollectionParamConverter<T> implements ParamConverter<Collection<T>> {
+        private final ParamConverter paramConverter;
+        private final Supplier<Collection> collectionFactory;
+
+        public CollectionParamConverter(ParamConverter paramConverter, Supplier<Collection> collectionFactory) {
+            this.paramConverter = paramConverter;
+            this.collectionFactory = collectionFactory;
+        }
+
+        @Override
+        public Collection<T> fromString(String value) {
+            if (value.isEmpty()) {
+                return null;
+            }
+
+            return of(value.substring(1, value.length() - 1)
+                    .split(", "))
+                    .map(paramConverter::fromString)
+                    .collect(toCollection(collectionFactory));
+        }
+
+        @Override
+        public String toString(Collection<T> value) {
+            if (value.isEmpty()) {
+                return null;
+            }
+
+            return new StringBuilder("[")
+                    .append(value.stream()
+                                 .map(paramConverter::toString)
+                                 .collect(joining(", ")))
+                    .append("]")
+                    .toString();
+        }
+    }
+
+    @Singleton
+    private static class IdentityParamConverter implements ParamConverter<Object> {
+        private IdentityParamConverter() {}
+
+        @Override
+        public Object fromString(String value) {
+            return value;
+        }
+
+        @Override
+        public String toString(Object value) {
+            return (String) value;
         }
     }
 }

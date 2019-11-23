@@ -22,6 +22,8 @@ import javax.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 
+import static org.glassfish.jersey.internal.inject.Bindings.service;
+
 /**
  * Configurator which initializes and register {@link ParamConverters.AggregatedProvider} instances into {@link InjectionManager}.
  *
@@ -31,9 +33,12 @@ public class ParamConverterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        InstanceBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
-                Bindings.service(new ParamConverters.AggregatedProvider())
-                    .to(ParamConverterProvider.class);
-        injectionManager.register(aggregatedConverters);
+        register(injectionManager, new ParamConverters.AggregatedProvider());
+        register(injectionManager, new ParamConverters.CollectionParamProvider(injectionManager));
+    }
+
+    private static <P extends ParamConverterProvider> void register(InjectionManager injectionManager, P paramConverterProvider) {
+        InstanceBinding<P> binding = service(paramConverterProvider).to(ParamConverterProvider.class);
+        injectionManager.register(binding);
     }
 }
