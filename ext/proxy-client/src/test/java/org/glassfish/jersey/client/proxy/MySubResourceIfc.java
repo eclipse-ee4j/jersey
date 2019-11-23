@@ -27,5 +27,5 @@ import javax.ws.rs.core.MediaType;
 public interface MySubResourceIfc {
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    MyBean getMyBean();
+    public MyBean getMyBean();
 }

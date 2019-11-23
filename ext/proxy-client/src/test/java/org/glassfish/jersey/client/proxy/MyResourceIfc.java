@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.client.proxy;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -56,13 +55,8 @@ public interface MyResourceIfc {
 
     @Path("{id}")
     @GET
-    @Produces(MediaType.APPLICATION_XML)
-    MyBean getById(@PathParam("id") MyId id);
-
-    @Path("/getByIds/{ids}")
-    @GET
-    @Produces(MediaType.APPLICATION_XML)
-    List<MyBean> getByIds(@PathParam("ids") Collection<MyId> ids);
+    @Produces(MediaType.TEXT_PLAIN)
+    String getId(@PathParam("id") String id);
 
     @Path("query")
     @GET
@@ -88,6 +82,7 @@ public interface MyResourceIfc {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     String postByNameFormParam(@FormParam("form-name") String name);
+
 
     @Path("query-list")
     @GET

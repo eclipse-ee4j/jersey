@@ -16,44 +16,9 @@
 
 package org.glassfish.jersey.client.proxy;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Objects;
-
-import static org.glassfish.jersey.internal.guava.MoreObjects.toStringHelper;
 
 @XmlRootElement
 public class MyBean {
-    @XmlAttribute
-    private String name;
-
-    public MyBean() {}
-
-    public MyBean(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MyBean myBean = (MyBean) o;
-        return Objects.equals(name, myBean.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper(this)
-            .add("name", name)
-            .toString();
-    }
+    public String name;
 }
