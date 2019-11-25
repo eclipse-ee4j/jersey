@@ -188,14 +188,15 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     @Override
     public JerseyInvocation.Builder request() {
         checkNotClosed();
-        return new JerseyInvocation.Builder(getUri(), config.snapshot());
+        JerseyInvocation.Builder b = new JerseyInvocation.Builder(getUri(), config.snapshot());
+        return onBuilder(b);
     }
 
     @Override
     public JerseyInvocation.Builder request(String... acceptedResponseTypes) {
         checkNotClosed();
         JerseyInvocation.Builder b = new JerseyInvocation.Builder(getUri(), config.snapshot());
-        b.request().accept(acceptedResponseTypes);
+        onBuilder(b).request().accept(acceptedResponseTypes);
         return b;
     }
 
@@ -203,7 +204,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     public JerseyInvocation.Builder request(MediaType... acceptedResponseTypes) {
         checkNotClosed();
         JerseyInvocation.Builder b = new JerseyInvocation.Builder(getUri(), config.snapshot());
-        b.request().accept(acceptedResponseTypes);
+        onBuilder(b).request().accept(acceptedResponseTypes);
         return b;
     }
 
@@ -357,5 +358,10 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     @Override
     public String toString() {
         return "JerseyWebTarget { " + targetUri.toTemplate() + " }";
+    }
+
+    private static JerseyInvocation.Builder onBuilder(JerseyInvocation.Builder builder) {
+        new InvocationBuilderListenerStage(builder.request().getInjectionManager()).invokeListener(builder);
+        return builder;
     }
 }
