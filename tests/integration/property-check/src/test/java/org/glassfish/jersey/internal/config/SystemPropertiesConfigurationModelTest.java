@@ -18,13 +18,15 @@ import org.junit.Test;
 
 public class SystemPropertiesConfigurationModelTest {
 
+    private static final String ROOT_PACKAGE = "org.glassfish.jersey";
+
     @Test
     public void allPropertyClassLoaded() throws IOException {
         Predicate<Class<?>> containsAnnotation = clazz -> clazz.getAnnotation(PropertiesClass.class) != null
                 || clazz.getAnnotation(Property.class) != null;
         Predicate<Class<?>> notCommon = clazz -> clazz != CommonProperties.class;
         Predicate<Class<?>> notTestProperties = clazz -> clazz != TestProperties.class;
-        List<String> propertyClasses = getClassesWithPredicate("org.glassfish.jersey", notCommon, notTestProperties,
+        List<String> propertyClasses = getClassesWithPredicate(ROOT_PACKAGE, notCommon, notTestProperties,
                 containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
         propertyClasses.removeAll(SystemPropertiesConfigurationModel.PROPERTY_CLASSES);
         assertEquals("New properties have been found. "
@@ -35,14 +37,14 @@ public class SystemPropertiesConfigurationModelTest {
     private List<Class<?>> getClassesWithPredicate(String packageRoot, Predicate<Class<?>>... predicates)
             throws IOException {
         ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader());
-        Stream<Class<?>> steam = classpath.getTopLevelClassesRecursive(packageRoot).stream().map(classInfo -> {
-            try {
-                return Class.forName(classInfo.getName());
-            } catch (ClassNotFoundException e) {
-                // Ignore it
-                return Void.class;
-            }
-        });
+        Stream<Class<?>> steam = classpath.getTopLevelClassesRecursive(packageRoot).stream()
+                .filter(classInfo -> classInfo.getName().startsWith(packageRoot)).map(classInfo -> {
+                    try {
+                        return Class.forName(classInfo.getName());
+                    } catch (ClassNotFoundException e) {
+                        return Void.class;
+                    }
+                });
         for (Predicate<Class<?>> predicate : predicates) {
             steam = steam.filter(predicate);
         }
