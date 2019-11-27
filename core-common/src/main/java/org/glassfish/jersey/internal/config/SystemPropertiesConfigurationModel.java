@@ -16,29 +16,44 @@
 
 package org.glassfish.jersey.internal.config;
 
-import org.glassfish.jersey.CommonProperties;
-import org.glassfish.jersey.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.util.PropertiesHelper;
-import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.spi.ExternalConfigurationModel;
-
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import javax.ws.rs.RuntimeType;
+import javax.ws.rs.core.Feature;
+
+import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.spi.ExternalConfigurationModel;
+
 
 class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<Void> {
 
     private static final Logger log = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
+    static final List<String> PROPERTY_CLASSES = Arrays.asList(
+            "org.glassfish.jersey.server.ServerProperties", 
+            "org.glassfish.jersey.client.ClientProperties",
+            "org.glassfish.jersey.servlet.ServletProperties",
+            "org.glassfish.jersey.internal.InternalProperties",
+            "org.glassfish.jersey.message.MessageProperties",
+            "org.glassfish.jersey.server.internal.InternalServerProperties",
+            "org.glassfish.jersey.apache.connector.ApacheClientProperties",
+            "org.glassfish.jersey.jdk.connector.JdkConnectorProperties",
+            "org.glassfish.jersey.jetty.connector.JettyClientProperties",
+            "org.glassfish.jersey.media.multipart.MultiPartProperties",
+            "org.glassfish.jersey.server.oauth1.OAuth1ServerProperties");
 
 
     private static final Map<Class, Function> converters = new HashMap<>();
@@ -118,26 +133,16 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
     }
 
     private Map<String, Object> getExpectedSystemProperties() {
-
-
         final Map<String, Object> result = new HashMap<>();
-
+        
         mapFieldsToProperties(result, CommonProperties.class);
-
-
-
-        mapFieldsToProperties(result,
-                AccessController.doPrivileged(
-                        ReflectionHelper.classForNamePA("org.glassfish.jersey.server.ServerProperties")
-                )
-        );
-
-        mapFieldsToProperties(result,
-                AccessController.doPrivileged(
-                        ReflectionHelper.classForNamePA("org.glassfish.jersey.client.ClientProperties")
-                )
-        );
-
+        for(String propertyClass : PROPERTY_CLASSES) {
+            mapFieldsToProperties(result,
+                    AccessController.doPrivileged(
+                            ReflectionHelper.classForNamePA(propertyClass)
+                    )
+            );
+        }
 
         return  result;
     }
