@@ -133,7 +133,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
     }
 
     private Map<String, Object> getExpectedSystemProperties() {
-        final Map<String, Object> result = new HashMap<>();        
+        final Map<String, Object> result = new HashMap<>();
         mapFieldsToProperties(result, CommonProperties.class);
         for (String propertyClass : PROPERTY_CLASSES) {
             mapFieldsToProperties(result,
