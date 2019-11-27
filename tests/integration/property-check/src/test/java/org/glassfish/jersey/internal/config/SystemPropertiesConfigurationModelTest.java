@@ -39,7 +39,8 @@ public class SystemPropertiesConfigurationModelTest {
             try {
                 return Class.forName(classInfo.getName());
             } catch (ClassNotFoundException e) {
-                return null;
+                // Ignore it
+                return Void.class;
             }
         });
         for (Predicate<Class<?>> predicate : predicates) {
