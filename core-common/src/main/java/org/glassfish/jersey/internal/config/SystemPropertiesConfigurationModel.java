@@ -43,7 +43,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     private static final Logger log = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
     static final List<String> PROPERTY_CLASSES = Arrays.asList(
-            "org.glassfish.jersey.server.ServerProperties", 
+            "org.glassfish.jersey.server.ServerProperties",
             "org.glassfish.jersey.client.ClientProperties",
             "org.glassfish.jersey.servlet.ServletProperties",
             "org.glassfish.jersey.internal.InternalProperties",
@@ -133,10 +133,9 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
     }
 
     private Map<String, Object> getExpectedSystemProperties() {
-        final Map<String, Object> result = new HashMap<>();
-        
+        final Map<String, Object> result = new HashMap<>();        
         mapFieldsToProperties(result, CommonProperties.class);
-        for(String propertyClass : PROPERTY_CLASSES) {
+        for (String propertyClass : PROPERTY_CLASSES) {
             mapFieldsToProperties(result,
                     AccessController.doPrivileged(
                             ReflectionHelper.classForNamePA(propertyClass)

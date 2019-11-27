@@ -40,7 +40,7 @@ public class SystemPropertiesConfigurationModelTest {
                         return null;
                     }
                 });
-        for(Predicate<Class<?>> predicate : predicates) {
+        for (Predicate<Class<?>> predicate : predicates) {
             steam = steam.filter(predicate);
         }
         return steam.collect(Collectors.toList());
