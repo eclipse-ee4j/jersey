@@ -38,7 +38,7 @@ public class SystemPropertiesConfigurationModelTest {
             throws IOException {
         ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader());
         Stream<Class<?>> steam = classpath.getTopLevelClassesRecursive(packageRoot).stream()
-                .filter(classInfo -> classInfo.getName().startsWith(packageRoot)).map(classInfo -> {
+                .map(classInfo -> {
                     try {
                         return Class.forName(classInfo.getName());
                     } catch (ClassNotFoundException e) {
