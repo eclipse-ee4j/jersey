@@ -46,7 +46,7 @@ import io.netty.handler.codec.http.LastHttpContent;
 /**
  * Netty implementation of {@link ContainerResponseWriter}.
  *
- * @author Pavel Bucek
+ * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 class NettyResponseWriter implements ContainerResponseWriter {
 
@@ -119,7 +119,11 @@ class NettyResponseWriter implements ContainerResponseWriter {
 
             JerseyChunkedInput jerseyChunkedInput = new JerseyChunkedInput(ctx.channel());
 
-            ctx.write(new HttpChunkedInput(jerseyChunkedInput)).addListener(FLUSH_FUTURE);
+            if (HttpUtil.isTransferEncodingChunked(response)) {
+                ctx.writeAndFlush(new HttpChunkedInput(jerseyChunkedInput));
+            } else {
+                ctx.write(new HttpChunkedInput(jerseyChunkedInput)).addListener(FLUSH_FUTURE);
+            }
             return jerseyChunkedInput;
 
         } else {

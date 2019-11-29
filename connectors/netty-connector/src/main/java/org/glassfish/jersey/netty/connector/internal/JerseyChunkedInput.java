@@ -42,10 +42,9 @@ import io.netty.handler.stream.ChunkedInput;
 public class JerseyChunkedInput extends OutputStream implements ChunkedInput<ByteBuf>, ChannelFutureListener {
 
     private static final ByteBuffer VOID = ByteBuffer.allocate(0);
-    private static final int CAPACITY = 8;
-    // TODO this needs to be configurable, see JERSEY-3228
-    private static final int WRITE_TIMEOUT = 10000;
-    private static final int READ_TIMEOUT = 10000;
+    private static final int CAPACITY = Integer.getInteger("jersey.ci.capacity", 8);
+    private static final int WRITE_TIMEOUT = Integer.getInteger("jersey.ci.read.timeout", 10000);
+    private static final int READ_TIMEOUT = Integer.getInteger("jersey.ci.write.timeout", 10000);
 
     private final LinkedBlockingDeque<ByteBuffer> queue = new LinkedBlockingDeque<>(CAPACITY);
     private final Channel ctx;
