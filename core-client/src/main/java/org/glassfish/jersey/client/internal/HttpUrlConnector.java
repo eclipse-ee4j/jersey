@@ -299,11 +299,34 @@ public class HttpUrlConnector implements Connector {
                 suc.setHostnameVerifier(verifier);
             }
 
-            if (HttpsURLConnection.getDefaultSSLSocketFactory() == suc.getSSLSocketFactory()) {
+            if (isDefaultSSLSocketFactory(suc)) {
                 // indicates that the custom socket factory was not set
                 suc.setSSLSocketFactory(sslSocketFactory.get());
             }
         }
+    }
+
+    static boolean isDefaultSSLSocketFactory(HttpsURLConnection suc) {
+        final boolean fastCheck = HttpsURLConnection.getDefaultSSLSocketFactory() == suc.getSSLSocketFactory();
+        if (fastCheck) {
+            return true;
+        }
+        final Object defaultContext = getContextObject(HttpsURLConnection.getDefaultSSLSocketFactory());
+        if (defaultContext == null) {
+            return false;
+        }
+        final Object sucContext = getContextObject(suc.getSSLSocketFactory());
+        return defaultContext == sucContext;
+    }
+
+    static Object getContextObject(SSLSocketFactory sslSocketFactory) {
+        try {
+            final Field contextField = sslSocketFactory.getClass().getField("context");
+            contextField.setAccessible(true);
+            return contextField.get(sslSocketFactory);
+        } catch (NoSuchFieldException | IllegalAccessException ignore) {
+        }
+        return null;
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
