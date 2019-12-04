@@ -35,10 +35,10 @@
     
     <properties>
         <java.sourceDirectory>${project.basedir}/src/main/java</java.sourceDirectory>
-        <java8_12.build.outputDirectory>${project.basedir}/target-java8_12</java8_12.build.outputDirectory>
-        <java8_12.sourceDirectory>${project.basedir}/src/main/java8_12</java8_12.sourceDirectory>
-        <java13.build.outputDirectory>${project.basedir}/target-java13</java13.build.outputDirectory>
-        <java13.sourceDirectory>${project.basedir}/src/main/java13</java13.sourceDirectory>
+        <java8_11.build.outputDirectory>${project.basedir}/target-java8_11</java8_11.build.outputDirectory>
+        <java8_11.sourceDirectory>${project.basedir}/src/main/java8_11</java8_11.sourceDirectory>
+        <java12.build.outputDirectory>${project.basedir}/target-java12</java12.build.outputDirectory>
+        <java12.sourceDirectory>${project.basedir}/src/main/java12</java12.sourceDirectory>
     </properties>
 
 
@@ -74,12 +74,12 @@
             </dependencies>
         </profile>
         <profile>
-            <id>jdk1.8_12</id>
+            <id>jdk1.8_11</id>
             <activation>
-                <jdk>[1.8,12]</jdk>
+                <jdk>[1.8,12)</jdk>
             </activation>
             <build>
-            	<directory>${java8_12.build.outputDirectory}</directory>
+            	<directory>${java8_11.build.outputDirectory}</directory>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -93,7 +93,7 @@
                                 <configuration>
                                     <sources>
                                         <source>${java.sourceDirectory}</source>
-                                        <source>${java8_12.sourceDirectory}</source>
+                                        <source>${java8_11.sourceDirectory}</source>
                                     </sources>
                                 </configuration>
                             </execution>
@@ -103,12 +103,12 @@
             </build>
         </profile>
         <profile>
-            <id>jdk13+</id>
+            <id>jdk12+</id>
             <activation>
-                <jdk>[13,)</jdk>
+                <jdk>[12,)</jdk>
             </activation>
             <build>
-            	<directory>${java13.build.outputDirectory}</directory>
+            	<directory>${java12.build.outputDirectory}</directory>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -122,7 +122,7 @@
                                 <configuration>
                                     <sources>
                                         <source>${java.sourceDirectory}</source>
-                                        <source>${java13.sourceDirectory}</source>
+                                        <source>${java12.sourceDirectory}</source>
                                     </sources>
                                 </configuration>
                             </execution>
