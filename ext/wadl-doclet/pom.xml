@@ -32,6 +32,14 @@
         of resource classes, so that this can be used for extending generated wadl with useful
         documentation.
     </description>
+    
+    <properties>
+        <java.sourceDirectory>${project.basedir}/src/main/java</java.sourceDirectory>
+        <java8_12.build.outputDirectory>${project.basedir}/target-java8_12</java8_12.build.outputDirectory>
+        <java8_12.sourceDirectory>${project.basedir}/src/main/java8_12</java8_12.sourceDirectory>
+        <java13.build.outputDirectory>${project.basedir}/target-java13</java13.build.outputDirectory>
+        <java13.sourceDirectory>${project.basedir}/src/main/java13</java13.sourceDirectory>
+    </properties>
 
 
     <profiles>
@@ -51,9 +59,9 @@
             </dependencies>
         </profile>
         <profile>
-            <id>jdk1.8</id>
+            <id>jdk1.8_12</id>
             <activation>
-                <jdk>1.8</jdk>
+                <jdk>[1.8,12]</jdk>
             </activation>
             <dependencies>
                 <dependency>
@@ -64,6 +72,58 @@
                     <systemPath>${java.home}/../lib/tools.jar</systemPath>
                 </dependency>
             </dependencies>
+            <build>
+            	<directory>${java8_12.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java.sourceDirectory}</source>
+                                        <source>${java8_12.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk13+</id>
+            <activation>
+                <jdk>[13,)</jdk>
+            </activation>
+            <build>
+            	<directory>${java13.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                        	<execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java.sourceDirectory}</source>
+                                        <source>${java13.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>tools.jar</id>
@@ -105,4 +165,5 @@
             </resource>
         </resources>
     </build>
+    
 </project>
