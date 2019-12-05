@@ -388,39 +388,9 @@ public class ResourceDoclet {
 
         /* Get referenced example bean
          */
+        
         final ClassDoc containingClass = referencedMember.containingClass();
-        final Object object;
-        try {
-            final Field declaredField = Class.forName(containingClass.qualifiedName(), false, Thread.currentThread()
-                    .getContextClassLoader()).getDeclaredField(referencedMember.name());
-            if (referencedMember.isFinal()) {
-                declaredField.setAccessible(true);
-            }
-            object = declaredField.get(null);
-            LOG.log(Level.FINE, "Got object " + object);
-        } catch (final Exception e) {
-            LOG.info("Have classloader: " + ResourceDoclet.class.getClassLoader().getClass());
-            LOG.info("Have thread classloader " + Thread.currentThread().getContextClassLoader().getClass());
-            LOG.info("Have system classloader " + ClassLoader.getSystemClassLoader().getClass());
-            LOG.log(Level.SEVERE, "Could not get field " + referencedMember.qualifiedName(), e);
-            return null;
-        }
-
-        /* marshal the bean to xml
-         */
-        try {
-            final JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
-            final StringWriter stringWriter = new StringWriter();
-            final Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(object, stringWriter);
-            final String result = stringWriter.getBuffer().toString();
-            LOG.log(Level.FINE, "Got marshalled output:\n" + result);
-            return result;
-        } catch (final Exception e) {
-            LOG.log(Level.SEVERE, "Could serialize bean to xml: " + object, e);
-            return null;
-        }
+        return DocletUtils.getLinkClass(containingClass.qualifiedName(), referencedMember.name());
     }
 
     private static String print(final Tag tag) {

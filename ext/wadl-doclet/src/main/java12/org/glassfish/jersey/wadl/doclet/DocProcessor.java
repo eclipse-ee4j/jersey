@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,6 @@ import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.Pa
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.ExecutableElement;
-import com.sun.source.doctree.ParamTree;
 import javax.lang.model.element.VariableElement;
 
 /**
@@ -55,7 +54,7 @@ public interface DocProcessor {
 
     /**
      * Use this method to extend the provided {@link ClassDocType} with the information from
-     * the given {@link ClassDoc}.
+     * the given {@link TypeElement}.
      *
      * @param classDoc     the class javadoc
      * @param classDocType the {@link ClassDocType} to extend. This will later be processed by the
@@ -65,9 +64,8 @@ public interface DocProcessor {
 
     /**
      * Process the provided methodDoc and add your custom information to the methodDocType.<br>
-     * Use e.g. {@link MethodDocType#getAny()} to store custom elements.
      *
-     * @param methodDoc     the {@link MethodDoc} representing the docs of your method.
+     * @param methodDoc     the {@link ExecutableElement} representing the docs of your method.
      * @param methodDocType the related {@link MethodDocType} that will later be processed by the
      *                      {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
      */
@@ -77,11 +75,10 @@ public interface DocProcessor {
      * Use this method to extend the provided {@link ParamDocType} with the information from the
      * given {@link ParamTag} and {@link Parameter}.
      *
-     * @param paramTag     the parameter javadoc
      * @param parameter    the parameter (that is documented or not)
      * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
      */
-    void processParamTag(ParamTree paramTag, VariableElement parameter, ParamDocType paramDocType);
+    void processParamTag(VariableElement parameter, ParamDocType paramDocType);
 
 }

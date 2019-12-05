@@ -22,7 +22,9 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -119,6 +121,39 @@ class DocletUtils {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Could not serialize ResourceDoc.", e);
             return false;
+        }
+    }
+
+    static String getLinkClass(String className, String field) {
+        Object object;
+        try {
+            Field declaredField = Class.forName(className, false, Thread.currentThread()
+                    .getContextClassLoader()).getDeclaredField(field);
+            declaredField.setAccessible(true);
+            object = declaredField.get(null);
+            LOG.log(Level.FINE, "Got object " + object);
+        } catch (final Exception e) {
+            LOG.info("Have classloader: " + ResourceDoclet.class.getClassLoader().getClass());
+            LOG.info("Have thread classloader " + Thread.currentThread().getContextClassLoader().getClass());
+            LOG.info("Have system classloader " + ClassLoader.getSystemClassLoader().getClass());
+            LOG.log(Level.SEVERE, "Could not get field " + className, e);
+            return null;
+        }
+
+        /* marshal the bean to xml
+         */
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
+            StringWriter stringWriter = new StringWriter();
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(object, stringWriter);
+            String result = stringWriter.getBuffer().toString();
+            LOG.log(Level.FINE, "Got marshalled output:\n" + result);
+            return result;
+        } catch (final Exception e) {
+            LOG.log(Level.SEVERE, "Could serialize bean to xml: " + object, e);
+            return null;
         }
     }
 

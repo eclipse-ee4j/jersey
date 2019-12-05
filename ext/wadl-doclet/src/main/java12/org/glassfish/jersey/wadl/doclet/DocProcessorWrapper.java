@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,11 +29,6 @@ import javax.lang.model.element.ExecutableElement;
 import com.sun.source.doctree.ParamTree;
 import javax.lang.model.element.VariableElement;
 
-/**
- * This {@link DocProcessor} wraps multiple {@code DocProcessor}s.
- *
- * @author Martin Grotzke (martin.grotzke at freiheit.com)
- */
 public class DocProcessorWrapper implements DocProcessor {
 
     private final List<DocProcessor> _docProcessors;
@@ -94,10 +89,10 @@ public class DocProcessorWrapper implements DocProcessor {
     }
 
     @Override
-    public void processParamTag(ParamTree paramTag, VariableElement parameter,
+    public void processParamTag(VariableElement parameter,
                                 ParamDocType paramDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processParamTag(paramTag, parameter, paramDocType);
+            docProcessor.processParamTag(parameter, paramDocType);
         }
     }
 

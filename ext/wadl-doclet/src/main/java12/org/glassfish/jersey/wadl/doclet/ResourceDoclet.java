@@ -114,7 +114,6 @@ public class ResourceDoclet implements Doclet {
         Map<DocTree.Kind, Map<String, String>> tags = new HashMap<>();
         if (docCommentTree != null) {
             for (DocTree tag : docCommentTree.getBlockTags()) {
-//                System.out.println(tag.getKind() + ": " + tag);
                 Map<String, String> tagsInKind = tags.get(tag.getKind());
                 if (tagsInKind == null) {
                     tagsInKind = new HashMap<>();
@@ -181,10 +180,10 @@ public class ResourceDoclet implements Doclet {
                         Map<String, String> paramTags = tags.get(DocTree.Kind.PARAM);
                         for (VariableElement parameter : method.getParameters()) {
                             ParamDocType paramDocType = buildParamDocType(parameter, paramTags);
-                            if (paramDocType != null) {
                             arguments.append(parameter.asType()).append(COMA);
-                            methodDocType.getParamDocs().add(paramDocType);
-//                            docProcessor.processParamTag(paramTag, parameter, paramDocType);
+                            if (paramDocType != null) {
+                                methodDocType.getParamDocs().add(paramDocType);
+                                docProcessor.processParamTag(parameter, paramDocType);
                             }
                         }
                         // Remove last comma if there are parameters
@@ -294,7 +293,6 @@ public class ResourceDoclet implements Doclet {
                     long httpCode = Long.parseLong(keySplit[2]);
                     RepresentationDocType representationDoc = groupedRepresentationDocType.get(httpCode);
                     if (representationDoc == null) {
-                        System.out.println("HTTP code: " + httpCode);
                         representationDoc = new RepresentationDocType();
                         representationDoc.setStatus(httpCode);
                         groupedRepresentationDocType.put(httpCode, representationDoc);
@@ -304,7 +302,7 @@ public class ResourceDoclet implements Doclet {
                     } else if ("mediaType".equals(keySplit[3])) {
                         representationDoc.setMediaType(entry.getValue());
                     } else if ("example".equals(getSerializedExample(keySplit[3]))) {
-                        representationDoc.setExample(entry.getValue());
+                        representationDoc.setExample(getSerializedExample(entry.getValue()));
                     } else if ("doc".equals(keySplit[3])) {
                         representationDoc.setDoc(entry.getValue());
                     } else {
@@ -334,26 +332,22 @@ public class ResourceDoclet implements Doclet {
 
     private String getSerializedExample(String tag) {
         if (tag != null) {
-            System.out.println("Analyze: " + tag);
             Matcher matcher = PATTERN_INLINE_TAG.matcher(tag);
-            if (matcher.matches()) {
-                while (matcher.find()) {
-                    String group = matcher.group();
-                    System.out.println("Group: " + group);
-                    String[] pair = getTagPair(group);
-                    if ("link".equals(pair[0])) {
-//                        final SeeTree linkTag = (SeeTree) inlineTag;
-                        // TODO
-                        return pair[1];
-                    } else {
-                        return pair[1];
-                    }
+            System.out.println("Processing tag: " + tag);
+            while (matcher.find()) {
+                String group = matcher.group();
+                String[] pair = getTagPair(group);
+                if ("link".equals(pair[0])) {
+                    System.out.println("It is link");
+                    String[] classAndField = pair[1].split("#");
+                    return DocletUtils.getLinkClass(classAndField[0], classAndField[1]);
+                } else {
+                    System.out.println("It is not link");
+                    return pair[1];
                 }
-            } else {
-                return tag;
             }
         }
-        return null;
+        return tag;
     }
 
 }
