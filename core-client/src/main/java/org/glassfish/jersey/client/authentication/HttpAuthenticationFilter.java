@@ -42,6 +42,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
@@ -88,6 +89,7 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
 
     private final DigestAuthenticator digestAuth;
     private final BasicAuthenticator basicAuth;
+    private final boolean cacheOnly2xx;
 
     private static final int MAXIMUM_DIGEST_CACHE_SIZE = 10000;
 
@@ -118,6 +120,8 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
             }
         });
 
+        cacheOnly2xx = configuration.getProperty(HttpAuthenticationFeature.HTTP_AUTHENTICATION_CACHE_ONLY_2XX) == Boolean.TRUE;
+        boolean validateChallenge = configuration.getProperty(HttpAuthenticationFeature.HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE) == Boolean.TRUE;
         this.mode = mode;
         switch (mode) {
             case BASIC_PREEMPTIVE:
@@ -127,11 +131,11 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
                 break;
             case DIGEST:
                 this.basicAuth = null;
-                this.digestAuth = new DigestAuthenticator(digestCredentials, limit);
+                this.digestAuth = new DigestAuthenticator(digestCredentials, limit, cacheOnly2xx, validateChallenge);
                 break;
             case UNIVERSAL:
                 this.basicAuth = new BasicAuthenticator(basicCredentials);
-                this.digestAuth = new DigestAuthenticator(digestCredentials, limit);
+                this.digestAuth = new DigestAuthenticator(digestCredentials, limit, cacheOnly2xx, validateChallenge);
                 break;
             default:
                 throw new IllegalStateException("Not implemented.");
@@ -245,6 +249,9 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
                     success = basicAuth.filterResponseAndAuthenticate(request, response);
                 } else if (result == Type.DIGEST) {
                     success = digestAuth.filterResponse(request, response);
+                }
+                if (cacheOnly2xx) {
+                    success = response.getStatusInfo().getFamily() == Family.SUCCESSFUL;
                 }
                 updateCache(request, success, result);
             }

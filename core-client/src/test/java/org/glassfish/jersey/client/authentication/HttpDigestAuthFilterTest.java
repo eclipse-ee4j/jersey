@@ -33,7 +33,7 @@ public class HttpDigestAuthFilterTest {
 
     @Test
     public void testParseHeaders1() throws Exception { // no digest scheme
-        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000);
+        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000, false, false);
         final Method method = DigestAuthenticator.class.getDeclaredMethod("parseAuthHeaders", List.class);
         method.setAccessible(true);
         final DigestScheme ds = (DigestScheme) method.invoke(f,
@@ -47,7 +47,7 @@ public class HttpDigestAuthFilterTest {
 
     @Test
     public void testParseHeaders2() throws Exception { // Two concurrent schemes
-        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000);
+        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000, false, false);
         final Method method = DigestAuthenticator.class.getDeclaredMethod("parseAuthHeaders", List.class);
         method.setAccessible(true);
         final DigestScheme ds = (DigestScheme) method.invoke(f,
@@ -62,7 +62,7 @@ public class HttpDigestAuthFilterTest {
 
     @Test
     public void testParseHeaders3() throws Exception { // Complex case, with comma inside value
-        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000);
+        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000, false, false);
         final Method method = DigestAuthenticator.class.getDeclaredMethod("parseAuthHeaders", List.class);
         method.setAccessible(true);
         final DigestScheme ds = (DigestScheme) method.invoke(f,
@@ -77,7 +77,7 @@ public class HttpDigestAuthFilterTest {
 
     @Test
     public void testParseHeaders4() throws Exception { // Spaces
-        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000);
+        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000, false, false);
         final Method method = DigestAuthenticator.class.getDeclaredMethod("parseAuthHeaders", List.class);
         method.setAccessible(true);
         final DigestScheme ds = (DigestScheme) method.invoke(f,
@@ -93,7 +93,7 @@ public class HttpDigestAuthFilterTest {
 
     @Test
     public void testParseHeaders5() throws Exception { // Mix of quotes and  non-quotes
-        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000);
+        final DigestAuthenticator f = new DigestAuthenticator(new HttpAuthenticationFilter.Credentials("foo", "bar"), 10000, false, false);
         final Method method = DigestAuthenticator.class.getDeclaredMethod("parseAuthHeaders", List.class);
         method.setAccessible(true);
         final DigestScheme ds = (DigestScheme) method.invoke(f,
