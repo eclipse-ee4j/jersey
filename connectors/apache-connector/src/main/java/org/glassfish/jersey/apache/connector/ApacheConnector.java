@@ -26,14 +26,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -173,7 +174,6 @@ import org.apache.http.util.VersionInfo;
 class ApacheConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(ApacheConnector.class.getName());
-
     private static final VersionInfo vi;
     private static final String release;
 
@@ -325,14 +325,16 @@ class ApacheConnector implements Connector {
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
 
-        Optional<Object> contract = config.getInstances().stream()
-                .filter(a -> ApacheHttpClientBuilderConfigurator.class.isInstance(a)).findFirst();
+        LinkedList<Object> contracts = config.getInstances().stream()
+                .filter(ApacheHttpClientBuilderConfigurator.class::isInstance)
+                .collect(Collectors.toCollection(LinkedList::new));
 
-        final HttpClientBuilder configuredBuilder = contract.isPresent()
-                ? ((ApacheHttpClientBuilderConfigurator) contract.get()).configure(clientBuilder)
-                : null;
+        HttpClientBuilder configuredBuilder = clientBuilder;
+        for (Object configurator : contracts) {
+            configuredBuilder = ((ApacheHttpClientBuilderConfigurator) configurator).configure(configuredBuilder);
+        }
 
-        this.client = configuredBuilder != null ? configuredBuilder.build() : clientBuilder.build();
+        this.client = configuredBuilder.build();
     }
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
@@ -515,7 +517,7 @@ class ApacheConnector implements Connector {
             }
 
             try {
-                final ResponseClosingMechanism closingMechanism = new ResponseClosingMechanism(clientRequest);
+                final ConnectionClosingMechanism closingMechanism = new ConnectionClosingMechanism(clientRequest, request);
                 responseContext.setEntityStream(getInputStream(response, closingMechanism));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
@@ -657,7 +659,7 @@ class ApacheConnector implements Connector {
     }
 
     private static InputStream getInputStream(final CloseableHttpResponse response,
-                                              final ResponseClosingMechanism closingMechanism) throws IOException {
+                                              final ConnectionClosingMechanism closingMechanism) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
@@ -674,77 +676,52 @@ class ApacheConnector implements Connector {
         return closingMechanism.getEntityStream(inputStream, response);
     }
 
-    /*
+    /**
      * The way the Apache CloseableHttpResponse is to be closed.
      * See https://github.com/eclipse-ee4j/jersey/issues/4321
-     * @see ApacheClientProperties#RESPONSE_CLOSING_STRATEGY
+     * {@link ApacheClientProperties#CONNECTION_CLOSING_STRATEGY}
      */
-    private final class ResponseClosingMechanism {
-        private ApacheClientProperties.ResponseClosingStrategy responseClosingStrategy = null;
+    private final class ConnectionClosingMechanism {
+        private ApacheConnectionClosingStrategy connectionClosingStrategy = null;
+        private final ClientRequest clientRequest;
+        private final HttpUriRequest apacheRequest;
 
-        ResponseClosingMechanism(ClientRequest clientRequest) {
+        private ConnectionClosingMechanism(ClientRequest clientRequest, HttpUriRequest apacheRequest) {
+            this.clientRequest = clientRequest;
+            this.apacheRequest = apacheRequest;
             Object closingStrategyProperty = clientRequest
-                    .resolveProperty(ApacheClientProperties.RESPONSE_CLOSING_STRATEGY, Object.class);
+                    .resolveProperty(ApacheClientProperties.CONNECTION_CLOSING_STRATEGY, Object.class);
             if (closingStrategyProperty != null) {
-                if (ApacheClientProperties.ResponseClosingStrategy.class.isInstance(closingStrategyProperty)) {
-                    responseClosingStrategy = (ApacheClientProperties.ResponseClosingStrategy) closingStrategyProperty;
-                } else if (String.class.isInstance(closingStrategyProperty)) {
-                    try {
-                        responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy
-                                .valueOf((String) closingStrategyProperty);
-                    } catch (Exception e) {
-                        // responseClosingStrategy not set
-                    }
-                }
-                if (responseClosingStrategy == null) {
+                if (ApacheConnectionClosingStrategy.class.isInstance(closingStrategyProperty)) {
+                    connectionClosingStrategy = (ApacheConnectionClosingStrategy) closingStrategyProperty;
+                } else {
                     LOGGER.log(
                             Level.WARNING,
                             LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
-                                    ApacheClientProperties.RESPONSE_CLOSING_STRATEGY,
+                                    ApacheClientProperties.CONNECTION_CLOSING_STRATEGY,
                                     closingStrategyProperty,
-                                    ApacheClientProperties.ResponseClosingStrategy.class.getName())
+                                    ApacheConnectionClosingStrategy.class.getName())
                     );
                 }
             }
 
-            if (responseClosingStrategy == null) {
-                int readTimeout = clientRequest.resolveProperty(ClientProperties.READ_TIMEOUT, -1);
-                if (readTimeout > 0 || (vi.getRelease().compareTo("4.5") > 0)) {
-                    responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy.STREAM_RESPONSE;
+            if (connectionClosingStrategy == null) {
+                if (vi.getRelease().compareTo("4.5") > 0) {
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.GracefulClosingStrategy.INSTANCE;
                 } else {
-                    responseClosingStrategy = ApacheClientProperties.ResponseClosingStrategy.RESPONSE_STREAM;
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.ImmediateClosingStrategy.INSTANCE;
                 }
             }
         }
 
         private InputStream getEntityStream(final InputStream inputStream,
                                             final CloseableHttpResponse response) {
-            InputStream filterStream = null;
-            switch (responseClosingStrategy) {
-                case STREAM_RESPONSE:
-                    filterStream = new FilterInputStream(inputStream) {
-                        @Override
-                        public void close() throws IOException {
-                            try {
-                                super.close();
-                            } catch (IOException ex) {
-                                // Ignore
-                            } finally {
-                                response.close();
-                            }
-                        }
-                    };
-                    break;
-                case RESPONSE_STREAM:
-                    filterStream = new FilterInputStream(inputStream) {
-                        @Override
-                        public void close() throws IOException {
-                            response.close();
-                            super.close();
-                        }
-                    };
-                    break;
-            }
+            InputStream filterStream = new FilterInputStream(inputStream) {
+                @Override
+                public void close() throws IOException {
+                    connectionClosingStrategy.close(clientRequest, apacheRequest, response, in);
+                }
+            };
             return filterStream;
         }
     }
