@@ -48,10 +48,10 @@ public class MultiThreadingAggregatedReservoirTest {
     private static final int PRODUCER_COUNT = 5;
     private static final int CONSUMER_COUNT = 5;
 
-    /**
+    /*
      * Note that more than 5 seconds may require more than 1G heap memory.
      */
-    private static final int TEST_DURATION_MILLIS = 10_000;
+    private static final int TEST_DURATION_MILLIS = 5_000;
     private static final int SHUTDOWN_TIMEOUT_SECONDS = 120;
     private static final double DELTA = 0.0001;
 

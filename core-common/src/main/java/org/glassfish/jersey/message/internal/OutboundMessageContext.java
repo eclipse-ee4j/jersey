@@ -125,6 +125,16 @@ public class OutboundMessageContext {
     }
 
     /**
+     * Create new outbound message context.
+     *
+     * @see #OutboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public OutboundMessageContext() {
+        this ((Configuration) null);
+    }
+
+    /**
      * Replace all headers.
      *
      * @param headers new headers.
