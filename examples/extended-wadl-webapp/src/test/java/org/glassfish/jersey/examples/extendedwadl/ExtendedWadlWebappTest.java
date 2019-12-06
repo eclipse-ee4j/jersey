@@ -142,7 +142,7 @@ public class ExtendedWadlWebappTest extends JerseyTest {
         val = (String) xp.evaluate("count(//wadl:resource[@path='try-hard']/wadl:method[@id='getItem']"
                         + "/wadl:doc[contains(., 'Tries hard to return the item if it exists.')])",
                 document, XPathConstants.STRING);
-        // FIXME
+        
         assertEquals("Unexpected documentation of getItem resource method at 'try-hard' path", "1", val);
 
         val = (String) xp.evaluate("count(//wadl:resource[@path='items']/wadl:method)", document, XPathConstants.STRING);

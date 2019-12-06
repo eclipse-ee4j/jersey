@@ -37,7 +37,7 @@
         <java.sourceDirectory>${project.basedir}/src/main/java</java.sourceDirectory>
         <java8_11.build.outputDirectory>${project.basedir}/target-java8_11</java8_11.build.outputDirectory>
         <java8_11.sourceDirectory>${project.basedir}/src/main/java8_11</java8_11.sourceDirectory>
-        <java12.build.outputDirectory>${project.basedir}/target-java12</java12.build.outputDirectory>
+        <java12.build.outputDirectory>${project.basedir}/target</java12.build.outputDirectory>
         <java12.sourceDirectory>${project.basedir}/src/main/java12</java12.sourceDirectory>
     </properties>
 
@@ -136,7 +136,7 @@
             <activation>
                 <file>
                     <!-- ${java12.build.outputDirectory} does not work here -->
-                    <exists>target-java12/classes/org/glassfish/jersey/wadl/doclet/ResourceDoclet.class</exists>
+                    <exists>target/classes/org/glassfish/jersey/wadl/doclet/ResourceDoclet.class</exists>
                 </file>
                 <jdk>[1.8,12)</jdk>
             </activation>
@@ -153,7 +153,7 @@
                             </instructions>
                         </configuration>
                     </plugin>
-					<plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <inherited>true</inherited>
@@ -174,6 +174,78 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK8FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java8_11.build.outputDirectory} does not work here -->
+                    <exists>target-java8_11/classes/org/glassfish/jersey/wadl/doclet/ResourceDoclet.class</exists>
+                </file>
+                <jdk>[12,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk11-classes</id>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target>
+<!--                                     	<copy todir="${java12.build.outputDirectory}/classes/META-INF/versions/8"> -->
+<!-- 										    <fileset dir="${java8_11.build.outputDirectory}/classes"> -->
+<!-- 										        <exclude name="**/META-INF/**"/> -->
+<!-- 										    </fileset> -->
+<!-- 										</copy> -->
+<!-- 										<copy todir="${java12.build.outputDirectory}/classes/META-INF/versions/9"> -->
+<!-- 										    <fileset dir="${java8_11.build.outputDirectory}/classes"> -->
+<!-- 										        <exclude name="**/META-INF/**"/> -->
+<!-- 										    </fileset> -->
+<!-- 										</copy> -->
+<!-- 										<copy todir="${java12.build.outputDirectory}/classes/META-INF/versions/10"> -->
+<!-- 										    <fileset dir="${java8_11.build.outputDirectory}/classes"> -->
+<!-- 										        <exclude name="**/META-INF/**"/> -->
+<!-- 										    </fileset> -->
+<!-- 										</copy> -->
+<!--                                         <copy todir="${java12.build.outputDirectory}/classes/META-INF/versions/11"> -->
+<!-- 										    <fileset dir="${java8_11.build.outputDirectory}/classes"> -->
+<!-- 										        <exclude name="**/META-INF/**"/> -->
+<!-- 										    </fileset> -->
+<!-- 										</copy> -->
+										<move todir="${java12.build.outputDirectory}/classes/META-INF/versions/12">
+										    <fileset dir="${java12.build.outputDirectory}/classes">
+										        <exclude name="**/META-INF/**"/>
+										    </fileset>
+										</move>
+										<copy todir="${java12.build.outputDirectory}/classes">
+										    <fileset dir="${java8_11.build.outputDirectory}/classes">
+										        <exclude name="**/META-INF/**"/>
+										    </fileset>
+										</copy>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                    	</executions>
                     </plugin>
                 </plugins>
             </build>
