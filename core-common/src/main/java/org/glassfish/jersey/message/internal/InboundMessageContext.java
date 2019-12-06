@@ -163,6 +163,28 @@ public abstract class InboundMessageContext {
         this.configuration = configuration;
     }
 
+    /**
+     * Create new inbound message context.
+     * @see #InboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public InboundMessageContext() {
+        this((Configuration) null);
+    }
+
+    /**
+     * Create new inbound message context.
+     *
+     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     *                      as required by JAX-RS specification on the server side.     *
+     * @see #InboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public InboundMessageContext(boolean translateNce) {
+        this((Configuration) null, translateNce);
+    }
+
     // Message headers
 
     /**
