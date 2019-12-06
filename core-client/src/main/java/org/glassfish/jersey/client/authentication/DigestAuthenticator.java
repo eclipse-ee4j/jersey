@@ -57,7 +57,7 @@ final class DigestAuthenticator {
 
     private final Map<URI, DigestScheme> digestCache;
     private final boolean cacheOnly2xx;
-    private boolean validateChallenge;
+    private final boolean validateChallenge;
 
     /**
      * Create a new instance initialized from credentials and configuration.
@@ -68,7 +68,8 @@ final class DigestAuthenticator {
      * @param cacheOnly2xx See {@link HttpAuthenticationFeature#HTTP_AUTHENTICATION_CACHE_ONLY_2XX}
      * @param validateChallenge See {@link HttpAuthenticationFeature#HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE}
      */
-    DigestAuthenticator(final HttpAuthenticationFilter.Credentials credentials, final int limit, final boolean cacheOnly2xx, boolean validateChallenge) {
+    DigestAuthenticator(final HttpAuthenticationFilter.Credentials credentials, final int limit,
+    		            final boolean cacheOnly2xx, final boolean validateChallenge) {
         this.credentials = credentials;
         this.cacheOnly2xx = cacheOnly2xx;
         this.validateChallenge = validateChallenge;
