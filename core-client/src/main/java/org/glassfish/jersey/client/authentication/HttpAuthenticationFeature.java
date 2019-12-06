@@ -479,7 +479,7 @@ public class HttpAuthenticationFeature implements Feature {
      * The name of the configuration property is <tt>{@value}</tt>.
      */
     public static final String HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE =
-    		"jersey.config.client.http.auth.digest.validateChallenge";
+            "jersey.config.client.http.auth.digest.validateChallenge";
 
     /**
      * Create the builder of the http authentication feature working in basic authentication mode. The builder
