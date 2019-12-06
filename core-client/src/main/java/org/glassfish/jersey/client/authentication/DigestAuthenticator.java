@@ -69,7 +69,7 @@ final class DigestAuthenticator {
      * @param validateChallenge See {@link HttpAuthenticationFeature#HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE}
      */
     DigestAuthenticator(final HttpAuthenticationFilter.Credentials credentials, final int limit,
-    		            final boolean cacheOnly2xx, final boolean validateChallenge) {
+                        final boolean cacheOnly2xx, final boolean validateChallenge) {
         this.credentials = credentials;
         this.cacheOnly2xx = cacheOnly2xx;
         this.validateChallenge = validateChallenge;
@@ -153,7 +153,7 @@ final class DigestAuthenticator {
         return true;
     }
 
-    private boolean challengeShouldBeCached(DigestScheme digestScheme, ClientResponseContext response) {
+    private boolean challengeShouldBeCached(final DigestScheme digestScheme, final ClientResponseContext response) {
         if (cacheOnly2xx && response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
             return false;
         }

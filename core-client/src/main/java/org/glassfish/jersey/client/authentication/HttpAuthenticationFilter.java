@@ -120,8 +120,10 @@ class HttpAuthenticationFilter implements ClientRequestFilter, ClientResponseFil
             }
         });
 
-        cacheOnly2xx = configuration.getProperty(HttpAuthenticationFeature.HTTP_AUTHENTICATION_CACHE_ONLY_2XX) == Boolean.TRUE;
-        boolean validateChallenge = configuration.getProperty(HttpAuthenticationFeature.HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE) == Boolean.TRUE;
+        cacheOnly2xx = configuration.getProperty(
+                HttpAuthenticationFeature.HTTP_AUTHENTICATION_CACHE_ONLY_2XX) == Boolean.TRUE;
+        boolean validateChallenge = configuration.getProperty(
+                HttpAuthenticationFeature.HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE) == Boolean.TRUE;
         this.mode = mode;
         switch (mode) {
             case BASIC_PREEMPTIVE:
