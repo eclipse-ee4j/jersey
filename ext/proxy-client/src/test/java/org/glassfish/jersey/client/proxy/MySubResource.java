@@ -23,8 +23,6 @@ package org.glassfish.jersey.client.proxy;
 public class MySubResource implements MySubResourceIfc {
     @Override
     public MyBean getMyBean() {
-        MyBean bean = new MyBean();
-        bean.name = "Got it!";
-        return bean;
+        return new MyBean("Got it!");
     }
 }

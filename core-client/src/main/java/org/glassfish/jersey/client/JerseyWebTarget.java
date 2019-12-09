@@ -16,16 +16,20 @@
 
 package org.glassfish.jersey.client;
 
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.glassfish.jersey.internal.guava.Preconditions;
 
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.glassfish.jersey.internal.guava.Preconditions;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.of;
+import static org.glassfish.jersey.client.ParameterMarshaller.parameterMarshaller;
 
 /**
  * Jersey implementation of {@link javax.ws.rs.client.WebTarget JAX-RS client target}
@@ -37,6 +41,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
 
     private final ClientConfig config;
     private final UriBuilder targetUri;
+    private final ParameterMarshaller marshaller;
 
     /**
      * Create new web target instance.
@@ -100,6 +105,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
 
         this.targetUri = uriBuilder;
         this.config = clientConfig.snapshot();
+        this.marshaller = parameterMarshaller(config);
     }
 
     @Override
@@ -140,13 +146,13 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         }
 
         checkForNullValues(name, values);
-        return new JerseyWebTarget(getUriBuilder().matrixParam(name, values), this);
+        return new JerseyWebTarget(getUriBuilder().matrixParam(name, marshalling(values)), this);
     }
 
     @Override
     public JerseyWebTarget queryParam(String name, Object... values) throws NullPointerException {
         checkNotClosed();
-        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(getUriBuilder(), name, values), this);
+        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(getUriBuilder(), name, marshalling(values)), this);
     }
 
     private static UriBuilder setQueryParam(UriBuilder uriBuilder, String name, Object[] values) {
@@ -185,6 +191,20 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         }
     }
 
+    private Object marshalling(Object object) {
+        if (Collection.class.isInstance(object)) {
+            return ((Collection) object).stream().map(marshaller::marshall).collect(toList());
+        }
+        return marshaller.marshall(object);
+    }
+
+    private Object[] marshalling(Object[] objects) {
+        if (objects == null) {
+            return null;
+        }
+        return of(objects).map(marshaller::marshall).toArray();
+    }
+
     @Override
     public JerseyInvocation.Builder request() {
         checkNotClosed();
@@ -219,7 +239,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         Preconditions.checkNotNull(name, "name is 'null'.");
         Preconditions.checkNotNull(value, "value is 'null'.");
 
-        return new JerseyWebTarget(getUriBuilder().resolveTemplate(name, value, encodeSlashInPath), this);
+        return new JerseyWebTarget(getUriBuilder().resolveTemplate(name, marshalling(value), encodeSlashInPath), this);
     }
 
     @Override
