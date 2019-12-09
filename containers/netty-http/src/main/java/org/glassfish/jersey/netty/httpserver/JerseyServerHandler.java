@@ -16,16 +16,17 @@
 
 package org.glassfish.jersey.netty.httpserver;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.MediaType;
+
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -36,8 +37,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -46,23 +45,26 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 
 /**
  * {@link io.netty.channel.ChannelInboundHandler} which servers as a bridge
- * between Netty and Jersey.
+ * between Netty and Jersey. Handles additional validation on the payload size
+ * that is controlled by a JVM property {@code max.http.request.entitySizeMb}.
  *
- * @author Pavel Bucek
+ * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
     private final URI baseUri;
-    private final LinkedBlockingDeque<InputStream> isList = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<ByteBuf> isList = new LinkedBlockingDeque<>();
     private final NettyHttpContainer container;
     private final ResourceConfig resourceConfig;
+
+    private static final long MAX_REQUEST_ENTITY_BYTES = Long.getLong("jersey.max.http.request.entitySizeMb", new Long(50000))
+            .longValue() * 1024 * 1024; //50 MB default limit
 
     /**
      * Constructor.
      *
      * @param baseUri   base {@link URI} of the container (includes context path, if any).
      * @param container Netty container implementation.
-     * @param resourceConfig  the application {@link ResourceConfig}
      */
     public JerseyServerHandler(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
         this.baseUri = baseUri;
@@ -85,6 +87,33 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
             requestContext.setWriter(new NettyResponseWriter(ctx, req, container));
 
+            long contentLength = req.headers().contains(HttpHeaderNames.CONTENT_LENGTH) ? HttpUtil.getContentLength(req)
+                    : -1L;
+            if (contentLength >= MAX_REQUEST_ENTITY_BYTES) {
+                requestContext.abortWith(javax.ws.rs.core.Response.status(Status.REQUEST_ENTITY_TOO_LARGE).build());
+            } else {
+                /**
+                 * Jackson JSON decoder tries to read a minimum of 2 bytes (4
+                 * for BOM). So, during an empty or 1-byte input, we'd want to
+                 * avoid reading the entity to safely handle this edge case by
+                 * eventually throwing a malformed JSON exception.
+                 */
+                String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
+                boolean isJson = contentType != null ? contentType.toLowerCase().contains(MediaType.APPLICATION_JSON)
+                        : false;
+                //process entity streams only if there is an entity issued in the request (i.e., content-length >=0).
+                //Otherwise, it's safe to discard during next processing
+                if ((!isJson && contentLength != -1) || HttpUtil.isTransferEncodingChunked(req)
+                        || (isJson && contentLength >= 2)) {
+                    requestContext.setEntityStream(new NettyInputStream(isList));
+                }
+            }
+
+            // copying headers from netty request to jersey container request context.
+            for (String name : req.headers().names()) {
+                requestContext.headers(name, req.headers().getAll(name));
+            }
+
             // must be like this, since there is a blocking read from Jersey
             container.getExecutorService().execute(new Runnable() {
                 @Override
@@ -95,18 +124,17 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
         }
 
         if (msg instanceof HttpContent) {
-            HttpContent httpContent = (HttpContent) msg;
+          HttpContent httpContent = (HttpContent) msg;
 
-            ByteBuf content = httpContent.content();
+          ByteBuf content = httpContent.content();
+          if (content.isReadable()) {
+              isList.add(content);
+          }
 
-            if (content.isReadable()) {
-                isList.add(new ByteBufInputStream(content, true));
-            }
-
-            if (msg instanceof LastHttpContent) {
-                isList.add(NettyInputStream.END_OF_INPUT);
-            }
-        }
+          if (msg instanceof LastHttpContent) {
+              isList.add(Unpooled.EMPTY_BUFFER);
+          }
+      }
     }
 
     /**
@@ -148,34 +176,9 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                     }
                 }, resourceConfig);
 
-        // request entity handling.
-        if ((req.headers().contains(HttpHeaderNames.CONTENT_LENGTH) && HttpUtil.getContentLength(req) > 0)
-                || HttpUtil.isTransferEncodingChunked(req)) {
-
-            ctx.channel().closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
-                @Override
-                public void operationComplete(Future<? super Void> future) throws Exception {
-                    isList.add(NettyInputStream.END_OF_INPUT_ERROR);
-                }
-            });
-
-            requestContext.setEntityStream(new NettyInputStream(isList));
-        } else {
-            requestContext.setEntityStream(new InputStream() {
-                @Override
-                public int read() throws IOException {
-                    return -1;
-                }
-            });
-        }
-
-        // copying headers from netty request to jersey container request context.
-        for (String name : req.headers().names()) {
-            requestContext.headers(name, req.headers().getAll(name));
-        }
-
         return requestContext;
     }
+
 
     private NettySecurityContext getSecurityContext(ChannelHandlerContext ctx) {
         return new NettySecurityContext(ctx);
