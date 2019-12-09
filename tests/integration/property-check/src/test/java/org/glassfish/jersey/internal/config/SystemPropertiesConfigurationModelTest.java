@@ -17,10 +17,12 @@
 package org.glassfish.jersey.internal.config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import com.google.common.reflect.ClassPath;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,6 +37,8 @@ import org.junit.Test;
 public class SystemPropertiesConfigurationModelTest {
 
     private static final String ROOT_PACKAGE = "org.glassfish.jersey";
+    private static final List<String> BLACK_LIST_CLASSES = Arrays.asList("org.glassfish.jersey.internal.OsgiRegistry",
+        "org.glassfish.jersey.internal.jsr166.SubmissionPublisher", "org.glassfish.jersey.internal.jsr166.Flow");
 
     @Test
     public void allPropertyClassLoaded() throws IOException {
@@ -44,6 +48,7 @@ public class SystemPropertiesConfigurationModelTest {
         Predicate<Class<?>> notTestProperties = clazz -> clazz != TestProperties.class;
         List<String> propertyClasses = getClassesWithPredicate(ROOT_PACKAGE, notCommon, notTestProperties,
                 containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
+        assertFalse(propertyClasses.isEmpty());
         propertyClasses.removeAll(SystemPropertiesConfigurationModel.PROPERTY_CLASSES);
         assertEquals("New properties have been found. "
                 + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
@@ -54,6 +59,7 @@ public class SystemPropertiesConfigurationModelTest {
             throws IOException {
         ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader());
         Stream<Class<?>> steam = classpath.getTopLevelClassesRecursive(packageRoot).stream()
+                .filter(classInfo -> !BLACK_LIST_CLASSES.contains(classInfo.getName()))
                 .map(classInfo -> {
                     try {
                         return Class.forName(classInfo.getName());
