@@ -59,6 +59,16 @@ public final class CommonProperties {
     }
 
     /**
+     * Property which allows (if true) default System properties configuration provider.
+     *
+     * Effective if there are no any external properties providers
+     *
+     * Shall be set (if used) in system properties.
+     * @since 2.29
+     */
+    public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
+
+    /**
      * If {@code true} then disable feature auto discovery globally on client/server.
      * <p>
      * By default auto discovery is automatically enabled. The value of this property may be overridden by the client/server
@@ -217,15 +227,21 @@ public final class CommonProperties {
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER = "jersey.config.server.contentLength.buffer";
 
     /**
-     * Property which allows (if true) default System properties configuration provider.
+     * Disable some of the default providers from being loaded. The following providers extend application footprint
+     * by XML dependencies, which is too heavy for native image, or by AWT which may possibly be not available by JDK 11 desktop:
+     * <ul>
+     *     <li>java.awt.image.RenderedImage</li>
+     *     <li>javax.xml.transform.Source</li>
+     *     <li>javax.xml.transform.dom.DOMSource</li>
+     *     <li>javax.xml.transform.sax.SAXSource</li>
+     *     <li>javax.xml.transform.stream.StreamSource</li>
+     * </ul>
+     * The following are the options to disable the provides: {@code DOMSOURCE, RENDEREDIMAGE, SAXSOURCE, SOURCE, STREAMSOURCE},
+     * or to disable all: {@code ALL}. Multiple options can be disabled by adding multiple comma separated values.
      *
-     * Effective if there are no any external properties providers
-     *
-     * Shall be set (if used) in system properties.
-     * @since 2.29
+     * @since 2.30
      */
-
-    public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
+    public static final String PROVIDER_DEFAULT_DISABLE = "jersey.config.disableDefaultProvider";
 
     /**
      * Prevent instantiation.
