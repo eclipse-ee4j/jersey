@@ -42,22 +42,30 @@ public class SystemPropertiesConfigurationModelTest {
 
     @Test
     public void allPropertyClassLoaded() throws IOException {
-        Predicate<Class<?>> containsAnnotation = clazz -> clazz.getAnnotation(PropertiesClass.class) != null
-                || clazz.getAnnotation(Property.class) != null;
-        Predicate<Class<?>> notCommon = clazz -> clazz != CommonProperties.class;
-        Predicate<Class<?>> notTestProperties = clazz -> clazz != TestProperties.class;
-        List<String> propertyClasses = getClassesWithPredicate(ROOT_PACKAGE, notCommon, notTestProperties,
-                containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
-        assertFalse(propertyClasses.isEmpty());
-        propertyClasses.removeAll(SystemPropertiesConfigurationModel.PROPERTY_CLASSES);
-        assertEquals("New properties have been found. "
-                + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
-                + propertyClasses, 0, propertyClasses.size());
+        /*
+         *  It doesn't work for higher JDKs because it is using different classloader
+         *  (jdk.internal.loader.ClassLoaders$AppClassLoader) that current Guava version doesn't support.
+         */
+        String version = System.getProperty("java.version");
+        if (version.startsWith("1.8")) {
+            Predicate<Class<?>> containsAnnotation = clazz -> clazz.getAnnotation(PropertiesClass.class) != null
+                    || clazz.getAnnotation(Property.class) != null;
+            Predicate<Class<?>> notCommon = clazz -> clazz != CommonProperties.class;
+            Predicate<Class<?>> notTestProperties = clazz -> clazz != TestProperties.class;
+            List<String> propertyClasses = getClassesWithPredicate(ROOT_PACKAGE, notCommon, notTestProperties,
+                    containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
+            assertFalse(propertyClasses.isEmpty());
+            propertyClasses.removeAll(SystemPropertiesConfigurationModel.PROPERTY_CLASSES);
+            assertEquals("New properties have been found. "
+                    + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
+                    + propertyClasses, 0, propertyClasses.size());
+        }
     }
 
     private List<Class<?>> getClassesWithPredicate(String packageRoot, Predicate<Class<?>>... predicates)
             throws IOException {
-        ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ClassPath classpath = ClassPath.from(loader);
         Stream<Class<?>> steam = classpath.getTopLevelClassesRecursive(packageRoot).stream()
                 .filter(classInfo -> !BLACK_LIST_CLASSES.contains(classInfo.getName()))
                 .map(classInfo -> {
