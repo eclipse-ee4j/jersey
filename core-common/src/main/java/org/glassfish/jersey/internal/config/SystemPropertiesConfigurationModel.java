@@ -17,6 +17,7 @@
 package org.glassfish.jersey.internal.config;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -156,7 +157,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
         );
 
         for (final Field field : fields) {
-            if (field.getType().isAssignableFrom(String.class)) {
+            if (Modifier.isStatic(field.getModifiers()) && field.getType().isAssignableFrom(String.class)) {
                 final String propertyValue = getPropertyNameByField(field);
                 properties.put(propertyValue, PropertiesHelper.getSystemProperty(propertyValue));
             }

@@ -18,19 +18,31 @@ package org.glassfish.jersey.internal.config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.reflect.ClassPath;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.Property;
+import org.glassfish.jersey.jetty.connector.JettyClientProperties;
+import org.glassfish.jersey.media.multipart.MultiPartProperties;
+import org.glassfish.jersey.message.MessageProperties;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.internal.InternalServerProperties;
+import org.glassfish.jersey.server.oauth1.OAuth1ServerProperties;
+import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
@@ -59,6 +71,39 @@ public class SystemPropertiesConfigurationModelTest {
             assertEquals("New properties have been found. "
                     + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
                     + propertyClasses, 0, propertyClasses.size());
+        }
+    }
+
+    @Test
+    public void propertyLoadedWhenSecurityException() {
+        SecurityManager sm = System.getSecurityManager();
+        String policy = System.getProperty("java.security.policy");
+        try {
+            System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, "true");
+            SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
+            assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
+            String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
+            System.setProperty("java.security.policy", securityPolicy);
+            System.setSecurityManager(null);
+            SecurityManager manager = new SecurityManager();
+            System.setSecurityManager(manager);
+            Map<String, Object> properties = model.getProperties();
+            assertTrue(properties.containsKey(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE));
+            assertTrue(properties.containsKey(ServerProperties.APPLICATION_NAME));
+            assertTrue(properties.containsKey(ClientProperties.ASYNC_THREADPOOL_SIZE));
+            assertTrue(properties.containsKey(ServletProperties.FILTER_CONTEXT_PATH));
+            assertTrue(properties.containsKey(InternalProperties.JSON_FEATURE));
+            assertTrue(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
+            assertTrue(properties.containsKey(ApacheClientProperties.CONNECTION_MANAGER));
+            assertTrue(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
+            assertTrue(properties.containsKey(MultiPartProperties.BUFFER_THRESHOLD));
+            assertTrue(properties.containsKey(OAuth1ServerProperties.ACCESS_TOKEN_URI));
+        } finally {
+            System.setSecurityManager(null);
+            if (policy != null) {
+                System.setProperty("java.security.policy", policy);
+            }
+            System.setSecurityManager(sm);
         }
     }
 
