@@ -59,7 +59,9 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.Initializable;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
@@ -92,6 +94,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private KeyStore sslTrustStore;
     private KeyStore sslKeyStore;
     private char[] sslKeyStorePassword;
+    private ConnectorProvider connector;
 
     RestClientBuilderImpl() {
         clientBuilder = ClientBuilder.newBuilder();
@@ -142,14 +145,14 @@ class RestClientBuilderImpl implements RestClientBuilder {
             throw new IllegalStateException("Base uri/url cannot be null!");
         }
 
+        for (RestClientListener restClientListener : ServiceLoader.load(RestClientListener.class)) {
+            restClientListener.onNewClient(interfaceClass, this);
+        }
+
         //Provider registration part
         processProviders(interfaceClass);
         InjectionManagerExposer injectionManagerExposer = new InjectionManagerExposer();
         register(injectionManagerExposer);
-
-        for (RestClientListener restClientListener : ServiceLoader.load(RestClientListener.class)) {
-            restClientListener.onNewClient(interfaceClass, this);
-        }
 
         //We need to check first if default exception mapper was not disabled by property on builder.
         registerExceptionMapper();
@@ -174,7 +177,16 @@ class RestClientBuilderImpl implements RestClientBuilder {
             clientBuilder.keyStore(sslKeyStore, sslKeyStorePassword);
         }
 
-        Client client = clientBuilder.build();
+        Client client;
+        if (connector == null) {
+            client = clientBuilder.build();
+        } else {
+            ClientConfig config = new ClientConfig();
+            config.loadFrom(getConfiguration());
+            config.connectorProvider(connector);
+            client = ClientBuilder.newClient(config);
+        }
+
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();
         }
@@ -377,7 +389,8 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private boolean isSupportedCustomProvider(Class<?> providerClass) {
         return ResponseExceptionMapper.class.isAssignableFrom(providerClass)
                 || ParamConverterProvider.class.isAssignableFrom(providerClass)
-                || AsyncInvocationInterceptorFactory.class.isAssignableFrom(providerClass);
+                || AsyncInvocationInterceptorFactory.class.isAssignableFrom(providerClass)
+                || ConnectorProvider.class.isAssignableFrom(providerClass);
     }
 
     private void registerCustomProvider(Object instance, Integer priority) {
@@ -398,6 +411,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
             asyncInterceptorFactories
                     .add(new AsyncInvocationInterceptorFactoryPriorityWrapper((AsyncInvocationInterceptorFactory) instance,
                                                                               priority));
+        }
+        if (instance instanceof ConnectorProvider) {
+            connector = (ConnectorProvider) instance;
         }
     }
 
