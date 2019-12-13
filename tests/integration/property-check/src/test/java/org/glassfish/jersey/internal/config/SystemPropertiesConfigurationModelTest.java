@@ -77,12 +77,20 @@ public class SystemPropertiesConfigurationModelTest {
 
     @Test
     public void propertyLoadedWhenSecurityException() {
-        final String APP_NAME = "propertyLoadedWhenSecurityException";
+        final String TEST_STRING = "test";
         SecurityManager sm = System.getSecurityManager();
         String policy = System.getProperty("java.security.policy");
         try {
             System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
-            System.setProperty(ServerProperties.APPLICATION_NAME, APP_NAME);
+            System.setProperty(ServerProperties.APPLICATION_NAME, TEST_STRING);
+            System.setProperty(ClientProperties.BACKGROUND_SCHEDULER_THREADPOOL_SIZE, TEST_STRING);
+            System.setProperty(ServletProperties.JAXRS_APPLICATION_CLASS, TEST_STRING);
+            System.setProperty(InternalProperties.JSON_FEATURE_CLIENT, TEST_STRING);
+            System.setProperty(MessageProperties.IO_BUFFER_SIZE, TEST_STRING);
+            System.setProperty(ApacheClientProperties.DISABLE_COOKIES, TEST_STRING);
+            System.setProperty(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, TEST_STRING);
+            System.setProperty(MultiPartProperties.TEMP_DIRECTORY, TEST_STRING);
+            System.setProperty(OAuth1ServerProperties.REALM, TEST_STRING);
             SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
             String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
@@ -90,16 +98,24 @@ public class SystemPropertiesConfigurationModelTest {
             SecurityManager manager = new SecurityManager();
             System.setSecurityManager(manager);
             Map<String, Object> properties = model.getProperties();
-            assertEquals(APP_NAME, properties.get(ServerProperties.APPLICATION_NAME));
+            assertEquals(TEST_STRING, properties.get(ServerProperties.APPLICATION_NAME));
             assertEquals(Boolean.TRUE.toString(), properties.get(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER));
             assertFalse(properties.containsKey(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE));
+            assertEquals(TEST_STRING, properties.get(ClientProperties.BACKGROUND_SCHEDULER_THREADPOOL_SIZE));
             assertFalse(properties.containsKey(ClientProperties.ASYNC_THREADPOOL_SIZE));
+            assertEquals(TEST_STRING, properties.get(ServletProperties.JAXRS_APPLICATION_CLASS));
             assertFalse(properties.containsKey(ServletProperties.FILTER_CONTEXT_PATH));
+            assertEquals(TEST_STRING, properties.get(InternalProperties.JSON_FEATURE_CLIENT));
             assertFalse(properties.containsKey(InternalProperties.JSON_FEATURE));
+            assertEquals(TEST_STRING, properties.get(MessageProperties.IO_BUFFER_SIZE));
             assertFalse(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
+            assertEquals(TEST_STRING, properties.get(ApacheClientProperties.DISABLE_COOKIES));
             assertFalse(properties.containsKey(ApacheClientProperties.CONNECTION_MANAGER));
+            assertEquals(TEST_STRING, properties.get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION));
             assertFalse(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
+            assertEquals(TEST_STRING, properties.get(MultiPartProperties.TEMP_DIRECTORY));
             assertFalse(properties.containsKey(MultiPartProperties.BUFFER_THRESHOLD));
+            assertEquals(TEST_STRING, properties.get(OAuth1ServerProperties.REALM));
             assertFalse(properties.containsKey(OAuth1ServerProperties.ACCESS_TOKEN_URI));
         } finally {
             if (policy != null) {
