@@ -48,7 +48,6 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
             "org.glassfish.jersey.client.ClientProperties",
             "org.glassfish.jersey.servlet.ServletProperties",
             "org.glassfish.jersey.message.MessageProperties",
-            "org.glassfish.jersey.server.internal.InternalServerProperties",
             "org.glassfish.jersey.apache.connector.ApacheClientProperties",
             "org.glassfish.jersey.jdk.connector.JdkConnectorProperties",
             "org.glassfish.jersey.jetty.connector.JettyClientProperties",

@@ -41,7 +41,6 @@ import org.glassfish.jersey.jetty.connector.JettyClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPartProperties;
 import org.glassfish.jersey.message.MessageProperties;
 import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.internal.InternalServerProperties;
 import org.glassfish.jersey.server.oauth1.OAuth1ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.TestProperties;
@@ -52,7 +51,8 @@ public class SystemPropertiesConfigurationModelTest {
     private static final String ROOT_PACKAGE = "org.glassfish.jersey";
     private static final List<String> BLACK_LIST_CLASSES = Arrays.asList("org.glassfish.jersey.internal.OsgiRegistry",
         "org.glassfish.jersey.internal.jsr166.SubmissionPublisher", "org.glassfish.jersey.internal.jsr166.Flow",
-        "org.glassfish.jersey.internal.InternalProperties");
+        "org.glassfish.jersey.internal.InternalProperties",
+        "org.glassfish.jersey.server.internal.InternalServerProperties");
 
     @Test
     public void allPropertyClassLoaded() throws IOException {
