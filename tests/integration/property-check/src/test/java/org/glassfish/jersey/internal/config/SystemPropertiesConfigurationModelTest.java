@@ -77,10 +77,12 @@ public class SystemPropertiesConfigurationModelTest {
 
     @Test
     public void propertyLoadedWhenSecurityException() {
+        final String APP_NAME = "propertyLoadedWhenSecurityException";
         SecurityManager sm = System.getSecurityManager();
         String policy = System.getProperty("java.security.policy");
         try {
-            System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, "true");
+            System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
+            System.setProperty(ServerProperties.APPLICATION_NAME, APP_NAME);
             SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
             String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
@@ -88,16 +90,17 @@ public class SystemPropertiesConfigurationModelTest {
             SecurityManager manager = new SecurityManager();
             System.setSecurityManager(manager);
             Map<String, Object> properties = model.getProperties();
-            assertTrue(properties.get(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE) != null);
-            assertTrue(properties.get(ServerProperties.APPLICATION_NAME) != null);
-            assertTrue(properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE) != null);
-            assertTrue(properties.get(ServletProperties.FILTER_CONTEXT_PATH) != null);
-            assertTrue(properties.get(InternalProperties.JSON_FEATURE) != null);
-            assertTrue(properties.get(MessageProperties.DEFLATE_WITHOUT_ZLIB) != null);
-            assertTrue(properties.get(ApacheClientProperties.CONNECTION_MANAGER) != null);
-            assertTrue(properties.get(JettyClientProperties.DISABLE_COOKIES) != null);
-            assertTrue(properties.get(MultiPartProperties.BUFFER_THRESHOLD) != null);
-            assertTrue(properties.get(OAuth1ServerProperties.ACCESS_TOKEN_URI) != null);
+            assertEquals(APP_NAME, properties.get(ServerProperties.APPLICATION_NAME));
+            assertEquals(Boolean.TRUE.toString(), properties.get(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER));
+            assertFalse(properties.containsKey(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE));
+            assertFalse(properties.containsKey(ClientProperties.ASYNC_THREADPOOL_SIZE));
+            assertFalse(properties.containsKey(ServletProperties.FILTER_CONTEXT_PATH));
+            assertFalse(properties.containsKey(InternalProperties.JSON_FEATURE));
+            assertFalse(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
+            assertFalse(properties.containsKey(ApacheClientProperties.CONNECTION_MANAGER));
+            assertFalse(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
+            assertFalse(properties.containsKey(MultiPartProperties.BUFFER_THRESHOLD));
+            assertFalse(properties.containsKey(OAuth1ServerProperties.ACCESS_TOKEN_URI));
         } finally {
             if (policy != null) {
                 System.setProperty("java.security.policy", policy);

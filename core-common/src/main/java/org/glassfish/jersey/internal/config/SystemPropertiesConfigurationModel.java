@@ -160,7 +160,10 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
             if (Modifier.isStatic(field.getModifiers()) && field.getType().isAssignableFrom(String.class)) {
                 final String propertyValue = getPropertyNameByField(field);
                 if (propertyValue != null) {
-                    properties.put(propertyValue, PropertiesHelper.getSystemProperty(propertyValue));
+                    String value = getSystemProperty(propertyValue);
+                    if (value != null) {
+                        properties.put(propertyValue, value);
+                    }
                 }
             }
         }
