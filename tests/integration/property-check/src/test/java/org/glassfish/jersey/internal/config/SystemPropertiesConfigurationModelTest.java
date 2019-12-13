@@ -51,7 +51,8 @@ public class SystemPropertiesConfigurationModelTest {
 
     private static final String ROOT_PACKAGE = "org.glassfish.jersey";
     private static final List<String> BLACK_LIST_CLASSES = Arrays.asList("org.glassfish.jersey.internal.OsgiRegistry",
-        "org.glassfish.jersey.internal.jsr166.SubmissionPublisher", "org.glassfish.jersey.internal.jsr166.Flow");
+        "org.glassfish.jersey.internal.jsr166.SubmissionPublisher", "org.glassfish.jersey.internal.jsr166.Flow",
+        "org.glassfish.jersey.internal.InternalProperties");
 
     @Test
     public void allPropertyClassLoaded() throws IOException {
@@ -85,7 +86,6 @@ public class SystemPropertiesConfigurationModelTest {
             System.setProperty(ServerProperties.APPLICATION_NAME, TEST_STRING);
             System.setProperty(ClientProperties.BACKGROUND_SCHEDULER_THREADPOOL_SIZE, TEST_STRING);
             System.setProperty(ServletProperties.JAXRS_APPLICATION_CLASS, TEST_STRING);
-            System.setProperty(InternalProperties.JSON_FEATURE_CLIENT, TEST_STRING);
             System.setProperty(MessageProperties.IO_BUFFER_SIZE, TEST_STRING);
             System.setProperty(ApacheClientProperties.DISABLE_COOKIES, TEST_STRING);
             System.setProperty(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, TEST_STRING);
@@ -105,7 +105,6 @@ public class SystemPropertiesConfigurationModelTest {
             assertFalse(properties.containsKey(ClientProperties.ASYNC_THREADPOOL_SIZE));
             assertEquals(TEST_STRING, properties.get(ServletProperties.JAXRS_APPLICATION_CLASS));
             assertFalse(properties.containsKey(ServletProperties.FILTER_CONTEXT_PATH));
-            assertEquals(TEST_STRING, properties.get(InternalProperties.JSON_FEATURE_CLIENT));
             assertFalse(properties.containsKey(InternalProperties.JSON_FEATURE));
             assertEquals(TEST_STRING, properties.get(MessageProperties.IO_BUFFER_SIZE));
             assertFalse(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
