@@ -17,9 +17,9 @@
 
 grant {
 	permission java.util.PropertyPermission "jersey.config.allowSystemPropertiesProvider", "read";
-    permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
-    permission java.lang.reflect.ReflectPermission "*";
-  	permission java.lang.RuntimePermission "*";
-  	permission java.net.NetPermission "specifyStreamHandler";
+	permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
+	permission java.lang.reflect.ReflectPermission "*";
+	permission java.lang.RuntimePermission "*";
+	permission java.net.NetPermission "specifyStreamHandler";
 	permission java.net.SocketPermission "*", "accept,listen,connect,resolve";
 };

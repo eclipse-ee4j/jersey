@@ -34,6 +34,7 @@ import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.InternalProperties;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.Property;
 import org.glassfish.jersey.jetty.connector.JettyClientProperties;
@@ -58,8 +59,8 @@ public class SystemPropertiesConfigurationModelTest {
          *  It doesn't work for higher JDKs because it is using different classloader
          *  (jdk.internal.loader.ClassLoaders$AppClassLoader) that current Guava version doesn't support.
          */
-        String version = System.getProperty("java.version");
-        if (version.startsWith("1.8")) {
+        if (JdkVersion.getJdkVersion().getMajor() == 8) {
+            SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
             Predicate<Class<?>> containsAnnotation = clazz -> clazz.getAnnotation(PropertiesClass.class) != null
                     || clazz.getAnnotation(Property.class) != null;
             Predicate<Class<?>> notCommon = clazz -> clazz != CommonProperties.class;
@@ -84,22 +85,20 @@ public class SystemPropertiesConfigurationModelTest {
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
             String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
             System.setProperty("java.security.policy", securityPolicy);
-            System.setSecurityManager(null);
             SecurityManager manager = new SecurityManager();
             System.setSecurityManager(manager);
             Map<String, Object> properties = model.getProperties();
-            assertTrue(properties.containsKey(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE));
-            assertTrue(properties.containsKey(ServerProperties.APPLICATION_NAME));
-            assertTrue(properties.containsKey(ClientProperties.ASYNC_THREADPOOL_SIZE));
-            assertTrue(properties.containsKey(ServletProperties.FILTER_CONTEXT_PATH));
-            assertTrue(properties.containsKey(InternalProperties.JSON_FEATURE));
-            assertTrue(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
-            assertTrue(properties.containsKey(ApacheClientProperties.CONNECTION_MANAGER));
-            assertTrue(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
-            assertTrue(properties.containsKey(MultiPartProperties.BUFFER_THRESHOLD));
-            assertTrue(properties.containsKey(OAuth1ServerProperties.ACCESS_TOKEN_URI));
+            assertTrue(properties.get(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE) != null);
+            assertTrue(properties.get(ServerProperties.APPLICATION_NAME) != null);
+            assertTrue(properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE) != null);
+            assertTrue(properties.get(ServletProperties.FILTER_CONTEXT_PATH) != null);
+            assertTrue(properties.get(InternalProperties.JSON_FEATURE) != null);
+            assertTrue(properties.get(MessageProperties.DEFLATE_WITHOUT_ZLIB) != null);
+            assertTrue(properties.get(ApacheClientProperties.CONNECTION_MANAGER) != null);
+            assertTrue(properties.get(JettyClientProperties.DISABLE_COOKIES) != null);
+            assertTrue(properties.get(MultiPartProperties.BUFFER_THRESHOLD) != null);
+            assertTrue(properties.get(OAuth1ServerProperties.ACCESS_TOKEN_URI) != null);
         } finally {
-            System.setSecurityManager(null);
             if (policy != null) {
                 System.setProperty("java.security.policy", policy);
             }
@@ -120,9 +119,7 @@ public class SystemPropertiesConfigurationModelTest {
                         return Void.class;
                     }
                 });
-        for (Predicate<Class<?>> predicate : predicates) {
-            steam = steam.filter(predicate);
-        }
+        steam = steam.filter(Arrays.stream(predicates).reduce(x->true, Predicate::and));
         return steam.collect(Collectors.toList());
     }
 
