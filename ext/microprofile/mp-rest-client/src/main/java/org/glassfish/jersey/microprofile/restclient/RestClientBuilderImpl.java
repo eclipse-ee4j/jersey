@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -63,6 +62,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
+import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -145,7 +145,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
             throw new IllegalStateException("Base uri/url cannot be null!");
         }
 
-        for (RestClientListener restClientListener : ServiceLoader.load(RestClientListener.class)) {
+        for (RestClientListener restClientListener : ServiceFinder.find(RestClientListener.class)) {
             restClientListener.onNewClient(interfaceClass, this);
         }
 
