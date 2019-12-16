@@ -124,6 +124,7 @@
         <module>servlet-tests</module>
         <module>sonar-test</module>
         <module>spring4</module>
+        <module>spring5</module>
         <module>tracing-support</module>
         <module>microprofile/config/helidon</module>
         <module>microprofile/config/webapp</module>

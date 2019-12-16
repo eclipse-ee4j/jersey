@@ -16,33 +16,32 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import org.junit.Test;
+import javax.ws.rs.core.Application;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerException;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.JerseyTest;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Tests for Spring managed JAX-RS resources with custom composite
- * annotation that derives from @Component.
- *
- * @author Konrad Garus (konrad.garus at gmail.com)
- */
-public class SpringManagedEndpointITCase extends ResourceTestBase {
+public class AccountResourceITCase extends JerseyTest {
 
     @Override
-    protected String getResourcePath() {
-        return "/spring/endpoint";
+    protected Application configure() {
+        return new Application();
+    }
+
+    @Override
+    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
+        return new ExternalTestContainerFactory();
     }
 
     @Test
-    public void testResourceScope() {
-        final WebTarget t = target(getResourceFullPath());
-        final String message = "hello, world";
-        final String echo = t.path("message").request().put(Entity.text(message), String.class);
-        assertEquals(message, echo);
-        final String msg = t.path("message").request().get(String.class);
-        assertEquals(message, msg);
+    public void testGet() throws Exception {
+        final String r = target().path("/jersey/account/message").request().get(String.class);
+        assertEquals(r, "n/a");
     }
 }

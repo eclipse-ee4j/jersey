@@ -16,33 +16,10 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import org.junit.Test;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-
-import static org.junit.Assert.assertEquals;
-
 /**
- * Tests for Jersey managed JAX-RS resources.
+ * Type to be handled as HK2 singleton.
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
  */
-public class JerseyManagedITCase extends AccountResourceTestBase {
-
-    @Override
-    protected String getResourcePath() {
-        return "/jersey/account";
-    }
-
-    @Test
-    public void testResourceScope() {
-        final WebTarget t = target(getResourceFullPath());
-        final String message = "hello, world";
-        final String echo = t.path("message").request().put(Entity.text(message), String.class);
-        assertEquals(message, echo);
-        final String msg = t.path("message").request().get(String.class);
-        assertEquals("n/a", msg);
-    }
-
+public class HK2ServiceSingleton {
 }
