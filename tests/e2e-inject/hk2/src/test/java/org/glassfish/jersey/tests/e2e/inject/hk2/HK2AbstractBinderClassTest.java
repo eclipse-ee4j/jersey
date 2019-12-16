@@ -22,18 +22,12 @@ import org.junit.Test;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/**
- * Test for older hk2 binders to be used
- */
-public class HK2AbstractBinderTest extends JerseyTest {
+public class HK2AbstractBinderClassTest extends JerseyTest {
 
     private static final AtomicInteger counter = new AtomicInteger();
 
@@ -45,17 +39,9 @@ public class HK2AbstractBinderTest extends JerseyTest {
         }
     }
 
-    public static class HK2BindingFeature implements Feature {
-        @Override
-        public boolean configure(FeatureContext context) {
-            context.register(new InjectableHK2Binder());
-            return true;
-        }
-    }
-
     @Override
     protected Application configure() {
-        return new ResourceConfig(HK2BindingFeature.class, AbstractBinderTestResource.class, InjectableTestFilter.class);
+        return new ResourceConfig(AbstractBinderTestResource.class, InjectableTestFilter.class, InjectableHK2Binder.class);
     }
 
     @Test
