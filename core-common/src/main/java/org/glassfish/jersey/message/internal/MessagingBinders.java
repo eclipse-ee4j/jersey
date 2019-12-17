@@ -18,6 +18,7 @@ package org.glassfish.jersey.message.internal;
 
 import java.security.AccessController;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -165,21 +166,26 @@ public final class MessagingBinders {
         }
 
         private static final String ALL = "ALL";
-        private HashSet<Provider> disabledProviders = new HashSet<>();
+        private HashSet<Provider> enabledProviders = new HashSet<>();
+
+        private EnabledProvidersBinder() {
+            for (Provider provider : Provider.values()) {
+                enabledProviders.add(provider);
+            }
+        }
 
         private void markDisabled(String properties) {
             String[] tokens = Tokenizer.tokenize(properties);
             for (int tokenIndex = 0; tokenIndex != tokens.length; tokenIndex++) {
                 String token = tokens[tokenIndex].toUpperCase(Locale.ROOT);
                 if (ALL.equals(token)) {
-                    for (Provider provider : Provider.values()) {
-                        disabledProviders.add(provider);
-                    }
+                    enabledProviders.clear();
                     return;
                 }
-                for (Provider provider : Provider.values()) {
+                for (Iterator<Provider> iterator = enabledProviders.iterator(); iterator.hasNext();) {
+                    Provider provider = iterator.next();
                     if (provider.name().equals(token)) {
-                        disabledProviders.add(provider);
+                        iterator.remove();
                     }
                 }
             }
@@ -187,8 +193,8 @@ public final class MessagingBinders {
 
         private void bindToBinder(AbstractBinder binder) {
             ProviderBinder providerBinder = null;
-            for (Provider provider : Provider.values()) {
-                if (!disabledProviders.contains(provider) && isClass(provider.className)) {
+            for (Provider provider : enabledProviders) {
+                if (isClass(provider.className)) {
                     switch (provider) {
                         case DOMSOURCE:
                             providerBinder = new DomSourceBinder();
