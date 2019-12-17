@@ -156,6 +156,15 @@ public final class ApacheClientProperties {
      */
     public static final String KEEPALIVE_STRATEGY = "jersey.config.apache.client.keepAliveStrategy";
 
+
+    /**
+     * Strategy that closes the Apache Connection. Accepts an instance of {@link ApacheConnectionClosingStrategy}.
+     *
+     * @see ApacheConnectionClosingStrategy
+     * @since 2.30
+     */
+    public static final String CONNECTION_CLOSING_STRATEGY = "jersey.config.apache.client.connectionClosingStrategy";
+
     /**
      * Get the value of the specified property.
      *
