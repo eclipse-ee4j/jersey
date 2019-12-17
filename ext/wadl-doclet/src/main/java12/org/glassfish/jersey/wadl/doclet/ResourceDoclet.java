@@ -83,21 +83,10 @@ public class ResourceDoclet implements Doclet {
     private final OptionOutput optionOutput = new OptionOutput();
     private final OptionClasspath optionClasspath = new OptionClasspath();
     private final OptionDocprocessor optionDocprocessor = new OptionDocprocessor();
-    private Reporter reporter;
 
     @Override
     public void init(Locale locale, Reporter reporter) {
         reporter.print(Kind.NOTE, "Doclet using locale: " + locale);
-        this.reporter = reporter;
-    }
-
-    private void printElement(DocTrees trees, Element e) {
-        DocCommentTree docCommentTree = trees.getDocCommentTree(e);
-        if (docCommentTree != null) {
-            reporter.print(Kind.NOTE, "Element (" + e.getKind() + ": " + e + ") has the following comments:");
-            reporter.print(Kind.NOTE, "Entire body: " + docCommentTree.getFullBody());
-            reporter.print(Kind.NOTE, "Block tags: " + docCommentTree.getBlockTags());
-        }
     }
 
     private String getComments(DocCommentTree docCommentTree) {
@@ -333,16 +322,13 @@ public class ResourceDoclet implements Doclet {
     private String getSerializedExample(String tag) {
         if (tag != null) {
             Matcher matcher = PATTERN_INLINE_TAG.matcher(tag);
-            System.out.println("Processing tag: " + tag);
             while (matcher.find()) {
                 String group = matcher.group();
                 String[] pair = getTagPair(group);
                 if ("link".equals(pair[0])) {
-                    System.out.println("It is link");
                     String[] classAndField = pair[1].split("#");
                     return DocletUtils.getLinkClass(classAndField[0], classAndField[1]);
                 } else {
-                    System.out.println("It is not link");
                     return pair[1];
                 }
             }
