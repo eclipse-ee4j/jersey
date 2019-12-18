@@ -61,9 +61,9 @@ public final class CommonProperties {
     /**
      * Property which allows (if true) default System properties configuration provider.
      *
-     * Effective if there are no any external properties providers
+     * If an external properties provider is used, the system properties are not used.
      *
-     * Shall be set (if used) in system properties.
+     * Shall be set to turn on the ability to propagate system properties to Jersey configuration.
      * @since 2.29
      */
     public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
