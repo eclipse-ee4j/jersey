@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,16 +24,11 @@ import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.Cl
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ParamDocType;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.Parameter;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.ExecutableElement;
+import com.sun.source.doctree.ParamTree;
+import javax.lang.model.element.VariableElement;
 
-/**
- * This {@link DocProcessor} wraps multiple {@code DocProcessor}s.
- *
- * @author Martin Grotzke (martin.grotzke at freiheit.com)
- */
 public class DocProcessorWrapper implements DocProcessor {
 
     private final List<DocProcessor> _docProcessors;
@@ -79,14 +74,14 @@ public class DocProcessorWrapper implements DocProcessor {
     }
 
     @Override
-    public void processClassDoc(ClassDoc classDoc, ClassDocType classDocType) {
+    public void processClassDoc(TypeElement classDoc, ClassDocType classDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
             docProcessor.processClassDoc(classDoc, classDocType);
         }
     }
 
     @Override
-    public void processMethodDoc(MethodDoc methodDoc,
+    public void processMethodDoc(ExecutableElement methodDoc,
                                  MethodDocType methodDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
             docProcessor.processMethodDoc(methodDoc, methodDocType);
@@ -94,10 +89,10 @@ public class DocProcessorWrapper implements DocProcessor {
     }
 
     @Override
-    public void processParamTag(ParamTag paramTag, Parameter parameter,
+    public void processParamTag(VariableElement parameter,
                                 ParamDocType paramDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processParamTag(paramTag, parameter, paramDocType);
+            docProcessor.processParamTag(parameter, paramDocType);
         }
     }
 

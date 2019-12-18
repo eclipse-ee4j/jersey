@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -96,6 +96,7 @@ public class ResourceDoclet {
      * @return true if no exception is thrown.
      */
     public static boolean start(final RootDoc root) {
+        boolean success = true;
         final String output = getOptionArg(root.options(), OPTION_OUTPUT);
 
         final String classpath = getOptionArg(root.options(), OPTION_CLASSPATH);
@@ -151,104 +152,12 @@ public class ResourceDoclet {
                 result.getDocs().add(classDocType);
             }
 
-            try {
-                final Class<?>[] clazzes = getJAXBContextClasses(result, docProcessor);
-                final JAXBContext c = JAXBContext.newInstance(clazzes);
-                final Marshaller m = c.createMarshaller();
-                m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                final OutputStream out = new BufferedOutputStream(new FileOutputStream(output));
-
-                final String[] cdataElements = getCDataElements(docProcessor);
-                final XMLSerializer serializer = getXMLSerializer(out, cdataElements);
-
-                m.marshal(result, serializer);
-                out.close();
-
-                LOG.info("Wrote " + output);
-
-            } catch (final Exception e) {
-                LOG.log(Level.SEVERE, "Could not serialize ResourceDoc.", e);
-                return false;
-            }
+            success = DocletUtils.createOutputFile(output, docProcessor, result);
         } finally {
             Thread.currentThread().setContextClassLoader(cl);
         }
 
-        return true;
-    }
-
-    private static String[] getCDataElements(final DocProcessor docProcessor) {
-        final String[] original = new String[] {"ns1^commentText", "ns2^commentText", "^commentText"};
-        if (docProcessor == null) {
-            return original;
-        } else {
-            final String[] cdataElements = docProcessor.getCDataElements();
-            if (cdataElements == null || cdataElements.length == 0) {
-                return original;
-            } else {
-
-                final String[] result = copyOf(original, original.length + cdataElements.length);
-                for (int i = 0; i < cdataElements.length; i++) {
-                    result[original.length + i] = cdataElements[i];
-                }
-                return result;
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T, U> T[] copyOf(final U[] original, final int newLength) {
-        final T[] copy = (original.getClass() == Object[].class)
-                ? (T[]) new Object[newLength]
-                : (T[]) Array.newInstance(original.getClass().getComponentType(), newLength);
-        System.arraycopy(original, 0, copy, 0,
-                Math.min(original.length, newLength));
-        return copy;
-    }
-
-    private static Class<?>[] getJAXBContextClasses(
-            final ResourceDocType result, final DocProcessor docProcessor) {
-        final Class<?>[] clazzes;
-        if (docProcessor == null) {
-            clazzes = new Class<?>[1];
-        } else {
-            final Class<?>[] requiredJaxbContextClasses = docProcessor.getRequiredJaxbContextClasses();
-            if (requiredJaxbContextClasses != null) {
-                clazzes = new Class<?>[1 + requiredJaxbContextClasses.length];
-                for (int i = 0; i < requiredJaxbContextClasses.length; i++) {
-                    clazzes[i + 1] = requiredJaxbContextClasses[i];
-                }
-            } else {
-                clazzes = new Class<?>[1];
-            }
-        }
-        clazzes[0] = result.getClass();
-        return clazzes;
-    }
-
-    private static XMLSerializer getXMLSerializer(final OutputStream os, final String[] cdataElements)
-            throws InstantiationException,
-            IllegalAccessException, ClassNotFoundException {
-        // configure an OutputFormat to handle CDATA
-        final OutputFormat of = new OutputFormat();
-
-        // specify which of your elements you want to be handled as CDATA.
-        // The use of the '^' between the namespaceURI and the localname
-        // seems to be an implementation detail of the xerces code.
-        // When processing xml that doesn't use namespaces, simply omit the
-        // namespace prefix as shown in the third CDataElement below.
-        of.setCDataElements(cdataElements);
-
-        // set any other options you'd like
-        of.setPreserveSpace(true);
-        of.setIndenting(true);
-
-        // create the serializer
-        final XMLSerializer serializer = new XMLSerializer(of);
-
-        serializer.setOutputByteStream(os);
-
-        return serializer;
+        return success;
     }
 
     private static void addResponseDoc(final MethodDoc methodDoc,
@@ -479,39 +388,9 @@ public class ResourceDoclet {
 
         /* Get referenced example bean
          */
+        
         final ClassDoc containingClass = referencedMember.containingClass();
-        final Object object;
-        try {
-            final Field declaredField = Class.forName(containingClass.qualifiedName(), false, Thread.currentThread()
-                    .getContextClassLoader()).getDeclaredField(referencedMember.name());
-            if (referencedMember.isFinal()) {
-                declaredField.setAccessible(true);
-            }
-            object = declaredField.get(null);
-            LOG.log(Level.FINE, "Got object " + object);
-        } catch (final Exception e) {
-            LOG.info("Have classloader: " + ResourceDoclet.class.getClassLoader().getClass());
-            LOG.info("Have thread classloader " + Thread.currentThread().getContextClassLoader().getClass());
-            LOG.info("Have system classloader " + ClassLoader.getSystemClassLoader().getClass());
-            LOG.log(Level.SEVERE, "Could not get field " + referencedMember.qualifiedName(), e);
-            return null;
-        }
-
-        /* marshal the bean to xml
-         */
-        try {
-            final JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
-            final StringWriter stringWriter = new StringWriter();
-            final Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(object, stringWriter);
-            final String result = stringWriter.getBuffer().toString();
-            LOG.log(Level.FINE, "Got marshalled output:\n" + result);
-            return result;
-        } catch (final Exception e) {
-            LOG.log(Level.SEVERE, "Could serialize bean to xml: " + object, e);
-            return null;
-        }
+        return DocletUtils.getLinkClass(containingClass.qualifiedName(), referencedMember.name());
     }
 
     private static String print(final Tag tag) {

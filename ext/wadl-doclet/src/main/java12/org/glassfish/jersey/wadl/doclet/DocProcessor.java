@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,9 @@ import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.Cl
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ParamDocType;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.Parameter;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 
 /**
  * A doc processor is handed over javadoc elements so that it can turn this into
@@ -55,33 +54,31 @@ public interface DocProcessor {
 
     /**
      * Use this method to extend the provided {@link ClassDocType} with the information from
-     * the given {@link ClassDoc}.
+     * the given {@link TypeElement}.
      *
      * @param classDoc     the class javadoc
      * @param classDocType the {@link ClassDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
      */
-    void processClassDoc(ClassDoc classDoc, ClassDocType classDocType);
+    void processClassDoc(TypeElement classDoc, ClassDocType classDocType);
 
     /**
      * Process the provided methodDoc and add your custom information to the methodDocType.<br>
-     * Use e.g. {@link MethodDocType#getAny()} to store custom elements.
      *
-     * @param methodDoc     the {@link MethodDoc} representing the docs of your method.
+     * @param methodDoc     the {@link ExecutableElement} representing the docs of your method.
      * @param methodDocType the related {@link MethodDocType} that will later be processed by the
      *                      {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
      */
-    void processMethodDoc(MethodDoc methodDoc, MethodDocType methodDocType);
+    void processMethodDoc(ExecutableElement methodDoc, MethodDocType methodDocType);
 
     /**
      * Use this method to extend the provided {@link ParamDocType} with the information from the
      * given {@link ParamTag} and {@link Parameter}.
      *
-     * @param paramTag     the parameter javadoc
      * @param parameter    the parameter (that is documented or not)
      * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
      */
-    void processParamTag(ParamTag paramTag, Parameter parameter, ParamDocType paramDocType);
+    void processParamTag(VariableElement parameter, ParamDocType paramDocType);
 
 }
