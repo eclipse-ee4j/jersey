@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.ws.rs.core.SecurityContext;
-
-import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -41,6 +41,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 
 /**
@@ -48,24 +49,27 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
  * <p>
  * Note that this implementation cannot be more experimental. Any contributions / feedback is welcomed.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 @ChannelHandler.Sharable
 class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
 
     private final URI baseUri;
-    private final LinkedBlockingDeque<InputStream> isList = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<ByteBuf> isList = new LinkedBlockingDeque<>();
     private final NettyHttpContainer container;
+    private final ResourceConfig resourceConfig;
 
     /**
      * Constructor.
      *
-     * @param baseUri   base {@link URI} of the container (includes context path, if any).
-     * @param container Netty container implementation.
+     * @param baseUri         base {@link URI} of the container (includes context path, if any).
+     * @param container       Netty container implementation.
+     * @param resourceConfig  the application {@link ResourceConfig}
      */
-    JerseyHttp2ServerHandler(URI baseUri, NettyHttpContainer container) {
+    JerseyHttp2ServerHandler(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
         this.baseUri = baseUri;
         this.container = container;
+        this.resourceConfig = resourceConfig;
     }
 
     @Override
@@ -88,9 +92,9 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
      * Process incoming data.
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        isList.add(new ByteBufInputStream(data.content()));
+        isList.add(data.content());
         if (data.isEndStream()) {
-            isList.add(NettyInputStream.END_OF_INPUT);
+            isList.add(Unpooled.EMPTY_BUFFER);
         }
     }
 
@@ -151,7 +155,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
                     public void removeProperty(String name) {
                         properties.remove(name);
                     }
-                });
+                }, resourceConfig);
 
         // request entity handling.
         if (!http2Headers.isEndStream()) {
@@ -159,7 +163,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
             ctx.channel().closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> future) throws Exception {
-                    isList.add(NettyInputStream.END_OF_INPUT_ERROR);
+                    isList.add(Unpooled.EMPTY_BUFFER);
                 }
             });
 

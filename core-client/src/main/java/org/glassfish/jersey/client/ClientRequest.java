@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,14 +50,15 @@ import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ExceptionUtils;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.message.MessageBodyWorkers;
+import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 
 /**
  * Jersey client request context.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
-public class ClientRequest extends OutboundMessageContext implements ClientRequestContext, InjectionManagerSupplier {
+public class ClientRequest extends OutboundMessageContext implements ClientRequestContext, HttpHeaders, InjectionManagerSupplier {
 
     // Request-scoped configuration instance
     private final ClientConfig clientConfig;
@@ -93,6 +94,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
      */
     protected ClientRequest(
             final URI requestUri, final ClientConfig clientConfig, final PropertiesDelegate propertiesDelegate) {
+        super(clientConfig.getConfiguration());
         clientConfig.checkClient();
 
         this.requestUri = requestUri;
@@ -268,6 +270,16 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
      */
     ClientConfig getClientConfig() {
         return clientConfig;
+    }
+
+    @Override
+    public List<String> getRequestHeader(String name) {
+        return HeaderUtils.asStringList(getHeaders().get(name), clientConfig.getConfiguration());
+    }
+
+    @Override
+    public MultivaluedMap<String, String> getRequestHeaders() {
+        return HeaderUtils.asStringHeaders(getHeaders(), clientConfig.getConfiguration());
     }
 
     @Override

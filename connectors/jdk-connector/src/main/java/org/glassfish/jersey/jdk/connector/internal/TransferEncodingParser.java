@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 
 import static org.glassfish.jersey.jdk.connector.internal.HttpParserUtils.skipSpaces;
 import static org.glassfish.jersey.jdk.connector.internal.HttpParserUtils.isSpaceOrTab;
@@ -24,7 +25,7 @@ import static org.glassfish.jersey.jdk.connector.internal.HttpParserUtils.isSpac
 
 /**
  * @author Alexey Stashok
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 abstract class TransferEncodingParser {
 
@@ -127,7 +128,7 @@ abstract class TransferEncodingParser {
                 } else {
                     // HTTP content starts from position 0 in the input Buffer (HTTP chunk header is not part of the input Buffer)
                     //contentParsingState.chunkContentStart = 0;
-                    contentParsingState.chunkContentStart = input.position();
+                    contentParsingState.chunkContentStart = ((Buffer) input).position();
                 }
 
                 // Get the position in the input Buffer, where actual HTTP content starts
@@ -155,16 +156,16 @@ abstract class TransferEncodingParser {
                 }
 
                 if (isLastChunk) {
-                    input.position(chunkContentStart);
+                    ((Buffer) input).position(chunkContentStart);
                     return true;
                 }
 
                 // Get the number of bytes remaining in the current chunk
                 final long thisPacketRemaining = contentParsingState.chunkRemainder;
                 // Get the number of content bytes available in the current input Buffer
-                final int contentAvailable = input.limit() - chunkContentStart;
+                final int contentAvailable = ((Buffer) input).limit() - chunkContentStart;
 
-                input.position(chunkContentStart);
+                ((Buffer) input).position(chunkContentStart);
                 ByteBuffer data;
                 if (contentAvailable > thisPacketRemaining) {
                     // If input Buffer has part of the next message - slice it
@@ -186,7 +187,7 @@ abstract class TransferEncodingParser {
             while (true) {
                 switch (headerParsingState.state) {
                     case 0: {// Initialize chunk parsing
-                        final int pos = input.position();
+                        final int pos = ((Buffer) input).position();
                         headerParsingState.start = pos;
                         headerParsingState.offset = pos;
                         headerParsingState.packetLimit = pos + MAX_HTTP_CHUNK_SIZE_LENGTH;
@@ -198,7 +199,7 @@ abstract class TransferEncodingParser {
                         final int nonSpaceIdx = skipSpaces(input,
                                 headerParsingState.offset, headerParsingState.packetLimit);
                         if (nonSpaceIdx == -1) {
-                            headerParsingState.offset = input.limit();
+                            headerParsingState.offset = ((Buffer) input).limit();
                             headerParsingState.state = 1;
 
                             headerParsingState.checkOverflow(LocalizationMessages.HTTP_CHUNK_ENCODING_PREFIX_OVERFLOW());

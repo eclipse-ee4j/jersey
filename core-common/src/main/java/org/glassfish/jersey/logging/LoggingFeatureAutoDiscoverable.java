@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,7 +47,7 @@ import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOS
  * <p>
  * The registration does not occur if the feature is already registered or auto-discoverable mechanism is disabled.
  *
- * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
+ * @author Ondrej Kosatka
  * @since 2.23
  */
 @Priority(AutoDiscoverable.DEFAULT_PRIORITY)

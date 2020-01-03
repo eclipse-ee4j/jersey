@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,14 +32,14 @@ import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.model.Parameter;
-import org.glassfish.jersey.server.model.Parameter.Source;
+import org.glassfish.jersey.model.Parameter.Source;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**
  * Value factory provider that delegates the injection target lookup to the underlying injection provider.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
  */
 @Singleton
 class DelegatedInjectionValueParamProvider implements ValueParamProvider {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2010, 2013 Coda Hale and Yammer, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ import static org.glassfish.jersey.server.internal.monitoring.core.ReservoirCons
  * particular nanosecond, if the collision buffer exceeds, newly added values are thrown away.
  *
  * @param <V> The type of values to store in this sliding window reservoir
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  * @see <pre><a href="https://github.com/dropwizard/metrics/blob/master/metrics-core/src/main/java/io/dropwizard/metrics
  * /SlidingTimeWindowReservoir.java">Dropwizard's
  * Metrics SlidingTimeWindowReservoir</a></pre>

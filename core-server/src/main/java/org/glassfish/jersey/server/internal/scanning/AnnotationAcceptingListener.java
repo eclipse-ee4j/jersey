@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,9 @@ import jersey.repackaged.org.objectweb.asm.ClassReader;
 import jersey.repackaged.org.objectweb.asm.ClassVisitor;
 import jersey.repackaged.org.objectweb.asm.FieldVisitor;
 import jersey.repackaged.org.objectweb.asm.MethodVisitor;
+import jersey.repackaged.org.objectweb.asm.ModuleVisitor;
 import jersey.repackaged.org.objectweb.asm.Opcodes;
+import jersey.repackaged.org.objectweb.asm.TypePath;
 
 /**
  * A scanner listener that processes Java class files (resource names
@@ -164,7 +166,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
         private boolean isAnnotated;
 
         private AnnotatedClassVisitor() {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM7);
         }
 
         public void visit(final int version, final int access, final String name,
@@ -225,6 +227,25 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
                                          final String string0, final String string1,
                                          final String[] string2) {
             // Do nothing
+            return null;
+        }
+
+        public ModuleVisitor visitModule(final String name, final int access, final String version) {
+            // Do nothing
+            return null;
+        }
+
+        public void visitNestHost(final String nestHost) {
+            // do nothing
+        }
+
+        public void visitNestMember(final String nestMember) {
+            // do nothing
+        }
+
+        public AnnotationVisitor visitTypeAnnotation(
+                final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+            //do nothing
             return null;
         }
 

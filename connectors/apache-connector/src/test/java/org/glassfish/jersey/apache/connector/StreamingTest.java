@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,12 @@ package org.glassfish.jersey.apache.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +42,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author Petr Janouch (petr.janouch at oracle.com)
+ * @author Petr Janouch
  */
 public class StreamingTest extends JerseyTest {
     private PoolingHttpClientConnectionManager connectionManager;
@@ -49,21 +51,13 @@ public class StreamingTest extends JerseyTest {
      * Test that a data stream can be terminated from the client side.
      */
     @Test
-    public void clientCloseTest() throws IOException {
-        // start streaming
-        InputStream inputStream = target().path("/streamingEndpoint").request()
-                .property(ClientProperties.READ_TIMEOUT, 1_000).get(InputStream.class);
+    public void clientCloseNoTimeoutTest() throws IOException {
+        clientCloseTest(-1);
+    }
 
-        WebTarget sendTarget = target().path("/streamingEndpoint/send");
-        // trigger sending 'A' to the stream; OK is sent if everything on the server was OK
-        assertEquals("OK", sendTarget.request().get().readEntity(String.class));
-        // check 'A' has been sent
-        assertEquals('A', inputStream.read());
-        // closing the stream should tear down the connection
-        inputStream.close();
-        // trigger sending another 'A' to the stream; it should fail
-        // (indicating that the streaming has been terminated on the server)
-        assertEquals("NOK", sendTarget.request().get().readEntity(String.class));
+    @Test
+    public void clientCloseWithTimeOutTest() throws IOException {
+        clientCloseTest(1_000);
     }
 
     /**
@@ -101,6 +95,43 @@ public class StreamingTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(StreamingEndpoint.class);
+    }
+
+    /**
+     * Test that a data stream can be terminated from the client side.
+     */
+    private void clientCloseTest(int readTimeout) throws IOException {
+        // start streaming
+        AtomicInteger counter = new AtomicInteger(0);
+        Invocation.Builder builder = target().path("/streamingEndpoint").request();
+        if (readTimeout > -1) {
+            counter.set(1);
+            builder.property(ClientProperties.READ_TIMEOUT, readTimeout);
+            builder.property(ApacheClientProperties.CONNECTION_CLOSING_STRATEGY,
+                    (ApacheConnectionClosingStrategy) (config, request, response, stream) -> {
+                try {
+                    stream.close();
+                } catch (Exception e) {
+                    // timeout, no chunk ending
+                } finally {
+                    counter.set(0);
+                    response.close();
+                }
+            });
+        }
+        InputStream inputStream = builder.get(InputStream.class);
+
+        WebTarget sendTarget = target().path("/streamingEndpoint/send");
+        // trigger sending 'A' to the stream; OK is sent if everything on the server was OK
+        assertEquals("OK", sendTarget.request().get().readEntity(String.class));
+        // check 'A' has been sent
+        assertEquals('A', inputStream.read());
+        // closing the stream should tear down the connection
+        inputStream.close();
+        // trigger sending another 'A' to the stream; it should fail
+        // (indicating that the streaming has been terminated on the server)
+        assertEquals("NOK", sendTarget.request().get().readEntity(String.class));
+        assertEquals(0, counter.get());
     }
 
     @Singleton

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,7 +56,7 @@ import org.glassfish.jersey.process.internal.Stages;
 /**
  * Client-side request processing runtime.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
@@ -78,6 +78,9 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
     private final ManagedObjectsFinalizer managedObjectsFinalizer;
     private final InjectionManager injectionManager;
 
+    private final InvocationInterceptorStages.PreInvocationInterceptorStage preInvocationInterceptorStage;
+    private final InvocationInterceptorStages.PostInvocationInterceptorStage postInvocationInterceptorStage;
+
     /**
      * Create new client request processing runtime.
      *
@@ -95,7 +98,14 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
         Stage.Builder<ClientRequest> requestingChainBuilder = Stages.chain(requestProcessingInitializationStage);
 
-        ChainableStage<ClientRequest> requestFilteringStage = ClientFilteringStages.createRequestFilteringStage(injectionManager);
+        preInvocationInterceptorStage = InvocationInterceptorStages.createPreInvocationInterceptorStage(injectionManager);
+        postInvocationInterceptorStage = InvocationInterceptorStages.createPostInvocationInterceptorStage(injectionManager);
+
+        ChainableStage<ClientRequest> requestFilteringStage = preInvocationInterceptorStage.hasPreInvocationInterceptors()
+                ? ClientFilteringStages.createRequestFilteringStage(
+                        preInvocationInterceptorStage.createPreInvocationInterceptorFilter(), injectionManager)
+                : ClientFilteringStages.createRequestFilteringStage(injectionManager);
+
         this.requestProcessingRoot = requestFilteringStage != null
                 ? requestingChainBuilder.build(requestFilteringStage) : requestingChainBuilder.build();
 
@@ -136,14 +146,22 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      * @return {@code Runnable} to be submitted for async processing using {@link #submit(Runnable)}.
      */
     Runnable createRunnableForAsyncProcessing(ClientRequest request, final ResponseCallback callback) {
+        try {
+            requestScope.runInScope(() -> preInvocationInterceptorStage.beforeRequest(request));
+        } catch (Throwable throwable) {
+            return () -> requestScope.runInScope(() -> processFailure(request, throwable, callback));
+        }
+
         return () -> requestScope.runInScope(() -> {
+            RuntimeException runtimeException = null;
             try {
                 ClientRequest processedRequest;
+
                 try {
                     processedRequest = Stages.process(request, requestProcessingRoot);
                     processedRequest = addUserAgent(processedRequest, connector.getName());
                 } catch (final AbortException aborted) {
-                    processResponse(aborted.getAbortResponse(), callback);
+                    processResponse(request, aborted.getAbortResponse(), callback);
                     return;
                 }
 
@@ -151,18 +169,18 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
                     @Override
                     public void response(final ClientResponse response) {
-                        requestScope.runInScope(() -> processResponse(response, callback));
+                        requestScope.runInScope(() -> processResponse(request, response, callback));
                     }
 
                     @Override
                     public void failure(final Throwable failure) {
-                        requestScope.runInScope(() -> processFailure(failure, callback));
+                        requestScope.runInScope(() -> processFailure(request, failure, callback));
                     }
                 };
 
                 connector.apply(processedRequest, connectorCallback);
             } catch (final Throwable throwable) {
-                processFailure(throwable, callback);
+                processFailure(request, throwable, callback);
             }
         });
     }
@@ -192,15 +210,36 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
         return backgroundScheduler.get().schedule(command, delay, unit);
     }
 
-    private void processResponse(final ClientResponse response, final ResponseCallback callback) {
-        final ClientResponse processedResponse;
+    private void processResponse(final ClientRequest request, final ClientResponse response, final ResponseCallback callback) {
+        ClientResponse processedResponse = null;
+        Throwable caught = null;
         try {
             processedResponse = Stages.process(response, responseProcessingRoot);
         } catch (final Throwable throwable) {
+            caught = throwable;
+        }
+
+        try {
+            processedResponse = postInvocationInterceptorStage.afterRequest(request, processedResponse, caught);
+        } catch (Throwable throwable) {
             processFailure(throwable, callback);
             return;
         }
         callback.completed(processedResponse, requestScope);
+    }
+
+    private void processFailure(final ClientRequest request, final Throwable failure, final ResponseCallback callback) {
+        if (postInvocationInterceptorStage.hasPostInvocationInterceptor()) {
+            try {
+                final ClientResponse clientResponse = postInvocationInterceptorStage.afterRequest(request, null, failure);
+                callback.completed(clientResponse, requestScope);
+            } catch (RuntimeException e) {
+                final Throwable t = e.getSuppressed().length == 1 && e.getSuppressed()[0] == failure ? failure : e;
+                processFailure(t, callback);
+            }
+        } else {
+            processFailure(failure, callback);
+        }
     }
 
     private void processFailure(final Throwable failure, final ResponseCallback callback) {
@@ -248,19 +287,25 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      * @throws javax.ws.rs.ProcessingException in case of an invocation failure.
      */
     public ClientResponse invoke(final ClientRequest request) {
-        ClientResponse response;
+        ProcessingException processingException = null;
+        ClientResponse response = null;
         try {
+            preInvocationInterceptorStage.beforeRequest(request);
+
             try {
                 response = connector.apply(addUserAgent(Stages.process(request, requestProcessingRoot), connector.getName()));
             } catch (final AbortException aborted) {
                 response = aborted.getAbortResponse();
             }
 
-            return Stages.process(response, responseProcessingRoot);
+            response = Stages.process(response, responseProcessingRoot);
         } catch (final ProcessingException pe) {
-            throw pe;
+            processingException = pe;
         } catch (final Throwable t) {
-            throw new ProcessingException(t.getMessage(), t);
+            processingException = new ProcessingException(t.getMessage(), t);
+        } finally {
+            response = postInvocationInterceptorStage.afterRequest(request, response, processingException);
+            return response;
         }
     }
 

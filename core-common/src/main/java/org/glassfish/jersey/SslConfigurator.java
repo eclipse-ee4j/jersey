@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
  * @author Alexey Stashok
  * @author Hubert Iwaniuk
  * @author Bruno Harbulot
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 @SuppressWarnings("UnusedDeclaration")
 public final class SslConfigurator {

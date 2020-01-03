@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -52,11 +52,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Jakub Podlesak
+ * @author Adam Lindenthal
  */
 public abstract class AbstractWebAppTest {
 
@@ -112,7 +113,7 @@ public abstract class AbstractWebAppTest {
                 systemProperty(org.osgi.framework.Constants.FRAMEWORK_SECURITY)
                         .value(org.osgi.framework.Constants.FRAMEWORK_SECURITY_OSGI),
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 // systemProperty(BundleLocationProperty).value(bundleLocation),
 
@@ -129,7 +130,7 @@ public abstract class AbstractWebAppTest {
                 //                 mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
                 // javax.annotation must go first!
-                mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 // pax exam dependencies
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),
                 junitBundles(), // adds junit classes to the OSGi context
@@ -139,13 +140,18 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("osgi-resource-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-locator").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2").artifactId("hk2-utils").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("javax.inject").versionAsInProject(),
+                mavenBundle().groupId("org.glassfish.hk2.external").artifactId("jakarta.inject").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.hk2.external").artifactId("aopalliance-repackaged").versionAsInProject(),
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
-                // JAX-RS API
-                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject(),
+                //JAXB-API
+                mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
+                //SUN JAXB IMPL OSGI
+                mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                systemPackage("com.sun.source.tree"),
+                systemPackage("com.sun.source.util"),
+
                 // validation - required by jersey-container-servlet-core
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
                 // Jersey bundles
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-common").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-server").versionAsInProject(),
@@ -153,6 +159,10 @@ public abstract class AbstractWebAppTest {
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                         .versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // JAX-RS API
+                mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject(),
+
                 // Those two bundles have different (unique) maven coordinates, but represent the same OSGi bundle in two
                 // different versions.
                 // (see the maven bundle plugin configuration in each of the two pom.xml files

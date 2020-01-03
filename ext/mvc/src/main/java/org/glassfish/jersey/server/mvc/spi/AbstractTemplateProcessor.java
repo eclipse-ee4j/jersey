@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -45,7 +47,6 @@ import javax.servlet.ServletContext;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.internal.util.collection.DataStructures;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.server.mvc.MvcFeature;
 import org.glassfish.jersey.server.mvc.internal.LocalizationMessages;
@@ -96,7 +97,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
         this.supportedExtensions =
                 Arrays.stream(supportedExtensions)
                       .map(input -> {
-                          input = input.toLowerCase();
+                          input = input.toLowerCase(Locale.ROOT);
                           return input.startsWith(".") ? input : "." + input;
                       })
                       .collect(Collectors.toSet());
@@ -116,7 +117,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
         if (cacheEnabled == null) {
             cacheEnabled = PropertiesHelper.getValue(properties, MvcFeature.CACHE_TEMPLATES, false, null);
         }
-        this.cache = cacheEnabled ? DataStructures.<String, T>createConcurrentMap() : null;
+        this.cache = cacheEnabled ? new ConcurrentHashMap<>() : null;
         this.encoding = TemplateHelper.getTemplateOutputEncoding(config, suffix);
     }
 
@@ -221,7 +222,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
      * @return collection of possible template paths.
      */
     private Collection<String> getTemplatePaths(final String name) {
-        final String lowerName = name.toLowerCase();
+        final String lowerName = name.toLowerCase(Locale.ROOT);
         final String templatePath = basePath.endsWith("/") ? basePath + name.substring(1) : basePath + name;
 
         // Check whether the given name ends with supported suffix.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,7 +46,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/jersey-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/jersey-client/dependencies.html">
     jersey-client
 </link>
 </entry>
@@ -54,7 +54,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/jersey-common/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/jersey-common/dependencies.html">
     jersey-common
 </link>
 </entry>
@@ -62,7 +62,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/jersey-server/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/jersey-server/dependencies.html">
     jersey-server
 </link>
 </entry>
@@ -84,7 +84,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-grizzly2-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-grizzly2-http/dependencies.html">
     jersey-container-grizzly2-http
 </link>
 </entry>
@@ -92,7 +92,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-grizzly2-servlet/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-grizzly2-servlet/dependencies.html">
     jersey-container-grizzly2-servlet
 </link>
 </entry>
@@ -100,7 +100,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-jdk-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-jdk-http/dependencies.html">
     jersey-container-jdk-http
 </link>
 </entry>
@@ -108,7 +108,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-jetty-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-jetty-http/dependencies.html">
     jersey-container-jetty-http
 </link>
 </entry>
@@ -116,7 +116,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-jetty-servlet/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-jetty-servlet/dependencies.html">
     jersey-container-jetty-servlet
 </link>
 </entry>
@@ -124,7 +124,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-netty-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-netty-http/dependencies.html">
     jersey-container-netty-http
 </link>
 </entry>
@@ -132,7 +132,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-servlet/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-servlet/dependencies.html">
     jersey-container-servlet
 </link>
 </entry>
@@ -140,7 +140,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-servlet-core/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-servlet-core/dependencies.html">
     jersey-container-servlet-core
 </link>
 </entry>
@@ -148,7 +148,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-container-simple-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-simple-http/dependencies.html">
     jersey-container-simple-http
 </link>
 </entry>
@@ -156,7 +156,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-gf-ejb/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-gf-ejb/dependencies.html">
     jersey-gf-ejb
 </link>
 </entry>
@@ -178,7 +178,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-apache-connector/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-apache-connector/dependencies.html">
     jersey-apache-connector
 </link>
 </entry>
@@ -186,7 +186,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-grizzly-connector/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-grizzly-connector/dependencies.html">
     jersey-grizzly-connector
 </link>
 </entry>
@@ -194,7 +194,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-jdk-connector/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-jdk-connector/dependencies.html">
     jersey-jdk-connector
 </link>
 </entry>
@@ -202,7 +202,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-jetty-connector/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-jetty-connector/dependencies.html">
     jersey-jetty-connector
 </link>
 </entry>
@@ -210,7 +210,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-netty-connector/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-netty-connector/dependencies.html">
     jersey-netty-connector
 </link>
 </entry>
@@ -232,7 +232,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-jaxb/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-jaxb/dependencies.html">
     jersey-media-jaxb
 </link>
 </entry>
@@ -240,7 +240,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-binding/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-binding/dependencies.html">
     jersey-media-json-binding
 </link>
 </entry>
@@ -248,7 +248,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jackson/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jackson/dependencies.html">
     jersey-media-json-jackson
 </link>
 </entry>
@@ -256,7 +256,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jackson1/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jackson1/dependencies.html">
     jersey-media-json-jackson1
 </link>
 </entry>
@@ -264,7 +264,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jettison/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jettison/dependencies.html">
     jersey-media-json-jettison
 </link>
 </entry>
@@ -272,7 +272,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-processing/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-processing/dependencies.html">
     jersey-media-json-processing
 </link>
 </entry>
@@ -280,7 +280,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-kryo/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-kryo/dependencies.html">
     jersey-media-kryo
 </link>
 </entry>
@@ -288,7 +288,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-moxy/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-moxy/dependencies.html">
     jersey-media-moxy
 </link>
 </entry>
@@ -296,7 +296,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-multipart/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-multipart/dependencies.html">
     jersey-media-multipart
 </link>
 </entry>
@@ -304,7 +304,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-media-sse/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-sse/dependencies.html">
     jersey-media-sse
 </link>
 </entry>
@@ -326,7 +326,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-bean-validation/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-bean-validation/dependencies.html">
     jersey-bean-validation
 </link>
 </entry>
@@ -334,7 +334,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x/dependencies.html">
     jersey-cdi1x
 </link>
 </entry>
@@ -342,7 +342,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-ban-custom-hk2-binding/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-ban-custom-hk2-binding/dependencies.html">
     jersey-cdi1x-ban-custom-hk2-binding
 </link>
 </entry>
@@ -350,7 +350,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-servlet/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-servlet/dependencies.html">
     jersey-cdi1x-servlet
 </link>
 </entry>
@@ -358,7 +358,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-transaction/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-transaction/dependencies.html">
     jersey-cdi1x-transaction
 </link>
 </entry>
@@ -366,7 +366,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-validation/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-cdi1x-validation/dependencies.html">
     jersey-cdi1x-validation
 </link>
 </entry>
@@ -374,7 +374,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-declarative-linking/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-declarative-linking/dependencies.html">
     jersey-declarative-linking
 </link>
 </entry>
@@ -382,7 +382,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-entity-filtering/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-entity-filtering/dependencies.html">
     jersey-entity-filtering
 </link>
 </entry>
@@ -390,7 +390,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-metainf-services/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-metainf-services/dependencies.html">
     jersey-metainf-services
 </link>
 </entry>
@@ -398,7 +398,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-mvc/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc/dependencies.html">
     jersey-mvc
 </link>
 </entry>
@@ -406,7 +406,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-bean-validation/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-bean-validation/dependencies.html">
     jersey-mvc-bean-validation
 </link>
 </entry>
@@ -414,7 +414,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-freemarker/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-freemarker/dependencies.html">
     jersey-mvc-freemarker
 </link>
 </entry>
@@ -422,7 +422,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-jsp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-jsp/dependencies.html">
     jersey-mvc-jsp
 </link>
 </entry>
@@ -430,7 +430,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-mustache/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-mustache/dependencies.html">
     jersey-mvc-mustache
 </link>
 </entry>
@@ -438,7 +438,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-proxy-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-proxy-client/dependencies.html">
     jersey-proxy-client
 </link>
 </entry>
@@ -446,7 +446,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-guava/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-guava/dependencies.html">
     jersey-rx-client-guava
 </link>
 </entry>
@@ -454,7 +454,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-rxjava/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-rxjava/dependencies.html">
     jersey-rx-client-rxjava
 </link>
 </entry>
@@ -462,7 +462,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-rxjava2/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-rx-client-rxjava2/dependencies.html">
     jersey-rx-client-rxjava2
 </link>
 </entry>
@@ -470,7 +470,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-servlet-portability/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-servlet-portability/dependencies.html">
     jersey-servlet-portability
 </link>
 </entry>
@@ -478,7 +478,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-spring4/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-spring4/dependencies.html">
     jersey-spring4
 </link>
 </entry>
@@ -486,7 +486,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-wadl-doclet/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-wadl-doclet/dependencies.html">
     jersey-wadl-doclet
 </link>
 </entry>
@@ -496,7 +496,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-weld2-se/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-weld2-se/dependencies.html">
     jersey-weld2-se
 </link>
 </entry>
@@ -518,7 +518,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/container-runner-maven-plugin/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/container-runner-maven-plugin/dependencies.html">
     container-runner-maven-plugin
 </link>
 </entry>
@@ -527,7 +527,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/custom-enforcer-rules/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/custom-enforcer-rules/dependencies.html">
     custom-enforcer-rules
 </link>
 </entry>
@@ -535,7 +535,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-test-framework-core/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-test-framework-core/dependencies.html">
     jersey-test-framework-core
 </link>
 </entry>
@@ -543,7 +543,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-bundle/dependencies.html">
     jersey-test-framework-provider-bundle
 </link>
 </entry>
@@ -551,7 +551,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-external/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-external/dependencies.html">
     jersey-test-framework-provider-external
 </link>
 </entry>
@@ -559,7 +559,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-grizzly2/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-grizzly2/dependencies.html">
     jersey-test-framework-provider-grizzly2
 </link>
 </entry>
@@ -567,7 +567,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-inmemory/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-inmemory/dependencies.html">
     jersey-test-framework-provider-inmemory
 </link>
 </entry>
@@ -575,7 +575,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jdk-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jdk-http/dependencies.html">
     jersey-test-framework-provider-jdk-http
 </link>
 </entry>
@@ -583,7 +583,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jetty/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jetty/dependencies.html">
     jersey-test-framework-provider-jetty
 </link>
 </entry>
@@ -591,7 +591,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-netty/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-netty/dependencies.html">
     jersey-test-framework-provider-netty
 </link>
 </entry>
@@ -599,7 +599,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-simple/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-simple/dependencies.html">
     jersey-test-framework-provider-simple
 </link>
 </entry>
@@ -607,7 +607,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jersey-test-framework-util/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-test-framework-util/dependencies.html">
     jersey-test-framework-util
 </link>
 </entry>
@@ -615,7 +615,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/memleak-test-common/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/memleak-test-common/dependencies.html">
     memleak-test-common
 </link>
 </entry>
@@ -637,7 +637,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-bundle/dependencies.html">
     jersey-test-framework-provider-bundle
 </link>
 </entry>
@@ -645,7 +645,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-external/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-external/dependencies.html">
     jersey-test-framework-provider-external
 </link>
 </entry>
@@ -653,7 +653,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-grizzly2/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-grizzly2/dependencies.html">
     jersey-test-framework-provider-grizzly2
 </link>
 </entry>
@@ -661,7 +661,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-inmemory/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-inmemory/dependencies.html">
     jersey-test-framework-provider-inmemory
 </link>
 </entry>
@@ -669,7 +669,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jdk-http/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jdk-http/dependencies.html">
     jersey-test-framework-provider-jdk-http
 </link>
 </entry>
@@ -677,7 +677,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jetty/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jetty/dependencies.html">
     jersey-test-framework-provider-jetty
 </link>
 </entry>
@@ -685,7 +685,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-netty/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-netty/dependencies.html">
     jersey-test-framework-provider-netty
 </link>
 </entry>
@@ -693,7 +693,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-simple/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-simple/dependencies.html">
     jersey-test-framework-provider-simple
 </link>
 </entry>
@@ -715,7 +715,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/project/jersey-gf-ejb/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-gf-ejb/dependencies.html">
     jersey-gf-ejb
 </link>
 </entry>
@@ -737,7 +737,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth1-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth1-client/dependencies.html">
     oauth1-client
 </link>
 </entry>
@@ -745,7 +745,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth1-server/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth1-server/dependencies.html">
     oauth1-server
 </link>
 </entry>
@@ -753,7 +753,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth1-signature/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth1-signature/dependencies.html">
     oauth1-signature
 </link>
 </entry>
@@ -761,7 +761,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth2-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth2-client/dependencies.html">
     oauth2-client
 </link>
 </entry>
@@ -783,7 +783,7 @@
         <tbody>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/additional-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/additional-bundle/dependencies.html">
     additional-bundle
 </link>
 </entry>
@@ -791,7 +791,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/alternate-version-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/alternate-version-bundle/dependencies.html">
     alternate-version-bundle
 </link>
 </entry>
@@ -799,7 +799,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/assemblies/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/assemblies/dependencies.html">
     assemblies
 </link>
 </entry>
@@ -807,7 +807,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bean-validation-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bean-validation-webapp/dependencies.html">
     bean-validation-webapp
 </link>
 </entry>
@@ -815,7 +815,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark/dependencies.html">
     bookmark
 </link>
 </entry>
@@ -823,7 +823,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark-em/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark-em/dependencies.html">
     bookmark-em
 </link>
 </entry>
@@ -831,7 +831,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookstore-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookstore-webapp/dependencies.html">
     bookstore-webapp
 </link>
 </entry>
@@ -839,7 +839,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/bundle/dependencies.html">
     bundle
 </link>
 </entry>
@@ -847,7 +847,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/cdi-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/cdi-webapp/dependencies.html">
     cdi-webapp
 </link>
 </entry>
@@ -855,7 +855,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/clipboard/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/clipboard/dependencies.html">
     clipboard
 </link>
 </entry>
@@ -863,7 +863,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/clipboard-programmatic/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/clipboard-programmatic/dependencies.html">
     clipboard-programmatic
 </link>
 </entry>
@@ -871,7 +871,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/declarative-linking/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/declarative-linking/dependencies.html">
     declarative-linking
 </link>
 </entry>
@@ -879,7 +879,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/entity-filtering/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/entity-filtering/dependencies.html">
     entity-filtering
 </link>
 </entry>
@@ -887,7 +887,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/entity-filtering-security/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/entity-filtering-security/dependencies.html">
     entity-filtering-security
 </link>
 </entry>
@@ -895,7 +895,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/entity-filtering-selectable/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/entity-filtering-selectable/dependencies.html">
     entity-filtering-selectable
 </link>
 </entry>
@@ -903,7 +903,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/exception-mapping/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/exception-mapping/dependencies.html">
     exception-mapping
 </link>
 </entry>
@@ -911,7 +911,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/extended-wadl-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/extended-wadl-webapp/dependencies.html">
     extended-wadl-webapp
 </link>
 </entry>
@@ -919,7 +919,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/feed-combiner-java8-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/feed-combiner-java8-webapp/dependencies.html">
     feed-combiner-java8-webapp
 </link>
 </entry>
@@ -927,7 +927,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/flight-management-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/flight-management-webapp/dependencies.html">
     flight-management-webapp
 </link>
 </entry>
@@ -935,7 +935,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/freemarker-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/freemarker-webapp/dependencies.html">
     freemarker-webapp
 </link>
 </entry>
@@ -943,7 +943,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/functional-test/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/functional-test/dependencies.html">
     functional-test
 </link>
 </entry>
@@ -951,7 +951,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/functional-test/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/functional-test/dependencies.html">
     functional-test
 </link>
 </entry>
@@ -959,7 +959,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/groovy/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/groovy/dependencies.html">
     groovy
 </link>
 </entry>
@@ -967,7 +967,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld/dependencies.html">
     helloworld
 </link>
 </entry>
@@ -975,7 +975,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-benchmark/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-benchmark/dependencies.html">
     helloworld-benchmark
 </link>
 </entry>
@@ -983,7 +983,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-cdi2-se/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-cdi2-se/dependencies.html">
     helloworld-cdi2-se
 </link>
 </entry>
@@ -991,7 +991,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-netty/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-netty/dependencies.html">
     helloworld-netty
 </link>
 </entry>
@@ -999,7 +999,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-programmatic/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-programmatic/dependencies.html">
     helloworld-programmatic
 </link>
 </entry>
@@ -1007,7 +1007,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-pure-jax-rs/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-pure-jax-rs/dependencies.html">
     helloworld-pure-jax-rs
 </link>
 </entry>
@@ -1015,7 +1015,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-annotations/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-annotations/dependencies.html">
     helloworld-spring-annotations
 </link>
 </entry>
@@ -1023,7 +1023,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-webapp/dependencies.html">
     helloworld-spring-webapp
 </link>
 </entry>
@@ -1031,7 +1031,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/helloworld-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/helloworld-webapp/dependencies.html">
     helloworld-webapp
 </link>
 </entry>
@@ -1039,7 +1039,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/helloworld-weld/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-weld/dependencies.html">
     helloworld-weld
 </link>
 </entry>
@@ -1047,7 +1047,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/http-patch/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/http-patch/dependencies.html">
     http-patch
 </link>
 </entry>
@@ -1057,7 +1057,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/http-trace/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/http-trace/dependencies.html">
     http-trace
 </link>
 </entry>
@@ -1065,7 +1065,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/https-clientserver-grizzly/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/https-clientserver-grizzly/dependencies.html">
     https-clientserver-grizzly
 </link>
 </entry>
@@ -1073,7 +1073,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/https-server-glassfish/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/https-server-glassfish/dependencies.html">
     https-server-glassfish
 </link>
 </entry>
@@ -1081,7 +1081,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/java8-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/java8-webapp/dependencies.html">
     java8-webapp
 </link>
 </entry>
@@ -1089,7 +1089,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jaxb/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jaxb/dependencies.html">
     jaxb
 </link>
 </entry>
@@ -1097,7 +1097,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/jaxrs-types-injection/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jaxrs-types-injection/dependencies.html">
     jaxrs-types-injection
 </link>
 </entry>
@@ -1105,7 +1105,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/jersey-ejb/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/jersey-ejb/dependencies.html">
     jersey-ejb
 </link>
 </entry>
@@ -1113,7 +1113,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-binding-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-binding-webapp/dependencies.html">
     json-binding-webapp
 </link>
 </entry>
@@ -1121,7 +1121,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-jackson/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-jackson/dependencies.html">
     json-jackson
 </link>
 </entry>
@@ -1129,7 +1129,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-jackson1/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-jackson1/dependencies.html">
     json-jackson1
 </link>
 </entry>
@@ -1137,7 +1137,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-jettison/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-jettison/dependencies.html">
     json-jettison
 </link>
 </entry>
@@ -1145,7 +1145,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-moxy/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-moxy/dependencies.html">
     json-moxy
 </link>
 </entry>
@@ -1153,7 +1153,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/json-processing-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/json-processing-webapp/dependencies.html">
     json-processing-webapp
 </link>
 </entry>
@@ -1161,7 +1161,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/json-with-padding/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-with-padding/dependencies.html">
     json-with-padding
 </link>
 </entry>
@@ -1169,7 +1169,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/lib-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/lib-bundle/dependencies.html">
     lib-bundle
 </link>
 </entry>
@@ -1177,7 +1177,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-beans-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-beans-webapp/dependencies.html">
     managed-beans-webapp
 </link>
 </entry>
@@ -1185,7 +1185,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/managed-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/managed-client/dependencies.html">
     managed-client
 </link>
 </entry>
@@ -1193,7 +1193,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-client-simple-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-client-simple-webapp/dependencies.html">
     managed-client-simple-webapp
 </link>
 </entry>
@@ -1201,7 +1201,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-client-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-client-webapp/dependencies.html">
     managed-client-webapp
 </link>
 </entry>
@@ -1209,7 +1209,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/monitoring-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/monitoring-webapp/dependencies.html">
     monitoring-webapp
 </link>
 </entry>
@@ -1217,7 +1217,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/multipart-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/multipart-webapp/dependencies.html">
     multipart-webapp
 </link>
 </entry>
@@ -1225,7 +1225,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth-client-twitter/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth-client-twitter/dependencies.html">
     oauth-client-twitter
 </link>
 </entry>
@@ -1234,7 +1234,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/oauth2-client-google-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth2-client-google-webapp/dependencies.html">
     oauth2-client-google-webapp
 </link>
 </entry>
@@ -1242,7 +1242,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/open-tracing/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/open-tracing/dependencies.html">
     open-tracing
 </link>
 </entry>
@@ -1250,7 +1250,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/dependencies.html">
     osgi-helloworld-webapp
 </link>
 </entry>
@@ -1258,7 +1258,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/dependencies.html">
     osgi-http-service
 </link>
 </entry>
@@ -1266,7 +1266,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/reload/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/reload/dependencies.html">
     reload
 </link>
 </entry>
@@ -1274,7 +1274,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/rx-client-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/rx-client-webapp/dependencies.html">
     rx-client-webapp
 </link>
 </entry>
@@ -1282,7 +1282,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-async/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-async/dependencies.html">
     server-async
 </link>
 </entry>
@@ -1290,7 +1290,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-async-managed/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-async-managed/dependencies.html">
     server-async-managed
 </link>
 </entry>
@@ -1298,7 +1298,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/dependencies.html">
     server-async-standalone
 </link>
 </entry>
@@ -1306,7 +1306,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/server-async-standalone-client/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/server-async-standalone-client/dependencies.html">
     server-async-standalone-client
 </link>
 </entry>
@@ -1314,7 +1314,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/server-async-standalone-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-async-standalone/server-async-standalone-webapp/dependencies.html">
     server-async-standalone-webapp
 </link>
 </entry>
@@ -1322,7 +1322,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-sent-events-jaxrs/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-sent-events-jaxrs/dependencies.html">
     server-sent-events-jaxrs
 </link>
 </entry>
@@ -1330,7 +1330,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/server-sent-events-jersey/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/server-sent-events-jersey/dependencies.html">
     server-sent-events-jersey
 </link>
 </entry>
@@ -1338,7 +1338,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/servlet3-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/servlet3-webapp/dependencies.html">
     servlet3-webapp
 </link>
 </entry>
@@ -1346,7 +1346,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/shortener-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/shortener-webapp/dependencies.html">
     shortener-webapp
 </link>
 </entry>
@@ -1354,7 +1354,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/simple-console/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/simple-console/dependencies.html">
     simple-console
 </link>
 </entry>
@@ -1362,7 +1362,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/sparklines/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/sparklines/dependencies.html">
     sparklines
 </link>
 </entry>
@@ -1370,7 +1370,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jaxrs-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jaxrs-webapp/dependencies.html">
     sse-item-store-jaxrs-webapp
 </link>
 </entry>
@@ -1378,7 +1378,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jersey-webapp/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jersey-webapp/dependencies.html">
     sse-item-store-jersey-webapp
 </link>
 </entry>
@@ -1386,7 +1386,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/sse-twitter-aggregator/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/sse-twitter-aggregator/dependencies.html">
     sse-twitter-aggregator
 </link>
 </entry>
@@ -1394,7 +1394,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/system-properties-example/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/system-properties-example/dependencies.html">
     system-properties-example
 </link>
 </entry>
@@ -1402,7 +1402,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/tone-generator/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/tone-generator/dependencies.html">
     tone-generator
 </link>
 </entry>
@@ -1410,7 +1410,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/war-bundle/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/war-bundle/dependencies.html">
     war-bundle
 </link>
 </entry>
@@ -1418,7 +1418,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/dependencies.html">
     webapp-example-parent
 </link>
 </entry>
@@ -1426,7 +1426,7 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://jersey.github.io/project-info/&version;/jersey/project/xml-moxy/dependencies.html">
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/xml-moxy/dependencies.html">
     xml-moxy
 </link>
 </entry>

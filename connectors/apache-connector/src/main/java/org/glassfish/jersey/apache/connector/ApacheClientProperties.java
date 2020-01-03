@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
  *
  * @author jorgeluisw@mac.com
  * @author Paul Sandoz
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  */
 @PropertiesClass
@@ -133,6 +133,37 @@ public final class ApacheClientProperties {
      * The name of the configuration property is <tt>{@value}</tt>.
      */
     public static final String RETRY_HANDLER = "jersey.config.apache.client.retryHandler";
+
+    /**
+     * ConnectionReuseStrategy for the {@link org.apache.http.client.HttpClient}.
+     * <p/>
+     * The value MUST be an instance of {@link org.apache.http.impl.ConnectionReuseStrategy}.
+     * <p/>
+     * If the property is absent the default reuse strategy of the Apache HTTP library will be used
+     * <p/>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     */
+    public static final String REUSE_STRATEGY = "jersey.config.apache.client.reuseStrategy";
+
+    /**
+     * ConnectionKeepAliveStrategy for the {@link org.apache.http.client.HttpClient}.
+     * <p/>
+     * The value MUST be an instance of {@link org.apache.http.conn.ConnectionKeepAliveStrategy}.
+     * <p/>
+     * If the property is absent the default keepalive strategy of the Apache HTTP library will be used
+     * <p/>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     */
+    public static final String KEEPALIVE_STRATEGY = "jersey.config.apache.client.keepAliveStrategy";
+
+
+    /**
+     * Strategy that closes the Apache Connection. Accepts an instance of {@link ApacheConnectionClosingStrategy}.
+     *
+     * @see ApacheConnectionClosingStrategy
+     * @since 2.30
+     */
+    public static final String CONNECTION_CLOSING_STRATEGY = "jersey.config.apache.client.connectionClosingStrategy";
 
     /**
      * Get the value of the specified property.

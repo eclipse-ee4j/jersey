@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import javax.ws.rs.ProcessingException;
  * Internal exception indicating that request processing has been aborted
  * in the request filter processing chain.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  *
  * @see javax.ws.rs.client.ClientRequestContext#abortWith(javax.ws.rs.core.Response)
  */

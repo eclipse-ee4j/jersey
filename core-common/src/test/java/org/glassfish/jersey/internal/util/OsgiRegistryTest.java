@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * Utility class {@ling OsgiRegistry} tests.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public class OsgiRegistryTest {
 
@@ -110,6 +110,12 @@ public class OsgiRegistryTest {
     public void testRootWebInfClassesBundleEntryPathTranslationNoLeadingSlash() {
         String className = OsgiRegistry.bundleEntryPathToClassName("/", "/WEB-INF/classes/org/glassfish/jersey/Test.class");
         Assert.assertEquals("org.glassfish.jersey.Test", className);
+    }
+
+    @Test
+    public void testDotClassInPackageName() {
+        String className = OsgiRegistry.bundleEntryPathToClassName("/", "com/classification/Test");
+        Assert.assertEquals("com.classification.Test", className);
     }
 
     @Test

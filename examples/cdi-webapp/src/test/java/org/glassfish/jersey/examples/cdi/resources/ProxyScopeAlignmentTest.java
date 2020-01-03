@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
  * Ensure CDI and JAX-RS scopes are well aligned, so that dynamic proxies
  * are only created when needed.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 @RunWith(Parameterized.class)
 public class ProxyScopeAlignmentTest extends CdiTest {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
  * Function that can be put to an acceptor chain to properly initialize
  * {@link org.glassfish.jersey.message.MessageBodyWorkers} instance on a current request and response.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ContainerMessageBodyWorkersInitializer
         implements Function<RequestProcessingContext, RequestProcessingContext> {

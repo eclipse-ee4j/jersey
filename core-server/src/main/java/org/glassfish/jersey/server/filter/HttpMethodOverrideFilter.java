@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.server.filter;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,7 +229,7 @@ public final class HttpMethodOverrideFilter implements ContainerRequestFilter {
             return null;
         }
         value = value.trim();
-        return value.length() == 0 ? null : value.toUpperCase();
+        return value.length() == 0 ? null : value.toUpperCase(Locale.ROOT);
     }
 
     @Override

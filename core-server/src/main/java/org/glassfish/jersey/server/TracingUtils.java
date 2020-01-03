@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.HttpHeaders;
@@ -28,7 +29,7 @@ import org.glassfish.jersey.server.internal.ServerTraceEvent;
 /**
  * Utilities for tracing support.
  *
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  * @since 2.3
  */
 public final class TracingUtils {
@@ -36,12 +37,12 @@ public final class TracingUtils {
     private static final List<String> SUMMARY_HEADERS = new ArrayList<>();
 
     static {
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_ENCODING.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_CHARSET.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_LANGUAGE.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_TYPE.toLowerCase());
-        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_ENCODING.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_CHARSET.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.ACCEPT_LANGUAGE.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_TYPE.toLowerCase(Locale.ROOT));
+        SUMMARY_HEADERS.add(HttpHeaders.CONTENT_LENGTH.toLowerCase(Locale.ROOT));
     }
 
     private static final TracingConfig DEFAULT_CONFIGURATION_TYPE = TracingConfig.OFF;

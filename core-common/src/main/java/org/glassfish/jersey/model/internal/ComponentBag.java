@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.model.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -67,7 +68,7 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
  * </ul>
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ComponentBag {
     /**
@@ -432,7 +433,7 @@ public class ComponentBag {
      *                        (if any).
      * @param contractMap     map of contracts and their binding priorities. If {@code null}, the contracts will
      *                        gathered by introspecting the component class. Content of the contract map
-     *                        may be modified during the registration processing.
+     *                        is not modified during the registration processing.
      * @param modelEnhancer   custom contract provider model enhancer.
      * @return {@code true} upon successful registration of a contract provider model for a given component class,
      *         {@code false} otherwise.
@@ -481,7 +482,7 @@ public class ComponentBag {
      *                        (if any).
      * @param contractMap     map of contracts and their binding priorities. If {@code null}, the contracts will
      *                        gathered by introspecting the component class. Content of the contract map
-     *                        may be modified during the registration processing.
+     *                        is not modified during the registration processing.
      * @param modelEnhancer   custom contract provider model enhancer.
      * @return contract provider model for the class.
      */
@@ -489,10 +490,11 @@ public class ComponentBag {
                                              final int defaultPriority,
                                              final Map<Class<?>, Integer> contractMap,
                                              final Inflector<ContractProvider.Builder, ContractProvider> modelEnhancer) {
-        Map<Class<?>, Integer> contracts = contractMap;
-        if (contracts == null) { // introspect
+        Map<Class<?>, Integer> contracts;
+        if (contractMap == null) { // introspect
             contracts = asMap(Providers.getProviderContracts(componentClass));
         } else { // filter custom contracts
+            contracts = new HashMap<>(contractMap);
             final Iterator<Class<?>> it = contracts.keySet().iterator();
             while (it.hasNext()) {
                 final Class<?> contract = it.next();
@@ -679,7 +681,7 @@ public class ComponentBag {
     /**
      * Immutable version of {@link org.glassfish.jersey.model.internal.ComponentBag}.
      *
-     * @author Marek Potociar (marek.potociar at oracle.com)
+     * @author Marek Potociar
      */
     private static class ImmutableComponentBag extends ComponentBag {
         ImmutableComponentBag(ComponentBag original) {

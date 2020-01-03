@@ -1,0 +1,2 @@
+org.glassfish.jersey.tests.cdi.manuallybound.CdiServiceExtension
+org.glassfish.jersey.tests.cdi.manuallybound.HK2ServiceExtension

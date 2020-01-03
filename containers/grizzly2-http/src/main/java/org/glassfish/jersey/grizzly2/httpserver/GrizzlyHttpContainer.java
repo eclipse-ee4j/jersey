@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,9 +60,9 @@ import org.glassfish.grizzly.http.server.Response;
 /**
  * Jersey {@code Container} implementation based on Grizzly {@link org.glassfish.grizzly.http.server.HttpHandler}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Libor Kramolis
+ * @author Marek Potociar
  */
 public final class GrizzlyHttpContainer extends HttpHandler implements Container {
 
@@ -338,8 +338,11 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
             URI baseUri = getBaseUri(request);
             URI requestUri = getRequestUri(request);
             final ContainerRequest requestContext = new ContainerRequest(baseUri,
-                    requestUri, request.getMethod().getMethodString(),
-                    getSecurityContext(request), new GrizzlyRequestPropertiesDelegate(request));
+                    requestUri,
+                    request.getMethod().getMethodString(),
+                    getSecurityContext(request),
+                    new GrizzlyRequestPropertiesDelegate(request),
+                    appHandler.getConfiguration());
             requestContext.setEntityStream(request.getInputStream());
             for (final String headerName : request.getHeaderNames()) {
                 requestContext.headers(headerName, request.getHeaders(headerName));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -64,7 +65,7 @@ import org.glassfish.jersey.message.internal.Statuses;
 /**
  * Default client transport connector using {@link HttpURLConnection}.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class HttpUrlConnector implements Connector {
 
@@ -90,7 +91,7 @@ public class HttpUrlConnector implements Connector {
 
     static {
         for (String headerName : restrictedHeaders) {
-            restrictedHeaderSet.add(headerName.toLowerCase());
+            restrictedHeaderSet.add(headerName.toLowerCase(Locale.ROOT));
         }
     }
 
@@ -424,7 +425,7 @@ public class HttpUrlConnector implements Connector {
     }
 
     private boolean isHeaderRestricted(String name, String value) {
-        name = name.toLowerCase();
+        name = name.toLowerCase(Locale.ROOT);
         return name.startsWith("sec-")
                 || restrictedHeaderSet.contains(name)
                 && !("connection".equalsIgnoreCase(name) && "close".equalsIgnoreCase(value));

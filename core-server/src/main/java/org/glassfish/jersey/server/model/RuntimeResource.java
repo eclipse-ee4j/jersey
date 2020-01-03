@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -128,10 +128,19 @@ public class RuntimeResource implements ResourceModelComponent {
     public static final Comparator<RuntimeResource> COMPARATOR = new Comparator<RuntimeResource>() {
         @Override
         public int compare(RuntimeResource o1, RuntimeResource o2) {
-            return PathPattern.COMPARATOR.compare(o1.getPathPattern(), o2.getPathPattern());
+            final int cmp = PathPattern.COMPARATOR.compare(o1.getPathPattern(), o2.getPathPattern());
+            if (cmp == 0) {
+                // quaternary key sorting those derived from
+                // sub-resource methods ahead of those derived from sub-resource locators
+                final int locatorCmp = o1.resourceLocators.size() - o2.resourceLocators.size();
+
+                // compare the regexes if still equal
+                return (locatorCmp == 0) ? o2.regex.compareTo(o1.regex) : locatorCmp;
+            } else {
+                return cmp;
+            }
         }
     };
-
 
     private final String regex;
     private final List<ResourceMethod> resourceMethods;

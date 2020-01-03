@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.glassfish.jersey.internal.OsgiRegistry;
@@ -60,7 +61,7 @@ import org.glassfish.jersey.uri.UriComponent;
  * and package scanning deployment will fail.
  *
  * @author Paul Sandoz
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
 
@@ -133,7 +134,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
 
     private void add(final UriSchemeResourceFinderFactory uriSchemeResourceFinderFactory) {
         for (final String scheme : uriSchemeResourceFinderFactory.getSchemes()) {
-            finderFactories.put(scheme.toLowerCase(), uriSchemeResourceFinderFactory);
+            finderFactories.put(scheme.toLowerCase(Locale.ROOT), uriSchemeResourceFinderFactory);
         }
     }
 
@@ -161,6 +162,10 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
     public void reset() {
         close();
         init();
+    }
+
+    public ClassLoader getClassloader() {
+        return classloader;
     }
 
     private void init() {
@@ -254,7 +259,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
     }
 
     private void addResourceFinder(final URI u) {
-        final UriSchemeResourceFinderFactory finderFactory = finderFactories.get(u.getScheme().toLowerCase());
+        final UriSchemeResourceFinderFactory finderFactory = finderFactories.get(u.getScheme().toLowerCase(Locale.ROOT));
         if (finderFactory != null) {
             compositeResourceFinder.push(finderFactory.create(u, recursive));
         } else {

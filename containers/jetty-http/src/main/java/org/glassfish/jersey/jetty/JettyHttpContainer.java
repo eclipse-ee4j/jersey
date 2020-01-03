@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,8 +68,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  * Jersey {@code Container} implementation based on Jetty {@link org.eclipse.jetty.server.Handler}.
  *
  * @author Arul Dhesiaseelan (aruld@acm.org)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Libor Kramolis
+ * @author Marek Potociar
  */
 public final class JettyHttpContainer extends AbstractHandler implements Container {
 
@@ -137,6 +137,10 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     public void handle(final String target, final Request request, final HttpServletRequest httpServletRequest,
                        final HttpServletResponse httpServletResponse) throws IOException, ServletException {
 
+        if (request.isHandled()) {
+            return;
+        }
+
         final Response response = request.getResponse();
         final ResponseWriter responseWriter = new ResponseWriter(request, response, configSetStatusOverSendError);
         final URI baseUri = getBaseUri(request);
@@ -147,7 +151,8 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     requestUri,
                     request.getMethod(),
                     getSecurityContext(request),
-                    new MapPropertiesDelegate());
+                    new MapPropertiesDelegate(),
+                    appHandler.getConfiguration());
             requestContext.setEntityStream(request.getInputStream());
             final Enumeration<String> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {

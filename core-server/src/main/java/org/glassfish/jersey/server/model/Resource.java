@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.glassfish.jersey.Severity;
 import org.glassfish.jersey.internal.Errors;
@@ -102,7 +105,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * </table>
  * </p>
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author Miroslav Fuksa
  */
 public final class Resource implements Routed, ResourceModelComponent {
@@ -542,28 +545,30 @@ public final class Resource implements Routed, ResourceModelComponent {
 
         }
 
-        private List<Resource.Data> mergeResources(List<Resource.Data> resources) {
-            List<Resource.Data> mergedResources = new ArrayList<>();
-            for (int i = 0; i < resources.size(); i++) {
-                Resource.Data outer = resources.get(i);
-                Resource.Builder builder = null;
+        private static List<Resource.Data> mergeResources(List<Resource.Data> resources) {
+            final MultivaluedMap<String, Data> resourceData = new MultivaluedHashMap<>();
+            final List<Resource.Data> mergedResources = new ArrayList<>();
 
-                for (int j = i + 1; j < resources.size(); j++) {
-                    Resource.Data inner = resources.get(j);
-
-                    if (outer.path.equals(inner.path)) {
-                        if (builder == null) {
-                            builder = Resource.builder(outer);
-                        }
-                        builder.mergeWith(inner);
-                        resources.remove(j);
-                        //noinspection AssignmentToForLoopParameter
-                        j--;
-                    }
+            for (Iterator<Resource.Data> resourcesIterator = resources.iterator(); resourcesIterator.hasNext(); ) {
+                Resource.Data data = resourcesIterator.next();
+                if (resourceData.containsKey(data.path)) {
+                    resourcesIterator.remove();
                 }
-                if (builder == null) {
-                    mergedResources.add(outer);
+                resourceData.add(data.path, data);
+            }
+
+            for (Map.Entry<String, List<Resource.Data>> entry : resourceData.entrySet()) {
+                if (entry.getValue().size() == 1) {
+                    mergedResources.add(entry.getValue().get(0));
                 } else {
+                    Resource.Builder builder = null;
+                    for (Resource.Data data : entry.getValue()) {
+                        if (builder != null) {
+                            builder.mergeWith(data);
+                        } else {
+                            builder = Resource.builder(data);
+                        }
+                    }
                     mergedResources.add(builder.buildResourceData());
                 }
             }

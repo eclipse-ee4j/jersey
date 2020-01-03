@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ import com.sun.net.httpserver.HttpsExchange;
  * Jersey {@code Container} implementation based on Java SE {@link HttpServer}.
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class JdkHttpHandlerContainer implements HttpHandler, Container {
 
@@ -127,7 +127,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
         final ResponseWriter responseWriter = new ResponseWriter(exchange);
         final ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri,
                 exchange.getRequestMethod(), getSecurityContext(exchange.getPrincipal(), isSecure),
-                new MapPropertiesDelegate());
+                new MapPropertiesDelegate(), appHandler.getConfiguration());
         requestContext.setEntityStream(exchange.getRequestBody());
         requestContext.getHeaders().putAll(exchange.getRequestHeaders());
         requestContext.setWriter(responseWriter);

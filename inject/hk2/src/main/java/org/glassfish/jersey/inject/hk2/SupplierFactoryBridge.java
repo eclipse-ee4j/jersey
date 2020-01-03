@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -42,15 +43,15 @@ import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
  */
 public class SupplierFactoryBridge<T> implements Factory<T> {
 
-    private ServiceLocator locator;
-    private ParameterizedType beanType;
-    private String beanName;
-    private boolean disposable;
+    private final ServiceLocator locator;
+    private final ParameterizedType beanType;
+    private final String beanName;
+    private final boolean disposable;
 
     // This bridge can create multiple instances using the method 'provide' therefore must map created suppliers because of
     // 'dispose' invocation later on.
     // TODO: Key as a WeakReference - prevent objects in scope which never dispose the objects such as PerLookup.
-    private Map<Object, DisposableSupplier<T>> disposableSuppliers = new IdentityHashMap<>();
+    private Map<Object, DisposableSupplier<T>> disposableSuppliers = Collections.synchronizedMap(new IdentityHashMap<>());
 
     /**
      * Constructor for a new bridge.
@@ -85,9 +86,8 @@ public class SupplierFactoryBridge<T> implements Factory<T> {
     @Override
     public void dispose(T instance) {
         if (disposable) {
-            DisposableSupplier<T> disposableSupplier = disposableSuppliers.get(instance);
+            DisposableSupplier<T> disposableSupplier = disposableSuppliers.remove(instance);
             disposableSupplier.dispose(instance);
-            disposableSuppliers.remove(instance);
         }
     }
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Link;
@@ -79,7 +80,7 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
 
     @Override
     public ResponseBuilder createResponseBuilder() {
-        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext());
+        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null));
     }
 
     @Override

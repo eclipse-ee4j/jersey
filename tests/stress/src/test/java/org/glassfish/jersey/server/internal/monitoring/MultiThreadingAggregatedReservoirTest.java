@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Multi Threading concurrency test of Jersey monitoring internals.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public class MultiThreadingAggregatedReservoirTest {
 
@@ -48,10 +48,10 @@ public class MultiThreadingAggregatedReservoirTest {
     private static final int PRODUCER_COUNT = 5;
     private static final int CONSUMER_COUNT = 5;
 
-    /**
+    /*
      * Note that more than 5 seconds may require more than 1G heap memory.
      */
-    private static final int TEST_DURATION_MILLIS = 10_000;
+    private static final int TEST_DURATION_MILLIS = 5_000;
     private static final int SHUTDOWN_TIMEOUT_SECONDS = 120;
     private static final double DELTA = 0.0001;
 

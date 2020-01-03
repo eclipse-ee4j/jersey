@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -26,8 +26,8 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 /**
  * Fake message aggregator used for testing purposes.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Marek Potociar
+ * @author Adam Lindenthal
  */
 public abstract class AbstractTestAggregator implements DataAggregator {
     private static final Logger LOGGER = Logger.getLogger(AbstractTestAggregator.class.getName());

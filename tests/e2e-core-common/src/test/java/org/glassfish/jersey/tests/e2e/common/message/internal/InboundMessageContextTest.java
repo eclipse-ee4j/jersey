@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * {@link org.glassfish.jersey.message.internal.InboundMessageContext} test.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class InboundMessageContextTest {
 
@@ -53,7 +53,7 @@ public class InboundMessageContextTest {
     }
 
     private static InboundMessageContext createInboundMessageContext() {
-        return new InboundMessageContext() {
+        return new InboundMessageContext(null) {
             @Override
             protected Iterable<ReaderInterceptor> getReaderInterceptors() {
                 return Collections.emptyList();

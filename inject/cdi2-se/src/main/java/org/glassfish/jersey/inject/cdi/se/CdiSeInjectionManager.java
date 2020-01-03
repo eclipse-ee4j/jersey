@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -96,7 +97,7 @@ public class CdiSeInjectionManager implements InjectionManager {
 
     @Override
     public <T> T createAndInitialize(Class<T> createMe) {
-        if (container != null) {
+        if (isInitialized()) {
             Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(createMe).newInstance();
             return unmanaged.produce()
                     .inject()
@@ -149,7 +150,7 @@ public class CdiSeInjectionManager implements InjectionManager {
 
     @SuppressWarnings("unchecked")
     private <T> T getInstanceInternal(Type contractOrImpl, Annotation... qualifiers) {
-        Set<Bean<?>> beans = beanManager.getBeans(contractOrImpl, qualifiers);
+        Set<Bean<?>> beans = isInitialized() ?  beanManager.getBeans(contractOrImpl, qualifiers) : Collections.emptySet();
         if (beans.isEmpty()) {
             return null;
         }
@@ -157,6 +158,17 @@ public class CdiSeInjectionManager implements InjectionManager {
         Bean<?> bean = beans.iterator().next();
         CreationalContext<?> ctx = beanManager.createCreationalContext(bean);
         return (T) beanManager.getReference(bean, contractOrImpl, ctx);
+    }
+
+    /**
+     * checks if being invoked  before #completeRegistration
+     * there are 2 signs for that - container is null (not initialized)
+     * and beanManager is null (because it appears from initialized container)
+     *
+     * @return true if completeRegistration was already invoked. False if it's not yet initialized
+     */
+    private boolean isInitialized() {
+        return container != null && beanManager != null;
     }
 
     @Override
@@ -178,7 +190,7 @@ public class CdiSeInjectionManager implements InjectionManager {
         } else {
             throw new RuntimeException(
                     org.glassfish.jersey.internal.LocalizationMessages
-                    .UNKNOWN_DESCRIPTOR_TYPE(binding.getClass().getSimpleName()));
+                            .UNKNOWN_DESCRIPTOR_TYPE(binding.getClass().getSimpleName()));
         }
 
         Set<Bean<?>> beans = beanManager.getBeans(clazz);
@@ -206,7 +218,7 @@ public class CdiSeInjectionManager implements InjectionManager {
     @Override
     @SuppressWarnings("unchecked")
     public void inject(Object instance) {
-        if (beanManager != null) {
+        if (isInitialized()) {
             AnnotatedType annotatedType = beanManager.createAnnotatedType((Class) instance.getClass());
             InjectionTarget injectionTarget = beanManager.createInjectionTarget(annotatedType);
             CreationalContext context = beanManager.createCreationalContext(null);

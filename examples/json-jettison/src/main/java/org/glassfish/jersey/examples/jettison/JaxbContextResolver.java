@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -25,8 +25,8 @@ import org.glassfish.jersey.jettison.JettisonJaxbContext;
 /**
  * {@link ContextResolver Context resolver} for {@link JAXBContext}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Jakub Podlesak
+ * @author Marek Potociar
  */
 @Provider
 public final class JaxbContextResolver implements ContextResolver<JAXBContext> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import java.util.Random;
 /**
  * Implementation of {@link org.glassfish.jersey.tests.performance.tools.TestValueGenerator} producing random results.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 public class RandomTestValueGenerator extends TestValueGenerator {
     private static final int MAX_STRING_LENGTH = 50;

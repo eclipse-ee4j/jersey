@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -120,7 +121,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * </p>
  *
  * @author Arul Dhesiaseelan (aruld at acm.org)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class JettyConnector implements Connector {
 
@@ -128,6 +129,7 @@ class JettyConnector implements Connector {
 
     private final HttpClient client;
     private final CookieStore cookieStore;
+    private final Configuration configuration;
 
     /**
      * Create the new Jetty client connector.
@@ -136,17 +138,28 @@ class JettyConnector implements Connector {
      * @param config client configuration.
      */
     JettyConnector(final Client jaxrsClient, final Configuration config) {
-        final SSLContext sslContext = jaxrsClient.getSslContext();
-        final SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setSslContext(sslContext);
+        this.configuration = config;
+        HttpClient httpClient = null;
+        if (config.isRegistered(JettyHttpClientSupplier.class)) {
+            Optional<Object> contract = config.getInstances().stream()
+                    .filter(a-> JettyHttpClientSupplier.class.isInstance(a)).findFirst();
+            if (contract.isPresent()) {
+                httpClient = ((JettyHttpClientSupplier) contract.get()).getHttpClient();
+            }
+        }
+        if (httpClient == null) {
+            final SSLContext sslContext = jaxrsClient.getSslContext();
+            final SslContextFactory sslContextFactory = new SslContextFactory();
+            sslContextFactory.setSslContext(sslContext);
+            httpClient = new HttpClient(sslContextFactory);
+        }
+        this.client = httpClient;
 
         Boolean enableHostnameVerification = (Boolean) config.getProperties()
-                                                             .get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION);
+                .get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION);
         if (enableHostnameVerification != null && enableHostnameVerification) {
-            sslContextFactory.setEndpointIdentificationAlgorithm("https");
+            client.getSslContextFactory().setEndpointIdentificationAlgorithm("https");
         }
-
-        this.client = new HttpClient(sslContextFactory);
 
         final Object connectTimeout = config.getProperties().get(ClientProperties.CONNECT_TIMEOUT);
         if (connectTimeout != null && connectTimeout instanceof Integer && (Integer) connectTimeout > 0) {
@@ -173,6 +186,13 @@ class JettyConnector implements Connector {
             final URI u = getProxyUri(proxyUri);
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
             proxyConfig.getProxies().add(new HttpProxy(u.getHost(), u.getPort()));
+
+            final Object proxyUsername = config.getProperties().get(ClientProperties.PROXY_USERNAME);
+            if (proxyUsername != null) {
+                final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
+                auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>",
+                        String.valueOf(proxyUsername), String.valueOf(proxyPassword)));
+            }
         }
 
         if (disableCookies) {
@@ -230,7 +250,7 @@ class JettyConnector implements Connector {
         try {
             final ContentResponse jettyResponse = jettyRequest.send();
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
-                                           JettyConnector.this.getClass().getName());
+                                           JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
             final javax.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
                     ? Statuses.from(jettyResponse.getStatus())
@@ -288,8 +308,8 @@ class JettyConnector implements Connector {
         return request;
     }
 
-    private static Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
-        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers);
+    private Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
+        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers, configuration);
 
         // remove User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
         request.getHeaders().remove(HttpHeader.USER_AGENT);
@@ -378,7 +398,7 @@ class JettyConnector implements Connector {
                 @Override
                 public void onHeaders(final Response jettyResponse) {
                     HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
-                                                   JettyConnector.this.getClass().getName());
+                                                   JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
                     if (responseFuture.isDone()) {
                         if (!callbackInvoked.compareAndSet(false, true)) {

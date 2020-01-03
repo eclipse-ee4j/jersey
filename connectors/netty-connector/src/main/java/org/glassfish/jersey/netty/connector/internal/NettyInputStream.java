@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,73 +20,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 /**
  * Input stream which servers as Request entity input.
  * <p>
- * Converts Netty NIO buffers to an input streams and stores them in the queue,
- * waiting for Jersey to process it.
- *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * Consumes a list of pending {@link ByteBuf}s and processes them on request by Jersey
  */
 public class NettyInputStream extends InputStream {
 
-    private volatile boolean end = false;
+    private final LinkedBlockingDeque<ByteBuf> isList;
 
-    /**
-     * End of input.
-     */
-    public static final InputStream END_OF_INPUT = new InputStream() {
-        @Override
-        public int read() throws IOException {
-            return 0;
-        }
-
-        @Override
-        public String toString() {
-            return "END_OF_INPUT " + super.toString();
-        }
-    };
-
-    /**
-     * Unexpected end of input.
-     */
-    public static final InputStream END_OF_INPUT_ERROR = new InputStream() {
-        @Override
-        public int read() throws IOException {
-            return 0;
-        }
-
-        @Override
-        public String toString() {
-            return "END_OF_INPUT_ERROR " + super.toString();
-        }
-    };
-
-    private final LinkedBlockingDeque<InputStream> isList;
-
-    public NettyInputStream(LinkedBlockingDeque<InputStream> isList) {
+    public NettyInputStream(LinkedBlockingDeque<ByteBuf> isList) {
         this.isList = isList;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
 
-        if (end) {
-            return -1;
-        }
-
-        InputStream take;
+        ByteBuf take;
         try {
             take = isList.take();
-
-            if (checkEndOfInput(take)) {
+            boolean isReadable = take.isReadable();
+            int read = -1;
+            if (checkEndOfInputOrError(take)) {
+                take.release();
                 return -1;
             }
 
-            int read = take.read(b, off, len);
-
-            if (take.available() > 0) {
-                isList.addFirst(take);
+            if (isReadable) {
+                int readableBytes = take.readableBytes();
+                read = Math.min(readableBytes, len);
+                take.readBytes(b, off, read);
+                if (read < len) {
+                    take.release();
+                } else {
+                    isList.addFirst(take);
+                }
+            } else {
+                read = 0;
+                take.release(); //We don't need `0`
             }
 
             return read;
@@ -98,47 +72,51 @@ public class NettyInputStream extends InputStream {
     @Override
     public int read() throws IOException {
 
-        if (end) {
-            return -1;
-        }
-
+        ByteBuf take;
         try {
-            InputStream take = isList.take();
-
-            if (checkEndOfInput(take)) {
+            take = isList.take();
+            boolean isReadable = take.isReadable();
+            if (checkEndOfInputOrError(take)) {
+                take.release();
                 return -1;
             }
 
-            int read = take.read();
-
-            if (take.available() > 0) {
-                isList.addFirst(take);
+            if (isReadable) {
+                return take.readInt();
+            } else {
+                take.release(); //We don't need `0`
             }
 
-            return read;
+            return 0;
         } catch (InterruptedException e) {
             throw new IOException("Interrupted.", e);
         }
     }
 
     @Override
-    public int available() throws IOException {
-        InputStream peek = isList.peek();
-        if (peek != null) {
-            return peek.available();
+    public void close() throws IOException {
+        if (isList != null) {
+            while (!isList.isEmpty()) {
+                try {
+                    isList.take().release();
+                } catch (InterruptedException e) {
+                    throw new IOException("Interrupted. Potential ByteBuf Leak.", e);
+                }
+            }
         }
+        super.close();
+    }
 
+    @Override
+    public int available() throws IOException {
+        ByteBuf peek = isList.peek();
+        if (peek != null && peek.isReadable()) {
+            return peek.readableBytes();
+        }
         return 0;
     }
 
-    private boolean checkEndOfInput(InputStream take) throws IOException {
-        if (take == END_OF_INPUT) {
-            end = true;
-            return true;
-        } else if (take == END_OF_INPUT_ERROR) {
-            end = true;
-            throw new IOException("Connection was closed prematurely.");
-        }
-        return false;
+    private boolean checkEndOfInputOrError(ByteBuf take) throws IOException {
+        return take == Unpooled.EMPTY_BUFFER;
     }
 }

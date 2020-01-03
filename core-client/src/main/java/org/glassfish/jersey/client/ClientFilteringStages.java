@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,8 @@
 package org.glassfish.jersey.client;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -24,6 +26,7 @@ import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.internal.routing.ClientResponseMediaTypeDeterminer;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -33,7 +36,7 @@ import org.glassfish.jersey.process.internal.ChainableStage;
 /**
  * Client filtering stage factory.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 class ClientFilteringStages {
 
@@ -56,6 +59,29 @@ class ClientFilteringStages {
     }
 
     /**
+     * Create client request filtering stage using the injection manager. May return {@code null}.
+     *
+     * @param firstFilter Non null {@link ClientRequestFilter client request filter} to be executed
+     *                    in the client request filtering stage.
+     * @param injectionManager injection manager to be used.
+     * @return configured request filtering stage, or {@code null} in case there are no
+     *         {@link ClientRequestFilter client request filters} registered in the injection manager
+     *         and {@code firstFilter} is null.
+     */
+    static ChainableStage<ClientRequest> createRequestFilteringStage(ClientRequestFilter firstFilter,
+                                                                     InjectionManager injectionManager) {
+        RankedComparator<ClientRequestFilter> comparator = new RankedComparator<>(RankedComparator.Order.ASCENDING);
+        Iterable<ClientRequestFilter> requestFilters =
+                Providers.getAllProviders(injectionManager, ClientRequestFilter.class, comparator);
+        if (firstFilter != null && !requestFilters.iterator().hasNext()) {
+            return new RequestFilteringStage(Collections.singletonList(firstFilter));
+        } else if (firstFilter != null && requestFilters.iterator().hasNext()) {
+            return new RequestFilteringStage(prependFilter(firstFilter, requestFilters));
+        }
+        return null;
+    }
+
+    /**
      * Create client response filtering stage using the injection manager. May return {@code null}.
      *
      * @param injectionManager injection manager to be used.
@@ -67,6 +93,39 @@ class ClientFilteringStages {
         Iterable<ClientResponseFilter> responseFilters =
                 Providers.getAllProviders(injectionManager, ClientResponseFilter.class, comparator);
         return responseFilters.iterator().hasNext() ? new ResponseFilterStage(responseFilters) : null;
+    }
+
+    /**
+     * Prepend an filter to a given iterable.
+     * @param filter to be prepend.
+     * @param filters the iterable the given filter is to be prependto
+     * @param <T> filter type
+     * @return iterable with first item of prepended filter.
+     */
+    private static <T> Iterable<T> prependFilter(T filter, Iterable<T> filters) {
+        return new Iterable<T>() {
+            boolean wasInterceptorFilterNext = false;
+            final Iterator<T> filterIterator = filters.iterator();
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    @Override
+                    public boolean hasNext() {
+                        return !wasInterceptorFilterNext || filterIterator.hasNext();
+                    }
+
+                    @Override
+                    public T next() {
+                        if (wasInterceptorFilterNext) {
+                            return filterIterator.next();
+                        } else {
+                            wasInterceptorFilterNext = true;
+                            return filter;
+                        }
+                    }
+                };
+            }
+        };
     }
 
     private static final class RequestFilteringStage extends AbstractChainableStage<ClientRequest> {
@@ -84,6 +143,9 @@ class ClientFilteringStages {
                     filter.filter(requestContext);
                     final Response abortResponse = requestContext.getAbortResponse();
                     if (abortResponse != null) {
+                        final ClientResponseMediaTypeDeterminer determiner = new ClientResponseMediaTypeDeterminer(
+                                requestContext.getWorkers());
+                        determiner.setResponseMediaTypeIfNotSet(abortResponse, requestContext.getConfiguration());
                         throw new AbortException(new ClientResponse(requestContext, abortResponse));
                     }
                 } catch (IOException ex) {

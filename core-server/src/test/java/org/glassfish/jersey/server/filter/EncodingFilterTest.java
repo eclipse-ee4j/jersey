@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,6 @@
 
 package org.glassfish.jersey.server.filter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -32,8 +23,16 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.spi.ContentEncoder;
-
 import org.junit.Test;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -83,6 +82,11 @@ public class EncodingFilterTest {
     }
 
     @Test
+    public void testEmptyEncodingHeader() throws IOException {
+        testEncoding(null, "", "", "", "");
+    }
+
+    @Test
     public void testAcceptEncodingHeaderNotSupported() throws IOException {
         testEncoding(null, "not-gzip");
     }
@@ -119,7 +123,7 @@ public class EncodingFilterTest {
 
     @Test
     public void testAnyAcceptableExceptGZipAndIdentity() throws IOException {
-        testEncoding("foo", "*", "gzip; q=0", "identity; q=0");
+        testEncoding("foo", "", "", "", "*", "gzip; q=0", "identity; q=0");
     }
 
     @Test

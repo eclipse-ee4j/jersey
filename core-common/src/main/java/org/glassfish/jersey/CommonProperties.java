@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
  * Common (server/client) Jersey configuration properties.
  *
  * @author Michal Gajdos
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 @PropertiesClass
 public final class CommonProperties {
@@ -57,6 +57,16 @@ public final class CommonProperties {
         LEGACY_FALLBACK_MAP.put(CommonProperties.MOXY_JSON_FEATURE_DISABLE_SERVER,
                 "jersey.config.disableMoxyJson.server");
     }
+
+    /**
+     * Property which allows (if true) default System properties configuration provider.
+     *
+     * If an external properties provider is used, the system properties are not used.
+     *
+     * Shall be set to turn on the ability to propagate system properties to Jersey configuration.
+     * @since 2.29
+     */
+    public static final String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider";
 
     /**
      * If {@code true} then disable feature auto discovery globally on client/server.
@@ -215,6 +225,23 @@ public final class CommonProperties {
      * @since 2.8
      */
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER = "jersey.config.server.contentLength.buffer";
+
+    /**
+     * Disable some of the default providers from being loaded. The following providers extend application footprint
+     * by XML dependencies, which is too heavy for native image, or by AWT which may possibly be not available by JDK 11 desktop:
+     * <ul>
+     *     <li>java.awt.image.RenderedImage</li>
+     *     <li>javax.xml.transform.Source</li>
+     *     <li>javax.xml.transform.dom.DOMSource</li>
+     *     <li>javax.xml.transform.sax.SAXSource</li>
+     *     <li>javax.xml.transform.stream.StreamSource</li>
+     * </ul>
+     * The following are the options to disable the provides: {@code DOMSOURCE, RENDEREDIMAGE, SAXSOURCE, SOURCE, STREAMSOURCE},
+     * or to disable all: {@code ALL}. Multiple options can be disabled by adding multiple comma separated values.
+     *
+     * @since 2.30
+     */
+    public static final String PROVIDER_DEFAULT_DISABLE = "jersey.config.disableDefaultProvider";
 
     /**
      * Prevent instantiation.

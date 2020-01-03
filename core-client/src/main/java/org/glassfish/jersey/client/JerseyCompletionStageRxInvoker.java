@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,42 +16,20 @@
 
 package org.glassfish.jersey.client;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutorService;
-
 import javax.ws.rs.client.CompletionStageRxInvoker;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.GenericType;
 
 /**
  * Implementation of Reactive Invoker for {@code CompletionStage}.
  *
+ * This class allows for using {@link javax.ws.rs.client.InvocationCallback} in
+ * {@link javax.ws.rs.client.Invocation.Builder#rx(Class) Invocation.Builder.rx(JerseyCompletionStageRxInvoker.class)}
+ * requests.
+ *
  * @author Michal Gajdos
  * @since 2.26
  */
-public class JerseyCompletionStageRxInvoker extends AbstractRxInvoker<CompletionStage> implements CompletionStageRxInvoker {
-
-    JerseyCompletionStageRxInvoker(Invocation.Builder builder, ExecutorService executor) {
-        super(builder, executor);
-    }
-
-    @Override
-    public <T> CompletionStage<T> method(final String name, final Entity<?> entity, final Class<T> responseType) {
-        final ExecutorService executorService = getExecutorService();
-
-        return executorService == null
-                ? CompletableFuture.supplyAsync(() -> getSyncInvoker().method(name, entity, responseType))
-                : CompletableFuture.supplyAsync(() -> getSyncInvoker().method(name, entity, responseType), executorService);
-    }
-
-    @Override
-    public <T> CompletionStage<T> method(final String name, final Entity<?> entity, final GenericType<T> responseType) {
-        final ExecutorService executorService = getExecutorService();
-
-        return executorService == null
-                ? CompletableFuture.supplyAsync(() -> getSyncInvoker().method(name, entity, responseType))
-                : CompletableFuture.supplyAsync(() -> getSyncInvoker().method(name, entity, responseType), executorService);
+public class JerseyCompletionStageRxInvoker extends JerseyInvocation.AsyncInvoker implements CompletionStageRxInvoker {
+    JerseyCompletionStageRxInvoker(JerseyInvocation.Builder builder) {
+        super(builder);
     }
 }

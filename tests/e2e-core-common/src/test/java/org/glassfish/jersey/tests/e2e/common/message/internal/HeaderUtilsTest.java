@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,7 @@ import static org.junit.Assert.fail;
 /**
  * {@link HeaderUtils} unit tests.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class HeaderUtilsTest {
 
@@ -135,7 +135,7 @@ public class HeaderUtilsTest {
 
     @Test
     public void testAsStringHeaders() throws Exception {
-        assertNull(HeaderUtils.asStringHeaders(null));
+        assertNull(HeaderUtils.asStringHeaders(null, null));
 
         final AbstractMultivaluedMap<String, Object> headers = HeaderUtils.createOutbound();
 
@@ -147,7 +147,7 @@ public class HeaderUtilsTest {
 
         headers.putSingle("k3", "value3");
 
-        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers);
+        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers, null);
 
         // test string values
         assertEquals(Arrays.asList("value", "value2"),

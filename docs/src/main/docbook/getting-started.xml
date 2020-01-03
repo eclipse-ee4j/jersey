@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,12 +50,11 @@
                     In case you want to depend on the latest SNAPSHOT versions of Jersey modules, the following repository
                     configuration needs to be added to your Maven project pom:
 
-                    <programlisting language="xml" linenumbering="unnumbered">&lt;repository&gt;
-    &lt;id&gt;snapshot-repository.java.net&lt;/id&gt;
-    &lt;name&gt;Java.net Snapshot Repository for Maven&lt;/name&gt;
-    &lt;url&gt;https://maven.java.net/content/repositories/snapshots/&lt;/url&gt;
-    &lt;layout&gt;default&lt;/layout&gt;
-&lt;/repository&gt;</programlisting>
+                    <programlisting language="xml" linenumbering="unnumbered">&lt;snapshotRepository&gt;
+                        &lt;id&gt;ossrh&lt;/id&gt;
+                    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
+                &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
+            &lt;/snapshotRepository&gt;</programlisting>
                 </para>
             </note>
         </para>
@@ -646,7 +645,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
             Feel free to browse through the code of individual
             <link xlink:href="&jersey.github.examples.uri;">Jersey Examples</link> in the Jersey source repository.
             For off-line browsing, you can also download a bundle with all the examples from
-            <link xlink:href="https://maven.java.net/content/repositories/&repository;/org/glassfish/jersey/bundles/jersey-examples/&version;/">here</link>.
+            <link xlink:href="http://central.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/&version;/">here</link>.
         </para>
     </section>
 </chapter>

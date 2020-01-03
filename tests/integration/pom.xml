@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests</groupId>
         <artifactId>project</artifactId>
-        <version>2.28-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.jersey.tests.integration</groupId>
@@ -32,19 +33,12 @@
     <name>jersey-tests-integration</name>
 
     <modules>
+        <module>asm</module>
         <module>async-jersey-filter</module>
-        <module>cdi-beanvalidation-webapp</module>
-        <module>cdi-ejb-test-webapp</module>
-        <module>cdi-iface-with-non-jaxrs-impl-test-webapp</module>
-        <module>cdi-multimodule</module>
-        <module>ejb-multimodule-reload</module>
-        <module>cdi-multipart-webapp</module>
-        <module>cdi-test-webapp</module>
-        <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
-        <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>
-        <module>cdi-with-jersey-injection-webapp</module>
+        <module>cdi-integration</module>
         <module>client-connector-provider</module>
         <module>ejb-multimodule</module>
+        <module>ejb-multimodule-reload</module>
         <module>ejb-test-webapp</module>
         <module>j-376</module>
         <module>j-441</module>
@@ -59,7 +53,7 @@
         <module>jersey-1928</module>
         <module>jersey-1960</module>
         <module>jersey-1964</module>
-        <module>jersey-2031</module>
+        <!--<module>jersey-2031</module>-->
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
@@ -84,7 +78,12 @@
         <module>jersey-2846</module>
         <module>jersey-2878</module>
         <module>jersey-2892</module>
+	    <module>jersey-3796</module>
         <module>jersey-780</module>
+        <module>jersey-3670</module>
+        <module>jersey-3992</module>
+        <module>jersey-4099</module>
+        <module>jersey-4321</module>
         <module>portability-jersey-1</module>
         <module>portability-jersey-2</module>
         <module>property-check</module>
@@ -125,10 +124,12 @@
         <module>servlet-request-wrapper-binding</module>
         <module>servlet-tests</module>
         <module>sonar-test</module>
-        <!-- TODO: temporarily removing spring 4 integration test -->
-        <!-- TODO: conflict in ASM version (too old) of jetty plugin -->
-        <!--<module>spring4</module>-->
+        <module>spring4</module>
+        <module>spring5</module>
         <module>tracing-support</module>
+        <module>microprofile/config/helidon</module>
+        <module>microprofile/config/webapp</module>
+        <module>microprofile/rest-client</module>
     </modules>
 
     <profiles>

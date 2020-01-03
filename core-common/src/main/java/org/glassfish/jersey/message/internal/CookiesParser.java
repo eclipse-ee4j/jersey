@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  * Cookies parser.
  *
  * @author Marc Hadley
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class CookiesParser {
 
@@ -133,7 +134,7 @@ public class CookiesParser {
             if (cookie == null) {
                 cookie = new MutableNewCookie(name, value);
             } else {
-                final String param = name.toLowerCase();
+                final String param = name.toLowerCase(Locale.ROOT);
 
                 if (param.startsWith("comment")) {
                     cookie.comment = value;

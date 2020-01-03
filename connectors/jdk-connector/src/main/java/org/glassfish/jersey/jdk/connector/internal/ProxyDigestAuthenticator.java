@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +32,8 @@ import java.util.regex.Pattern;
  *
  * @author raphael.jolivet@gmail.com
  * @author Stefan Katerkamp (stefan@katerkamp.de)
- * @author Miroslav Fuksa (miroslav.fuksa at oracle.com)
- * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
+ * @author Miroslav Fuksa
+ * @author Ondrej Kosatka
  */
 class ProxyDigestAuthenticator {
 
@@ -98,7 +99,7 @@ class ProxyDigestAuthenticator {
         if (parts.length != 2) {
             return null;
         }
-        if (!parts[0].toLowerCase().equals("digest")) {
+        if (!parts[0].toLowerCase(Locale.ROOT).equals("digest")) {
             return null;
         }
 
@@ -326,7 +327,7 @@ class ProxyDigestAuthenticator {
                 return Algorithm.UNSPECIFIED;
             }
             val = val.trim();
-            if (val.contains(MD5_SESS.md) || val.contains(MD5_SESS.md.toLowerCase())) {
+            if (val.contains(MD5_SESS.md) || val.contains(MD5_SESS.md.toLowerCase(Locale.ROOT))) {
                 return MD5_SESS;
             }
             return MD5;

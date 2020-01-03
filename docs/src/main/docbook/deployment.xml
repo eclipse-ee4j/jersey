@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1316,7 +1316,7 @@ Bundle ID: 303</programlisting>
                 or install it directly from the maven repository:
 
                 <programlisting language="bash shell" linenumbering="numbered">
-gogo$ install http://maven.java.net/content/repositories/releases/org/glassfish/jersey/examples/osgi-http-service/bundle/&lt;version&gt;/bundle-&lt;version&gt;.jar
+gogo$ install http://central.maven.org/maven2/org/glassfish/jersey/examples/osgi-http-service/bundle/&lt;version&gt;/bundle-&lt;version&gt;.jar
 Bundle ID: 303</programlisting>
             </para>
 
