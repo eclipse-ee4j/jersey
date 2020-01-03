@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -208,7 +209,8 @@ public class OAuth1Signature {
             if (url == null) {
                 throw new OAuth1SignatureException();
             }
-            final StringBuilder builder = new StringBuilder(url.getProtocol()).append("://").append(url.getHost().toLowerCase());
+            final StringBuilder builder = new StringBuilder(url.getProtocol()).append("://")
+                    .append(url.getHost().toLowerCase(Locale.ROOT));
             final int port = url.getPort();
             if (port > 0 && port != url.getDefaultPort()) {
                 builder.append(':').append(port);
@@ -232,7 +234,7 @@ public class OAuth1Signature {
     private String baseString(final OAuth1Request request,
                               final OAuth1Parameters params) throws OAuth1SignatureException {
         // HTTP request method
-        final StringBuilder builder = new StringBuilder(request.getRequestMethod().toUpperCase());
+        final StringBuilder builder = new StringBuilder(request.getRequestMethod().toUpperCase(Locale.ROOT));
 
         // request URL, see section 3.4.1.2 http://tools.ietf.org/html/draft-hammer-oauth-10#section-3.4.1.2
         builder.append('&').append(UriComponent.encode(constructRequestURL(request).toASCIIString(),

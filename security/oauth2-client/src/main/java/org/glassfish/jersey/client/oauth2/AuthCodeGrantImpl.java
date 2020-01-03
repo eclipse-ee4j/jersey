@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -263,10 +264,12 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
 
         setDefaultProperty(OAuth2Parameters.CLIENT_SECRET, clientIdentifier.getClientSecret(), accessTokenProperties,
                 refreshTokenProperties);
-        setDefaultProperty(OAuth2Parameters.GrantType.key, OAuth2Parameters.GrantType.AUTHORIZATION_CODE.name().toLowerCase(),
+        setDefaultProperty(OAuth2Parameters.GrantType.key,
+                OAuth2Parameters.GrantType.AUTHORIZATION_CODE.name().toLowerCase(Locale.ROOT),
                 accessTokenProperties);
 
-        setDefaultProperty(OAuth2Parameters.GrantType.key, OAuth2Parameters.GrantType.REFRESH_TOKEN.name().toLowerCase(),
+        setDefaultProperty(OAuth2Parameters.GrantType.key,
+                OAuth2Parameters.GrantType.REFRESH_TOKEN.name().toLowerCase(Locale.ROOT),
                 refreshTokenProperties);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,8 +34,10 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,8 +83,8 @@ import org.glassfish.jersey.message.WriterModel;
  * A factory for managing {@link MessageBodyReader}, {@link MessageBodyWriter} instances.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Marek Potociar
+ * @author Jakub Podlesak
  */
 public class MessageBodyFactory implements MessageBodyWorkers {
 
@@ -130,7 +132,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
                 @Override
                 public int hash(final MediaType mt) {
                     // treat compatible types as equal
-                    return mt.getType().toLowerCase().hashCode() + mt.getSubtype().toLowerCase().hashCode();
+                    return mt.getType().toLowerCase(Locale.ROOT).hashCode() + mt.getSubtype().toLowerCase(Locale.ROOT).hashCode();
                 }
             };
     /**
@@ -180,19 +182,19 @@ public class MessageBodyFactory implements MessageBodyWorkers {
 
     private static final int LOOKUP_CACHE_INITIAL_CAPACITY = 32;
     private static final float LOOKUP_CACHE_LOAD_FACTOR = 0.75f;
-    private final Map<Class<?>, List<ReaderModel>> mbrTypeLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<ReaderModel>> mbrTypeLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<Class<?>, List<WriterModel>> mbwTypeLookupCache = DataStructures.createConcurrentMap(
-            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-
-    private final Map<Class<?>, List<MediaType>> typeToMediaTypeReadersCache = DataStructures.createConcurrentMap(
-            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<Class<?>, List<MediaType>> typeToMediaTypeWritersCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<WriterModel>> mbwTypeLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
 
-    private final Map<ModelLookupKey, List<ReaderModel>> mbrLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<MediaType>> typeToMediaTypeReadersCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
-    private final Map<ModelLookupKey, List<WriterModel>> mbwLookupCache = DataStructures.createConcurrentMap(
+    private final Map<Class<?>, List<MediaType>> typeToMediaTypeWritersCache = new ConcurrentHashMap<>(
+            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
+
+    private final Map<ModelLookupKey, List<ReaderModel>> mbrLookupCache = new ConcurrentHashMap<>(
+            LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
+    private final Map<ModelLookupKey, List<WriterModel>> mbwLookupCache = new ConcurrentHashMap<>(
             LOOKUP_CACHE_INITIAL_CAPACITY, LOOKUP_CACHE_LOAD_FACTOR, DataStructures.DEFAULT_CONCURENCY_LEVEL);
 
     /**

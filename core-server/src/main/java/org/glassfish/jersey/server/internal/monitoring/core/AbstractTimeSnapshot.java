@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2010, 2013 Coda Hale and Yammer, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Base implementation of {@code UniformTimeSnapshot}.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
+ * @author Stepan Vavra
  */
 public abstract class AbstractTimeSnapshot implements UniformTimeSnapshot {
 

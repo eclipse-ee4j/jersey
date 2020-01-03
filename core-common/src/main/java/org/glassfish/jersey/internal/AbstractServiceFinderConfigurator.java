@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 
 import javax.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 /**
  * Simple ServiceFinder configuration.
@@ -59,13 +59,7 @@ public abstract class AbstractServiceFinderConfigurator<T> implements BootstrapC
      * @return all registered classes of the type {@code T}.
      */
     protected List<Class<T>> loadImplementations(Map<String, Object> applicationProperties) {
-        boolean METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT = false;
-        boolean disableMetaInfServicesLookup = METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT;
-        if (applicationProperties != null) {
-            disableMetaInfServicesLookup = CommonProperties.getValue(applicationProperties, runtimeType,
-                    CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE, METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT, Boolean.class);
-        }
-        if (!disableMetaInfServicesLookup) {
+        if (PropertiesHelper.isMetaInfServicesEnabled(applicationProperties, runtimeType)) {
             return Stream.of(ServiceFinder.find(contract, true).toClassArray())
                     .collect(Collectors.toList());
         }

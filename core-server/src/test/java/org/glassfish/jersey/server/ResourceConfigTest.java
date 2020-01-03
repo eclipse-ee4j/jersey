@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,6 @@ import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.server.config.innerstatic.InnerStaticClass;
 import org.glassfish.jersey.server.config.toplevel.PublicRootResourceClass;
 import org.glassfish.jersey.server.config.toplevelinnerstatic.PublicRootResourceInnerStaticClass;
-import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 
 import org.junit.Test;
 import static org.glassfish.jersey.server.JarUtils.createJarFile;
@@ -45,11 +44,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import mockit.Mocked;
-import mockit.Verifications;
-
 /**
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 public class ResourceConfigTest {
 
@@ -348,53 +344,6 @@ public class ResourceConfigTest {
         assertThat(classes.size(), is(2));
         assertThat(classes, hasItem(PublicRootResourceClass.class));
         assertThat(classes, hasItem(InnerStaticClass.PublicClass.class));
-    }
-
-    /**
-     * Reproducer for OWLS-19790: Invalidate resource finders in resource config only when needed.
-     */
-    @Test
-    public void testInvalidateResourceFinders(@Mocked final PackageNamesScanner scanner) throws Exception {
-        final ResourceConfig resourceConfig = new ResourceConfig()
-                .packages(false, PublicRootResourceClass.class.getPackage().getName());
-
-        // Scan packages.
-        resourceConfig.getClasses();
-
-        // No reset.
-        new Verifications() {{
-            scanner.reset();
-            times = 0;
-        }};
-
-        resourceConfig.register(InnerStaticClass.PublicClass.class);
-
-        // Reset - we called getClasses() on ResourceConfig.
-        new Verifications() {{
-            scanner.reset();
-            times = 1;
-        }};
-
-        // No reset.
-        resourceConfig.register(PublicRootResourceClass.class);
-        resourceConfig.register(PublicRootResourceInnerStaticClass.PublicClass.class);
-
-        // No reset - simple registering does not invoke cache invalidation and reset of resource finders.
-        new Verifications() {{
-            scanner.reset();
-            times = 1;
-        }};
-
-        // Scan packages.
-        resourceConfig.getClasses();
-
-        resourceConfig.registerFinder(new PackageNamesScanner(new String[] {"javax.ws.rs"}, false));
-
-        // Reset - we called getClasses() on ResourceConfig.
-        new Verifications() {{
-            scanner.reset();
-            times = 2;
-        }};
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Feature;
 
 import org.glassfish.jersey.internal.Errors;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
@@ -56,13 +57,14 @@ import org.glassfish.jersey.server.internal.scanning.FilesScanner;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.model.Resource;
 
+
 /**
  * The resource configuration for configuring a web application.
  *
  * @author Paul Sandoz
  * @author Martin Matula
  * @author Michal Gajdos
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ResourceConfig extends Application implements Configurable<ResourceConfig>, ServerConfig {
 
@@ -654,6 +656,27 @@ public class ResourceConfig extends Application implements Configurable<Resource
     }
 
     /**
+     * Adds array of package names which will be used to scan for components.
+     * <p/>
+     * Package scanning ignores an inheritance and therefore {@link Path} annotation
+     * on parent classes and interfaces will be ignored.
+     * <p/>
+     * @param recursive defines whether any nested packages in the collection of specified
+     *                  package names should be recursively scanned (value of {@code true})
+     *                  as part of the package scanning or not (value of {@code false}).
+     * @param classLoader defines the classloader used for scanning the packages and loading the classes.
+     * @param packages  array of package names.
+     * @return updated resource configuration instance.
+     * @see #packages(String...)
+     */
+    public final ResourceConfig packages(final boolean recursive, final ClassLoader classLoader, final String... packages) {
+        if (packages == null || packages.length == 0) {
+            return this;
+        }
+        return registerFinder(new PackageNamesScanner(classLoader, packages, recursive));
+    }
+
+    /**
      * Adds array of file and directory names to scan for components.
      * <p/>
      * Any directories in the list will be scanned recursively, including their sub-directories.
@@ -713,6 +736,7 @@ public class ResourceConfig extends Application implements Configurable<Resource
         final State current = state;
         if (!(current instanceof ImmutableState)) {
             setupApplicationName();
+            ExternalPropertiesConfigurationFactory.configure(state);
             state = new ImmutableState(current);
         }
     }
@@ -874,9 +898,19 @@ public class ResourceConfig extends Application implements Configurable<Resource
             rfs.add(new FilesScanner(classPathElements, true));
         }
 
-        final AnnotationAcceptingListener afl =
+        final AnnotationAcceptingListener parentAfl =
                 AnnotationAcceptingListener.newJaxrsResourceAndProviderListener(_state.getClassLoader());
+
         for (final ResourceFinder resourceFinder : rfs) {
+            AnnotationAcceptingListener afl = parentAfl;
+
+            if (resourceFinder instanceof PackageNamesScanner) {
+                final ClassLoader classLoader = ((PackageNamesScanner) resourceFinder).getClassloader();
+                if (!getClassLoader().equals(classLoader)) {
+                    afl = AnnotationAcceptingListener.newJaxrsResourceAndProviderListener(classLoader);
+                }
+            }
+
             while (resourceFinder.hasNext()) {
                 final String next = resourceFinder.next();
                 if (afl.accept(next)) {
@@ -894,9 +928,13 @@ public class ResourceConfig extends Application implements Configurable<Resource
                     }
                 }
             }
+
+            if (afl != parentAfl) {
+               result.addAll(afl.getAnnotatedClasses());
+            }
         }
 
-        result.addAll(afl.getAnnotatedClasses());
+        result.addAll(parentAfl.getAnnotatedClasses());
         return result;
     }
 
@@ -1297,4 +1335,5 @@ public class ResourceConfig extends Application implements Configurable<Resource
             setApplicationName(appName);
         }
     }
+
 }

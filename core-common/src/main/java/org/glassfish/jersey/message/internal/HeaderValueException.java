@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import javax.ws.rs.ProcessingException;
  * {@link ProcessingException Processing exception} indicating that an attempt to
  * read a value of a header failed.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class HeaderValueException extends ProcessingException {
     private static final long serialVersionUID = 981810773601231157L;

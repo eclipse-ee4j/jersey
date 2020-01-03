@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.server.internal.routing;
 
 import java.util.List;
+import java.util.Set;
 
 import org.glassfish.jersey.uri.PathPattern;
 
@@ -25,11 +26,13 @@ import org.glassfish.jersey.uri.PathPattern;
  * and a {@link #next() list of next-level stages} to be processed in case the
  * routing pattern successfully matches the un-matched right-hand part of the request.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 final class Route {
     private final PathPattern routingPattern;
     private final List<Router> routers;
+
+    private Set<String> httpMethods;
 
     /**
      * Create a new request route.
@@ -67,5 +70,13 @@ final class Route {
      */
     public List<Router> next() {
         return routers;
+    }
+
+    Set<String> getHttpMethods() {
+        return httpMethods;
+    }
+
+    void setHttpMethods(Set<String> httpMethods) {
+        this.httpMethods = httpMethods;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.client.authentication;
 
 import java.util.Base64;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ import org.glassfish.jersey.client.internal.LocalizationMessages;
  * Implementation of Basic Http Authentication method (RFC 2617).
  *
  * @author Miroslav Fuksa
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  * @author Craig McClanahan
  */
 final class BasicAuthenticator {
@@ -96,7 +97,7 @@ final class BasicAuthenticator {
      */
     public boolean filterResponseAndAuthenticate(ClientRequestContext request, ClientResponseContext response) {
         final String authenticate = response.getHeaders().getFirst(HttpHeaders.WWW_AUTHENTICATE);
-        if (authenticate != null && authenticate.trim().toUpperCase().startsWith("BASIC")) {
+        if (authenticate != null && authenticate.trim().toUpperCase(Locale.ROOT).startsWith("BASIC")) {
             HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter
                     .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,7 @@ import org.glassfish.jersey.server.spi.ContainerProvider;
  * <p>
  * There is also a few "factory" methods for creating Netty server.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @since 2.24
  */
 @Beta
@@ -80,7 +80,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
             b.option(ChannelOption.SO_BACKLOG, 1024);
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container));
+             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, configuration));
 
             int port = getPort(baseUri);
 
@@ -149,7 +149,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
             b.option(ChannelOption.SO_BACKLOG, 1024);
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, true));
+             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, configuration, true));
 
             int port = getPort(baseUri);
 

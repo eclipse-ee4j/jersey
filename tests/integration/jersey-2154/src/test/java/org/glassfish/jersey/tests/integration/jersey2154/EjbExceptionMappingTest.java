@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@ import static org.hamcrest.core.StringContains.containsString;
  * Test generated {@link WebApplicationException} is propagated
  * via CDI call and mapped to 200 response, even when wrapped with an {@link EJBException}.
  *
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
+ * @author Jakub Podlesak
  */
 public class EjbExceptionMappingTest extends JerseyTest {
 

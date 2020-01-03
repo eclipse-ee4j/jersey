@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,9 @@ import java.util.Map;
 
 import javax.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 /**
  * Simple ServiceFinder injection binder.
@@ -31,8 +31,8 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
  * and registers found instances to {@link InjectionManager}.
  *
  * @param <T> contract type.
- * @author Pavel Bucek (pavel.bucek at oracle.com)
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Pavel Bucek
+ * @author Libor Kramolis
  */
 public class ServiceFinderBinder<T> extends AbstractBinder {
 
@@ -57,13 +57,7 @@ public class ServiceFinderBinder<T> extends AbstractBinder {
 
     @Override
     protected void configure() {
-        final boolean METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT = false;
-        boolean disableMetainfServicesLookup = METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT;
-        if (applicationProperties != null) {
-            disableMetainfServicesLookup = CommonProperties.getValue(applicationProperties, runtimeType,
-                    CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE, METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT, Boolean.class);
-        }
-        if (!disableMetainfServicesLookup) {
+        if (PropertiesHelper.isMetaInfServicesEnabled(applicationProperties, runtimeType)) {
             for (Class<T> t : ServiceFinder.find(contract, true).toClassArray()) {
                 bind(t).to(contract);
             }

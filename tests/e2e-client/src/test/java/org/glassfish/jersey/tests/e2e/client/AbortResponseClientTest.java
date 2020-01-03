@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import javax.json.Json;
+import javax.json.JsonString;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.client.ClientRequestContext;
@@ -41,7 +43,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests aborting the request on the client side.
@@ -107,6 +112,23 @@ public class AbortResponseClientTest extends JerseyTest {
         assertEquals(99, r.getLength());
 
         assertEquals(200, r.getStatus());
+        r.close();
+    }
+
+    @Test
+    public void testAbortWithJson() {
+        final JsonString jsonString = Json.createValue("{\"key\":\"value\"}");
+        ClientRequestFilter filter = new ClientRequestFilter() {
+            @Override
+            public void filter(ClientRequestContext requestContext) throws IOException {
+                requestContext.abortWith(Response.ok(jsonString).build());
+            }
+        };
+        WebTarget target = target().path("test").register(filter);
+        try (Response response = target.request().get()){
+            assertThat(response.getMediaType(), is(MediaType.APPLICATION_JSON_TYPE));
+            assertThat(response.readEntity(JsonString.class), is(jsonString));
+        };
     }
 
     private Date getDate() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -17,7 +17,7 @@ import java.util.Map;
  * In order to load re-compiled classes we need
  * to have a separate class-loader for each reload.
  *
- * Jakub Podlesak (jakub.podlesak at oracle.com)
+ * Jakub Podlesak
  */
 public class AppClassLoader extends ClassLoader {
 

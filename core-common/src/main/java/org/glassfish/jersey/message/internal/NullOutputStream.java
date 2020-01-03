@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  * to write the data to the closed stream result in an {@link java.io.IOException} being thrown.
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class NullOutputStream extends OutputStream {
 

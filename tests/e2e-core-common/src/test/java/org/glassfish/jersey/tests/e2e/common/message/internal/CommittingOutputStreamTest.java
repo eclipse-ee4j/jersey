@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.RuntimeType;
+import javax.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -273,7 +274,7 @@ public class CommittingOutputStreamTest {
     }
 
     private void checkBufferSize(int expectedSize, Map<String, Object> properties, RuntimeType runtime) throws IOException {
-        OutboundMessageContext outboundMessageContext = new OutboundMessageContext();
+        OutboundMessageContext outboundMessageContext = new OutboundMessageContext((Configuration) null);
         final Passed passed = new Passed();
         outboundMessageContext.setStreamProvider(new OutboundMessageContext.StreamProvider() {
             @Override

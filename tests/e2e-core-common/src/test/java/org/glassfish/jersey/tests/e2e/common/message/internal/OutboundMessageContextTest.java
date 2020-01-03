@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
@@ -48,7 +49,7 @@ import static org.junit.Assert.fail;
 /**
  * {@link OutboundMessageContext} test.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class OutboundMessageContextTest {
 
@@ -58,7 +59,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testAcceptableMediaTypes() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
 
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/xml, text/plain");
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
@@ -72,7 +73,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testAcceptableLanguages() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.ACCEPT_LANGUAGE, "en-gb;q=0.8, en;q=0.7");
         r.getHeaders().add(HttpHeaders.ACCEPT_LANGUAGE, "de");
         assertEquals(r.getAcceptableLanguages().size(), 3);
@@ -83,7 +84,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testRequestCookies() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.COOKIE, "oreo=chocolate");
         r.getHeaders().add(HttpHeaders.COOKIE, "nilla=vanilla");
         assertEquals(r.getRequestCookies().size(), 2);
@@ -96,7 +97,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testDate() throws URISyntaxException, ParseException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.DATE, "Tue, 29 Jan 2002 22:14:02 -0500");
         SimpleDateFormat f = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         Date date = f.parse("Tue, 29 Jan 2002 22:14:02 -0500");
@@ -105,7 +106,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testHeader() throws URISyntaxException, ParseException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/xml, text/plain");
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
         r.getHeaders().add("FOO", "");
@@ -118,7 +119,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testHeaderMap() throws URISyntaxException, ParseException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/xml, text/plain");
         r.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
         r.getHeaders().add("Allow", "GET, PUT");
@@ -131,7 +132,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testAllowedMethods() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add("Allow", "GET, PUT");
         r.getHeaders().add("Allow", "POST");
         assertEquals(3, r.getAllowedMethods().size());
@@ -143,7 +144,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testResponseCookies() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.SET_COOKIE, "oreo=chocolate");
         r.getHeaders().add(HttpHeaders.SET_COOKIE, "nilla=vanilla");
         assertEquals(2, r.getResponseCookies().size());
@@ -153,14 +154,14 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testEntityTag() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.ETAG, "\"tag\"");
         assertEquals(EntityTag.valueOf("\"tag\""), r.getEntityTag());
     }
 
     @Test
     public void testLastModified() throws URISyntaxException, ParseException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.LAST_MODIFIED, "Tue, 29 Jan 2002 22:14:02 -0500");
         SimpleDateFormat f = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         Date date = f.parse("Tue, 29 Jan 2002 22:14:02 -0500");
@@ -169,14 +170,14 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testLocation() throws URISyntaxException {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add(HttpHeaders.LOCATION, "http://example.org/app");
         assertEquals(URI.create("http://example.org/app"), r.getLocation());
     }
 
     @Test
     public void testGetLinks() {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         Link link1 = Link.fromUri("http://example.org/app/link1").param("produces", "application/json").param("method", "GET").rel("self").build();
         Link link2 = Link.fromUri("http://example.org/app/link2").param("produces", "application/xml").param("method", "PUT").rel("self").build();
         r.getHeaders().add("Link", link1.toString());
@@ -188,7 +189,7 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testGetLink() {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         Link link1 = Link.fromUri("http://example.org/app/link1").param("produces", "application/json").param("method", "GET").rel("self").build();
         Link link2 = Link.fromUri("http://example.org/app/link2").param("produces", "application/xml").param("method", "PUT").rel("update").build();
         Link link3 = Link.fromUri("http://example.org/app/link2").param("produces", "application/xml").param("method", "POST").rel("update").build();
@@ -201,14 +202,14 @@ public class OutboundMessageContextTest {
 
     @Test
     public void testGetLength() {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         r.getHeaders().add("Content-Length", 50);
         assertEquals(50, r.getLengthLong());
     }
 
     @Test
     public void testGetLength_tooLongForInt() {
-        OutboundMessageContext r = new OutboundMessageContext();
+        OutboundMessageContext r = new OutboundMessageContext((Configuration) null);
         long length = Integer.MAX_VALUE + 5L;
         r.getHeaders().add("Content-Length", length);
 

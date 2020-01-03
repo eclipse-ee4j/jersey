@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,8 +62,8 @@ import org.junit.Test;
  * It is also possible to send the data to netcat: {@code nc -l 8080} and verify the problem is
  * on the client side.
  *
- * @author Stepan Vavra (stepan.vavra at oracle.com)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Stepan Vavra
+ * @author Marek Potociar
  */
 public class LargeDataTest extends JerseyTest {
 

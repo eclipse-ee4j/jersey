@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +36,7 @@ import static org.glassfish.jersey.message.internal.Utils.throwIllegalArgumentEx
  * {@code Cache-Control} {@link HeaderDelegateProvider header delegate provider}.
  *
  * @author Paul Sandoz
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  * @author hubick@java.net
  */
 @Singleton
@@ -113,7 +114,7 @@ public final class CacheControlProvider implements HeaderDelegateProvider<CacheC
     private void readDirective(CacheControl cacheControl,
                                HttpHeaderReader reader) throws ParseException {
 
-        final String directiveName = reader.nextToken().toString().toLowerCase();
+        final String directiveName = reader.nextToken().toString().toLowerCase(Locale.ROOT);
         if ("private".equals(directiveName)) {
             cacheControl.setPrivate(true);
             readFieldNames(cacheControl.getPrivateFields(), reader);

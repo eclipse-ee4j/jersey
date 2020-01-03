@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -33,6 +34,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -56,7 +58,7 @@ import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.message.internal.Statuses;
-
+import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -76,6 +78,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.ManagedHttpClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
@@ -111,12 +114,14 @@ import org.apache.http.util.VersionInfo;
  * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link ApacheClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link ApacheClientProperties#DISABLE_COOKIES}</li>
- * <li>{@link ClientProperties#PROXY_URI}</li>
- * <li>{@link ClientProperties#PROXY_USERNAME}</li>
- * <li>{@link ClientProperties#PROXY_PASSWORD}</li>
- * <li>{@link ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link RequestEntityProcessing#CHUNKED}</li>
+ * <li>{@link ApacheClientProperties#KEEPALIVE_STRATEGY}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
+ * <li>{@link org.glassfish.jersey.client.ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
  * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link ApacheClientProperties#RETRY_HANDLER}</li>
+ * <li>{@link ApacheClientProperties#REUSE_STRATEGY}</li>
  * </ul>
  * <p>
  * This connector uses {@link RequestEntityProcessing#CHUNKED chunked encoding} as a default setting. This can
@@ -133,6 +138,12 @@ import org.apache.http.util.VersionInfo;
  * is disabled (chunked encoding is used) then the property
  * {@link org.glassfish.jersey.apache.connector.ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION} must
  * be set to {@code true}.
+ * </p>
+ * <p>
+ * Registration of {@link ApacheHttpClientBuilderConfigurator} instance on the
+ * {@link javax.ws.rs.client.Client#register(Object) Client} is supported. A configuration provided by
+ * {@link ApacheHttpClientBuilderConfigurator} will override the {@link org.apache.http.impl.client.HttpClientBuilder}
+ * configuration set by using the properties.
  * </p>
  * <p>
  * If a {@link org.glassfish.jersey.client.ClientResponse} is obtained and an
@@ -155,7 +166,7 @@ import org.apache.http.util.VersionInfo;
  *
  * @author jorgeluisw@mac.com
  * @author Paul Sandoz
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @see ApacheClientProperties#CONNECTION_MANAGER
  */
@@ -163,7 +174,6 @@ import org.apache.http.util.VersionInfo;
 class ApacheConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(ApacheConnector.class.getName());
-
     private static final VersionInfo vi;
     private static final String release;
 
@@ -197,6 +207,34 @@ class ApacheConnector implements Connector {
             }
         }
 
+        Object keepAliveStrategy = config.getProperties().get(ApacheClientProperties.KEEPALIVE_STRATEGY);
+        if (keepAliveStrategy != null) {
+            if (!(keepAliveStrategy instanceof ConnectionKeepAliveStrategy)) {
+                LOGGER.log(
+                        Level.WARNING,
+                        LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                ApacheClientProperties.KEEPALIVE_STRATEGY,
+                                keepAliveStrategy.getClass().getName(),
+                                ConnectionKeepAliveStrategy.class.getName())
+                );
+                keepAliveStrategy = null;
+            }
+        }
+
+        Object reuseStrategy = config.getProperties().get(ApacheClientProperties.REUSE_STRATEGY);
+        if (reuseStrategy != null) {
+            if (!(reuseStrategy instanceof ConnectionReuseStrategy)) {
+                LOGGER.log(
+                        Level.WARNING,
+                        LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                ApacheClientProperties.REUSE_STRATEGY,
+                                reuseStrategy.getClass().getName(),
+                                ConnectionReuseStrategy.class.getName())
+                );
+                reuseStrategy = null;
+            }
+        }
+
         Object reqConfig = config.getProperties().get(ApacheClientProperties.REQUEST_CONFIG);
         if (reqConfig != null) {
             if (!(reqConfig instanceof RequestConfig)) {
@@ -217,7 +255,13 @@ class ApacheConnector implements Connector {
         clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext));
         clientBuilder.setConnectionManagerShared(
                 PropertiesHelper.getValue(config.getProperties(), ApacheClientProperties.CONNECTION_MANAGER_SHARED, false, null));
-        clientBuilder.setSslcontext(sslContext);
+        clientBuilder.setSSLContext(sslContext);
+        if (keepAliveStrategy != null) {
+            clientBuilder.setKeepAliveStrategy((ConnectionKeepAliveStrategy) keepAliveStrategy);
+        }
+        if (reuseStrategy != null) {
+            clientBuilder.setConnectionReuseStrategy((ConnectionReuseStrategy) reuseStrategy);
+        }
 
         final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
@@ -280,7 +324,17 @@ class ApacheConnector implements Connector {
             this.cookieStore = null;
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
-        this.client = clientBuilder.build();
+
+        LinkedList<Object> contracts = config.getInstances().stream()
+                .filter(ApacheHttpClientBuilderConfigurator.class::isInstance)
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        HttpClientBuilder configuredBuilder = clientBuilder;
+        for (Object configurator : contracts) {
+            configuredBuilder = ((ApacheHttpClientBuilderConfigurator) configurator).configure(configuredBuilder);
+        }
+
+        this.client = configuredBuilder.build();
     }
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
@@ -404,7 +458,7 @@ class ApacheConnector implements Connector {
     @Override
     public ClientResponse apply(final ClientRequest clientRequest) throws ProcessingException {
         final HttpUriRequest request = getUriHttpRequest(clientRequest);
-        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(clientRequest.getHeaders(), request);
+        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(clientRequest, request);
 
         try {
             final CloseableHttpResponse response;
@@ -424,7 +478,8 @@ class ApacheConnector implements Connector {
             }
 
             response = client.execute(getHost(request), request, context);
-            HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, clientRequest.getHeaders(), this.getClass().getName());
+            HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, clientRequest.getHeaders(),
+                    this.getClass().getName(), clientRequest.getConfiguration());
 
             final Response.StatusType status = response.getStatusLine().getReasonPhrase() == null
                     ? Statuses.from(response.getStatusLine().getStatusCode())
@@ -462,7 +517,8 @@ class ApacheConnector implements Connector {
             }
 
             try {
-                responseContext.setEntityStream(getInputStream(response));
+                final ConnectionClosingMechanism closingMechanism = new ConnectionClosingMechanism(clientRequest, request);
+                responseContext.setEntityStream(getInputStream(response, closingMechanism));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -591,9 +647,10 @@ class ApacheConnector implements Connector {
         }
     }
 
-    private static Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers,
+    private static Map<String, String> writeOutBoundHeaders(final ClientRequest clientRequest,
                                                             final HttpUriRequest request) {
-        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers);
+        final Map<String, String> stringHeaders =
+                HeaderUtils.asStringHeadersSingleValue(clientRequest.getHeaders(), clientRequest.getConfiguration());
 
         for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
             request.addHeader(e.getKey(), e.getValue());
@@ -601,8 +658,8 @@ class ApacheConnector implements Connector {
         return stringHeaders;
     }
 
-    private static InputStream getInputStream(final CloseableHttpResponse response) throws IOException {
-
+    private static InputStream getInputStream(final CloseableHttpResponse response,
+                                              final ConnectionClosingMechanism closingMechanism) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
@@ -616,18 +673,57 @@ class ApacheConnector implements Connector {
             }
         }
 
-        return new FilterInputStream(inputStream) {
-            @Override
-            public void close() throws IOException {
-                try {
-                    super.close();
-                } catch (IOException ex) {
-                    // Ignore
-                } finally {
-                    response.close();
+        return closingMechanism.getEntityStream(inputStream, response);
+    }
+
+    /**
+     * The way the Apache CloseableHttpResponse is to be closed.
+     * See https://github.com/eclipse-ee4j/jersey/issues/4321
+     * {@link ApacheClientProperties#CONNECTION_CLOSING_STRATEGY}
+     */
+    private final class ConnectionClosingMechanism {
+        private ApacheConnectionClosingStrategy connectionClosingStrategy = null;
+        private final ClientRequest clientRequest;
+        private final HttpUriRequest apacheRequest;
+
+        private ConnectionClosingMechanism(ClientRequest clientRequest, HttpUriRequest apacheRequest) {
+            this.clientRequest = clientRequest;
+            this.apacheRequest = apacheRequest;
+            Object closingStrategyProperty = clientRequest
+                    .resolveProperty(ApacheClientProperties.CONNECTION_CLOSING_STRATEGY, Object.class);
+            if (closingStrategyProperty != null) {
+                if (ApacheConnectionClosingStrategy.class.isInstance(closingStrategyProperty)) {
+                    connectionClosingStrategy = (ApacheConnectionClosingStrategy) closingStrategyProperty;
+                } else {
+                    LOGGER.log(
+                            Level.WARNING,
+                            LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                    ApacheClientProperties.CONNECTION_CLOSING_STRATEGY,
+                                    closingStrategyProperty,
+                                    ApacheConnectionClosingStrategy.class.getName())
+                    );
                 }
             }
-        };
+
+            if (connectionClosingStrategy == null) {
+                if (vi.getRelease().compareTo("4.5") > 0) {
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.GracefulClosingStrategy.INSTANCE;
+                } else {
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.ImmediateClosingStrategy.INSTANCE;
+                }
+            }
+        }
+
+        private InputStream getEntityStream(final InputStream inputStream,
+                                            final CloseableHttpResponse response) {
+            InputStream filterStream = new FilterInputStream(inputStream) {
+                @Override
+                public void close() throws IOException {
+                    connectionClosingStrategy.close(clientRequest, apacheRequest, response, in);
+                }
+            };
+            return filterStream;
+        }
     }
 
     private static class ConnectionFactory extends ManagedHttpClientConnectionFactory {

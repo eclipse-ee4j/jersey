@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * connected TCP socket channel.
  *
  * @author Arul Dhesiaseelan (aruld@acm.org)
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class JettyHttpContainerFactory {
 
@@ -286,6 +286,10 @@ public final class JettyHttpContainerFactory {
         return server;
     }
 
+    // TODO: Use https://www.eclipse.org/jetty/javadoc/current/org/eclipse/jetty/util/thread/QueuedThreadPool.html
+    //  #%3Cinit%3E(int,int,int,int,java.util.concurrent.BlockingQueue,java.lang.ThreadGroup,java.util.concurrent.ThreadFactory)
+    //
+    //  Keeping this for backwards compatibility for the time being
     private static final class JettyConnectorThreadPool extends QueuedThreadPool {
         private final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("jetty-http-server-%d")

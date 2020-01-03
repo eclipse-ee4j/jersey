@@ -50,7 +50,7 @@ public abstract class AbstractJsonOsgiIntegrationTest {
     protected abstract Feature getJsonProviderFeature();
 
     @Test
-    public void testJson() throws Exception {
+    public void testJson() {
         final Feature jsonProviderFeature = getJsonProviderFeature();
         final Client client = ClientBuilder.newClient();
         final ResourceConfig resourceConfig = new ResourceConfig(JsonResource.class);

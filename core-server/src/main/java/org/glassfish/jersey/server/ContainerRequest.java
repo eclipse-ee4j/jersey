@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.HttpHeaders;
@@ -76,7 +77,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
  * An instance of the request context is passed by the container to the
  * {@link ApplicationHandler} for each incoming client request.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class ContainerRequest extends InboundMessageContext
         implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate {
@@ -139,14 +140,16 @@ public class ContainerRequest extends InboundMessageContext
      *                           by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate}
      *                           to be used by the context.
+     * @param configuration the server {@link Configuration}. If {@code null}, the default behaviour is expected.
      */
     public ContainerRequest(
             final URI baseUri,
             final URI requestUri,
             final String httpMethod,
             final SecurityContext securityContext,
-            final PropertiesDelegate propertiesDelegate) {
-        super(true);
+            final PropertiesDelegate propertiesDelegate,
+            final Configuration configuration) {
+        super(configuration, true);
 
         this.baseUri = baseUri == null ? DEFAULT_BASE_URI : baseUri.normalize();
         this.requestUri = requestUri;
@@ -154,6 +157,30 @@ public class ContainerRequest extends InboundMessageContext
         this.securityContext = securityContext;
         this.propertiesDelegate = new TracingAwarePropertiesDelegate(propertiesDelegate);
         this.uriRoutingContext = new UriRoutingContext(this);
+    }
+
+    /**
+     * Create new Jersey container request context.
+     *
+     * @param baseUri            base application URI.
+     * @param requestUri         request URI.
+     * @param httpMethod         request HTTP method name.
+     * @param securityContext    security context of the current request. Must not be {@code null}.
+     *                           The {@link SecurityContext#getUserPrincipal()} must return
+     *                           {@code null} if the current request has not been authenticated
+     *                           by the container.
+     * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate}
+     *                           to be used by the context.
+     * @see #ContainerRequest(URI, URI, String, SecurityContext, PropertiesDelegate, Configuration)
+     */
+    @Deprecated
+    public ContainerRequest(
+            final URI baseUri,
+            final URI requestUri,
+            final String httpMethod,
+            final SecurityContext securityContext,
+            final PropertiesDelegate propertiesDelegate) {
+        this(baseUri, requestUri, httpMethod, securityContext, propertiesDelegate, (Configuration) null);
     }
 
     /**

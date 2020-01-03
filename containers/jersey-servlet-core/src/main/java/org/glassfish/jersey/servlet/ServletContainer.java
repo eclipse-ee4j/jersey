@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -125,9 +125,9 @@ import org.glassfish.jersey.uri.UriComponent;
  * field or parameter annotated with {@code @PersistenceUnit(unitName="WidgetPU")}.
  *
  * @author Paul Sandoz
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  * @author Michal Gajdos
- * @author Libor Kramolis (libor.kramolis at oracle.com)
+ * @author Libor Kramolis
  */
 public class ServletContainer extends HttpServlet implements Filter, Container {
 
@@ -294,8 +294,9 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
                 UriComponent.Type.PATH);
 
         if (!decodedBasePath.equals(encodedBasePath)) {
-            throw new ProcessingException("The servlet context path and/or the "
-                    + "servlet path contain characters that are percent encoded");
+            setResponseForInvalidUri(response, new ProcessingException("The servlet context path and/or the "
+                    + "servlet path contain characters that are percent encoded"));
+            return;
         }
 
         final URI baseUri;

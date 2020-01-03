@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -45,7 +46,7 @@ import org.glassfish.jersey.uri.PathPattern;
  * Model of a method available on a resource. Covers resource method, sub-resource
  * method and sub-resource locator.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class ResourceMethod implements ResourceModelComponent, Producing, Consuming, Suspendable, NameBound {
 
@@ -578,7 +579,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
             this.managedAsync = managedAsync;
             this.type = JaxrsType.classify(httpMethod);
 
-            this.httpMethod = (httpMethod == null) ? httpMethod : httpMethod.toUpperCase();
+            this.httpMethod = (httpMethod == null) ? httpMethod : httpMethod.toUpperCase(Locale.ROOT);
 
             this.consumedTypes = Collections.unmodifiableList(new ArrayList<>(consumedTypes));
             this.producedTypes = Collections.unmodifiableList(new ArrayList<>(producedTypes));

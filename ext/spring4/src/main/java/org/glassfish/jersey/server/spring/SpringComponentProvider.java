@@ -34,6 +34,7 @@ import org.jvnet.hk2.spring.bridge.api.SpringBridge;
 import org.jvnet.hk2.spring.bridge.api.SpringIntoHK2Bridge;
 
 import org.springframework.aop.framework.Advised;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -102,7 +103,7 @@ public class SpringComponentProvider implements ComponentProvider {
         }
 
         if (AnnotationUtils.findAnnotation(component, Component.class) != null) {
-            String[] beanNames = ctx.getBeanNamesForType(component);
+            String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, component);
             if (beanNames == null || beanNames.length != 1) {
                 LOGGER.severe(LocalizationMessages.NONE_OR_MULTIPLE_BEANS_AVAILABLE(component));
                 return false;

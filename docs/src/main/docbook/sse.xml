@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,7 @@
                             dedicated media type that describes a simple format of individual events sent from the server to the
                             client. SSE also offers standard javascript client API implemented most modern browsers. For more
                             information about SSE, see the
-                            <link xlink:href='http://www.w3.org/TR/2009/WD-eventsource-20091029/'>SSE API specification</link>.
+                            <link xlink:href='https://www.w3.org/TR/eventsource/'>SSE API specification</link>.
                         </para>
                     </listitem>
                 </varlistentry>

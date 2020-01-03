@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@
         <title>Checking Out the Source</title>
         <para>
             Jersey source code is available on GitHub. You can browse the sources at
-            <link xlink:href="https://github.com/jersey/jersey">https://github.com/jersey/jersey</link>.
+            <link xlink:href="https://github.com/eclipse-ee4j/jersey">https://github.com/eclipse-ee4j/jersey</link>.
         </para>
         <para>
             In case you are not familiar with Git, we recommend reading some of the many "Getting Started with Git" articles
@@ -50,14 +50,14 @@
         <para>
             To clone the Jersey repository you can execute the following command on the command-line
             (provided you have a command-line Git client installed on your machine):
-            <programlisting language="bash" linenumbering="unnumbered">git clone git://github.com/jersey/jersey.git</programlisting>
+            <programlisting language="bash" linenumbering="unnumbered">git clone git://github.com/eclipse-ee4j/jersey.git</programlisting>
             This creates read-only copy of Jersey workspace. If you want to contribute, please use "pull request":
             <link xlink:href="https://help.github.com/articles/creating-a-pull-request">https://help.github.com/articles/creating-a-pull-request</link>.
         </para>
         <para>
             Milestones and releases of Jersey are tagged. You can list the tags by executing the standard Git command in the repository directory:
             <programlisting language="bash" linenumbering="unnumbered">git tag -l</programlisting> or by visiting
-            <link xlink:href="https://github.com/jersey/jersey/tags">https://github.com/jersey/jersey/tags</link>.
+            <link xlink:href="https://github.com/eclipse-ee4j/jersey/tags">https://github.com/eclipse-ee4j/jersey/tags</link>.
         </para>
     </section>
 

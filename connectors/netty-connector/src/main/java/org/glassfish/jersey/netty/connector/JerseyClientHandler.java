@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.netty.connector;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -31,6 +30,7 @@ import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpContent;
@@ -45,12 +45,12 @@ import io.netty.util.concurrent.GenericFutureListener;
 /**
  * Jersey implementation of Netty channel handler.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     private final NettyConnector connector;
-    private final LinkedBlockingDeque<InputStream> isList = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<ByteBuf> isList = new LinkedBlockingDeque<>();
 
     private final AsyncConnectorCallback asyncConnectorCallback;
     private final ClientRequest jerseyRequest;
@@ -89,7 +89,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             for (Map.Entry<String, String> entry : response.headers().entries()) {
                 jerseyResponse.getHeaders().add(entry.getKey(), entry.getValue());
             }
-
+            isList.clear(); // clearing the content - possible leftover from previous request processing.
             // request entity handling.
             if ((response.headers().contains(HttpHeaderNames.CONTENT_LENGTH) && HttpUtil.getContentLength(response) > 0)
                     || HttpUtil.isTransferEncodingChunked(response)) {
@@ -97,7 +97,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                 ctx.channel().closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                     @Override
                     public void operationComplete(Future<? super Void> future) throws Exception {
-                        isList.add(NettyInputStream.END_OF_INPUT_ERROR);
+                        isList.add(Unpooled.EMPTY_BUFFER);
                     }
                 });
 
@@ -123,21 +123,16 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
         }
         if (msg instanceof HttpContent) {
-
             HttpContent httpContent = (HttpContent) msg;
 
             ByteBuf content = httpContent.content();
-
             if (content.isReadable()) {
-                // copy bytes - when netty reads last chunk, it automatically closes the channel, which invalidates all
-                // relates ByteBuffs.
-                byte[] bytes = new byte[content.readableBytes()];
-                content.getBytes(content.readerIndex(), bytes);
-                isList.add(new ByteArrayInputStream(bytes));
+                content.retain();
+                isList.add(content);
             }
 
             if (msg instanceof LastHttpContent) {
-                isList.add(NettyInputStream.END_OF_INPUT);
+                isList.add(Unpooled.EMPTY_BUFFER);
             }
         }
     }
@@ -153,6 +148,6 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             });
         }
         future.completeExceptionally(cause);
-        isList.add(NettyInputStream.END_OF_INPUT_ERROR);
+        ctx.close();
     }
 }

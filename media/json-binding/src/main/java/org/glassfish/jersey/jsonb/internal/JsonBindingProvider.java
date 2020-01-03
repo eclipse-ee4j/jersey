@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.Providers;
@@ -39,11 +40,12 @@ import javax.json.bind.JsonbException;
 
 import org.glassfish.jersey.jsonb.LocalizationMessages;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.EntityInputStream;
 
 /**
  * Entity provider (reader and writer) for JSONB.
  *
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Adam Lindenthal
  */
 @Provider
 @Produces({"application/json", "text/json", "*/*"})
@@ -70,7 +72,14 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
                            MediaType mediaType,
                            MultivaluedMap<String, String> httpHeaders,
                            InputStream entityStream) throws IOException, WebApplicationException {
+        final EntityInputStream entityInputStream =  new EntityInputStream(entityStream);
+        entityStream = entityInputStream;
+        if (entityInputStream.isEmpty()) {
+            throw new NoContentException(LocalizationMessages.ERROR_JSONB_EMPTYSTREAM());
+        }
+
         Jsonb jsonb = getJsonb(type);
+
         try {
             return jsonb.fromJson(entityStream, genericType);
         } catch (JsonbException e) {
