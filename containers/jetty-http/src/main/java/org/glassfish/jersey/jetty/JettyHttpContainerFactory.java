@@ -293,7 +293,7 @@ public final class JettyHttpContainerFactory {
                 .build();
 
         @Override
-        protected Thread newThread(Runnable runnable) {
+        public Thread newThread(Runnable runnable) {
             return threadFactory.newThread(runnable);
         }
     }
