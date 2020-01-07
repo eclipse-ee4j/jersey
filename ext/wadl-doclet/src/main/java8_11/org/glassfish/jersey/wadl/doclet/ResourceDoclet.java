@@ -388,7 +388,6 @@ public class ResourceDoclet {
 
         /* Get referenced example bean
          */
-        
         final ClassDoc containingClass = referencedMember.containingClass();
         return DocletUtils.getLinkClass(containingClass.qualifiedName(), referencedMember.name());
     }
