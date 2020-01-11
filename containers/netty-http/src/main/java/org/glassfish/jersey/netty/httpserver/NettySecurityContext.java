@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Ian Kirk. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,4 +53,4 @@ public class NettySecurityContext implements SecurityContext {
     public String getAuthenticationScheme() {
         return null;
     }
-};
+}

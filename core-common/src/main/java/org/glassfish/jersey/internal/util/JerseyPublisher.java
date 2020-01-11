@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -417,7 +417,7 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
         }
     }
 
-    public enum PublisherStrategy{
+    public enum PublisherStrategy {
         /**
          * Blocking publisher strategy - tries to deliver to all subscribers regardless the cost.
          *

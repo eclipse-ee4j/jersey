@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,22 +28,25 @@
         <property name="eachLine" value="true"/>
     </module>
 
+    <module name="LineLength">
+        <property name="max" value="130"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://|@see| \* |@link|TODO|@todo|@version"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
 
         <module name="OuterTypeFilename"/>
-
-        <module name="LineLength">
-            <property name="max" value="130"/>
-            <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://|@see| \* |@link|TODO|@todo|@version"/>
-        </module>
 
         <module name="AvoidStarImport"/>
         <!--<module name="UnusedImports"/>-->
 
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap"/>
-        <module name="MethodParamPad"/>
+        <module name="MethodParamPad">
+            <property name="tokens" value="CTOR_DEF, LITERAL_NEW, METHOD_CALL, METHOD_DEF, SUPER_CTOR_CALL"/>
+        </module>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
@@ -60,13 +63,16 @@
             <property name="allowSingleLineStatement" value="true"/>
         </module>
         <module name="LeftCurly">
-            <property name="maxLineLength" value="130"/>
+            <property name="tokens" value="ANNOTATION_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF,
+                                           INTERFACE_DEF, LITERAL_CASE, LITERAL_CATCH, LITERAL_DEFAULT,
+                                           LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF,
+                                           LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE,
+                                           METHOD_DEF, OBJBLOCK, STATIC_INIT" />
         </module>
-        <module name="RightCurly"/>
         <module name="RightCurly">
             <property name="option" value="alone"/>
             <property name="tokens"
-                    value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, STATIC_INIT, INSTANCE_INIT"/>
+                    value="LITERAL_FINALLY, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE"/>
         </module>
 
         <module name="WhitespaceAround">
@@ -88,7 +94,7 @@
                     value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
         </module>
 
-        <module name="OneStatementPerLine"/>
+        <!-- <module name="OneStatementPerLine"/> -->
         <module name="FallThrough"/>
         <module name="UpperEll"/>
         <module name="ModifierOrder"/>
