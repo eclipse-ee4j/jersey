@@ -182,7 +182,7 @@
                         <executions>
                             <execution>
                                 <id>copy-jdk12-sources</id>
-                                <phase>verify</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <target>
                                     	<property name="sources-jar" value="${java8_11.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
