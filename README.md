@@ -105,8 +105,8 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
  <h3>Latest Articles</h3>
 
 <table>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a>                        </td><td> Oct 4, 2019 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=164" target="_blank">Jersey Apache Connector Hangs …?</a>                        </td><td> Oct 4, 2019 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a>                         </td><td> Jan 13, 2020 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=164" target="_blank">Jersey Apache Connector Hangs …?</a>                      </td><td> Jan 7, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=150" target="_blank">Configuring Jersey Application</a>                        </td><td> Oct 4, 2019 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=147" target="_blank">Jersey 2.29.1 Has Been Released</a>                       </td><td> Sep 10, 2019 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=144" target="_blank">Jersey 2.29 Has Been Released</a>                         </td><td> Jun 25, 2019 </td><td> Jan Supol </td> </tr>
