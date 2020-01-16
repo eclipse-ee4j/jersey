@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -154,11 +154,11 @@ public final class MessagingBinders {
 
     private static final class EnabledProvidersBinder {
         private enum Provider {
-            DOMSOURCE ("javax.xml.transform.dom.DOMSource"),
-            RENDEREDIMAGE ("java.awt.image.RenderedImage"),
-            SAXSOURCE ("javax.xml.transform.sax.SAXSource"),
-            SOURCE ("javax.xml.transform.Source"),
-            STREAMSOURCE ("javax.xml.transform.stream.StreamSource");
+            DOMSOURCE("javax.xml.transform.dom.DOMSource"),
+            RENDEREDIMAGE("java.awt.image.RenderedImage"),
+            SAXSOURCE("javax.xml.transform.sax.SAXSource"),
+            SOURCE("javax.xml.transform.Source"),
+            STREAMSOURCE("javax.xml.transform.stream.StreamSource");
             Provider(String className) {
                 this.className = className;
             }
