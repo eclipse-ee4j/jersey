@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -122,7 +122,10 @@ public class PreInvocationInterceptorTest {
     public void testPreInvocationInterceptorAbortWith() {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .executorService(new CustomClientExecutorProvider().getExecutorService())
-                .register(new PropertyPreInvocationInterceptor(a -> {a.abortWith(Response.noContent().build()); return true; }))
+                .register(new PropertyPreInvocationInterceptor(a -> {
+                    a.abortWith(Response.noContent().build());
+                    return true;
+                }))
                 .register(new PropertyRequestFilter(a -> {throw new IllegalStateException(); }))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.get()) {
@@ -135,11 +138,17 @@ public class PreInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .executorService(new CustomClientExecutorProvider().getExecutorService())
                 .register(
-                        new PropertyPreInvocationInterceptor(a -> {a.abortWith(Response.noContent().build()); return true; }){},
+                        new PropertyPreInvocationInterceptor(a -> {
+                            a.abortWith(Response.noContent().build());
+                            return true;
+                        }) {},
                         200
                 )
                 .register(
-                        new PropertyPreInvocationInterceptor(a -> {a.abortWith(Response.accepted().build()); return true; }){},
+                        new PropertyPreInvocationInterceptor(a -> {
+                            a.abortWith(Response.accepted().build());
+                            return true;
+                        }) {},
                         100
                 )
                 .register(new PropertyRequestFilter(a -> {throw new IllegalStateException(); }))

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -354,7 +354,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     }
 
     private static AnnotatedConstructor<?> enrichedConstructor(final AnnotatedConstructor<?> ctor) {
-        return new AnnotatedConstructor(){
+        return new AnnotatedConstructor() {
 
             @Override
             public Constructor getJavaMember() {
