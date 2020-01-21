@@ -79,6 +79,7 @@ public class ExtendedWadlWebappOsgiTest {
     BundleContext bundleContext;
 
     private static final Logger LOGGER = Logger.getLogger(ExtendedWadlWebappOsgiTest.class.getName());
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
 
     // we want to re-use the port number as set for Jersey test container to avoid CT port number clashes
     private static final String testContainerPort = System.getProperty(TestProperties.CONTAINER_PORT);
@@ -94,7 +95,8 @@ public class ExtendedWadlWebappOsgiTest {
     public static Option[] configuration() {
         List<Option> options = Arrays.asList(options(
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
-                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
 
                 // javax.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),

@@ -48,6 +48,11 @@ Bootstrap v3.3.7
 * Project: http://getbootstrap.com
 * Copyright: 2011-2016 Twitter, Inc
 
+CDI API Version 1.1
+* License: Apache License, 2.0
+* Project: http://www.seamframework.org/Weld
+* Copyright 2010, Red Hat, Inc., and individual contributors by the @authors tag.
+
 Google Guava Version 18.0
 * License: Apache License, 2.0
 * Copyright (C) 2009 The Guava Authors
