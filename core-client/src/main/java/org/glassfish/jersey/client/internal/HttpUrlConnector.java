@@ -321,12 +321,28 @@ public class HttpUrlConnector implements Connector {
 
     static Object getContextObject(final SSLSocketFactory sslSocketFactory) {
         try {
-            final Field contextField = sslSocketFactory.getClass().getDeclaredField("context");
+            final Field contextField = getContextField(sslSocketFactory);
+            if (contextField == null) {
+                return null;
+            }
             contextField.setAccessible(true);
             return contextField.get(sslSocketFactory);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * Search for the field named "context" instead of using "getDeclaredField" method which throws an exception if the field is not found
+     */
+    private static Field getContextField(final SSLSocketFactory sslSocketFactory) {
+        final Field[] declaredFields = sslSocketFactory.getClass().getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            if ("context".equals(declaredField.getName())) {
+                return declaredField;
+            }
+        }
+        return null;
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
