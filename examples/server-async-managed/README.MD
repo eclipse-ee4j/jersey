@@ -12,7 +12,7 @@ Server Asynchronous Managed Example
 This example demonstrates JAX-RS 2.0 server-side non-blocking API using **ManagedAsync** annotation.
 
 The full description how to create an asynchronous resource can be found in Jersey User Guide, chapter 
-[Asynchronous Services and Clients](https://jersey.java.net/documentation/latest/async.html).
+[Asynchronous Services and Clients](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/async.html).
 
 Indicates that the resource method to which the annotation has been applied
  * should be executed on a separate thread managed by an internal Jersey

@@ -10,7 +10,7 @@ Server Asynchronous Example
 ===========================
 
 The full description how to create an asynchronous resource can be found in Jersey User Guide, chapter 
-[Asynchronous Services and Clients](https://jersey.java.net/documentation/latest/async.html).
+[Asynchronous Services and Clients](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/async.html).
 
 This example demonstrates JAX-RS 2.0 server-side non-blocking API in comparison to blocking and long-running
 asynchronous operations.

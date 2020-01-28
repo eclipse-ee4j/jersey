@@ -16,12 +16,12 @@ annotations (views) and how to apply them on domain classes as well as
 on JAX-RS resource classes or JAX-RS resource methods.
 
 The full description how Entity Data Filtering can be found in Jersey User Guide, chapter
-[Entity Data Filtering](https://jersey.java.net/documentation/latest/entity-filtering.html).
+[Entity Data Filtering](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html).
 Sections relevant to this example (describing this exact example) are:
 
--   [Enabling and configuring Entity Filtering in your application](https://jersey.java.net/documentation/latest/entity-filtering.html#d0e13911)
--   [Components used to describe Entity Filtering concepts](https://jersey.java.net/documentation/latest/entity-filtering.html#d0e14024)
--   [Using custom annotations to filter entities](https://jersey.java.net/documentation/latest/entity-filtering.html#ef.annotations)
+-   [Enabling and configuring Entity Filtering in your application](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14229)
+-   [Components used to describe Entity Filtering concepts](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14342)
+-   [Using custom annotations to filter entities](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#ef.annotations)
 
 Contents
 --------

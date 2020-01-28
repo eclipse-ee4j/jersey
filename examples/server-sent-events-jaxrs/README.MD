@@ -13,7 +13,7 @@ This example demonstrates JAX-RS 2.1 server-sent events support.
 
 The full description how to add support for server-sent events to your application can be found in Jersey User Guide, 
 chapter
-[Server-Sent Events (SSE) Support](https://jersey.java.net/documentation/latest/sse.html).
+[Server-Sent Events (SSE) Support](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/sse.html).
 
 Contents
 --------
@@ -61,7 +61,7 @@ Running the Example
 -------------------
 
 Look at Jersey Documentation to learn how to consume Server-Sent Events using Jersey Client
-<https://jersey.java.net/documentation/latest/sse.html#d0e11786>
+<https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/sse.html#sse-client-jaxrs>
 
 Run the example as follows:
 

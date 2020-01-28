@@ -24,13 +24,13 @@ each incoming request as if the request was invoked by a user in role
 
 The full description how Entity Data Filtering can be found in Jersey
 User Guide, chapter [Entity Data
-Filtering](https://jersey.java.net/documentation/latest/entity-filtering.html).
+Filtering](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html).
 Sections relevant to this example (describing this exact example) are:
 
 -   [Enabling and configuring Entity Filtering in your
-    application](https://jersey.java.net/documentation/latest/entity-filtering.html#d0e13911)
+    application](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14229)
 -   [Role-based Entity Filtering using (javax.annotation.security)
-    annotations](https://jersey.java.net/documentation/latest/entity-filtering.html#ef.security.annotations)
+    annotations](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#ef.security.annotations)
 
 Contents
 --------
