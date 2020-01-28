@@ -306,8 +306,8 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    static boolean isDefaultSSLSocketFactory(HttpsURLConnection suc) {
-        final boolean fastCheck = HttpsURLConnection.getDefaultSSLSocketFactory() == suc.getSSLSocketFactory();
+    static boolean isDefaultSSLSocketFactory(final HttpsURLConnection httpsURLConnection) {
+        final boolean fastCheck = HttpsURLConnection.getDefaultSSLSocketFactory() == httpsURLConnection.getSSLSocketFactory();
         if (fastCheck) {
             return true;
         }
@@ -315,18 +315,18 @@ public class HttpUrlConnector implements Connector {
         if (defaultContext == null) {
             return false;
         }
-        final Object sucContext = getContextObject(suc.getSSLSocketFactory());
+        final Object sucContext = getContextObject(httpsURLConnection.getSSLSocketFactory());
         return defaultContext == sucContext;
     }
 
-    static Object getContextObject(SSLSocketFactory sslSocketFactory) {
+    static Object getContextObject(final SSLSocketFactory sslSocketFactory) {
         try {
             final Field contextField = sslSocketFactory.getClass().getDeclaredField("context");
             contextField.setAccessible(true);
             return contextField.get(sslSocketFactory);
-        } catch (NoSuchFieldException | IllegalAccessException ignore) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
         }
-        return null;
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
