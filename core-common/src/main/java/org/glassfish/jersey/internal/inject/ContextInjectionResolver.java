@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.internal.inject;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 /**
  * A marker interface to {@code InjectionResolver&lt;Context&gt;}. This interface must be implemented by every Dependency

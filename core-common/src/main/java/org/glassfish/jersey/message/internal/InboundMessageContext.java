@@ -274,8 +274,8 @@ public abstract class InboundMessageContext {
      * Get a message header as a single string value.
      * <p/>
      * Each single header value is converted to String using a
-     * {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
-     * via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     * {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if one is available
+     * via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
      * for the header value class or using its {@code toString} method  if a header
      * delegate is not available.
      *
@@ -537,7 +537,7 @@ public abstract class InboundMessageContext {
     /**
      * Get any cookies that accompanied the request.
      *
-     * @return a read-only map of cookie name (String) to {@link javax.ws.rs.core.Cookie}.
+     * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
      */
     public Map<String, Cookie> getRequestCookies() {
         List<String> cookies = this.headers.get(HttpHeaders.COOKIE);
@@ -575,7 +575,7 @@ public abstract class InboundMessageContext {
     /**
      * Get any new cookies set on the response message.
      *
-     * @return a read-only map of cookie name (String) to a {@link javax.ws.rs.core.NewCookie new cookie}.
+     * @return a read-only map of cookie name (String) to a {@link jakarta.ws.rs.core.NewCookie new cookie}.
      */
     public Map<String, NewCookie> getResponseCookies() {
         List<String> cookies = this.headers.get(HttpHeaders.SET_COOKIE);
@@ -722,7 +722,7 @@ public abstract class InboundMessageContext {
     }
 
     /**
-     * Convenience method that returns a {@link javax.ws.rs.core.Link.Builder Link.Builder}
+     * Convenience method that returns a {@link jakarta.ws.rs.core.Link.Builder Link.Builder}
      * for the relation.
      *
      * @param relation link relation.
@@ -905,7 +905,7 @@ public abstract class InboundMessageContext {
      * Buffer the entity stream (if not empty).
      *
      * @return {@code true} if the entity input stream was successfully buffered.
-     * @throws javax.ws.rs.ProcessingException in case of an IO error.
+     * @throws jakarta.ws.rs.ProcessingException in case of an IO error.
      */
     public boolean bufferEntity() throws ProcessingException {
         entityContent.ensureNotClosed();

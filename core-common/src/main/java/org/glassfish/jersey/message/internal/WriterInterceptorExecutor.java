@@ -28,13 +28,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
@@ -248,7 +248,7 @@ public final class WriterInterceptorExecutor extends InterceptorExecutor<WriterI
     }
 
     /**
-     * {@link javax.ws.rs.ext.MessageBodyWriter}s should not close the given {@link java.io.OutputStream stream}. This output
+     * {@link jakarta.ws.rs.ext.MessageBodyWriter}s should not close the given {@link java.io.OutputStream stream}. This output
      * stream makes sure that the stream is not closed even if MBW tries to do it.
      */
     private static class UnCloseableOutputStream extends OutputStream {

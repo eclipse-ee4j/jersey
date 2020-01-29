@@ -18,7 +18,7 @@ package org.glassfish.jersey.message.internal;
 
 import java.text.ParseException;
 
-import javax.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.EntityTag;
 
 import javax.inject.Singleton;
 

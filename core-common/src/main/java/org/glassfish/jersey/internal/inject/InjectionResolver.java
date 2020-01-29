@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
  * {@code &#64;Inject}. Otherwise, this resolver can be used to provide injection points for any annotation.
  * <p>
  * Jersey provides all {@code InjectionResolvers} for JAX-RS annotation and {@code org.glassfish.jersey.server.Uri} apart from
- * {@link javax.ws.rs.core.Context} which must be implemented and registered directly as a part of DI integration because of
+ * {@link jakarta.ws.rs.core.Context} which must be implemented and registered directly as a part of DI integration because of
  * many optimization which cannot be implemented on Jersey side.
  * <p>
  * The {@code InjectionResolvers} are delivered to DI integration using {@link InjectionManager#register(Binder)} and DI provider

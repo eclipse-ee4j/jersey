@@ -19,7 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.text.ParseException;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.inject.Singleton;
 
@@ -72,7 +72,7 @@ public class MediaTypeProvider implements HeaderDelegateProvider<MediaType> {
     }
 
     /**
-     * Create a new {@link javax.ws.rs.core.MediaType} instance from a header reader.
+     * Create a new {@link jakarta.ws.rs.core.MediaType} instance from a header reader.
      *
      * @param reader header reader.
      * @return new {@code MediaType} instance.

@@ -18,7 +18,7 @@ package org.glassfish.jersey.model.internal;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 

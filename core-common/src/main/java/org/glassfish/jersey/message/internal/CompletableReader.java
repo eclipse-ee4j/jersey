@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.internal;
 
-import javax.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyReader;
 
 /**
  * A {@link MessageBodyReader} may implement this interface to signal that

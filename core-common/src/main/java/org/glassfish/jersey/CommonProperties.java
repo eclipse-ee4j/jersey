@@ -19,7 +19,7 @@ package org.glassfish.jersey;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -132,7 +132,7 @@ public final class CommonProperties {
      * If {@code true} then disable META-INF/services lookup globally on client/server.
      * <p>
      * By default Jersey looks up SPI implementations described by META-INF/services/* files.
-     * Then you can register appropriate provider classes by {@link javax.ws.rs.core.Application}.
+     * Then you can register appropriate provider classes by {@link jakarta.ws.rs.core.Application}.
      * </p>
      * <p>
      * The default value is {@code false}.
@@ -193,7 +193,7 @@ public final class CommonProperties {
 
     /**
      * An integer value that defines the buffer size used to buffer the outbound message entity in order to
-     * determine its size and set the value of HTTP <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
+     * determine its size and set the value of HTTP <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
      * <p>
      * If the entity size exceeds the configured buffer size, the buffering would be cancelled and the entity size
      * would not be determined. Value less or equal to zero disable the buffering of the entity at all.

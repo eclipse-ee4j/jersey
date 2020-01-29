@@ -19,8 +19,8 @@ package org.glassfish.jersey.internal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;

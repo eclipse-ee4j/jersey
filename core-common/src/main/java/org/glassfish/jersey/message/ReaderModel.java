@@ -20,13 +20,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.glassfish.jersey.message.internal.MessageBodyFactory;
 
 /**
- * {@link javax.ws.rs.ext.MessageBodyReader} model.
+ * {@link jakarta.ws.rs.ext.MessageBodyReader} model.
  *
  * @author Marek Potociar
  * @since 2.16
@@ -47,7 +47,7 @@ public final class ReaderModel extends AbstractEntityProviderModel<MessageBodyRe
     }
 
     /**
-     * Safely invokes {@link javax.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the underlying provider.
+     * Safely invokes {@link jakarta.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the underlying provider.
      *
      * Any exceptions will be logged at finer level.
      *

@@ -18,7 +18,7 @@ package org.glassfish.jersey.message;
 
 import java.nio.charset.Charset;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.message.internal.ReaderWriter;
 

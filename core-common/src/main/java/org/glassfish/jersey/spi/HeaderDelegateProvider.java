@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.spi;
 
-import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
+import jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
 /**
  * A provider that supports the conversion of an HTTP header, of type T, to and

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.spi;
 
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 /**
  * Extension of a {@link ExceptionMapper exception mapper interface}. The exception mapping

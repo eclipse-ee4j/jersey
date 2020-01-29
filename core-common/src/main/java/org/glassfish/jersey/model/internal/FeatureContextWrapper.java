@@ -18,14 +18,14 @@ package org.glassfish.jersey.model.internal;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 
 /**
- * Wrapper of {@link javax.ws.rs.core.FeatureContext} that can supply instance of
+ * Wrapper of {@link jakarta.ws.rs.core.FeatureContext} that can supply instance of
  * {@link InjectionManager injection manager}.
  *
  * @author Miroslav Fuksa
