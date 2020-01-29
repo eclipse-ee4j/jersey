@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,16 +39,16 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.Function;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.ext.ReaderInterceptor;
 
 import javax.xml.transform.Source;
 
@@ -152,8 +152,8 @@ public abstract class InboundMessageContext {
      *
      * @param configuration the related client/server side {@link Configuration}. If {@code null},
      *                      the default behaviour is expected.
-     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
-     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     * @param translateNce  if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link jakarta.ws.rs.BadRequestException}
      *                      as required by JAX-RS specification on the server side.
      */
     public InboundMessageContext(Configuration configuration, boolean translateNce) {
@@ -175,8 +175,8 @@ public abstract class InboundMessageContext {
     /**
      * Create new inbound message context.
      *
-     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
-     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     * @param translateNce  if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link jakarta.ws.rs.BadRequestException}
      *                      as required by JAX-RS specification on the server side.     *
      * @see #InboundMessageContext(Configuration)
      */

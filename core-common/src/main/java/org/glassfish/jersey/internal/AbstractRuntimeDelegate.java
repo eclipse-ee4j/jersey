@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import jakarta.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.Link;
@@ -79,7 +80,7 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
 
     @Override
     public ResponseBuilder createResponseBuilder() {
-        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext());
+        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null));
     }
 
     @Override
