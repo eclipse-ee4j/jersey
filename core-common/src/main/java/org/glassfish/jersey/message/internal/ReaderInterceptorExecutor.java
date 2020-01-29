@@ -27,16 +27,16 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NoContentException;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NoContentException;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
@@ -84,9 +84,9 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
      * @param workers            {@link org.glassfish.jersey.message.MessageBodyWorkers Message body workers}.
      * @param readerInterceptors Reader interceptor that are to be used to intercept the reading of an entity.
      *                           The interceptors will be executed in the same order as given in this parameter.
-     * @param translateNce       if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a selected message
+     * @param translateNce       if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a selected message
      *                           body
-     *                           reader will be translated into a {@link javax.ws.rs.BadRequestException} as required by
+     *                           reader will be translated into a {@link jakarta.ws.rs.BadRequestException} as required by
      * @param injectionManager   injection manager.
      */
     ReaderInterceptorExecutor(final Class<?> rawType, final Type type,
@@ -245,7 +245,7 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
     }
 
     /**
-     * {@link javax.ws.rs.ext.MessageBodyReader}s should not close the given {@link java.io.InputStream stream}. This input
+     * {@link jakarta.ws.rs.ext.MessageBodyReader}s should not close the given {@link java.io.InputStream stream}. This input
      * stream makes sure that the stream is not closed even if MBR tries to do it.
      */
     private static class UnCloseableInputStream extends InputStream {

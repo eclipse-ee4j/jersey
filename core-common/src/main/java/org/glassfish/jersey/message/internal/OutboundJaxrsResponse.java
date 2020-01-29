@@ -30,18 +30,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Variant;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Variant;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 
@@ -53,7 +51,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  *
  * @author Marek Potociar
  */
-public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
+public class OutboundJaxrsResponse extends jakarta.ws.rs.core.Response {
 
     private final OutboundMessageContext context;
     private final StatusType status;
@@ -375,7 +373,7 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response build() {
+        public jakarta.ws.rs.core.Response build() {
             StatusType st = status;
             if (st == null) {
                 st = context.hasEntity() ? Status.OK : Status.NO_CONTENT;
@@ -390,7 +388,7 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder status(StatusType status) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder status(StatusType status) {
             if (status == null) {
                 throw new IllegalArgumentException("Response status must not be 'null'");
             }
@@ -428,13 +426,13 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder status(int code) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder status(int code) {
             this.status = Statuses.from(code);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder entity(Object entity) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder entity(Object entity) {
             context.setEntity(entity);
             return this;
         }
@@ -446,18 +444,18 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder type(MediaType type) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder type(MediaType type) {
             context.setMediaType(type);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder type(String type) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder type(String type) {
             return type(type == null ? null : MediaType.valueOf(type));
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder variant(Variant variant) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder variant(Variant variant) {
             if (variant == null) {
                 type((MediaType) null);
                 language((String) null);
@@ -473,7 +471,7 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder variants(List<Variant> variants) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder variants(List<Variant> variants) {
             if (variants == null) {
                 header(HttpHeaders.VARY, null);
                 return this;
@@ -531,19 +529,19 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder language(String language) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder language(String language) {
             headerSingle(HttpHeaders.CONTENT_LANGUAGE, language);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder language(Locale language) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder language(Locale language) {
             headerSingle(HttpHeaders.CONTENT_LANGUAGE, language);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder location(URI location) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder location(URI location) {
             URI locationUri = location;
             if (location != null && !location.isAbsolute()) {
                 URI baseUri = getBaseUri();
@@ -556,48 +554,48 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder contentLocation(URI location) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder contentLocation(URI location) {
             headerSingle(HttpHeaders.CONTENT_LOCATION, location);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder encoding(String encoding) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder encoding(String encoding) {
             headerSingle(HttpHeaders.CONTENT_ENCODING, encoding);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder tag(EntityTag tag) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder tag(EntityTag tag) {
             headerSingle(HttpHeaders.ETAG, tag);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder tag(String tag) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder tag(String tag) {
             return tag(tag == null ? null : new EntityTag(tag));
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder lastModified(Date lastModified) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder lastModified(Date lastModified) {
             headerSingle(HttpHeaders.LAST_MODIFIED, lastModified);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder cacheControl(CacheControl cacheControl) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder cacheControl(CacheControl cacheControl) {
             headerSingle(HttpHeaders.CACHE_CONTROL, cacheControl);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder expires(Date expires) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder expires(Date expires) {
             headerSingle(HttpHeaders.EXPIRES, expires);
             return this;
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder cookie(NewCookie... cookies) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder cookie(NewCookie... cookies) {
             if (cookies != null) {
                 for (NewCookie cookie : cookies) {
                     header(HttpHeaders.SET_COOKIE, cookie);
@@ -609,15 +607,15 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         }
 
         @Override
-        public javax.ws.rs.core.Response.ResponseBuilder header(String name, Object value) {
+        public jakarta.ws.rs.core.Response.ResponseBuilder header(String name, Object value) {
             return header(name, value, false);
         }
 
-        private javax.ws.rs.core.Response.ResponseBuilder headerSingle(String name, Object value) {
+        private jakarta.ws.rs.core.Response.ResponseBuilder headerSingle(String name, Object value) {
             return header(name, value, true);
         }
 
-        private javax.ws.rs.core.Response.ResponseBuilder header(String name, Object value, boolean single) {
+        private jakarta.ws.rs.core.Response.ResponseBuilder header(String name, Object value, boolean single) {
             if (value != null) {
                 if (single) {
                     context.getHeaders().putSingle(name, value);

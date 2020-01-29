@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.logging;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.Test;
 import static org.glassfish.jersey.logging.LoggingFeature.Verbosity.HEADERS_ONLY;
@@ -25,8 +25,8 @@ import static org.glassfish.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_TEXT
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
-import static javax.ws.rs.core.MediaType.TEXT_HTML_TYPE;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
+import static jakarta.ws.rs.core.MediaType.TEXT_HTML_TYPE;
 
 /**
  * @author Ondrej Kosatka

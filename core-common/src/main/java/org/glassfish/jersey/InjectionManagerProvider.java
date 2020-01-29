@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey;
 
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.ReaderInterceptorContext;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -27,7 +27,7 @@ import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 /**
  * Utility class with static methods that extract {@link InjectionManager injection manager}
  * from various JAX-RS components. This class can be used when no injection is possible by
- * {@link javax.ws.rs.core.Context} or {@link javax.inject.Inject} annotation due to character of
+ * {@link jakarta.ws.rs.core.Context} or {@link javax.inject.Inject} annotation due to character of
  * provider but there is a need to get any service from {@link InjectionManager}.
  * <p>
  * Injections are not possible for example when a provider is registered as an instance on the client.
@@ -83,8 +83,8 @@ import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 public class InjectionManagerProvider {
 
     /**
-     * Extract and return injection manager from {@link javax.ws.rs.ext.WriterInterceptorContext writerInterceptorContext}.
-     * The method can be used to inject custom types into a {@link javax.ws.rs.ext.WriterInterceptor}.
+     * Extract and return injection manager from {@link jakarta.ws.rs.ext.WriterInterceptorContext writerInterceptorContext}.
+     * The method can be used to inject custom types into a {@link jakarta.ws.rs.ext.WriterInterceptor}.
      *
      * @param writerInterceptorContext Writer interceptor context.
      *
@@ -92,7 +92,7 @@ public class InjectionManagerProvider {
      *
      * @throws java.lang.IllegalArgumentException when {@code writerInterceptorContext} is not a default
      * Jersey implementation provided by Jersey as argument in the
-     * {@link javax.ws.rs.ext.WriterInterceptor#aroundWriteTo(javax.ws.rs.ext.WriterInterceptorContext)} method.
+     * {@link jakarta.ws.rs.ext.WriterInterceptor#aroundWriteTo(jakarta.ws.rs.ext.WriterInterceptorContext)} method.
      */
     public static InjectionManager getInjectionManager(WriterInterceptorContext writerInterceptorContext) {
         if (!(writerInterceptorContext instanceof InjectionManagerSupplier)) {
@@ -104,8 +104,8 @@ public class InjectionManagerProvider {
     }
 
     /**
-     * Extract and return injection manager from {@link javax.ws.rs.ext.ReaderInterceptorContext readerInterceptorContext}.
-     * The method can be used to inject custom types into a {@link javax.ws.rs.ext.ReaderInterceptor}.
+     * Extract and return injection manager from {@link jakarta.ws.rs.ext.ReaderInterceptorContext readerInterceptorContext}.
+     * The method can be used to inject custom types into a {@link jakarta.ws.rs.ext.ReaderInterceptor}.
      *
      * @param readerInterceptorContext Reader interceptor context.
      *
@@ -113,7 +113,7 @@ public class InjectionManagerProvider {
      *
      * @throws java.lang.IllegalArgumentException when {@code readerInterceptorContext} is not a default
      * Jersey implementation provided by Jersey as argument in the
-     * {@link javax.ws.rs.ext.ReaderInterceptor#aroundReadFrom(javax.ws.rs.ext.ReaderInterceptorContext)} method.
+     * {@link jakarta.ws.rs.ext.ReaderInterceptor#aroundReadFrom(jakarta.ws.rs.ext.ReaderInterceptorContext)} method.
 
      */
     public static InjectionManager getInjectionManager(ReaderInterceptorContext readerInterceptorContext) {
@@ -126,8 +126,8 @@ public class InjectionManagerProvider {
     }
 
     /**
-     * Extract and return injection manager from {@link javax.ws.rs.core.FeatureContext featureContext}.
-     * The method can be used to inject custom types into a {@link javax.ws.rs.core.Feature}.
+     * Extract and return injection manager from {@link jakarta.ws.rs.core.FeatureContext featureContext}.
+     * The method can be used to inject custom types into a {@link jakarta.ws.rs.core.Feature}.
      * <p>
      * Note that features are utilized during initialization phase when not all providers are registered yet.
      * It is undefined which injections are already available in this phase.
@@ -139,7 +139,7 @@ public class InjectionManagerProvider {
      *
      * @throws java.lang.IllegalArgumentException when {@code writerInterceptorContext} is not a default
      * Jersey instance provided by Jersey
-     * in {@link javax.ws.rs.core.Feature#configure(javax.ws.rs.core.FeatureContext)} method.
+     * in {@link jakarta.ws.rs.core.Feature#configure(jakarta.ws.rs.core.FeatureContext)} method.
      */
     public static InjectionManager getInjectionManager(FeatureContext featureContext) {
         if (!(featureContext instanceof InjectionManagerSupplier)) {

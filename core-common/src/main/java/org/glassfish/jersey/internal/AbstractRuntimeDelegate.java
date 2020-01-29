@@ -22,16 +22,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.JerseyLink;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
@@ -74,13 +73,13 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
     }
 
     @Override
-    public javax.ws.rs.core.Variant.VariantListBuilder createVariantListBuilder() {
+    public jakarta.ws.rs.core.Variant.VariantListBuilder createVariantListBuilder() {
         return new VariantListBuilder();
     }
 
     @Override
     public ResponseBuilder createResponseBuilder() {
-        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null));
+        return new OutboundJaxrsResponse.Builder(new OutboundMessageContext());
     }
 
     @Override

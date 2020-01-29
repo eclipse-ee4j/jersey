@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Extended common runtime configuration.

@@ -57,7 +57,7 @@ import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.process.Inflector;
 
 /**
- * Common immutable {@link javax.ws.rs.core.Configuration} implementation for
+ * Common immutable {@link jakarta.ws.rs.core.Configuration} implementation for
  * server and client.
  *
  * @author Michal Gajdos

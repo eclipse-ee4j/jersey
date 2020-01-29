@@ -26,8 +26,8 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
 
@@ -35,7 +35,7 @@ import org.glassfish.jersey.spi.ContentEncoder;
 
 /**
  * Deflate encoding support. Interceptor that encodes the output or decodes the input if
- * {@link javax.ws.rs.core.HttpHeaders#CONTENT_ENCODING Content-Encoding header} value equals to {@code deflate}.
+ * {@link jakarta.ws.rs.core.HttpHeaders#CONTENT_ENCODING Content-Encoding header} value equals to {@code deflate}.
  * The default behavior of this interceptor can be tweaked using {@link MessageProperties#DEFLATE_WITHOUT_ZLIB}
  * property.
  *
