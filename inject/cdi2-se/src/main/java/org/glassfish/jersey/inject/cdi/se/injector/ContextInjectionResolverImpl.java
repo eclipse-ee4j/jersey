@@ -20,8 +20,8 @@ import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;

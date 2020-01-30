@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.cdi.se;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

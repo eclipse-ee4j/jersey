@@ -17,8 +17,8 @@
 
 package org.glassfish.jersey.client.internal.inject;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.ParamConverter;
 
 import org.glassfish.jersey.internal.inject.UpdaterException;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;

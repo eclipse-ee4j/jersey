@@ -28,14 +28,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -157,7 +157,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * provided the data represented by this response instance. Because Jersey client connectors
      * may be configured to {@link ClientProperties#FOLLOW_REDIRECTS
      * automatically follow redirect responses}, the value of the URI returned by this method may
-     * be different from the value of the {@link javax.ws.rs.client.ClientRequestContext#getUri()
+     * be different from the value of the {@link jakarta.ws.rs.client.ClientRequestContext#getUri()
      * original request URI} that can be retrieved using {@code response.getRequestContext().getUri()}
      * chain of method calls.
      * </p>
@@ -249,7 +249,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * @throws IllegalStateException if the entity was previously fully consumed
      *                               as an {@link InputStream input stream}, or
      *                               if the response has been {@link #close() closed}.
-     * @see javax.ws.rs.core.Response#getEntity()
+     * @see jakarta.ws.rs.core.Response#getEntity()
      * @since 2.5
      */
     public Object getEntity() throws IllegalStateException {
@@ -259,7 +259,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
 
     /**
      * Read the message entity input stream as an instance of specified Java type
-     * using a {@link javax.ws.rs.ext.MessageBodyReader} that supports mapping the
+     * using a {@link jakarta.ws.rs.ext.MessageBodyReader} that supports mapping the
      * message entity stream onto the requested type.
      * <p>
      * Method throws an {@link ProcessingException} if the content of the
@@ -283,15 +283,15 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * @return the message entity; for a zero-length response entities returns a corresponding
      *         Java object that represents zero-length data. In case no zero-length representation
      *         is defined for the Java type, a {@link ProcessingException} wrapping the
-     *         underlying {@link javax.ws.rs.core.NoContentException} is thrown.
+     *         underlying {@link jakarta.ws.rs.core.NoContentException} is thrown.
      * @throws ProcessingException   if the content of the message cannot be
      *                               mapped to an entity of the requested type.
      * @throws IllegalStateException if the entity is not backed by an input stream,
      *                               the response has been {@link #close() closed} already,
      *                               or if the entity input stream has been fully consumed already and has
      *                               not been buffered prior consuming.
-     * @see javax.ws.rs.ext.MessageBodyReader
-     * @see javax.ws.rs.core.Response#readEntity(Class)
+     * @see jakarta.ws.rs.ext.MessageBodyReader
+     * @see jakarta.ws.rs.core.Response#readEntity(Class)
      * @since 2.5
      */
     public <T> T readEntity(Class<T> entityType) throws ProcessingException, IllegalStateException {
@@ -300,7 +300,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
 
     /**
      * Read the message entity input stream as an instance of specified Java type
-     * using a {@link javax.ws.rs.ext.MessageBodyReader} that supports mapping the
+     * using a {@link jakarta.ws.rs.ext.MessageBodyReader} that supports mapping the
      * message entity stream onto the requested type.
      * <p>
      * Method throws an {@link ProcessingException} if the content of the
@@ -324,15 +324,15 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * @return the message entity; for a zero-length response entities returns a corresponding
      *         Java object that represents zero-length data. In case no zero-length representation
      *         is defined for the Java type, a {@link ProcessingException} wrapping the
-     *         underlying {@link javax.ws.rs.core.NoContentException} is thrown.
+     *         underlying {@link jakarta.ws.rs.core.NoContentException} is thrown.
      * @throws ProcessingException   if the content of the message cannot be
      *                               mapped to an entity of the requested type.
      * @throws IllegalStateException if the entity is not backed by an input stream,
      *                               the response has been {@link #close() closed} already,
      *                               or if the entity input stream has been fully consumed already and has
      *                               not been buffered prior consuming.
-     * @see javax.ws.rs.ext.MessageBodyReader
-     * @see javax.ws.rs.core.Response#readEntity(javax.ws.rs.core.GenericType)
+     * @see jakarta.ws.rs.ext.MessageBodyReader
+     * @see jakarta.ws.rs.core.Response#readEntity(jakarta.ws.rs.core.GenericType)
      * @since 2.5
      */
     @SuppressWarnings("unchecked")
@@ -342,7 +342,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
 
     /**
      * Read the message entity input stream as an instance of specified Java type
-     * using a {@link javax.ws.rs.ext.MessageBodyReader} that supports mapping the
+     * using a {@link jakarta.ws.rs.ext.MessageBodyReader} that supports mapping the
      * message entity stream onto the requested type.
      * <p>
      * Method throws an {@link ProcessingException} if the content of the
@@ -363,19 +363,19 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      *
      * @param <T>         entity instance Java type.
      * @param entityType  the type of entity.
-     * @param annotations annotations that will be passed to the {@link javax.ws.rs.ext.MessageBodyReader}.
+     * @param annotations annotations that will be passed to the {@link jakarta.ws.rs.ext.MessageBodyReader}.
      * @return the message entity; for a zero-length response entities returns a corresponding
      *         Java object that represents zero-length data. In case no zero-length representation
      *         is defined for the Java type, a {@link ProcessingException} wrapping the
-     *         underlying {@link javax.ws.rs.core.NoContentException} is thrown.
+     *         underlying {@link jakarta.ws.rs.core.NoContentException} is thrown.
      * @throws ProcessingException   if the content of the message cannot be
      *                               mapped to an entity of the requested type.
      * @throws IllegalStateException if the entity is not backed by an input stream,
      *                               the response has been {@link #close() closed} already,
      *                               or if the entity input stream has been fully consumed already and has
      *                               not been buffered prior consuming.
-     * @see javax.ws.rs.ext.MessageBodyReader
-     * @see javax.ws.rs.core.Response#readEntity(Class, java.lang.annotation.Annotation[])
+     * @see jakarta.ws.rs.ext.MessageBodyReader
+     * @see jakarta.ws.rs.core.Response#readEntity(Class, java.lang.annotation.Annotation[])
      * @since 2.5
      */
     public <T> T readEntity(Class<T> entityType, Annotation[] annotations) throws ProcessingException, IllegalStateException {
@@ -384,7 +384,7 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
 
     /**
      * Read the message entity input stream as an instance of specified Java type
-     * using a {@link javax.ws.rs.ext.MessageBodyReader} that supports mapping the
+     * using a {@link jakarta.ws.rs.ext.MessageBodyReader} that supports mapping the
      * message entity stream onto the requested type.
      * <p>
      * Method throws an {@link ProcessingException} if the content of the
@@ -405,19 +405,19 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      *
      * @param <T>         entity instance Java type.
      * @param entityType  the type of entity; may be generic.
-     * @param annotations annotations that will be passed to the {@link javax.ws.rs.ext.MessageBodyReader}.
+     * @param annotations annotations that will be passed to the {@link jakarta.ws.rs.ext.MessageBodyReader}.
      * @return the message entity; for a zero-length response entities returns a corresponding
      *         Java object that represents zero-length data. In case no zero-length representation
      *         is defined for the Java type, a {@link ProcessingException} wrapping the
-     *         underlying {@link javax.ws.rs.core.NoContentException} is thrown.
+     *         underlying {@link jakarta.ws.rs.core.NoContentException} is thrown.
      * @throws ProcessingException   if the content of the message cannot be
      *                               mapped to an entity of the requested type.
      * @throws IllegalStateException if the entity is not backed by an input stream,
      *                               the response has been {@link #close() closed} already,
      *                               or if the entity input stream has been fully consumed already and has
      *                               not been buffered prior consuming.
-     * @see javax.ws.rs.ext.MessageBodyReader
-     * @see javax.ws.rs.core.Response#readEntity(javax.ws.rs.core.GenericType, java.lang.annotation.Annotation[])
+     * @see jakarta.ws.rs.ext.MessageBodyReader
+     * @see jakarta.ws.rs.core.Response#readEntity(jakarta.ws.rs.core.GenericType, java.lang.annotation.Annotation[])
      * @since 2.5
      */
     @SuppressWarnings("unchecked")

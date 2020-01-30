@@ -22,8 +22,8 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Set;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.Path;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;

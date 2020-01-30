@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.filter;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -27,7 +27,7 @@ import org.glassfish.jersey.spi.ContentEncoder;
  * Feature that configures support for content encodings on the client side.
  * This feature registers {@link EncodingFilter} and the specified set of
  * {@link org.glassfish.jersey.spi.ContentEncoder encoding providers} to the
- * {@link javax.ws.rs.core.Configurable client configuration}. It also allows
+ * {@link jakarta.ws.rs.core.Configurable client configuration}. It also allows
  * setting the value of {@link ClientProperties#USE_ENCODING} property.
  *
  * @author Martin Matula

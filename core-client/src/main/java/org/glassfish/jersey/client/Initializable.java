@@ -31,10 +31,10 @@ package org.glassfish.jersey.client;
 public interface Initializable<T extends Initializable<T>> {
 
     /**
-     * Pre-initializes the runtime and runtime {@link javax.ws.rs.core.Configuration configuration} of this component
+     * Pre-initializes the runtime and runtime {@link jakarta.ws.rs.core.Configuration configuration} of this component
      * in order to improve performance during the first request.
      * <p>
-     * Once this method is called no other method implementing {@link javax.ws.rs.core.Configurable} should be called
+     * Once this method is called no other method implementing {@link jakarta.ws.rs.core.Configurable} should be called
      * on this pre initialized component, otherwise the initialized client runtime will be discarded and the configuration
      * will change back to uninitialized.
      * </p>
