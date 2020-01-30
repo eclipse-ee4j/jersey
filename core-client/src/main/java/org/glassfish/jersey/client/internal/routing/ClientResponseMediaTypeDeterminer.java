@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,20 +26,20 @@ import org.glassfish.jersey.message.internal.AcceptableMediaType;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.InboundMessageContext;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ReaderInterceptor;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Client side {@link Response} utility class determining the media type.
  * Used for determining media type when {@link ClientRequestContext#abortWith(Response)} on
- * {@link javax.ws.rs.client.ClientRequestFilter#filter(ClientRequestContext)} is used without specifying the response
+ * {@link jakarta.ws.rs.client.ClientRequestFilter#filter(ClientRequestContext)} is used without specifying the response
  * media type.
  */
 public class ClientResponseMediaTypeDeterminer extends ContentTypeDeterminer {
@@ -102,7 +102,7 @@ public class ClientResponseMediaTypeDeterminer extends ContentTypeDeterminer {
     }
 
     /**
-     * An information that the routing aborted by  {@code javax.ws.rs.client.ClientRequestContext#abortWith(Response)}.
+     * An information that the routing aborted by  {@code jakarta.ws.rs.client.ClientRequestContext#abortWith(Response)}.
      */
     private static final class AbortedRouting {
 
