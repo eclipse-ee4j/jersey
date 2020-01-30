@@ -27,10 +27,10 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.ExtendedConfig;
@@ -61,7 +61,7 @@ import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
 
 /**
- * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable
+ * Jersey externalized implementation of client-side JAX-RS {@link jakarta.ws.rs.core.Configurable
  * configurable} contract.
  *
  * @author Marek Potociar
@@ -535,7 +535,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
      * property values copied from the supplied JAX-RS configuration instance.
      *
      * @param parent parent Jersey client instance.
-     * @param that   original {@link javax.ws.rs.core.Configuration}.
+     * @param that   original {@link jakarta.ws.rs.core.Configuration}.
      */
     ClientConfig(final JerseyClient parent, final Configuration that) {
         if (that instanceof ClientConfig) {

@@ -28,18 +28,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Variant;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Variant;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -435,7 +435,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
     }
 
     /**
-     * Returns true if the request is called asynchronously using {@link javax.ws.rs.client.AsyncInvoker}
+     * Returns true if the request is called asynchronously using {@link jakarta.ws.rs.client.AsyncInvoker}
      *
      * @return True if the request is asynchronous; false otherwise.
      */
@@ -444,7 +444,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
     }
 
     /**
-     * Sets the flag indicating whether the request is called asynchronously using {@link javax.ws.rs.client.AsyncInvoker}.
+     * Sets the flag indicating whether the request is called asynchronously using {@link jakarta.ws.rs.client.AsyncInvoker}.
      *
      * @param async True if the request is asynchronous; false otherwise.
      */
@@ -467,7 +467,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
 
     /**
      * Write (serialize) the entity set in this request into the {@link #getEntityStream() entity stream}. The method
-     * use {@link javax.ws.rs.ext.WriterInterceptor writer interceptors} and {@link javax.ws.rs.ext.MessageBodyWriter
+     * use {@link jakarta.ws.rs.ext.WriterInterceptor writer interceptors} and {@link jakarta.ws.rs.ext.MessageBodyWriter
      * message body writer}.
      * <p/>
      * This method modifies the state of this request and therefore it can be called only once per request life cycle otherwise

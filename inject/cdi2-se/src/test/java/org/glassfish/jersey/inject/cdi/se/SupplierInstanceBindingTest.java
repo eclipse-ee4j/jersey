@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.cdi.se;
 
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.enterprise.inject.Vetoed;
 

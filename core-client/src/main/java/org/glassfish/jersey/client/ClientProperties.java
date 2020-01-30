@@ -191,7 +191,7 @@ public final class ClientProperties {
     /**
      * An integer value that defines the buffer size used to buffer client-side
      * request entity in order to determine its size and set the value of HTTP
-     * <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
+     * <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
      * <p>
      * If the entity size exceeds the configured buffer size, the buffering
      * would be cancelled and the entity size would not be determined. Value
@@ -242,7 +242,7 @@ public final class ClientProperties {
      * If {@code true} then disable META-INF/services lookup on client.
      * <p>
      * By default Jersey looks up SPI implementations described by {@code META-INF/services/*} files.
-     * Then you can register appropriate provider  classes by {@link javax.ws.rs.core.Application}.
+     * Then you can register appropriate provider  classes by {@link jakarta.ws.rs.core.Application}.
      * </p>
      * <p>
      * The default value is {@code false}.

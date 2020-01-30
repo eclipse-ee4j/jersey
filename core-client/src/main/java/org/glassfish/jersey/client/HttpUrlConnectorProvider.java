@@ -22,8 +22,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.client.internal.HttpUrlConnector;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
@@ -52,11 +52,11 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 public class HttpUrlConnectorProvider implements ConnectorProvider {
     /**
      * If {@code true}, the {@link HttpUrlConnector} (if used) will assume the content length
-     * from the value of {@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH} request
+     * from the value of {@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH} request
      * header (if present).
      * <p>
      * When this property is enabled and the request has a valid non-zero content length
-     * value specified in its {@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH} request
+     * value specified in its {@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH} request
      * header, that this value will be used as an input to the
      * {@link java.net.HttpURLConnection#setFixedLengthStreamingMode(int)} method call
      * invoked on the underlying {@link java.net.HttpURLConnection connection}.
@@ -65,7 +65,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * </p>
      * <p>
      * Note that the content length value defined in the request header must exactly match
-     * the real size of the entity. If the {@link javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH} header
+     * the real size of the entity. If the {@link jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH} header
      * is explicitly specified in a request, this property will be ignored and the
      * request entity will be still buffered by the underlying @{code HttpURLConnection} infrastructure.
      * </p>

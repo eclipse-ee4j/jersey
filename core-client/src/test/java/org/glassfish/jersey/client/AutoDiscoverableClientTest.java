@@ -18,17 +18,17 @@ package org.glassfish.jersey.client;
 
 import java.io.IOException;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Response;
 
 import javax.annotation.Priority;
 
@@ -168,7 +168,7 @@ public class AutoDiscoverableClientTest {
     /**
      * Tests, that {@link org.glassfish.jersey.client.ClientLifecycleListener} registered via
      * {@link org.glassfish.jersey.internal.spi.AutoDiscoverable}
-     * {@link javax.ws.rs.core.Feature} will be notified when {@link javax.ws.rs.client.Client#close()} is invoked.
+     * {@link jakarta.ws.rs.core.Feature} will be notified when {@link jakarta.ws.rs.client.Client#close()} is invoked.
      */
     @Test
     @Ignore("intermittent failures.")

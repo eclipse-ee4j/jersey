@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.authentication;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * Features that provides Http Basic and Digest client authentication (based on RFC 2617).
@@ -86,8 +86,8 @@ import javax.ws.rs.core.FeatureContext;
  * </pre>
  * </p>
  * <p>
- * Once the feature is built it needs to be registered into the {@link javax.ws.rs.client.Client},
- * {@link javax.ws.rs.client.WebTarget} or other client configurable object. Example:
+ * Once the feature is built it needs to be registered into the {@link jakarta.ws.rs.client.Client},
+ * {@link jakarta.ws.rs.client.WebTarget} or other client configurable object. Example:
  * <pre>
  * final Client client = ClientBuilder.newClient();
  * client.register(feature);
@@ -311,8 +311,8 @@ public class HttpAuthenticationFeature implements Feature {
     }
 
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the username for http authentication feature for the request.
      * <p>
      * Example:
@@ -334,8 +334,8 @@ public class HttpAuthenticationFeature implements Feature {
      */
     public static final String HTTP_AUTHENTICATION_USERNAME = "jersey.config.client.http.auth.username";
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the password for http authentication feature for the request.
      * <p>
      * Example:
@@ -358,8 +358,8 @@ public class HttpAuthenticationFeature implements Feature {
     public static final String HTTP_AUTHENTICATION_PASSWORD = "jersey.config.client.http.auth.password";
 
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the username for http basic authentication feature for the request.
      * <p>
      * Example:
@@ -383,8 +383,8 @@ public class HttpAuthenticationFeature implements Feature {
     public static final String HTTP_AUTHENTICATION_BASIC_USERNAME = "jersey.config.client.http.auth.basic.username";
 
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the password for http basic authentication feature for the request.
      * <p>
      * Example:
@@ -406,8 +406,8 @@ public class HttpAuthenticationFeature implements Feature {
     public static final String HTTP_AUTHENTICATION_BASIC_PASSWORD = "jersey.config.client.http.auth.basic.password";
 
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the username for http digest authentication feature for the request.
      * <p>
      * Example:
@@ -429,8 +429,8 @@ public class HttpAuthenticationFeature implements Feature {
     public static final String HTTP_AUTHENTICATION_DIGEST_USERNAME = "jersey.config.client.http.auth.digest.username";
 
     /**
-     * Key of the property that can be set into the {@link javax.ws.rs.client.ClientRequestContext client request}
-     * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
+     * Key of the property that can be set into the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+     * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} in order to override
      * the password for http digest authentication feature for the request.
      * <p>
      * Example:

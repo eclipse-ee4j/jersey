@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.client;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.process.internal.RequestScope;
 

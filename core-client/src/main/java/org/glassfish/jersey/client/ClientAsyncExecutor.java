@@ -27,7 +27,7 @@ import javax.inject.Qualifier;
 
 /**
  * Injection qualifier that can be used to inject an {@link java.util.concurrent.ExecutorService}
- * instance used by Jersey client runtime to execute {@link javax.ws.rs.client.Invocation.Builder#async() asynchronous}
+ * instance used by Jersey client runtime to execute {@link jakarta.ws.rs.client.Invocation.Builder#async() asynchronous}
  * client requests.
  * <p>
  * The asynchronous client request executor service instance injected using this injection qualifier can be customized
