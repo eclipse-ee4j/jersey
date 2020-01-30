@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,31 +19,31 @@ package org.glassfish.jersey.client.spi;
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.spi.Contract;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.core.Response;
 import java.util.Deque;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 /**
  * The interceptor of a client request invocation that is executed after the request invocation itself, i.e. after the
- * {@link javax.ws.rs.client.ClientResponseFilter ClientResponseFilters} are executed.
+ * {@link jakarta.ws.rs.client.ClientResponseFilter ClientResponseFilters} are executed.
  * <p/>
  * It is ensured that all {@code PostInvocationInterceptors} are executed after the request, in the reverse order given by the
  * {@link javax.annotation.Priority}, the higher the priority the later the execution. Any {@code Throwable} thrown when
  * the {@link PostInvocationInterceptor#afterRequest(ClientRequestContext, ClientResponseContext)} or
  * {@link PostInvocationInterceptor#onException(ClientRequestContext, ExceptionContext)} is being processed is accumulated and
  * a multi RuntimeException with other {@link Throwable#addSuppressed(Throwable) exceptions supressed} is being thrown at the end
- * (possibly encapsulated in a {@link javax.ws.rs.ProcessingException} if not a single {@code RuntimeException}),
+ * (possibly encapsulated in a {@link jakarta.ws.rs.ProcessingException} if not a single {@code RuntimeException}),
  * unless resolved by {@link PostInvocationInterceptor#onException(ClientRequestContext, ExceptionContext)}. During the
  * {@link PostInvocationInterceptor} processing, the accumulated {@link Deque} of the {@code Throwables} is available in the
  * {@link ExceptionContext}.
  * <p/>
  * For asynchronous invocation, the {@code PostInvocationInterceptor} is invoked in the request thread, i.e. in the thread
- * provided by {@link javax.ws.rs.client.ClientBuilder#executorService(ExecutorService) ExecutorService}.
+ * provided by {@link jakarta.ws.rs.client.ClientBuilder#executorService(ExecutorService) ExecutorService}.
  * <p/>
  * When the lowest priority {@code PostInvocationInterceptor} is executed first, one of the two methods can be invoked.
  * {@link PostInvocationInterceptor#afterRequest(ClientRequestContext, ClientResponseContext)} in a usual case when no previous
@@ -87,7 +87,7 @@ public interface PostInvocationInterceptor {
          * will be cleared.
          *
          * @param response the provided {@link Response} to be passed to a next {@code PostInvocationInterceptor} or the
-         * {@link javax.ws.rs.client.Client}.
+         * {@link jakarta.ws.rs.client.Client}.
          */
         void resolve(Response response);
     }
@@ -97,9 +97,9 @@ public interface PostInvocationInterceptor {
      * {@link ExceptionContext#resolve(Response) resolved} by previous {@code PostInvocationInterceptor}.
      *
      * @param requestContext the request context.
-     * @param responseContext the response context of the original {@link javax.ws.rs.core.Response} or response context
+     * @param responseContext the response context of the original {@link jakarta.ws.rs.core.Response} or response context
      *                        defined by the new {@link ExceptionContext#resolve(Response) resolving}
-     *                        {@link javax.ws.rs.core.Response}.
+     *                        {@link jakarta.ws.rs.core.Response}.
      */
     void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext);
 
