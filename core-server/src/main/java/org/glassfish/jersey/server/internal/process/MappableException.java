@@ -16,15 +16,15 @@
 
 package org.glassfish.jersey.server.internal.process;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  * A runtime exception that contains a cause, a checked or runtime exception,
- * that may be mapped to a {@link javax.ws.rs.core.Response} instance.
+ * that may be mapped to a {@link jakarta.ws.rs.core.Response} instance.
  * <p>
  * The runtime will catch such exceptions and attempt to map the cause
- * exception to a registered {@link javax.ws.rs.ext.ExceptionMapper} that
- * provides an appropriate {@link javax.ws.rs.core.Response} instance.
+ * exception to a registered {@link jakarta.ws.rs.ext.ExceptionMapper} that
+ * provides an appropriate {@link jakarta.ws.rs.core.Response} instance.
  *
  * @author Paul Sandoz
  * @author Marek Potociar

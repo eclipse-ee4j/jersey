@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.moxy.json.internal;
 
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.annotation.Priority;
 

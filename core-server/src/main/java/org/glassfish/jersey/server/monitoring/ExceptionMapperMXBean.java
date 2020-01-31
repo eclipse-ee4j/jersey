@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.monitoring;
 import java.util.Map;
 
 /**
- * MXBean interface of the {@link javax.ws.rs.ext.ExceptionMapper exception mapper} statistics.
+ * MXBean interface of the {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} statistics.
  *
  * @author Miroslav Fuksa
  */
@@ -28,14 +28,14 @@ public interface ExceptionMapperMXBean {
     /**
      * Get the statistics of execution of exception mappers.
      *
-     * @return Map where keys are string class names of {@link javax.ws.rs.ext.ExceptionMapper exception mappers}
+     * @return Map where keys are string class names of {@link jakarta.ws.rs.ext.ExceptionMapper exception mappers}
      *         and values are counts of execution of these mappers.
      */
     public Map<String, Long> getExceptionMapperCount();
 
     /**
      * Get count of all successful exception mappings. Successful exception mapping occurs when
-     * any {@link javax.ws.rs.ext.ExceptionMapper exception mapper} returns an valid response
+     * any {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} returns an valid response
      * (even if response contains non-successful response status code).
      *
      * @return Count of successfully mapped exception.
@@ -45,7 +45,7 @@ public interface ExceptionMapperMXBean {
     /**
      * Get count of all unsuccessful exception mappings. Unsuccessful exception mapping occurs when
      * any exception mapping process does not produce an valid response. The reason can be that the
-     * {@link javax.ws.rs.ext.ExceptionMapper exception mapper} is not found, or is found but throws
+     * {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} is not found, or is found but throws
      * exception.
      *
      * @return Count of unmapped exception.

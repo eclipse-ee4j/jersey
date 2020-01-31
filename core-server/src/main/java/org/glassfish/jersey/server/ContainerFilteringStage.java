@@ -18,9 +18,9 @@ package org.glassfish.jersey.server;
 
 import java.util.ArrayList;
 
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.message.internal.TracingLogger;

@@ -18,9 +18,9 @@ package org.glassfish.jersey.media.sse;
 
 import java.util.ArrayList;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 

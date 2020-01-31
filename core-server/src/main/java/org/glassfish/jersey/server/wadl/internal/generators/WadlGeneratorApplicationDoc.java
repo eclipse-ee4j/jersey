@@ -21,8 +21,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.inject.Provider;
 import javax.xml.parsers.SAXParserFactory;
@@ -140,7 +140,7 @@ public class WadlGeneratorApplicationDoc implements WadlGenerator {
      * @param mediaType
      * @return representation type
      * @see org.glassfish.jersey.server.wadl.WadlGenerator#createRequestRepresentation(org.glassfish.jersey.server.model.Resource,
-     *      org.glassfish.jersey.server.model.ResourceMethod, javax.ws.rs.core.MediaType)
+     *      org.glassfish.jersey.server.model.ResourceMethod, jakarta.ws.rs.core.MediaType)
      */
     public Representation createRequestRepresentation(org.glassfish.jersey.server.model.Resource r,
                                                       org.glassfish.jersey.server.model.ResourceMethod m,

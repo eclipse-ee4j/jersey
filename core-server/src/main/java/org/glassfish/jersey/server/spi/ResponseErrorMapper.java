@@ -16,17 +16,17 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.spi.Contract;
 
 /**
- * Contract for a provider that maps response processing errors to {@link javax.ws.rs.core.Response}.
+ * Contract for a provider that maps response processing errors to {@link jakarta.ws.rs.core.Response}.
  * <p>
  * Providers implementing {@code ResponseErrorMapper} contract must be either programmatically registered in a JAX-RS runtime or
- * must be annotated with {@link javax.ws.rs.ext.Provider &#64;Provider} annotation to be automatically discovered by the JAX-RS
+ * must be annotated with {@link jakarta.ws.rs.ext.Provider &#64;Provider} annotation to be automatically discovered by the JAX-RS
  * runtime during a provider scanning phase.
  * </p>
  * <p>
@@ -35,8 +35,8 @@ import org.glassfish.jersey.spi.Contract;
  * </p>
  *
  * @author Michal Gajdos
- * @see javax.ws.rs.ext.Provider
- * @see javax.ws.rs.core.Response
+ * @see jakarta.ws.rs.ext.Provider
+ * @see jakarta.ws.rs.core.Response
  * @since 2.8
  */
 @Contract

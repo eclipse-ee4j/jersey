@@ -99,9 +99,9 @@ public interface ApplicationInfo {
     /**
      * Get registered providers available in the runtime. The registered providers
      * are providers like {@link org.glassfish.jersey.server.model.MethodList.Filter filters},
-     * {@link javax.ws.rs.ext.ReaderInterceptor reader} and {@link javax.ws.rs.ext.WriterInterceptor writer}
+     * {@link jakarta.ws.rs.ext.ReaderInterceptor reader} and {@link jakarta.ws.rs.ext.WriterInterceptor writer}
      * interceptors which are explicitly registered by configuration, or annotated by
-     * {@link javax.ws.rs.ext.Provider @Provider} or registered in META-INF/services. The
+     * {@link jakarta.ws.rs.ext.Provider @Provider} or registered in META-INF/services. The
      * set does not include providers that are by default built in Jersey.
      *
      * @return Set of provider classes.

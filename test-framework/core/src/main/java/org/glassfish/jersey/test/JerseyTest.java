@@ -34,12 +34,12 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -66,10 +66,10 @@ import org.junit.Before;
  * has run, the {@link TestContainer#stop()} method is invoked on the test container. Stopped test container
  * generally shouldn't be again started for another test, rather a new test container should be created.
  * Every test method in the {@code JerseyTest} subclass can invoke the {@link #client()} to obtain a JAX-RS
- * {@link javax.ws.rs.client.Client}, from which {@link javax.ws.rs.client.WebTarget} instances can be created
+ * {@link jakarta.ws.rs.client.Client}, from which {@link jakarta.ws.rs.client.WebTarget} instances can be created
  * to send arbitrary requests.
  * Also, one of the {@code target} methods ({@link #target()} or {@link #target(String)}) may be invoked to obtain
- * a JAX-RS {@link javax.ws.rs.client.WebTarget} instances from which requests can be sent to and responses
+ * a JAX-RS {@link jakarta.ws.rs.client.WebTarget} instances from which requests can be sent to and responses
  * received from the Web application under test.
  * </p>
  * <p>
@@ -383,7 +383,7 @@ public abstract class JerseyTest {
      * must not depend on any subclass fields as those will not be initialized yet when the method is invoked.
      * </p>
      * <p>
-     * Also note that in case the {@link #JerseyTest(javax.ws.rs.core.Application)} constructor is used, the method is never
+     * Also note that in case the {@link #JerseyTest(jakarta.ws.rs.core.Application)} constructor is used, the method is never
      * invoked.
      * </p>
      *
@@ -401,7 +401,7 @@ public abstract class JerseyTest {
      * <p>
      * The method is invoked from {@code JerseyTest} constructors to provide deployment context for the tested application.
      * Default implementation of this method creates
-     * {@link DeploymentContext#newInstance(javax.ws.rs.core.Application) new deployment context}
+     * {@link DeploymentContext#newInstance(jakarta.ws.rs.core.Application) new deployment context}
      * using JAX-RS application instance obtained by calling the {@link #configure()} method.
      * </p>
      * <p>
@@ -409,7 +409,7 @@ public abstract class JerseyTest {
      * must not depend on any subclass fields as those will not be initialized yet when the method is invoked.
      * </p>
      * <p>
-     * Also note that in case the {@link #JerseyTest(javax.ws.rs.core.Application)} constructor is used, the method is never
+     * Also note that in case the {@link #JerseyTest(jakarta.ws.rs.core.Application)} constructor is used, the method is never
      * invoked.
      * </p>
      *
@@ -592,7 +592,7 @@ public abstract class JerseyTest {
 
     /**
      * Tear down the test by {@link TestContainer#stop() stopping} the test container obtained from the
-     * {@link #getTestContainerFactory() test container factory} and by {@link javax.ws.rs.client.Client#close() closing}
+     * {@link #getTestContainerFactory() test container factory} and by {@link jakarta.ws.rs.client.Client#close() closing}
      * and discarding the {@link #configureClient(org.glassfish.jersey.client.ClientConfig) pre-configured} test client
      * that was {@link #setUp() set up} for the test.
      *
@@ -672,7 +672,7 @@ public abstract class JerseyTest {
      * <p>
      * The method can be overridden by {@code JerseyTest} subclasses to conveniently configure the test client instance
      * used by Jersey test framework (either returned from {@link #client()} method or used to create
-     * {@link javax.ws.rs.client.WebTarget} instances returned from one of the {@code target} methods
+     * {@link jakarta.ws.rs.client.WebTarget} instances returned from one of the {@code target} methods
      * ({@link #target()} or {@link #target(String)}).
      * <p>
      * Prior to every test method run, a new client instance is configured and created using the client configuration
@@ -684,7 +684,7 @@ public abstract class JerseyTest {
      * to further customize created client instance.
      * </p>
      * <p>
-     * After each test method is run, the existing client instance is {@link javax.ws.rs.client.Client#close() closed}
+     * After each test method is run, the existing client instance is {@link jakarta.ws.rs.client.Client#close() closed}
      * and discarded.
      * </p>
      * <p>

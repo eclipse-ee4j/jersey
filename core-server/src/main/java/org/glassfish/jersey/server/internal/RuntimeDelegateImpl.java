@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,16 @@
 
 package org.glassfish.jersey.server.internal;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.server.ContainerFactory;
 
 /**
- * Server-side implementation of JAX-RS {@link javax.ws.rs.ext.RuntimeDelegate}.
- * This overrides the default implementation of {@link javax.ws.rs.ext.RuntimeDelegate} from
- * jersey-common which does not implement {@link #createEndpoint(javax.ws.rs.core.Application, java.lang.Class)}
+ * Server-side implementation of JAX-RS {@link jakarta.ws.rs.ext.RuntimeDelegate}.
+ * This overrides the default implementation of {@link jakarta.ws.rs.ext.RuntimeDelegate} from
+ * jersey-common which does not implement {@link #createEndpoint(jakarta.ws.rs.core.Application, java.lang.Class)}
  * method.
  *
  * @author Jakub Podlesak

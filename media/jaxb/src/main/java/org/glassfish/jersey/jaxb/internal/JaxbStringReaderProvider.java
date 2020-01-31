@@ -21,12 +21,12 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
-import javax.ws.rs.ext.Providers;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Provider;
 import javax.xml.bind.JAXBContext;

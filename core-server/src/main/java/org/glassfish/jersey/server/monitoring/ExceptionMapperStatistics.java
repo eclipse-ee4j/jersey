@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.monitoring;
 import java.util.Map;
 
 /**
- * Monitoring statistics of {@link javax.ws.rs.ext.ExceptionMapper exception mapper} executions.
+ * Monitoring statistics of {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} executions.
  * <p/>
  * Statistics retrieved from Jersey runtime might be mutable and thanks to it might provide inconsistent data
  * as not all statistics are updated in the same time. To retrieve the immutable and consistent
@@ -33,9 +33,9 @@ public interface ExceptionMapperStatistics {
 
     /**
      * Get the count of exception mapper executions. The returned map contains {@link Class classes}
-     * of {@link javax.ws.rs.ext.ExceptionMapper exception mappers} and corresponding execution count
+     * of {@link jakarta.ws.rs.ext.ExceptionMapper exception mappers} and corresponding execution count
      * as values. One execution of exception mapper is one call
-     * of {@link javax.ws.rs.ext.ExceptionMapper#toResponse(Throwable)} method.
+     * of {@link jakarta.ws.rs.ext.ExceptionMapper#toResponse(Throwable)} method.
      *
      * @return Map with exception mappers as keys and execution count as values.
      */
@@ -43,7 +43,7 @@ public interface ExceptionMapperStatistics {
 
     /**
      * Get count of all successful exception mappings. Successful exception mapping occurs when
-     * any {@link javax.ws.rs.ext.ExceptionMapper exception mapper} returns an valid response
+     * any {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} returns an valid response
      * (even if response contains non-successful response status code).
      *
      * @return Count of successfully mapped exception.
@@ -53,7 +53,7 @@ public interface ExceptionMapperStatistics {
     /**
      * Get count of all unsuccessful exception mappings. Unsuccessful exception mapping occurs when
      * any exception mapping process does not produce an valid response. The reason can be that the
-     * {@link javax.ws.rs.ext.ExceptionMapper exception mapper} is not found, or is found but throws
+     * {@link jakarta.ws.rs.ext.ExceptionMapper exception mapper} is not found, or is found but throws
      * exception.
      *
      * @return Count of unmapped exception.

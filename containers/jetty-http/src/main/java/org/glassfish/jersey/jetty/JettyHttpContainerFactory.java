@@ -19,7 +19,7 @@ package org.glassfish.jersey.jetty;
 import java.net.URI;
 import java.util.concurrent.ThreadFactory;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.jetty.internal.LocalizationMessages;
@@ -91,7 +91,7 @@ public final class JettyHttpContainerFactory {
      * resource configuration.
      * <p/>
      * This implementation defers to the
-     * {@link org.glassfish.jersey.server.ContainerFactory#createContainer(Class, javax.ws.rs.core.Application)} method
+     * {@link org.glassfish.jersey.server.ContainerFactory#createContainer(Class, jakarta.ws.rs.core.Application)} method
      * for creating an Container that manages the root resources.
      *
      * @param uri    the URI to create the http server. The URI scheme must be
@@ -117,7 +117,7 @@ public final class JettyHttpContainerFactory {
      * resource configuration.
      * <p/>
      * This implementation defers to the
-     * {@link org.glassfish.jersey.server.ContainerFactory#createContainer(Class, javax.ws.rs.core.Application)} method
+     * {@link org.glassfish.jersey.server.ContainerFactory#createContainer(Class, jakarta.ws.rs.core.Application)} method
      * for creating an Container that manages the root resources.
      *
      * @param uri           URI on which the Jersey web application will be deployed. Only first path segment will be
@@ -190,7 +190,7 @@ public final class JettyHttpContainerFactory {
      * resource configuration.
      * <p/>
      * This implementation defers to the
-     * {@link ContainerFactory#createContainer(Class, javax.ws.rs.core.Application)} method
+     * {@link ContainerFactory#createContainer(Class, jakarta.ws.rs.core.Application)} method
      * for creating an Container that manages the root resources.
      *
      * @param uri               the URI to create the http server. The URI scheme must be

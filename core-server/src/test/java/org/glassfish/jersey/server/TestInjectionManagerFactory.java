@@ -20,7 +20,7 @@ package org.glassfish.jersey.server;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

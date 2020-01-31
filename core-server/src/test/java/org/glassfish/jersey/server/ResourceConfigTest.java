@@ -21,11 +21,11 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.util.Tokenizer;
@@ -348,7 +348,7 @@ public class ResourceConfigTest {
 
     @Test
     public void testResourceFinderStreamsClosed() throws IOException {
-        System.out.println(new ResourceConfig().packages("javax.ws.rs").getClasses());
+        System.out.println(new ResourceConfig().packages("jakarta.ws.rs").getClasses());
     }
 
     private ResourceConfig createConfigWithClassPathProperty(final File jarFile) {

@@ -32,9 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -138,7 +138,7 @@ public final class SimpleContainer implements org.simpleframework.http.core.Cont
         @Override
         public OutputStream writeResponseStatusAndHeaders(final long contentLength,
                                                           final ContainerResponse context) throws ContainerException {
-            final javax.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
+            final jakarta.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
 
             final int code = statusInfo.getStatusCode();
             final String reason = statusInfo.getReasonPhrase() == null
@@ -220,7 +220,7 @@ public final class SimpleContainer implements org.simpleframework.http.core.Cont
         public void failure(final Throwable error) {
             try {
                 if (!response.isCommitted()) {
-                    response.setCode(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                    response.setCode(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                     response.setDescription(error.getMessage());
                 }
             } finally {

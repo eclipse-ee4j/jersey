@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.internal.inject;
 
 import java.util.function.Function;
 
-import javax.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.container.AsyncResponse;
 
 import javax.inject.Provider;
 
@@ -28,7 +28,7 @@ import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**
- * Value factory provider supporting the {@link javax.ws.rs.container.Suspended} injection annotation.
+ * Value factory provider supporting the {@link jakarta.ws.rs.container.Suspended} injection annotation.
  *
  * @author Marek Potociar
  */

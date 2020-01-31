@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.ws.rs.Encoded;
+import jakarta.ws.rs.Encoded;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;

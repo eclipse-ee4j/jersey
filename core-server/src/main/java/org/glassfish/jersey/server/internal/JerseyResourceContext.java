@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.container.ResourceContext;
 
 import javax.inject.Scope;
 import javax.inject.Singleton;

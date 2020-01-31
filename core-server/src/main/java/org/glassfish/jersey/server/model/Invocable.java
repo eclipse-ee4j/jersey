@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Request;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Request;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
@@ -148,9 +148,9 @@ public final class Invocable implements Parameterized, ResourceModelComponent {
      *                            {@link #getHandlingMethod() the Java handling method}) for purposes of
      *                            resource method selection. This might be useful in cases when resource
      *                            method returns a type {@code A} but thanks to registered providers
-     *                            (eg. {@link javax.ws.rs.ext.WriterInterceptor}) it will be always converted
+     *                            (eg. {@link jakarta.ws.rs.ext.WriterInterceptor}) it will be always converted
      *                            to type {@code B}. Then the method selecting algorithm would check presence of
-     *                            {@link javax.ws.rs.ext.MessageBodyWriter} for type {@code A} (which will
+     *                            {@link jakarta.ws.rs.ext.MessageBodyWriter} for type {@code A} (which will
      *                            never be actually needed) and might result in choosing undesired method.
      *                            If the parameter is {@code null} then the default response type will be used.
      *
@@ -322,7 +322,7 @@ public final class Invocable implements Parameterized, ResourceModelComponent {
      * is in most cases equal to the {@link #getResponseType() response type}.
      * If returned value is different then it overrides the response type for
      * purposes of resource method selection and will be used to look for available
-     * {@link javax.ws.rs.ext.MessageBodyWriter message body writers}.
+     * {@link jakarta.ws.rs.ext.MessageBodyWriter message body writers}.
      *
      * @return Response type used for the routing.
      */
@@ -337,7 +337,7 @@ public final class Invocable implements Parameterized, ResourceModelComponent {
      * is in most cases equal to the {@link #getResponseType() response type}.
      * If returned value is different then it overrides the response type for
      * purposes of resource method selection and will be used to look for available
-     * {@link javax.ws.rs.ext.MessageBodyWriter message body writers}.
+     * {@link jakarta.ws.rs.ext.MessageBodyWriter message body writers}.
      *
      * @return Response type used for the routing.
      */

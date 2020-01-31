@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.test;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerException;

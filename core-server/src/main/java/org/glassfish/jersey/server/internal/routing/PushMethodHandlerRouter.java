@@ -21,7 +21,7 @@ import org.glassfish.jersey.server.model.MethodHandler;
 
 /**
  * Terminal router that pushes the matched method's handler instance to the stack
- * returned by {@link javax.ws.rs.core.UriInfo#getMatchedResources()} method.
+ * returned by {@link jakarta.ws.rs.core.UriInfo#getMatchedResources()} method.
  *
  * @author Marek Potociar
  */

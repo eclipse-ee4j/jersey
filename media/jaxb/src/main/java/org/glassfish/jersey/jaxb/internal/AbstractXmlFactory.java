@@ -18,7 +18,7 @@ package org.glassfish.jersey.jaxb.internal;
 
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.message.MessageProperties;

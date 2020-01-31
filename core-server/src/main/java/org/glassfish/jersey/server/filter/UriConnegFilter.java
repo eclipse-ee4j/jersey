@@ -22,16 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.PreMatching;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.annotation.Priority;
 
@@ -85,7 +85,7 @@ public final class UriConnegFilter implements ContainerRequestFilter {
      * Create a filter that reads the configuration (media type and language mappings)
      * from the provided {@link ResourceConfig} instance.
      * This constructor will be called by the Jersey runtime when the filter
-     * class is returned from {@link javax.ws.rs.core.Application#getClasses()}.
+     * class is returned from {@link jakarta.ws.rs.core.Application#getClasses()}.
      * The {@link ResourceConfig} instance will get auto-injected.
      *
      * @param rc ResourceConfig instance that holds the configuration for the filter.

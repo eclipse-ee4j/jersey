@@ -27,15 +27,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Provider;
-import javax.ws.rs.ext.Providers;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Provider;
+import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Singleton;
 
@@ -97,7 +97,7 @@ public class MultiPartWriter implements MessageBodyWriter<MultiPart> {
      * @param headers     mutable map of HTTP headers for the entire response.
      * @param stream      output stream to which the entity should be written.
      * @throws java.io.IOException if an I/O error occurs.
-     * @throws javax.ws.rs.WebApplicationException
+     * @throws jakarta.ws.rs.WebApplicationException
      *                             if an HTTP error response
      *                             needs to be produced (only effective if the response is not committed yet).
      */

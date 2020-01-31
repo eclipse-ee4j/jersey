@@ -30,12 +30,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
@@ -310,8 +310,8 @@ public class ResourceConfig extends Application implements Configurable<Resource
      * <p/>
      * This method provides an option of supplying the set of classes that should be returned from {@link #getClasses()}
      * method if the application defined by the supplied application class returns empty sets from
-     * {@link javax.ws.rs.core.Application#getClasses()}
-     * and {@link javax.ws.rs.core.Application#getSingletons()} methods.
+     * {@link jakarta.ws.rs.core.Application#getClasses()}
+     * and {@link jakarta.ws.rs.core.Application#getSingletons()} methods.
      *
      * @param applicationClass Class representing a JAX-RS application.
      * @param defaultClasses   Default set of classes that should be returned from {@link #getClasses()} if the underlying
@@ -1069,7 +1069,7 @@ public class ResourceConfig extends Application implements Configurable<Resource
         }
 
         /**
-         * Set the {@link javax.ws.rs.core.Application JAX-RS Application instance}
+         * Set the {@link jakarta.ws.rs.core.Application JAX-RS Application instance}
          * in the {@code ResourceConfig}.
          * <p/>
          * This method is used by the {@link org.glassfish.jersey.server.ApplicationHandler} in case this resource

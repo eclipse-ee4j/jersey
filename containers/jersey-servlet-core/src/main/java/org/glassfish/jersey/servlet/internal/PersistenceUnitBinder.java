@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManagerFactory;

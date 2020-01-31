@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.model.internal;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ApplicationHandler;

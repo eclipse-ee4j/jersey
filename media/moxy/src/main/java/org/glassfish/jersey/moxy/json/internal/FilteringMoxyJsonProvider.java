@@ -19,8 +19,8 @@ package org.glassfish.jersey.moxy.json.internal;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

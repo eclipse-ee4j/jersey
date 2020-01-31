@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.sse.InboundSseEvent;
-import javax.ws.rs.sse.SseEventSource;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.sse.InboundSseEvent;
+import jakarta.ws.rs.sse.SseEventSource;
 
 import org.glassfish.jersey.client.ClientExecutor;
 import org.glassfish.jersey.client.JerseyWebTarget;
@@ -196,7 +196,7 @@ public class JerseySseEventSource implements SseEventSource {
     /**
      * {@link SseEventSource.Builder} implementation.
      */
-    public static class Builder extends javax.ws.rs.sse.SseEventSource.Builder {
+    public static class Builder extends jakarta.ws.rs.sse.SseEventSource.Builder {
 
         private WebTarget endpoint;
         private long reconnectDelay = DEFAULT_RECONNECT_DELAY;

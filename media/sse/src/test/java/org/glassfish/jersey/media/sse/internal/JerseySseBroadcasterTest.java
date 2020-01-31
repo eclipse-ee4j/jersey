@@ -20,8 +20,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.sse.OutboundSseEvent;
-import javax.ws.rs.sse.SseEventSink;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.SseEventSink;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 /**
- * {@link javax.ws.rs.sse.SseBroadcaster} test.
+ * {@link jakarta.ws.rs.sse.SseBroadcaster} test.
  *
  * @author Adam Lindenthal
  */

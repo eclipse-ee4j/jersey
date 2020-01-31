@@ -269,7 +269,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
                     + " supported for such URIs."
                     + "\nTry using a different deployment mechanism such as"
                     + " explicitly declaring root resource and provider classes"
-                    + " using an extension of javax.ws.rs.core.Application");
+                    + " using an extension of jakarta.ws.rs.core.Application");
         }
     }
 

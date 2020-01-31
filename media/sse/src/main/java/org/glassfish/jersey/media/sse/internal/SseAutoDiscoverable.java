@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.annotation.Priority;
 

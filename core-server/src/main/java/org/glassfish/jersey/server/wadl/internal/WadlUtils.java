@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

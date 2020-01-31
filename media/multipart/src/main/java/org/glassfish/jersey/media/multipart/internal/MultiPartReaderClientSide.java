@@ -27,18 +27,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.Providers;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -143,7 +143,7 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
      * @param headers     mutable map of HTTP headers for the entire response.
      * @param stream      output stream to which the entity should be written.
      * @throws java.io.IOException                 if an I/O error occurs.
-     * @throws javax.ws.rs.WebApplicationException If an HTTP error response needs to be produced (only effective if the response
+     * @throws jakarta.ws.rs.WebApplicationException If an HTTP error response needs to be produced (only effective if the response
      *                                             is not
      *                                             committed yet) or if the Content-Disposition header of a {@code
      *                                             multipart/form-data} body part

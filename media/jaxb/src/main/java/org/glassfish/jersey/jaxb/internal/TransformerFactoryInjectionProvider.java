@@ -19,7 +19,7 @@ package org.glassfish.jersey.jaxb.internal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
 import javax.xml.XMLConstants;

@@ -29,7 +29,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.TestInjectionManagerFactory;
 import org.glassfish.jersey.server.model.Parameter;

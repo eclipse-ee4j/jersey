@@ -18,7 +18,7 @@ package org.glassfish.jersey.media.multipart;
 
 import java.util.Collections;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Convenience {@link MediaType} (and associated String)

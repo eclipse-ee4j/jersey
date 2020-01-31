@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilderFactory;

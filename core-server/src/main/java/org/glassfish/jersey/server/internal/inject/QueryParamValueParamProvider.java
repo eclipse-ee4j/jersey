@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.internal.inject;
 
 import java.util.function.Function;
 
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.QueryParam;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

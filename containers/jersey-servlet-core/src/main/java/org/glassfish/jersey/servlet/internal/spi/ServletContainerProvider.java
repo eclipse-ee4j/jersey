@@ -45,9 +45,9 @@ public interface ServletContainerProvider {
      * Parameter {@code servletNames} contains list of names of currently registered Jersey servlets.
      *
      * @param servletContext the {@code ServletContext} of the JAX-RS/Jersey web application that is being started.
-     * @param classes        the mutable Set of application classes that extend {@link javax.ws.rs.core.Application},
-     *                       implement, or have been annotated with the class types {@link javax.ws.rs.Path},
-     *                       {@link javax.ws.rs.ext.Provider} or {@link javax.ws.rs.ApplicationPath}.
+     * @param classes        the mutable Set of application classes that extend {@link jakarta.ws.rs.core.Application},
+     *                       implement, or have been annotated with the class types {@link jakarta.ws.rs.Path},
+     *                       {@link jakarta.ws.rs.ext.Provider} or {@link jakarta.ws.rs.ApplicationPath}.
      *                       May be empty, never {@code null}.
      * @throws ServletException if an error has occurred. {@code javax.servlet.ServletContainerInitializer.onStartup}
      *                          is interrupted.
@@ -61,9 +61,9 @@ public interface ServletContainerProvider {
      * Parameter {@code servletNames} contains list of names of currently registered Jersey servlets.
      *
      * @param servletContext the {@code ServletContext} of the JAX-RS/Jersey web application that is being started.
-     * @param classes        the mutable Set of application classes that extend {@link javax.ws.rs.core.Application},
-     *                       implement, or have been annotated with the class types {@link javax.ws.rs.Path},
-     *                       {@link javax.ws.rs.ext.Provider} or {@link javax.ws.rs.ApplicationPath}.
+     * @param classes        the mutable Set of application classes that extend {@link jakarta.ws.rs.core.Application},
+     *                       implement, or have been annotated with the class types {@link jakarta.ws.rs.Path},
+     *                       {@link jakarta.ws.rs.ext.Provider} or {@link jakarta.ws.rs.ApplicationPath}.
      *                       May be empty, never {@code null}.
      * @param servletNames   the Immutable set of Jersey's ServletContainer names. May be empty, never {@code null}.
      * @throws ServletException if an error has occurred. {@code javax.servlet.ServletContainerInitializer.onStartup}

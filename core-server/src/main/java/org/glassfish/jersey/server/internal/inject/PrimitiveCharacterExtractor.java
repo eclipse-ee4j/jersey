@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
