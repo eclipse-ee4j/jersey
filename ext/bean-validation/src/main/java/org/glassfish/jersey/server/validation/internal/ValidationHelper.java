@@ -25,7 +25,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ElementKind;
 import javax.validation.Path;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.validation.ValidationError;
 

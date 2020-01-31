@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Form;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.core.Form;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link FormParam}.

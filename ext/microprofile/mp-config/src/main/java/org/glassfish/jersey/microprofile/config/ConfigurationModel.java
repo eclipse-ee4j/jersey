@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.config;
 import org.eclipse.microprofile.config.Config;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

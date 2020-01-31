@@ -18,8 +18,8 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link PathParam}.

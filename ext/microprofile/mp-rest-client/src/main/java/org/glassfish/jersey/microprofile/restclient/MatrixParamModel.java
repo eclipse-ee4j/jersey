@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * Contains information to method parameter which is annotated by {@link MatrixParam}.

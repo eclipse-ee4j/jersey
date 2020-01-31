@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.scope;
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 import org.glassfish.jersey.server.spring.LocalizationMessages;
 import org.springframework.util.StringUtils;

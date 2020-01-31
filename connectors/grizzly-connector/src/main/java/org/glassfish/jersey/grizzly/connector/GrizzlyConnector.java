@@ -169,7 +169,7 @@ class GrizzlyConnector implements Connector {
     }
 
     /**
-     * Sends the {@link javax.ws.rs.core.Request} via Grizzly transport and returns the {@link javax.ws.rs.core.Response}.
+     * Sends the {@link jakarta.ws.rs.core.Request} via Grizzly transport and returns the {@link jakarta.ws.rs.core.Response}.
      *
      * @param request Jersey client request to be sent.
      * @return received response.

@@ -27,17 +27,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.InvocationCallback;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.InvocationCallback;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import javax.net.ssl.SSLSession;
 
@@ -367,7 +367,7 @@ public class HelloWorldTest extends JerseyTest {
                          * is released by AHC runtime. In our test, this is expected to happen
                          * as soon as the exception is created for an error response
                          * (as the error response entity gets buffered in
-                         * {@link org.glassfish.jersey.client.JerseyInvocation#convertToException(javax.ws.rs.core.Response)}).
+                         * {@link org.glassfish.jersey.client.JerseyInvocation#convertToException(jakarta.ws.rs.core.Response)}).
                          */
                         return new ClientConnectionRequest() {
                             @Override

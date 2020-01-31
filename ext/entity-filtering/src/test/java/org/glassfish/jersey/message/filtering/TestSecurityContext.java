@@ -18,7 +18,7 @@ package org.glassfish.jersey.message.filtering;
 
 import java.security.Principal;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
 * @author Michal Gajdos

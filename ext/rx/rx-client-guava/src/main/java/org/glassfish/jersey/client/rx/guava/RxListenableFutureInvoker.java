@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.client.rx.guava;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.RxInvoker;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.RxInvoker;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 
 import com.google.common.util.concurrent.ListenableFuture;
 

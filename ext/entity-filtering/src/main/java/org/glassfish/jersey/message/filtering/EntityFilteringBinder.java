@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.filtering;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.inject.Singleton;
 

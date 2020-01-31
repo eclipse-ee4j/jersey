@@ -19,7 +19,7 @@ package org.glassfish.jersey.jdk.connector.internal;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 /**
  * @author Petr Janouch

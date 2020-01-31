@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal;
 
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
 import org.glassfish.jersey.internal.inject.InjectionManager;

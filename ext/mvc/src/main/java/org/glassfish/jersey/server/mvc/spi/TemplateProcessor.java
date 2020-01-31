@@ -19,10 +19,10 @@ package org.glassfish.jersey.server.mvc.spi;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.glassfish.jersey.spi.Contract;
@@ -36,9 +36,9 @@ import org.glassfish.jersey.spi.Contract;
  * reference and media type, the results of which are written to an output stream.
  * <p/>
  * Implementations can register a view processor as a provider, for
- * example, annotating the implementation class with {@link javax.ws.rs.ext.Provider}
+ * example, annotating the implementation class with {@link jakarta.ws.rs.ext.Provider}
  * or registering an implementing class or instance as a singleton with
- * {@link org.glassfish.jersey.server.ResourceConfig} or {@link javax.ws.rs.core.Application}.
+ * {@link org.glassfish.jersey.server.ResourceConfig} or {@link jakarta.ws.rs.core.Application}.
  * <p/>
  * Such view processors could be JSP view processors (supported by the
  * Jersey servlet and filter implementations) or say Freemarker or Velocity
@@ -65,7 +65,7 @@ public interface TemplateProcessor<T> {
      * Process a template and write the result to an output stream.
      *
      * @param templateReference the template reference. This is obtained by calling the {@link #resolve(String,
-     * javax.ws.rs.core.MediaType)} method with a template name and media type.
+     * jakarta.ws.rs.core.MediaType)} method with a template name and media type.
      * @param viewable the viewable that contains the model to be passed to the template.
      * @param mediaType media type the {@code templateReference} should be transformed into.
      * @param httpHeaders http headers that will be send in the response. Headers can be modified to

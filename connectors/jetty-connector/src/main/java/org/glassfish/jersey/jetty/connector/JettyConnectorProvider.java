@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.jetty.connector;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.Connector;
