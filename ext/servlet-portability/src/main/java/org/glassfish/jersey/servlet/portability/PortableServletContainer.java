@@ -41,18 +41,18 @@ import javax.servlet.ServletResponse;
  *     specified in web.xml you may want different values depending on which version of Jersey container is present,
  *     You can prefix the init parameter name either with {@code jersey1#} or {@code jersey2#} to
  *     make it specific to a given version. For example, to specify different values for
- *     {@code javax.ws.rs.Application} init parameter depending on the version of Jersey used, you can include
+ *     {@code jakarta.ws.rs.Application} init parameter depending on the version of Jersey used, you can include
  *     the following in your web.xml:
  *     <pre>
  *     &lt;servlet&gt;
  *         &lt;servlet-name&gt;Jersey Web Application&lt;/servlet-name&gt;
  *         &lt;servlet-class&gt;org.glassfish.jersey.servlet.portability.PortableServletContainer&lt;/servlet-class&gt;
  *         &lt;init-param&gt;
- *             &lt;param-name&gt;jersey1#javax.ws.rs.Application&lt;/param-name&gt;
+ *             &lt;param-name&gt;jersey1#jakarta.ws.rs.Application&lt;/param-name&gt;
  *             &lt;param-value&gt;myapp.jersey1specific.Jersey1Application&lt;/param-value&gt;
  *         &lt;/init-param&gt;
  *         &lt;init-param&gt;
- *             &lt;param-name&gt;jersey2#javax.ws.rs.Application&lt;/param-name&gt;
+ *             &lt;param-name&gt;jersey2#jakarta.ws.rs.Application&lt;/param-name&gt;
  *             &lt;param-value&gt;myapp.jersey2specific.Jersey2Application&lt;/param-value&gt;
  *         &lt;/init-param&gt;
  *     &lt;/servlet&gt;

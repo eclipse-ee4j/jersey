@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring;
 
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.ext.Provider;
 
 import javax.inject.Inject;
 

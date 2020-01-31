@@ -19,7 +19,7 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  *

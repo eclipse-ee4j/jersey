@@ -18,9 +18,9 @@ package org.glassfish.jersey.client.rx.rxjava;
 
 import java.util.concurrent.ExecutorService;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.SyncInvoker;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.SyncInvoker;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.client.AbstractRxInvoker;
 

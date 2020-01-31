@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.filter;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.spring.SpringTestConfiguration;
 import org.glassfish.jersey.test.JerseyTest;

@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.Buffer;
 import java.util.List;
 
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 /**
  * @author Alexey Stashok

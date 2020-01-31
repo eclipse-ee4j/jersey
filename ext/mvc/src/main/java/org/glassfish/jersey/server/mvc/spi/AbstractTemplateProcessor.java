@@ -38,10 +38,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.servlet.ServletContext;
 
@@ -80,7 +80,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
     private final Charset encoding;
 
     /**
-     * Create an instance of the processor with injected {@link javax.ws.rs.core.Configuration config} and
+     * Create an instance of the processor with injected {@link jakarta.ws.rs.core.Configuration config} and
      * (optional) {@link ServletContext servlet context}.
      *
      * @param config configuration to configure this processor from.
@@ -237,7 +237,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
 
     /**
      * Retrieve a template object factory. The factory is, at first, looked for in
-     * {@link javax.ws.rs.core.Configuration configuration} and if not found, given default value is used.
+     * {@link jakarta.ws.rs.core.Configuration configuration} and if not found, given default value is used.
      *
      * @param createInstance function that delegates a creation and an initialization to injection manager.
      * @param type           type of requested template object factory.

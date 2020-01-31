@@ -20,8 +20,8 @@ import org.glassfish.jersey.server.spring.TestComponent1;
 import org.glassfish.jersey.server.spring.TestComponent2;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;

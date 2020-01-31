@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.aspect4j;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;

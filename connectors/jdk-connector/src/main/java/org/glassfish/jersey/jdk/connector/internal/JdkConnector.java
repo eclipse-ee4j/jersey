@@ -26,10 +26,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
@@ -112,7 +112,7 @@ public class JdkConnector implements Connector {
         if (httpRequest.getBodyMode() == HttpRequest.BodyMode.CHUNKED) {
 
             /* We wait with sending the request header until the body stream has been touched.
-             This is because of javax.ws.rs.ext.MessageBodyWriter, which says:
+             This is because of jakarta.ws.rs.ext.MessageBodyWriter, which says:
 
              "The message header map is mutable but any changes must be made before writing to the output stream since
               the headers will be flushed prior to writing the message body"

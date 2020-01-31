@@ -36,8 +36,8 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Qualifier;
 import javax.interceptor.Interceptor;
 import javax.transaction.TransactionalException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.ext.cdi1x.internal.GenericCdiBeanSupplier;

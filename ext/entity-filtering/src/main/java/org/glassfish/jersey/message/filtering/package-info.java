@@ -17,7 +17,7 @@
 /**
  * Support for Entity Data Filtering in Jersey.
  * <p/>
- * To use Entity Data Filtering one of the provided {@link javax.ws.rs.core.Feature features} has to be registered in an
+ * To use Entity Data Filtering one of the provided {@link jakarta.ws.rs.core.Feature features} has to be registered in an
  * application:
  * <ul>
  *     <li>{@link org.glassfish.jersey.message.filtering.EntityFilteringFeature} - adds support for entity-filtering
