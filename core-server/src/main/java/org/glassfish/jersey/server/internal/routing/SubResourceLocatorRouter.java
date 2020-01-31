@@ -24,10 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.SecurityContext;
 
 import org.glassfish.jersey.server.SubjectSecurityContext;
 import org.glassfish.jersey.server.internal.JerseyResourceContext;

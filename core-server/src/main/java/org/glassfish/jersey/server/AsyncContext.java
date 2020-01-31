@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.internal.util.Producer;
 

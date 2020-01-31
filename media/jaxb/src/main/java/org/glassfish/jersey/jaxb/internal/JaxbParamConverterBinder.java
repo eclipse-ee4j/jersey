@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import javax.inject.Singleton;
 

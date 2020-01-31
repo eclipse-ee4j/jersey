@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ResourceConfig;

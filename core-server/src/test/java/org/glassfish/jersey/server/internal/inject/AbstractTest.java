@@ -23,8 +23,8 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Request;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.Request;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;

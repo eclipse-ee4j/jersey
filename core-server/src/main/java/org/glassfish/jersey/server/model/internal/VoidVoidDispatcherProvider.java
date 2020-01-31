@@ -18,9 +18,9 @@ package org.glassfish.jersey.server.model.internal;
 
 import java.lang.reflect.InvocationHandler;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Response;
 
 import javax.inject.Singleton;
 

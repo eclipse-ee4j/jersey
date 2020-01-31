@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.wadl.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.xml.namespace.QName;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,17 +22,17 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.PreMatching;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.UriBuilder;
 
 import javax.annotation.Priority;
 
@@ -59,7 +59,7 @@ import static org.glassfish.jersey.internal.util.Tokenizer.COMMON_DELIMITERS;
  * when replacing the POST method with GET, the filter will convert the form parameters
  * to query parameters. If the filter is configured to look for both the X-HTTP-Method-Override
  * header as well as the _method query parameter (the default setting), both are present in the
- * request and they differ, the filter returns {@link javax.ws.rs.core.Response.Status#BAD_REQUEST} response.
+ * request and they differ, the filter returns {@link jakarta.ws.rs.core.Response.Status#BAD_REQUEST} response.
  * </p>
  * <p>
  * The filter behavior can be configured using {@link org.glassfish.jersey.server.ServerProperties#HTTP_METHOD_OVERRIDE}
@@ -144,7 +144,7 @@ public final class HttpMethodOverrideFilter implements ContainerRequestFilter {
      * from the provided {@link org.glassfish.jersey.server.ResourceConfig} instance.
      * <p/>
      * This constructor will be called by the Jersey runtime when the filter class is returned from
-     * {@link javax.ws.rs.core.Application#getClasses()}. The {@link org.glassfish.jersey.server.ResourceConfig}
+     * {@link jakarta.ws.rs.core.Application#getClasses()}. The {@link org.glassfish.jersey.server.ResourceConfig}
      * instance will get auto-injected.
      *
      * @param rc ResourceConfig instance that holds the configuration for the filter.

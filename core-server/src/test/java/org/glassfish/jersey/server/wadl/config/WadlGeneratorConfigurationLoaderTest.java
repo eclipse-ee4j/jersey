@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.wadl.config;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;

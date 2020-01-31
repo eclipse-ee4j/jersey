@@ -19,10 +19,10 @@ package org.glassfish.jersey.media.sse.internal;
 import java.util.concurrent.ExecutorService;
 
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.sse.OutboundSseEvent;
-import javax.ws.rs.sse.Sse;
-import javax.ws.rs.sse.SseBroadcaster;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseBroadcaster;
 
 import org.glassfish.jersey.media.sse.OutboundEvent;
 

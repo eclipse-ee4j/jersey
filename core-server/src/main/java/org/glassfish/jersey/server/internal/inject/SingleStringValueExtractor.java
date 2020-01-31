@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * Extract value of the parameter by returning the first string parameter value

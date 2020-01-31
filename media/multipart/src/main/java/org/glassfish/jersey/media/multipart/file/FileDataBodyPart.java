@@ -19,7 +19,7 @@ package org.glassfish.jersey.media.multipart.file;
 import java.io.File;
 import java.util.Date;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -59,7 +59,7 @@ public class FileDataBodyPart extends FormDataBodyPart {
      * @param fileEntity the file that represents the entity.
      *
      * @see MediaTypePredictor#getMediaTypeFromFile(java.io.File)
-     * @see FileDataBodyPart#FileDataBodyPart(java.lang.String, java.io.File, javax.ws.rs.core.MediaType)
+     * @see FileDataBodyPart#FileDataBodyPart(java.lang.String, java.io.File, jakarta.ws.rs.core.MediaType)
      */
     public FileDataBodyPart(final String name, final File fileEntity) {
         this(name, fileEntity, null);
@@ -102,7 +102,7 @@ public class FileDataBodyPart extends FormDataBodyPart {
      * @param value the field value as a Java object.
      * @throws java.lang.UnsupportedOperationException Operation not supported.
      *
-     * @see FileDataBodyPart#setFileEntity(java.io.File, javax.ws.rs.core.MediaType)
+     * @see FileDataBodyPart#setFileEntity(java.io.File, jakarta.ws.rs.core.MediaType)
      */
     @Override
     public void setValue(final MediaType mediaType, final Object value) throws UnsupportedOperationException {

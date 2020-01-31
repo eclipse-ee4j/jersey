@@ -26,9 +26,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.ws.rs.container.ConnectionCallback;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.container.ConnectionCallback;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.inject.Provider;
 

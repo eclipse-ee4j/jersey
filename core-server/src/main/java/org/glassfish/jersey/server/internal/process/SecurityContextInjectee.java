@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.internal.process;
 
 import java.security.Principal;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
 

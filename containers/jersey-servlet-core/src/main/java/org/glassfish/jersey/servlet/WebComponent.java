@@ -36,13 +36,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -442,7 +442,7 @@ public class WebComponent {
     }
 
     /**
-     * Get default {@link javax.ws.rs.core.SecurityContext} for given {@code request}.
+     * Get default {@link jakarta.ws.rs.core.SecurityContext} for given {@code request}.
      *
      * @param request http servlet request to create a security context for.
      * @return a non-null security context instance.
@@ -506,16 +506,16 @@ public class WebComponent {
         }
 
         try {
-            final Class<? extends javax.ws.rs.core.Application> jaxrsApplicationClass = AccessController.doPrivileged(
-                    ReflectionHelper.<javax.ws.rs.core.Application>classForNameWithExceptionPEA(jaxrsApplicationClassName)
+            final Class<? extends jakarta.ws.rs.core.Application> jaxrsApplicationClass = AccessController.doPrivileged(
+                    ReflectionHelper.<jakarta.ws.rs.core.Application>classForNameWithExceptionPEA(jaxrsApplicationClassName)
             );
 
-            if (javax.ws.rs.core.Application.class.isAssignableFrom(jaxrsApplicationClass)) {
+            if (jakarta.ws.rs.core.Application.class.isAssignableFrom(jaxrsApplicationClass)) {
                 return ResourceConfig.forApplicationClass(jaxrsApplicationClass)
                         .addProperties(initParams).addProperties(contextParams);
             } else {
                 throw new ServletException(LocalizationMessages.RESOURCE_CONFIG_PARENT_CLASS_INVALID(
-                        jaxrsApplicationClassName, javax.ws.rs.core.Application.class));
+                        jaxrsApplicationClassName, jakarta.ws.rs.core.Application.class));
             }
         } catch (final PrivilegedActionException e) {
             throw new ServletException(

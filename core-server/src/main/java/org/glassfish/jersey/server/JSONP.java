@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation can be used to define the JavaScript callback function name if the valid JSONP format is requested as an
- * acceptable {@link javax.ws.rs.core.MediaType media type} of this request. At the moment only resource methods are supported to
+ * acceptable {@link jakarta.ws.rs.core.MediaType media type} of this request. At the moment only resource methods are supported to
  * be annotated with this annotation.
  * <p/>
  * The acceptable JavaScript media types for JSONP compatible with this annotation are:

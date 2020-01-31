@@ -19,7 +19,7 @@ package org.glassfish.jersey.media.multipart.file;
 import java.io.File;
 import java.util.Locale;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Default implementation of {@link MediaTypePredictor} that uses

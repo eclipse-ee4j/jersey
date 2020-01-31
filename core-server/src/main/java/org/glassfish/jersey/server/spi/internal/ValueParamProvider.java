@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.spi.internal;
 
 import java.util.function.Function;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.model.Parameter;

@@ -46,7 +46,7 @@ import io.netty.handler.codec.http.LastHttpContent;
 /**
  * Netty implementation of {@link ContainerResponseWriter}.
  *
- * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Pavel Bucek
  */
 class NettyResponseWriter implements ContainerResponseWriter {
 

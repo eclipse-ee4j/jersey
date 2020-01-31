@@ -19,12 +19,12 @@ package org.glassfish.jersey.server;
 import java.io.IOException;
 import java.util.Set;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
 import org.junit.Test;
 import static org.junit.Assert.assertFalse;
@@ -75,7 +75,7 @@ public class ResourceConfigBuilderTest {
 
     @Test
     public void testApplication() {
-        final javax.ws.rs.core.Application application = new Application() {
+        final jakarta.ws.rs.core.Application application = new Application() {
             @Override
             public Set<Class<?>> getClasses() {
                 return super.getClasses();

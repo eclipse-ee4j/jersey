@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * Provider that converts the values of an entry of a given {@link #getName() name}

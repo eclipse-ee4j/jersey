@@ -107,7 +107,7 @@ public interface MonitoringStatistics {
     public ResponseStatistics getResponseStatistics();
 
     /**
-     * Get statistics about registered {@link javax.ws.rs.ext.ExceptionMapper exception mappers}.
+     * Get statistics about registered {@link jakarta.ws.rs.ext.ExceptionMapper exception mappers}.
      *
      * @return Exception mapper statistics.
      */

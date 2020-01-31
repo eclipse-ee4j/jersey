@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,16 +27,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -89,7 +89,7 @@ public class ContainerResponse implements ContainerResponseContext {
 
     /**
      * Returns true if the response is result of the exception (for example created during
-     * {@link javax.ws.rs.ext.ExceptionMapper exception mapping}).
+     * {@link jakarta.ws.rs.ext.ExceptionMapper exception mapping}).
      *
      * @return True if this response was created based on the exception, false otherwise.
      */
@@ -100,7 +100,7 @@ public class ContainerResponse implements ContainerResponseContext {
     /**
      * Sets the flag indicating whether the response was created based on the exception.
      * @param mappedFromException True if this exception if result of the exception (for example result of
-     *                      {@link javax.ws.rs.ext.ExceptionMapper exception mapping}).
+     *                      {@link jakarta.ws.rs.ext.ExceptionMapper exception mapping}).
      */
     public void setMappedFromException(final boolean mappedFromException) {
         this.mappedFromException = mappedFromException;
@@ -241,7 +241,7 @@ public class ContainerResponse implements ContainerResponseContext {
      * Set a new message message entity.
      *
      * @param entity entity object.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(final Object entity) {
         messageContext.setEntity(entity);
@@ -252,7 +252,7 @@ public class ContainerResponse implements ContainerResponseContext {
      *
      * @param entity      entity object.
      * @param annotations annotations attached to the entity.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(final Object entity, final Annotation[] annotations) {
         messageContext.setEntity(entity, annotations);
@@ -264,7 +264,7 @@ public class ContainerResponse implements ContainerResponseContext {
      * @param entity      entity object.
      * @param type        declared entity class.
      * @param annotations annotations attached to the entity.
-     * @see javax.ws.rs.ext.MessageBodyWriter
+     * @see jakarta.ws.rs.ext.MessageBodyWriter
      */
     public void setEntity(final Object entity, final Type type, final Annotation[] annotations) {
         messageContext.setEntity(entity, type, annotations);

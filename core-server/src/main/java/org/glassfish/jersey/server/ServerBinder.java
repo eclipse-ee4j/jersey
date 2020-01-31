@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.inject.Singleton;
 

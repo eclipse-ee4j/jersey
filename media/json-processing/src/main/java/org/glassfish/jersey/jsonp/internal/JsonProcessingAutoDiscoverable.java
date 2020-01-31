@@ -17,7 +17,7 @@
 package org.glassfish.jersey.jsonp.internal;
 
 import javax.annotation.Priority;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;

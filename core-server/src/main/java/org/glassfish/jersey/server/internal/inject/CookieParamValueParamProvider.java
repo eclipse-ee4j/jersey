@@ -19,9 +19,9 @@ package org.glassfish.jersey.server.internal.inject;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.CookieParam;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

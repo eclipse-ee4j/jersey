@@ -19,7 +19,7 @@ package org.glassfish.jersey.moxy.json;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.ContextResolver;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.persistence.jaxb.MarshallerProperties;

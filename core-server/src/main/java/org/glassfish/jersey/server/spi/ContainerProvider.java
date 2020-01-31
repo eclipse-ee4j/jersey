@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.spi.Contract;

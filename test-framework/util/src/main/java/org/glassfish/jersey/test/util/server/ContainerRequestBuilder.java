@@ -20,11 +20,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.PropertiesDelegate;
@@ -338,8 +338,8 @@ public final class ContainerRequestBuilder {
      *
      * @param name  the name of the header
      * @param value the value of the header, the header will be serialized
-     *              using a {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if
-     *              one is available via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     *              using a {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if
+     *              one is available via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
      *              for the class of {@code value} or using its {@code toString} method
      *              if a header delegate is not available. If {@code value} is {@code null}
      *              then all current headers of the same name will be removed.

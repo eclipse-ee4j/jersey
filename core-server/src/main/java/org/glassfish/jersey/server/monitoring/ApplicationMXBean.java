@@ -34,7 +34,7 @@ public interface ApplicationMXBean {
     public String getApplicationName();
 
     /**
-     * Get the {@link javax.ws.rs.core.Application application class} used for configuration of Jersey application.
+     * Get the {@link jakarta.ws.rs.core.Application application class} used for configuration of Jersey application.
      *
      * @return Application class name.
      */
