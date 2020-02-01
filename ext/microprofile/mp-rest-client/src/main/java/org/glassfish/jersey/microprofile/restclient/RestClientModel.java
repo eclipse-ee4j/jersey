@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.inject.spi.BeanManager;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;

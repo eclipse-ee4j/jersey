@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -252,7 +252,7 @@ class JettyConnector implements Connector {
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
                                            JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
-            final javax.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
+            final jakarta.ws.rs.core.Response.StatusType status = jettyResponse.getReason() == null
                     ? Statuses.from(jettyResponse.getStatus())
                     : Statuses.from(jettyResponse.getStatus(), jettyResponse.getReason());
 
