@@ -18,13 +18,13 @@ package org.glassfish.jersey.internal;
 
 import jakarta.ws.rs.core.Application;
 
+import jakarta.ws.rs.ext.RuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 
 /**
  * Default implementation of JAX-RS {@link jakarta.ws.rs.ext.RuntimeDelegate}.
  * The {@link jakarta.ws.rs.ext.RuntimeDelegate} class looks for the implementations registered
- * in META-INF/services. If no such implementation is found, this one is picked
- * as the default. Server injection binder should override this (using META-INF/services)
+ * in META-INF/services. Server injection binder should override this (using META-INF/services)
  * to provide an implementation that supports {@link #createEndpoint(jakarta.ws.rs.core.Application, java.lang.Class)}
  * method.
  *
@@ -41,6 +41,14 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
     @Override
     public <T> T createEndpoint(Application application, Class<T> endpointType)
             throws IllegalArgumentException, UnsupportedOperationException {
+
+        // TODO : Do we need multiple RuntimeDelegates?
+        for (RuntimeDelegate delegate : ServiceFinder.find(RuntimeDelegate.class)) {
+            // try to find runtime delegate from core-server
+            if (delegate.getClass() != RuntimeDelegateImpl.class) {
+                return delegate.createEndpoint(application, endpointType);
+            }
+        }
         throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
     }
 }
