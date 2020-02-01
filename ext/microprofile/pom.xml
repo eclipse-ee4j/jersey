@@ -32,8 +32,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mp-rest-client</module>
-	<module>mp-config</module>
+<!--        <module>mp-rest-client</module>-->
+<!--	    <module>mp-config</module>-->
     </modules>
 
 
