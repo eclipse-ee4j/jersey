@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -24,13 +24,13 @@ each incoming request as if the request was invoked by a user in role
 
 The full description how Entity Data Filtering can be found in Jersey
 User Guide, chapter [Entity Data
-Filtering](https://jersey.java.net/documentation/latest/entity-filtering.html).
+Filtering](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html).
 Sections relevant to this example (describing this exact example) are:
 
 -   [Enabling and configuring Entity Filtering in your
-    application](https://jersey.java.net/documentation/latest/entity-filtering.html#d0e13911)
+    application](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14229)
 -   [Role-based Entity Filtering using (javax.annotation.security)
-    annotations](https://jersey.java.net/documentation/latest/entity-filtering.html#ef.security.annotations)
+    annotations](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#ef.security.annotations)
 
 Contents
 --------

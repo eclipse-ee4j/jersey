@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -13,7 +13,7 @@ This example demonstrates how to create a custom exception mapping. There are de
 `WebApplicationException`, custom exceptions and an exception mapper inheritance.
 
 The full description how to handle exception and map them to Response object can be found in Jersey User Guide, chapter
-[WebApplicationException and Mapping Exceptions to Responses](https://jersey.java.net/documentation/latest/representations.html#d0e6567).
+[WebApplicationException and Mapping Exceptions to Responses](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/representations.html#d0e6355).
 
 Contents
 --------

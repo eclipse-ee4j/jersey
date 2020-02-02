@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -10,7 +10,7 @@ Server Asynchronous Example
 ===========================
 
 The full description how to create an asynchronous resource can be found in Jersey User Guide, chapter 
-[Asynchronous Services and Clients](https://jersey.java.net/documentation/latest/async.html).
+[Asynchronous Services and Clients](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/async.html).
 
 This example demonstrates JAX-RS 2.0 server-side non-blocking API in comparison to blocking and long-running
 asynchronous operations.

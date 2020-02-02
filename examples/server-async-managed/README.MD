@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -12,7 +12,7 @@ Server Asynchronous Managed Example
 This example demonstrates JAX-RS 2.0 server-side non-blocking API using **ManagedAsync** annotation.
 
 The full description how to create an asynchronous resource can be found in Jersey User Guide, chapter 
-[Asynchronous Services and Clients](https://jersey.java.net/documentation/latest/async.html).
+[Asynchronous Services and Clients](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/async.html).
 
 Indicates that the resource method to which the annotation has been applied
  * should be executed on a separate thread managed by an internal Jersey
