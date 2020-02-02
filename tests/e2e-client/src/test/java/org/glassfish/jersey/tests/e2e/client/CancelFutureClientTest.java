@@ -22,11 +22,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.InvocationCallback;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.InvocationCallback;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -40,9 +40,9 @@ import static org.junit.Assert.fail;
  *
  * <p>
  * Tests, that if the async request future is cancelled by the client,
- * the {@link javax.ws.rs.client.InvocationCallback#completed(Object)} callback is not invoked and that
+ * the {@link jakarta.ws.rs.client.InvocationCallback#completed(Object)} callback is not invoked and that
  * {@link java.util.concurrent.CancellationException} is correctly returned (according to spec.) to
- * {@link javax.ws.rs.client.InvocationCallback#failed(Throwable)} callback method.
+ * {@link jakarta.ws.rs.client.InvocationCallback#failed(Throwable)} callback method.
  * </p>
  *
  * @author Adam Lindenthal

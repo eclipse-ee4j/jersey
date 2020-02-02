@@ -26,7 +26,7 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
 import org.junit.Assert;
 
-import javax.ws.rs.NotFoundException;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * @author Libor Kramolis

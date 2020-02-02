@@ -19,9 +19,9 @@ package org.glassfish.jersey.tests.performance.benchmark.entity.json;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 /**
  * Resource class for {@link Project projects}. Provides methods to retrieve projects in "default" view ({@link #getProjects()}

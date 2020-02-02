@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.integration.jersey2176;
 
 import java.io.IOException;
 
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

@@ -16,8 +16,8 @@
 package org.glassfish.jersey.tests.integration.jersey4099;
 
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 @RequestScoped
 @Path("/exception")

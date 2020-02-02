@@ -16,12 +16,12 @@
 
 package org.glassfish.jersey.tests.e2e.server.validation;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

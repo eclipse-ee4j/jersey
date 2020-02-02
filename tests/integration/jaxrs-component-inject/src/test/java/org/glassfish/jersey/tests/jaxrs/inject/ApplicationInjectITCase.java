@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.jaxrs.inject;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.test.JerseyTest;
@@ -30,7 +30,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests {@link javax.ws.rs.core.Context} injection into JAX-RS components Provider, Resource, Application.
+ * Tests {@link jakarta.ws.rs.core.Context} injection into JAX-RS components Provider, Resource, Application.
  *
  * @author Petr Bouda
  */

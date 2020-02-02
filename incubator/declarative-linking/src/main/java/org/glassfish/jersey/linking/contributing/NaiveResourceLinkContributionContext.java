@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.linking.ProvideLink;
 import org.glassfish.jersey.linking.ProvideLinkDescriptor;

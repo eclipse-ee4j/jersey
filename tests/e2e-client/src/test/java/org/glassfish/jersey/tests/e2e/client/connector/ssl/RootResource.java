@@ -19,16 +19,16 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 import java.util.Base64;
 import java.util.logging.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 
 
 /**
  * Simple resource demonstrating low level approach of getting user credentials.
  *
- * A better way would be injecting {@link javax.ws.rs.core.SecurityContext}.
+ * A better way would be injecting {@link jakarta.ws.rs.core.SecurityContext}.
  *
  * @author Pavel Bucek
  */

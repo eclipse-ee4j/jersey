@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.api;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.NewCookie;
 
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 

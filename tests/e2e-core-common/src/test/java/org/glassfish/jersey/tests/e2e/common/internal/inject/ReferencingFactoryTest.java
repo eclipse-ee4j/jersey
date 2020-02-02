@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

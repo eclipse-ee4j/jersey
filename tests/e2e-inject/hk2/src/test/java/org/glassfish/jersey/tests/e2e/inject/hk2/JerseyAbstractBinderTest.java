@@ -22,9 +22,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
 import javax.inject.Singleton;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

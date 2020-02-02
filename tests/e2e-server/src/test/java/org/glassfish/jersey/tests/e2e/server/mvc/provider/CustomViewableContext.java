@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.server.mvc.provider;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.glassfish.jersey.server.mvc.internal.TemplateHelper;

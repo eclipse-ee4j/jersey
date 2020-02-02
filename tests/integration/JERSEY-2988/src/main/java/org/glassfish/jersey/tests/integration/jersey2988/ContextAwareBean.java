@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.integration.jersey2988;
 
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
 
 import javax.enterprise.context.ApplicationScoped;
 

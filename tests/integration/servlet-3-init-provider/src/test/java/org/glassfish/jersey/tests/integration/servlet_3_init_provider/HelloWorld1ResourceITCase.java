@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_init_provider;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class HelloWorld1ResourceITCase extends AbstractHelloWorldResourceTest {
         testRegisteredServletNames(target, "application2");
         testRegisteredServletNames(target, "application3");
         testRegisteredServletNames(target, "org.glassfish.jersey.tests.integration.servlet_3_init_provider.Application4");
-        testRegisteredServletNames(target, "javax.ws.rs.core.Application");
+        testRegisteredServletNames(target, "jakarta.ws.rs.core.Application");
     }
 
     private void testRegisteredServletNames(WebTarget target, String servletName) throws Exception {

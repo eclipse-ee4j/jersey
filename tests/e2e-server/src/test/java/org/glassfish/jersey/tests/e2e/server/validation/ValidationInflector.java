@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.e2e.server.validation;
 
 import java.io.IOException;
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 import javax.validation.constraints.NotNull;
 

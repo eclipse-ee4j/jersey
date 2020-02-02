@@ -19,9 +19,9 @@ package org.glassfish.jersey.tests.ejb.resources;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * JERSEY-2320 reproducer. {@link CustomExceptionTwo} will get mapped

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;

@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.server.gae;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * Google App Engine integration for Jersey server runtime.

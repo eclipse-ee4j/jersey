@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.jersey2160;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;

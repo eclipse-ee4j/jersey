@@ -25,8 +25,8 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
 import java.util.Map;
 
 /**

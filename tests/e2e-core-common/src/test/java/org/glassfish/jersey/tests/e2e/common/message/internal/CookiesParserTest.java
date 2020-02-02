@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import javax.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.NewCookie;
 
 import org.glassfish.jersey.message.internal.CookiesParser;
 

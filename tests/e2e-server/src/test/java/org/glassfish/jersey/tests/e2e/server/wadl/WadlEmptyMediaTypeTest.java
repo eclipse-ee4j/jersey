@@ -19,11 +19,11 @@ package org.glassfish.jersey.tests.e2e.server.wadl;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

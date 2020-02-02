@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_inflector_1;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;

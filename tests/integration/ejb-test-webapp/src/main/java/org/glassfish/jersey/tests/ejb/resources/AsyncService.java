@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
-import javax.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.container.AsyncResponse;
 
 /**
  * @author Jan Algermissen

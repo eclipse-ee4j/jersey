@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.message.internal.AcceptableLanguageTag;
 import org.glassfish.jersey.message.internal.AcceptableToken;
 import org.glassfish.jersey.message.internal.HttpDateFormat;

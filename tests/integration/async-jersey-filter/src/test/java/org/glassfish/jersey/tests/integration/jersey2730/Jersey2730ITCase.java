@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2730;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.async.AbstractAsyncJerseyTest;
 

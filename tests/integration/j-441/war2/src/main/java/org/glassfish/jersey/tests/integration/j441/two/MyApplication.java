@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.j441.two;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 import org.glassfish.jersey.server.ResourceConfig;
 

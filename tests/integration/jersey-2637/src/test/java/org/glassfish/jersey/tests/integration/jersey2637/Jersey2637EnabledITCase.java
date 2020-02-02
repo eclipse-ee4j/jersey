@@ -19,10 +19,10 @@ package org.glassfish.jersey.tests.integration.jersey2637;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Reproducer tests for JERSEY-2637 - Query params can be injected using {@link javax.ws.rs.FormParam}.
+ * Reproducer tests for JERSEY-2637 - Query params can be injected using {@link jakarta.ws.rs.FormParam}.
  */
 @RunWith(Parameterized.class)
 public class Jersey2637EnabledITCase extends JerseyTest {

@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.server.validation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

@@ -18,11 +18,11 @@ package org.glassfish.jersey.tests.e2e.common.internal;
 
 import java.util.Collections;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.Provider;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.ContextResolverFactory;

@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.integration.servlet_3_chunked_io;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.server.ResourceConfig;

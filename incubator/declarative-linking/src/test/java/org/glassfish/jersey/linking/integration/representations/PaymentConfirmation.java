@@ -18,7 +18,7 @@ package org.glassfish.jersey.linking.integration.representations;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link;
 
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;

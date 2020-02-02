@@ -19,7 +19,7 @@ package org.glassfish.jersey.osgi.test.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.jackson1.Jackson1Feature;
 import org.glassfish.jersey.osgi.test.util.Helper;

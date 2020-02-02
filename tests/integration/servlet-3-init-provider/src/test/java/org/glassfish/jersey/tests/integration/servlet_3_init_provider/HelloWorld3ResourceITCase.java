@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.servlet_3_init_provider;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * @author Libor Kramolis
