@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.server.validation;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 
 import javax.validation.constraints.NotNull;
 
@@ -180,8 +180,7 @@ public class PropertyValidationTest {
     private void assertApply(int responseStatus, ResourceConfig resourceConfig, URI uri)
             throws InterruptedException, ExecutionException {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
-        final ContainerRequest requestContext =
-                new ContainerRequest(uri, uri, "POST", null, new MapPropertiesDelegate(), resourceConfig);
+        final ContainerRequest requestContext = new ContainerRequest(uri, uri, "POST", null, new MapPropertiesDelegate());
         final ContainerResponse containerResponse = applicationHandler.apply(requestContext).get();
 
         assertEquals(responseStatus, containerResponse.getStatus());

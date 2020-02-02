@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_inflector_1;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Response;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

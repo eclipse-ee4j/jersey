@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.integration.multimodule.ejb.reload.lib;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * JAX-RS resource used to reload the first application.

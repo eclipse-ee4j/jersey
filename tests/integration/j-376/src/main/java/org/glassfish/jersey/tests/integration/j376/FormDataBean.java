@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.integration.j376;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;

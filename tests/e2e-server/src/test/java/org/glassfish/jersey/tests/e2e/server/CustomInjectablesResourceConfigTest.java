@@ -20,10 +20,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Application;
 
 import javax.inject.Inject;
 import javax.inject.Qualifier;
@@ -124,7 +124,7 @@ public class CustomInjectablesResourceConfigTest extends JerseyTest {
 
     @Test
     public void testPerRequest() throws Exception {
-        final javax.ws.rs.client.WebTarget perRequest = target().path("perrequest");
+        final jakarta.ws.rs.client.WebTarget perRequest = target().path("perrequest");
 
         assertEquals("1", perRequest.request().get(String.class));
         assertEquals("1", perRequest.request().get(String.class));
@@ -133,7 +133,7 @@ public class CustomInjectablesResourceConfigTest extends JerseyTest {
 
     @Test
     public void testSingleton() throws Exception {
-        final javax.ws.rs.client.WebTarget perRequest = target().path("singleton");
+        final jakarta.ws.rs.client.WebTarget perRequest = target().path("singleton");
 
         assertEquals("1", perRequest.request().get(String.class));
         assertEquals("2", perRequest.request().get(String.class));
@@ -142,7 +142,7 @@ public class CustomInjectablesResourceConfigTest extends JerseyTest {
 
     @Test
     public void testCustomAnnotation() throws Exception {
-        final javax.ws.rs.client.WebTarget perRequestCustomAnnotation = target().path("perrequestCustomQualifier");
+        final jakarta.ws.rs.client.WebTarget perRequestCustomAnnotation = target().path("perrequestCustomQualifier");
 
         assertEquals("1", perRequestCustomAnnotation.request().get(String.class));
         assertEquals("1", perRequestCustomAnnotation.request().get(String.class));

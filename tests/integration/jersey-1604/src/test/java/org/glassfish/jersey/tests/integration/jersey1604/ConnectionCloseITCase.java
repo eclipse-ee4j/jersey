@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey1604;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;

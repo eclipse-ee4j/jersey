@@ -18,11 +18,11 @@ package org.glassfish.jersey.tests.integration.servlet_25_init_1;
 
 import java.net.URI;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * A resource that instantiated & uses JAX-RS/Jersey client to access another resource.

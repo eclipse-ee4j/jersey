@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey3670;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

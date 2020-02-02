@@ -22,7 +22,7 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 

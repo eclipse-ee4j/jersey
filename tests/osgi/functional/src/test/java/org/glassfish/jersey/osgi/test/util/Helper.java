@@ -47,7 +47,7 @@ public class Helper {
     /**
      * JAX-RS delegate property.
      */
-    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
 
     /**
      * Returns an integer value of given system property, or a default value

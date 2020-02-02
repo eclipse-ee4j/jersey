@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_autodiscovery_2;
 
-import javax.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Entity;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

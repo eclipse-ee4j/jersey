@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;

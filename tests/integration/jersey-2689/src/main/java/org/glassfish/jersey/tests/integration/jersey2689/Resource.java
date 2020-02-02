@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.jersey2689;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 
 import javax.validation.Valid;
 

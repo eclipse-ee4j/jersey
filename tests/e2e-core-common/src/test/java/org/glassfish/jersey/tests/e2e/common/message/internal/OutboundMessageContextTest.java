@@ -24,13 +24,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.CookieProvider;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;

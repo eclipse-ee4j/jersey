@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_25_mvc_3;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_3.resource.Bookstore;
 

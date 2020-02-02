@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_init_provider;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 /**
  * @author Libor Kramolis

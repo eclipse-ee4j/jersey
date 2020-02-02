@@ -18,18 +18,18 @@ package org.glassfish.jersey.tests.e2e.server;
 
 import java.util.logging.Logger;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -96,7 +96,7 @@ public class MessageBodyProvidersExceptionsTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         String resString = response.readEntity(String.class);
         // no MBW should have been found, InternalServerErrorException expected
-        assertEquals("javax.ws.rs.InternalServerErrorException", resString);
+        assertEquals("jakarta.ws.rs.InternalServerErrorException", resString);
     }
 
     @Test
@@ -105,6 +105,6 @@ public class MessageBodyProvidersExceptionsTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         String resString = response.readEntity(String.class);
         // no MBR should have been found, NotSupportedException expected
-        assertEquals("javax.ws.rs.NotSupportedException", resString);
+        assertEquals("jakarta.ws.rs.NotSupportedException", resString);
     }
 }

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.j441.one;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;

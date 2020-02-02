@@ -18,9 +18,9 @@ package org.glassfish.jersey.server.spring.test;
 
 import java.math.BigDecimal;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.startsWith;

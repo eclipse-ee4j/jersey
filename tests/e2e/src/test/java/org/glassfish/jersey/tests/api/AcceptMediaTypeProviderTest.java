@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.api;
 
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.junit.Test;

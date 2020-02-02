@@ -16,8 +16,8 @@
 package org.glassfish.jersey.tests.integration.jersey4099;
 
 import javax.annotation.Priority;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 /**
  * This mapper has a lower priority and should always be selected

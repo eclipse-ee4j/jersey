@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.integration.jersey2184;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 import javax.servlet.ServletContext;
 

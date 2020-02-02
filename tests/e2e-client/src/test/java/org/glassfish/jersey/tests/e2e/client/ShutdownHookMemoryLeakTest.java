@@ -22,10 +22,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -142,7 +142,7 @@ public class ShutdownHookMemoryLeakTest extends JerseyTest {
                 listenersClosed.get(), is(ITERATIONS));
     }
 
-    private Collection getShutdownHooks(javax.ws.rs.client.Client client) throws NoSuchFieldException, IllegalAccessException {
+    private Collection getShutdownHooks(jakarta.ws.rs.client.Client client) throws NoSuchFieldException, IllegalAccessException {
         JerseyClient jerseyClient = (JerseyClient) client;
         Field shutdownHooksField = JerseyClient.class.getDeclaredField("shutdownHooks");
         shutdownHooksField.setAccessible(true);

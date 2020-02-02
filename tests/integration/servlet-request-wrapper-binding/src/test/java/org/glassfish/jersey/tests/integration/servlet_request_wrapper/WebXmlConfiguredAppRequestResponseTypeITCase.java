@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_request_wrapper;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.tests.integration.servlet_request_wrapper_binding.RequestResponseInjectedResource;

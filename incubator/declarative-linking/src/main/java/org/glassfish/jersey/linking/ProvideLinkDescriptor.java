@@ -21,8 +21,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Link;
 
 import org.glassfish.jersey.linking.mapping.ResourceMappingContext;
 import org.glassfish.jersey.server.model.AnnotatedMethod;

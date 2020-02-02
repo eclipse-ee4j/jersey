@@ -18,11 +18,11 @@ package org.glassfish.jersey.tests.e2e.server;
 
 import java.util.Formatter;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -144,7 +144,7 @@ public class ResourceConfigTest extends JerseyTest {
      * {@code ApplicationHandler}.
      * <p/>
      * Test is trying to simulate the behaviour of Jersey as if the application was deployed into a servlet container
-     * with a servlet defined in {@code web.xml} file using {@code init-param} {@code javax.ws.rs.Application}.
+     * with a servlet defined in {@code web.xml} file using {@code init-param} {@code jakarta.ws.rs.Application}.
      */
     @Test
     public void testJersey1094() throws Exception {

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.api;
 
-import javax.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.CacheControl;
 
 import org.glassfish.jersey.message.internal.CacheControlProvider;
 

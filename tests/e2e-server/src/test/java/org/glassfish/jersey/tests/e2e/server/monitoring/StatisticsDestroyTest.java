@@ -18,9 +18,9 @@ package org.glassfish.jersey.tests.e2e.server.monitoring;
 
 import java.lang.management.ManagementFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Application;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;

@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.ws.rs.core.AbstractMultivaluedMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.core.AbstractMultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;

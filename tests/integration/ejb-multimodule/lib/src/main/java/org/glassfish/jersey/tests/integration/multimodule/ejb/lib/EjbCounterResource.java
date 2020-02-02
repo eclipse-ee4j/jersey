@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ejb.Singleton;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * Singleton EJB counter bean as a JAX-RS resource.
