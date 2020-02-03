@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.cdi.resources;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
