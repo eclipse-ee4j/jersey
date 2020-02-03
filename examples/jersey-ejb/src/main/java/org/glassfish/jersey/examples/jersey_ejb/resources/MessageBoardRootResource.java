@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.jersey_ejb.resources;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 /**
  * Message board root resource. The main message board resource

@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.entityfiltering.security;
 
 import java.util.Arrays;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedEntity;
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedSubEntity;

@@ -26,7 +26,7 @@
 
 package org.glassfish.jersey.examples.bookstore.webapp.resource;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

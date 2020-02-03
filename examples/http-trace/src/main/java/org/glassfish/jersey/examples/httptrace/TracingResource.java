@@ -10,9 +10,9 @@
 
 package org.glassfish.jersey.examples.httptrace;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Request;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Request;
 
 import org.glassfish.jersey.server.ContainerRequest;
 

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.examples.entityfiltering.selectable.domain.Address;

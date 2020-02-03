@@ -19,9 +19,9 @@ package org.glassfish.jersey.server.oauth1;
 import java.util.Map;
 
 import javax.annotation.Priority;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.oauth1.signature.OAuth1SignatureFeature;
 import org.glassfish.jersey.server.model.ModelProcessor;

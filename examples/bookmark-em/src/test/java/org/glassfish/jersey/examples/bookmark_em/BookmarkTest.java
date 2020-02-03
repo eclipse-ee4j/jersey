@@ -12,9 +12,9 @@ package org.glassfish.jersey.examples.bookmark_em;
 
 import java.net.URI;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jettison.JettisonFeature;

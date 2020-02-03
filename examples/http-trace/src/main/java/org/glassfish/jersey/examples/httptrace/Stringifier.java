@@ -13,8 +13,8 @@ package org.glassfish.jersey.examples.httptrace;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Request;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Request;
 
 import org.glassfish.jersey.server.ContainerRequest;
 

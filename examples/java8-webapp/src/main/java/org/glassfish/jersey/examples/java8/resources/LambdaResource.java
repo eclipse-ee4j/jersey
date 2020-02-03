@@ -13,9 +13,9 @@ package org.glassfish.jersey.examples.java8.resources;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 /**
  * JAX-RS resource using Java SE 8 lambdas.

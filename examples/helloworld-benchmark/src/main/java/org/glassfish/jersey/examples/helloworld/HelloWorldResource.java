@@ -10,11 +10,11 @@
 
 package org.glassfish.jersey.examples.helloworld;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 /**
  * Simple "Hello World" resource with three resource methods and a sub-resource locator (that points again to this class itself).

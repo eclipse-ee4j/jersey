@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.oauth1;
 
 import java.security.Principal;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /** Interface representing an OAuth token (i.e. access token or request token).
  *
@@ -58,7 +58,7 @@ public interface OAuth1Token {
      * user the request containing this token is authorized to act on behalf of.
      * When the oauth filter verifies the request
      * with this token is properly authenticated, it injects this token into a security context
-     * which then delegates {@link javax.ws.rs.core.SecurityContext#getUserPrincipal()} to this
+     * which then delegates {@link jakarta.ws.rs.core.SecurityContext#getUserPrincipal()} to this
      * method.
      *
      * @return Principal corresponding to this token, or null if the token is not authorized
@@ -68,7 +68,7 @@ public interface OAuth1Token {
     /** Returns a boolean indicating whether this token is authorized for the
      * specified logical "role". When the oauth filter verifies the request
      * with this token is properly authenticated, it injects this token into a security context
-     * which then delegates {@link javax.ws.rs.core.SecurityContext#isUserInRole(String)} to this
+     * which then delegates {@link jakarta.ws.rs.core.SecurityContext#isUserInRole(String)} to this
      * method.
      *
      * @param role a {@code String} specifying the name of the role

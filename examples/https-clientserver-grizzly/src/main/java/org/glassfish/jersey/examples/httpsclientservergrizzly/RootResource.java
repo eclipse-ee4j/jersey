@@ -13,15 +13,15 @@ package org.glassfish.jersey.examples.httpsclientservergrizzly;
 import java.nio.charset.Charset;
 import javax.xml.bind.DatatypeConverter;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 
 /**
  * Simple resource demonstrating low level approach of getting user credentials.
  *
- * Better way would be injecting {@link javax.ws.rs.core.SecurityContext}.
+ * Better way would be injecting {@link jakarta.ws.rs.core.SecurityContext}.
  *
  * @author Pavel Bucek
  */

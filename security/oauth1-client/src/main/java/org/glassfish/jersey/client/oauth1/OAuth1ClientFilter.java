@@ -18,10 +18,10 @@ package org.glassfish.jersey.client.oauth1;
 
 import java.io.IOException;
 
-import javax.ws.rs.Priorities;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

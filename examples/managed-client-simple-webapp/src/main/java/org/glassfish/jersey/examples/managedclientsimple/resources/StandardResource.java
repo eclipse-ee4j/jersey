@@ -10,9 +10,9 @@
 
 package org.glassfish.jersey.examples.managedclientsimple.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 /**
  * Standard example resource exposing  GET methods. This resource can be accessed directly by GET and is also
