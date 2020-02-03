@@ -35,6 +35,16 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
+
+import java.net.URI;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -97,8 +107,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                  * eventually throwing a malformed JSON exception.
                  */
                 String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
-                boolean isJson = contentType != null ? contentType.toLowerCase().contains(MediaType.APPLICATION_JSON)
-                        : false;
+                boolean isJson = contentType != null && contentType.toLowerCase().contains(MediaType.APPLICATION_JSON);
                 //process entity streams only if there is an entity issued in the request (i.e., content-length >=0).
                 //Otherwise, it's safe to discard during next processing
                 if ((!isJson && contentLength != -1) || HttpUtil.isTransferEncodingChunked(req)
@@ -143,11 +152,10 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
      * @return created Jersey Container Request.
      */
     private ContainerRequest createContainerRequest(ChannelHandlerContext ctx, HttpRequest req) {
+        String s = getPath(req);
+        URI requestUri = URI.create(getRequestUri() + ContainerUtils.encodeUnsafeCharacters(s));
 
-        String s = req.uri().startsWith("/") ? req.uri().substring(1) : req.uri();
-        URI requestUri = URI.create(baseUri + ContainerUtils.encodeUnsafeCharacters(s));
-
-        ContainerRequest requestContext = new ContainerRequest(
+        return new ContainerRequest(
                 baseUri, requestUri, req.method().name(), getSecurityContext(ctx),
                 new PropertiesDelegate() {
 
@@ -173,8 +181,28 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                         properties.remove(name);
                     }
                 }, resourceConfig);
+    }
 
-        return requestContext;
+    private String getPath(HttpRequest req) {
+        String s = req.uri();
+        if (baseUriHasBasePath()) {
+            s = s.startsWith("/") ? s.substring(1) : s;
+            if (!baseUri.toString().endsWith("/")) {
+                s = s.replaceFirst("/", "");
+            }
+            s = "/" + s;
+        }
+        return s;
+    }
+
+    private boolean baseUriHasBasePath() {
+        String path = baseUri.getPath();
+        return path != null && !path.isEmpty() && !"/".equals(path);
+    }
+
+    private URI getRequestUri() {
+        String baseUrl = String.format("%s://%s:%s", baseUri.getScheme(), baseUri.getHost(), baseUri.getPort());
+        return URI.create(baseUrl);
     }
 
 
