@@ -10,9 +10,9 @@
 
 package org.glassfish.jersey.examples.helloworld.cdi2se;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 import javax.inject.Inject;
 

@@ -10,9 +10,9 @@
 
 package org.glassfish.jersey.examples.jersey_ejb.exceptions;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * An exception mapper to return 404 responses when a {@link CustomNotFoundException} is thrown.

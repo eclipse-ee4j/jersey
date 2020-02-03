@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.sysprops.impl;
 
 import java.util.Set;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.examples.sysprops.PropertyNamesResource;
 import org.glassfish.jersey.examples.sysprops.PropertyResource;

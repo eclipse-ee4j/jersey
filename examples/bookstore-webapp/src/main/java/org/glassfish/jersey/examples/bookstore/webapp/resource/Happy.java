@@ -26,9 +26,9 @@
 
 package org.glassfish.jersey.examples.bookstore.webapp.resource;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import javax.inject.Singleton;
 

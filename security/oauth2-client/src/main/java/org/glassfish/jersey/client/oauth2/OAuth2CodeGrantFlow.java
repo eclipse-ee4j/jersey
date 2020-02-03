@@ -18,8 +18,8 @@ package org.glassfish.jersey.client.oauth2;
 
 import java.util.Map;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Feature;
 
 /**
  * The interface that defines OAuth 2 Authorization Code Grant Flow.

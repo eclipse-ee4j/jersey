@@ -14,7 +14,7 @@ import org.glassfish.jersey.jackson1.Jackson1Feature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
- * {@link javax.ws.rs.core.Application} descendant.
+ * {@link jakarta.ws.rs.core.Application} descendant.
  *
  * Used to set resource and providers classes.
  *

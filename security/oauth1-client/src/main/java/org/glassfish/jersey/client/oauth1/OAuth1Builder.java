@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.oauth1;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Feature;
 
 /**
  * Builder of OAuth 1 client support. This builder can build {@link OAuth1AuthorizationFlow} using a method
@@ -112,7 +112,7 @@ public interface OAuth1Builder {
 
 
     /**
-     * Builder of the {@link javax.ws.rs.core.Feature}.
+     * Builder of the {@link jakarta.ws.rs.core.Feature}.
      */
     public static interface FilterFeatureBuilder {
         /**

@@ -10,16 +10,16 @@
 
 package org.glassfish.jersey.examples.linking.resources;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.examples.linking.model.ItemsModel;
 import org.glassfish.jersey.examples.linking.representation.ItemsRepresentation;
@@ -42,7 +42,7 @@ public class ItemsResource {
 
     @GET
     public ItemsRepresentation query(
-            @Context javax.ws.rs.core.UriInfo info,
+            @Context jakarta.ws.rs.core.UriInfo info,
             @QueryParam("offset") @DefaultValue("-1") int offset, @DefaultValue("-1") @QueryParam("limit") int limit) {
 
         if (offset == -1 || limit == -1) {

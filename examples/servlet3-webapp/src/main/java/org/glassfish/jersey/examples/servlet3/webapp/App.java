@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.servlet3.webapp;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 

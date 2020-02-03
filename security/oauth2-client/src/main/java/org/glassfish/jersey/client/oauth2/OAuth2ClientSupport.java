@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.client.oauth2;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Feature;
 
 /**
- * Main class to build the Authorization Flow instances and {@link javax.ws.rs.core.Feature client filter feature} that
+ * Main class to build the Authorization Flow instances and {@link jakarta.ws.rs.core.Feature client filter feature} that
  * can supports performing of authenticated OAuth requests.
  * <p><b>Authorization flow</b></p>
  * For more information about authorization flow, see {@link OAuth2CodeGrantFlow}.
@@ -29,15 +29,15 @@ import javax.ws.rs.core.Feature;
  * Use method {@link #feature(String)} to build the feature. OAuth2 client filter feature registers
  * the support for performing authenticated requests to the
  * Service Provider. The feature uses an access token to initialize
- * the internal {@link javax.ws.rs.container.ContainerRequestFilter filter}
+ * the internal {@link jakarta.ws.rs.container.ContainerRequestFilter filter}
  * which will add {@code Authorization} http header containing OAuth 2 authorization information (based
  * on {@code bearer} tokens).
  * </p>
  *
  * <p>
  * The internal filter can be controlled by properties put into
- * the {@link javax.ws.rs.client.ClientRequestContext client request}
- * using {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property key
+ * the {@link jakarta.ws.rs.client.ClientRequestContext client request}
+ * using {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} method. The property key
  * is defined in this class as a static variables
  * ({@link OAuth2ClientSupport#OAUTH2_PROPERTY_ACCESS_TOKEN} (see its javadoc for usage).
  * Using the property a specific
@@ -56,13 +56,13 @@ import javax.ws.rs.core.Feature;
 public final class OAuth2ClientSupport {
     /**
      * Key of the property that can be attached to the
-     * {@link javax.ws.rs.client.ClientRequestContext client request} using
-     * {@link javax.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
+     * {@link jakarta.ws.rs.client.ClientRequestContext client request} using
+     * {@link jakarta.ws.rs.client.ClientRequestContext#setProperty(String, Object)} and that
      * defines access token that should be used when generating OAuth {@code Authorization}
      * http header. The property will override the setting of the internal
-     * {@link javax.ws.rs.client.ClientRequestFilter filter} for the current request only. This property
-     * can be used only when {@link javax.ws.rs.core.Feature OAauth 2 filter feature} is
-     * registered into the {@link javax.ws.rs.client.Client}
+     * {@link jakarta.ws.rs.client.ClientRequestFilter filter} for the current request only. This property
+     * can be used only when {@link jakarta.ws.rs.core.Feature OAauth 2 filter feature} is
+     * registered into the {@link jakarta.ws.rs.client.Client}
      * instance.
      * <p>
      * The value of the property must be a {@link String}.

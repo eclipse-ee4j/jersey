@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.rx;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.examples.rx.agent.AsyncAgentResource;
 import org.glassfish.jersey.examples.rx.agent.CompletionStageAgentResource;

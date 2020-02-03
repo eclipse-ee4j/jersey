@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.bookmark.util.tx;
 
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

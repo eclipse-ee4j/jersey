@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.cdi.resources;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.junit.Test;
 

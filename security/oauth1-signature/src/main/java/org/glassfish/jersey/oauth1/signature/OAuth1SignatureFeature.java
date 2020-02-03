@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.oauth1.signature;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.inject.Singleton;
 

@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.helloworld;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

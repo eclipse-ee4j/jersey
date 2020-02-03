@@ -16,16 +16,16 @@
 
 package org.glassfish.jersey.server.oauth1;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 
 /**
  * {@link WebApplicationException Web application exception} that is mapped either
- * to {@link javax.ws.rs.core.Response.Status#BAD_REQUEST} (e.g. if problem with OAuth
+ * to {@link jakarta.ws.rs.core.Response.Status#BAD_REQUEST} (e.g. if problem with OAuth
  * parameters occurs) or
- * {@link javax.ws.rs.core.Response.Status#UNAUTHORIZED} (e.g. if signature is incorrect).
+ * {@link jakarta.ws.rs.core.Response.Status#UNAUTHORIZED} (e.g. if signature is incorrect).
  *
  * @author Martin Matula
  * @author Miroslav Fuksa

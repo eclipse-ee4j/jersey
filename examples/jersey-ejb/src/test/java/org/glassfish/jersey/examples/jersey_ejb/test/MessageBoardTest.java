@@ -12,11 +12,11 @@ package org.glassfish.jersey.examples.jersey_ejb.test;
 
 import java.net.URI;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.examples.jersey_ejb.resources.MyApplication;
 import org.glassfish.jersey.test.JerseyTest;
