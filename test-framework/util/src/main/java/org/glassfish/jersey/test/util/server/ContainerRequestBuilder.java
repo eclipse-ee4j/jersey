@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
