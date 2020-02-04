@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -336,7 +336,7 @@
                                     <target>
                                         <mkdir dir="${java11.build.outputDirectory}" />
                                         <javac srcdir="${java11.sourceDirectory}" destdir="${java11.build.outputDirectory}"
-                                               classpath="${project.build.outputDirectory}" includeantruntime="false" />
+                                               classpath="${project.build.outputDirectory}" includeantruntime="false" release="11" />
                                     </target>
                                 </configuration>
                                 <goals>
