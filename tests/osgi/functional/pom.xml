@@ -376,12 +376,13 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>jakarta.activation</artifactId>
-            <version>${jakarta.activation.version}</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            Not needed since Jackson 2.10.1 -->
+<!--            <groupId>com.sun.activation</groupId>-->
+<!--            <artifactId>jakarta.activation</artifactId>-->
+<!--            <version>${jakarta.activation.version}</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <!-- logging -->
         <dependency>
