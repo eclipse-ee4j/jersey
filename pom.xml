@@ -2100,6 +2100,7 @@
         <httpclient.version>4.5.9</httpclient.version>
         <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
         <jackson.version>2.10.1</jackson.version>
+        <jackson1.version>1.9.13</jackson1.version>
         <jakarta.activation-api.version>2.0.0-RC3</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.0-RC3</jakarta.activation.version>
         <javassist.version>3.25.0-GA</javassist.version>
