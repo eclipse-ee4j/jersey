@@ -4,7 +4,6 @@ import java.lang.annotation.Annotation;
 
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP;
-import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JacksonFeatures;
 
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -61,7 +60,6 @@ public class JsonEndpointConfig
     /**********************************************************
      */
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void addAnnotation(Class<? extends Annotation> type,
             Annotation annotation, boolean forWriting)
@@ -69,15 +67,6 @@ public class JsonEndpointConfig
         if (type == JSONP.class) {
             if (forWriting) {
                 _jsonp = new JSONP.Def((JSONP) annotation);
-            }
-        } else if (type == JacksonFeatures.class) {
-            JacksonFeatures feats = (JacksonFeatures) annotation;
-            if (forWriting) {
-                _serEnable = nullIfEmpty(feats.serializationEnable());
-                _serDisable = nullIfEmpty(feats.serializationDisable());
-            } else {
-                _deserEnable = nullIfEmpty(feats.deserializationEnable());
-                _deserDisable = nullIfEmpty(feats.deserializationDisable());
             }
         } else {
             super.addAnnotation(type, annotation, forWriting);
