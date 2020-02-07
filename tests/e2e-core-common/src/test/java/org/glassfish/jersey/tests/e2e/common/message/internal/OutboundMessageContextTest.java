@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Link;

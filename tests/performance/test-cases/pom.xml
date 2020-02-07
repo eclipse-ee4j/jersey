@@ -45,11 +45,11 @@
         <module>interceptor-name</module>
         <module>mbw-custom-provider</module>
         <module>mbw-json-jackson</module>
-        <module>mbw-json-moxy</module>
+<!--        <module>mbw-json-moxy</module>-->
         <module>mbw-kryo</module>
         <module>mbw-text-plain</module>
         <module>mbw-xml-jaxb</module>
-        <module>mbw-xml-moxy</module>
+<!--        <module>mbw-xml-moxy</module>-->
         <module>param-srl</module>
         <module>proxy-injection</module>
     </modules>

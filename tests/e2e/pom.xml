@@ -42,6 +42,20 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/e2e/oauth/OAuth2Test.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/common/NoEntityTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <testExcludes>
+                        <exclude>org/glassfish/jersey/tests/e2e/oauth/OAuth2Test.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/common/NoEntityTest.java</exclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -89,16 +103,16 @@
             <artifactId>jersey-media-json-jettison</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-moxy</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-processing</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-moxy</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-processing</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>

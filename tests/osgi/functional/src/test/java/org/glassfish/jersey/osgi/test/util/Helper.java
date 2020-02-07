@@ -52,7 +52,7 @@ public class Helper {
     /**
      * JAX-RS Client Builder property
      */
-    private static final String JAXRS_CLIENT_BUILDER = "javax.ws.rs.client.ClientBuilder";
+    private static final String JAXRS_CLIENT_BUILDER = "jakarta.ws.rs.client.ClientBuilder";
 
     /**
      * Returns an integer value of given system property, or a default value

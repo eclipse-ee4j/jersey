@@ -63,7 +63,7 @@ public abstract class JsonTestProvider {
     private Feature feature;
     private JettisonConfig configuration;
     private Set<Object> providers = new LinkedHashSet<>();
-
+/*
     public static class JettisonMappedJsonTestProvider extends JsonTestProvider {
 
         public JettisonMappedJsonTestProvider() {
@@ -149,6 +149,7 @@ public abstract class JsonTestProvider {
             getProviders().add(new JsonbContextResolver());
         }
     }
+    */
 
     public JettisonConfig getConfiguration() {
         return configuration;
