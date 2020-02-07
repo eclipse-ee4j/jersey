@@ -46,6 +46,13 @@
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
+                        <configuration>
+                            <testExcludes>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonProcessingTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJackson1Test.java</exclude>
+                            </testExcludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -208,16 +215,16 @@
             <artifactId>jersey-media-json-jettison</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-moxy</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-processing</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-moxy</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-processing</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>
@@ -393,6 +400,28 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>testsSkipJdk8</id>
+            <activation>
+                <jdk>[8,11)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Exclude unit tests JSONP & MOXY for now -->
+                            <excludes>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonProcessingTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJackson1Test.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>testsSkipJdk11</id>
             <activation>

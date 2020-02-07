@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -50,4 +51,13 @@ public class EventsTest extends JerseyTest {
         assertEquals(25, current.longValue());
     }
 
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        try {
+            super.setUp();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 }

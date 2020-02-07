@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
         <filter-name>org.glassfish.jersey.examples.bookstore.webapp.MyApplication</filter-name>
         <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
         <init-param>
-            <param-name>javax.ws.rs.Application</param-name>
+            <param-name>jakarta.ws.rs.Application</param-name>
             <param-value>org.glassfish.jersey.examples.bookstore.webapp.MyApplication</param-value>
         </init-param>
         <!-- pass to next filter if Jersey/App returns 404 -->

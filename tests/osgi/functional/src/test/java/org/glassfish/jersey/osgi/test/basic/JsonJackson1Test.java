@@ -31,7 +31,8 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 /**
  * @author Michal Gajdos
  */
-public class JsonJackson1Test extends AbstractJsonOsgiIntegrationTest {
+public class
+JsonJackson1Test extends AbstractJsonOsgiIntegrationTest {
 
     @Configuration
     public static Option[] configuration() {
