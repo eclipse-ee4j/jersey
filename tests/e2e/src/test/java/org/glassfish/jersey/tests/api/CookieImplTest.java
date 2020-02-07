@@ -159,7 +159,7 @@ public class CookieImplTest {
         assertEquals("kobe", c.getName());
         assertEquals("longeststring", c.getValue());
 
-        cookieHeader = "bryant=longeststring; bryant=shortstring ; fred=shortstring ; fred=longeststring ; $Path=/path ; $Domain=.sun.com";
+        cookieHeader = "bryant=longeststring; bryant=shortstring; fred=shortstring ;fred=longeststring;$Path=/path";
         cookies = HttpHeaderReader.readCookies(cookieHeader);
         assertEquals(cookies.size(), 2);
         c = cookies.get("bryant");
@@ -171,7 +171,6 @@ public class CookieImplTest {
         assertEquals("fred", c.getName());
         assertEquals("longeststring", c.getValue());
         assertEquals("/path", c.getPath());
-        assertEquals(".sun.com", c.getDomain());
 
     }
 
