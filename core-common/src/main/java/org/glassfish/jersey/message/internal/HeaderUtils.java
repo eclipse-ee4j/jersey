@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.AbstractMultivaluedMap;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
@@ -295,6 +296,24 @@ public final class HeaderUtils {
                             changedHeaderNames.toString()));
                 }
             }
+        }
+    }
+
+    /**
+     * Compare two NewCookies having the same name. See documentation RFC.
+     *
+     * @param one    NewCookie to be compared.
+     * @param second NewCookie to be compared.
+     * @return the prefered NewCookie according to rules :
+     *              - the latest expiration date.
+     *              - if same expiration date, the longest path.
+     */
+    public static NewCookie getPreferedNewCookie(NewCookie one, NewCookie second) {
+
+        if (!one.getExpiry().equals(second.getExpiry())){
+            return one.getExpiry().after(second.getExpiry()) ?  one : second;
+        } else {
+            return one.getPath().length() > second.getPath().length() ?  one : second;
         }
     }
 

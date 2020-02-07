@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,16 +17,20 @@
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.core.AbstractMultivaluedMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.HeaderUtils;
+import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
 import org.junit.Test;
@@ -180,4 +184,97 @@ public class HeaderUtilsTest {
         final String result = HeaderUtils.asHeaderString(values, null);
         assertEquals("value,[null]," + uri.toASCIIString(), result);
     }
+
+    @Test
+    public void testgetPreferedNewCookie(){
+
+        Date earliestDate;
+        Date latestDate;
+
+        try {
+            earliestDate = HttpDateFormat.readDate("Fri, 1 Jan 2020 00:00:00 GMT");
+            latestDate =  HttpDateFormat.readDate("Fri, 1 Jan 2020 01:00:00 GMT");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            earliestDate = new Date(10);
+            latestDate =  new Date(100);
+        }
+
+        NewCookie one = new NewCookie(
+                "fred",
+                "valuestring",
+                "pathstring",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                latestDate,
+                false,
+                false);
+        NewCookie second = new NewCookie(
+                "fred",
+                "valuestring",
+                "pathstring",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                earliestDate,
+                false,
+                false);
+
+        assertEquals(one, HeaderUtils.getPreferedNewCookie(one, second));
+
+        NewCookie longPathNewCookie = new NewCookie(
+                "fred",
+                "valuestring",
+                "longestpathstring",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                latestDate,
+                false,
+                false);
+        NewCookie shortPathNewCookie = new NewCookie(
+                "fred",
+                "valuestring",
+                "shortestpath",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                latestDate,
+                false,
+                false);
+
+        assertEquals(longPathNewCookie, HeaderUtils.getPreferedNewCookie(longPathNewCookie, shortPathNewCookie));
+
+        NewCookie identicalNewCookie = new NewCookie(
+                "fred",
+                "valuestring",
+                "pathstring",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                latestDate,
+                false,
+                false);
+        NewCookie identicalNewCookie1 = new NewCookie(
+                "fred",
+                "valuestring",
+                "pathstring",
+                "domainstring",
+                0,
+                "commentstring",
+                0,
+                latestDate,
+                false,
+                false);
+
+        assertEquals(identicalNewCookie, HeaderUtils.getPreferedNewCookie(identicalNewCookie, identicalNewCookie1));
+
+    }
+
 }

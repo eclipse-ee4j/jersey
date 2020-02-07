@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -146,6 +146,33 @@ public class CookieImplTest {
         assertTrue("barney".equals(c.getName()));
         assertTrue("rubble".equals(c.getValue()));
         assertTrue(".sun.com".equals(c.getDomain()));
+    }
+
+    @Test
+    public void testMultipleCookiesWithSameName(){
+
+        String cookieHeader = "kobe=longeststring; kobe=shortstring";
+        Map<String, Cookie> cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 1);
+        Cookie c = cookies.get("kobe");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("kobe", c.getName());
+        assertEquals("longeststring", c.getValue());
+
+        cookieHeader = "bryant=longeststring; bryant=shortstring ; fred=shortstring ; fred=longeststring ; $Path=/path ; $Domain=.sun.com";
+        cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 2);
+        c = cookies.get("bryant");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("bryant", c.getName());
+        assertEquals("longeststring", c.getValue());
+        c = cookies.get("fred");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("fred", c.getName());
+        assertEquals("longeststring", c.getValue());
+        assertEquals("/path", c.getPath());
+        assertEquals(".sun.com", c.getDomain());
+
     }
 
     @Test
