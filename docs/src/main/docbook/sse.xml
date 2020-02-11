@@ -195,7 +195,7 @@ public static class SseResource {
                     .name("message-to-client")
                     .data(String.class, "Hello world " + i + "!")
                     .build();
-                eventSink.onNext(event);
+                eventSink.send(event);
             }
         }).start();
     }
@@ -432,7 +432,7 @@ public static class BroadcasterResource {
 Client client = ClientBuilder.newBuilder().build();
 WebTarget target = client.target("http://example.com/events");
 SseEventSource sseEventSource = SseEventSource.target(target).build();
-sseEventSource.subscribe((event) -> System.out.println(event.getName() + "; "
+sseEventSource.register(event -> System.out.println(event.getName() + "; "
     + event.readData(String.class)));
 sseEventSource.open();
 
