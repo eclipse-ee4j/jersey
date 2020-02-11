@@ -130,7 +130,7 @@
         <repository>
             <id>eclipselink.repository</id>
             <name>Eclipse Maven Repository</name>
-            <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+            <url>https://download.eclipse.org/rt/eclipselink/maven.repo</url>
             <layout>default</layout>
         </repository>
     </repositories>

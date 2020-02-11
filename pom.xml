@@ -1105,7 +1105,7 @@
                 <repository>
                     <id>eclipselink.repository</id>
                     <name>Eclipse Maven Repository</name>
-                    <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+                    <url>https://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
                     <layout>default</layout>
                 </repository>
             </repositories>
