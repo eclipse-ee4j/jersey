@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -100,6 +100,9 @@
 <!ENTITY rxjava.uri "https://github.com/ReactiveX/RxJava">
 <!ENTITY wikipedia.uri "http://en.wikipedia.org/wiki/">
 <!ENTITY jira.uri.prefix "https://github.com/eclipse-ee4j/jersey/issues">
+<!ENTITY microprofile.spec.link "<link xlink:href='https://microprofile.io/project/eclipse/microprofile-config'>Microprofile Config Specification</link>">
+<!ENTITY helidon.link "<link xlink:href='https://helidon.io/'>Helidon</link>">
+<!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Configuration.html'>Configuration</link>">
