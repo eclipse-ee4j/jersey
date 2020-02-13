@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -224,4 +225,22 @@ public class HelloWorldTest extends JerseyTest {
         assertEquals(1, CustomLoggingFilter.preFilterCalled);
         assertEquals(1, CustomLoggingFilter.postFilterCalled);
     }
+
+    @Test
+    @RunSeparately
+    public void testQueryParameterGet() {
+        String result = target().path(App.ROOT_PATH + "/query1").queryParam("test1", "expected1")
+                .queryParam("test2", "expected2").request().get(String.class);
+        assertEquals("expected1expected2", result);
+    }
+
+    @Test
+    @RunSeparately
+    public void testQueryParameterPost() {
+        String result = target().path(App.ROOT_PATH + "/query2").queryParam("test1", "expected1")
+                .queryParam("test2", "expected2").request("text/plain").post(Entity.entity("entity", "text/plain"))
+                .readEntity(String.class);
+        assertEquals("entityexpected1expected2", result);
+    }
+
 }
