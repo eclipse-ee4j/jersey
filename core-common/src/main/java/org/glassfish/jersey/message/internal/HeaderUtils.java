@@ -304,14 +304,14 @@ public final class HeaderUtils {
      *
      * @param one    NewCookie to be compared.
      * @param second NewCookie to be compared.
-     * @return the prefered NewCookie according to rules :
-     *              - the latest expiration date.
-     *              - if same expiration date, the longest path.
+     * @return the preferred NewCookie according to rules :
+     *              - the latest maxAge.
+     *              - if same maxAge, the longest path.
      */
-    public static NewCookie getPreferedNewCookie(NewCookie one, NewCookie second) {
+    public static NewCookie getPreferredCookie(NewCookie one, NewCookie second) {
 
-        if (!one.getExpiry().equals(second.getExpiry())){
-            return one.getExpiry().after(second.getExpiry()) ?  one : second;
+        if (one.getMaxAge() != second.getMaxAge()){
+            return one.getMaxAge() > second.getMaxAge() ?  one : second;
         } else {
             return one.getPath().length() > second.getPath().length() ?  one : second;
         }

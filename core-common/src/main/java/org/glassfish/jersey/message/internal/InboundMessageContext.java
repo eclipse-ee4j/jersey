@@ -589,7 +589,7 @@ public abstract class InboundMessageContext {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
                 String cookieName = newCookie.getName();
                 if (result.containsKey(cookieName)) {
-                    result.put(cookieName, HeaderUtils.getPreferedNewCookie(result.get(cookieName), newCookie));
+                    result.put(cookieName, HeaderUtils.getPreferredCookie(result.get(cookieName), newCookie));
                 } else {
                     result.put(cookieName, newCookie);
                 }
