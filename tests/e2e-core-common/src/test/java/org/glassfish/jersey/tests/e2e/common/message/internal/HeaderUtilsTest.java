@@ -18,7 +18,9 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -184,6 +186,19 @@ public class HeaderUtilsTest {
 
     @Test
     public void testgetPreferredCookie(){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, Calendar.JANUARY, Calendar.MONDAY);
+        Date earlyDate = calendar.getTime();
+        calendar.set(2000, Calendar.JANUARY, Calendar.TUESDAY);
+        Date laterDate = calendar.getTime();
+
+        NewCookie earlyCookie = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 0, earlyDate, false, false);
+        NewCookie laterCookie = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 0, laterDate, false, false);
+
+        assertEquals(laterCookie, HeaderUtils.getPreferredCookie(earlyCookie, laterCookie));
 
         NewCookie one = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
                 0, "commentstring", 100, null, false, false);

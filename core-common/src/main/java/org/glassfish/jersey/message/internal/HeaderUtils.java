@@ -17,6 +17,7 @@
 package org.glassfish.jersey.message.internal;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -300,20 +301,40 @@ public final class HeaderUtils {
     }
 
     /**
+     * Compare two objects according to comparator
+     *
+     * @param first first object to be compared
+     * @param second second object to be compared
+     * @param comparator criteria
+     * @return the preferred object according to comparator
+     */
+    public static <T> T compareNullable(T first, T second, Comparator<T> comparator) {
+        if (first == null) {
+            return second;
+        } else if (second == null) {
+            return first;
+        }
+        return comparator.compare(first, second) <= 0 ? first : second;
+    }
+
+    /**
      * Compare two NewCookies having the same name. See documentation RFC.
      *
-     * @param one    NewCookie to be compared.
+     * @param first    NewCookie to be compared.
      * @param second NewCookie to be compared.
      * @return the preferred NewCookie according to rules :
      *              - the latest maxAge.
-     *              - if same maxAge, the longest path.
+     *              - if equal, compare the expiry date
+     *              - if equal, compare name length
      */
-    public static NewCookie getPreferredCookie(NewCookie one, NewCookie second) {
+    public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
 
-        if (one.getMaxAge() != second.getMaxAge()){
-            return one.getMaxAge() > second.getMaxAge() ?  one : second;
+        if (first.getMaxAge() != second.getMaxAge()){
+            return compareNullable(first, second, Comparator.comparing(NewCookie::getMaxAge));
+        } else if (first.getExpiry() != null && second.getExpiry() != null && !first.getExpiry().equals(second.getExpiry())) {
+            return compareNullable(first, second, Comparator.comparing(NewCookie::getExpiry));
         } else {
-            return one.getPath().length() > second.getPath().length() ?  one : second;
+            return first.getPath().length() > second.getPath().length() ? first : second;
         }
     }
 
