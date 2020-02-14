@@ -314,7 +314,7 @@ public final class HeaderUtils {
         } else if (second == null) {
             return first;
         }
-        return comparator.compare(first, second) <= 0 ? first : second;
+        return comparator.compare(first, second) > 0 ? first : second;
     }
 
     /**
@@ -328,6 +328,12 @@ public final class HeaderUtils {
      *              - if equal, compare name length
      */
     public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
+
+        if (first == null) {
+            return second;
+        } else if (second == null) {
+            return first;
+        }
 
         if (first.getMaxAge() != second.getMaxAge()){
             return compareNullable(first, second, Comparator.comparing(NewCookie::getMaxAge));
