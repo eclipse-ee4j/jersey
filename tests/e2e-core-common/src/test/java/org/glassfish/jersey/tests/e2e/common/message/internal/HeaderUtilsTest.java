@@ -188,9 +188,9 @@ public class HeaderUtilsTest {
     public void testgetPreferredCookie(){
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2000, Calendar.JANUARY, Calendar.MONDAY);
+        calendar.set(2000, Calendar.JANUARY, 1);
         Date earlyDate = calendar.getTime();
-        calendar.set(2000, Calendar.JANUARY, Calendar.TUESDAY);
+        calendar.set(2000, Calendar.JANUARY, 2);
         Date laterDate = calendar.getTime();
 
         NewCookie earlyCookie = new NewCookie("fred", "valuestring", "pathstring", "domainstring",

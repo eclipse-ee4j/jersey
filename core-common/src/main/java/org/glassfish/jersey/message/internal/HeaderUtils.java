@@ -301,23 +301,6 @@ public final class HeaderUtils {
     }
 
     /**
-     * Compare two objects according to comparator
-     *
-     * @param first first object to be compared
-     * @param second second object to be compared
-     * @param comparator criteria
-     * @return the preferred object according to comparator
-     */
-    public static <T> T compareNullable(T first, T second, Comparator<T> comparator) {
-        if (first == null) {
-            return second;
-        } else if (second == null) {
-            return first;
-        }
-        return comparator.compare(first, second) > 0 ? first : second;
-    }
-
-    /**
      * Compare two NewCookies having the same name. See documentation RFC.
      *
      * @param first    NewCookie to be compared.
@@ -336,9 +319,9 @@ public final class HeaderUtils {
         }
 
         if (first.getMaxAge() != second.getMaxAge()){
-            return compareNullable(first, second, Comparator.comparing(NewCookie::getMaxAge));
+            return Comparator.comparing(NewCookie::getMaxAge).compare(first, second) > 0 ? first : second;
         } else if (first.getExpiry() != null && second.getExpiry() != null && !first.getExpiry().equals(second.getExpiry())) {
-            return compareNullable(first, second, Comparator.comparing(NewCookie::getExpiry));
+            return Comparator.comparing(NewCookie::getExpiry).compare(first, second) > 0 ? first : second;
         } else {
             return first.getPath().length() > second.getPath().length() ? first : second;
         }
