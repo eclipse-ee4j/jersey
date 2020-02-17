@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -205,15 +205,16 @@ class NettyConnector implements Connector {
             ch.closeFuture().addListener(closeListener);
 
             HttpRequest nettyRequest;
+            String pathWithQuery = buildPathWithQueryParameters(requestUri);
 
             if (jerseyRequest.hasEntity()) {
                 nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
                                                       HttpMethod.valueOf(jerseyRequest.getMethod()),
-                                                      requestUri.getRawPath());
+                                                      pathWithQuery);
             } else {
                 nettyRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1,
                                                           HttpMethod.valueOf(jerseyRequest.getMethod()),
-                                                          requestUri.getRawPath());
+                                                          pathWithQuery);
             }
 
             // headers
@@ -280,6 +281,14 @@ class NettyConnector implements Connector {
         }
 
         return settableFuture;
+    }
+
+    private String buildPathWithQueryParameters(URI requestUri) {
+        if (requestUri.getRawQuery() != null) {
+            return String.format("%s?%s", requestUri.getRawPath(), requestUri.getRawQuery());
+        } else {
+            return requestUri.getRawPath();
+        }
     }
 
     @Override
