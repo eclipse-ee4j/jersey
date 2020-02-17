@@ -10,9 +10,13 @@
 
 package org.glassfish.jersey.examples.helloworld.netty;
 
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 
 /**
  *
@@ -26,6 +30,23 @@ public class HelloWorldResource {
     @Produces("text/plain")
     public String getHello() {
         return CLICHED_MESSAGE;
+    }
+
+    @GET
+    @Path("query1")
+    @Produces("text/plain")
+    public String getQueryParameter(@DefaultValue("error1") @QueryParam(value = "test1") String test1,
+            @DefaultValue("error2") @QueryParam(value = "test2") String test2) {
+        return test1 + test2;
+    }
+
+    @POST
+    @Path("query2")
+    @Consumes("text/plain")
+    @Produces("text/plain")
+    public String postQueryParameter(@DefaultValue("error1") @QueryParam(value = "test1") String test1,
+            @DefaultValue("error2") @QueryParam(value = "test2") String test2, String entity) {
+        return entity + test1 + test2;
     }
 
 }

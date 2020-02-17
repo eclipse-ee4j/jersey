@@ -205,15 +205,16 @@ class NettyConnector implements Connector {
             ch.closeFuture().addListener(closeListener);
 
             HttpRequest nettyRequest;
+            String pathWithQuery = buildPathWithQueryParameters(requestUri);
 
             if (jerseyRequest.hasEntity()) {
                 nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
                                                       HttpMethod.valueOf(jerseyRequest.getMethod()),
-                                                      requestUri.getRawPath());
+                                                      pathWithQuery);
             } else {
                 nettyRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1,
                                                           HttpMethod.valueOf(jerseyRequest.getMethod()),
-                                                          requestUri.getRawPath());
+                                                          pathWithQuery);
             }
 
             // headers
@@ -280,6 +281,14 @@ class NettyConnector implements Connector {
         }
 
         return settableFuture;
+    }
+
+    private String buildPathWithQueryParameters(URI requestUri) {
+        if (requestUri.getRawQuery() != null) {
+            return String.format("%s?%s", requestUri.getRawPath(), requestUri.getRawQuery());
+        } else {
+            return requestUri.getRawPath();
+        }
     }
 
     @Override

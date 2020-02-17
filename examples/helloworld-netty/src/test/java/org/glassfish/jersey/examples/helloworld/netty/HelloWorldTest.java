@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.InvocationCallback;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
@@ -224,4 +225,22 @@ public class HelloWorldTest extends JerseyTest {
         assertEquals(1, CustomLoggingFilter.preFilterCalled);
         assertEquals(1, CustomLoggingFilter.postFilterCalled);
     }
+
+    @Test
+    @RunSeparately
+    public void testQueryParameterGet() {
+        String result = target().path(App.ROOT_PATH + "/query1").queryParam("test1", "expected1")
+                .queryParam("test2", "expected2").request().get(String.class);
+        assertEquals("expected1expected2", result);
+    }
+
+    @Test
+    @RunSeparately
+    public void testQueryParameterPost() {
+        String result = target().path(App.ROOT_PATH + "/query2").queryParam("test1", "expected1")
+                .queryParam("test2", "expected2").request("text/plain").post(Entity.entity("entity", "text/plain"))
+                .readEntity(String.class);
+        assertEquals("entityexpected1expected2", result);
+    }
+
 }
