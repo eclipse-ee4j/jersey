@@ -143,19 +143,7 @@ public class NettyInputStream extends InputStream {
 
     @Override
     public int available() throws IOException {
-        if (end || reading) {
-            return 0;
-        }
-        if (current != null) {
-            return current.readableBytes();
-        }
-        if (!isList.isEmpty()) {
-            final ByteBuf peek = isList.peek();
-            if (peek != null && peek.isReadable()) {
-                return peek.readableBytes();
-            }
-        }
-        return 0;
+        return buffer == null ? 0: buffer.remaining();
     }
 
     public synchronized void publish(ByteBuf content) {
