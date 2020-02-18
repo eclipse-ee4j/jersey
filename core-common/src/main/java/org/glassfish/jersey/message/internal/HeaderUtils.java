@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.message.internal;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.AbstractMultivaluedMap;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
@@ -295,6 +297,33 @@ public final class HeaderUtils {
                             changedHeaderNames.toString()));
                 }
             }
+        }
+    }
+
+    /**
+     * Compare two NewCookies having the same name. See documentation RFC.
+     *
+     * @param first    NewCookie to be compared.
+     * @param second NewCookie to be compared.
+     * @return the preferred NewCookie according to rules :
+     *              - the latest maxAge.
+     *              - if equal, compare the expiry date
+     *              - if equal, compare name length
+     */
+    public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
+
+        if (first == null) {
+            return second;
+        } else if (second == null) {
+            return first;
+        }
+
+        if (first.getMaxAge() != second.getMaxAge()){
+            return Comparator.comparing(NewCookie::getMaxAge).compare(first, second) > 0 ? first : second;
+        } else if (first.getExpiry() != null && second.getExpiry() != null && !first.getExpiry().equals(second.getExpiry())) {
+            return Comparator.comparing(NewCookie::getExpiry).compare(first, second) > 0 ? first : second;
+        } else {
+            return first.getPath().length() > second.getPath().length() ? first : second;
         }
     }
 
