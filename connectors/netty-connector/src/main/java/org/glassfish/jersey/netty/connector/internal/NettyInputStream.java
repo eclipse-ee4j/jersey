@@ -143,7 +143,7 @@ public class NettyInputStream extends InputStream {
 
     @Override
     public int available() throws IOException {
-        return buffer == null ? 0: buffer.remaining();
+        return buffer == null ? 0 : buffer.remaining();
     }
 
     public synchronized void publish(ByteBuf content) {
