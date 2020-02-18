@@ -67,9 +67,7 @@ public class NettyInputStream extends InputStream {
        }
        buffer.get(b, off, len);
        if (rem == len) {
-          current.release();
-          current = null;
-          buffer = null;
+          releaseByteBuf();
        }
 
        return len;
@@ -90,13 +88,19 @@ public class NettyInputStream extends InputStream {
 
     @Override
     public synchronized void close() {
-       if (current != null) {
-          current.release();
-       }
 
-       current = null;
-       buffer = null;
-       cleanup(true);
+        releaseByteBuf();
+
+        cleanup(true);
+    }
+
+    private void releaseByteBuf() {
+        if (current != null) {
+            current.release();
+        }
+
+        current = null;
+        buffer = null;
     }
 
     protected synchronized ByteBuffer awaitNext() {
@@ -135,6 +139,23 @@ public class NettyInputStream extends InputStream {
        if (reading) {
           notifyAll();
        }
+    }
+
+    @Override
+    public int available() throws IOException {
+        if (end || reading) {
+            return 0;
+        }
+        if (current != null) {
+            return current.readableBytes();
+        }
+        if (!isList.isEmpty()) {
+            final ByteBuf peek = isList.peek();
+            if (peek != null && peek.isReadable()) {
+                return peek.readableBytes();
+            }
+        }
+        return 0;
     }
 
     public synchronized void publish(ByteBuf content) {
