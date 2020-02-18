@@ -70,10 +70,7 @@ public class CookiesParser {
                 value = value.substring(1, value.length() - 1);
             }
             if (!name.startsWith("$")) {
-                if (cookie != null) {
-                    cookies.put(cookie.name, cookie.getImmutableCookie());
-                }
-
+                checkSimilarCookieName(cookies, cookie);
                 cookie = new MutableCookie(name, value);
                 cookie.version = version;
             } else if (name.startsWith("$Version")) {
@@ -84,10 +81,26 @@ public class CookiesParser {
                 cookie.domain = value;
             }
         }
-        if (cookie != null) {
-            cookies.put(cookie.name, cookie.getImmutableCookie());
-        }
+        checkSimilarCookieName(cookies, cookie);
         return cookies;
+    }
+
+    /**
+     * Check if a cookie with identical name had been parsed.
+     * If yes, the one with the longest string will be kept
+     * @param cookies : Map of cookies
+     * @param cookie : Cookie to be checked
+     */
+    private static void checkSimilarCookieName(Map<String, Cookie> cookies, MutableCookie cookie) {
+        if (cookie != null) {
+            if (cookies.containsKey(cookie.name)){
+                if (cookie.value.length() > cookies.get(cookie.name).getValue().length()){
+                    cookies.put(cookie.name, cookie.getImmutableCookie());
+                }
+            } else {
+                cookies.put(cookie.name, cookie.getImmutableCookie());
+            }
+        }
     }
 
     public static Cookie parseCookie(String header) {
@@ -148,8 +161,6 @@ public class CookiesParser {
                     cookie.secure = true;
                 } else if (param.startsWith("version")) {
                     cookie.version = Integer.parseInt(value);
-                } else if (param.startsWith("domain")) {
-                    cookie.domain = value;
                 } else if (param.startsWith("httponly")) {
                     cookie.httpOnly = true;
                 }  else if (param.startsWith("expires")) {

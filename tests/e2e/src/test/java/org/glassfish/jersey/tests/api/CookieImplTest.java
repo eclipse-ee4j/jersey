@@ -149,6 +149,32 @@ public class CookieImplTest {
     }
 
     @Test
+    public void testMultipleCookiesWithSameName(){
+
+        String cookieHeader = "kobe=longeststring; kobe=shortstring";
+        Map<String, Cookie> cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 1);
+        Cookie c = cookies.get("kobe");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("kobe", c.getName());
+        assertEquals("longeststring", c.getValue());
+
+        cookieHeader = "bryant=longeststring; bryant=shortstring; fred=shortstring ;fred=longeststring;$Path=/path";
+        cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 2);
+        c = cookies.get("bryant");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("bryant", c.getName());
+        assertEquals("longeststring", c.getValue());
+        c = cookies.get("fred");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("fred", c.getName());
+        assertEquals("longeststring", c.getValue());
+        assertEquals("/path", c.getPath());
+
+    }
+
+    @Test
     public void testNewCookieToString() {
         NewCookie cookie = new NewCookie("fred", "flintstone");
         String expResult = "fred=flintstone;Version=1";
