@@ -94,7 +94,7 @@ public class NettyInputStream extends InputStream {
         cleanup(true);
     }
 
-    private void releaseByteBuf() {
+    private synchronized void releaseByteBuf() {
         if (current != null) {
             current.release();
         }
