@@ -77,6 +77,7 @@ public class HelloWorldTest extends JerseyTest {
     public void testConnection() {
         Response response = target().path(ROOT_PATH).request("text/plain").get();
         assertEquals(200, response.getStatus());
+        response.close();
     }
 
     @Test
