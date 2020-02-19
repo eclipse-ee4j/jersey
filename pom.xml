@@ -2115,8 +2115,8 @@
         <helidon.version>1.0.3</helidon.version>
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.version>2.6.1</hk2.version>
-        <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,3)"</hk2.osgi.version>
-        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,3)"</hk2.jvnet.osgi.version>
+        <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
+        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
         <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
