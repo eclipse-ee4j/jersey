@@ -87,14 +87,14 @@ public class NettyInputStream extends InputStream {
     }
 
     @Override
-    public synchronized void close() {
+    public void close() {
 
         releaseByteBuf();
 
         cleanup(true);
     }
 
-    private synchronized void releaseByteBuf() {
+    private void releaseByteBuf() {
         if (current != null) {
             current.release();
         }
@@ -122,12 +122,12 @@ public class NettyInputStream extends InputStream {
        return current.nioBuffer().asReadOnlyBuffer();
     }
 
-    public synchronized void complete(Throwable cause) {
+    public void complete(Throwable cause) {
        this.cause = cause;
        cleanup(cause != null);
     }
 
-    protected void cleanup(boolean drain) {
+    protected synchronized void cleanup(boolean drain) {
        if (drain) {
           while (!isList.isEmpty()) {
              isList.poll().release();
@@ -142,7 +142,7 @@ public class NettyInputStream extends InputStream {
     }
 
     @Override
-    public synchronized int available() throws IOException {
+    public int available() throws IOException {
         return buffer == null ? 0 : buffer.remaining();
     }
 
