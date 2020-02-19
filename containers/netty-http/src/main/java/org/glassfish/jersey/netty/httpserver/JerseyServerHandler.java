@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,11 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.MediaType;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -53,7 +51,7 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
     private final URI baseUri;
-    private final LinkedBlockingDeque<ByteBuf> isList = new LinkedBlockingDeque<>();
+    private final NettyInputStream nettyInputStream = new NettyInputStream();
     private final NettyHttpContainer container;
     private final ResourceConfig resourceConfig;
 
@@ -82,7 +80,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                 ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
 
-            isList.clear(); // clearing the content - possible leftover from previous request processing.
+            nettyInputStream.clear(); // clearing the content - possible leftover from previous request processing.
             final ContainerRequest requestContext = createContainerRequest(ctx, req);
 
             requestContext.setWriter(new NettyResponseWriter(ctx, req, container));
@@ -105,7 +103,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                 //Otherwise, it's safe to discard during next processing
                 if ((!isJson && contentLength != -1) || HttpUtil.isTransferEncodingChunked(req)
                         || (isJson && contentLength >= 2)) {
-                    requestContext.setEntityStream(new NettyInputStream(isList));
+                    requestContext.setEntityStream(nettyInputStream);
                 }
             }
 
@@ -128,11 +126,11 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
           ByteBuf content = httpContent.content();
           if (content.isReadable()) {
-              isList.add(content);
+              nettyInputStream.publish(content);
           }
 
           if (msg instanceof LastHttpContent) {
-              isList.add(Unpooled.EMPTY_BUFFER);
+              nettyInputStream.complete(null);
           }
       }
     }
