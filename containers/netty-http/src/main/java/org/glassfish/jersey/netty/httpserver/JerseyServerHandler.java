@@ -196,8 +196,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     private boolean baseUriHasBasePath() {
-        String path = baseUri.getPath();
-        return path != null && !path.isEmpty() && !"/".equals(path);
+        return !"/".equals(baseUri.getPath());
     }
 
     private URI getRequestUri() {
