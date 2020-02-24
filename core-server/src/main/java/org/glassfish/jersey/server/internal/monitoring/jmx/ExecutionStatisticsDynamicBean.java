@@ -173,8 +173,12 @@ public class ExecutionStatisticsDynamicBean implements DynamicMBean {
 
     @Override
     public AttributeList getAttributes(String[] attributes) {
-        // TODO: implement
-        return null;
+        AttributeList x = new AttributeList();
+        for (String k : attributes) {
+            Attribute a = new Attribute(k, attributeValues.get(k).get());
+            x.add(a);
+        }
+        return x;
     }
 
     @Override
