@@ -73,6 +73,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
             <version>${project.version}</version>
