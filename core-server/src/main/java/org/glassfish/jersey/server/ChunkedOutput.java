@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.ws.rs.container.ConnectionCallback;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.container.ConnectionCallback;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.inject.Provider;
 

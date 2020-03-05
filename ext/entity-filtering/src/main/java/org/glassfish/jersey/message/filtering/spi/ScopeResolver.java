@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import org.glassfish.jersey.spi.Contract;
 /**
  * Class used to resolve entity-filtering scopes from annotations. Annotations passed to {@code #resolve()} method
  * can be one of the following: entity annotations (provided when creating request/response entity),
- * annotations obtained from {@link javax.ws.rs.core.Configuration configuration}, resource method / resource class annotations.
+ * annotations obtained from {@link jakarta.ws.rs.core.Configuration configuration}, resource method / resource class annotations.
  * <p/>
  * Entity-filtering scope is supposed to be an unique string that can be derived from an annotations and that can be further used
  * in internal entity data filtering structures. Examples of such unique strings are:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,9 +30,9 @@ import org.glassfish.jersey.spi.Contract;
  * Methods are also accepting a list of entity annotations which entity-filtering scopes and then particular entity-filtering
  * object are determined from. Entity annotations can be passed to the runtime via:
  * <ul>
- * <li>{@link javax.ws.rs.client.Entity#entity(Object, javax.ws.rs.core.MediaType, java.lang.annotation.Annotation[])} on the
+ * <li>{@link jakarta.ws.rs.client.Entity#entity(Object, jakarta.ws.rs.core.MediaType, java.lang.annotation.Annotation[])} on the
  * client, or</li>
- * <li>{@link javax.ws.rs.core.Response.ResponseBuilder#entity(Object, java.lang.annotation.Annotation[])} on the server</li>
+ * <li>{@link jakarta.ws.rs.core.Response.ResponseBuilder#entity(Object, java.lang.annotation.Annotation[])} on the server</li>
  * </ul>
  * </p>
  * <p>

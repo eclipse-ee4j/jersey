@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,9 +12,9 @@ package org.glassfish.jersey.examples.jaxb;
 
 import java.util.Collection;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
-import static javax.ws.rs.client.Entity.xml;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.GenericType;
+import static jakarta.ws.rs.client.Entity.xml;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;

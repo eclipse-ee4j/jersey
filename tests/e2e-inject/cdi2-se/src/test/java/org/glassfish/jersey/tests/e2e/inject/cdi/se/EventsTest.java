@@ -16,13 +16,14 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -50,4 +51,13 @@ public class EventsTest extends JerseyTest {
         assertEquals(25, current.longValue());
     }
 
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        try {
+            super.setUp();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 }

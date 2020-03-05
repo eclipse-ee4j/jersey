@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ public interface ApplicationMXBean {
     public String getApplicationName();
 
     /**
-     * Get the {@link javax.ws.rs.core.Application application class} used for configuration of Jersey application.
+     * Get the {@link jakarta.ws.rs.core.Application application class} used for configuration of Jersey application.
      *
      * @return Application class name.
      */

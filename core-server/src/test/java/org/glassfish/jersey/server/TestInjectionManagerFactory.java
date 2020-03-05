@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,7 @@ package org.glassfish.jersey.server;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

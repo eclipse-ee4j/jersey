@@ -39,7 +39,7 @@
         <module>benchmarks</module>
         <module>runners</module>
         <module>test-cases</module>
-        <module>tools</module>
+<!--        <module>tools</module> Moxy-->
     </modules>
 
 </project>

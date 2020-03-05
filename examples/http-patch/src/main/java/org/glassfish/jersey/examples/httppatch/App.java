@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
@@ -85,7 +85,7 @@ public final class App {
     }
 
     /**
-     * Create {@link javax.ws.rs.ext.ContextResolver} for {@link org.glassfish.jersey.moxy.json.MoxyJsonConfig}
+     * Create {@link jakarta.ws.rs.ext.ContextResolver} for {@link org.glassfish.jersey.moxy.json.MoxyJsonConfig}
      * for this application.
      *
      * @return {@code MoxyJsonConfig} context resolver.

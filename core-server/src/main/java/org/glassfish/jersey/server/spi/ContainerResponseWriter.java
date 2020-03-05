@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -168,7 +168,7 @@ public interface ContainerResponseWriter {
      *
      * If enabled, the outbound entity is buffered by Jersey runtime up to a configured amount of bytes
      * prior to being written to the output stream to determine its size that may be used to set the value
-     * of HTTP <tt>{@value javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
+     * of HTTP <tt>{@value jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH}</tt> header.
      * <p>
      * Containers that provide it's own solution for determining the message payload size may decide to
      * return {@code false} to prevent Jersey from buffering message entities unnecessarily.

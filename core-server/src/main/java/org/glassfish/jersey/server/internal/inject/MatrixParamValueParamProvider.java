@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.server.internal.inject;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.core.PathSegment;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.core.PathSegment;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

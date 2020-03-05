@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import java.io.InputStream;
  * Chunk parsers are typically expected to skip any empty chunks (the chunks that do
  * not contain any data) or any control meta-data associated with chunks, however it
  * is not a hard requirement to do so. The decision depends on the knowledge of which
- * {@link javax.ws.rs.ext.MessageBodyReader} implementation is selected for de-serialization
+ * {@link jakarta.ws.rs.ext.MessageBodyReader} implementation is selected for de-serialization
  * of the chunk data.
  * </p>
  *

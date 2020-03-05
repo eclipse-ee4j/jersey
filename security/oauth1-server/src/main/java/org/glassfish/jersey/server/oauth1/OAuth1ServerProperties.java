@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -119,8 +119,8 @@ public final class OAuth1ServerProperties {
     /**
      * If set to {@code true} makes the correct OAuth authentication optional.
      * Instead of returning the appropriate status code
-     * ({@link javax.ws.rs.core.Response.Status#BAD_REQUEST}
-     * or {@link javax.ws.rs.core.Response.Status#UNAUTHORIZED}) the {@link OAuth1ServerFilter OAuth filter}
+     * ({@link jakarta.ws.rs.core.Response.Status#BAD_REQUEST}
+     * or {@link jakarta.ws.rs.core.Response.Status#UNAUTHORIZED}) the {@link OAuth1ServerFilter OAuth filter}
      * will ignore this request (as if it was not authenticated) and let the web application deal with it.
      *
      * <p>

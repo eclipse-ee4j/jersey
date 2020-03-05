@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.test;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -105,7 +105,7 @@ public class DeploymentContext {
 
     /**
      * Deployment context builder for building a basic application deployment context for the JAX-RS / Jersey application
-     * defined by the associated {@link javax.ws.rs.core.Application} class or instance.
+     * defined by the associated {@link jakarta.ws.rs.core.Application} class or instance.
      * <p>
      * If properties of the builder are not modified, default values will be utilized:
      * <ul>

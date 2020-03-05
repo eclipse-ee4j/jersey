@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.model.internal;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 /**
  * Common model helper methods.
@@ -28,10 +28,10 @@ public final class ModelHelper {
 
     /**
      * Get the class in the provided resource class ancestor hierarchy that
-     * is actually annotated with the {@link javax.ws.rs.Path &#64;Path} annotation.
+     * is actually annotated with the {@link jakarta.ws.rs.Path &#64;Path} annotation.
      *
      * @param resourceClass resource class.
-     * @return resource class or it's ancestor that is annotated with the {@link javax.ws.rs.Path &#64;Path}
+     * @return resource class or it's ancestor that is annotated with the {@link jakarta.ws.rs.Path &#64;Path}
      *         annotation.
      */
     public static Class<?> getAnnotatedResourceClass(final Class<?> resourceClass) {

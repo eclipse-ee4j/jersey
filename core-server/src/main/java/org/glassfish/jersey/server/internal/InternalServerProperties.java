@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,13 +28,13 @@ public final class InternalServerProperties {
 
 
     /**
-     * Used internally for storing {@link javax.ws.rs.core.Form} instance with original (not url-decoded) values in
+     * Used internally for storing {@link jakarta.ws.rs.core.Form} instance with original (not url-decoded) values in
      * {@link org.glassfish.jersey.server.ContainerRequest} properties.
      */
     public static final String FORM_PROPERTY = "jersey.config.server.representation.form";
 
     /**
-     * Used internally for storing {@link javax.ws.rs.core.Form} instance with url-decoded values in
+     * Used internally for storing {@link jakarta.ws.rs.core.Form} instance with url-decoded values in
      * {@link org.glassfish.jersey.server.ContainerRequest} properties.
      */
     public static final String FORM_DECODED_PROPERTY = "jersey.config.server.representation.decoded.form";

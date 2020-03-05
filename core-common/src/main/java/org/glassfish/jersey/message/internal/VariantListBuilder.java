@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Variant;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Variant;
 
 /**
  * An implementation of {@link VariantListBuilder}.

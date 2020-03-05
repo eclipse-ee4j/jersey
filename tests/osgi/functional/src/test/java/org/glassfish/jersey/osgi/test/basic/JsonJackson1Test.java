@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package org.glassfish.jersey.osgi.test.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.jackson1.Jackson1Feature;
 import org.glassfish.jersey.osgi.test.util.Helper;
@@ -31,7 +31,8 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 /**
  * @author Michal Gajdos
  */
-public class JsonJackson1Test extends AbstractJsonOsgiIntegrationTest {
+public class
+JsonJackson1Test extends AbstractJsonOsgiIntegrationTest {
 
     @Configuration
     public static Option[] configuration() {

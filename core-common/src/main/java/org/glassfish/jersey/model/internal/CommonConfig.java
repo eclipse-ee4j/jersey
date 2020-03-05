@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,12 +34,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import javax.annotation.Priority;
 
@@ -57,7 +57,7 @@ import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.process.Inflector;
 
 /**
- * Common immutable {@link javax.ws.rs.core.Configuration} implementation for
+ * Common immutable {@link jakarta.ws.rs.core.Configuration} implementation for
  * server and client.
  *
  * @author Michal Gajdos

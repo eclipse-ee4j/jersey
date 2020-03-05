@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.client;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Link;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class LinkTest {
         Link l = Link.fromUri("http://examples.org/app").type("text/plain").build();
         assertNotNull(l);
 
-        javax.ws.rs.client.Invocation i = client.invocation(l).buildGet();
+        jakarta.ws.rs.client.Invocation i = client.invocation(l).buildGet();
         assertNotNull(i);
     }
 
@@ -55,7 +55,7 @@ public class LinkTest {
     public void testInvocationFromLinkWithEntity() {
         Link l = Link.fromUri("http://examples.org/app").type("*/*").build();
         Entity<String> e = Entity.text("hello world");
-        javax.ws.rs.client.Invocation i = client.invocation(l).buildPost(e);
+        jakarta.ws.rs.client.Invocation i = client.invocation(l).buildPost(e);
         assertTrue(i != null);
     }
 }

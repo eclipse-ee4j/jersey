@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.java8;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
 

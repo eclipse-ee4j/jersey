@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.FormParam;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.server.model.ParamQualifier;
@@ -117,8 +117,8 @@ import org.glassfish.jersey.server.model.ParamQualifier;
  * @see FormDataMultiPart
  * @see FormDataBodyPart
  * @see FormDataContentDisposition
- * @see javax.ws.rs.DefaultValue
- * @see javax.ws.rs.FormParam
+ * @see jakarta.ws.rs.DefaultValue
+ * @see jakarta.ws.rs.FormParam
  *
  * @author Craig McClanahan
  * @author Paul Sandoz

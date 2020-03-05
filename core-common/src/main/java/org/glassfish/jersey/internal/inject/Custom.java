@@ -24,7 +24,7 @@ import javax.inject.Qualifier;
 /**
  * {@link Qualifier Qualifier annotation} used to annotate HK2 injections and
  * bindings for user custom providers. Providers are classes which implement one
- * of the provider interfaces (for example {@link javax.ws.rs.ext.MessageBodyReader
+ * of the provider interfaces (for example {@link jakarta.ws.rs.ext.MessageBodyReader
  * Message body reader interface}).
  * <p>
  * Custom providers are bound in the HK2 injection manager using {@code &#64;Custom}

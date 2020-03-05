@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.config;
 import org.eclipse.microprofile.config.Config;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

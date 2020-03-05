@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.entityfiltering.security;
 
 import java.util.Arrays;
 
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedEntity;
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedSubEntity;

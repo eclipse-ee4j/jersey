@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -14,7 +14,7 @@ import org.glassfish.jersey.jackson1.Jackson1Feature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
- * {@link javax.ws.rs.core.Application} descendant.
+ * {@link jakarta.ws.rs.core.Application} descendant.
  *
  * Used to set resource and providers classes.
  *

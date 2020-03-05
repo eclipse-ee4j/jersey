@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,15 +19,15 @@ package org.glassfish.jersey.client.spi;
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.spi.Contract;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.Response;
 import java.util.concurrent.ExecutorService;
 
 /**
  * The interceptor of a client request invocation that is executed before the invocation itself, i.e. before the
- * {@link javax.ws.rs.client.ClientRequestFilter} is invoked.
+ * {@link jakarta.ws.rs.client.ClientRequestFilter} is invoked.
  * <p/>
  * It is ensured that all {@code PreInvocationInterceptors} are executed before the request, in the order given by the
  * {@link javax.annotation.Priority}, the higher the priority the sooner the execution. Any {@code RuntimeException} thrown when
@@ -35,8 +35,8 @@ import java.util.concurrent.ExecutorService;
  * a multi RuntimeException with other {@link Throwable#addSuppressed(Throwable) exceptions supressed} is being thrown.
  * <p/>
  * For asynchronous invocation, the {@code PreInvocationInterceptor} is invoked in the main thread, i.e. not in the thread
- * provided by {@link javax.ws.rs.client.ClientBuilder#executorService(ExecutorService) ExecutorService}. For reactive
- * invocations, this depends on the provided {@link javax.ws.rs.client.RxInvoker}. For the default Jersey asynchronous
+ * provided by {@link jakarta.ws.rs.client.ClientBuilder#executorService(ExecutorService) ExecutorService}. For reactive
+ * invocations, this depends on the provided {@link jakarta.ws.rs.client.RxInvoker}. For the default Jersey asynchronous
  * {@link org.glassfish.jersey.client.JerseyCompletionStageRxInvoker}, {@code PreInvocationInterceptor} is invoked in the
  * main thread, too.
  * <p/>
@@ -54,7 +54,7 @@ public interface PreInvocationInterceptor {
 
     /**
      * The method invoked before the request starts.
-     * @param requestContext the request context shared with {@link javax.ws.rs.client.ClientRequestFilter}.
+     * @param requestContext the request context shared with {@link jakarta.ws.rs.client.ClientRequestFilter}.
      */
     void beforeRequest(ClientRequestContext requestContext);
 }

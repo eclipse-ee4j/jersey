@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.cdi.resources;
 
 import java.net.URI;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.test.JerseyTest;

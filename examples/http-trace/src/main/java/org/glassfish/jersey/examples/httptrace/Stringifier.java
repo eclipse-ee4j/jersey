@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,8 +13,8 @@ package org.glassfish.jersey.examples.httptrace;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Request;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Request;
 
 import org.glassfish.jersey.server.ContainerRequest;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Configuration;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -34,7 +34,7 @@ import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Values;
 
 /**
- * Jersey provider of {@link javax.ws.rs.client.ClientBuilder JAX-RS client builder}.
+ * Jersey provider of {@link jakarta.ws.rs.client.ClientBuilder JAX-RS client builder}.
  *
  * @author Marek Potociar
  */

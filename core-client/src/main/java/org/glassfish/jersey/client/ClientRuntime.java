@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,10 +27,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.inject.Provider;
 
@@ -284,7 +284,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      *
      * @param request client request to be invoked.
      * @return client response.
-     * @throws javax.ws.rs.ProcessingException in case of an invocation failure.
+     * @throws jakarta.ws.rs.ProcessingException in case of an invocation failure.
      */
     public ClientResponse invoke(final ClientRequest request) {
         ProcessingException processingException = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -232,7 +232,7 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
                                                           final ContainerResponse context)
                 throws ContainerException {
             try {
-                final javax.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
+                final jakarta.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
                 if (statusInfo.getReasonPhrase() == null) {
                     grizzlyResponse.setStatus(statusInfo.getStatusCode());
                 } else {

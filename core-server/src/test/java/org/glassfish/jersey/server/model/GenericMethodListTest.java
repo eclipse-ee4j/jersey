@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Iterator;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.core.Context;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

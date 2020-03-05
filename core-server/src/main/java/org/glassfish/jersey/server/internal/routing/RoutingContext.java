@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.internal.routing;
 
 import java.util.regex.MatchResult;
 
-import javax.ws.rs.container.ResourceInfo;
+import jakarta.ws.rs.container.ResourceInfo;
 
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.internal.process.Endpoint;
@@ -85,7 +85,7 @@ public interface RoutingContext extends ResourceInfo, ExtendedUriInfo {
 
     /**
      * Add currently matched left-hand side part of request path to the list of
-     * matched paths returned by {@link javax.ws.rs.core.UriInfo#getMatchedURIs()}.
+     * matched paths returned by {@link jakarta.ws.rs.core.UriInfo#getMatchedURIs()}.
      * <p/>
      * Left-hand side request path is the request path excluding the suffix
      * part of the path matched by the {@link #getFinalMatchingGroup() final

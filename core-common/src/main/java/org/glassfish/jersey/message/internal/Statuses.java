@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.message.internal;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
-import javax.ws.rs.core.Response.StatusType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status.Family;
+import jakarta.ws.rs.core.Response.StatusType;
 
 /**
  * Factory for producing custom JAX-RS {@link StatusType response status type}
@@ -97,7 +97,7 @@ public final class Statuses {
     /**
      * Create a new status type instance.
      * <p>
-     * For standard status codes listed in {@link javax.ws.rs.core.Response.Status} enum, the default reason phrase
+     * For standard status codes listed in {@link jakarta.ws.rs.core.Response.Status} enum, the default reason phrase
      * is used. For any other status code an empty string is used as a reason phrase.
      * </p>
      *

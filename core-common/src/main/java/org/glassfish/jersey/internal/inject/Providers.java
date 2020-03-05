@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,10 +35,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
 
 import javax.annotation.Priority;
 
@@ -76,21 +76,21 @@ public final class Providers {
     private static Map<Class<?>, ProviderRuntime> getJaxRsProviderInterfaces() {
         final Map<Class<?>, ProviderRuntime> interfaces = new HashMap<Class<?>, ProviderRuntime>();
 
-        interfaces.put(javax.ws.rs.ext.ContextResolver.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.ExceptionMapper.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.MessageBodyReader.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.MessageBodyWriter.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.ReaderInterceptor.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.WriterInterceptor.class, ProviderRuntime.BOTH);
-        interfaces.put(javax.ws.rs.ext.ParamConverterProvider.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.ContextResolver.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.ExceptionMapper.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.MessageBodyReader.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.MessageBodyWriter.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.ReaderInterceptor.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.WriterInterceptor.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.ext.ParamConverterProvider.class, ProviderRuntime.BOTH);
 
-        interfaces.put(javax.ws.rs.container.ContainerRequestFilter.class, ProviderRuntime.SERVER);
-        interfaces.put(javax.ws.rs.container.ContainerResponseFilter.class, ProviderRuntime.SERVER);
-        interfaces.put(javax.ws.rs.container.DynamicFeature.class, ProviderRuntime.SERVER);
+        interfaces.put(jakarta.ws.rs.container.ContainerRequestFilter.class, ProviderRuntime.SERVER);
+        interfaces.put(jakarta.ws.rs.container.ContainerResponseFilter.class, ProviderRuntime.SERVER);
+        interfaces.put(jakarta.ws.rs.container.DynamicFeature.class, ProviderRuntime.SERVER);
 
-        interfaces.put(javax.ws.rs.client.ClientResponseFilter.class, ProviderRuntime.CLIENT);
-        interfaces.put(javax.ws.rs.client.ClientRequestFilter.class, ProviderRuntime.CLIENT);
-        interfaces.put(javax.ws.rs.client.RxInvokerProvider.class, ProviderRuntime.CLIENT);
+        interfaces.put(jakarta.ws.rs.client.ClientResponseFilter.class, ProviderRuntime.CLIENT);
+        interfaces.put(jakarta.ws.rs.client.ClientRequestFilter.class, ProviderRuntime.CLIENT);
+        interfaces.put(jakarta.ws.rs.client.RxInvokerProvider.class, ProviderRuntime.CLIENT);
 
         return interfaces;
     }
@@ -100,7 +100,7 @@ public final class Providers {
 
         // JAX-RS
         interfaces.putAll(JAX_RS_PROVIDER_INTERFACE_WHITELIST);
-        interfaces.put(javax.ws.rs.core.Feature.class, ProviderRuntime.BOTH);
+        interfaces.put(jakarta.ws.rs.core.Feature.class, ProviderRuntime.BOTH);
         interfaces.put(Binder.class, ProviderRuntime.BOTH);
         return interfaces;
     }

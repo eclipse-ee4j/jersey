@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ import static org.junit.Assert.fail;
  */
 public class PackageNamesScannerTest {
 
-    private static final String[] packages = {"javax.ws.rs"};
+    private static final String[] packages = {"jakarta.ws.rs"};
 
     private String jaxRsApiPath;
 
@@ -96,11 +96,11 @@ public class PackageNamesScannerTest {
 
 
     @Tested
-    PackageNamesScanner scanner1 = new PackageNamesScanner(new String[]{"javax.ws.rs"}, false);
+    PackageNamesScanner scanner1 = new PackageNamesScanner(new String[]{"jakarta.ws.rs"}, false);
     @Tested
-    PackageNamesScanner scanner2 = new PackageNamesScanner(new String[]{"javax.ws.rs.core"}, false);
+    PackageNamesScanner scanner2 = new PackageNamesScanner(new String[]{"jakarta.ws.rs.core"}, false);
     @Tested
-    PackageNamesScanner scanner3 = new PackageNamesScanner(new String[]{"javax.ws.rs.client"}, false);
+    PackageNamesScanner scanner3 = new PackageNamesScanner(new String[]{"jakarta.ws.rs.client"}, false);
 
     /**
      * Reproducer for OWLS-19790: When scanner is reset the underlying JAR input streams should be closed.
@@ -153,7 +153,7 @@ public class PackageNamesScannerTest {
      * Reproducer for OWLS-19790: When we iterate through the all entries provided by a scanner JAR input stream should be closed.
      */
     @Tested
-    PackageNamesScanner scanner = new PackageNamesScanner(new String[]{"javax.ws.rs"}, false);
+    PackageNamesScanner scanner = new PackageNamesScanner(new String[]{"jakarta.ws.rs"}, false);
     @Test
     public void testInputStreamClosedAfterIteration(@Injectable("false") boolean recursive) throws Exception {
         JarInputStream stream = new JarInputStream(

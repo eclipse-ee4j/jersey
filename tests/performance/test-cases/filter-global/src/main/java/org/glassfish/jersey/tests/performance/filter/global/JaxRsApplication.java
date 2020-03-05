@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.performance.filter.global;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * Test case JAX-RS application.

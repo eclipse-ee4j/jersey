@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,10 +32,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.NameBinding;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.NameBinding;
+import jakarta.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.model.NameBound;
@@ -285,7 +285,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
         }
 
         /**
-         * Adds name bindings. The passed annotation types not annotated with {@link javax.ws.rs.NameBinding}
+         * Adds name bindings. The passed annotation types not annotated with {@link jakarta.ws.rs.NameBinding}
          * meta-annotation will be ignored.
          *
          * @param nameBindings collection of name binding annotation types.
@@ -301,7 +301,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
         }
 
         /**
-         * Adds name bindings. The passed annotation types not annotated with {@link javax.ws.rs.NameBinding}
+         * Adds name bindings. The passed annotation types not annotated with {@link jakarta.ws.rs.NameBinding}
          * meta-annotation will be ignored.
          *
          * @param nameBindings name binding annotation types.
@@ -313,7 +313,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
         }
 
         /**
-         * Adds name bindings. The passed annotations not annotated with {@link javax.ws.rs.NameBinding}
+         * Adds name bindings. The passed annotations not annotated with {@link jakarta.ws.rs.NameBinding}
          * meta-annotation will be ignored.
          *
          * @param nameBindings name binding annotations.
@@ -376,7 +376,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
          * @param value {@code true} if the automatic parameter decoding should be
          *              disabled, false otherwise.
          * @return updated builder object.
-         * @see javax.ws.rs.Encoded
+         * @see jakarta.ws.rs.Encoded
          */
         public Builder encodedParameters(boolean value) {
             encodedParams = value;

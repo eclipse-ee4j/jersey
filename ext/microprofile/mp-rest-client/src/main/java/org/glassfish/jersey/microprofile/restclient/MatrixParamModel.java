@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * Contains information to method parameter which is annotated by {@link MatrixParam}.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +22,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.ext.ParamConverter;
 import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.UpdaterException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;

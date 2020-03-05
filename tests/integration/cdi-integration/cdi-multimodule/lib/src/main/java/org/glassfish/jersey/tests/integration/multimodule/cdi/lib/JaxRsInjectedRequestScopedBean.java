@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,9 @@
 package org.glassfish.jersey.tests.integration.multimodule.cdi.lib;
 
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * CDI managed bean, that gets JAX-RS injected. This bean is being consumed

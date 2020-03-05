@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import java.io.Closeable;
  * are required to be closed.
  * <p>
  * This interface may be injected onto server-side components using
- * the {@link javax.ws.rs.core.Context} annotation.
+ * the {@link jakarta.ws.rs.core.Context} annotation.
  * <p>
  * The service may be used within the scope of a request to add instances
  * of {@link Closeable} that are to be closed when the request goes out

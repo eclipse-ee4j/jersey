@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,8 @@ package org.glassfish.jersey.client.rx.rxjava;
 
 import java.util.concurrent.ExecutorService;
 
-import javax.ws.rs.client.RxInvokerProvider;
-import javax.ws.rs.client.SyncInvoker;
+import jakarta.ws.rs.client.RxInvokerProvider;
+import jakarta.ws.rs.client.SyncInvoker;
 
 /**
  * Invoker provider for invokers based on RxJava's {@code Observable}.

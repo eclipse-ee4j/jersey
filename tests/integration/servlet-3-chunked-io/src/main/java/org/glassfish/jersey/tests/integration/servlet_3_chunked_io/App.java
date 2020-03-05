@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.integration.servlet_3_chunked_io;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.server.ResourceConfig;

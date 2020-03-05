@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.internal.spi;
 
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.FeatureContext;
 
 /**
  * A service provider contract for JAX-RS and Jersey components that need to be automatically discovered and registered in
- * {@link javax.ws.rs.core.Configuration runtime configurations}.
+ * {@link jakarta.ws.rs.core.Configuration runtime configurations}.
  * <p/>
  * A component implementing this contract becomes auto-discoverable by adding a new entry with fully qualified name of its
  * implementation class name to a {@code org.glassfish.jersey.internal.spi.AutoDiscoverable} file in the {@code
@@ -43,7 +43,7 @@ public interface AutoDiscoverable {
     /**
      * A call-back method called when an auto-discoverable component is to be configured in a given runtime configuration scope.
      * <p>
-     * Note that as with {@link javax.ws.rs.core.Feature JAX-RS features}, before registering new JAX-RS components in a
+     * Note that as with {@link jakarta.ws.rs.core.Feature JAX-RS features}, before registering new JAX-RS components in a
      * given configurable context, an auto-discoverable component should verify that newly registered components are not
      * already registered in the configurable context.
      * </p>

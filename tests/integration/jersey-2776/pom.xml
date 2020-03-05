@@ -37,7 +37,7 @@
 
     <dependencies>
         <!-- For testing multipart support with another http client -->
-        <!-- The order of these imports are important as it's the first dependency that has a javax.ws.rs.ext.RuntimeDelegate in
+        <!-- The order of these imports are important as it's the first dependency that has a jakarta.ws.rs.ext.RuntimeDelegate in
              the services that will be used. -->
         <dependency>
             <groupId>org.apache.cxf</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.UriBuilder;
 
 import javax.inject.Inject;
 
@@ -65,7 +65,8 @@ public abstract class AbstractHttpServiceTest {
     private static final String CONTEXT = "/jersey-http-service";
     private static final URI baseUri = UriBuilder.fromUri("http://localhost").port(port).path(CONTEXT).build();
     private static final String BundleLocationProperty = "jersey.bundle.location";
-    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_CLIENT_BUILDER = "jakarta.ws.rs.client.ClientBuilder";
 
     private static final Logger LOGGER = Logger.getLogger(AbstractHttpServiceTest.class.getName());
 
@@ -86,6 +87,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // do not remove the following line
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
@@ -126,6 +128,9 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
                 .versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
+
+                // validation
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // JAX-RS API
                 mavenBundle().groupId("jakarta.ws.rs").artifactId("jakarta.ws.rs-api").versionAsInProject()

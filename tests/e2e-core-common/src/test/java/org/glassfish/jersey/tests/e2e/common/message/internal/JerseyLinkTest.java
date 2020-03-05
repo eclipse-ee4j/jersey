@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,11 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 
 import java.net.URI;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 

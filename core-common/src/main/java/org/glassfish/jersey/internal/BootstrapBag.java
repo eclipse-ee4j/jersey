@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.message.MessageBodyWorkers;

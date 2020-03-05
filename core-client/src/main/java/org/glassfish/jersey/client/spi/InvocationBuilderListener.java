@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,16 +19,16 @@ package org.glassfish.jersey.client.spi;
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.spi.Contract;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.CacheControl;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.Map;
  * Implementations of this interface will be notified when a new Invocation.Builder
  * is created. This will allow implementations to access the invocation builders,
  * and is intended for global providers. For example, the Invocation.Builder properties can be
- * accessed to set properties that are available on the {@link javax.ws.rs.client.ClientRequestContext}.
+ * accessed to set properties that are available on the {@link jakarta.ws.rs.client.ClientRequestContext}.
  * <p>
  * In order for the InvocationBuilderListener to be called, the implementation of the interface needs
  * to be registered on the {@code Client} the same way the {@code ClientRequestFilter} is registered, for instance.
@@ -55,7 +55,7 @@ import java.util.Map;
 public interface InvocationBuilderListener {
 
     /**
-     * An {@link javax.ws.rs.client.Invocation.Builder} subset of setter methods.
+     * An {@link jakarta.ws.rs.client.Invocation.Builder} subset of setter methods.
      */
     public interface InvocationBuilderContext {
         /**
@@ -155,7 +155,7 @@ public interface InvocationBuilderListener {
         /**
          * Get any cookies that accompanied the request.
          *
-         * @return a read-only map of cookie name (String) to {@link javax.ws.rs.core.Cookie}.
+         * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
          */
         Map<String, Cookie> getCookies();
 
@@ -225,8 +225,8 @@ public interface InvocationBuilderListener {
          *
          * @param name  the name of the header
          * @param value the value of the header, the header will be serialized
-         *              using a {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if
-         *              one is available via {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+         *              using a {@link jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if
+         *              one is available via {@link jakarta.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
          *              for the class of {@code value} or using its {@code toString} method
          *              if a header delegate is not available. If {@code value} is {@code null}
          *              then all current headers of the same name will be removed.
@@ -247,7 +247,7 @@ public interface InvocationBuilderListener {
          * Set a new property in the context of a request represented by this invocation builder.
          * <p>
          * The property is available for a later retrieval via {@link ClientRequestContext#getProperty(String)}
-         * or {@link javax.ws.rs.ext.InterceptorContext#getProperty(String)}.
+         * or {@link jakarta.ws.rs.ext.InterceptorContext#getProperty(String)}.
          * If a property with a given name is already set in the request context,
          * the existing value of the property will be updated.
          * Setting a {@code null} value into a property effectively removes the property

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.client.spi;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Caching connector provider.
@@ -25,8 +25,8 @@ import javax.ws.rs.core.Configuration;
  * This utility provider can be used to serve as a lazily initialized provider of the same connector instance.
  * <p>
  * Note however that the connector instance will be configured using the runtime configuration of the first client instance that
- * has invoked the {@link #getConnector(javax.ws.rs.client.Client, javax.ws.rs.core.Configuration)} method.
- * {@link javax.ws.rs.client.Client} and {@link javax.ws.rs.core.Configuration} instance passed to subsequent
+ * has invoked the {@link #getConnector(jakarta.ws.rs.client.Client, jakarta.ws.rs.core.Configuration)} method.
+ * {@link jakarta.ws.rs.client.Client} and {@link jakarta.ws.rs.core.Configuration} instance passed to subsequent
  * {@code getConnector(...)} invocations will be ignored. As such, this connector provider should not be shared among client
  * instances that have significantly different connector-specific settings.
  * </p>

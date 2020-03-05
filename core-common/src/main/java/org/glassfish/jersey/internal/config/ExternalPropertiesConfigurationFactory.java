@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import org.glassfish.jersey.spi.ExternalConfigurationModel;
 import org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
 import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.core.Configurable;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.core.Configurable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

@@ -42,6 +42,37 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/e2e/json/AbstractJsonTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/json/JsonTestProvider.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/json/JsonProcessingTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/JsonMoxyTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringClientTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringScopesTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringServerTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnPropertiesTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/XmlMoxyTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnClassTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEmptyEntityTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <testExcludes>
+                        <exclude>org/glassfish/jersey/tests/e2e/json/*</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/json/**/*</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/JsonMoxyTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringClientTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringScopesTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringServerTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnPropertiesTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/XmlMoxyTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnClassTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEmptyEntityTest.java</exclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -89,16 +120,16 @@
             <artifactId>jersey-media-json-jettison</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-moxy</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-processing</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-moxy</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-processing</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>

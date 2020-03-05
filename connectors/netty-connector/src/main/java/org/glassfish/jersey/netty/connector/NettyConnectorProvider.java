@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.netty.connector;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.client.spi.Connector;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import org.glassfish.jersey.server.model.MethodHandler;
 
 /**
  * Terminal router that pushes the matched method's handler instance to the stack
- * returned by {@link javax.ws.rs.core.UriInfo#getMatchedResources()} method.
+ * returned by {@link jakarta.ws.rs.core.UriInfo#getMatchedResources()} method.
  *
  * @author Marek Potociar
  */

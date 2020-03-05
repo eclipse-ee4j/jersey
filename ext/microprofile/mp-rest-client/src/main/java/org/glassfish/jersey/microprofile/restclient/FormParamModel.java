@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Form;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.core.Form;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link FormParam}.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -88,7 +88,7 @@ public class VFSSchemeResourceFinderTest {
              Closeable mount = VFS.mountZip(VFS.getChild(jaxRsApiPath), mountDir, provider)) {
 
             ResourceFinder finder = new VfsSchemeResourceFinderFactory()
-                    .create(new URI(mountDir.toURI().toString() + "/javax/ws/rs"), true);
+                    .create(new URI(mountDir.toURI().toString() + "/jakarta/ws/rs"), true);
 
             int scannedEntryCount = 0;
             while (finder.hasNext()) {
@@ -104,7 +104,7 @@ public class VFSSchemeResourceFinderTest {
                 }
             }
 
-            assertThat("Failed to enumerate all contents of javax.ws.rs-api.", scannedEntryCount, equalTo(actualEntries));
+            assertThat("Failed to enumerate all contents of jakarta.ws.rs-api.", scannedEntryCount, equalTo(actualEntries));
         } finally {
             executor.shutdownNow();
         }

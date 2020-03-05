@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 public class WebAppFelixTest extends AbstractWebAppTest {
 
     private static final Logger LOGGER = Logger.getLogger(WebAppFelixTest.class.getName());
-    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
 
     @Override
     public List<Option> osgiRuntimeOptions() {
@@ -42,7 +42,8 @@ public class WebAppFelixTest extends AbstractWebAppTest {
                 mavenBundle()
                         .groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin")
                         .versionAsInProject(),
-                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"))
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"))
         );
     }
 

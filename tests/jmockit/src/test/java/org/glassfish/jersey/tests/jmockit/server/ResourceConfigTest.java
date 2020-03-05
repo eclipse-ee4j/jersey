@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,7 +68,7 @@ public class ResourceConfigTest {
         // Scan packages.
         resourceConfig.getClasses();
 
-        resourceConfig.registerFinder(new PackageNamesScanner(new String[] {"javax.ws.rs"}, false));
+        resourceConfig.registerFinder(new PackageNamesScanner(new String[] {"jakarta.ws.rs"}, false));
 
         // Reset - we called getClasses() on ResourceConfig.
         new Verifications() {{

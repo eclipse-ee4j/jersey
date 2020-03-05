@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 
@@ -103,10 +103,10 @@ public class EntityInputStream extends InputStream {
      * {@inheritDoc}
      * <p>
      * The method is customized to not throw an {@link IOException} if the reset operation fails. Instead,
-     * a runtime {@link javax.ws.rs.ProcessingException} is thrown.
+     * a runtime {@link jakarta.ws.rs.ProcessingException} is thrown.
      * </p>
      *
-     * @throws javax.ws.rs.ProcessingException in case the reset operation on the underlying entity input stream failed.
+     * @throws jakarta.ws.rs.ProcessingException in case the reset operation on the underlying entity input stream failed.
      */
     @Override
     public void reset() {

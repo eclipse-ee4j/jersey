@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.ws.rs.core.AbstractMultivaluedMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.core.AbstractMultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;

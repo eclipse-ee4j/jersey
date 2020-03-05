@@ -19,8 +19,8 @@ package org.glassfish.jersey.internal.util.collection;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * An implementation of {@link MultivaluedMap} where keys and values are

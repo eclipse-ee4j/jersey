@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,19 +21,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.guava.Preconditions;
 
 /**
- * Jersey implementation of {@link javax.ws.rs.client.WebTarget JAX-RS client target}
+ * Jersey implementation of {@link jakarta.ws.rs.client.WebTarget JAX-RS client target}
  * contract.
  *
  * @author Marek Potociar
  */
-public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializable<JerseyWebTarget> {
+public class JerseyWebTarget implements jakarta.ws.rs.client.WebTarget, Initializable<JerseyWebTarget> {
 
     private final ClientConfig config;
     private final UriBuilder targetUri;

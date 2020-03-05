@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,8 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * Contains information about method parameter or class field which is annotated by {@link PathParam}.

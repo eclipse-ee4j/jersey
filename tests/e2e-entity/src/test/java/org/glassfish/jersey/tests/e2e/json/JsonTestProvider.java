@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,9 +22,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.Provider;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -63,7 +63,7 @@ public abstract class JsonTestProvider {
     private Feature feature;
     private JettisonConfig configuration;
     private Set<Object> providers = new LinkedHashSet<>();
-
+/*
     public static class JettisonMappedJsonTestProvider extends JsonTestProvider {
 
         public JettisonMappedJsonTestProvider() {
@@ -149,6 +149,7 @@ public abstract class JsonTestProvider {
             getProviders().add(new JsonbContextResolver());
         }
     }
+    */
 
     public JettisonConfig getConfiguration() {
         return configuration;

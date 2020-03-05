@@ -18,8 +18,8 @@ package org.glassfish.jersey.spi;
 
 import java.lang.reflect.Type;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.ContextResolver;
 
 /**
  * An injectable interface providing look-up for {@link ContextResolver ContextResolver&lt;T&gt;}

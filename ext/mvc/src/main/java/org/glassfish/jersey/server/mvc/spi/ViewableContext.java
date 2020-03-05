@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.server.mvc.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.glassfish.jersey.spi.Contract;
@@ -28,7 +28,7 @@ import org.glassfish.jersey.spi.Contract;
  * ResolvedViewable}.
  * <p/>
  * Note:
- * {@link ViewableContext#resolveViewable(org.glassfish.jersey.server.mvc.Viewable, javax.ws.rs.core.MediaType, Class, TemplateProcessor)}
+ * {@link ViewableContext#resolveViewable(org.glassfish.jersey.server.mvc.Viewable, jakarta.ws.rs.core.MediaType, Class, TemplateProcessor)}
  * method may be called multiple times (combination of all the calculated possible media types of the response with all found
  * {@link TemplateProcessor template processors}).
  *
@@ -40,7 +40,7 @@ import org.glassfish.jersey.spi.Contract;
 public interface ViewableContext {
 
     /**
-     * Resolve given {@link org.glassfish.jersey.server.mvc.Viewable viewable} using {@link javax.ws.rs.core.MediaType mediaType},
+     * Resolve given {@link org.glassfish.jersey.server.mvc.Viewable viewable} using {@link jakarta.ws.rs.core.MediaType mediaType},
      * {@code resourceClass} and {@link TemplateProcessor templateProcessor}.
      * <p/>
      * If the template name of the viewable is not absolute then the given {@code resourceClass} may be utilized to resolve

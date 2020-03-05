@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -109,9 +109,9 @@ public final class RequestProcessingContext implements RespondingContext {
      * <p>
      * This instance is used  by {@link RequestProcessingConfigurator} to satisfy injection of multiple types, namely:
      * <ul>
-     * <li>{@link javax.ws.rs.core.UriInfo}<li>
+     * <li>{@link jakarta.ws.rs.core.UriInfo}<li>
      * </li>{@link org.glassfish.jersey.server.ExtendedUriInfo}<li>
-     * </li>{@link javax.ws.rs.container.ResourceInfo}</li>
+     * </li>{@link jakarta.ws.rs.container.ResourceInfo}</li>
      * </ul>
      * </p>
      *

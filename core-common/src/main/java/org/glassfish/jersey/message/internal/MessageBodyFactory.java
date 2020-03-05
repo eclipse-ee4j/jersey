@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,17 +43,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.xml.transform.Source;
 
@@ -1122,7 +1122,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
     }
 
     /**
-     * Safely invokes {@link javax.ws.rs.ext.MessageBodyWriter#isWriteable isWriteable} method on the supplied provider.
+     * Safely invokes {@link jakarta.ws.rs.ext.MessageBodyWriter#isWriteable isWriteable} method on the supplied provider.
      *
      * Any exceptions will be logged at finer level.
      *
@@ -1130,7 +1130,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
      * @param type        the class of instance that is to be written.
      * @param genericType the type of instance to be written, obtained either
      *                    by reflection of a resource method return type or via inspection
-     *                    of the returned instance. {@link javax.ws.rs.core.GenericEntity}
+     *                    of the returned instance. {@link jakarta.ws.rs.core.GenericEntity}
      *                    provides a way to specify this information at runtime.
      * @param annotations an array of the annotations attached to the message entity instance.
      * @param mediaType   the media type of the HTTP entity.
@@ -1153,12 +1153,12 @@ public class MessageBodyFactory implements MessageBodyWorkers {
     }
 
     /**
-     * Safely invokes {@link javax.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the supplied provider.
+     * Safely invokes {@link jakarta.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the supplied provider.
      *
      * Any exceptions will be logged at finer level.
      *
      * @param provider    message body reader on which the {@code isReadable} should be invoked.
-     *                    Safely invokes {@link javax.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the underlying
+     *                    Safely invokes {@link jakarta.ws.rs.ext.MessageBodyReader#isReadable isReadable} method on the underlying
      *                    provider.
      * @param type        the class of instance to be produced.
      * @param genericType the type of instance to be produced. E.g. if the

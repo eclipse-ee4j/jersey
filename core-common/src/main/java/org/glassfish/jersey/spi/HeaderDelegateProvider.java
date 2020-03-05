@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.spi;
 
-import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
+import jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
 /**
  * A provider that supports the conversion of an HTTP header, of type T, to and

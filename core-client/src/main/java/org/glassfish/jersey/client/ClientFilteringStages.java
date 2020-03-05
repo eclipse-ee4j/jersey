@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.ClientResponseFilter;
-import javax.ws.rs.client.ResponseProcessingException;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.client.ResponseProcessingException;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.internal.routing.ClientResponseMediaTypeDeterminer;
 import org.glassfish.jersey.internal.inject.InjectionManager;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * An acceptable media type.
@@ -130,7 +130,7 @@ public class AcceptableMediaType extends MediaType implements Qualified {
 
     /**
      * Create new acceptable media type instance from the supplied
-     * {@link javax.ws.rs.core.MediaType media type}.
+     * {@link jakarta.ws.rs.core.MediaType media type}.
      *
      * @param mediaType general-purpose media type.
      * @return new acceptable media type instance.

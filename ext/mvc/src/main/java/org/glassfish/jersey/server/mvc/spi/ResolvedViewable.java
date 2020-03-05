@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.server.mvc.spi;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 
@@ -81,8 +81,8 @@ public final class ResolvedViewable<T> extends Viewable {
      * Write the resolved viewable.
      * <p/>
      * This method defers to
-     * {@link TemplateProcessor#writeTo(Object, org.glassfish.jersey.server.mvc.Viewable, javax.ws.rs.core.MediaType,
-     * javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)}
+     * {@link TemplateProcessor#writeTo(Object, org.glassfish.jersey.server.mvc.Viewable, jakarta.ws.rs.core.MediaType,
+     * jakarta.ws.rs.core.MultivaluedMap, java.io.OutputStream)}
      * to write the viewable utilizing the template reference.
      *
      * @param out the output stream that the view processor writes to.
@@ -95,7 +95,7 @@ public final class ResolvedViewable<T> extends Viewable {
     /**
      * Get the media type for which the {@link TemplateProcessor view processor} resolved the template reference.
      *
-     * @return final {@link javax.ws.rs.core.MediaType media type} of the resolved viewable.
+     * @return final {@link jakarta.ws.rs.core.MediaType media type} of the resolved viewable.
      */
     public MediaType getMediaType() {
         return mediaType;

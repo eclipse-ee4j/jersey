@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,8 +13,8 @@ package org.glassfish.jersey.examples.entityfiltering;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.examples.entityfiltering.domain.Project;
 import org.glassfish.jersey.jackson.JacksonFeature;

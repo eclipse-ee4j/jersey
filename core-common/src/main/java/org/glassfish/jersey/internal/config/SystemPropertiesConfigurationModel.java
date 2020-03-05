@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;

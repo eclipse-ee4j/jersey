@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.rx;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.examples.rx.agent.AsyncAgentResource;
 import org.glassfish.jersey.examples.rx.agent.CompletionStageAgentResource;

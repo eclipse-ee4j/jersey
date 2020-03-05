@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,7 +49,7 @@ public interface OAuth1Consumer {
     /** Returns a boolean indicating whether this consumer is authorized for the
      * specified logical "role". When the oauth filter verifies the request
      * and no access token is provided (2-legged oauth), it sets the consumer object to the security context
-     * which then delegates {@link javax.ws.rs.core.SecurityContext#isUserInRole(String)} to this
+     * which then delegates {@link jakarta.ws.rs.core.SecurityContext#isUserInRole(String)} to this
      * method.
      *
      * @param role a {@code String} specifying the name of the role

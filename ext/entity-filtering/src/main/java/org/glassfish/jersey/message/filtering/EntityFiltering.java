@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -85,7 +85,7 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * At last, on the client-side, the entity-filtering annotations are passed to the runtime via
- * {@link javax.ws.rs.client.Entity#entity(Object, javax.ws.rs.core.MediaType, java.lang.annotation.Annotation[]) Entity.entity()}
+ * {@link jakarta.ws.rs.client.Entity#entity(Object, jakarta.ws.rs.core.MediaType, java.lang.annotation.Annotation[]) Entity.entity()}
  * method and the entity-filtering scopes are then derived from the annotations:
  * <pre>
  *  ClientBuilder.newClient()

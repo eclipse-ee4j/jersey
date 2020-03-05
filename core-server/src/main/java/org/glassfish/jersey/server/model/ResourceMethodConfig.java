@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.CommonConfig;
@@ -36,7 +36,7 @@ import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 
 /**
- * Default {@link javax.ws.rs.core.Configuration configuration} for resource methods.
+ * Default {@link jakarta.ws.rs.core.Configuration configuration} for resource methods.
  * The only allowed contract types for this configuration are:
  * <ul>
  * <li>ContainerRequestFilter</li>

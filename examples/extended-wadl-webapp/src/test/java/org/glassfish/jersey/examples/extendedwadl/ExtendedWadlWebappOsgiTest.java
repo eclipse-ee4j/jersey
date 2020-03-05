@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,10 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
@@ -79,7 +79,8 @@ public class ExtendedWadlWebappOsgiTest {
     BundleContext bundleContext;
 
     private static final Logger LOGGER = Logger.getLogger(ExtendedWadlWebappOsgiTest.class.getName());
-    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_CLIENT_BUILDER = "jakarta.ws.rs.client.ClientBuilder";
 
     // we want to re-use the port number as set for Jersey test container to avoid CT port number clashes
     private static final String testContainerPort = System.getProperty(TestProperties.CONTAINER_PORT);
@@ -97,6 +98,7 @@ public class ExtendedWadlWebappOsgiTest {
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
+                systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
                 // javax.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),

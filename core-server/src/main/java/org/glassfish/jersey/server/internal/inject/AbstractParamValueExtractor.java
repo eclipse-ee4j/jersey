@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.ParamConverter;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;

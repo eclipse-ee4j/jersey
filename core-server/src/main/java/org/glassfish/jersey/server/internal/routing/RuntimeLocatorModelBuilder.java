@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.guava.CacheBuilder;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -115,9 +115,9 @@ public interface ApplicationEvent {
     /**
      * Get registered providers available in the runtime. The registered providers
      * are providers like {@link org.glassfish.jersey.server.model.MethodList.Filter filters},
-     * {@link javax.ws.rs.ext.ReaderInterceptor reader} and {@link javax.ws.rs.ext.WriterInterceptor writer}
+     * {@link jakarta.ws.rs.ext.ReaderInterceptor reader} and {@link jakarta.ws.rs.ext.WriterInterceptor writer}
      * interceptors which are explicitly registered by configuration, or annotated by
-     * {@link javax.ws.rs.ext.Provider @Provider} or registered in META-INF/services. The
+     * {@link jakarta.ws.rs.ext.Provider @Provider} or registered in META-INF/services. The
      * set does not include providers that are by default built in Jersey.
      *
      * @return Set of provider classes.

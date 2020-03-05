@@ -2,7 +2,7 @@ package org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg;
 
 import java.io.IOException;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JavaType;

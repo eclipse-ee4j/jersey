@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation can be used to define the JavaScript callback function name if the valid JSONP format is requested as an
- * acceptable {@link javax.ws.rs.core.MediaType media type} of this request. At the moment only resource methods are supported to
+ * acceptable {@link jakarta.ws.rs.core.MediaType media type} of this request. At the moment only resource methods are supported to
  * be annotated with this annotation.
  * <p/>
  * The acceptable JavaScript media types for JSONP compatible with this annotation are:
