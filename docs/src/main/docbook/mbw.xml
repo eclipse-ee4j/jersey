@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -416,7 +416,7 @@ public MyBean readFrom(Class<MyBean> type,
                     <literal>@Consumes("application/xml")</literal>,
                     therefore for purpose of de-serialization of entity for the <literal>postMyBean()</literal> method,
                     only requests with entities represented as <literal>"application/xml"</literal>
-                    media type will match the method. However, this method might be executed for for entity types that are sub classes
+                    media type will match the method. However, this method might be executed for entity types that are sub classes
                     or super classes of the declared generic type on the &lit.jaxrs.ext.MessageBodyReader; will be also considered.
                     It is a responsibility of the <literal>isReadable</literal> method to decide whether it is able
                     to de-serialize the entity and type comparison is one of the basic decision steps.
@@ -592,7 +592,7 @@ MyBean{anyString='Hello World!', anyNumber=42}]]></screen>
                     Determine the media type of the response.
                 </para>
                 <para>
-                    In our case. for resource method <literal>getMyBean</literal>
+                    In our case, for resource method <literal>getMyBean</literal>
                     annotated with <literal>@Produces("application/xml")</literal>, the media type will be
                     <literal>"application/xml"</literal>.
                 </para>
@@ -649,7 +649,7 @@ MyBean{anyString='Hello World!', anyNumber=42}]]></screen>
                 <stepalternatives>
                     <step>
                         <para>
-                            Otherwise, the server runtime MUST generate a generate an
+                            Otherwise, the server runtime MUST generate an
                             <literal>InternalServerErrorException</literal>, a subclass of
                             <literal>WebApplicationException</literal> with its status set to 500, and no entity and the client
                             runtime MUST generate a <literal>ProcessingException</literal>.
