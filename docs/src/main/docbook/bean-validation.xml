@@ -85,7 +85,7 @@
         <para>
             As stated in <xref linkend="deployment.autodiscoverable"/>, Jersey Bean Validation is one of the modules where you
             don't need to explicitly register its &lit.jaxrs.core.Feature;s (&jersey.ext.ValidationFeature;) on the
-            server as it's features are automatically discovered and registered when you add the
+            server as its features are automatically discovered and registered when you add the
             &lit.jersey-bean-validation; module to your classpath.
             There are three Jersey specific properties that could disable automatic discovery and registration of Jersey Bean
             Validation integration module:
