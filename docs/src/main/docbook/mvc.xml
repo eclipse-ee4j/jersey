@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -284,7 +284,7 @@ public Viewable get() {
         <title>Handling errors with MVC</title>
 
         <para>
-            In addition to &jersey.server.mvc.Template; a &jersey.server.mvc.ErrorTemplate; annotation has been introduced in
+            In addition to &jersey.server.mvc.Template; an &jersey.server.mvc.ErrorTemplate; annotation has been introduced in
             Jersey 2.3. The purpose of this annotation is to bind the model to an error view in case an exception has been raised during
             processing of a request. This is true for any exception thrown after the resource matching phase (i.e. this not only
             applies to JAX-RS resources but providers and even Jersey runtime as well). The model in this case is the thrown exception
@@ -292,7 +292,7 @@ public Viewable get() {
         </para>
         <para>
             <xref linkend="mvc.example.error.simple"/> shows how to use &lit.jersey.server.mvc.ErrorTemplate; on a resource method.
-            If all goes well with the method processing, then the <literal>/short-link</literal> template is used to as page sent
+            If all goes well with the method processing, then the <literal>/short-link</literal> template is used as page sent
             to the user. Otherwise if an exception is raised then the <literal>/error-form</literal> template is shown to the user.
         </para>
         <example xml:id="mvc.example.error.simple">
@@ -321,7 +321,7 @@ public ShortenedLink createLink(@FormParam("link") final String link) {
             <title>MVC &amp; Bean Validation</title>
 
             <para>
-                &lit.jersey.server.mvc.ErrorTemplate; can be used in also with Bean Validation to display specific error pages in
+                &lit.jersey.server.mvc.ErrorTemplate; can also be used with Bean Validation to display specific error pages in
                 case the validation of input/output values fails for some reason. Everything works as described above except the
                 model is not the thrown exception but rather a list of &jersey.ext.ValidationError;s. This list can be iterated in
                 the template and all the validation errors can be shown to the user in a desirable way.
@@ -465,7 +465,7 @@ public ShortenedLink createLink(@NotEmpty @FormParam("link") final String link) 
                 <step>
                     <para>
                         if <literal>ServletContext.getResource</literal>, <literal>Class.getResource</literal> or
-                        <literal>File.exists</literal>returns a non-&lit.null; value for the reference then
+                        <literal>File.exists</literal> returns a non-&lit.null; value for the reference then
                         return the reference as the processable template reference otherwise return &lit.null;
                         (to indicate the absolute reference has not been resolved by the Mustache template processor).
                     </para>
@@ -541,7 +541,7 @@ public ShortenedLink createLink(@NotEmpty @FormParam("link") final String link) 
                 <step>
                     <para>
                         if <literal>ServletContext.getResource</literal>, <literal>Class.getResource</literal> or
-                        <literal>File.exists</literal>returns a non-&lit.null; value for the reference then
+                        <literal>File.exists</literal> returns a non-&lit.null; value for the reference then
                         return the reference as the processable template reference otherwise return &lit.null;
                         (to indicate the absolute reference has not been resolved by the Freemarker template processor).
                     </para>
