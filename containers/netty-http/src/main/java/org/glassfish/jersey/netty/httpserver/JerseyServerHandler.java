@@ -152,7 +152,7 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
      * @return created Jersey Container Request.
      */
     private ContainerRequest createContainerRequest(ChannelHandlerContext ctx, HttpRequest req) {
-        String s = getPath(req);
+        String s = !req.uri().startsWith("/") ? "/" + req.uri() : req.uri();
         URI requestUri = URI.create(getRequestUri() + ContainerUtils.encodeUnsafeCharacters(s));
 
         return new ContainerRequest(
@@ -181,22 +181,6 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                         properties.remove(name);
                     }
                 }, resourceConfig);
-    }
-
-    private String getPath(HttpRequest req) {
-        String s = req.uri();
-        if (baseUriHasBasePath()) {
-            s = s.startsWith("/") ? s.substring(1) : s;
-            if (!baseUri.toString().endsWith("/")) {
-                s = s.replaceFirst("/", "");
-            }
-            s = "/" + s;
-        }
-        return s;
-    }
-
-    private boolean baseUriHasBasePath() {
-        return !"/".equals(baseUri.getPath());
     }
 
     private URI getRequestUri() {
