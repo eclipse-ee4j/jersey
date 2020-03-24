@@ -99,8 +99,7 @@ class NettyConnector implements Connector {
         try {
             CompletableFuture<ClientResponse> resultFuture = execute(jerseyRequest);
 
-            Integer timeout = ClientProperties.getValue(jerseyRequest.getConfiguration().getProperties(),
-                                                        ClientProperties.READ_TIMEOUT, 0);
+            Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
 
             return (timeout != null && timeout > 0) ? resultFuture.get(timeout, TimeUnit.MILLISECONDS)
                                                     : resultFuture.get();
@@ -183,8 +182,7 @@ class NettyConnector implements Connector {
                 });
 
                // connect timeout
-               Integer connectTimeout = ClientProperties.getValue(jerseyRequest.getConfiguration().getProperties(),
-                                                                  ClientProperties.CONNECT_TIMEOUT, 0);
+               Integer connectTimeout = jerseyRequest.resolveProperty(ClientProperties.CONNECT_TIMEOUT, 0);
                if (connectTimeout > 0) {
                    b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
                }
