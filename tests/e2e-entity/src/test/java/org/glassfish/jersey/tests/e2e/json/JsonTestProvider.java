@@ -31,7 +31,6 @@ import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.jackson1.Jackson1Feature;
 import org.glassfish.jersey.jettison.JettisonConfig;
 import org.glassfish.jersey.jettison.JettisonFeature;
 import org.glassfish.jersey.jsonb.JsonBindingFeature;
@@ -47,7 +46,6 @@ public abstract class JsonTestProvider {
 
     public static final Collection<JsonTestProvider> JAXB_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
         add(new JacksonJsonTestProvider());
-        add(new Jackson1JsonTestProvider());
         add(new JettisonMappedJsonTestProvider());
         add(new JettisonBadgerfishJsonTestProvider());
         add(new MoxyJsonTestProvider());
@@ -57,7 +55,6 @@ public abstract class JsonTestProvider {
     //  TODO add MoxyJsonTestProvider once MOXy supports POJO
     public static final Collection<JsonTestProvider> POJO_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
         add(new JacksonJsonTestProvider());
-        add(new Jackson1JsonTestProvider());
     }};
 
     private Feature feature;
