@@ -1,1 +1,2 @@
 org.glassfish.jersey.tests.e2e.header.HeaderDelegateProviderTest$BeanHeaderDelegateProvider
+org.glassfish.jersey.tests.e2e.header.HeaderDelegateProviderTest$EmptyContentTypeHandler

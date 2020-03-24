@@ -267,7 +267,8 @@ public class OutboundMessageContext {
      * message entity).
      */
     public MediaType getMediaType() {
-        return singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, MediaType::valueOf, false);
+        return singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, RuntimeDelegateDecorator.configured(configuration)
+                .createHeaderDelegate(MediaType.class)::fromString, false);
     }
 
     /**
