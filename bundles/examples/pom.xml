@@ -347,13 +347,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
-            <artifactId>json-jackson1</artifactId>
-            <version>${project.version}</version>
-            <classifier>project-src</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>json-jettison</artifactId>
             <version>${project.version}</version>
             <classifier>project-src</classifier>
