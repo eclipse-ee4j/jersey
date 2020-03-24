@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -618,15 +619,19 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
      * @param injectionManager injection manager in which the binders and features should be configured.
      */
     public void configureMetaProviders(InjectionManager injectionManager, ManagedObjectsFinalizer finalizer) {
+        final Set<Object> configuredExternals = Collections.newSetFromMap(new IdentityHashMap<>());
+
         // First, configure existing binders
-        Set<Binder> configuredBinders = configureBinders(injectionManager, Collections.emptySet());
+        final Set<Binder> configuredBinders = configureBinders(injectionManager, Collections.emptySet());
 
         // Check whether meta providers have been initialized for a config this config has been loaded from.
         if (!disableMetaProviderConfiguration) {
+            // Next, register external meta objects
+            configureExternalObjects(injectionManager, configuredExternals);
             // Configure all features
             configureFeatures(injectionManager, new HashSet<>(), resetRegistrations(), finalizer);
-            // Next, register external meta objects
-            configureExternalObjects(injectionManager);
+            // Next, register external meta objects registered by features
+            configureExternalObjects(injectionManager, configuredExternals);
             // At last, configure any new binders added by features
             configureBinders(injectionManager, configuredBinders);
         }
@@ -653,11 +658,17 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 .collect(Collectors.toList());
     }
 
-    private void configureExternalObjects(InjectionManager injectionManager) {
+    private void configureExternalObjects(InjectionManager injectionManager, Set<Object> externalObjects) {
+        Consumer<Object> registerOnce = o -> {
+            if (!externalObjects.contains(o)) {
+                injectionManager.register(o);
+                externalObjects.add(o);
+            }
+        };
         componentBag.getInstances(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                .forEach(injectionManager::register);
+                .forEach(registerOnce);
         componentBag.getClasses(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                .forEach(injectionManager::register);
+                .forEach(registerOnce);
     }
 
     private void configureFeatures(InjectionManager injectionManager,

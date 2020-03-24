@@ -772,6 +772,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant</artifactId>
+                            <version>1.10.7</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.fortasoft</groupId>
@@ -1105,7 +1112,7 @@
                 <repository>
                     <id>eclipselink.repository</id>
                     <name>Eclipse Maven Repository</name>
-                    <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+                    <url>https://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
                     <layout>default</layout>
                 </repository>
             </repositories>
@@ -2108,12 +2115,12 @@
         <helidon.version>1.0.3</helidon.version>
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.version>2.6.1</hk2.version>
-        <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,3)"</hk2.osgi.version>
-        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,3)"</hk2.jvnet.osgi.version>
+        <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
+        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
         <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.1</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <jakarta.activation.version>1.2.1</jakarta.activation.version>
         <javassist.version>3.25.0-GA</javassist.version>
@@ -2148,7 +2155,7 @@
         <mockito.version>1.10.19</mockito.version>
         <moxy.version>2.7.4</moxy.version>
         <mustache.version>0.8.17</mustache.version>
-        <netty.version>4.1.31.Final</netty.version>
+        <netty.version>4.1.43.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
         <opentracing.version>0.30.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -195,7 +195,7 @@ public static class SseResource {
                     .name("message-to-client")
                     .data(String.class, "Hello world " + i + "!")
                     .build();
-                eventSink.onNext(event);
+                eventSink.send(event);
             }
         }).start();
     }
@@ -432,7 +432,7 @@ public static class BroadcasterResource {
 Client client = ClientBuilder.newBuilder().build();
 WebTarget target = client.target("http://example.com/events");
 SseEventSource sseEventSource = SseEventSource.target(target).build();
-sseEventSource.subscribe((event) -> System.out.println(event.getName() + "; "
+sseEventSource.register(event -> System.out.println(event.getName() + "; "
     + event.readData(String.class)));
 sseEventSource.open();
 

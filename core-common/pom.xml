@@ -336,7 +336,7 @@
                                     <target>
                                         <mkdir dir="${java11.build.outputDirectory}" />
                                         <javac srcdir="${java11.sourceDirectory}" destdir="${java11.build.outputDirectory}"
-                                               classpath="${project.build.outputDirectory}" includeantruntime="false" />
+                                               classpath="${project.build.outputDirectory}" includeantruntime="false" release="11" />
                                     </target>
                                 </configuration>
                                 <goals>

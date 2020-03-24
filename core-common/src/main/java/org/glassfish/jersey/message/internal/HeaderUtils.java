@@ -17,6 +17,7 @@
 package org.glassfish.jersey.message.internal;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.core.AbstractMultivaluedMap;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 import jakarta.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
@@ -295,6 +297,33 @@ public final class HeaderUtils {
                             changedHeaderNames.toString()));
                 }
             }
+        }
+    }
+
+    /**
+     * Compare two NewCookies having the same name. See documentation RFC.
+     *
+     * @param first    NewCookie to be compared.
+     * @param second NewCookie to be compared.
+     * @return the preferred NewCookie according to rules :
+     *              - the latest maxAge.
+     *              - if equal, compare the expiry date
+     *              - if equal, compare name length
+     */
+    public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
+
+        if (first == null) {
+            return second;
+        } else if (second == null) {
+            return first;
+        }
+
+        if (first.getMaxAge() != second.getMaxAge()){
+            return Comparator.comparing(NewCookie::getMaxAge).compare(first, second) > 0 ? first : second;
+        } else if (first.getExpiry() != null && second.getExpiry() != null && !first.getExpiry().equals(second.getExpiry())) {
+            return Comparator.comparing(NewCookie::getExpiry).compare(first, second) > 0 ? first : second;
+        } else {
+            return first.getPath().length() > second.getPath().length() ? first : second;
         }
     }
 

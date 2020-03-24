@@ -18,12 +18,15 @@ package org.glassfish.jersey.tests.e2e.common.message.internal;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import jakarta.ws.rs.core.AbstractMultivaluedMap;
 import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.HeaderUtils;
@@ -180,4 +183,48 @@ public class HeaderUtilsTest {
         final String result = HeaderUtils.asHeaderString(values, null);
         assertEquals("value,[null]," + uri.toASCIIString(), result);
     }
+
+    @Test
+    public void testgetPreferredCookie(){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, Calendar.JANUARY, 1);
+        Date earlyDate = calendar.getTime();
+        calendar.set(2000, Calendar.JANUARY, 2);
+        Date laterDate = calendar.getTime();
+
+        NewCookie earlyCookie = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 0, earlyDate, false, false);
+        NewCookie laterCookie = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 0, laterDate, false, false);
+
+        assertEquals(laterCookie, HeaderUtils.getPreferredCookie(earlyCookie, laterCookie));
+
+        NewCookie one = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 100, null, false, false);
+        NewCookie second = new NewCookie("fred", "valuestring", "pathstring", "domainstring",
+                0, "commentstring", 10, null, false, false);
+
+        assertEquals(one, HeaderUtils.getPreferredCookie(one, second));
+
+        NewCookie longPathNewCookie = new NewCookie("fred", "valuestring", "longestpathstring",
+                "domainstring", 0, "commentstring", 0, null,
+                false, false);
+        NewCookie shortPathNewCookie = new NewCookie("fred", "valuestring", "shortestpath",
+                "domainstring", 0, "commentstring", 0, null,
+                false, false);
+
+        assertEquals(longPathNewCookie, HeaderUtils.getPreferredCookie(longPathNewCookie, shortPathNewCookie));
+
+        NewCookie identicalNewCookie = new NewCookie("fred", "valuestring", "pathstring",
+                "domainstring", 0, "commentstring", 0, null,
+                false, false);
+        NewCookie identicalNewCookie1 = new NewCookie("fred", "valuestring", "pathstring",
+                "domainstring", 0, "commentstring", 0, null,
+                false, false);
+
+        assertEquals(identicalNewCookie, HeaderUtils.getPreferredCookie(identicalNewCookie, identicalNewCookie1));
+
+    }
+
 }

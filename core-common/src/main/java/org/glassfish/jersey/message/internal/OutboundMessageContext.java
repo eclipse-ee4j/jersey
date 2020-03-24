@@ -456,7 +456,12 @@ public class OutboundMessageContext {
         for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
             if (cookie != null) {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
-                result.put(newCookie.getName(), newCookie);
+                String cookieName = newCookie.getName();
+                if (result.containsKey(cookieName)) {
+                    result.put(cookieName, HeaderUtils.getPreferredCookie(result.get(cookieName), newCookie));
+                } else {
+                    result.put(cookieName, newCookie);
+                }
             }
         }
         return result;

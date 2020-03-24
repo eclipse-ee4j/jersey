@@ -25,11 +25,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import jakarta.ws.rs.core.SecurityContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -55,7 +53,7 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
 
     private final URI baseUri;
-    private final LinkedBlockingDeque<ByteBuf> isList = new LinkedBlockingDeque<>();
+    private final NettyInputStream nettyInputStream = new NettyInputStream();
     private final NettyHttpContainer container;
     private final ResourceConfig resourceConfig;
 
@@ -92,9 +90,9 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
      * Process incoming data.
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        isList.add(data.content());
+        nettyInputStream.publish(data.content());
         if (data.isEndStream()) {
-            isList.add(Unpooled.EMPTY_BUFFER);
+            nettyInputStream.complete(null);
         }
     }
 
@@ -163,11 +161,11 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
             ctx.channel().closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> future) throws Exception {
-                    isList.add(Unpooled.EMPTY_BUFFER);
+                    nettyInputStream.complete(future.cause());
                 }
             });
 
-            requestContext.setEntityStream(new NettyInputStream(isList));
+            requestContext.setEntityStream(nettyInputStream);
         } else {
             requestContext.setEntityStream(new InputStream() {
                 @Override
