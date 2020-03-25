@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -180,14 +181,19 @@ public class Helper {
                     mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
 
                     // Jersey Injection provider
-                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject()
+                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    // not needed since Jackson 2.10.1
-                    // mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                    getActivationBundle()
             ));
         }
 
         return addPaxExamMavenLocalRepositoryProperty(options);
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 
     /**

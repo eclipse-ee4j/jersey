@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-aether</artifactId>
-            <version>1.6.0</version>
+            <version>2.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -184,7 +184,7 @@
             <groupId>org.ops4j.pax.logging</groupId>
             <artifactId>pax-logging-api</artifactId>
             <scope>test</scope>
-            <version>1.8.3</version>
+            <version>1.11.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -356,13 +356,6 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            Not needed since Jackson 2.10.1 -->
-<!--            <groupId>com.sun.activation</groupId>-->
-<!--            <artifactId>jakarta.activation</artifactId>-->
-<!--            <version>${jakarta.activation.version}</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
 
         <!-- logging -->
         <dependency>
@@ -374,6 +367,19 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>jdk11dependency</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                    <version>${jakarta.activation.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>testsSkipJdk8</id>
             <activation>
@@ -424,6 +430,7 @@
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BasicOsgiIntegrationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BeanValidationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JaxRsRiBundleTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJackson1Test.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonJacksonTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonJettisonTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>

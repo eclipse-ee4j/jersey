@@ -30,6 +30,7 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import javax.inject.Inject;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import org.ops4j.pax.exam.Configuration;
@@ -115,6 +116,7 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 //SUN JAXB IMPL OSGI
                 mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                getActivationBundle(),
                 systemPackage("com.sun.source.tree"),
                 systemPackage("com.sun.source.util"),
 
@@ -255,5 +257,11 @@ public abstract class AbstractHttpServiceTest {
         Dictionary result = new Hashtable();
         result.put(EventConstants.EVENT_TOPIC, topics);
         return result;
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 }

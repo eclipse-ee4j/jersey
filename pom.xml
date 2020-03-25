@@ -1914,13 +1914,6 @@
 
             <dependency>
                 <groupId>org.ops4j.pax.exam</groupId>
-                <artifactId>pax-exam-container-native</artifactId>
-                <version>${pax.exam.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>pax-exam-junit-extender-impl</artifactId>
                 <version>1.2.4</version>
                 <scope>test</scope>
@@ -1995,22 +1988,21 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <!--5.2.0+ does not work with moxy osgi functional tests-->
-                <version>5.0.1</version>
+                <version>6.0.3</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
-                <version>1.2.2</version>
+                <version>1.5.0</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework.security</artifactId>
-                <version>2.2.0</version>
+                <version>2.6.1</version>
                 <scope>test</scope>
             </dependency>
 
