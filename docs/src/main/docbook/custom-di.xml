@@ -65,8 +65,8 @@
         as a good example that will help me demonstrate implementation of the use cases described above.
         The following examples should work on top of Jersey Servlet integration module. The approach that will be
         demonstrated could be further generalized.
-        Bellow I will show how to make actual Servlet &jee6.servlet.HttpSession; injectable into JAX-RS components
-        and how to make this injection work with a custom inject annotation type. Finally, I will demonstrate
+        Below we will show how to make actual Servlet &jee6.servlet.HttpSession; injectable into JAX-RS components
+        and how to make this injection work with a custom inject annotation type. Finally, we will demonstrate
         how you can write &lit.jee6.servlet.HttpSession;-scoped JAX-RS resources.
     </para>
 
