@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -225,24 +225,17 @@
 
     <profiles>
         <profile>
-            <id>testsSkipJdk11</id>
+            <id>testsJdk11</id>
             <activation>
                 <jdk>[11,)</jdk>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <!-- Exclude unit tests on jdk 11 for now -->
-                            <excludes>
-                                <exclude>**/WebAppFelixTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                    <version>${jakarta.activation.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>release</id>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -30,6 +30,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import javax.inject.Inject;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import org.ops4j.pax.exam.Configuration;
@@ -111,6 +112,7 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 //SUN JAXB IMPL OSGI
                 mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                getActivationBundle(),
                 systemPackage("com.sun.source.tree"),
                 systemPackage("com.sun.source.util"),
 
@@ -248,5 +250,11 @@ public abstract class AbstractHttpServiceTest {
         Dictionary result = new Hashtable();
         result.put(EventConstants.EVENT_TOPIC, topics);
         return result;
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 }
