@@ -267,7 +267,7 @@ try {
 
                 <para>
                     As stated in the <xref linkend="deployment.autodiscoverable"/> as well as earlier in this chapter, MOXy media
-                    module is one of the modules where you don't need to explicitly register it's &lit.jaxrs.core.Feature;s
+                    module is one of the modules where you don't need to explicitly register its &lit.jaxrs.core.Feature;s
                     (&lit.jersey.media.MoxyJsonFeature;) in your client/server &jaxrs.core.Configurable; as this feature is
                     automatically discovered and registered when you add &lit.jersey-media-moxy; module to your class-path.
                 </para>
@@ -458,7 +458,7 @@ final Application application = new ResourceConfig()
 
                 <para>
                     As stated in <xref linkend="deployment.autodiscoverable"/> JSON-Processing media module is one of the
-                    modules where you don't need to explicitly register it's
+                    modules where you don't need to explicitly register its
                     &lit.jaxrs.core.Feature;s (&lit.jersey.media.JsonProcessingFeature;) in your client/server
                     &jaxrs.core.Configurable; as this feature is automatically discovered and registered when you add
                     &lit.jersey-media-json-processing; module to your classpath.
@@ -1507,7 +1507,7 @@ final Application application = new ResourceConfig()
             <title>Client</title>
 
             <para>
-                &jersey.media.multipart.MultiPart; class (or it's subclasses) can be used as an entry point to using
+                &jersey.media.multipart.MultiPart; class (or it's subclasses) can be used as an entry point to use
                 &lit.jersey-media-multipart; module on the client side. This class represents a
                 <link xlink:href='&wikipedia.uri;MIME#Multipart_messages'>MIME multipart message</link> and is able
                 to hold an arbitrary number of &jersey.media.multipart.BodyPart;s. Default media type is
@@ -1696,7 +1696,7 @@ public MultiPart post(final FormDataMultiPart multiPart) {
                             <para>
                                 A <literal>List</literal> or <literal>Collection</literal> of
                                 &lit.jersey.media.multipart.FormDataBodyPart;.
-                                The value of the parameter will one or more named body parts with the same name or
+                                The value of the parameter will be one or more named body parts with the same name or
                                 &lit.null; if such a named body part is not present.
                             </para>
                         </listitem>
@@ -1711,7 +1711,7 @@ public MultiPart post(final FormDataMultiPart multiPart) {
                             <para>
                                 A <literal>List</literal> or <literal>Collection</literal> of
                                 &lit.jersey.media.multipart.FormDataContentDisposition;.
-                                The value of the parameter will one or more content dispositions of the named body parts with the
+                                The value of the parameter will be one or more content dispositions of the named body parts with the
                                 same name or &lit.null; if such a named body part is not present.
                             </para>
                         </listitem>

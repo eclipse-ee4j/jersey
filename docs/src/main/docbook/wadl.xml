@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,7 +35,7 @@
             Jersey contains support for
             <link xlink:href='https://javaee.github.io/wadl/'>Web Application Description Language (WADL)</link>. WADL is
             a XML description of a deployed RESTful web application. It contains model of the deployed resources, their
-            structure, supported media types, HTTP methods and so on. In a sense, WADL is a similar to the WSDL
+            structure, supported media types, HTTP methods and so on. In a sense, WADL is similar to the WSDL
             (Web Service Description Language) which describes SOAP web services. WADL is however specifically designed
             to describe RESTful Web resources.
         </para>
@@ -242,7 +242,7 @@ public static class CountryResource {
             and one &lit.http.GET; method which return this WADL. There is also
             a sub-resource with a path defined by path param <literal>{path}</literal>. This means that you can request
             a resource on the URI <literal>http://localhost:9998/application.wadl/something</literal>.
-            This is used only to return an external grammar if there is any attached. Such a external grammar can be
+            This is used only to return an external grammar if there is any attached. Such an external grammar can be
             for example an <literal>XSD</literal> schema of the response entity which if the response entity is a JAXB bean.
             An external grammar support via Jersey <emphasis>extended WADL support</emphasis> is described in sections below.
         </para>
@@ -256,7 +256,7 @@ public static class CountryResource {
             primary use case of getting formatted data.
         </para>
         <para>
-            Let's now send an HTTP &lit.http.OPTIONS; request to <literal>"country/{id}"</literal> resource using the the
+            Let's now send a HTTP &lit.http.OPTIONS; request to <literal>"country/{id}"</literal> resource using the the
             <literal>curl</literal> command:
             <programlisting linenumbering="unnumbered">curl -X OPTIONS -H "Allow: application/vnd.sun.wadl+xml" \
     -v http://localhost:9998/country/15</programlisting>
@@ -491,7 +491,7 @@ public static class CustomerAddressSubResource {
             The <literal>resource</literal> with <literal>path="customer/{id}"</literal> is similar to the
             country resource from the previous example. There is a path parameter which identifies the customer
             by <literal>id</literal>. The resource contains 2 user-declared methods and again auto-generated
-            &lit.http.OPTIONS; methods added by Jersey. THe resource declares 2 sub-resource locators which are
+            &lit.http.OPTIONS; methods added by Jersey. The resource declares 2 sub-resource locators which are
             represented in the returned WADL document as nested <literal>resource</literal> elements. Note that the sub-resource
             locator <literal>getCustomerAddress()</literal> returns a type CustomerAddressSubResource in the
             method declaration and also in the WADL there is a <literal>resource</literal> element for such

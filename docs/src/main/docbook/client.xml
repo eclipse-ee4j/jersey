@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -233,7 +233,7 @@ target.request(MediaType.APPLICATION_JSON_TYPE)
             </title>
 
             <para>
-                JAX-RS Client API is a designed to allow fluent programming model. This means, a construction of a
+                JAX-RS Client API is designed to allow fluent programming model. This means, a construction of a
                 &lit.jaxrs.client.Client; instance, from which a &lit.jaxrs.client.WebTarget; is created, from which a
                 request &jaxrs.client.Invocation; is built and invoked can be chained in a single "flow" of invocations.
                 The individual steps of the flow will be shown in the following sections.
@@ -345,7 +345,7 @@ Configuration newConfiguration = client.getConfiguration();</programlisting>
 webTarget.register(FilterForExampleCom.class);</programlisting>
 
                 The configuration principles used in JAX-RS client API apply to &lit.jaxrs.client.WebTarget; as well. Each
-                &lit.jaxrs.client.WebTarget; instance inherits a configuration from it's parent (either a client or another
+                &lit.jaxrs.client.WebTarget; instance inherits a configuration from its parent (either a client or another
                 web target) and can be further custom-configured without affecting the configuration of the parent component.
                 In this case, the <literal>FilterForExampleCom</literal> will be registered only in the
                 <literal>webTarget</literal> and not in <literal>client</literal>. So, the <literal>client</literal>
@@ -739,7 +739,7 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
 clientConfig.connectorProvider(new GrizzlyConnectorProvider());
 Client client = ClientBuilder.newClient(clientConfig);</programlisting>
 
-            &lit.jaxrs.client.Client; accepts as as a constructor argument a &lit.jaxrs.core.Configurable; instance. Jersey
+            &lit.jaxrs.client.Client; accepts as a constructor argument a &lit.jaxrs.core.Configurable; instance. Jersey
             implementation of the &lit.jaxrs.core.Configurable; provider for the client is &lit.jersey.client.ClientConfig;.
             By using the Jersey &lit.jersey.client.ClientConfig; you can configure the custom
             &lit.jersey.client.ConnectorProvider;
@@ -965,7 +965,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                         <emphasis>UNIVERSAL:</emphasis> Combination of basic and digest authentication. The feature works in non-preemptive
                           mode which means that it sends requests without authentication information. If <literal>401</literal> status
                           code is returned, the request is repeated and an appropriate authentication is used based on the
-                          authentication requested in the response (defined in <literal>WWW-Authenticate</literal> HTTP header. The feature
+                          authentication requested in the response (defined in <literal>WWW-Authenticate</literal> HTTP header). The feature
                           remembers which authentication requests were successful for given URI and next time tries to preemptively
                           authenticate against this URI with latest successful authentication method.
                     </para>
