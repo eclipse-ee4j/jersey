@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,7 @@
             request parameters, the method parameter associated with the
             representation being consumed does not require annotating. In other words the
             representation (entity) parameter does not require a specific 'entity' annotation. A method parameter
-            without a annotation is an entity. A maximum of
+            without an annotation is an entity. A maximum of
             one such unannotated method parameter may exist since there may only be a
             maximum of one such representation sent in a request.
         </para>
@@ -367,7 +367,7 @@ public class EntityNotFoundMapper implements ExceptionMapper&lt;javax.persistenc
 
         <para>Notice that in this example the constructor of a resource class is used
             to perform actions that may otherwise have to be duplicated to
-            invoked for each resource method. The life cycle of resource classes is per-request
+            be invoked for each resource method. The life cycle of resource classes is per-request
             which means that the resource instance is created for each request and therefore
             can work with request parameters and for example make changes to the request processing by
             throwing an exception as it is shown in this example.

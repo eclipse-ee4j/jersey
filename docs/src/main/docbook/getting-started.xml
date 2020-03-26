@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -176,7 +176,7 @@ public class MyResourceTest {
 
             In this unit test, a Grizzly container is first started and server application is deployed in the
             test <literal>setUp()</literal> method by a static call to <literal>Main.startServer()</literal>.
-            Next, a JAX-RS client components are created in the same test set-up method. First a new JAX-RS client
+            Next, JAX-RS client components are created in the same test set-up method. First a new JAX-RS client
             instance <literal>c</literal> is built and then a JAX-RS web target component pointing to the context root of our
             application deployed at <literal>http://localhost:8080/myapp/</literal> (a value of
             <literal>Main.BASE_URI</literal> constant) is stored into a <literal>target</literal> field of the unit test class.
