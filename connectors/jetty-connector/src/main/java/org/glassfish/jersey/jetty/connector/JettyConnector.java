@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -301,7 +301,7 @@ class JettyConnector implements Connector {
         request.method(clientRequest.getMethod());
 
         request.followRedirects(clientRequest.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true));
-        final Object readTimeout = clientRequest.getConfiguration().getProperties().get(ClientProperties.READ_TIMEOUT);
+        final Object readTimeout = clientRequest.resolveProperty(ClientProperties.READ_TIMEOUT, -1);
         if (readTimeout != null && readTimeout instanceof Integer && (Integer) readTimeout > 0) {
             request.timeout((Integer) readTimeout, TimeUnit.MILLISECONDS);
         }

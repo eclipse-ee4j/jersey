@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,7 +64,6 @@ public class TimeoutTest extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.property(ClientProperties.READ_TIMEOUT, 1000);
         config.connectorProvider(new NettyConnectorProvider());
     }
 
@@ -78,11 +77,22 @@ public class TimeoutTest extends JerseyTest {
     @Test
     public void testSlow() {
         try {
-            target("test/timeout").request().get();
+            target("test/timeout").property(ClientProperties.READ_TIMEOUT, 1_000).request().get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
             assertThat("Unexpected processing exception cause",
                        e.getCause(), instanceOf(TimeoutException.class));
+        }
+    }
+
+    @Test
+    public void testTimeoutInRequest() {
+        try {
+            target("test/timeout").request().property(ClientProperties.READ_TIMEOUT, 1_000).get();
+            fail("Timeout expected.");
+        } catch (ProcessingException e) {
+            assertThat("Unexpected processing exception cause",
+                    e.getCause(), instanceOf(TimeoutException.class));
         }
     }
 }
