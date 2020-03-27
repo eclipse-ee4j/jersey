@@ -16,18 +16,19 @@
 
 package org.glassfish.jersey.test.inmemory;
 
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.server.ApplicationHandler;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.test.DeploymentContext;
+import org.glassfish.jersey.test.spi.TestContainer;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.ws.rs.core.UriBuilder;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.server.ApplicationHandler;
-import org.glassfish.jersey.test.DeploymentContext;
-import org.glassfish.jersey.test.spi.TestContainer;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 /**
  * In-memory test container factory.
@@ -41,6 +42,7 @@ public class InMemoryTestContainerFactory implements TestContainerFactory {
 
         private final URI baseUri;
         private final ApplicationHandler appHandler;
+        private final InMemoryContainer container;
         private final AtomicBoolean started = new AtomicBoolean(false);
         private static final Logger LOGGER = Logger.getLogger(InMemoryTestContainer.class.getName());
 
@@ -52,6 +54,7 @@ public class InMemoryTestContainerFactory implements TestContainerFactory {
             }
 
             this.appHandler = new ApplicationHandler(context.getResourceConfig());
+            this.container = new InMemoryContainer();
         }
 
         @Override
@@ -68,6 +71,7 @@ public class InMemoryTestContainerFactory implements TestContainerFactory {
         public void start() {
             if (started.compareAndSet(false, true)) {
                 LOGGER.log(Level.FINE, "Starting InMemoryContainer...");
+                appHandler.onStartup(container);
             } else {
                 LOGGER.log(Level.WARNING, "Ignoring start request - InMemoryTestContainer is already started.");
             }
@@ -77,8 +81,40 @@ public class InMemoryTestContainerFactory implements TestContainerFactory {
         public void stop() {
             if (started.compareAndSet(true, false)) {
                 LOGGER.log(Level.FINE, "Stopping InMemoryContainer...");
+                appHandler.onShutdown(container);
             } else {
                 LOGGER.log(Level.WARNING, "Ignoring stop request - InMemoryTestContainer is already stopped.");
+            }
+        }
+
+
+        private class InMemoryContainer implements Container {
+            @Override
+            public ResourceConfig getConfiguration() {
+                return appHandler.getConfiguration();
+            }
+
+            @Override
+            public ApplicationHandler getApplicationHandler() {
+                return appHandler;
+            }
+
+            /**
+             * @throws UnsupportedOperationException because {@link org.glassfish.jersey.test.spi.TestContainer}
+             * doesn't have reload method.
+             */
+            @Override
+            public void reload() throws UnsupportedOperationException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * @throws UnsupportedOperationException because {@link org.glassfish.jersey.test.spi.TestContainer}
+             * doesn't have reload method.
+             */
+            @Override
+            public void reload(ResourceConfig configuration) throws UnsupportedOperationException {
+                throw new UnsupportedOperationException();
             }
         }
     }
