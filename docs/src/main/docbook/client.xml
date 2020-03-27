@@ -1001,12 +1001,8 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
     </section>
 
     <section>
-        <title>New Features</title>
+        <title>InvocationInterceptors</title>
         <para>
-            Jersey 2.30 comes with multiple new features, and this post describes three new interfaces on the client.
-            They are <literal>PreInvocationInterceptor</literal>, <literal>PostInvocationInterceptor</literal>, and
-            <literal>InvocationBuilderListener</literal>.
-
             Suppose a case that the start of the request is to be logged and even measured.
             This can be done by <literal>ClientRequestFilter</literal>, which is usually invoked before the request is wired on the network.
             However, the filter may be called as a last of the filters in the chain. Sure, it can have the highest priority,
@@ -1078,60 +1074,60 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             </para>
             <programlisting language="java" linenumbering="numbered">
                 String response = ClientBuilder.newClient().target("path")
-                .register(new PreInvocationInterceptor() {
-                    @Override
-                    public void beforeRequest(ClientRequestContext requestContext) {
-                        startTime = System.currentTimeMillis();
-                    }
-                })
-                .register(new PostInvocationInterceptor() {
-                    @Override
-                    public void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext) {
-                        logDuration(System.currentTimeMillis() - startTime);
-                    }
-                    @Override
-                    public void onException(ClientRequestContext requestContext, ExceptionContext exceptionContext) {
-                        logDuration(System.currentTimeMillis() - startTime);
-                    }
-                })
-                .request().get().readEntity(String.class);
+                    .register(new PreInvocationInterceptor() {
+                        @Override
+                        public void beforeRequest(ClientRequestContext requestContext) {
+                            startTime = System.currentTimeMillis();
+                        }
+                    })
+                    .register(new PostInvocationInterceptor() {
+                        @Override
+                        public void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext) {
+                            logDuration(System.currentTimeMillis() - startTime);
+                        }
+                        @Override
+                        public void onException(ClientRequestContext requestContext, ExceptionContext exceptionContext) {
+                            logDuration(System.currentTimeMillis() - startTime);
+                        }
+                    })
+                    .request().get().readEntity(String.class);
             </programlisting>
         </section>
-        <section>
-            <title>InvocationBuilderListener</title>
-            <para>
-                InvocationBuilderListener is an interface that is inspired by Microprofile REST Client <literal>RestClientBuilderListener</literal>
-                and it contains a single method:
-            </para>
-            <programlisting language="java">
-                /**
-                * Whenever an Invocation.Builder is created, (i.e. when
-                * WebTarget#request() is called, this method would be invoked.
-                *
-                * @param context the updated InvocationBuilderContext.
-                */
-                void onNewBuilder(InvocationBuilderContext context);
-            </programlisting>
-            <para>
-                <literal>InvocationBuilderContext</literal> a subset of methods of the <literal>Invocation.Builder</literal>. It can be used to call the default
-                values of the <literal>Invocation.Builder</literal>. Since it is invoked at the time <literal>Invocation.Builder</literal> is instantiated, any consequent
-                calls of the <literal>Invocation.Builder</literal>‘s methods will replace the defaults set by the <literal>InvocationBuilderListener</literal>.
+    </section>
+    <section>
+        <title>InvocationBuilderListener</title>
+        <para>
+            InvocationBuilderListener is an interface that is inspired by Microprofile REST Client <literal>RestClientBuilderListener</literal>
+            and it contains a single method:
+        </para>
+        <programlisting language="java">
+            /**
+            * Whenever an Invocation.Builder is created, (i.e. when
+            * WebTarget#request() is called, this method would be invoked.
+            *
+            * @param context the updated InvocationBuilderContext.
+            */
+            void onNewBuilder(InvocationBuilderContext context);
+        </programlisting>
+        <para>
+            <literal>InvocationBuilderContext</literal> a subset of methods of the <literal>Invocation.Builder</literal>. It can be used to call the default
+            values of the <literal>Invocation.Builder</literal>. Since it is invoked at the time <literal>Invocation.Builder</literal> is instantiated, any consequent
+            calls of the <literal>Invocation.Builder</literal>‘s methods will replace the defaults set by the <literal>InvocationBuilderListener</literal>.
 
-                For instance, if all the HTTP requests should contain a custom HTTP header,
-                there can be created a feature that would be registered on the client:
-            </para>
-            <programlisting language="java" linenumbering="numbered">
-                public static class MyFeature implements Feature {
-                    @Override
-                    public boolean configure(FeatureContext context) {
-                        context.register(
-                            (InvocationBuilderListener)(l)-&gt;
-                            l.getHeaders().add("MY_HEADER", "MY_VALUE")
-                        );
-                        return true;
-                    }
+            For instance, if all the HTTP requests should contain a custom HTTP header,
+            there can be created a feature that would be registered on the client:
+        </para>
+        <programlisting language="java" linenumbering="numbered">
+            public static class MyFeature implements Feature {
+                @Override
+                public boolean configure(FeatureContext context) {
+                    context.register(
+                        (InvocationBuilderListener)(l)-&gt;
+                        l.getHeaders().add("MY_HEADER", "MY_VALUE")
+                    );
+                    return true;
                 }
-            </programlisting>
-        </section>
+            }
+        </programlisting>
     </section>
 </chapter>
