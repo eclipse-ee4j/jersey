@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -451,12 +451,19 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
 
         @Override
         public CompletionStageRxInvoker rx() {
-            return new JerseyCompletionStageRxInvoker(this);
+            return rx(JerseyCompletionStageRxInvoker.class);
         }
 
         @Override
         public <T extends RxInvoker> T rx(Class<T> clazz) {
             if (clazz == JerseyCompletionStageRxInvoker.class) {
+                final ExecutorService configured = request().getClientConfig().getExecutorService();
+                if (configured == null) {
+                    final ExecutorService provided = executorService();
+                    if (provided != null) {
+                        request().getClientConfig().executorService(provided);
+                    }
+                }
                 return (T) new JerseyCompletionStageRxInvoker(this);
             }
             return createRxInvoker(clazz, executorService());

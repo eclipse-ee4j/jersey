@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,28 +16,35 @@
 
 package org.glassfish.jersey.client;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.RxInvokerProvider;
 import javax.ws.rs.client.SyncInvoker;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 
+import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.hamcrest.core.AllOf;
 import org.hamcrest.core.StringContains;
 import org.junit.After;
-import org.junit.Ignore;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -55,18 +62,21 @@ public class ClientRxTest {
 
     public ClientRxTest() {
         CLIENT = ClientBuilder.newClient();
-
-        // TODO JAX-RS 2.1
-        // CLIENT_WITH_EXECUTOR = ClientBuilder.newBuilder().executorService(EXECUTOR_SERVICE).build();
-        CLIENT_WITH_EXECUTOR = null;
+        CLIENT_WITH_EXECUTOR = ClientBuilder.newBuilder().executorService(EXECUTOR_SERVICE).build();
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @After
-    public void afterClass() {
+    public void afterTest() {
         CLIENT.close();
+        CLIENT_WITH_EXECUTOR.close();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        EXECUTOR_SERVICE.shutdownNow();
     }
 
     @Test
@@ -80,17 +90,55 @@ public class ClientRxTest {
     }
 
     @Test
-    @Ignore("TODO JAX-RS 2.1")
     public void testRxInvokerWithExecutor() {
         // implicit register (not saying that the contract is RxInvokerProvider).
-        CLIENT.register(TestRxInvokerProvider.class);
-
-        ExecutorService executorService = Executors
-                .newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("rxTest-%d").build());
-        String s = target(CLIENT_WITH_EXECUTOR).request().rx(TestRxInvoker.class).get();
+        String s = target(CLIENT_WITH_EXECUTOR).register(TestRxInvokerProvider.class).request().rx(TestRxInvoker.class).get();
 
         assertTrue("Provided RxInvoker was not used.", s.startsWith("rxTestInvoker"));
         assertTrue("Executor Service was not passed to RxInvoker", s.contains("rxTest-"));
+    }
+
+    @Test
+    public void testDefaultRxInvokerWithExecutor() throws ExecutionException, InterruptedException {
+        AtomicReference<String> threadName = new AtomicReference<>();
+        ClientRequestFilter threadFilter = (f) -> { threadName.set(Thread.currentThread().getName()); };
+        ClientRequestFilter abortFilter = (f) -> { f.abortWith(Response.ok().build()); };
+        try (Response r = target(CLIENT_WITH_EXECUTOR)
+                .register(threadFilter, 100)
+                .register(abortFilter, 200)
+                .request().rx().get().toCompletableFuture().get()) {
+
+            assertEquals(200, r.getStatus());
+            assertTrue("Executor Service was not passed to RxInvoker", threadName.get().contains("rxTest-"));
+        }
+    }
+
+    @Test
+    public void testRxInvokerWithExecutorServiceProvider() {
+        AtomicReference<String> threadName = new AtomicReference<>();
+        String s = target(CLIENT)
+                .register(TestRxInvokerProvider.class, 200)
+                .register(TestExecutorServiceProvider.class)
+                .request().rx(TestRxInvoker.class).get();
+
+        assertTrue("Provided RxInvoker was not used.", s.startsWith("rxTestInvoker"));
+        assertTrue("Executor Service was not passed to RxInvoker", s.contains("rxTest-"));
+    }
+
+    @Test
+    public void testDefaultRxInvokerWithExecutorServiceProvider() throws ExecutionException, InterruptedException {
+        AtomicReference<String> threadName = new AtomicReference<>();
+        ClientRequestFilter threadFilter = (f) -> { threadName.set(Thread.currentThread().getName()); };
+        ClientRequestFilter abortFilter = (f) -> { f.abortWith(Response.ok().build()); };
+        try (Response r = target(CLIENT)
+                .register(threadFilter, 100)
+                .register(abortFilter, 200)
+                .register(TestExecutorServiceProvider.class)
+                .request().rx().get().toCompletableFuture().get()) {
+
+            assertEquals(200, r.getStatus());
+            assertTrue("Executor Service was not passed to RxInvoker", threadName.get().contains("rxTest-"));
+        }
     }
 
     @Test
@@ -144,6 +192,19 @@ public class ClientRxTest {
         @Override
         public <R> String method(String name, Entity<?> entity, GenericType<R> responseType) {
             return "rxTestInvoker" + (getExecutorService() == null ? "" : " rxTest-");
+        }
+    }
+
+    private static class TestExecutorServiceProvider implements ExecutorServiceProvider {
+
+        @Override
+        public ExecutorService getExecutorService() {
+            return EXECUTOR_SERVICE;
+        }
+
+        @Override
+        public void dispose(ExecutorService executorService) {
+            //@After
         }
     }
 }
