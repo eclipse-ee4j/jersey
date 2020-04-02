@@ -86,7 +86,7 @@ public class ComplexBeanWithAttributes4 {
     public int hashCode() {
         int hash = 3;
         hash = 19 * hash + (this.a1 != null ? this.a1.hashCode() : 0);
-        hash = 19 * hash + this.a2;
+        hash = 19 * hash + (this.a2 != null ? this.a2.hashCode() : 0);
         hash = 19 * hash + (this.b != null ? this.b.hashCode() : 0);
         hash = 19 * hash + (this.filler1 != null ? this.filler1.hashCode() : 0);
         hash = 19 * hash + (this.filler2 != null ? this.filler2.hashCode() : 0);
