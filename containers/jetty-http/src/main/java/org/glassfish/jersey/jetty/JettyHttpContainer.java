@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.jersey.jetty;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -323,7 +325,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         @Override
         public void commit() {
             try {
-                response.closeOutput();
+                closeOutput(response);
             } catch (final IOException e) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.UNABLE_TO_CLOSE_RESPONSE(), e);
             } finally {
@@ -331,6 +333,22 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     continuation.complete();
                 }
                 LOGGER.log(Level.FINEST, "commit() called");
+            }
+        }
+
+        private void closeOutput(Response response) throws IOException {
+            try {
+                response.completeOutput();
+            } catch (final IOException e) {
+                throw e;
+            } catch (NoSuchMethodError e) {
+                // try older Jetty Response#closeOutput
+                try {
+                    Method method = response.getClass().getMethod("closeOutput");
+                    method.invoke(response);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+                    throw new IOException(ex);
+                }
             }
         }
 
