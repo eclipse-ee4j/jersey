@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -2106,8 +2106,8 @@
         <javax.interceptor.version>1.2.5</javax.interceptor.version>
         <javax.persistence.version>2.2.3</javax.persistence.version>
         <javax.validation.api.version>2.0.2</javax.validation.api.version>
-        <jaxb.api.version>2.3.2</jaxb.api.version>
-        <jaxb.ri.version>2.3.2</jaxb.ri.version>
+        <jaxb.api.version>3.0.0-RC2</jaxb.api.version>
+        <jaxb.ri.version>3.0.0-M1</jaxb.ri.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
