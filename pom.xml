@@ -32,8 +32,8 @@
     <version>3.0-SNAPSHOT</version>
     <name>jersey</name>
     <description>
-        Eclipse Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370)
-        production quality Reference Implementation for building RESTful Web services.
+        Eclipse Jersey is the open source (under dual EPL+GPL license) Jakarta RESTful WebServices 3.0
+        production quality Reference Implementation for building RESTful Web Services.
     </description>
 
     <url>https://projects.eclipse.org/projects/ee4j.jersey</url>
@@ -2109,8 +2109,8 @@
         <jaxb.api.version>2.3.2</jaxb.api.version>
         <jaxb.ri.version>2.3.2</jaxb.ri.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
-        <jaxrs.api.spec.version>2.2</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>3.0-SNAPSHOT</jaxrs.api.impl.version>
+        <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
+        <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
