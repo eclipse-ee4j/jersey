@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,6 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib prefix="rbt" uri="urn:org:glassfish:jersey:servlet:mvc" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -33,7 +31,7 @@
 
     ${model.index}
 
-    <rbt:include page="include.jsp"/>
+    <jersey-mvc-jsp:include page="include.jsp"/>
 
     </body>
 </html>
