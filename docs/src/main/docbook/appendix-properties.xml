@@ -640,7 +640,7 @@
                     </row>
                     <row>
                         <entry>&jersey.servlet.ServletProperties.JAXRS_APPLICATION_CLASS;</entry>
-                        <entry><literal>javax.ws.rs.Application</literal></entry>
+                        <entry><literal>jakarta.ws.rs.Application</literal></entry>
                         <entry>
                             <para>
                                 Application configuration initialization property whose value is a fully qualified class name of a

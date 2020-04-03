@@ -420,7 +420,7 @@ public ShortenedLink createLink(@NotEmpty @FormParam("link") final String link) 
     <servlet-name>org.glassfish.jersey.examples.freemarker.MyApplication</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
-        <param-name>javax.ws.rs.Application</param-name>
+        <param-name>jakarta.ws.rs.Application</param-name>
         <param-value>org.glassfish.jersey.examples.freemarker.MyApplication</param-value>
     </init-param>
     <init-param>

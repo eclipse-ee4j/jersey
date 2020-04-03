@@ -404,7 +404,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.binding.BindingBuilderFactory;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 
-@javax.ws.rs.ext.Provider
+@jakarta.ws.rs.ext.Provider
 public class PerSessionComponentProvider implements ComponentProvider {
 
     private ServiceLocator locator;

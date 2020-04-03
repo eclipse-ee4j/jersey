@@ -72,10 +72,10 @@
                 <example>
                     <title>Container response filter</title>
                     <programlisting language="java" linenumbering="numbered">import java.io.IOException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.core.Response;
 
 public class PoweredByResponseFilter implements ContainerResponseFilter {
 
@@ -111,10 +111,10 @@ public class PoweredByResponseFilter implements ContainerResponseFilter {
             <example>
                 <title>Container request filter</title>
                 <programlisting language="java" linenumbering="numbered">import java.io.IOException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
@@ -178,9 +178,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
                 <example>
                     <title>Pre-matching request filter</title>
                     <programlisting language="java" linenumbering="numbered">...
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.PreMatching;
 ...
 
 @PreMatching
@@ -420,7 +420,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
                 </listitem>
                 <listitem>Client receives the response: the response contains compressed entity data.</listitem>
                 <listitem>Client ClientResponseFilters: client response filters are executed and they manipulate the response headers.</listitem>
-                <listitem>Client response is returned: the javax.ws.rs.core.Response is returned from the request invocation.</listitem>
+                <listitem>Client response is returned: the jakarta.ws.rs.core.Response is returned from the request invocation.</listitem>
                 <listitem>Client code calls response.readEntity(): read entity is executed on the client to extract the entity from the response.</listitem>
                 <listitem>Client &lit.jaxrs.ReaderInterceptor;: the client reader interceptor is executed when readEntity(Class) is called. The interceptor
                         wraps the entity input stream with GZIPInputStream. This will decompress the data from the original input stream.
@@ -463,10 +463,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.zip.GZIPInputStream;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.NameBinding;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NameBinding;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 ...
 
 
@@ -553,8 +553,8 @@ public class GZIPWriterInterceptor implements WriterInterceptor {
             <example>
                 <title>Dynamic binding example</title>
                 <programlisting language="java" linenumbering="numbered">...
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.container.DynamicFeature;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.container.DynamicFeature;
 ...
 
 @Path("helloworld")
@@ -649,7 +649,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
                 <title>Priorities example</title>
                 <programlisting language="java" linenumbering="numbered">...
 import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
+import jakarta.ws.rs.Priorities;
 ...
 
 @Priority(Priorities.HEADER_DECORATOR)

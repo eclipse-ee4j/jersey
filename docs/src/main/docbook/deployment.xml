@@ -585,14 +585,14 @@ Channel server = NettyHttpContainerProvider.createServer(baseUri, resourceConfig
                     classes (<literal>getClasses()</literal>) and singletons (<literal>getSingletons()</literal>),
                     i.e. your JAX-RS application model, you then need to register it in your web application
                     <literal>web.xml</literal> deployment descriptor using a Servlet or Servlet filter initialization
-                    parameter with a name of  <literal>javax.ws.rs.Application</literal> [<emphasis>sic</emphasis>] as follows:
+                    parameter with a name of  <literal>jakarta.ws.rs.Application</literal> [<emphasis>sic</emphasis>] as follows:
 
                     <example>
                         <title>
                             Configuring Jersey container Servlet or Filter to use custom &lit.jaxrs.core.Application; subclass
                         </title>
                         <programlisting language="xml" linenumbering="numbered">&lt;init-param&gt;
-    &lt;param-name&gt;javax.ws.rs.Application&lt;/param-name&gt;
+    &lt;param-name&gt;jakarta.ws.rs.Application&lt;/param-name&gt;
     &lt;param-value&gt;org.foo.MyApplication&lt;/param-value&gt;
 &lt;/init-param&gt;</programlisting>
                     </example>
@@ -604,7 +604,7 @@ Channel server = NettyHttpContainerProvider.createServer(baseUri, resourceConfig
                 <note>
                     <para>
                         The name of the configuration property as defined by JAX-RS specification is indeed
-                        <literal>javax.ws.rs.Application</literal> and not <literal>javax.ws.rs.core.Application</literal>
+                        <literal>jakarta.ws.rs.Application</literal> and not <literal>jakarta.ws.rs.core.Application</literal>
                         as one might expect.
                     </para>
                 </note>
@@ -790,11 +790,11 @@ public class MyApplication extends ResourceConfig {
 
                     If no &lit.jaxrs.core.Application; (or &lit.jersey.server.ResourceConfig;) subclass is present,
                     Jersey will dynamically add a Jersey container Servlet and set its name to
-                    <literal>javax.ws.rs.core.Application</literal>. The web application path will be scanned and all the
+                    <literal>jakarta.ws.rs.core.Application</literal>. The web application path will be scanned and all the
                     root resource classes (the classes annotated with &jaxrs.Path; annotation) as well as any providers that are
                     annotated with &jaxrs.ext.Provider; annotation packaged with the application will be automatically registered
                     in the JAX-RS application. The web application has to be packaged with a deployment descriptor specifying
-                    at least the mapping for the added <literal>javax.ws.rs.core.Application</literal> Servlet:
+                    at least the mapping for the added <literal>jakarta.ws.rs.core.Application</literal> Servlet:
 
                     <example>
                         <title>
@@ -807,11 +807,11 @@ public class MyApplication extends ResourceConfig {
     &lt;!-- Servlet declaration can be omitted in which case
          it would be automatically added by Jersey --&gt;
     &lt;servlet&gt;
-        &lt;servlet-name&gt;javax.ws.rs.core.Application&lt;/servlet-name&gt;
+        &lt;servlet-name&gt;jakarta.ws.rs.core.Application&lt;/servlet-name&gt;
     &lt;/servlet&gt;
 
     &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;javax.ws.rs.core.Application&lt;/servlet-name&gt;
+        &lt;servlet-name&gt;jakarta.ws.rs.core.Application&lt;/servlet-name&gt;
         &lt;url-pattern&gt;/myresources/*&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
 &lt;/web-app&gt;</programlisting>
@@ -828,7 +828,7 @@ public class MyApplication extends ResourceConfig {
 
                     <para>
                         If the <literal>web.xml</literal> contains a Servlet definition, that has an initialization parameter
-                        <literal>javax.ws.rs.Application</literal> whose value is the fully qualified name of the
+                        <literal>jakarta.ws.rs.Application</literal> whose value is the fully qualified name of the
                         &lit.jaxrs.core.Application; subclass, Jersey does not perform any additional steps in such case.
                     </para>
 
@@ -903,7 +903,7 @@ public class MyApplication extends ResourceConfig {
                                 <row>
                                     <entry>No &lit.jaxrs.core.Application; subclass</entry>
                                     <entry>Adds Servlet</entry>
-                                    <entry><literal>javax.ws.rs.core.Application</literal></entry>
+                                    <entry><literal>jakarta.ws.rs.core.Application</literal></entry>
                                     <entry>Servlet mapping is required</entry>
                                 </row>
                                 <row>

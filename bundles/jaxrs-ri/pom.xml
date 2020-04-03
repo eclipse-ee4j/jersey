@@ -272,7 +272,7 @@
                         </Implementation-Version>
                         <Extension-Name>${project.artifactId}</Extension-Name>
                         <Export-Package>
-                            javax.ws.rs.*;version=${jaxrs.api.impl.version},
+                            jakarta.ws.rs.*;version=${jaxrs.api.impl.version},
                             org.glassfish.jersey.*;version=${project.version},
                             com.sun.research.ws.wadl.*;version=${project.version},
                             jersey.repackaged.org.objectweb.asm.*;version=${project.version}

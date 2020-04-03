@@ -24,7 +24,7 @@
     <wls:container-descriptor>
         <wls:prefer-application-packages>
             <!-- jsr311 -->
-            <wls:package-name>javax.ws.rs.*</wls:package-name>
+            <wls:package-name>jakarta.ws.rs.*</wls:package-name>
             <!-- javassist -->
             <wls:package-name>javassist.*</wls:package-name>
             <!-- aop repackaged -->
@@ -43,7 +43,7 @@
 
         <wls:prefer-application-resources>
             <wls:resource-name>META-INF/services/javax.servlet.ServletContainerInitializer</wls:resource-name>
-            <wls:resource-name>META-INF/services/javax.ws.rs.ext.RuntimeDelegate</wls:resource-name>
+            <wls:resource-name>META-INF/services/jakarta.ws.rs.ext.RuntimeDelegate</wls:resource-name>
 
             <!-- jersey -->
             <wls:resource-name>META-INF/services/org.glassfish.jersey.*</wls:resource-name>

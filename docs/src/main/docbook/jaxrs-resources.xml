@@ -60,9 +60,9 @@
                 <title>Simple hello world root resource class</title>
                 <programlisting language="java" linenumbering="numbered">package org.glassfish.jersey.examples.helloworld;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 @Path("helloworld")
 public class HelloWorldResource {
@@ -387,8 +387,8 @@ public Response smooth(
                 </para>
             </listitem>
             <listitem>
-                <para>Have a registered implementation of <literal>javax.ws.rs.ext.ParamConverterProvider</literal> JAX-RS
-                    extension SPI that returns a <literal>javax.ws.rs.ext.ParamConverter</literal> instance capable of
+                <para>Have a registered implementation of <literal>jakarta.ws.rs.ext.ParamConverterProvider</literal> JAX-RS
+                    extension SPI that returns a <literal>jakarta.ws.rs.ext.ParamConverter</literal> instance capable of
                     a "from string" conversion for the type.
                      or
                 </para>

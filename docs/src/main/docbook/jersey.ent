@@ -55,7 +55,7 @@
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
 <!ENTITY jaxrs.release.uri "https://github.com/jax-rs">
 <!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/&jax-rs.version;/">
-<!ENTITY jaxrs21.javadoc.uri "#/javax/ws/rs">   <!-- TODO - once we have published javadocs to link here -->
+<!ENTITY jaxrs21.javadoc.uri "#/jakarta.ws.rs">   <!-- TODO - once we have published javadocs to link here -->
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
 <!ENTITY jersey.ext.declarative-linking.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-declarative-linking/dependencies.html'>jersey-declarative-linking</link>" >
@@ -362,10 +362,10 @@
 <!ENTITY jersey.ext.ValidationFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/server/validation/ValidationFeature.html'>ValidationFeature</link>">
 <!ENTITY jersey.ext.rx.client.AbstractRxInvoker "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/spi/AbstractRxInvoker.html'>AbstractRxInvoker</link>">
 <!ENTITY jersey.ext.rx.client.Rx "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html'>Rx</link>">
-<!ENTITY jersey.ext.rx.client.Rx.fromClient "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(javax.ws.rs.client.Client, java.lang.Class)'>Rx.from(Client,Class)</link>">
-<!ENTITY jersey.ext.rx.client.Rx.fromClientExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(javax.ws.rs.client.Client, java.lang.Class, java.util.concurrent.ExecutorService)'>Rx.from(Client,Class,ExecutorService)</link>">
-<!ENTITY jersey.ext.rx.client.Rx.fromWebTarget "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(javax.ws.rs.client.WebTarget, java.lang.Class)'>Rx.from(WebTarget,Class)</link>">
-<!ENTITY jersey.ext.rx.client.Rx.fromWebTargetExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(javax.ws.rs.client.WebTarget, java.lang.Class, java.util.concurrent.ExecutorService)'>Rx.from(WebTarget,Class,ExecutorService)</link>">
+<!ENTITY jersey.ext.rx.client.Rx.fromClient "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(jakarta.ws.rs.client.Client, java.lang.Class)'>Rx.from(Client,Class)</link>">
+<!ENTITY jersey.ext.rx.client.Rx.fromClientExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(jakarta.ws.rs.client.Client, java.lang.Class, java.util.concurrent.ExecutorService)'>Rx.from(Client,Class,ExecutorService)</link>">
+<!ENTITY jersey.ext.rx.client.Rx.fromWebTarget "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(jakarta.ws.rs.client.WebTarget, java.lang.Class)'>Rx.from(WebTarget,Class)</link>">
+<!ENTITY jersey.ext.rx.client.Rx.fromWebTargetExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#from(jakarta.ws.rs.client.WebTarget, java.lang.Class, java.util.concurrent.ExecutorService)'>Rx.from(WebTarget,Class,ExecutorService)</link>">
 <!ENTITY jersey.ext.rx.client.Rx.newClient "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#newClient(java.lang.Class)'>Rx.newClient(Class)</link>">
 <!ENTITY jersey.ext.rx.client.Rx.newClientExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/Rx.html#newClient(java.lang.Class, java.util.concurrent.ExecutorService)'>Rx.newClient(Class,ExecutorService)</link>">
 <!ENTITY jersey.ext.rx.client.RxClient "<link xlink:href='&jersey.javadoc.uri.prefix;/client/rx/RxClient.html'>RxClient</link>">
@@ -593,9 +593,9 @@
 <!ENTITY jersey.test.spi.TestContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/test/spi/TestContainerFactory.html'>TestContainerFactory</link>">
 <!ENTITY jersey.test.util.ContainerRequestBuilder "<link xlink:href='&jersey.javadoc.uri.prefix;/test/util/server/ContainerRequestBuilder.html'>ContainerRequestBuilder</link>">
 <!ENTITY jersey.test.util.LoopBackConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/test/util/client/LoopBackConnectorProvider.html'>LoopBackConnectorProvider</link>">
-<!ENTITY javax.ws.rs.sse.SseEventSource.Builder "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSource.Builder.html'>SseEventSource.Builder</link>">
-<!ENTITY javax.ws.rs.sse.SseEventSource "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSource.html'>SseEventSource</link>">
-<!ENTITY javax.ws.rs.sse.InboundSseEvent "<link xlink:href='&jaxrs21.javadoc.uri;/sse/InboundSseEvent.html'>InboundSseEvent</link>">
+<!ENTITY jakarta.ws.rs.sse.SseEventSource.Builder "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSource.Builder.html'>SseEventSource.Builder</link>">
+<!ENTITY jakarta.ws.rs.sse.SseEventSource "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSource.html'>SseEventSource</link>">
+<!ENTITY jakarta.ws.rs.sse.InboundSseEvent "<link xlink:href='&jaxrs21.javadoc.uri;/sse/InboundSseEvent.html'>InboundSseEvent</link>">
 
 <!-- Links to specific JIRA issues -->
 <!ENTITY jersey.jira.2883 "<link xlink:href='&jira.uri.prefix;/2838'>JERSEY-2838</link>">

@@ -98,10 +98,10 @@
 
             <programlisting language="java" linenumbering="numbered">package com.example;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -138,9 +138,9 @@ public class MyResource {
 
             <programlisting language="java" linenumbering="numbered">package com.example;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -453,7 +453,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     [INFO] Copying jetty-xml-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-xml-9.0.6.v20130930.jar
     [INFO] Copying jersey-server-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-server-2.5.jar
     [INFO] Copying jersey-container-servlet-core-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-2.5.jar
-    [INFO] Copying javax.ws.rs-api-2.0.jar to .../simple-heroku-webapp/target/dependency/javax.ws.rs-api-2.0.jar
+    [INFO] Copying jakarta.ws.rs-api-2.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-2.0.jar
     [INFO] Copying jetty-servlet-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-servlet-9.0.6.v20130930.jar
     [INFO] Copying javax.inject-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/javax.inject-2.2.0-b21.jar
     [INFO] Copying javax.servlet-3.0.0.v201112011016.jar to .../simple-heroku-webapp/target/dependency/javax.servlet-3.0.0.v201112011016.jar
@@ -582,7 +582,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
            [INFO] Copying guava-14.0.1.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/guava-14.0.1.jar
            [INFO] Copying javax.annotation-api-1.2.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/javax.annotation-api-1.2.jar
            [INFO] Copying validation-api-1.1.0.Final.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/validation-api-1.1.0.Final.jar
-           [INFO] Copying javax.ws.rs-api-2.0.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/javax.ws.rs-api-2.0.jar
+           [INFO] Copying jakarta.ws.rs-api-2.0.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jakarta.ws.rs-api-2.0.jar
            [INFO] Copying jetty-http-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-http-9.0.6.v20130930.jar
            [INFO] Copying jetty-io-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-io-9.0.6.v20130930.jar
            [INFO] Copying jetty-security-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-security-9.0.6.v20130930.jar

@@ -30,7 +30,7 @@
     <packaging>war</packaging>
     <name>jersey-tests-integration-servlet-3-gf-async</name>
 
-    <description>Servlet (GF) integration test - servlet-3-gf-async - configured via jax-rs application annotated with @javax.ws.rs.ApplicationPath</description>
+    <description>Servlet (GF) integration test - servlet-3-gf-async - configured via jax-rs application annotated with @jakarta.ws.rs.ApplicationPath</description>
 
     <dependencies>
         <dependency>

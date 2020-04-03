@@ -36,7 +36,7 @@
             or pom:groupId='javax.annotation'
             or pom:groupId='javax.enterprise'
             or pom:groupId='javax.servlet'
-            or pom:groupId='javax.ws.rs']/pom:scope[text()!=test]">
+            or pom:groupId='jakarta.ws.rs']/pom:scope[text()!=test]">
         <scope>provided</scope>
     </xsl:template>
 
@@ -54,7 +54,7 @@
             or pom:groupId='javax.annotation'
             or pom:groupId='javax.enterprise'
             or pom:groupId='javax.servlet'
-            or pom:groupId='javax.ws.rs']">
+            or pom:groupId='jakarta.ws.rs']">
         <xsl:copy>
             <xsl:apply-templates />
             <xsl:if test="count(pom:scope)=0">

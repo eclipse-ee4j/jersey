@@ -31,8 +31,8 @@
     <name>jersey-tests-integration-servlet-3-init-2</name>
 
     <description>
-        Servlet integration test - servlet-3-init-2 - configured via jax-rs application annotated with @javax.ws.rs.ApplicationPath
-        and providers annotated with @javax.ws.rs.ext.Provider.
+        Servlet integration test - servlet-3-init-2 - configured via jax-rs application annotated with @jakarta.ws.rs.ApplicationPath
+        and providers annotated with @jakarta.ws.rs.ext.Provider.
     </description>
 
     <dependencies>

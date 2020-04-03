@@ -23,7 +23,7 @@ URI path            | Resource class       | HTTP methods
 **_/helloworld_**   | HelloWorldResource   | GET
 
 Application is configured by using web.xml, which registers
-[javax.ws.rs.core.Application](https://jax-rs-spec.java.net/nonav/2.0/apidocs/javax/ws/rs/core/Application.html)
+[jakarta.ws.rs.core.Application](https://jax-rs-spec.java.net/nonav/2.0/apidocs/jakarta.ws.rs/core/Application.html)
 descendant to get classes and singletons from it (see class MyApplication).
 
 Running the Example

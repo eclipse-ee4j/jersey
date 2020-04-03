@@ -27,7 +27,7 @@ URI path            | Resource class     | HTTP methods
 In the example, the requests to a *public resource* deployed on
 `/public/` path are forwarded to an *internal resource* (deployed on
 `/internal/` path) using injected
-[javax.ws.rs.client.WebTarget](https://jax-rs-spec.java.net/nonav/2.0/apidocs/javax/ws/rs/client/WebTarget.html)
+[jakarta.ws.rs.client.WebTarget](https://jax-rs-spec.java.net/nonav/2.0/apidocs/jakarta.ws.rs/client/WebTarget.html)
 instances produced using 2 separate managed clients each of the managed
 clients using it's own custom configuration.
 
