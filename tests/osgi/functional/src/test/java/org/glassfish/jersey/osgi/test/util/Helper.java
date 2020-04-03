@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -150,7 +150,7 @@ public class Helper {
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-server").versionAsInProject(),
 
                 // javax.validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // Jersey Grizzly
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-http")
