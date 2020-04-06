@@ -45,7 +45,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.WriterInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.client.ClientAsyncExecutor;
 import org.glassfish.jersey.client.ClientConfig;

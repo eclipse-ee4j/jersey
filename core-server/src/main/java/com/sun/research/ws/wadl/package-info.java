@@ -5,5 +5,5 @@
 // Generated on: 2014.08.06 at 11:57:31 AM CEST
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://wadl.dev.java.net/2009/02", elementFormDefault = javax.xml.bind
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://wadl.dev.java.net/2009/02", elementFormDefault = jakarta.xml.bind
         .annotation.XmlNsForm.QUALIFIED) package com.sun.research.ws.wadl;

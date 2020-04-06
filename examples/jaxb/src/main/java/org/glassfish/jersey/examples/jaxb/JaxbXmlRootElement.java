@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.jaxb;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class JaxbXmlRootElement {

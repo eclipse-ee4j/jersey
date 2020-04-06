@@ -32,7 +32,7 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Provider;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.glassfish.jersey.model.internal.CommonConfig;

@@ -28,7 +28,7 @@ public final class MessageProperties {
 
     /**
      * If set to {@code true} then XML root element tag name for collections will
-     * be derived from {@link javax.xml.bind.annotation.XmlRootElement @XmlRootElement}
+     * be derived from {@link jakarta.xml.bind.annotation.XmlRootElement @XmlRootElement}
      * annotation value and won't be de-capitalized.
      * <p />
      * The default value is {@code false}.

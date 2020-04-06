@@ -371,7 +371,7 @@ final ContextResolver&lt;MoxyJsonConfig&gt; jsonConfigResolver = moxyJsonConfig.
                         <tgroup cols="2" align="left">
                             <tbody>
                                 <row>
-                                    <entry><literal>javax.xml.bind.Marshaller#JAXB_FORMATTED_OUTPUT</literal></entry>
+                                    <entry><literal>jakarta.xml.bind.Marshaller#JAXB_FORMATTED_OUTPUT</literal></entry>
                                     <entry><literal>false</literal></entry>
                                 </row>
                                 <row>

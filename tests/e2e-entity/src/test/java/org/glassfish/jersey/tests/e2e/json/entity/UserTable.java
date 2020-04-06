@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.tests.e2e.json.JsonTestHelper;
 
@@ -33,7 +33,7 @@ import org.glassfish.jersey.tests.e2e.json.JsonTestHelper;
  * unmarshalling XML/JSON stream additional elements are added to this list - MOXy doesn't override the existing list with a
  * new one created during unmarshalling).
  * <p/>
- * Workaround: Set {@link javax.xml.bind.annotation.XmlAccessorType} to {@link javax.xml.bind.annotation.XmlAccessType#FIELD},
+ * Workaround: Set {@link jakarta.xml.bind.annotation.XmlAccessorType} to {@link jakarta.xml.bind.annotation.XmlAccessType#FIELD},
  * do not initialize the list in the default constructor
  * (field initializer) and assign the value to the list that should contain predefined values manually (in this case the value
  * object is represented by {@code #DEFAULT_HEADERS}).

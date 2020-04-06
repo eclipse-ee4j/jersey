@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.performance.mbw.xml;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Test data bean.

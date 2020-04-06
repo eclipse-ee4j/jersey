@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.entityfiltering.selectable.domain;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Person {

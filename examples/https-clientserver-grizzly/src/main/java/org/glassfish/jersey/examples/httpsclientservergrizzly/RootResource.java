@@ -11,7 +11,7 @@
 package org.glassfish.jersey.examples.httpsclientservergrizzly;
 
 import java.nio.charset.Charset;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

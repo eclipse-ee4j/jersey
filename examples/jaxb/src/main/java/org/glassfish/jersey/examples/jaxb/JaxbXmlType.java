@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.jaxb;
 
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType
 public class JaxbXmlType {

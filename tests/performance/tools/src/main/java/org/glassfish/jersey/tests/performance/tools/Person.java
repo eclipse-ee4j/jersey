@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.performance.tools;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Person data bean, copied from mbw tests and annotated for the test data generation tool.

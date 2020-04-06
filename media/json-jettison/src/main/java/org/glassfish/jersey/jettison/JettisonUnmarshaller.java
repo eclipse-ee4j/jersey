@@ -19,8 +19,8 @@ package org.glassfish.jersey.jettison;
 import java.io.InputStream;
 import java.io.Reader;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 
 /**
  * A JSON unmarshaller responsible for deserializing JSON data to a Java
@@ -44,10 +44,10 @@ public interface JettisonUnmarshaller {
      * @return the newly created root object of the Java content tree. The
      *         content tree may be an instance of a class that is
      *         mapped to a XML root element (for example, annotated with
-     *         {@link javax.xml.bind.annotation.XmlRootElement}) or mapped to an XML type (for example,
-     *         annotated with {@link javax.xml.bind.annotation.XmlType}).
-     * @throws javax.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
-     * @throws javax.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
+     *         {@link jakarta.xml.bind.annotation.XmlRootElement}) or mapped to an XML type (for example,
+     *         annotated with {@link jakarta.xml.bind.annotation.XmlType}).
+     * @throws jakarta.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
+     * @throws jakarta.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
      *         to perform the JSON to Java binding.
      */
     <T> T unmarshalFromJSON(InputStream is, Class<T> expectedType) throws JAXBException;
@@ -65,10 +65,10 @@ public interface JettisonUnmarshaller {
      * @return the newly created root object of the Java content tree. The
      *         content tree may be an instance of a class that is
      *         mapped to a XML root element (for example, annotated with
-     *         {@link javax.xml.bind.annotation.XmlRootElement}) or mapped to an XML type (for example,
-     *         annotated with {@link javax.xml.bind.annotation.XmlType}).
-     * @throws javax.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
-     * @throws javax.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
+     *         {@link jakarta.xml.bind.annotation.XmlRootElement}) or mapped to an XML type (for example,
+     *         annotated with {@link jakarta.xml.bind.annotation.XmlType}).
+     * @throws jakarta.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
+     * @throws jakarta.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
      *         to perform the JSON to Java binding.
      */
     <T> T unmarshalFromJSON(Reader reader, Class<T> expectedType) throws JAXBException;
@@ -83,12 +83,12 @@ public interface JettisonUnmarshaller {
      * @param <T> the type of the Java content tree.
      * @param is the InputStream to unmarshal JSON data from.
      * @param declaredType a class that is mapped to a XML root element
-     *        (for example, annotated with {@link javax.xml.bind.annotation.XmlRootElement}) or mapped to
-     *        an XML type (for example, annotated with {@link javax.xml.bind.annotation.XmlType}).
+     *        (for example, annotated with {@link jakarta.xml.bind.annotation.XmlRootElement}) or mapped to
+     *        an XML type (for example, annotated with {@link jakarta.xml.bind.annotation.XmlType}).
      * @return the newly created root object of the Java content tree, root
-     *         by a {@link javax.xml.bind.JAXBElement} instance.
-     * @throws javax.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
-     * @throws javax.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
+     *         by a {@link jakarta.xml.bind.JAXBElement} instance.
+     * @throws jakarta.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
+     * @throws jakarta.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
      *         to perform the JSON to Java binding.
      */
     <T> JAXBElement<T> unmarshalJAXBElementFromJSON(InputStream is, Class<T> declaredType) throws JAXBException;
@@ -103,12 +103,12 @@ public interface JettisonUnmarshaller {
      * @param <T> the type of the Java content tree.
      * @param reader the Reader to unmarshal JSON data from.
      * @param declaredType a class that is mapped to a XML root element
-     *        (for example, annotated with {@link javax.xml.bind.annotation.XmlRootElement}) or mapped to
-     *        an XML type (for example, annotated with {@link javax.xml.bind.annotation.XmlType}).
+     *        (for example, annotated with {@link jakarta.xml.bind.annotation.XmlRootElement}) or mapped to
+     *        an XML type (for example, annotated with {@link jakarta.xml.bind.annotation.XmlType}).
      * @return the newly created root object of the Java content tree, root
-     *         by a {@link javax.xml.bind.JAXBElement} instance.
-     * @throws javax.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
-     * @throws javax.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
+     *         by a {@link jakarta.xml.bind.JAXBElement} instance.
+     * @throws jakarta.xml.bind.JAXBException if any unexpected errors occur while unmarshalling.
+     * @throws jakarta.xml.bind.UnmarshalException if the <code>JsonUnmarshaller</code> is unable
      *         to perform the JSON to Java binding.
      */
     <T> JAXBElement<T> unmarshalJAXBElementFromJSON(Reader reader, Class<T> declaredType) throws JAXBException;

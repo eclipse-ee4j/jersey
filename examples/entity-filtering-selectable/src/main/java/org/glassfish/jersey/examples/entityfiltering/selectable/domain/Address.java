@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.entityfiltering.selectable.domain;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Address {

@@ -31,7 +31,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -70,8 +70,8 @@ public class WebResourceFactoryTest {
         List<Option> options = Helper.getCommonOsgiOptions();
 
         options.addAll(Helper.expandedList(
-                bootDelegationPackage("javax.xml.bind"),
-                bootDelegationPackage("javax.xml.bind.*"),
+                bootDelegationPackage("jakarta.xml.bind"),
+                bootDelegationPackage("jakarta.xml.bind.*"),
                 // jersey-multipart dependencies
                 mavenBundle().groupId("org.glassfish.jersey.ext").artifactId("jersey-proxy-client").versionAsInProject(),
                 //SUN JAXB IMPL OSGI

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.xhtml;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 /**

@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBContext;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.util.JdkVersion;
@@ -218,7 +218,7 @@ public abstract class AbstractJsonTest extends JerseyTest {
 
     private static boolean moxyJaxbProvider() {
         return "org.eclipse.persistence.jaxb.JAXBContextFactory".equals(
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("javax.xml.bind.JAXBContext")));
+                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("jakarta.xml.bind.JAXBContext")));
     }
 
     /**

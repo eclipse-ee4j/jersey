@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;

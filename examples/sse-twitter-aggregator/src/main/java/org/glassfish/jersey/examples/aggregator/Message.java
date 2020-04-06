@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.aggregator;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 
 import org.eclipse.persistence.oxm.annotations.XmlPath;
 

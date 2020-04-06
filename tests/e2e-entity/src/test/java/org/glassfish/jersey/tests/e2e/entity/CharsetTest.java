@@ -37,7 +37,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBContext;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jettison.JettisonFeature;

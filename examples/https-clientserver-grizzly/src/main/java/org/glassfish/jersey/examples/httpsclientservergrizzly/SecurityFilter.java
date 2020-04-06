@@ -25,7 +25,7 @@ import jakarta.ws.rs.ext.Provider;
 import javax.inject.Inject;
 
 import java.nio.charset.Charset;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 /**
  * Simple authentication filter.

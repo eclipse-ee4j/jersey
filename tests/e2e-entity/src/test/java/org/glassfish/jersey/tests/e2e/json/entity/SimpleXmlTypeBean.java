@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.e2e.json.entity;
 
 import java.util.Formatter;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * @author Jakub Podlesak

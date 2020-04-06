@@ -39,8 +39,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.AnnotationDocType;

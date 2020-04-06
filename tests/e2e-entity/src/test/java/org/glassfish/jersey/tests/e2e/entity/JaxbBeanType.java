@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.entity;
 
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlType;
 
 /**
  *

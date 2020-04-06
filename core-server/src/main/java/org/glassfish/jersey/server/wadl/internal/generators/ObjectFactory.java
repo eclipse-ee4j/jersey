@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.wadl.internal.generators;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 /**
  * The object factory for application docs jaxb bindings.<br>

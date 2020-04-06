@@ -35,10 +35,10 @@ import jakarta.ws.rs.ext.Providers;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.glassfish.jersey.message.internal.EntityInputStream;

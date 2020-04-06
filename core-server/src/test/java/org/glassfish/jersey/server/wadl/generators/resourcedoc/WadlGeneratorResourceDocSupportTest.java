@@ -25,9 +25,9 @@ import java.util.Collections;
 
 import jakarta.ws.rs.POST;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.wadl.WadlGenerator;

@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.e2e.json.entity;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.tests.e2e.json.JsonTestHelper;
 

@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.performance.benchmark.entity.json;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * User entity class. Fields {@code projects} and {@code tasks} are available only in detailed view (defined via

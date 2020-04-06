@@ -56,10 +56,10 @@
             	<listitem>XML media types (<literal>text/xml</literal>, <literal>application/xml</literal> and <literal>application/...+xml</literal>)
             		<itemizedlist>
             			<listitem><literal>javax.xml.transform.Source</literal></listitem>
-            			<listitem><literal>javax.xml.bind.JAXBElement</literal></listitem>
+            			<listitem><literal>jakarta.xml.bind.JAXBElement</literal></listitem>
             			<listitem>Application supplied JAXB classes (types annotated with
-	    <link xlink:href="http://docs.oracle.com/javase/6/docs/api/javax/xml/bind/annotation/XmlRootElement.html">@XmlRootElement</link>
-	    or<link xlink:href="http://docs.oracle.com/javase/6/docs/api/javax/xml/bind/annotation/XmlType.html">@XmlType</link>)</listitem>
+	    <link xlink:href="http://docs.oracle.com/javase/6/docs/api/jakarta.xml.bind/annotation/XmlRootElement.html">@XmlRootElement</link>
+	    or<link xlink:href="http://docs.oracle.com/javase/6/docs/api/jakarta.xml.bind/annotation/XmlType.html">@XmlType</link>)</listitem>
              		</itemizedlist>
             	</listitem>
                 <listitem>Form content (<literal>application/x-www-form-urlencoded</literal>)

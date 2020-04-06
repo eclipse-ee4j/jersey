@@ -104,7 +104,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>javax.xml.bind.*;version="!",*</Import-Package>
+                        <Import-Package>jakarta.xml.bind.*;version="!",*</Import-Package>
                         <Export-Package>org.glassfish.jersey.jaxb.*;version=${project.version}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>

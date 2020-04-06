@@ -19,8 +19,8 @@ package org.glassfish.jersey.jettison;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.PropertyException;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.PropertyException;
 
 /**
  * A JSON marshaller responsible for serializing Java content trees, defined
@@ -37,16 +37,16 @@ public interface JettisonMarshaller {
      * Marshall the content tree rooted at <code>jaxbElement</code> into an
      * output stream. The content tree may be an instance of a class that is
      * mapped to a XML root element (for example, annotated with
-     * {@link javax.xml.bind.annotation.XmlRootElement}) or an instance of {@link javax.xml.bind.JAXBElement}.
+     * {@link jakarta.xml.bind.annotation.XmlRootElement}) or an instance of {@link jakarta.xml.bind.JAXBElement}.
      * <p>
      * The UTF-8 character encoding scheme will be used to encode the characters
      * of the JSON data.
      *
      * @param jaxbElement the root of the content tree to be marshalled.
      * @param os the JSON will be added to this stream.
-     * @throws javax.xml.bind.JAXBException if any unexpected problem occurs during the
+     * @throws jakarta.xml.bind.JAXBException if any unexpected problem occurs during the
      *         marshalling.
-     * @throws javax.xml.bind.MarshalException if the <code>JsonMarshaller</code> is unable to
+     * @throws jakarta.xml.bind.MarshalException if the <code>JsonMarshaller</code> is unable to
      *         marshal <code>jaxbElement</code> (or any object reachable from obj)
      * @throws IllegalArgumentException if any of the method parameters are null.
      *
@@ -57,16 +57,16 @@ public interface JettisonMarshaller {
      * Marshall the content tree rooted at <code>jaxbElement</code> into an
      * output stream. The content tree may be an instance of a class that is
      * mapped to a XML root element (for example, annotated with
-     * {@link javax.xml.bind.annotation.XmlRootElement}) or an instance of {@link javax.xml.bind.JAXBElement}.
+     * {@link jakarta.xml.bind.annotation.XmlRootElement}) or an instance of {@link jakarta.xml.bind.JAXBElement}.
      * <p>
      * The character encoding scheme of the <code>writer</code> will be used to
      * encode the characters of the JSON data.
      *
      * @param jaxbElement the root of the content tree to be marshalled.
      * @param writer the JSON will be added to this writer.
-     * @throws javax.xml.bind.JAXBException if any unexpected problem occurs during the
+     * @throws jakarta.xml.bind.JAXBException if any unexpected problem occurs during the
      *         marshalling.
-     * @throws javax.xml.bind.MarshalException if the <code>JsonMarshaller</code> is unable to
+     * @throws jakarta.xml.bind.MarshalException if the <code>JsonMarshaller</code> is unable to
      *         marshal <code>jaxbElement</code> (or any object reachable from obj)
      * @throws IllegalArgumentException If any of the method parameters are null.
      */
@@ -82,7 +82,7 @@ public interface JettisonMarshaller {
      *              supplied string.
      * @param value the value of the property to be set
      *
-     * @throws javax.xml.bind.PropertyException when there is an error processing the given
+     * @throws jakarta.xml.bind.PropertyException when there is an error processing the given
      *                            property or value
      * @throws IllegalArgumentException
      *      If the name parameter is null

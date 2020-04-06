@@ -11,7 +11,7 @@
 package org.glassfish.jersey.examples.entityfiltering.security.domain;
 
 import javax.annotation.security.RolesAllowed;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Restricted sub-entity to demonstrate that security entity-filtering is transitive.

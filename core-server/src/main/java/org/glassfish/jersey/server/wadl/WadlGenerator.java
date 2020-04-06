@@ -23,8 +23,8 @@ import java.util.Map;
 
 import jakarta.ws.rs.core.MediaType;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
 import org.glassfish.jersey.server.model.Parameter;

@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.executable.ExecutableType;
 import javax.validation.executable.ValidateOnExecution;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.tests.e2e.server.validation.Extended;
 

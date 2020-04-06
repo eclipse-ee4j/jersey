@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.json.entity;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Jakub Podlesak

@@ -11,7 +11,7 @@
 package org.glassfish.jersey.examples.server.async.managed;
 
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Chat message JAXB POJO.

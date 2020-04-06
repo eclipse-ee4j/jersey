@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.validation;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Default validation error entity to be included in {@code Response}.

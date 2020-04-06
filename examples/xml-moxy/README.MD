@@ -83,7 +83,7 @@ Jersey use MOXy runtime, you just need to put a `jaxb.properties` file
 into the Java package containing your JAXB beans. The file should have
 the following content:
 
-    javax.xml.bind.context.factory=org.eclipse.persistence.jaxb.JAXBContextFactory
+    jakarta.xml.bind.context.factory=org.eclipse.persistence.jaxb.JAXBContextFactory
 
 Concrete file used in this example is placed under
 

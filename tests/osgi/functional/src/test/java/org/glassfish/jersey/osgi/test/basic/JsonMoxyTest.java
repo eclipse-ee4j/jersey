@@ -45,8 +45,8 @@ public class JsonMoxyTest extends AbstractJsonOsgiIntegrationTest {
         options.addAll(Helper.expandedList(
                 // vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
 
-                bootDelegationPackage("javax.xml.bind"),
-                bootDelegationPackage("javax.xml.bind.*"),
+                bootDelegationPackage("jakarta.xml.bind"),
+                bootDelegationPackage("jakarta.xml.bind.*"),
                 // validation
                 bootDelegationPackage("javax.xml.parsers"),
                 bootDelegationPackage("javax.xml.parsers.*"),

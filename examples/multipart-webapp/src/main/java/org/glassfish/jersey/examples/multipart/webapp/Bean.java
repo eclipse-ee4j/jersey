@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.multipart.webapp;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Bean {

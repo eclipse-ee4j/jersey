@@ -52,7 +52,7 @@
 <!ENTITY hk2.link "<link xlink:href='https://javaee.github.io/hk2/'>HK2</link>">
 <!ENTITY hk2.spring-bridge.link "<link xlink:href='https://javaee.github.io/hk2/spring-bridge/'>The Spring/HK2 Bridge</link>">
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
-<!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
+<!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/jakarta.xml.bind">
 <!ENTITY jaxrs.release.uri "https://github.com/jax-rs">
 <!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/&jax-rs.version;/">
 <!ENTITY jaxrs21.javadoc.uri "#/jakarta.ws.rs">   <!-- TODO - once we have published javadocs to link here -->
@@ -251,7 +251,7 @@
 <!ENTITY jdk6.HttpServer "<link xlink:href='http://docs.oracle.com/javase/6/docs/jre/api/net/httpserver/spec/com/sun/net/httpserver/HttpServer.html'>HttpServer</link>">
 <!ENTITY jdk6.HttpUrlConnection "<link xlink:href='&jdk6.javadoc.uri;/java/net/HttpURLConnection.html'>HttpURLConnection</link>">
 <!ENTITY jdk6.InputStream "<link xlink:href='&jdk6.javadoc.uri;/java/io/InputStream.html'>InputStream</link>">
-<!ENTITY jdk6.JAXBElement "<link xlink:href='&jdk6.javadoc.uri;/javax/xml/bind/JAXBElement.html'>JAXBElement</link>">
+<!ENTITY jdk6.JAXBElement "<link xlink:href='&jdk6.javadoc.uri;/jakarta.xml.bind/JAXBElement.html'>JAXBElement</link>">
 <!ENTITY jdk6.KeyStore "<link xlink:href='&jdk6.javadoc.uri;/java/security/KeyStore.html'>KeyStore</link>">
 <!ENTITY jdk6.NIO "<link xlink:href='&jdk6.javadoc.uri;/java/nio/package-summary.html'>NIO</link>">
 <!ENTITY jdk6.Number "<link xlink:href='&jdk6.javadoc.uri;/java/lang/Number.html'>Number</link>">
