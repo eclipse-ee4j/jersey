@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,9 +10,10 @@
 
 package org.glassfish.jersey.examples.helloworld.cdi2se;
 
+import org.jboss.weld.context.ejb.Ejb;
+
 import java.security.Principal;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -33,7 +34,7 @@ import static java.util.Optional.ofNullable;
 @Path("helloworld")
 public class HelloWorldResource {
 
-    @Inject
+    @Ejb
     private HelloBean helloBean;
 
     @GET
