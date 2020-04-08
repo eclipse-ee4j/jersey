@@ -37,4 +37,4 @@ Run the example as follows:
 
 This deploys the example using [Grizzly](http://grizzly.java.net/) container. You can access the application at:
 
-- <http://localhost:8080/weld>
+- <http://localhost:8080/weld/application.wadl>
