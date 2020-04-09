@@ -1001,4 +1001,9 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
     ClientRequest request() {
         return requestContext;
     }
+
+    @Override
+    public String toString() {
+        return "JerseyInvocation [" + request().getMethod() + ' ' + request().getUri() + "]";
+    }
 }
