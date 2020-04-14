@@ -10,10 +10,9 @@
 
 package org.glassfish.jersey.examples.helloworld.cdi2se;
 
-import org.jboss.weld.context.ejb.Ejb;
-
 import java.security.Principal;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -34,7 +33,7 @@ import static java.util.Optional.ofNullable;
 @Path("helloworld")
 public class HelloWorldResource {
 
-    @Ejb
+    @Inject
     private HelloBean helloBean;
 
     @GET
