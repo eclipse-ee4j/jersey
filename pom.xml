@@ -2042,6 +2042,7 @@
                 <artifactId>opentracing-util</artifactId>
                 <version>${opentracing.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
