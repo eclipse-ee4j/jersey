@@ -2042,13 +2042,6 @@
                 <artifactId>opentracing-util</artifactId>
                 <version>${opentracing.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.sun.istack</groupId>
-                <artifactId>istack-commons-runtime</artifactId>
-                <version>${istack.commons.runtime.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 

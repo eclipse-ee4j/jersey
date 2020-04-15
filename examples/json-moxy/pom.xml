@@ -55,6 +55,7 @@
         <dependency>
             <groupId>com.sun.istack</groupId>
             <artifactId>istack-commons-runtime</artifactId>
+            <version>${istack.commons.runtime.version}</version>
         </dependency>
     </dependencies>
 
