@@ -77,6 +77,16 @@
                     <war>${project.build.directory}/${project.build.finalName}.war</war>
                 </configuration>
             </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <!-- TODO remove after jakartification -->
+            <configuration>
+                <excludes>
+                    <exclude>org/glassfish/jersey/examples/rx/RxClientsTest.java</exclude>
+                </excludes>
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 

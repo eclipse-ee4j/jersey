@@ -51,7 +51,11 @@
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-grizzly-connector</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-util</artifactId>
@@ -133,6 +137,10 @@
                 <configuration>
                     <forkMode>always</forkMode>
                     <enableAssertions>false</enableAssertions>
+                    <!-- TODO remove after jakartification -->
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/performance/benchmark/server/JacksonTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

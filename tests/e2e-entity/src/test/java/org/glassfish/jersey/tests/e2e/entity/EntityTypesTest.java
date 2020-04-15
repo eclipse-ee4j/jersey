@@ -58,7 +58,7 @@ import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;

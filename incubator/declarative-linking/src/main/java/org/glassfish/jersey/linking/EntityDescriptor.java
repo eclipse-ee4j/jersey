@@ -120,7 +120,8 @@ class EntityDescriptor {
                 // see issue http://java.net/jira/browse/JERSEY-625
                 if ((f.getModifiers() & Modifier.STATIC) > 0
                         || f.getName().startsWith("java.")
-                        || f.getName().startsWith("javax.")) {
+                        || f.getName().startsWith("javax.")
+                        || f.getName().startsWith("jakarta.")) {
                     continue;
                 }
                 nonLinkFields.put(f.getName(), new FieldDescriptor(f));

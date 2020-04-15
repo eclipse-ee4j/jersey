@@ -61,6 +61,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/integration/jersey2673/Jersey2673ITCase.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>

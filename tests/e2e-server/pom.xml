@@ -43,6 +43,19 @@
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
                 </configuration>
+                <!-- TODO remove after jakartification -->
+                <executions>
+                    <execution>
+                        <id>default-test</id> <!-- jakartification-excluded-tests -->
+                        <configuration>
+                            <excludes>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/ContentNegotiationTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/BeanParamExceptionTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/EntityInheritanceValidationTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
