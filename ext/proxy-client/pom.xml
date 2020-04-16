@@ -83,5 +83,25 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <!-- TODO remove after jakartification -->
+                        <configuration>
+                            <excludes> <!--JDK 8 -->
+                                <exclude>org/glassfish/jersey/client/proxy/WebResourceFactoryTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

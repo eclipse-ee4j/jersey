@@ -43,6 +43,10 @@
             <artifactId>jersey-test-framework-provider-external</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,16 +68,23 @@
 
     <profiles>
         <profile>
-            <id>jdk11+</id>
+            <id>jdk8</id>
             <activation>
-                <jdk>[11,)</jdk>
+                <jdk>1.8</jdk>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                </dependency>
-            </dependencies>
+            <build>
+               <plugins>
+                   <plugin>
+                       <groupId>org.apache.maven.plugins</groupId>
+                       <artifactId>maven-failsafe-plugin</artifactId>
+                       <configuration>
+                           <excludes>
+                               <exclude>org/glassfish/jersey/tests/integration/servlet_2_5_filter/MyResourceITCase.java</exclude>
+                           </excludes>
+                       </configuration>
+                   </plugin>
+               </plugins>
+            </build>
         </profile>
     </profiles>
 

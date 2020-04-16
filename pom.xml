@@ -2142,7 +2142,7 @@
         <opentracing.version>0.30.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <pax.exam.version>4.9.1</pax.exam.version>
+        <pax.exam.version>4.13.2</pax.exam.version>
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>

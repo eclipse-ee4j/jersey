@@ -52,6 +52,14 @@
                                 <exclude>org/glassfish/jersey/tests/e2e/server/ContentNegotiationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/server/BeanParamExceptionTest.java</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/server/validation/EntityInheritanceValidationTest.java</exclude>
+                                <!--JDK 8 -->
+                                <exclude>org/glassfish/jersey/tests/e2e/server/ResourceConfigTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/EntityExpansionTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/ResourceExtendedFlagTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlBeanParamTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlResourceTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/validateonexecution/ValidateOnExecutionBasicTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlEmptyMediaTypeTest*</exclude>
                             </excludes>
                         </configuration>
                     </execution>

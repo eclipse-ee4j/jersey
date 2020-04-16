@@ -377,7 +377,7 @@
         <profile>
             <id>testsSkipJdk8</id>
             <activation>
-                <jdk>[8,11)</jdk>
+                <jdk>[1.8,11)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -389,6 +389,18 @@
                             <excludes>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonProcessingTest.java</exclude>
+                                <!-- TODO remove after jakartification -->
+                                <exclude>org/glassfish/jersey/osgi/test/basic/ApacheOsgiIntegrationTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/BasicOsgiIntegrationTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/BeanValidationTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JaxRsRiBundleTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJacksonTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJettisonTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/MultiPartTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/PackageScanningTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/ResourceBundleTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/SseTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/WebResourceFactoryTest.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
