@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
 import static jakarta.ws.rs.client.Entity.xml;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.glassfish.jersey.server.ResourceConfig;

@@ -30,7 +30,7 @@
     <packaging>war</packaging>
     <name>jersey-tests-integration-servlet-3-init-1</name>
 
-    <description>Servlet integration test - servlet-3-init-1 - configured via jax-rs application annotated with @javax.ws.rs.ApplicationPath</description>
+    <description>Servlet integration test - servlet-3-init-1 - configured via jax-rs application annotated with @jakarta.ws.rs.ApplicationPath</description>
 
     <dependencies>
         <dependency>

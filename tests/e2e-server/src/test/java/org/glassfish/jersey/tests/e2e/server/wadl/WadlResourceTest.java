@@ -55,7 +55,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import javax.inject.Named;
 import javax.xml.XMLConstants;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

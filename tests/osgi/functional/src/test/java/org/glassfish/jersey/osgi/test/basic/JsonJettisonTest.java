@@ -41,8 +41,8 @@ public class JsonJettisonTest extends AbstractJsonOsgiIntegrationTest {
 
         options.addAll(Helper.getCommonOsgiOptions());
         options.addAll(Helper.expandedList(
-                bootDelegationPackage("javax.xml.bind"),
-                bootDelegationPackage("javax.xml.bind.*"),
+                bootDelegationPackage("jakarta.xml.bind"),
+                bootDelegationPackage("jakarta.xml.bind.*"),
                 // jersey-json dependencies
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-json-jettison").versionAsInProject(),
                 mavenBundle().groupId("org.codehaus.jettison").artifactId("jettison").versionAsInProject(),

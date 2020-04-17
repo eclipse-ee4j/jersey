@@ -29,7 +29,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 /**
  * Provider for marshalling/un-marshalling of {@code application/octet-stream}

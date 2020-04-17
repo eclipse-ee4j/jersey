@@ -93,6 +93,27 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>org/glassfish/jersey/tests/integration/servlet_25_mvc_2/BookstoreITCase.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/integration/servlet_25_mvc_2/ItemITCase.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ public final class MessageProperties {
 
     /**
      * If set to {@code true} then XML root element tag name for collections will
-     * be derived from {@link javax.xml.bind.annotation.XmlRootElement @XmlRootElement}
+     * be derived from {@link jakarta.xml.bind.annotation.XmlRootElement @XmlRootElement}
      * annotation value and won't be de-capitalized.
      * <p />
      * The default value is {@code false}.

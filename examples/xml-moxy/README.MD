@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -83,7 +83,7 @@ Jersey use MOXy runtime, you just need to put a `jaxb.properties` file
 into the Java package containing your JAXB beans. The file should have
 the following content:
 
-    javax.xml.bind.context.factory=org.eclipse.persistence.jaxb.JAXBContextFactory
+    jakarta.xml.bind.context.factory=org.eclipse.persistence.jaxb.JAXBContextFactory
 
 Concrete file used in this example is placed under
 

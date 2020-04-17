@@ -30,9 +30,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.glassfish.jersey.jaxb.internal.AbstractRootElementJaxbProvider;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
@@ -40,8 +40,8 @@ import org.glassfish.jersey.jettison.JettisonMarshaller;
 
 /**
  * JSON message entity media type provider (reader & writer) for JAXB types that
- * are annotated with {@link javax.xml.bind.annotation.XmlRootElement &#64;XmlRootElement}
- * or {@link javax.xml.bind.annotation.XmlType &#64;XmlType}.
+ * are annotated with {@link jakarta.xml.bind.annotation.XmlRootElement &#64;XmlRootElement}
+ * or {@link jakarta.xml.bind.annotation.XmlType &#64;XmlType}.
  *
  * @author Paul Sandoz
  * @author Jakub Podlesak

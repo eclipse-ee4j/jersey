@@ -44,13 +44,13 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -261,7 +261,7 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
      * @param c            the charset
      * @param m            the marshaller
      * @param entityStream the output stream to marshall the collection
-     * @throws javax.xml.bind.JAXBException in case the marshalling of element collection fails.
+     * @throws jakarta.xml.bind.JAXBException in case the marshalling of element collection fails.
      * @throws IOException                  in case of any other I/O error while marshalling the collection of JAXB objects.
      */
     public abstract void writeCollection(Class<?> elementType, Collection<?> t,
@@ -425,8 +425,8 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
     /**
      * Get the element name for a given Java type.
      * <p>
-     * In case the element is annotated with a {@link javax.xml.bind.annotation.XmlRootElement} annotation
-     * and the {@link javax.xml.bind.annotation.XmlRootElement#name() specified element name} is not default,
+     * In case the element is annotated with a {@link jakarta.xml.bind.annotation.XmlRootElement} annotation
+     * and the {@link jakarta.xml.bind.annotation.XmlRootElement#name() specified element name} is not default,
      * the method returns the specified element name in the annotation. Otherwise, the method returns the name of
      * the element class instead.
      * </p>

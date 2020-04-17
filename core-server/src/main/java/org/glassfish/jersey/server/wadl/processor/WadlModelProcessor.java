@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.UriInfo;
 import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.Marshaller;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.message.internal.MediaTypes;

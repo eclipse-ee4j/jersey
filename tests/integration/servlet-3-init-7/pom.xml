@@ -31,7 +31,7 @@
     <name>jersey-tests-integration-servlet-3-init-7</name>
 
     <description>Servlet integration test - servlet-3-init-7 - no Application subclass is present;
-        dynamically add a servlet and set its name to javax.ws.rs.core.Application;
+        dynamically add a servlet and set its name to jakarta.ws.rs.core.Application;
         servlet-mapping in web.xml</description>
 
     <dependencies>

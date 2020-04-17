@@ -63,6 +63,16 @@
                     <mainClass>org.glassfish.jersey.examples.jackson.App</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/examples/jackson/JacksonTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

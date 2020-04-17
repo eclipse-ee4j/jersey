@@ -104,7 +104,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>javax.xml.bind.*;version="!",*</Import-Package>
+                        <Import-Package>jakarta.xml.bind.*;version="!",*</Import-Package>
                         <Export-Package>org.glassfish.jersey.jaxb.*;version=${project.version}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
@@ -155,6 +155,26 @@
                   <scope>test</scope>
               </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <!-- TODO remove after jakartification -->
+                        <configuration>
+                            <excludes> <!--JDK 8 -->
+                                <exclude>org/glassfish/jersey/jaxb/internal/JaxbStringReaderProviderTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

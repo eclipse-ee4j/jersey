@@ -31,12 +31,12 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.transform.stream.StreamSource;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
@@ -126,7 +126,7 @@ public abstract class AbstractRootElementJaxbProvider extends AbstractJaxbProvid
      * @param u            the unmarshaller to use for unmarshalling.
      * @param entityStream the input stream to unmarshal from.
      * @return an instance of the JAXB type.
-     * @throws javax.xml.bind.JAXBException in case the JAXB unmarshalling fails.
+     * @throws jakarta.xml.bind.JAXBException in case the JAXB unmarshalling fails.
      */
     protected Object readFrom(Class<Object> type, MediaType mediaType,
                               Unmarshaller u, InputStream entityStream)
@@ -170,7 +170,7 @@ public abstract class AbstractRootElementJaxbProvider extends AbstractJaxbProvid
      * @param c            the character set to serialize characters to.
      * @param m            the marshaller to marshaller the instance of the JAXB type.
      * @param entityStream the output stream to marshal to.
-     * @throws javax.xml.bind.JAXBException in case the JAXB marshalling fails.
+     * @throws jakarta.xml.bind.JAXBException in case the JAXB marshalling fails.
      */
     protected void writeTo(Object t, MediaType mediaType, Charset c,
                            Marshaller m, OutputStream entityStream)

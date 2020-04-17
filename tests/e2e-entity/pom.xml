@@ -56,6 +56,25 @@
                         <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEmptyEntityTest.java</exclude>
                     </excludes>
                 </configuration>
+                <!-- TODO remove after jakartification -->
+                <executions>
+                    <execution>
+                        <id>default-test</id> <!-- jakartification-excluded-tests -->
+                        <configuration>
+                            <excludes>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/MultipartTest.java</exclude>
+                                <!--JDK 8 -->
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/CharsetTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/EmptyRequestWithJaxbTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/EntityTypesTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/JAXBContextResolverTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/JAXBContextResolverTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/XXETest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/XmlJaxBElementProviderTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

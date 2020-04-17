@@ -30,17 +30,17 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.glassfish.jersey.jaxb.internal.AbstractJaxbElementProvider;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 import org.glassfish.jersey.jettison.JettisonMarshaller;
 
 /**
- * JSON message entity media type provider (reader & writer) for {@link javax.xml.bind.JAXBElement}
+ * JSON message entity media type provider (reader & writer) for {@link jakarta.xml.bind.JAXBElement}
  * type.
  *
  * @author Jakub Podlesak

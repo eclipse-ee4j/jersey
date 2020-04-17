@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -420,7 +420,7 @@ public ShortenedLink createLink(@NotEmpty @FormParam("link") final String link) 
     <servlet-name>org.glassfish.jersey.examples.freemarker.MyApplication</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
-        <param-name>javax.ws.rs.Application</param-name>
+        <param-name>jakarta.ws.rs.Application</param-name>
         <param-value>org.glassfish.jersey.examples.freemarker.MyApplication</param-value>
     </init-param>
     <init-param>

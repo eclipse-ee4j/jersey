@@ -64,7 +64,7 @@
 <!--        <module>entity-filtering</module> MOXY-->
 <!--        <module>entity-filtering-selectable</module> MOXY-->
 <!--        <module>entity-filtering-security</module> MOXY-->
-        <module>extended-wadl-webapp</module>
+        <!-- <module>extended-wadl-webapp</module> -->
         <module>exception-mapping</module>
         <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
@@ -124,6 +124,12 @@
         <module>webapp-example-parent</module>
 <!--        <module>xml-moxy</module> MOXY-->
     </modules>
+    <profiles>
+        <profile>
+            <id>exluded_due_to_jakartification</id>
+            <modules><module>extended-wadl-webapp</module></modules>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>

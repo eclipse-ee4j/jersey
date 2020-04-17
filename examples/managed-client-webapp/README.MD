@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -27,7 +27,7 @@ URI path            | Resource class     | HTTP methods
 In the example, the requests to a *public resource* deployed on
 `/public/` path are forwarded to an *internal resource* (deployed on
 `/internal/` path) using injected
-[javax.ws.rs.client.WebTarget](https://jax-rs-spec.java.net/nonav/2.0/apidocs/javax/ws/rs/client/WebTarget.html)
+[jakarta.ws.rs.client.WebTarget](https://jax-rs-spec.java.net/nonav/2.0/apidocs/jakarta.ws.rs/client/WebTarget.html)
 instances produced using 2 separate managed clients each of the managed
 clients using it's own custom configuration.
 

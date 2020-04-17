@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -24,7 +24,7 @@ URI path                        | Resource class            | HTTP methods
 **_/spring-singleton-hello_**   | SpringSingletonResource   | GET
 
 Application is configured by using web.xml, which registers
-[javax.ws.rs.core.Application](https://jax-rs-spec.java.net/nonav/2.0/apidocs/javax/ws/rs/core/Application.html)
+[jakarta.ws.rs.core.Application](https://jax-rs-spec.java.net/nonav/2.0/apidocs/jakarta.ws.rs/core/Application.html)
 descendant to get classes and singletons from it (see class
 MyApplication).
 
