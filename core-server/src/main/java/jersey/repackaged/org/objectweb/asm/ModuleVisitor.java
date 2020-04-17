@@ -66,8 +66,16 @@ public abstract class ModuleVisitor {
    *     be null.
    */
   public ModuleVisitor(final int api, final ModuleVisitor moduleVisitor) {
-    if (api != Opcodes.ASM7 && api != Opcodes.ASM6) {
+    if (api != Opcodes.ASM8
+        && api != Opcodes.ASM7
+        && api != Opcodes.ASM6
+        && api != Opcodes.ASM5
+        && api != Opcodes.ASM4
+        && api != Opcodes.ASM9_EXPERIMENTAL) {
       throw new IllegalArgumentException("Unsupported api " + api);
+    }
+    if (api == Opcodes.ASM9_EXPERIMENTAL) {
+      Constants.checkAsmExperimental(this);
     }
     this.api = api;
     this.mv = moduleVisitor;
