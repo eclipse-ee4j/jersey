@@ -465,7 +465,7 @@
                             <exclude>bundles/**</exclude>
                             <fileExclude>module-info.java</fileExclude>
                         </sourceFileExcludes>
-                        <verbose />
+                        <verbose>true</verbose>
                         <additionalparam>-Xdoclint:none</additionalparam>
                         <maxmemory>256m</maxmemory>
                     </configuration>
