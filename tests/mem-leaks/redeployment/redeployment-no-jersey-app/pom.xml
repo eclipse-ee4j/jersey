@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.memleaks.redeployment</groupId>
         <artifactId>project</artifactId>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.0.0-M1</version>
     </parent>
 
     <artifactId>redeployment-no-jersey-app</artifactId>

@@ -19,7 +19,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.0.0-M1</version>
     </parent>
 
     <artifactId>https-server-glassfish</artifactId>

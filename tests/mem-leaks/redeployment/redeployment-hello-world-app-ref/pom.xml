@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.memleaks.redeployment</groupId>
         <artifactId>project</artifactId>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.0.0-M1</version>
     </parent>
 
     <artifactId>redeployment-hello-world-app-ref</artifactId>
@@ -132,7 +132,7 @@
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>helloworld-webapp</artifactId>
             <type>war</type>
-            <version>3.0-SNAPSHOT</version>
+            <version>3.0.0-M1</version>
         </dependency>
     </dependencies>
 

@@ -22,7 +22,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.0.0-M1</version>
     </parent>
 
     <artifactId>j-376</artifactId>
