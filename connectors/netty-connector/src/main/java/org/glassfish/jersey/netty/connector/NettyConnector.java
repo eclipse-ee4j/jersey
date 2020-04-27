@@ -310,14 +310,6 @@ class NettyConnector implements Connector {
         }
     }
 
-    private String buildPathWithQueryParameters(URI requestUri) {
-        if (requestUri.getRawQuery() != null) {
-            return String.format("%s?%s", requestUri.getRawPath(), requestUri.getRawQuery());
-        } else {
-            return requestUri.getRawPath();
-        }
-    }
-
     @Override
     public String getName() {
         return "Netty 4.1.x";
