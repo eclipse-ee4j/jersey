@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,18 @@ import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
 import javax.inject.Singleton;
+import javax.xml.bind.JAXBException;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.model.ModelProcessor;
 import org.glassfish.jersey.server.wadl.internal.WadlApplicationContextImpl;
+import org.glassfish.jersey.server.wadl.internal.generators.WadlGeneratorJAXBGrammarGenerator;
 import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
+
+import java.util.logging.Logger;
 
 
 /**
@@ -38,11 +43,18 @@ import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
  */
 public class WadlFeature implements Feature {
 
+    private static final Logger LOGGER = Logger.getLogger(WadlFeature.class.getName());
+
     @Override
     public boolean configure(FeatureContext context) {
         final boolean disabled = PropertiesHelper.isProperty(context.getConfiguration().getProperty(ServerProperties
                 .WADL_FEATURE_DISABLE));
         if (disabled) {
+            return false;
+        }
+
+        if (!isJaxB()) {
+            LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED());
             return false;
         }
 
@@ -55,5 +67,13 @@ public class WadlFeature implements Feature {
         });
 
         return true;
+    }
+
+    private static boolean isJaxB() {
+        try {
+            return null != WadlApplicationContextImpl.getJAXBContextFromWadlGenerator(new WadlGeneratorJAXBGrammarGenerator());
+        } catch (JAXBException je) {
+            return false;
+        }
     }
 }
