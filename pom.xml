@@ -2096,7 +2096,6 @@
         <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
         <jackson.version>2.10.1</jackson.version>
-        <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>

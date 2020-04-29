@@ -84,11 +84,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
-            <!-- TODO enable plugin after jakartification -->
-            <!--<plugin>
+            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -110,15 +109,12 @@
                             </excludes>
                         </configuration>
                     </plugin>
+                    <!-- TODO remove after jakartification -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <!-- TODO remove after jakartification -->
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
                         <configuration>
-                            <excludes> <!--JDK 8 -->
-                                <exclude>org/glassfish/jersey/tests/integration/jersey2689/Jersey2689ITCase.java
-                                </exclude>
-                            </excludes>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                 </plugins>
