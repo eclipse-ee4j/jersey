@@ -216,18 +216,18 @@ public static class SseResource {
                 the client can read headers and starts listening for individual events.
             </para>
             <para>
-                In the<xref linkend="example-simple-sse-jaxrs"/>, the resource method creates a new thread that sends a
+                In the <xref linkend="example-simple-sse-jaxrs"/>, the resource method creates a new thread that sends a
                 sequence of 10 events. There is a 1 second delay between two subsequent events as indicated in a comment. Each
                 event is represented by <literal>jakarta.ws.rs.sse.OutboundSseEvent</literal> type and is built with a help of a
                 provided <literal>Builder</literal>. The <literal>Builder</literal> is obtain via the injected instance
                 (actually, it is a singleton) of <literal>jakarta.ws.rs.sse.Sse</literal> (the
                 <literal>newEventBuilder()</literal>
-                method. The <literal>OutboundSseEvent</literal> implementation reflects the standardized format of
+                method). The <literal>OutboundSseEvent</literal> implementation reflects the standardized format of
                 SSE messages and contains properties that represent <literal>name</literal> (for named events),
                 <literal>comment</literal>, <literal>data</literal> or <literal>id</literal>. The code also sets the
                 event data media type using the <literal>mediaType(MediaType)</literal> method on the
                 <literal>eventBuilder</literal>. The media type, together with the data type set by the
-                <literal>data(Class, Object></literal>
+                <literal>data(Class, Object)</literal>
                 method (in our case <literal>String.class</literal>), is used
                 for serialization of the event data. Note that the event data media type will not be written to any headers as
                 the response <literal>Content-type</literal> header is already defined by the &lit.jaxrs.Produces; and set to
@@ -361,7 +361,7 @@ public static class BroadcasterResource {
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public void listenToBroadcast(@Context SseEventSink eventSink) {
-        this.broadcaster.subscribe(eventSink);
+        this.broadcaster.register(eventSink);
     }
 }
                     </programlisting>
@@ -369,7 +369,7 @@ public static class BroadcasterResource {
                 Let's explore the example together. The <literal>BroadcasterResource</literal> resource class is annotated with
                 &jee6.inject.Singleton; annotation which tells Jersey runtime that only a single instance of the resource
                 class should be used to serve all the incoming requests to <literal>/broadcast</literal> path. This is needed as
-                we want to keep an application-wide single reference to the private <literal>broadcaster</literal> field so that
+                we want to keep an application-wide single reference to the private <literal>broadcaster</literal> field so
                 we can use the same instance for all requests. Clients that want to listen to SSE events first send a
                 &lit.http.GET; request to the <literal>BroadcasterResource</literal>, that is handled by the
                 <literal>listenToBroadcast()</literal>
@@ -411,7 +411,7 @@ public static class BroadcasterResource {
                 of the registered <literal>EventSink</literal>s as well as it frees all the server-side resources associated with
                 the stale connection.
                 Additionally, the <literal>SseBroadcaster</literal> is implemented to be thread-safe, so that clients can connect
-                and disconnect in any time and <literal>SseBroadcaster</literal> will always broadcast messages to the most recent
+                and disconnect at any time and <literal>SseBroadcaster</literal> will always broadcast messages to the most recent
                 collection of registered and active set of clients.
             </para>
         </section>
@@ -560,7 +560,7 @@ onComplete);
                             method <emphasis>MUST</emphasis> be called, otherwise
                             the subscriber will not receive ANY data. Furthermore, in the current
                             <literal>SseEventSource</literal>
-                            implementation, such a subscriber will block a threadm and will
+                            implementation, such a subscriber will block a thread and will
                             occasionally lead to overflow of an internal buffer in <literal>SseEventSource</literal>. As
                             mentioned, calling <literal>subscription.request(Long.MAX_VALUE)</literal>, e.g. in the registered
                             <literal>onSubscribe</literal>
@@ -596,7 +596,7 @@ onComplete);
                 </para>
             </note>
             <para>
-                By default, when a connection the the SSE endpoint is lost, the event source will use a default delay
+                By default, when a connection to the SSE endpoint is lost, the event source will use a default delay
                 before attempting to reconnect to the SSE endpoint. The SSE endpoint can however control the client-side
                 retry delay by including a special <literal>retry</literal> field value in any event sent to the client.
                 Jersey &jakarta.ws.rs.sse.SseEventSource; implementation automatically tracks any received SSE event
@@ -642,7 +642,7 @@ onComplete);
             <xref linkend="overview-jaxrs"/>
         </para>
         <para>
-            The API contains support SSE support for both - server and client. To use the Jersey-specific SSE API, you need to
+            The API contains SSE support for both - server and client. To use the Jersey-specific SSE API, you need to
             add the dependency to the
         </para>
         <para>
@@ -726,7 +726,7 @@ public static class SseResource {
                     &jersey.server.ChunkedOutput; API for output chunked message processing.
                 </para>
                 <para>
-                    In the<xref linkend="example-simple-sse"/>, the resource method creates a new thread that sends a sequence of
+                    In the <xref linkend="example-simple-sse"/>, the resource method creates a new thread that sends a sequence of
                     10 events. There is a 1 second delay between two subsequent events as indicated in a comment. Each event is
                     represented by &lit.jersey.sse.OutboundEvent; type and is built with a help of an outbound event
                     <literal>Builder</literal>. The &lit.jersey.sse.OutboundEvent; reflects the standardized format of SSE
@@ -1053,7 +1053,7 @@ eventSource.close();
                         </programlisting>
                     </example>
 
-                    The code above is very similar to the code in<xref linkend="sse.ex.client.eventListener"/>. In this example
+                    The code above is very similar to the code in <xref linkend="sse.ex.client.eventListener"/>. In this example
                     however, the &lit.jersey.sse.EventSource; is constructed directly using a single-parameter constructor.
                     This way, the connection to the SSE endpoint is by default automatically opened at the event source
                     creation. The implementation of the &lit.jersey.sse.EventListener; has been moved into the overridden

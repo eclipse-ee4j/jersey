@@ -54,6 +54,7 @@ import javax.xml.transform.Source;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
+import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 /**
@@ -331,7 +332,7 @@ public abstract class InboundMessageContext {
         }
 
         try {
-            return converter.apply(HeaderUtils.asString(value, null));
+            return converter.apply(HeaderUtils.asString(value, configuration));
         } catch (ProcessingException ex) {
             throw exception(name, value, ex);
         }
@@ -450,7 +451,9 @@ public abstract class InboundMessageContext {
             @Override
             public MediaType apply(String input) {
                 try {
-                    return MediaType.valueOf(input);
+                    return RuntimeDelegateDecorator.configured(configuration)
+                            .createHeaderDelegate(MediaType.class)
+                            .fromString(input);
                 } catch (IllegalArgumentException iae) {
                     throw new ProcessingException(iae);
                 }

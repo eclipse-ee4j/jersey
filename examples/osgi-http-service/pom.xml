@@ -29,7 +29,7 @@
 
     <modules>
         <module>bundle</module>
-        <module>functional-test</module>
+<!--        <module>functional-test</module>-->
     </modules>
 
     <profiles>

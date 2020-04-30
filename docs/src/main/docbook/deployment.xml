@@ -73,7 +73,7 @@
         <para>
             Compared to &lit.jaxrs.core.Application;, the &lit.jersey.server.ResourceConfig; provides advanced capabilities
             to simplify registration of JAX-RS components, such as scanning for root resource and provider classes in a provided
-            classpath or a in a set of package names etc. All JAX-RS component classes that are either manually registered or
+            classpath or a set of package names etc. All JAX-RS component classes that are either manually registered or
             found during scanning are automatically added to the set of classes that are returned by
             <literal>getClasses</literal>. For example, the following application class that extends from
             &lit.jersey.server.ResourceConfig; scans during deployment for JAX-RS components in packages
@@ -1101,7 +1101,7 @@ public class StatelessEjbResource implements LocalEjb {
                 <para>
                     As explained in <link linkend="servlet-app-glassfish">2.3.1</link> , you don't need to add any specific
                     dependencies on GlassFish, Jersey is already packaged within GlassFish. You only need to add the
-                    <literal>provided</literal>-scoped dependencies to you project to be able to compile it. At runtime,
+                    <literal>provided</literal>-scoped dependencies to your project to be able to compile it. At runtime,
                     GlassFish will make sure that your application has access to the Jersey libraries.
                 </para>
 

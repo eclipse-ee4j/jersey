@@ -612,7 +612,7 @@ public class PrintersResource {
         <para>If the path of the request URL is "printers" then the resource methods not annotated with &jaxrs.Path;
             will be selected. If the request path of the request URL is "printers/list" then first the root resource class
             will be matched and then the sub-resource methods that match "list" will be selected, which in this case
-            is the sub-resource method<literal>getListOfPrinters</literal>. So, in this example hierarchical matching
+            is the sub-resource method <literal>getListOfPrinters</literal>. So, in this example hierarchical matching
             on the path of the request URL is performed.
         </para>
 

@@ -80,7 +80,9 @@ public class SimpleBeanWithObjectAttributes {
         if (null != uri) {
             hash += 17 * uri.hashCode();
         }
-        hash += 13 * i;
+        if (null != i) {
+            hash += 13 * i;
+        }
         return hash;
     }
 

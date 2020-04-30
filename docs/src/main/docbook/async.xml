@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -224,7 +224,7 @@ public class AsyncResource {
                 multiple callbacks using varags.
             </para>
             <para>
-                As some async requests may take long time to process the client may decide to terminate it's connection to the
+                As some async requests may take long time to process the client may decide to terminate its connection to the
                 server before the response has been resumed or before it has been fully written to the client. To deal with these
                 use cases a &lit.jaxrs.container.ConnectionCallback; can be used. This callback will be executed only if the
                 connection was prematurely terminated or lost while the response is being written to the back client. Note that
