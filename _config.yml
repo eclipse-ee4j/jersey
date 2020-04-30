@@ -1,6 +1,9 @@
-remote_theme: jakartaee/jekyll-theme-jakarta-ee
+github: [metadata]
 
-title: [Jersey]
+remote_theme: eclipsefdn/jekyll-theme-eclipsefdn
+#theme: jekyll-theme-eclipsefdn # for local execution
+
+title: [Eclipse Jersey]
 description: [Eclipse Jersey is a REST framework that provides a JAX-RS (JSR-370) implementation and more]
 
 latestVersion: '2.30.1'
