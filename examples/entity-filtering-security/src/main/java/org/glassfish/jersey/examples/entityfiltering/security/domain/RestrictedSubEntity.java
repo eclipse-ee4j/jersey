@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.entityfiltering.security.domain;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**

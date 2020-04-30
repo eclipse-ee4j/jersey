@@ -32,7 +32,7 @@ import jakarta.ws.rs.ext.ReaderInterceptorContext;
 import jakarta.ws.rs.ext.WriterInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 /**
  * Standard contract for plugging in content encoding support. Provides a standard way of implementing encoding

@@ -27,7 +27,7 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response.Status;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 /**
  * Simple server-side request filter that implements CSRF protection as per the

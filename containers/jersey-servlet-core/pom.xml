@@ -72,7 +72,7 @@
                         <Import-Package>
                             javax.persistence.*;resolution:=optional,
                             javax.servlet.*;version="[2.4,5.0)",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.servlet.*</Export-Package>

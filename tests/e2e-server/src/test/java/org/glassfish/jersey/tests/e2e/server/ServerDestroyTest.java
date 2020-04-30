@@ -37,7 +37,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.WriterInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

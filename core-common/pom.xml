@@ -127,7 +127,7 @@
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
                             javax.activation.*;version="!",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>

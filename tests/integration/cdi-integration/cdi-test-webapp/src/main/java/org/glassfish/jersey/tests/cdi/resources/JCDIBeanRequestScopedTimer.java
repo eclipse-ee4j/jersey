@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 
 /**

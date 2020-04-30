@@ -84,7 +84,7 @@
                             org.glassfish.jersey.ext.cdi1x.internal.spi
                         </Export-Package>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             ${hk2.osgi.version},
                             *
                         </Import-Package>

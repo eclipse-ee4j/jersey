@@ -23,7 +23,7 @@ import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.HttpHeaders;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 /**
  * Client filter that adds access token to the {@code Authorization} http header. The filter uses {@code bearer}

@@ -116,7 +116,7 @@
                         <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
                         <Import-Package>
                             com.sun.*;version="[4.0,7)",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             org.glassfish.ejb.*;version="[4.0,7)",
                             org.glassfish.internal.*;version="[4.0,7)",
                             ${hk2.osgi.version},

@@ -1509,7 +1509,7 @@
             <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
-                <version>${javax.annotation.version}</version>
+                <version>${jakarta.annotation.version}</version>
             </dependency>
 
             <dependency>

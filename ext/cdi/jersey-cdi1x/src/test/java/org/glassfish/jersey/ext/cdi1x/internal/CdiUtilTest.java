@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.BeanManagerProvider;

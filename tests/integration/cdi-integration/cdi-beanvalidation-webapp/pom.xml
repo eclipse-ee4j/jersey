@@ -119,5 +119,20 @@
     </profiles>
     <build>
         <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <enableAssertions>false</enableAssertions>
+                    <!-- TODO remove after jakartification -->
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/cdi/bv/CombinedTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/cdi/bv/RawCdiTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

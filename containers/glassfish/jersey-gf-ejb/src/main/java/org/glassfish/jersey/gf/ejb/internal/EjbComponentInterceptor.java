@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.gf.ejb.internal;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.interceptor.InvocationContext;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;

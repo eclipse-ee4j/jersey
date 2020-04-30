@@ -16,8 +16,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.PostConstruct;
 
 /**
  * Shows injection of path and query parameter into a managed bean.

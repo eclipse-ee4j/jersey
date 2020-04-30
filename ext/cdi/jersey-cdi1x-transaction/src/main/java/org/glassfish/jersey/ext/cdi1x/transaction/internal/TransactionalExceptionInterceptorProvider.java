@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterTypeDiscovery;
 import javax.enterprise.inject.spi.BeanManager;

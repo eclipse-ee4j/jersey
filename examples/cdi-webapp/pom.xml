@@ -182,6 +182,18 @@
                     <classpathScope>test</classpathScope>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <enableAssertions>false</enableAssertions>
+                    <!-- TODO remove after jakartification -->
+                    <excludes>
+                        <exclude>org/glassfish/jersey/examples/cdi/resources/EchoParamBeanTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import org.glassfish.jersey.client.ClientLifecycleListener;
 import org.glassfish.jersey.client.JerseyClient;

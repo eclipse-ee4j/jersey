@@ -17,7 +17,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;

@@ -19,7 +19,7 @@ package org.glassfish.jersey.model.internal;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;

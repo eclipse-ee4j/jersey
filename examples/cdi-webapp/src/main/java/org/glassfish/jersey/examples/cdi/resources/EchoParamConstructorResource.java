@@ -18,8 +18,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.PostConstruct;
 
 import javax.inject.Inject;
 

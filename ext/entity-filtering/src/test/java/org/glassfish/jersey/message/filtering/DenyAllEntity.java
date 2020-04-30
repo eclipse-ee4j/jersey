@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.filtering;
 
-import javax.annotation.security.DenyAll;
+import jakarta.annotation.security.DenyAll;
 
 /**
  * @author Michal Gajdos

@@ -29,7 +29,7 @@ import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Configuration;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

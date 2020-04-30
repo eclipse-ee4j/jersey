@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.NameBinding;
 import jakarta.ws.rs.core.Feature;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Scope;
 
 import org.glassfish.jersey.Severity;

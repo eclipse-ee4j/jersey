@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.bookmark_em.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

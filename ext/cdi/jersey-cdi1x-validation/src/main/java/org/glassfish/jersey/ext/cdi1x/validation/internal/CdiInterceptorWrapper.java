@@ -18,7 +18,7 @@ package org.glassfish.jersey.ext.cdi1x.validation.internal;
 
 import java.util.Set;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;

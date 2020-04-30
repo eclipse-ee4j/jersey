@@ -27,8 +27,8 @@ import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

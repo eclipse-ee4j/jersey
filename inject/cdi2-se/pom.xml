@@ -87,7 +87,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

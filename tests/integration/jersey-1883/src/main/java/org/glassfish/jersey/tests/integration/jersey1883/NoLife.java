@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey1883;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

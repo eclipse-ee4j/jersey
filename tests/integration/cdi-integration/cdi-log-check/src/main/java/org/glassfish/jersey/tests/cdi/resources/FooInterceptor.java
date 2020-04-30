@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Intercepted;
 import javax.enterprise.inject.spi.Bean;

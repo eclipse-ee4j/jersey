@@ -91,7 +91,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <unpackBundle>true</unpackBundle>

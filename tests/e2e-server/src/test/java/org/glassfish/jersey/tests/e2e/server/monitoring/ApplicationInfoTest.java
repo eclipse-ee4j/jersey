@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.core.Response;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Provider;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;

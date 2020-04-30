@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * Basic timer implementation to be reused for various types of beans.

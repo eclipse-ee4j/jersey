@@ -42,8 +42,8 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.Priority;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;

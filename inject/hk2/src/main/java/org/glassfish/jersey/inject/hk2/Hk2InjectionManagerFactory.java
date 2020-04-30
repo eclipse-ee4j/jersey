@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.security.AccessController;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;

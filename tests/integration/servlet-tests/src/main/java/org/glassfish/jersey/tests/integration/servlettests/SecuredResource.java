@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.servlettests;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 
 /**
  * @author Petr Bouda

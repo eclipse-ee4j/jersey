@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.filtering;
 
-import javax.annotation.security.PermitAll;
+import jakarta.annotation.security.PermitAll;
 
 /**
  * @author Michal Gajdos

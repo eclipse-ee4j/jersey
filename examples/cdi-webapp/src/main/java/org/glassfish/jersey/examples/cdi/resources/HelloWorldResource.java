@@ -14,7 +14,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Path;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 
 /**
  * A managed bean with no use of injection whatsoever.

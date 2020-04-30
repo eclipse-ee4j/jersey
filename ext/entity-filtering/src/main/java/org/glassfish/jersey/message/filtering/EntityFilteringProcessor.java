@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractEntityProcessor;

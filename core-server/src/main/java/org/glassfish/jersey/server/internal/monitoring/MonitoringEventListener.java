@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import jakarta.ws.rs.ProcessingException;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.inject.Inject;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;

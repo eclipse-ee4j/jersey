@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.message.filtering;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 
 /**
  * @author Michal Gajdos
