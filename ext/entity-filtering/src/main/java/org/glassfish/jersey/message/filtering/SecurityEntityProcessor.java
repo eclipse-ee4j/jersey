@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import jakarta.annotation.Priority;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractEntityProcessor;
 import org.glassfish.jersey.message.filtering.spi.EntityGraph;

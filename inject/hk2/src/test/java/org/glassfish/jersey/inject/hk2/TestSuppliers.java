@@ -18,8 +18,8 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Set of suppliers to inject.

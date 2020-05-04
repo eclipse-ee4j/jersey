@@ -33,7 +33,7 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.junit.Test;
 

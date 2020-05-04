@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Variant;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 

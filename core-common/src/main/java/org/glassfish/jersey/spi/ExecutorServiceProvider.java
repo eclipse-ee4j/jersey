@@ -47,8 +47,8 @@ import java.util.concurrent.ExecutorService;
  * </p>
  * <p>
  * Jersey runtime expects that a concrete executor service provider implementation class is annotated with a
- * {@link javax.inject.Qualifier qualifier} annotation. This qualifier is then used to createAndInitialize a qualified injection point
- * for injecting the executor service instance provided by the annotated provider. {@link javax.inject.Named Named} providers
+ * {@link jakarta.inject.Qualifier qualifier} annotation. This qualifier is then used to createAndInitialize a qualified injection point
+ * for injecting the executor service instance provided by the annotated provider. {@link jakarta.inject.Named Named} providers
  * are also supported. For example:
  * </p>
  * <pre>

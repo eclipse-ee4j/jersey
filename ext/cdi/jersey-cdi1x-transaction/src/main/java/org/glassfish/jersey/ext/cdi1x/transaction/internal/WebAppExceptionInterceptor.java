@@ -21,7 +21,7 @@ import java.io.Serializable;
 import jakarta.ws.rs.WebApplicationException;
 
 import jakarta.annotation.Priority;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;

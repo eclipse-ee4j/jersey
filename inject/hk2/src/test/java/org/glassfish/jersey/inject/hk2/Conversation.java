@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author Petr Bouda

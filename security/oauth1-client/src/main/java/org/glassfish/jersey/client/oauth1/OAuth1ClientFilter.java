@@ -24,8 +24,8 @@ import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 
 import jakarta.annotation.Priority;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.client.oauth1.internal.LocalizationMessages;
 import org.glassfish.jersey.message.MessageBodyWorkers;

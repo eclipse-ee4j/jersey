@@ -30,7 +30,7 @@ import jakarta.ws.rs.container.ConnectionCallback;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;

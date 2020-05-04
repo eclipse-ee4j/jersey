@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 import org.glassfish.jersey.internal.inject.InjectionManager;

@@ -39,7 +39,7 @@ public interface Hk2CustomBoundTypesProvider {
      * by CDI container in a form of CDI beans backed by HK2.
      *
      * <p>Jersey will ask CDI container to veto these types
-     * and will register HK2 backed beans into CDI, so that @{@link javax.inject.Inject}
+     * and will register HK2 backed beans into CDI, so that @{@link jakarta.inject.Inject}
      * marked injection points could be satisfied.
      *
      * <p>The end user is responsible for defining necessary HK2 bindings

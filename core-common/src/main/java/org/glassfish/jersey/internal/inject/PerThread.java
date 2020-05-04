@@ -20,14 +20,14 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.inject.Scope;
+import jakarta.inject.Scope;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * PerThread is a scope that operates like {@link javax.inject.Singleton} scope, except on a per-thread basis. The lifecycle of
+ * PerThread is a scope that operates like {@link jakarta.inject.Singleton} scope, except on a per-thread basis. The lifecycle of
  * the service is determined by the thread it is on. On a single thread only one of the service will be created, but a new
  * service will be created for each thread.
  *

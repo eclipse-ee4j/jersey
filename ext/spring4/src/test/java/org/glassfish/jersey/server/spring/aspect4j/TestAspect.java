@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.aspect4j;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

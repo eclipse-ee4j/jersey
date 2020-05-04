@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.cdi.resources;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Qualifier for application specific echo service.

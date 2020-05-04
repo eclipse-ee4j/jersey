@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import jakarta.annotation.Priority;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.filtering.spi.AbstractEntityProcessor;

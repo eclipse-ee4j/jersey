@@ -26,7 +26,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 

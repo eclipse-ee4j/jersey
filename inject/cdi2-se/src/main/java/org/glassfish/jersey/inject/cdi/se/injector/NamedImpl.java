@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.cdi.se.injector;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.glassfish.jersey.internal.inject.AnnotationLiteral;
 

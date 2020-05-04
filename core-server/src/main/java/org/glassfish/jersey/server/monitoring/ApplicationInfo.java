@@ -40,7 +40,7 @@ import org.glassfish.jersey.server.ResourceConfig;
  *       }
  *   }
  * </pre>
- * Note usage of {@link javax.inject.Provider} to retrieve application info. Info changes over time and this will
+ * Note usage of {@link jakarta.inject.Provider} to retrieve application info. Info changes over time and this will
  * inject the latest info. In the case of singleton resources usage of {@code Provider} is the only way how
  * to inject application info that are up to date.
  * <p/>

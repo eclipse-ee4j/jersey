@@ -32,8 +32,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.Priority;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.xml.bind.Marshaller;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;

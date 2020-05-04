@@ -31,8 +31,8 @@ import java.util.concurrent.ScheduledExecutorService;
  * models and policies specific to each particular environment.
  * </p>
  * Jersey runtime expects that a concrete scheduled executor service provider implementation class is annotated with a
- * {@link javax.inject.Qualifier qualifier} annotation. This qualifier is then used to createAndInitialize a qualified injection point
- * for injecting the scheduled executor service instance provided by the annotated provider. {@link javax.inject.Named Named}
+ * {@link jakarta.inject.Qualifier qualifier} annotation. This qualifier is then used to createAndInitialize a qualified injection point
+ * for injecting the scheduled executor service instance provided by the annotated provider. {@link jakarta.inject.Named Named}
  * providers are also supported. For example:
  * </p>
  * <pre>

@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.helloworld.cdi2se;
 
 import java.security.Principal;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

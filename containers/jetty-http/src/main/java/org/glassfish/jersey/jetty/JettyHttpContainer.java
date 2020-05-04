@@ -35,8 +35,8 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,7 +115,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
      * This binder allows to inject underlying Jetty HTTP request and response instances.
      * Note that since Jetty {@code Request} class is not proxiable as it does not expose an empty constructor,
      * the injection of Jetty request instance into singleton JAX-RS and Jersey providers is only supported via
-     * {@link javax.inject.Provider injection provider}.
+     * {@link jakarta.inject.Provider injection provider}.
      */
     private static class JettyBinder extends AbstractBinder {
 

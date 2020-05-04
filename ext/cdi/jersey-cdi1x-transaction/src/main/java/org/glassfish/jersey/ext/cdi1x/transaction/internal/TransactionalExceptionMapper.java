@@ -22,8 +22,8 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.transaction.TransactionalException;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;

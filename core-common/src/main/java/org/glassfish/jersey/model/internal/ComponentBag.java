@@ -34,7 +34,7 @@ import jakarta.ws.rs.NameBinding;
 import jakarta.ws.rs.core.Feature;
 
 import jakarta.annotation.Priority;
-import javax.inject.Scope;
+import jakarta.inject.Scope;
 
 import org.glassfish.jersey.Severity;
 import org.glassfish.jersey.internal.Errors;

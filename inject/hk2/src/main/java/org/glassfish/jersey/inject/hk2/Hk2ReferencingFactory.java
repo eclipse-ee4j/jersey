@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.hk2;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;

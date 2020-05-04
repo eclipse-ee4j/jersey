@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.glassfish.jersey.message.filtering.spi.ScopeResolver;

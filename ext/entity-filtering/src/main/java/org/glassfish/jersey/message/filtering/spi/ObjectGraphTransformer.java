@@ -37,19 +37,19 @@ import org.glassfish.jersey.spi.Contract;
  *       // Scope.
  *       .in(Singleton.class);
  * </pre>
- * The custom transformer can be then {@link javax.inject.Inject injected} as one these injection point types:
+ * The custom transformer can be then {@link jakarta.inject.Inject injected} as one these injection point types:
  * <ul>
  * <li>{@code MyObjectGraphTransformer}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectGraphTransformer&lt;MyFilteringObject&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectGraphTransformer&lt;MyFilteringObject&gt;&gt;}</li>
  * </ul>
  * </p>
  * <p>
  * By default a {@code ObjectGraph} -&gt; {@code ObjectGraph} transformer is available in the runtime. This transformer can be
- * injected (via {@link javax.inject.Inject @Inject}) into the following types:
+ * injected (via {@link jakarta.inject.Inject @Inject}) into the following types:
  * <ul>
  * <li>{@code ObjectGraphTransformer}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectGraphTransformer&lt;Object&gt;&gt;}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectGraphTransformer&lt;ObjectGraph&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectGraphTransformer&lt;Object&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectGraphTransformer&lt;ObjectGraph&gt;&gt;}</li>
  * </ul>
  * </p>
  *

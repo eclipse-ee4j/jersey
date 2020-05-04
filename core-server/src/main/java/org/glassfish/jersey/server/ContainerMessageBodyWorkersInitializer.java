@@ -18,8 +18,8 @@ package org.glassfish.jersey.server;
 
 import java.util.function.Function;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.server.internal.process.RequestProcessingContext;

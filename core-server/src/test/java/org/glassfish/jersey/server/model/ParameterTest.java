@@ -17,7 +17,7 @@
 package org.glassfish.jersey.server.model;
 
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;

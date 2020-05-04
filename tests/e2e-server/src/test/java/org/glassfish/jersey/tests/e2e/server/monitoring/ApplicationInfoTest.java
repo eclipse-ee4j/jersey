@@ -29,7 +29,7 @@ import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.core.Response;
 
 import jakarta.annotation.Priority;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;

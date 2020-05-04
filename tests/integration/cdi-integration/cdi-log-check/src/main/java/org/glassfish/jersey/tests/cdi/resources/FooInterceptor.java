@@ -20,7 +20,7 @@ import jakarta.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Intercepted;
 import javax.enterprise.inject.spi.Bean;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;

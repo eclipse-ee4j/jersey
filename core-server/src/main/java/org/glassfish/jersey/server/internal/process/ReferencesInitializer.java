@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.internal.process;
 
 import java.util.function.Function;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.spi.RequestScopedInitializer;

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
@@ -65,11 +65,11 @@ final class ViewableMessageBodyWriter implements MessageBodyWriter<Viewable> {
     private InjectionManager injectionManager;
 
     @Context
-    private javax.inject.Provider<ExtendedUriInfo> extendedUriInfoProvider;
+    private jakarta.inject.Provider<ExtendedUriInfo> extendedUriInfoProvider;
     @Context
-    private javax.inject.Provider<ContainerRequest> requestProvider;
+    private jakarta.inject.Provider<ContainerRequest> requestProvider;
     @Context
-    private javax.inject.Provider<ResourceInfo> resourceInfoProvider;
+    private jakarta.inject.Provider<ResourceInfo> resourceInfoProvider;
 
     private static final Logger LOGGER = Logger.getLogger(ViewableMessageBodyWriter.class.getName());
 

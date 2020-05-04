@@ -17,7 +17,7 @@
 package org.glassfish.jersey.media.sse.internal;
 
 import jakarta.ws.rs.sse.Sse;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 

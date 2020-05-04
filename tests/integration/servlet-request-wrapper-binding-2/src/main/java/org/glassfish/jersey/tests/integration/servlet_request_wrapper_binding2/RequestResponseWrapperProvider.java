@@ -34,8 +34,8 @@ import java.util.function.Supplier;
 import javax.servlet.http.HttpUpgradeHandler;
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
@@ -191,7 +191,7 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
         };
 
         final ServiceLocator locator;
-        volatile javax.inject.Provider<Ref<HttpServletRequestWrapper>> request;
+        volatile jakarta.inject.Provider<Ref<HttpServletRequestWrapper>> request;
 
         public HttpServletRequestDescriptor(final ServiceLocator locator) {
             super(advertisedContracts,
@@ -254,10 +254,10 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
     }
 
     private static class HttpServletResponseFactory implements Supplier<HttpServletResponse> {
-        private final javax.inject.Provider<Ref<HttpServletResponseWrapper>> response;
+        private final jakarta.inject.Provider<Ref<HttpServletResponseWrapper>> response;
 
         @Inject
-        public HttpServletResponseFactory(javax.inject.Provider<Ref<HttpServletResponseWrapper>> response) {
+        public HttpServletResponseFactory(jakarta.inject.Provider<Ref<HttpServletResponseWrapper>> response) {
             this.response = response;
         }
 
@@ -467,7 +467,7 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
 
         @Inject
         public HttpServletRequestReferencingFactory(
-                final javax.inject.Provider<Ref<HttpServletRequestWrapper>> referenceFactory) {
+                final jakarta.inject.Provider<Ref<HttpServletRequestWrapper>> referenceFactory) {
 
             super(referenceFactory);
         }
@@ -478,7 +478,7 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
 
         @Inject
         public HttpServletResponseReferencingFactory(
-                final javax.inject.Provider<Ref<HttpServletResponseWrapper>> referenceFactory) {
+                final jakarta.inject.Provider<Ref<HttpServletResponseWrapper>> referenceFactory) {
 
             super(referenceFactory);
         }

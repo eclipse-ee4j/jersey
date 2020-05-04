@@ -100,7 +100,7 @@ public interface Injectee {
     boolean isFactory();
 
     /**
-     * This method returns {@code true} if the injectee value is provided using {@link javax.inject.Provider}.
+     * This method returns {@code true} if the injectee value is provided using {@link jakarta.inject.Provider}.
      *
      * @return {@code true} if the injectee is a provider.
      */

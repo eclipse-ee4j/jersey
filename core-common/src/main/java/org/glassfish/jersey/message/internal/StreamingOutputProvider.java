@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Message body writer that supports {@link StreamingOutput streaming output} marshalling.

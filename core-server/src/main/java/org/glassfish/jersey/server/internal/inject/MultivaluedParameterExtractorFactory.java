@@ -28,7 +28,7 @@ import java.util.SortedSet;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.ext.ParamConverter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;

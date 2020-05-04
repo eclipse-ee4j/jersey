@@ -29,7 +29,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Resource that causes {@link OutOfMemoryError} exception upon repetitive call of {@link #invoke(int)}.

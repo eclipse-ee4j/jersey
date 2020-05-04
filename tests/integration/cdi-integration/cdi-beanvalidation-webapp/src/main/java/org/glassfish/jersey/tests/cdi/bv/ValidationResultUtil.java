@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
 import java.util.Set;
 
 import javax.enterprise.inject.Vetoed;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.validation.ConstraintViolation;
 
 /**
@@ -42,7 +42,7 @@ public final class ValidationResultUtil {
 
     /**
      * Search for a {@code javax.mvc.validation.ValidationResult} field in the resource's
-     * class hierarchy. Field must be annotated with {@link javax.inject.Inject}.
+     * class hierarchy. Field must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param resource resource instance.
      * @return field or {@code null} if none is found.
@@ -192,7 +192,7 @@ public final class ValidationResultUtil {
 
     /**
      * Determines if a method is a setter for {@code javax.mvc.validation.ValidationResult}.
-     * As a CDI initializer method, it must be annotated with {@link javax.inject.Inject}.
+     * As a CDI initializer method, it must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param m method to test.
      * @return outcome of test.

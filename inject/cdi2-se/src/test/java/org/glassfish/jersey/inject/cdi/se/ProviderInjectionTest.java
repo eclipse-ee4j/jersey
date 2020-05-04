@@ -18,8 +18,8 @@ package org.glassfish.jersey.inject.cdi.se;
 
 import jakarta.ws.rs.core.Context;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 

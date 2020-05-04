@@ -18,8 +18,8 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.lang.annotation.Annotation;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.process.internal.RequestScope;

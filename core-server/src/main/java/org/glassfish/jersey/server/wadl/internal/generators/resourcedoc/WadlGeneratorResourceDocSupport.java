@@ -25,7 +25,7 @@ import java.util.List;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.glassfish.jersey.server.model.Parameter;

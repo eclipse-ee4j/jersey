@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.internal.inject;
 import java.lang.reflect.ParameterizedType;
 import java.util.function.Function;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.Bindings;

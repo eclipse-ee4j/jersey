@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Decorator wraps the hello resource by stars.

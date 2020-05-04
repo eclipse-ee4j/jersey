@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.hk2;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.process.internal.RequestScope;
 

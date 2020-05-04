@@ -36,7 +36,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.message.filtering.spi.FilteringHelper;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
@@ -53,7 +53,7 @@ public class FilteringMessageBodyProvider implements MessageBodyReader<Object>, 
     private static final Logger LOGGER = Logger.getLogger(FilteringMessageBodyProvider.class.getName());
 
     @Inject
-    private javax.inject.Provider<ObjectProvider<ObjectGraph>> provider;
+    private jakarta.inject.Provider<ObjectProvider<ObjectGraph>> provider;
 
     @Override
     public boolean isReadable(final Class<?> type, final Type genericType, final Annotation[] annotations,

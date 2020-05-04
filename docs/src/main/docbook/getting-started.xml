@@ -455,7 +455,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     [INFO] Copying jersey-container-servlet-core-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-2.5.jar
     [INFO] Copying jakarta.ws.rs-api-2.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-2.0.jar
     [INFO] Copying jetty-servlet-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-servlet-9.0.6.v20130930.jar
-    [INFO] Copying javax.inject-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/javax.inject-2.2.0-b21.jar
+    [INFO] Copying jakarta.inject-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/jakarta.inject-2.2.0-b21.jar
     [INFO] Copying javax.servlet-3.0.0.v201112011016.jar to .../simple-heroku-webapp/target/dependency/javax.servlet-3.0.0.v201112011016.jar
     [INFO] Copying javax.annotation-api-1.2.jar to .../simple-heroku-webapp/target/dependency/javax.annotation-api-1.2.jar
     [INFO] ------------------------------------------------------------------------
@@ -598,7 +598,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
            [INFO] Copying osgi-resource-locator-1.0.1.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/osgi-resource-locator-1.0.1.jar
            [INFO] Copying asm-all-repackaged-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/asm-all-repackaged-2.2.0-b21.jar
            [INFO] Copying cglib-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/cglib-2.2.0-b21.jar
-           [INFO] Copying javax.inject-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/javax.inject-2.2.0-b21.jar
+           [INFO] Copying jakarta.inject-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jakarta.inject-2.2.0-b21.jar
            [INFO] Copying jersey-container-servlet-2.5.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jersey-container-servlet-2.5.jar
            [INFO] Copying jersey-container-servlet-core-2.5.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jersey-container-servlet-core-2.5.jar
            [INFO] Copying jersey-client-2.5.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jersey-client-2.5.jar

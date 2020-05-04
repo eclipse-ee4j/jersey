@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadFactory;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.server.ApplicationHandler;

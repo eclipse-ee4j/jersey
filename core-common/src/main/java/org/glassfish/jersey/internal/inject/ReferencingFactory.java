@@ -18,7 +18,7 @@ package org.glassfish.jersey.internal.inject;
 
 import java.util.function.Supplier;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;

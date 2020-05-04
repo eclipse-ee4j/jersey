@@ -31,7 +31,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.glassfish.jersey.client.ClientConfig;

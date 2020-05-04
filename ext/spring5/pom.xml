@@ -81,8 +81,8 @@
             <version>${hk2.version}</version>
             <exclusions>
                 <exclusion>  <!-- already pulled in by jersey-server -->
-                    <groupId>javax.inject</groupId>
-                    <artifactId>javax.inject</artifactId>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.glassfish.hk2</groupId>

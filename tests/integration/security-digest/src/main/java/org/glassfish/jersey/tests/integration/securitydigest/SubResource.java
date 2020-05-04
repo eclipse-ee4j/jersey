@@ -20,7 +20,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  *

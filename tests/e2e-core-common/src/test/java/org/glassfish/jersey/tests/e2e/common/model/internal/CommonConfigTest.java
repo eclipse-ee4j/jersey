@@ -38,7 +38,7 @@ import jakarta.ws.rs.ext.WriterInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import jakarta.annotation.Priority;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.AbstractBinder;

@@ -279,10 +279,10 @@
 <!ENTITY jee6.annotations.DenyAll "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/DenyAll.html'>@DenyAll</link>">
 <!ENTITY jee6.annotations.PermitAll "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/PermitAll.html'>@PermitAll</link>">
 <!ENTITY jee6.annotations.RolesAllowed "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/RolesAllowed.html'>@RolesAllowed</link>">
-<!ENTITY jee6.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/javax/inject/Singleton.html'>@Singleton</link>">
-<!ENTITY jee6.javax.inject.Inject "<link xlink:href='&jee.javadoc.uri;/javax/inject/Inject.html'>@Inject</link>">
-<!ENTITY jee6.javax.inject.Provider "<link xlink:href='&jee.javadoc.uri;/javax/inject/Provider.html'>Provider</link>">
-<!ENTITY jee6.javax.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/javax/inject/Singleton.html'>@Singleton</link>">
+<!ENTITY jee6.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Singleton.html'>@Singleton</link>">
+<!ENTITY jee6.jakarta.inject.Inject "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Inject.html'>@Inject</link>">
+<!ENTITY jee6.jakarta.inject.Provider "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Provider.html'>Provider</link>">
+<!ENTITY jee6.jakarta.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Singleton.html'>@Singleton</link>">
 <!ENTITY jee6.servlet.HttpServletRequest "<link xlink:href='&jee.javadoc.uri;/javax/servlet/http/HttpServletRequest.html'>HttpServletRequest</link>">
 <!ENTITY jee6.servlet.HttpSession "<link xlink:href='&jee.javadoc.uri;/javax/servlet/http/HttpSession.html'>HttpSession</link>">
 
@@ -789,9 +789,9 @@
 <!ENTITY lit.jee6.annotations.PermitAll "<literal>@PermitAll</literal>">
 <!ENTITY lit.jee6.annotations.RolesAllowed "<literal>@RolesAllowed</literal>">
 <!ENTITY lit.jee6.inject.Singleton "<literal>@Singleton</literal>">
-<!ENTITY lit.jee6.javax.inject.Inject "<literal>@Inject</literal>">
-<!ENTITY lit.jee6.javax.inject.Provider "<literal>Provider</literal>">
-<!ENTITY lit.jee6.javax.inject.Singleton "<literal>@Singleton</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Inject "<literal>@Inject</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Provider "<literal>Provider</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Singleton "<literal>@Singleton</literal>">
 <!ENTITY lit.jee6.servlet.HttpServletRequest "<literal>HttpServletRequest</literal>">
 <!ENTITY lit.jee6.servlet.HttpSession "<literal>HttpSession</literal>">
 

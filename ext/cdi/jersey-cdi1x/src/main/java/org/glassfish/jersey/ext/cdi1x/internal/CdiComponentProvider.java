@@ -66,7 +66,7 @@ import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -689,7 +689,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     private boolean isInjectionProvider(final Type injectedType) {
         return injectedType instanceof ParameterizedType
-                && ((ParameterizedType) injectedType).getRawType() == javax.inject.Provider.class;
+                && ((ParameterizedType) injectedType).getRawType() == jakarta.inject.Provider.class;
     }
 
     private boolean isProviderOfJerseyType(final ParameterizedType provider) {

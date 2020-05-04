@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import java.nio.charset.Charset;
 import jakarta.xml.bind.DatatypeConverter;
@@ -40,7 +40,7 @@ import jakarta.xml.bind.DatatypeConverter;
 public class SecurityFilter implements ContainerRequestFilter {
 
     @Inject
-    javax.inject.Provider<UriInfo> uriInfo;
+    jakarta.inject.Provider<UriInfo> uriInfo;
     private static final String REALM = "HTTPS Example authentication";
 
     @Override

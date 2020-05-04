@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2551;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;

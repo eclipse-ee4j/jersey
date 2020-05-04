@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.test;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.process.internal.RequestScoped;

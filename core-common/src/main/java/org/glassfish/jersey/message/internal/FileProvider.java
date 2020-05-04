@@ -32,7 +32,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Provider for marshalling/un-marshalling of {@code application/octet-stream}

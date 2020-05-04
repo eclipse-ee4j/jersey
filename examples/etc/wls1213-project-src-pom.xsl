@@ -70,7 +70,7 @@
             </exclusion>
             <exclusion>
                 <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>javax.inject</artifactId>
+                <artifactId>jakarta.inject</artifactId>
             </exclusion>
             <exclusion>
                 <groupId>jakarta.ws.rs</groupId>
@@ -98,7 +98,7 @@
                     </exclusion>
                     <exclusion>
                         <groupId>org.glassfish.hk2.external</groupId>
-                        <artifactId>javax.inject</artifactId>
+                        <artifactId>jakarta.inject</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>jakarta.ws.rs</groupId>

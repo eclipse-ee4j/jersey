@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.hk2;
 
 import java.util.function.Supplier;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 

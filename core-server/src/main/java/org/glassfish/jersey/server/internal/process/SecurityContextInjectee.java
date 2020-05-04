@@ -21,7 +21,7 @@ import java.security.Principal;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 

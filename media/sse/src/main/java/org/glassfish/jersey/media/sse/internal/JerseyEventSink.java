@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.sse.OutboundSseEvent;
 import jakarta.ws.rs.sse.SseEventSink;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.jsr166.Flow;
 import org.glassfish.jersey.media.sse.LocalizationMessages;

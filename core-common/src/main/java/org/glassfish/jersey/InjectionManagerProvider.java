@@ -27,7 +27,7 @@ import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 /**
  * Utility class with static methods that extract {@link InjectionManager injection manager}
  * from various JAX-RS components. This class can be used when no injection is possible by
- * {@link jakarta.ws.rs.core.Context} or {@link javax.inject.Inject} annotation due to character of
+ * {@link jakarta.ws.rs.core.Context} or {@link jakarta.inject.Inject} annotation due to character of
  * provider but there is a need to get any service from {@link InjectionManager}.
  * <p>
  * Injections are not possible for example when a provider is registered as an instance on the client.

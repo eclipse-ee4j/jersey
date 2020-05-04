@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;

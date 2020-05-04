@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.annotation.PreDestroy;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 

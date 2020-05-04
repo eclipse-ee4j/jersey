@@ -19,7 +19,7 @@ package org.glassfish.jersey.inject.hk2;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.inject.Scope;
+import jakarta.inject.Scope;
 
 import org.glassfish.hk2.api.Proxiable;
 

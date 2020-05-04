@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.uri.UriComponent;

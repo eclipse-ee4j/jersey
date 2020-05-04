@@ -36,7 +36,7 @@ public class CustomCdiProducer {
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
-    @javax.inject.Qualifier
+    @jakarta.inject.Qualifier
     public static @interface Qualifier {
     }
 

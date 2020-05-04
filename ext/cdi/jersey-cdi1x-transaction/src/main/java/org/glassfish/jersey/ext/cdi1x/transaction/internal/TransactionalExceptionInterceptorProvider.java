@@ -33,7 +33,7 @@ import javax.enterprise.inject.spi.AfterTypeDiscovery;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import javax.interceptor.Interceptor;
 import javax.transaction.TransactionalException;
 import jakarta.ws.rs.WebApplicationException;

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.Configuration;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.xml.XMLConstants;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;

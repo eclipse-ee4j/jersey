@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2167;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;

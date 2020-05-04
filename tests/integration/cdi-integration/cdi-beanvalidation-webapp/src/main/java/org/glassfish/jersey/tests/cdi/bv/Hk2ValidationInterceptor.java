@@ -24,9 +24,9 @@ import java.util.function.Supplier;
 import jakarta.ws.rs.core.Context;
 
 import javax.enterprise.inject.Vetoed;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
@@ -178,7 +178,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
 
     /**
      * Determines if a method is a setter for {@code javax.mvc.validation.ValidationResult}.
-     * As a CDI initializer method, it must be annotated with {@link javax.inject.Inject}.
+     * As a CDI initializer method, it must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param m method to test.
      * @return outcome of test.

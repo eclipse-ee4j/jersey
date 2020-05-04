@@ -42,8 +42,8 @@ import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.client.oauth2.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;

@@ -19,7 +19,7 @@ package org.glassfish.jersey.server;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.internal.JsonWithPaddingInterceptor;

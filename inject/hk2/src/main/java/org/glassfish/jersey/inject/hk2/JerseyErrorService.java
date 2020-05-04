@@ -19,7 +19,7 @@ package org.glassfish.jersey.inject.hk2;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.Errors;
 

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.cdi.se;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;

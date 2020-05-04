@@ -34,7 +34,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Provider for marshalling/un-marshalling of graphical image data represented as

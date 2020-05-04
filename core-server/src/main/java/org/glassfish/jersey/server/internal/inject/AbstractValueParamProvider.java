@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.model.Parameter;

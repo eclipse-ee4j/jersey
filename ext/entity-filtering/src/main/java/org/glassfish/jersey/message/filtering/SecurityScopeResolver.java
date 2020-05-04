@@ -19,7 +19,7 @@ package org.glassfish.jersey.message.filtering;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.message.filtering.spi.ScopeResolver;
 

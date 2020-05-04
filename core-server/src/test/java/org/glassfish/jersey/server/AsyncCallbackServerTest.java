@@ -33,7 +33,7 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.container.Suspended;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

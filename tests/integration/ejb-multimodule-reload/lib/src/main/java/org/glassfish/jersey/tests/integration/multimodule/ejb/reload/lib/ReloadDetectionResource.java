@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.multimodule.ejb.reload.lib;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * JAX-RS resource registered as a singleton

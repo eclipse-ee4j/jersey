@@ -34,7 +34,7 @@ import jakarta.ws.rs.sse.SseBroadcaster;
 import jakarta.ws.rs.sse.SseEventSink;
 import jakarta.ws.rs.sse.SseEventSource;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.client.ClientAsyncExecutor;
 import org.glassfish.jersey.client.ClientConfig;

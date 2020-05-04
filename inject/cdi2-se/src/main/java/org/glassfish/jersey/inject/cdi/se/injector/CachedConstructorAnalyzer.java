@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.InjectionException;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.collection.LazyValue;

@@ -20,7 +20,7 @@ import java.util.Set;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.ext.cdi1x.internal.GenericCdiBeanSupplier;

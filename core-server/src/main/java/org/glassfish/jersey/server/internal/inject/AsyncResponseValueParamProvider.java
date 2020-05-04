@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import jakarta.ws.rs.container.AsyncResponse;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.AsyncContext;

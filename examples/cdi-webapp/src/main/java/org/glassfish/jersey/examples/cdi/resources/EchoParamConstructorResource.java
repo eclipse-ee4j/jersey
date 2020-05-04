@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.annotation.ManagedBean;
 import jakarta.annotation.PostConstruct;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Shows constructor injection of a path parameter in a managed bean.

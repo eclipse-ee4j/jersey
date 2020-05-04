@@ -27,8 +27,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerLookup;
@@ -250,7 +250,7 @@ public class ActiveBindingBindingTest extends AbstractTest {
 
             boolean direct = false;
 
-            final javax.inject.Provider<Ref<RequestProcessingContext>> ctxRef =
+            final jakarta.inject.Provider<Ref<RequestProcessingContext>> ctxRef =
                     injectionManager.getInstance(new GenericType<Provider<Ref<RequestProcessingContext>>>() {
                                         }.getType());
 

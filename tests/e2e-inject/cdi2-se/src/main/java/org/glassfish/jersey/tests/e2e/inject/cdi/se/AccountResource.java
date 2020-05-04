@@ -23,7 +23,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 
 import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Testing resource for CDI events.

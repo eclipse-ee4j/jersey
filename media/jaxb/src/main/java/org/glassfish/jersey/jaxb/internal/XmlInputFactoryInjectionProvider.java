@@ -18,7 +18,7 @@ package org.glassfish.jersey.jaxb.internal;
 
 import jakarta.ws.rs.core.Configuration;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.xml.stream.XMLInputFactory;
 
 /**

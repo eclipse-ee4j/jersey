@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.integration.j59.cdi.web;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javax.jws.WebResult;
 

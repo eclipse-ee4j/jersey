@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.cdi.manuallybound;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 public class HK2Binder extends AbstractBinder {
     @Override
