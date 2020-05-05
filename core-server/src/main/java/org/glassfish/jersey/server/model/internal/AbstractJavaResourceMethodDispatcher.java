@@ -30,7 +30,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.message.internal.TracingLogger;
 import org.glassfish.jersey.server.ContainerRequest;

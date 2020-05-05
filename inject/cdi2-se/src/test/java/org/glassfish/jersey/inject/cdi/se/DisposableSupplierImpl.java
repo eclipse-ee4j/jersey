@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.cdi.se;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 

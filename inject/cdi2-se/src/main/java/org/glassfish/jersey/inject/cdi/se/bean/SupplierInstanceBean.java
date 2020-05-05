@@ -22,15 +22,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import javax.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.context.spi.CreationalContext;
 
 import org.glassfish.jersey.inject.cdi.se.ParameterizedTypeImpl;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 /**
- * Creates an implementation of {@link javax.enterprise.inject.spi.Bean} interface using Jersey's {@link SupplierInstanceBinding}.
- * Binding provides the information about the bean also called {@link javax.enterprise.inject.spi.BeanAttributes} information.
+ * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link SupplierInstanceBinding}.
+ * Binding provides the information about the bean also called {@link jakarta.enterprise.inject.spi.BeanAttributes} information.
  * The {@code Bean} does not use {@link org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget} because serves already
  * created supplier instance, therefore the create operation just return provided instance without any other contextual operation
  * (produce, inject, destroy). Client has to manage the instance alone.
@@ -63,9 +63,9 @@ class SupplierInstanceBean<T> extends JerseyBean<Supplier<T>> {
     private final Supplier<T> supplier;
 
     /**
-     * Creates a new Jersey-specific {@link javax.enterprise.inject.spi.Bean} instance.
+     * Creates a new Jersey-specific {@link jakarta.enterprise.inject.spi.Bean} instance.
      *
-     * @param binding {@link javax.enterprise.inject.spi.BeanAttributes} part of the bean.
+     * @param binding {@link jakarta.enterprise.inject.spi.BeanAttributes} part of the bean.
      */
     SupplierInstanceBean(SupplierInstanceBinding<T> binding) {
         super(binding);

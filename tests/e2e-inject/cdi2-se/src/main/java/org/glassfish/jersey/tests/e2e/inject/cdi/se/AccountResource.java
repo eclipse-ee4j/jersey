@@ -22,7 +22,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 
 /**

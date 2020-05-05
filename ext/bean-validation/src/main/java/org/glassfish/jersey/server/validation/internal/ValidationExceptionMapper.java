@@ -31,8 +31,8 @@ import jakarta.ws.rs.core.Variant;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
 import jakarta.inject.Provider;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationError;

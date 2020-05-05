@@ -23,7 +23,7 @@ import jakarta.ws.rs.Produces;
 
 import javax.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Resource to test CDI injection into JAX-RS resource via constructor parameter.

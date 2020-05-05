@@ -19,7 +19,7 @@ package org.glassfish.jersey.inject.cdi.se;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 @Vetoed
 public class MyVetoedLongSupplier implements Supplier<Long> {

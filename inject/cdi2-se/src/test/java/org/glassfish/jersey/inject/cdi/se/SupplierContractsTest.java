@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.cdi.se;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;

@@ -27,7 +27,6 @@
     <description>Jersey "Hello world" example with CDI 2 SE.</description>
 
     <properties>
-        <cdi.api.version>2.0</cdi.api.version>
         <weld.version>${weld3.version}</weld.version>
     </properties>
 
@@ -81,8 +80,8 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>jakartification_exclude_tests</id> <!-- TODO remove after jakartification -->
+        <!--<profile>
+            <id>jakartification_exclude_tests</id> &lt;!&ndash; TODO remove after jakartification &ndash;&gt;
             <activation>
                 <jdk>[1.8,)</jdk>
             </activation>
@@ -97,7 +96,7 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
+        </profile>-->
     </profiles>
 
 </project>

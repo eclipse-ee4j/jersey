@@ -21,8 +21,8 @@ import java.lang.reflect.Method;
 
 import javax.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.spi.ValidationInterceptor;
 import org.glassfish.jersey.server.spi.ValidationInterceptorContext;

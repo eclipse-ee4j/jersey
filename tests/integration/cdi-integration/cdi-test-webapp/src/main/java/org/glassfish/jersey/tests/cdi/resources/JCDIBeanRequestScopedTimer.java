@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.cdi.resources;
 
 import jakarta.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * Request scoped CDI bean to be injected into {@link JCDIBeanDependentResource}.

@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.helloworld.cdi2se;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Application-scoped counter.

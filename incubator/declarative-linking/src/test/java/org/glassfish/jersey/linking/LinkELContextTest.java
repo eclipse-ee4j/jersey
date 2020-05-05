@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.linking;
 
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

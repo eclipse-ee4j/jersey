@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.cdi.bv;
 
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 /**
  * An interface to be utilized when resource method validation issues

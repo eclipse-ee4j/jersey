@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.cdi.bv;
 
 import java.util.Set;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.inject.Inject;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;

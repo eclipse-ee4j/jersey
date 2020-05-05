@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 /**
  * CDI implementation of validation result.

@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.model.Invocable;
 
@@ -71,7 +71,7 @@ public interface ValidationInterceptorContext {
      *
      * This method must be invoked by a validation interceptor implementation.
      *
-     * @throws javax.validation.ValidationException in case the further validation processing failed with a validation error.
+     * @throws jakarta.validation.ValidationException in case the further validation processing failed with a validation error.
      */
     public void proceed() throws ValidationException;
 }

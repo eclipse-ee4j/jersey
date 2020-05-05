@@ -18,15 +18,15 @@ package org.glassfish.jersey.inject.cdi.se.bean;
 
 import java.lang.annotation.Annotation;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InstanceBinding;
 
 /**
- * Creates an implementation of {@link javax.enterprise.inject.spi.Bean} interface using Jersey's {@link InstanceBinding}. Binding
- * provides the information about the bean also called {@link javax.enterprise.inject.spi.BeanAttributes} information.
+ * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link InstanceBinding}. Binding
+ * provides the information about the bean also called {@link jakarta.enterprise.inject.spi.BeanAttributes} information.
  * The {@code Bean} does not use {@link org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget} because serves already
  * created instances, therefore the create operation just return the provided instance and attempt to inject the rest of the
  * fields but omit contextual operations Produce and Destroy. Client has to manage the instance alone.
@@ -58,9 +58,9 @@ class InstanceBean<T> extends JerseyBean<T> {
     private InjectionTarget<T> injectionTarget;
 
     /**
-     * Creates a new Jersey-specific {@link javax.enterprise.inject.spi.Bean} instance.
+     * Creates a new Jersey-specific {@link jakarta.enterprise.inject.spi.Bean} instance.
      *
-     * @param binding {@link javax.enterprise.inject.spi.BeanAttributes} part of the bean.
+     * @param binding {@link jakarta.enterprise.inject.spi.BeanAttributes} part of the bean.
      */
     InstanceBean(InstanceBinding<T> binding) {
         super(binding);
@@ -87,7 +87,7 @@ class InstanceBean<T> extends JerseyBean<T> {
     /**
      * Lazy set of an injection target because to create fully functional injection target needs already created bean.
      *
-     * @param injectionTarget {@link javax.enterprise.context.spi.Contextual} information belonging to this bean.
+     * @param injectionTarget {@link jakarta.enterprise.context.spi.Contextual} information belonging to this bean.
      */
     void setInjectionTarget(InjectionTarget<T> injectionTarget) {
         this.injectionTarget = injectionTarget;

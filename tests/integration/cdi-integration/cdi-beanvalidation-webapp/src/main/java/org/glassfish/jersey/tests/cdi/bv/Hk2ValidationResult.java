@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.inject.Vetoed;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 /**
  * HK2 managed validation result bean.

@@ -49,7 +49,7 @@
             or pom:artifactId='jersey-mvc-jsp'
             or pom:artifactId='jersey-bean-validation'
             or pom:groupId='com.sun.xml.bind'
-            or pom:groupId='javax.validation'
+            or pom:groupId='jakarta.validation'
             or pom:groupId='org.codehaus.jettison'
             or pom:groupId='javax.annotation'
             or pom:groupId='javax.enterprise'

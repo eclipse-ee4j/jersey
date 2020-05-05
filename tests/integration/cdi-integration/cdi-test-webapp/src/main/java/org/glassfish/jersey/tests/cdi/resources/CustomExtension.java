@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.cdi.resources;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 /**
  * Part of JERSEY-2461 reproducer. We need an extension that we could inject,

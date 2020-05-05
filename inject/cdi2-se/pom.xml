@@ -32,10 +32,6 @@
 
     <description>CDI 2 SE InjectionManager implementation</description>
 
-    <properties>
-        <cdi.api.version>2.0</cdi.api.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -53,6 +49,15 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -109,9 +114,9 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
+    <!--<profiles>
         <profile>
-            <id>jakartification_exclude_tests</id> <!-- TODO remove after jakartification -->
+            <id>jakartification_exclude_tests</id> &lt;!&ndash; TODO remove after jakartification &ndash;&gt;
             <activation>
                 <jdk>[1.8,)</jdk>
             </activation>
@@ -127,5 +132,5 @@
                 </plugins>
             </build>
         </profile>
-    </profiles>
+    </profiles>-->
 </project>

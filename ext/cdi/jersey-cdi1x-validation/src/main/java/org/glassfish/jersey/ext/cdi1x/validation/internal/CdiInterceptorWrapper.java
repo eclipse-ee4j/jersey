@@ -19,13 +19,13 @@ package org.glassfish.jersey.ext.cdi1x.validation.internal;
 import java.util.Set;
 
 import jakarta.annotation.Priority;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import javax.interceptor.AroundConstruct;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundConstruct;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import org.hibernate.validator.cdi.internal.interceptor.MethodValidated;
 import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;

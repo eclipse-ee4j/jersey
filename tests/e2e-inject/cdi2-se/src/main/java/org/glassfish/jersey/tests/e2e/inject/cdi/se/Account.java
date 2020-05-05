@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 /**
  * Keeps current state of money.

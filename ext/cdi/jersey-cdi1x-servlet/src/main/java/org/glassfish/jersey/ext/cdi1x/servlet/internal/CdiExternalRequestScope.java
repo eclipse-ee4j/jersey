@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.ext.cdi1x.servlet.internal;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 import org.glassfish.jersey.internal.inject.InjectionManager;

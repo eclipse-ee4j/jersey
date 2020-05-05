@@ -16,12 +16,12 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal.spi;
 
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
- * CDI {@link javax.enterprise.inject.spi.InjectionTarget injection target} that is co-injected by injection manager.
+ * CDI {@link jakarta.enterprise.inject.spi.InjectionTarget injection target} that is co-injected by injection manager.
  * The injection is done via given {@link InjectionManager injection manager}.
  *
  * @author Michal Gajdos

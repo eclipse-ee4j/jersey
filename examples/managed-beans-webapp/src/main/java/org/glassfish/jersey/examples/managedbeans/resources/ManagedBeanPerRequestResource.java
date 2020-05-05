@@ -19,9 +19,9 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.ManagedBean;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptors;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * JAX-RS root resource treated as managed bean.

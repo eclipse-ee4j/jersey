@@ -24,7 +24,7 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.InjectionException;
+import jakarta.enterprise.inject.InjectionException;
 import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.LocalizationMessages;

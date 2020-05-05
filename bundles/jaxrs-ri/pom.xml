@@ -283,7 +283,7 @@
                             javax.servlet.*;version="[2.4,5.0)",
                             ${jakarta.annotation.osgi.version},
                             javax.persistence.*;resolution:=optional,
-                            javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            jakarta.validation.*;resolution:=optional;version="[2,4)",
                             sun.misc.*;resolution:=optional,
                             ${hk2.osgi.version},
                             *
@@ -322,7 +322,7 @@
                                         <exclude>META-INF/LICENSE.md</exclude>
                                         <exclude>javax/annotation/**</exclude>
                                         <exclude>javax/decorator/**</exclude>
-                                        <exclude>javax/el/**</exclude>
+                                        <exclude>jakarta.el/**</exclude>
                                         <exclude>javax/enterprise/**</exclude>
                                         <exclude>javax/interceptor/**</exclude>
                                     </excludes>

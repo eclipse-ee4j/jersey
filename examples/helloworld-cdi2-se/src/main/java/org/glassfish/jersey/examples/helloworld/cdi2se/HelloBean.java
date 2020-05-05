@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.helloworld.cdi2se;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Application-scoped service returning "hello" sentence.

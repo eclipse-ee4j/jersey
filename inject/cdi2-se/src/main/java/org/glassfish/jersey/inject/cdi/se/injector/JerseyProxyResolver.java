@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 
 import jakarta.ws.rs.core.Application;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
@@ -71,7 +71,7 @@ public class JerseyProxyResolver {
      * In these cases the value is not proxiable:
      * <ul>
      * <li>Class without the annotation</li>
-     * <li>Class annotated by {@link javax.enterprise.context.RequestScoped}</li>
+     * <li>Class annotated by {@link jakarta.enterprise.context.RequestScoped}</li>
      * <li>Class annotated by {@link org.glassfish.jersey.process.internal.RequestScoped}</li>
      * <ul/>
      *
@@ -88,7 +88,7 @@ public class JerseyProxyResolver {
      * In these cases the value is not proxiable:
      * <ul>
      * <li>Class without the annotation</li>
-     * <li>Class annotated by {@link javax.enterprise.context.RequestScoped}</li>
+     * <li>Class annotated by {@link jakarta.enterprise.context.RequestScoped}</li>
      * <li>Class annotated by {@link org.glassfish.jersey.process.internal.RequestScoped}</li>
      * <ul/>
      *

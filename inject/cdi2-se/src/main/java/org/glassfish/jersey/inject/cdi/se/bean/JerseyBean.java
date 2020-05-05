@@ -23,15 +23,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.Binding;
@@ -59,7 +59,7 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
     private final Binding<T, ?> binding;
 
     /**
-     * JerseyBean constructor with {@link Binding} which represents {@link javax.enterprise.context.spi.Contextual} part of the
+     * JerseyBean constructor with {@link Binding} which represents {@link jakarta.enterprise.context.spi.Contextual} part of the
      * bean.
      *
      * @param binding information about the bean.

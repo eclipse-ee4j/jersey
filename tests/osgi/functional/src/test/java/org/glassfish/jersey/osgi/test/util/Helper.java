@@ -161,8 +161,8 @@ public class Helper {
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-server").versionAsInProject(),
 
-                // javax.validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                // jakarta.validation
+                mavenBundle().groupId("jakarta.validation").artifactId("validation-api").versionAsInProject(),
 
                 // Jersey Grizzly
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-http")

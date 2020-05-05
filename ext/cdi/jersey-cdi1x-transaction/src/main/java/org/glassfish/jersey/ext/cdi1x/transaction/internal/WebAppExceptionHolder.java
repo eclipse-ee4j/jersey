@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 import jakarta.ws.rs.WebApplicationException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.transaction.Transactional;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 

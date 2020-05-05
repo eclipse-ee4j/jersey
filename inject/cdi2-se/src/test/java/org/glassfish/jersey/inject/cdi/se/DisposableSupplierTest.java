@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import jakarta.ws.rs.core.GenericType;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

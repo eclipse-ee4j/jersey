@@ -24,14 +24,14 @@ import java.util.Set;
 
 import jakarta.ws.rs.core.Response;
 
-import javax.validation.Configuration;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
-import javax.validation.executable.ExecutableType;
-import javax.validation.executable.ExecutableValidator;
-import javax.validation.metadata.BeanDescriptor;
-import javax.validation.metadata.MethodDescriptor;
+import jakarta.validation.Configuration;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import jakarta.validation.executable.ExecutableType;
+import jakarta.validation.executable.ExecutableValidator;
+import jakarta.validation.metadata.BeanDescriptor;
+import jakarta.validation.metadata.MethodDescriptor;
 
 import org.glassfish.jersey.server.internal.inject.ConfiguredValidator;
 import org.glassfish.jersey.server.model.Invocable;
@@ -57,7 +57,7 @@ class DefaultConfiguredValidator implements ConfiguredValidator, ValidationInter
      * @param delegate                   validator to delegate calls to.
      * @param configuration              configuration to obtain {@link ExecutableType executable types} configured in descriptor
      *                                   from.
-     * @param validateOnExecutionHandler handler for processing {@link javax.validation.executable.ValidateOnExecution}
+     * @param validateOnExecutionHandler handler for processing {@link jakarta.validation.executable.ValidateOnExecution}
      *                                   annotations.
      * @param interceptors               custom validation interceptors.
      */

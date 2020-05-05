@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.decorator.Decorator;
-import javax.decorator.Delegate;
-import javax.enterprise.inject.Any;
+import jakarta.decorator.Decorator;
+import jakarta.decorator.Delegate;
+import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 
 /**

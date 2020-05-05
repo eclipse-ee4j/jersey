@@ -24,10 +24,10 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Application;
 
-import javax.validation.ValidationException;
-import javax.validation.constraints.NotNull;
-import javax.validation.executable.ExecutableType;
-import javax.validation.executable.ValidateOnExecution;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.executable.ExecutableType;
+import jakarta.validation.executable.ValidateOnExecution;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -39,7 +39,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
 /**
- * Testing whether an {@link javax.validation.ValidationException} is raised when {@link ValidateOnExecution} is present on
+ * Testing whether an {@link jakarta.validation.ValidationException} is raised when {@link ValidateOnExecution} is present on
  * overriding/implementing method as well.
  *
  * @author Michal Gajdos

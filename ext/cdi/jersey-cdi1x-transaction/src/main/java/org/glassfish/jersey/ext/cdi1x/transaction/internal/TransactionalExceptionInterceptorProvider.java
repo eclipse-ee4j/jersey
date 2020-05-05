@@ -28,14 +28,14 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.annotation.Priority;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterTypeDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterTypeDiscovery;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.inject.Qualifier;
-import javax.interceptor.Interceptor;
-import javax.transaction.TransactionalException;
+import jakarta.interceptor.Interceptor;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.ext.ExceptionMapper;
 

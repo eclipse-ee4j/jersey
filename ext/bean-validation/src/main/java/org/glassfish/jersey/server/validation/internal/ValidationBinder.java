@@ -33,15 +33,15 @@ import jakarta.ws.rs.ext.Providers;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.validation.Configuration;
-import javax.validation.TraversableResolver;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
-import javax.validation.ValidationProviderResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
-import javax.validation.spi.ValidationProvider;
+import jakarta.validation.Configuration;
+import jakarta.validation.TraversableResolver;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
+import jakarta.validation.ValidationProviderResolver;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.spi.ValidationProvider;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -79,7 +79,7 @@ public final class ValidationBinder extends AbstractBinder {
     }
 
     /**
-     * Factory providing default {@link javax.validation.Configuration} instance.
+     * Factory providing default {@link jakarta.validation.Configuration} instance.
      */
     private static class DefaultConfigurationProvider implements Supplier<Configuration> {
 
@@ -266,7 +266,7 @@ public final class ValidationBinder extends AbstractBinder {
         }
 
         /**
-         * Create traversable resolver able to process {@link javax.validation.executable.ValidateOnExecution} annotation on
+         * Create traversable resolver able to process {@link jakarta.validation.executable.ValidateOnExecution} annotation on
          * beans.
          *
          * @param delegate resolver to be wrapped into the custom traversable resolver.

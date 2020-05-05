@@ -23,9 +23,9 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * Test bean containingboth JAX-RS and CDI injection points.

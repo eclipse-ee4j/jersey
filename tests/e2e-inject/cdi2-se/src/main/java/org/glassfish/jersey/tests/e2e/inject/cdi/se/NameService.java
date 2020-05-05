@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Service returning the name.

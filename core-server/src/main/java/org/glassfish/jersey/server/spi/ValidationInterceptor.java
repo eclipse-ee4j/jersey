@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.spi.Contract;
 
@@ -25,7 +25,7 @@ import org.glassfish.jersey.spi.Contract;
  * Interceptor for method validation processing.
  *
  * Allows to override the default Jersey behaviour. By default, the Jersey runtime throws a
- * {@link javax.validation.ValidationException} or one of its subclasses,
+ * {@link jakarta.validation.ValidationException} or one of its subclasses,
  * that gets mapped to a HTTP 400 response, if any validation issues occur. In such case
  * the actual resource method does not get invoked at all.
  * <p>

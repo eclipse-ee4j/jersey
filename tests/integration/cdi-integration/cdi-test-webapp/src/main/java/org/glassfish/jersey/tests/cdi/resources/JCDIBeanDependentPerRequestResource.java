@@ -30,7 +30,7 @@ import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 
 /**

@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.e2e.inject.cdi.se.scopes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Request counter.

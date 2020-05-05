@@ -22,10 +22,10 @@ import jakarta.ws.rs.WebApplicationException;
 
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-import javax.transaction.Transactional;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.Transactional;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 

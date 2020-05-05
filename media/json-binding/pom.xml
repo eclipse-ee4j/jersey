@@ -80,9 +80,9 @@
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
             <exclusions>
-                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
                 <exclusion>
-                    <groupId>javax.el</groupId>
+                    <groupId>jakarta.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
                 <exclusion>

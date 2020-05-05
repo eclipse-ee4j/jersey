@@ -23,13 +23,13 @@ import java.security.AccessController;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.validation.Path;
-import javax.validation.TraversableResolver;
+import jakarta.validation.Path;
+import jakarta.validation.TraversableResolver;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
- * {@link TraversableResolver Traversable resolver} used for handling {@link javax.validation.executable.ValidateOnExecution}
+ * {@link TraversableResolver Traversable resolver} used for handling {@link jakarta.validation.executable.ValidateOnExecution}
  * annotations present on property getters when validating resource class.
  *
  * @author Michal Gajdos

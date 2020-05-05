@@ -47,14 +47,13 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
-            <version>1.2</version>
             <exclusions>
-                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
                 <exclusion>
-                    <groupId>javax.el</groupId>
+                    <groupId>jakarta.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
                 <exclusion>

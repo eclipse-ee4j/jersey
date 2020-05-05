@@ -709,7 +709,7 @@ public final class ValidationError {
 
                 The <literal>message</literal> property is the interpolated error message, <literal>messageTemplate</literal>
                 represents a non-interpolated error message (or key from your constraint definition e.g.
-                <literal>{javax.validation.constraints.NotNull.message}</literal>), <literal>path</literal> contains information
+                <literal>{jakarta.validation.constraints.NotNull.message}</literal>), <literal>path</literal> contains information
                 about the path in the validated object graph to the property holding invalid value and
                 <literal>invalidValue</literal> is the string representation of the invalid value itself.
             </para>

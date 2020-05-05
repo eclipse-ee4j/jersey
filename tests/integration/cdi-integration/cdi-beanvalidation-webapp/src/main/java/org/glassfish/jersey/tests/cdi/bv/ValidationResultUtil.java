@@ -24,7 +24,7 @@ import java.util.Set;
 
 import javax.enterprise.inject.Vetoed;
 import jakarta.inject.Inject;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 /**
  * Helper class to implement support for {@code javax.mvc.validation.ValidationResult}.

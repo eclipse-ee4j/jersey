@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
 import jakarta.inject.Singleton;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.glassfish.jersey.server.mvc.spi.AbstractErrorTemplateMapper;
 import org.glassfish.jersey.server.validation.internal.ValidationHelper;

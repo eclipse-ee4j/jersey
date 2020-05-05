@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.cdi.se;
 
 import java.util.function.Supplier;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * @author Petr Bouda

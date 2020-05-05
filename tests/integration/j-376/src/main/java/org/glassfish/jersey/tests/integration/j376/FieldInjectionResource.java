@@ -23,7 +23,7 @@ import jakarta.ws.rs.Produces;
 
 import javax.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.BeanParam;
 
 /**

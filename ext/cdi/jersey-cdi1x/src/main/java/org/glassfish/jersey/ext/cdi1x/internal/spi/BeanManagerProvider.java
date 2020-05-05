@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal.spi;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 
 /**
- * Provider SPI for CDI {@link javax.enterprise.inject.spi.BeanManager} for the current context.
+ * Provider SPI for CDI {@link jakarta.enterprise.inject.spi.BeanManager} for the current context.
  * Implementations can decide how to obtain bean manager (e.g. {@link javax.naming.InitialContext}, CDI 1.1 API, ...).
  *
  * @author Michal Gajdos
@@ -28,7 +28,7 @@ import javax.enterprise.inject.spi.BeanManager;
 public interface BeanManagerProvider {
 
     /**
-     * Get the CDI {@link javax.enterprise.inject.spi.BeanManager bean manager} for the current context.
+     * Get the CDI {@link jakarta.enterprise.inject.spi.BeanManager bean manager} for the current context.
      *
      * @return bean manager for the current context or {@code null} if no bean manager is available.
      */
