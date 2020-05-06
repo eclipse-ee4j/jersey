@@ -320,11 +320,11 @@
                                     <excludes>
                                         <exclude>META-INF/DEPENDENCIES.txt</exclude>
                                         <exclude>META-INF/LICENSE.md</exclude>
-                                        <exclude>javax/annotation/**</exclude>
-                                        <exclude>javax/decorator/**</exclude>
-                                        <exclude>jakarta.el/**</exclude>
-                                        <exclude>javax/enterprise/**</exclude>
-                                        <exclude>javax/interceptor/**</exclude>
+                                        <exclude>jakarta/annotation/**</exclude>
+                                        <exclude>jakarta/decorator/**</exclude>
+                                        <exclude>jakarta/el/**</exclude>
+                                        <exclude>jakarta/enterprise/**</exclude>
+                                        <exclude>jakarta/interceptor/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

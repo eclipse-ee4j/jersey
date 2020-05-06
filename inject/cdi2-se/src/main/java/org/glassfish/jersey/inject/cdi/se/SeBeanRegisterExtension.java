@@ -132,7 +132,7 @@ class SeBeanRegisterExtension implements Extension {
         List<InjectionResolver> injectionResolvers = bindings.stream()
                 .filter(binding -> InjectionResolverBinding.class.isAssignableFrom(binding.getClass()))
                 .map(InjectionResolverBinding.class::cast)
-                .map((InjectionResolverBinding injectionResolverBinding) -> injectionResolverBinding.getResolver())
+                .map(InjectionResolverBinding::getResolver)
                 .collect(Collectors.toList());
 
         /*
