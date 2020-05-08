@@ -21,7 +21,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 
 import javax.enterprise.inject.Vetoed;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * This HK2 managed resource should get validated.

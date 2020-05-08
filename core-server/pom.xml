@@ -94,8 +94,8 @@
                             com.sun.research.ws.wadl.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
-                            javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            ${jakarta.annotation.osgi.version},
+                            jakarta.validation.*;resolution:=optional;version="[2,4)",
                             *
                         </Import-Package>
                     </instructions>
@@ -184,8 +184,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
 
         <dependency>

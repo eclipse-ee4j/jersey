@@ -19,10 +19,10 @@ package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * Interceptor checking James as a user in query params.

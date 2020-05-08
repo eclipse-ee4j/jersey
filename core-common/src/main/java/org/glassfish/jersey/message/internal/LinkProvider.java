@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.Link;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.Tokenizer;

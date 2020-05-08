@@ -25,7 +25,7 @@ import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.container.PreMatching;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;

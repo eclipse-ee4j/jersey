@@ -103,7 +103,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             ${hk2.jvnet.osgi.version},
                             ${hk2.osgi.version},
                             *

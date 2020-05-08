@@ -91,7 +91,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <unpackBundle>true</unpackBundle>
@@ -114,8 +114,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
 
         <dependency>

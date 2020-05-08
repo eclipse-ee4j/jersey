@@ -54,7 +54,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.jsonb.*</Export-Package>
-                        <Import-Package>${javax.annotation.osgi.version},*</Import-Package>
+                        <Import-Package>${jakarta.annotation.osgi.version},*</Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>
@@ -80,9 +80,9 @@
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
             <exclusions>
-                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
                 <exclusion>
-                    <groupId>javax.el</groupId>
+                    <groupId>jakarta.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
                 <exclusion>

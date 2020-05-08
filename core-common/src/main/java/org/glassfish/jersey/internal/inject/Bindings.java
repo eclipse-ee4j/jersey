@@ -119,7 +119,7 @@ public final class Bindings {
 
     /**
      * Start building a new instance-based service binding. The binding is naturally
-     * considered to be a {@link javax.inject.Singleton singleton-scoped}.
+     * considered to be a {@link jakarta.inject.Singleton singleton-scoped}.
      * <p>
      * Does NOT service the service type itself as a contract type.
      *
@@ -133,7 +133,7 @@ public final class Bindings {
 
     /**
      * Start building a new instance-based service binding. The binding is naturally
-     * considered to be a {@link javax.inject.Singleton singleton-scoped}.
+     * considered to be a {@link jakarta.inject.Singleton singleton-scoped}.
      * <p>
      * Binds the generic service type itself as a contract type.
      *
@@ -184,7 +184,7 @@ public final class Bindings {
 
     /**
      * Start building a new injection resolver binding. The injection resolver is naturally
-     * considered to be a {@link javax.inject.Singleton singleton-scoped}.
+     * considered to be a {@link jakarta.inject.Singleton singleton-scoped}.
      * <p>
      * There is no need to provide any additional information. Other method on {@link Binding}
      * will be ignored.

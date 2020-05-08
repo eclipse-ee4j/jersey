@@ -724,7 +724,7 @@ public class ItemResource {
         <para>
             <example>
                 <title>Sub-resource locators created from classes</title>
-                <programlisting language="java" linenumbering="numbered">import javax.inject.Singleton;
+                <programlisting language="java" linenumbering="numbered">import jakarta.inject.Singleton;
 
 @Path("/item")
 public class ItemResource {
@@ -745,7 +745,7 @@ public class ItemContentSingletonResource {
 
         <para>JAX-RS resources are managed in per-request scope by default which means that
             new resource is created for each request.
-            In this example the <literal>javax.inject.Singleton</literal> annotation says
+            In this example the <literal>jakarta.inject.Singleton</literal> annotation says
             that the resource will be managed as singleton and not in request scope.
             The sub-resource locator method returns a class which means that the runtime
             will managed the resource instance and its life-cycle. If the method would return instance instead,
@@ -837,7 +837,7 @@ public class ItemResource {
                             the resource instance is created every time it is needed for the processing even it handles
                             the same request.</entry></row>
                     <row><entry>Singleton</entry><entry>@Singleton</entry>
-                        <entry>javax.inject.Singleton</entry>
+                        <entry>jakarta.inject.Singleton</entry>
                         <entry>In this scope there is only one instance per jax-rs application. Singleton resource can be either
                             annotated with @Singleton and its class can be registered using the instance of
                             &jaxrs.core.Application;. You can also create singletons by registering singleton instances

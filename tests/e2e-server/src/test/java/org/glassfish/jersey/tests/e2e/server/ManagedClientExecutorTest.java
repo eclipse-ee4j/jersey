@@ -42,7 +42,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;

@@ -33,7 +33,7 @@ import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Context;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 /**

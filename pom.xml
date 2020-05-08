@@ -1509,12 +1509,12 @@
             <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
-                <version>${javax.annotation.version}</version>
+                <version>${jakarta.annotation.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${cdi.api.version}</version>
             </dependency>
 
@@ -1575,15 +1575,9 @@
                 <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>jakarta.inject</artifactId>
-                <version>${hk2.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.inject</groupId>
-                        <artifactId>javax.inject</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${jakarta.inject.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
@@ -1808,12 +1802,12 @@
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
-                <version>${javax.el.version}</version>
+                <version>${jakarta.el.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
-                <version>${javax.el.impl.version}</version>
+                <version>${jakarta.el.impl.version}</version>
             </dependency>
 
             <dependency>
@@ -1877,16 +1871,11 @@
                 <artifactId>weld-se-core</artifactId>
                 <version>${weld.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jboss.weld.servlet</groupId>
-                <artifactId>weld-servlet</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
-                <version>${javax.validation.api.version}</version>
+                <version>${jakarta.validation.api.version}</version>
             </dependency>
 
             <!-- Test scope -->
@@ -2072,7 +2061,7 @@
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>8.0</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
-        <cdi.api.version>1.1</cdi.api.version>
+        <cdi.api.version>3.0.0-M2</cdi.api.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <config.version>1.2.1</config.version>
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
@@ -2090,7 +2079,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <helidon.version>1.0.3</helidon.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>2.6.1</hk2.version>
+        <hk2.version>3.0.0-M1</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
@@ -2129,9 +2118,9 @@
         <spring4.version>4.3.20.RELEASE</spring4.version>
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
-        <validation.impl.version>6.0.17.Final</validation.impl.version>
+        <validation.impl.version>7.0.0.Alpha1</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
-        <weld3.version>3.0.0.Final</weld3.version>
+        <weld3.version>4.0.0.Alpha1</weld3.version>
         <xerces.version>2.11.0</xerces.version>
 
         <!-- do not need CQs -->
@@ -2139,15 +2128,16 @@
         <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.0-RC3</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.0-RC3</jakarta.activation.version>
-        <javax.el.version>3.0.3</javax.el.version>
-        <javax.el.impl.version>3.0.3</javax.el.impl.version>
+        <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
+        <jakarta.el.impl.version>4.0.0-RC1</jakarta.el.impl.version>
         <javax.annotation.osgi.version>javax.annotation.*;version="[1.2,3)"</javax.annotation.osgi.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[1.2,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.0.0-RC1</jakarta.annotation.version>
+        <jakarta.inject.version>2.0.0-RC3</jakarta.inject.version>
         <javax.annotation.version>1.3.5</javax.annotation.version>
         <javax.interceptor.version>1.2.5</javax.interceptor.version>
         <javax.persistence.version>2.2.3</javax.persistence.version>
-        <javax.validation.api.version>2.0.2</javax.validation.api.version>
+        <jakarta.validation.api.version>3.0.0-M1</jakarta.validation.api.version>
         <jaxb.api.version>3.0.0-RC2</jaxb.api.version>
         <javax.jaxb.api.version>2.3.2</javax.jaxb.api.version>
         <jaxb.ri.version>3.0.0-M1</jaxb.ri.version>

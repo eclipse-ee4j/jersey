@@ -20,7 +20,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
 import org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.core.Configurable;
 import java.util.ArrayList;

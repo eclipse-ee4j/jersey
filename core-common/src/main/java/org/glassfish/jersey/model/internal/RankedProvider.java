@@ -21,7 +21,7 @@ import java.util.Set;
 
 import jakarta.ws.rs.Priorities;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.model.ContractProvider;
 

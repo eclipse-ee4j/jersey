@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.integration.tracing;
 
 import java.io.IOException;
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.ext.Provider;
 import jakarta.ws.rs.ext.ReaderInterceptor;

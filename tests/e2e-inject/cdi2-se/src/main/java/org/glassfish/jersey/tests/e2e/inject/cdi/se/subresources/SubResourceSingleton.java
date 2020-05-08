@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.e2e.inject.cdi.se.subresources;
 
 import jakarta.ws.rs.GET;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class SubResourceSingleton {

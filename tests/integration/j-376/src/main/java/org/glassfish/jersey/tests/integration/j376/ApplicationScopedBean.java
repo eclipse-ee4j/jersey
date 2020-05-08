@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.integration.j376;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 

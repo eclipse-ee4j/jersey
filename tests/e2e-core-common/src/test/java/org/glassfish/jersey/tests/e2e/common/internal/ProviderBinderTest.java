@@ -40,7 +40,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.CompositeBinder;

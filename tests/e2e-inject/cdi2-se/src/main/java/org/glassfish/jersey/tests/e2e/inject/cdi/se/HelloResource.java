@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.inject.cdi.se;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Intercepted and decorated resource.

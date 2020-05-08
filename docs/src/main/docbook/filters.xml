@@ -648,7 +648,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
             <example>
                 <title>Priorities example</title>
                 <programlisting language="java" linenumbering="numbered">...
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 ...
 

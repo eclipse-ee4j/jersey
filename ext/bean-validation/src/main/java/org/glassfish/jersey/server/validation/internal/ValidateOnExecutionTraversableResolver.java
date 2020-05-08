@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,13 +23,13 @@ import java.security.AccessController;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.validation.Path;
-import javax.validation.TraversableResolver;
+import jakarta.validation.Path;
+import jakarta.validation.TraversableResolver;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
- * {@link TraversableResolver Traversable resolver} used for handling {@link javax.validation.executable.ValidateOnExecution}
+ * {@link TraversableResolver Traversable resolver} used for handling {@link jakarta.validation.executable.ValidateOnExecution}
  * annotations present on property getters when validating resource class.
  *
  * @author Michal Gajdos

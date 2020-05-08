@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.FeatureContext;

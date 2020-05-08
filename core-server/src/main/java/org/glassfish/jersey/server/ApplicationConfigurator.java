@@ -21,7 +21,7 @@ import java.util.Collections;
 
 import jakarta.ws.rs.core.Application;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

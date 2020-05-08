@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 import jakarta.ws.rs.Encoded;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;

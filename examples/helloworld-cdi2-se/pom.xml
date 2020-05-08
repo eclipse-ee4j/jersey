@@ -27,7 +27,6 @@
     <description>Jersey "Hello world" example with CDI 2 SE.</description>
 
     <properties>
-        <cdi.api.version>2.0</cdi.api.version>
         <weld.version>${weld3.version}</weld.version>
     </properties>
 

@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.server.ExtendedUriInfo;

@@ -31,7 +31,7 @@ import org.glassfish.jersey.server.validation.ValidationFeature;
  * {@link org.glassfish.jersey.server.mvc.Viewable Viewable} (template) defined by
  * {@link org.glassfish.jersey.server.mvc.ErrorTemplate ErrorTemplate} annotation, present directly on an executed resource method
  * or on a resource class the resource method is defined in, is processed to display an error message caused by an
- * {@link javax.validation.ConstraintViolationException Bean Validation exception}. Model is, in this case, a list of
+ * {@link jakarta.validation.ConstraintViolationException Bean Validation exception}. Model is, in this case, a list of
  * {@link org.glassfish.jersey.server.validation.ValidationError validation errors}.
  * <p/>
  * Note: This feature also registers {@link MvcFeature}.

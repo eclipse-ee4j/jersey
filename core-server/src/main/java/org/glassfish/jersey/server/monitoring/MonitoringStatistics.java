@@ -41,7 +41,7 @@ import java.util.Map;
  *       }
  *   }
  * </pre>
- * Note usage of {@link javax.inject.Provider} to retrieve statistics. Statistics change over time and this will
+ * Note usage of {@link jakarta.inject.Provider} to retrieve statistics. Statistics change over time and this will
  * inject the latest statistics. In the case of singleton resources usage of {@code Provider} is the only way how
  * to inject statistics that are up to date.
  * <p/>

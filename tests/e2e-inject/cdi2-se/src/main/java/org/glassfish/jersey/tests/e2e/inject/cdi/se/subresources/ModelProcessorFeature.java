@@ -23,8 +23,8 @@ import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
 
-import javax.annotation.Priority;
-import javax.inject.Singleton;
+import jakarta.annotation.Priority;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.model.ModelProcessor;

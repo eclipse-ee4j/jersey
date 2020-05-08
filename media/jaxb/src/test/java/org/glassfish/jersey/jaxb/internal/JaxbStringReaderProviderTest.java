@@ -31,7 +31,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.SAXParserFactory;
 

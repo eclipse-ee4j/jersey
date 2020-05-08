@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,13 @@
 
 package org.glassfish.jersey.tests.cdi.manuallybound;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.literal.InjectLiteral;
-import javax.enterprise.inject.spi.AfterTypeDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.configurator.AnnotatedTypeConfigurator;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.literal.InjectLiteral;
+import jakarta.enterprise.inject.spi.AfterTypeDiscovery;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.configurator.AnnotatedTypeConfigurator;
 
 /*
  * Replaces bean-discovery-mode="annotated" + @ApplicationScoped on HK2InjectedFilter

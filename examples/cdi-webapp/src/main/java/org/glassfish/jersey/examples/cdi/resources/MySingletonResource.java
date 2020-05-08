@@ -20,8 +20,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.Resource;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 
 /**

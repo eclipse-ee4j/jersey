@@ -26,7 +26,7 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

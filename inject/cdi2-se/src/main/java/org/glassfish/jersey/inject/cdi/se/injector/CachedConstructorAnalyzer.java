@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.InjectionException;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.InjectionException;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.collection.LazyValue;

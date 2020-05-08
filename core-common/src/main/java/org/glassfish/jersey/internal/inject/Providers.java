@@ -40,7 +40,7 @@ import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Feature;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.model.ContractProvider;

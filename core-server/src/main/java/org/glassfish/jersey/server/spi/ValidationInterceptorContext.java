@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.model.Invocable;
 
@@ -71,7 +71,7 @@ public interface ValidationInterceptorContext {
      *
      * This method must be invoked by a validation interceptor implementation.
      *
-     * @throws javax.validation.ValidationException in case the further validation processing failed with a validation error.
+     * @throws jakarta.validation.ValidationException in case the further validation processing failed with a validation error.
      */
     public void proceed() throws ValidationException;
 }

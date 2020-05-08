@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,14 +20,14 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.inject.Scope;
+import jakarta.inject.Scope;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * PerThread is a scope that operates like {@link javax.inject.Singleton} scope, except on a per-thread basis. The lifecycle of
+ * PerThread is a scope that operates like {@link jakarta.inject.Singleton} scope, except on a per-thread basis. The lifecycle of
  * the service is determined by the thread it is on. On a single thread only one of the service will be created, but a new
  * service will be created for each thread.
  *

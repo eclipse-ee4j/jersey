@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_request_wrapper_binding2;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;

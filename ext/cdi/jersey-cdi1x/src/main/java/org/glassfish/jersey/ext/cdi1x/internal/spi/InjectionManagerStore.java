@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
  * {@link InjectionManager injection manager} designed for Jersey
- * {@link javax.enterprise.inject.spi.Extension CDI extension}. This SPI is designed to support deployments that can contain
+ * {@link jakarta.enterprise.inject.spi.Extension CDI extension}. This SPI is designed to support deployments that can contain
  * more than one Jersey/InjectionManager managed CDI {@link org.glassfish.jersey.server.spi.ComponentProvider component provider}
  * (more injection manager) but only single CDI extension instance (e.g. EAR with multiple WARs). Each CDI component provider
  * instance acknowledges the manager about new injection manager and manager is supposed to return the effective injection manager

@@ -353,8 +353,8 @@ public static class StatisticsResource {
                 </example>
                 <para>
                     &jersey.server.monitoring.MonitoringStatistics; are
-                    injected into the resource using an &jee6.javax.inject.Inject; annotation.
-                    Please note the usage of the &jee6.javax.inject.Provider; for injection (it will be discussed later).
+                    injected into the resource using an &jee6.jakarta.inject.Inject; annotation.
+                    Please note the usage of the &jee6.jakarta.inject.Provider; for injection (it will be discussed later).
                     Firstly, the snapshot of statistics is retrieved by the <literal>snapshot()</literal> method.
                     The snapshot of statistics is an immutable copy of statistics which does not change over the time.
                     Additionally, data in a snapshot are consistent. It's recommended to create snapshots before working with
@@ -451,11 +451,11 @@ request count: 4, average request processing [ms]: 73</programlisting>
                     on &lit.jersey.server.monitoring.TimeWindowStatistics; again.
                 </para>
                 <para>
-                    Statistics are injected using the &jee6.javax.inject.Provider;. This is preferred way of
+                    Statistics are injected using the &jee6.jakarta.inject.Provider;. This is preferred way of
                     injecting statistics. The reason is simple. Statistics might change over time and contract
                     of &lit.jersey.server.monitoring.MonitoringStatistics; does not make any assumptions about mutability of
                     monitoring statistics instances (to allow future optimizations and changes in implementation strategy). In
-                    order to get always latest statistics, we recommend injecting a &jee6.javax.inject.Provider; rather than a
+                    order to get always latest statistics, we recommend injecting a &jee6.jakarta.inject.Provider; rather than a
                     direct reference and use its <literal>get()</literal> method to retrieve the latest statistics. For example,
                     in singleton resources the use of the technique is very important otherwise statistics might correspond
                     to the time when singleton was firstly created and might not update since that time.

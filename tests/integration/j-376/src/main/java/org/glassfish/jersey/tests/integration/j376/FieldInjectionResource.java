@@ -22,8 +22,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.Valid;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.BeanParam;
 
 /**

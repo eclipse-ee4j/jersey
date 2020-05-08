@@ -32,10 +32,6 @@
 
     <description>CDI 2 SE InjectionManager implementation</description>
 
-    <properties>
-        <cdi.api.version>2.0</cdi.api.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -53,6 +49,15 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -87,7 +92,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

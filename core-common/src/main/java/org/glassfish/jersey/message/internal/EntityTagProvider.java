@@ -20,7 +20,7 @@ import java.text.ParseException;
 
 import jakarta.ws.rs.core.EntityTag;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.HttpHeaderReader.Event;

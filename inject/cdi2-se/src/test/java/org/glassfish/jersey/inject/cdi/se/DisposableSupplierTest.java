@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 import jakarta.ws.rs.core.GenericType;
 
-import javax.enterprise.inject.Vetoed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.inject.cdi.se.bean.BeanHelper;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;

@@ -43,13 +43,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
             <exclusions>
-                <!-- Remove ancient javax.el that causes problems with Hibernate -->
+                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
                 <exclusion>
-                    <groupId>javax.el</groupId>
+                    <groupId>jakarta.el</groupId>
                     <artifactId>el-api</artifactId>
                 </exclusion>
             </exclusions>
@@ -119,5 +119,20 @@
     </profiles>
     <build>
         <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <enableAssertions>false</enableAssertions>
+                    <!-- TODO remove after jakartification -->
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/cdi/bv/CombinedTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/cdi/bv/RawCdiTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

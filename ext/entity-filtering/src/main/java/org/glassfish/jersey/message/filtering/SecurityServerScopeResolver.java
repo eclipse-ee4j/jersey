@@ -25,8 +25,8 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.annotation.Priority;
-import javax.inject.Singleton;
+import jakarta.annotation.Priority;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.message.filtering.spi.ScopeResolver;
 

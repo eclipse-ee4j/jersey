@@ -55,8 +55,8 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Export-Package>org.glassfish.jersey.server.validation.*;version=${project.version}</Export-Package>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
-                            javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            ${jakarta.annotation.osgi.version},
+                            jakarta.validation.*;resolution:=optional;version="[2,4)",
                             *
                         </Import-Package>
                     </instructions>
@@ -68,8 +68,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -91,8 +91,12 @@
             <artifactId>hibernate-validator</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.validation</groupId>
-                    <artifactId>validation-api</artifactId>
+                    <groupId>jakarta.validation</groupId>
+                    <artifactId>jakarta.validation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

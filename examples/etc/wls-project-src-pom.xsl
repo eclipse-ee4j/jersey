@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -71,7 +71,7 @@
             </exclusion>
             <exclusion>
                 <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>javax.inject</artifactId>
+                <artifactId>jakarta.inject</artifactId>
             </exclusion>
             <exclusion>
                 <groupId>jakarta.ws.rs</groupId>
@@ -98,7 +98,7 @@
                     </exclusion>
                     <exclusion>
                         <groupId>org.glassfish.hk2.external</groupId>
-                        <artifactId>javax.inject</artifactId>
+                        <artifactId>jakarta.inject</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>jakarta.ws.rs</groupId>

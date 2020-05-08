@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.integration.jersey2612;
 
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 

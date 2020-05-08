@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.multimodule.cdi.lib;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;

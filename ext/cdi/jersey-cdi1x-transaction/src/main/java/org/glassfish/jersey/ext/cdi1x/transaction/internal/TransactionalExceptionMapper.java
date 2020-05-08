@@ -20,11 +20,11 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.transaction.TransactionalException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.transaction.TransactionalException;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 import org.glassfish.jersey.spi.ExceptionMappers;

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 
 import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.message.filtering.spi.FilteringHelper;

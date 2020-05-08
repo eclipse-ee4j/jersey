@@ -18,7 +18,7 @@ package org.glassfish.jersey.kryo.internal;
 
 import jakarta.ws.rs.core.FeatureContext;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.kryo.KryoFeature;

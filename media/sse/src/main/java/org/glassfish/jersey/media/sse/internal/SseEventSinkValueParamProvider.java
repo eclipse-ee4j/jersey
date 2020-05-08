@@ -21,8 +21,8 @@ import java.util.function.Function;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.sse.SseEventSink;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.server.AsyncContext;
 import org.glassfish.jersey.server.ContainerRequest;

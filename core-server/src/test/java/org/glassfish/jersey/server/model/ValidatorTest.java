@@ -46,7 +46,7 @@ import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.sse.SseEventSink;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.Severity;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

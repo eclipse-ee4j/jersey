@@ -21,8 +21,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.Resource;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;

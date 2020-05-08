@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 import jakarta.ws.rs.core.GenericType;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 

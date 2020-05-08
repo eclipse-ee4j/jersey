@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.mvc.spi;
 
 import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.model.Invocable;
@@ -47,7 +47,7 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
 public abstract class AbstractErrorTemplateMapper<T extends Throwable> implements ExtendedExceptionMapper<T> {
 
     @Inject
-    private javax.inject.Provider<ExtendedUriInfo> uriInfoProvider;
+    private jakarta.inject.Provider<ExtendedUriInfo> uriInfoProvider;
 
     @Override
     public final boolean isMappable(final T throwable) {

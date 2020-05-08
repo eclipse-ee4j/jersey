@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.helloworld.spring;
 
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

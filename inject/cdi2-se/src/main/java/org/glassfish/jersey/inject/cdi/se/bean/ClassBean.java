@@ -25,20 +25,20 @@ import java.util.Set;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.Path;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.internal.inject.ClassBinding;
 
 /**
- * Creates an implementation of {@link javax.enterprise.inject.spi.Bean} interface using Jersey's {@link ClassBinding}. Binding
- * provides the information about the bean also called {@link javax.enterprise.inject.spi.BeanAttributes} information and
+ * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link ClassBinding}. Binding
+ * provides the information about the bean also called {@link jakarta.enterprise.inject.spi.BeanAttributes} information and
  * {@link JerseyInjectionTarget} provides the contextual part of the bean because implements
- * {@link javax.enterprise.context.spi.Contextual} with Jersey injection extension (is able to inject into JAX-RS/Jersey specified
+ * {@link jakarta.enterprise.context.spi.Contextual} with Jersey injection extension (is able to inject into JAX-RS/Jersey specified
  * annotation).
  * <p>
  * Inject example:
@@ -69,9 +69,9 @@ class ClassBean<T> extends JerseyBean<T> {
     private InjectionTarget<T> injectionTarget;
 
     /**
-     * Creates a new Jersey-specific {@link javax.enterprise.inject.spi.Bean} instance.
+     * Creates a new Jersey-specific {@link jakarta.enterprise.inject.spi.Bean} instance.
      *
-     * @param binding {@link javax.enterprise.inject.spi.BeanAttributes} part of the bean.
+     * @param binding {@link jakarta.enterprise.inject.spi.BeanAttributes} part of the bean.
      */
     ClassBean(ClassBinding<T> binding) {
         super(binding);
@@ -126,7 +126,7 @@ class ClassBean<T> extends JerseyBean<T> {
     /**
      * Lazy set of an injection target because to create fully functional injection target needs already created bean.
      *
-     * @param injectionTarget {@link javax.enterprise.context.spi.Contextual} information belonging to this bean.
+     * @param injectionTarget {@link jakarta.enterprise.context.spi.Contextual} information belonging to this bean.
      */
     void setInjectionTarget(InjectionTarget<T> injectionTarget) {
         this.injectionTarget = injectionTarget;

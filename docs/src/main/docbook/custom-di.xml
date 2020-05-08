@@ -52,7 +52,7 @@
         <itemizedlist>
             <listitem><simpara>Implementing a custom injection provider that allows an application to define
                 additional types to be injectable into Jersey-managed JAX-RS components.</simpara></listitem>
-            <listitem><simpara>Defining a custom injection annotation (other than &jee6.javax.inject.Inject;
+            <listitem><simpara>Defining a custom injection annotation (other than &jee6.jakarta.inject.Inject;
                 or &jaxrs.core.Context;) to mark application injection points.</simpara></listitem>
             <listitem><simpara>Specifying a custom component life cycle management for your application
                 components.</simpara></listitem>
@@ -242,8 +242,8 @@ public class MyDiResource {
             we need to implement our own HK2 &hk2.InjectionResolver; for the annotation as demonstrated
             in the following listing:
 
-            <programlisting language="java">import javax.inject.Inject;
-import javax.inject.Named;
+            <programlisting language="java">import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import javax.servlet.http.HttpSession;
 
@@ -294,7 +294,7 @@ public class SessionInjectResolver implements InjectionResolver&lt;SessionInject
             <programlisting language="java">import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 ...
 
@@ -391,8 +391,8 @@ public class PerSessionResource {
             Following example shows a simple &lit.jersey.server.spi.ComponentProvider; implementation,
             for our use case. Some comments on the code follow.
 
-            <programlisting language="java">import javax.inject.Inject;
-import javax.inject.Provider;
+            <programlisting language="java">import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 ...

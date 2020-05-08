@@ -41,11 +41,11 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
