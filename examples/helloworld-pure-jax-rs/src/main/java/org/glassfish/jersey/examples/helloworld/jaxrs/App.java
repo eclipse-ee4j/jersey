@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -62,7 +62,7 @@ public class App {
 
         System.out.println("Application started.\n"
                 + "Try accessing " + getBaseURI() + "helloworld in the browser.\n"
-                + "Hit enter to stop the application...");
+                + "CTRL + C to stop the application...\n");
 
         Thread.currentThread().join();
     }
