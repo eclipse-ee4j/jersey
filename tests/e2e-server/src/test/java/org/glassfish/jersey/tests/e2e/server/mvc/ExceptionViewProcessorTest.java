@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -37,6 +38,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.server.mvc.provider.TestViewProcessor;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -71,7 +73,9 @@ public class ExceptionViewProcessorTest extends JerseyTest {
 
             // Relative.
             if (exception.getResponse().getStatus() == 406) {
-                return Response.status(406).entity(
+                return Response.status(406)
+                        .type(MediaType.TEXT_PLAIN_TYPE)
+                        .entity(
                         new Viewable(
                                 "/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/WebAppExceptionMapper/406",
                                 "406")).build();
@@ -102,6 +106,8 @@ public class ExceptionViewProcessorTest extends JerseyTest {
         p.load(cr.readEntity(InputStream.class));
         assertEquals("/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/404.testp", p.getProperty("path"));
         assertEquals("404", p.getProperty("model"));
+
+        cr.close();
     }
 
     @Test
@@ -116,5 +122,8 @@ public class ExceptionViewProcessorTest extends JerseyTest {
         assertEquals("/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/WebAppExceptionMapper/406.testp",
                 p.getProperty("path"));
         assertEquals("406", p.getProperty("model"));
+
+        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, cr.getMediaType());
+        cr.close();
     }
 }
