@@ -6,7 +6,7 @@
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.server.validation.internal;
+package org.glassfish.jersey.server.validation.internal.hibernate;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;

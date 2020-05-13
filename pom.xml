@@ -170,7 +170,8 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
             <distribution>repo</distribution>
             <comments>Google Guava @ org.glassfish.jersey.internal.guava,
-                      Dropwizard Monitoring inspired classes @ org.glassfish.jersey.server.internal.monitoring.core and
+                      Dropwizard Monitoring inspired classes @ org.glassfish.jersey.server.internal.monitoring.core,
+                      Hibernate Validation classes @ org.glassfish.jersey.server.validation.internal.hibernate, and
                       Jackson JAX-RS Providers @ org.glassfish.jersey.jackson.internal.jackson.jaxrs</comments>
         </license>
         <license>
