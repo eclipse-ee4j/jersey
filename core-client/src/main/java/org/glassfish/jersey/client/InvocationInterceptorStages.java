@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -92,12 +92,11 @@ class InvocationInterceptorStages {
      * The stage to execute all the {@link PreInvocationInterceptor PreInvocationInterceptors}.
      */
     static class PreInvocationInterceptorStage {
-        private Iterator<PreInvocationInterceptor> preInvocationInterceptors;
+        private Iterable<PreInvocationInterceptor> preInvocationInterceptors;
         private PreInvocationInterceptorStage(InjectionManager injectionManager) {
             final RankedComparator<PreInvocationInterceptor> comparator =
                     new RankedComparator<>(RankedComparator.Order.DESCENDING);
-            preInvocationInterceptors = Providers.getAllProviders(injectionManager, PreInvocationInterceptor.class, comparator)
-                    .iterator();
+            preInvocationInterceptors = Providers.getAllProviders(injectionManager, PreInvocationInterceptor.class, comparator);
         }
 
         /**
@@ -106,7 +105,7 @@ class InvocationInterceptorStages {
          * @return {@code true} if there is a {@link PreInvocationInterceptor} yet to be executed.
          */
         boolean hasPreInvocationInterceptors() {
-            return preInvocationInterceptors.hasNext();
+            return preInvocationInterceptors.iterator().hasNext();
         }
 
         /**
@@ -117,9 +116,10 @@ class InvocationInterceptorStages {
         void beforeRequest(ClientRequest request) {
             final LinkedList<Throwable> throwables = new LinkedList<>();
             final ClientRequestContext requestContext = new InvocationInterceptorRequestContext(request);
-            while (preInvocationInterceptors.hasNext()) {
+            final Iterator<PreInvocationInterceptor> preInvocationInterceptorIterator = preInvocationInterceptors.iterator();
+            while (preInvocationInterceptorIterator.hasNext()) {
                 try {
-                    preInvocationInterceptors.next().beforeRequest(requestContext);
+                    preInvocationInterceptorIterator.next().beforeRequest(requestContext);
                 } catch (Throwable throwable) {
                     LOGGER.log(Level.FINE, LocalizationMessages.PREINVOCATION_INTERCEPTOR_EXCEPTION(), throwable);
                     throwables.add(throwable);
@@ -151,14 +151,13 @@ class InvocationInterceptorStages {
      * The stage to execute all the {@link PostInvocationInterceptor PostInvocationInterceptors}.
      */
     static class PostInvocationInterceptorStage {
-        private final Iterator<PostInvocationInterceptor> postInvocationInterceptors;
+        private final Iterable<PostInvocationInterceptor> postInvocationInterceptors;
 
         private PostInvocationInterceptorStage(InjectionManager injectionManager) {
             final RankedComparator<PostInvocationInterceptor> comparator =
                     new RankedComparator<>(RankedComparator.Order.ASCENDING);
-            final Iterable<PostInvocationInterceptor> postInvocationInterceptors
+            postInvocationInterceptors
                     = Providers.getAllProviders(injectionManager, PostInvocationInterceptor.class, comparator);
-            this.postInvocationInterceptors = postInvocationInterceptors.iterator();
         }
 
         /**
@@ -167,7 +166,7 @@ class InvocationInterceptorStages {
          * @return {@code true} if there is a {@link PostInvocationInterceptor} yet to be executed.
          */
         boolean hasPostInvocationInterceptor() {
-            return postInvocationInterceptors.hasNext();
+            return postInvocationInterceptors.iterator().hasNext();
         }
 
         private ClientResponse afterRequestWithoutException(Iterator<PostInvocationInterceptor> postInvocationInterceptors,
@@ -241,8 +240,8 @@ class InvocationInterceptorStages {
                     = new PostInvocationExceptionContext(response, previousException);
             final InvocationInterceptorRequestContext requestContext = new InvocationInterceptorRequestContext(request);
             return previousException != null
-                    ? afterRequestWithException(postInvocationInterceptors, requestContext, exceptionContext)
-                    : afterRequestWithoutException(postInvocationInterceptors, requestContext, exceptionContext);
+                    ? afterRequestWithException(postInvocationInterceptors.iterator(), requestContext, exceptionContext)
+                    : afterRequestWithoutException(postInvocationInterceptors.iterator(), requestContext, exceptionContext);
         }
 
         private static boolean resolveResponse(InvocationInterceptorRequestContext requestContext,
