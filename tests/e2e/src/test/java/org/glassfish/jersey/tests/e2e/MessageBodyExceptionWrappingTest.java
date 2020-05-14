@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,9 +72,15 @@ public class MessageBodyExceptionWrappingTest extends JerseyTest {
         try {
             Response response = resource.request().post(Entity.entity(source, MediaType.TEXT_XML_TYPE));
             fail("Exception expected, instead response with " + response.getStatus() + " status has been returned.");
-        } catch (ProcessingException e) {
-            assertEquals(WebApplicationException.class, e.getCause().getClass());
-            assertEquals(555, ((WebApplicationException) e.getCause()).getResponse().getStatus());
+        } catch (WebApplicationException e) {
+            assertEquals(555, e.getResponse().getStatus());
+        }
+
+        try {
+            Response response = resource.request().post(Entity.entity(source, MediaType.TEXT_XML_TYPE), Response.class);
+            fail("Exception expected, instead response with " + response.getStatus() + " status has been returned.");
+        } catch (WebApplicationException e) {
+            assertEquals(555, e.getResponse().getStatus());
         }
     }
 

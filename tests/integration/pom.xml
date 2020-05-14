@@ -82,6 +82,7 @@
         <module>jersey-780</module>
         <module>jersey-3670</module>
         <module>jersey-3992</module>
+        <module>jersey-4003</module>
         <module>jersey-4099</module>
         <module>jersey-4321</module>
         <module>jetty-response-close</module>
