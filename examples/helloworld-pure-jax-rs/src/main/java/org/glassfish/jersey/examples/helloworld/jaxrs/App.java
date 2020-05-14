@@ -62,7 +62,7 @@ public class App {
 
         System.out.println("Application started.\n"
                 + "Try accessing " + getBaseURI() + "helloworld in the browser.\n"
-                + "Hit enter to stop the application...");
+                + "CTRL + C to stop the application...\n");
 
         Thread.currentThread().join();
     }

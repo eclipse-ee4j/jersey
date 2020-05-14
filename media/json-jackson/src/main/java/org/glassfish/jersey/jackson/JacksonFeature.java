@@ -25,6 +25,7 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.jackson.internal.DefaultJacksonJaxbJsonProvider;
 import org.glassfish.jersey.jackson.internal.FilteringJacksonJaxbJsonProvider;
 import org.glassfish.jersey.jackson.internal.JacksonFilteringFeature;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.JsonMappingExceptionMapper;
@@ -103,7 +104,7 @@ public class JacksonFeature implements Feature {
                 context.register(JacksonFilteringFeature.class);
                 context.register(FilteringJacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
             } else {
-                context.register(JacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
+                context.register(DefaultJacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
             }
         }
 

@@ -357,12 +357,15 @@ class ApacheConnector implements Connector {
             }
         }
 
+        final boolean useSystemProperties =
+            PropertiesHelper.isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
+
         // Create custom connection manager.
         return createConnectionManager(
                 client,
                 config,
                 sslContext,
-                false);
+            useSystemProperties);
     }
 
     private HttpClientConnectionManager createConnectionManager(

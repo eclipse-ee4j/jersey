@@ -33,7 +33,6 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterInjector;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier;
-import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig;
 import org.glassfish.jersey.message.filtering.spi.ObjectProvider;
 
@@ -56,7 +55,7 @@ import com.fasterxml.jackson.databind.ser.PropertyFilter;
  * @author Michal Gajdos
  */
 @Singleton
-public final class FilteringJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
+public final class FilteringJacksonJaxbJsonProvider extends DefaultJacksonJaxbJsonProvider {
 
     @Inject
     private Provider<ObjectProvider<FilterProvider>> provider;
