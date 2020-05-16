@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,8 +62,11 @@ public class SecureSaxParserFactory extends SAXParserFactory {
 
     private static final String EXTERNAL_GENERAL_ENTITIES_FEATURE = "http://xml.org/sax/features/external-general-entities";
     private static final String EXTERNAL_PARAMETER_ENTITIES_FEATURE = "http://xml.org/sax/features/external-parameter-entities";
+    private static final String DISALLOW_DOCTYPE_DECLARATION_FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
 
     private final SAXParserFactory spf;
+    private Map<String, Object> saxParserProperties;
+    private final boolean isSecure;
 
     /**
      * Create new secure SAX parser factory wrapper.
@@ -70,13 +74,25 @@ public class SecureSaxParserFactory extends SAXParserFactory {
      * @param spf SAX parser factory.
      */
     public SecureSaxParserFactory(SAXParserFactory spf) {
+        this(spf, true);
+    }
+
+    /**
+     * Create new SAX parser factory wrapper. Can be secure.
+     * @param spf SAX parser factory.
+     * @param isSecure defined whether the parser is secure.
+     */
+    SecureSaxParserFactory(SAXParserFactory spf, boolean isSecure) {
         this.spf = spf;
+        this.isSecure = isSecure;
 
         if (SaxHelper.isXdkParserFactory(spf)) {
             LOGGER.log(Level.WARNING, LocalizationMessages.SAX_XDK_NO_SECURITY_FEATURES());
         } else {
             try {
-                spf.setFeature(EXTERNAL_GENERAL_ENTITIES_FEATURE, Boolean.FALSE);
+                if (isSecure) {
+                    spf.setFeature(EXTERNAL_GENERAL_ENTITIES_FEATURE, Boolean.FALSE);
+                }
             } catch (Exception ex) {
                 LOGGER.log(
                         Level.CONFIG,
@@ -85,7 +101,9 @@ public class SecureSaxParserFactory extends SAXParserFactory {
             }
 
             try {
-                spf.setFeature(EXTERNAL_PARAMETER_ENTITIES_FEATURE, Boolean.FALSE);
+                if (isSecure) {
+                    spf.setFeature(EXTERNAL_PARAMETER_ENTITIES_FEATURE, Boolean.FALSE);
+                }
             } catch (Exception ex) {
                 LOGGER.log(
                         Level.CONFIG,
@@ -94,11 +112,24 @@ public class SecureSaxParserFactory extends SAXParserFactory {
             }
 
             try {
-                spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+                if (isSecure) {
+                    spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+                }
             } catch (Exception ex) {
                 LOGGER.log(
                         Level.CONFIG,
                         LocalizationMessages.SAX_CANNOT_ENABLE_SECURE_PROCESSING_FEATURE(spf.getClass()),
+                        ex);
+            }
+
+            try {
+                if (isSecure) {
+                    spf.setFeature(DISALLOW_DOCTYPE_DECLARATION_FEATURE, Boolean.TRUE);
+                }
+            } catch (Exception ex) {
+                LOGGER.log(
+                        Level.CONFIG,
+                        LocalizationMessages.SAX_CANNOT_ENABLE_DISALLOW_DOCTYPE_DECLARATION_FEATURE(spf.getClass()),
                         ex);
             }
         }
@@ -146,7 +177,13 @@ public class SecureSaxParserFactory extends SAXParserFactory {
 
     @Override
     public SAXParser newSAXParser() throws ParserConfigurationException, SAXException {
-        return new WrappingSAXParser(spf.newSAXParser());
+        final SAXParser wrappingParser = new WrappingSAXParser(spf.newSAXParser(), isSecure);
+        if (saxParserProperties != null) {
+            for (Map.Entry<String, Object> entry : saxParserProperties.entrySet()) {
+                JaxbFeatureUtil.setProperty(SAXParser.class, entry, wrappingParser::setProperty);
+            }
+        }
+        return wrappingParser;
     }
 
     @Override
@@ -160,13 +197,19 @@ public class SecureSaxParserFactory extends SAXParserFactory {
         return spf.getFeature(s);
     }
 
+    void setSaxParserProperties(Map<String, Object> saxParserProperties) {
+        this.saxParserProperties = saxParserProperties;
+    }
+
     @SuppressWarnings("deprecation")
     private static final class WrappingSAXParser extends SAXParser {
 
         private final SAXParser sp;
+        private final boolean isSecure;
 
-        protected WrappingSAXParser(SAXParser sp) {
+        private WrappingSAXParser(SAXParser sp, boolean isSecure) {
             this.sp = sp;
+            this.isSecure = isSecure;
         }
 
         @Override
@@ -240,6 +283,18 @@ public class SecureSaxParserFactory extends SAXParserFactory {
         public XMLReader getXMLReader() throws SAXException {
             XMLReader r = sp.getXMLReader();
             r.setEntityResolver(EMPTY_ENTITY_RESOLVER);
+
+            try {
+                if (isSecure) {
+                    r.setFeature(EXTERNAL_GENERAL_ENTITIES_FEATURE, Boolean.FALSE);
+                }
+            } catch (Exception ex) {
+                LOGGER.log(
+                        Level.CONFIG,
+                        LocalizationMessages.SAX_CANNOT_DISABLE_GENERAL_ENTITY_PROCESSING_FEATURE_ON_READER(r.getClass()),
+                        ex);
+            }
+
             return r;
         }
 
