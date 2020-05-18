@@ -2154,8 +2154,8 @@
         <javax.interceptor.version>1.2.5</javax.interceptor.version>
         <javax.persistence.version>2.2.3</javax.persistence.version>
         <javax.validation.api.version>2.0.2</javax.validation.api.version>
-        <jaxb.api.version>2.3.2</jaxb.api.version>
-        <jaxb.ri.version>2.3.2</jaxb.ri.version>
+        <jaxb.api.version>2.3.3</jaxb.api.version>
+        <jaxb.ri.version>2.3.3</jaxb.ri.version>
         <jaxrs.api.spec.version>2.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>2.1.6</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
