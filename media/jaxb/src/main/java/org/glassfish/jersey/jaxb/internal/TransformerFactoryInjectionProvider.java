@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,9 +49,12 @@ public class TransformerFactoryInjectionProvider extends AbstractXmlFactory<Tran
         super(config);
     }
 
+    @Inject
+    private InjectionManager injectionManager;
+
     @Override
     public TransformerFactory get() {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
         if (!isXmlSecurityDisabled()) {
             try {
@@ -58,6 +63,9 @@ public class TransformerFactoryInjectionProvider extends AbstractXmlFactory<Tran
                 LOGGER.log(Level.CONFIG, LocalizationMessages.UNABLE_TO_SECURE_XML_TRANSFORMER_PROCESSING(), e);
             }
         }
+
+        JaxbFeatureUtil.setFeatures(injectionManager, TransformerFactory.class, transformerFactory::setFeature);
+        JaxbFeatureUtil.setProperties(injectionManager, TransformerFactory.class, transformerFactory::setAttribute);
 
         return transformerFactory;
     }

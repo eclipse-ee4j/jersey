@@ -102,7 +102,9 @@ final class ViewableMessageBodyWriter implements MessageBodyWriter<Viewable> {
                 throw new WebApplicationException(new ProcessingException(message), Response.Status.NOT_FOUND);
             }
 
-            httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, resolvedViewable.getMediaType());
+            if (!httpHeaders.containsKey(HttpHeaders.CONTENT_TYPE)) {
+                httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, resolvedViewable.getMediaType());
+            }
             resolvedViewable.writeTo(entityStream, httpHeaders);
         } catch (ViewableContextException vce) {
             throw new NotFoundException(vce);

@@ -72,9 +72,15 @@ public class MessageBodyExceptionWrappingTest extends JerseyTest {
         try {
             Response response = resource.request().post(Entity.entity(source, MediaType.TEXT_XML_TYPE));
             fail("Exception expected, instead response with " + response.getStatus() + " status has been returned.");
-        } catch (ProcessingException e) {
-            assertEquals(WebApplicationException.class, e.getCause().getClass());
-            assertEquals(555, ((WebApplicationException) e.getCause()).getResponse().getStatus());
+        } catch (WebApplicationException e) {
+            assertEquals(555, e.getResponse().getStatus());
+        }
+
+        try {
+            Response response = resource.request().post(Entity.entity(source, MediaType.TEXT_XML_TYPE), Response.class);
+            fail("Exception expected, instead response with " + response.getStatus() + " status has been returned.");
+        } catch (WebApplicationException e) {
+            assertEquals(555, e.getResponse().getStatus());
         }
     }
 

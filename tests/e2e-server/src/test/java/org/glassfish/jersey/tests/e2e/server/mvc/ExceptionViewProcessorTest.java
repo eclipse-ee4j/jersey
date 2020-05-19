@@ -26,6 +26,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -37,6 +38,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.server.mvc.provider.TestViewProcessor;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -71,7 +73,9 @@ public class ExceptionViewProcessorTest extends JerseyTest {
 
             // Relative.
             if (exception.getResponse().getStatus() == 406) {
-                return Response.status(406).entity(
+                return Response.status(406)
+                        .type(MediaType.TEXT_PLAIN_TYPE)
+                        .entity(
                         new Viewable(
                                 "/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/WebAppExceptionMapper/406",
                                 "406")).build();
@@ -102,6 +106,8 @@ public class ExceptionViewProcessorTest extends JerseyTest {
         p.load(cr.readEntity(InputStream.class));
         assertEquals("/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/404.testp", p.getProperty("path"));
         assertEquals("404", p.getProperty("model"));
+
+        cr.close();
     }
 
     @Test
@@ -116,5 +122,8 @@ public class ExceptionViewProcessorTest extends JerseyTest {
         assertEquals("/org/glassfish/jersey/tests/e2e/server/mvc/ExceptionViewProcessorTest/WebAppExceptionMapper/406.testp",
                 p.getProperty("path"));
         assertEquals("406", p.getProperty("model"));
+
+        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, cr.getMediaType());
+        cr.close();
     }
 }

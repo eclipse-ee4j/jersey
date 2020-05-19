@@ -41,10 +41,12 @@ import org.glassfish.jersey.internal.inject.CompositeBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.internal.inject.PerThread;
+import org.glassfish.jersey.jaxb.FeatureSupplier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.InputSource;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
@@ -133,6 +135,7 @@ public class SaxParserFactoryInjectionProviderTest {
                         .to(SAXParserFactory.class)
                         .in(PerThread.class);
                 bindAsContract(MySPFProvider.class).in(Singleton.class);
+                bind(FeatureSupplier.allowDoctypeDeclFeature()).to(FeatureSupplier.class);
             }
         };
         System.arraycopy(customBinders, 0, binders, 2, customBinders.length);
