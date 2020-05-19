@@ -130,6 +130,7 @@
                             ${javax.annotation.osgi.version},
                             *
                         </Import-Package>
+                        <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
                         <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
                     </instructions>
