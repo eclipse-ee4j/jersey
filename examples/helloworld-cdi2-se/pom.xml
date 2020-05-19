@@ -65,6 +65,17 @@
                     <mainClass>org.glassfish.jersey.examples.helloworld.cdi2se.App</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes> <!--JDK 11 -->
+                        <exclude>**/**/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

@@ -104,7 +104,9 @@ public class JacksonFeature implements Feature {
                 context.register(JacksonFilteringFeature.class);
                 context.register(FilteringJacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
             } else {
-                context.register(DefaultJacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
+                //context.register(DefaultJacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
+//                TODO: remove after jakartification
+                context.register(JacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class);
             }
         }
 

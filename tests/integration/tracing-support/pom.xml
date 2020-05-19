@@ -57,8 +57,13 @@
                 <configuration>
                     <systemPropertyVariables>
                         <!-- client side config works - failsafe plugin forks jvm -->
-                        <java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties</java.util.logging.config.file>
+                        <java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties
+                        </java.util.logging.config.file>
                     </systemPropertyVariables>
+                    <!-- TODO remove after jakartification -->
+                    <excludes> <!--JDK 11 -->
+                        <exclude>**/**/*.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
