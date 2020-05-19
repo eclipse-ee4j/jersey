@@ -82,6 +82,17 @@
                     <unpackBundle>true</unpackBundle>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes> <!--JDK 11 -->
+                        <exclude>org/glassfish/jersey/jackson/internal/DefaultJacksonJaxbJsonProviderTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

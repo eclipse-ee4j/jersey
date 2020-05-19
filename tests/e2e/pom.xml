@@ -45,6 +45,8 @@
                     <excludes>
                         <exclude>org/glassfish/jersey/tests/e2e/oauth/OAuth2Test.java</exclude>
                         <exclude>org/glassfish/jersey/tests/e2e/common/NoEntityTest.java</exclude>
+                        <!--TODO remove after jakartification-->
+                        <exclude>org/glassfish/jersey/tests/e2e/server/wadl/NoJAXBNoWadlTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
