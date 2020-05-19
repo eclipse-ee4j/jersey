@@ -40,16 +40,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.DeploymentException;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.enterprise.util.AnnotationLiteral;
 import javax.net.ssl.HostnameVerifier;
 
 import org.eclipse.microprofile.config.Config;

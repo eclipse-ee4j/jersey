@@ -21,7 +21,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;

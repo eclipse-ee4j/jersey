@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.j376;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * Bean to be injected into another bean by CDI.

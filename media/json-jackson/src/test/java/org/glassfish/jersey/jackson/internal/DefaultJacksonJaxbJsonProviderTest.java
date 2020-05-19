@@ -21,7 +21,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import static junit.framework.TestCase.assertEquals;
 

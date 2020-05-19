@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.helloworld;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * Request scoped CDI bean. Serves as a storage

@@ -298,7 +298,7 @@ public final class ContractProvider implements Scoped, NameBound {
      * @param contract provider contract.
      * @return provider priority.
      *
-     * @see javax.annotation.Priority
+     * @see jakarta.annotation.Priority
      */
     public int getPriority(final Class<?> contract) {
         if (contracts.containsKey(contract)) {

@@ -21,16 +21,16 @@ import java.lang.annotation.Target;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessInjectionPoint;
-import javax.enterprise.inject.spi.WithAnnotations;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.DeploymentException;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.ProcessInjectionPoint;
+import jakarta.enterprise.inject.spi.WithAnnotations;
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Qualifier;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;

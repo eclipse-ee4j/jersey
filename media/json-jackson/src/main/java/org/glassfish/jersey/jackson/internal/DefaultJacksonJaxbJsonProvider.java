@@ -21,7 +21,7 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import java.util.Objects;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Entity Data provider based on Jackson JSON provider.

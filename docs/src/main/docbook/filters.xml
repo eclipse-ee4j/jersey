@@ -623,7 +623,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
 
         <para>In case you register more filters and interceptors you might want to define an exact order in which
             they should be invoked. The order can be controlled by the <literal>@Priority</literal> annotation defined
-            by the <literal>javax.annotation.Priority</literal> class. The annotation accepts an integer parameter of priority.
+            by the <literal>jakarta.annotation.Priority</literal> class. The annotation accepts an integer parameter of priority.
             Providers used in request processing (&lit.jaxrs.container.ContainerRequestFilter;,
             &lit.jaxrs.client.ClientRequestFilter;) as well as entity interceptors (&lit.jaxrs.ReaderInterceptor;,
             &lit.jaxrs.WriterInterceptor;) are sorted based on the priority in an ascending manner. So, a request filter with

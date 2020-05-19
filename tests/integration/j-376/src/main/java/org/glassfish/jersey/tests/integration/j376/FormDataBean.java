@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -59,7 +59,7 @@ public class FormDataBean {
     }
 
     /**
-     * Exposes the state of injected {@code UriInfo} in the time of the call of {@link javax.annotation.PostConstruct}
+     * Exposes the state of injected {@code UriInfo} in the time of the call of {@link jakarta.annotation.PostConstruct}
      * annotated method. The returned value will be used in test to ensure, that {@code UriInfo} is injected in time
      *
      * @return path injected via {@code UriInfo} at the time-point of the {@link #postConstruct()} method call.

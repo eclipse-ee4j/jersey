@@ -15,11 +15,11 @@
  */
 package org.glassfish.jersey.server.validation.internal;
 
-import javax.annotation.PostConstruct;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
 
 /**
  * {@link ConstraintValidatorFactory} implementation that uses {@link InjectingConstraintValidatorFactory}

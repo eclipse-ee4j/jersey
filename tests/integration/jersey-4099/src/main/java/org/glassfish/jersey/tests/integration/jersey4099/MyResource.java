@@ -15,7 +15,7 @@
  */
 package org.glassfish.jersey.tests.integration.jersey4099;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 

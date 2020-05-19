@@ -48,6 +48,10 @@
             <artifactId>jersey-cdi1x</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

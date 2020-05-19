@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.annotation.ManagedBean;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;

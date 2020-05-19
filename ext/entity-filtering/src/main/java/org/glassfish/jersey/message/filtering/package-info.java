@@ -23,7 +23,7 @@
  *     <li>{@link org.glassfish.jersey.message.filtering.EntityFilteringFeature} - adds support for entity-filtering
  *     annotations based on {@link org.glassfish.jersey.message.filtering.EntityFiltering} meta-annotation.</li>
  *     <li>{@link org.glassfish.jersey.message.filtering.SecurityEntityFilteringFeature} - add support for entity-filtering using
- *     Java Security annotations (<code>javax.annotation.security</code>).</li>
+ *     Java Security annotations (<code>jakarta.annotation.security</code>).</li>
  * </ul>
  * <p/>
  * To define own entity-filtering annotations, refer to the {@link org.glassfish.jersey.message.filtering.EntityFiltering}

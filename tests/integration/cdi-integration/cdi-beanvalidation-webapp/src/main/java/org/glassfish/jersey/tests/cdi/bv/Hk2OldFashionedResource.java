@@ -20,7 +20,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.validation.constraints.NotNull;
 
 /**

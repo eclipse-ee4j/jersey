@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.ManagedBean;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;

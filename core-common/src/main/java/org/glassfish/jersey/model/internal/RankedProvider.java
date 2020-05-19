@@ -38,7 +38,7 @@ public class RankedProvider<T> {
     private final Set<Type> contractTypes;
 
     /**
-     * Creates a new {@code RankedProvider} instance. The rank of the provider is obtained from the {@link javax.annotation.Priority}
+     * Creates a new {@code RankedProvider} instance. The rank of the provider is obtained from the {@link jakarta.annotation.Priority}
      * annotation or is set to {@value jakarta.ws.rs.Priorities#USER} if the annotation is not present.
      *
      * @param provider service provider to create a {@code RankedProvider} instance from.

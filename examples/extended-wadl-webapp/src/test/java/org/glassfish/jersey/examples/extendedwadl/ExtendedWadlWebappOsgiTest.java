@@ -97,11 +97,11 @@ public class ExtendedWadlWebappOsgiTest {
     public static Option[] configuration() {
         List<Option> options = Arrays.asList(options(
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
                 systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
-                // javax.annotation must go first!
+                // jakarta.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 //JAXB-API
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),

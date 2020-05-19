@@ -10,10 +10,10 @@ package org.glassfish.jersey.server.validation.internal;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;

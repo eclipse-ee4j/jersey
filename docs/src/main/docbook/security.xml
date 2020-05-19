@@ -171,7 +171,7 @@ public static class MyResource {
             </section>
 
             <section xml:id="annotation-based-security">
-                <title>Securing JAX-RS resources with standard <literal>javax.annotation.security</literal> annotations</title>
+                <title>Securing JAX-RS resources with standard <literal>jakarta.annotation.security</literal> annotations</title>
 
                 <para>
                     With Jersey you can define the access to resources based on the user group using annotations. You
@@ -202,10 +202,10 @@ resourceConfig.register(RolesAllowedDynamicFeature.class);
                 </para>
                 <para>
                     Once the feature is registered, you can use annotations from package
-                    <literal>javax.annotation.security</literal> defined by JSR-250. See the following example.
+                    <literal>jakarta.annotation.security</literal> defined by JSR-250. See the following example.
 
                     <example>
-                        <title>Applying <literal>javax.annotation.security</literal> to JAX-RS resource methods.</title>
+                        <title>Applying <literal>jakarta.annotation.security</literal> to JAX-RS resource methods.</title>
                         <programlisting language="java" linenumbering="numbered"><![CDATA[@Path("/")
 @PermitAll
 public class Resource {

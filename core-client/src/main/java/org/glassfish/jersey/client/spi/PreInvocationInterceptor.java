@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
  * {@link jakarta.ws.rs.client.ClientRequestFilter} is invoked.
  * <p/>
  * It is ensured that all {@code PreInvocationInterceptors} are executed before the request, in the order given by the
- * {@link javax.annotation.Priority}, the higher the priority the sooner the execution. Any {@code RuntimeException} thrown when
+ * {@link jakarta.annotation.Priority}, the higher the priority the sooner the execution. Any {@code RuntimeException} thrown when
  * the {@link PreInvocationInterceptor#beforeRequest(ClientRequestContext)} is being processed is accumulated and
  * a multi RuntimeException with other {@link Throwable#addSuppressed(Throwable) exceptions supressed} is being thrown.
  * <p/>

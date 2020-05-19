@@ -260,7 +260,7 @@ public final class ValidationBinder extends AbstractBinder {
 
             // if CDI is available use composite factiry
             if (AccessController.doPrivileged(
-                    ReflectionHelper.classForNamePA("javax.enterprise.inject.spi.BeanManager")) != null) {
+                    ReflectionHelper.classForNamePA("jakarta.enterprise.inject.spi.BeanManager")) != null) {
                 // Composite Configuration - due to PAYARA-2491
                 // https://github.com/payara/Payara/issues/2245
                 context.constraintValidatorFactory(resourceContext.getResource(
