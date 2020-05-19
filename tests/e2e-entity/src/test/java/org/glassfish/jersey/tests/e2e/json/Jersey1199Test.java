@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.bind.adapter.JsonbAdapter;
+import jakarta.json.bind.adapter.JsonbAdapter;
 
 import org.glassfish.jersey.tests.e2e.json.entity.ColorHolder;
 import org.glassfish.jersey.tests.e2e.json.entity.Jersey1199List;

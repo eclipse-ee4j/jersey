@@ -10,8 +10,8 @@
 
 package org.glassfish.jersey.examples.jsonb;
 
-import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 /**
  * Example cat POJO for JSONB (un)marshalling.

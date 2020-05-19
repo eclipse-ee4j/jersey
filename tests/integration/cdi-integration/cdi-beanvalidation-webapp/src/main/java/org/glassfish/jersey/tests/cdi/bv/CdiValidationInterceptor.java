@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.cdi.bv;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;

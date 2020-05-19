@@ -20,7 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.glassfish.jersey.examples.bookmark.entity.BookmarkEntity;
 import org.glassfish.jersey.examples.bookmark.entity.BookmarkEntityPK;

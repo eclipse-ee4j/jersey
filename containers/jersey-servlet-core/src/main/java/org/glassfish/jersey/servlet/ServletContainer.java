@@ -30,16 +30,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
@@ -58,7 +58,7 @@ import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
 import org.glassfish.jersey.uri.UriComponent;
 
 /**
- * A {@link javax.servlet.Servlet} or {@link Filter} for deploying root resource classes.
+ * A {@link jakarta.servlet.Servlet} or {@link Filter} for deploying root resource classes.
  * <p />
  * The following sections make reference to initialization parameters. Unless
  * otherwise specified the initialization parameters apply to both server
@@ -96,8 +96,8 @@ import org.glassfish.jersey.uri.UriComponent;
  * and {@link jakarta.ws.rs.core.Application} classes using {@link jakarta.ws.rs.core.Context
  * &#64;Context} annotation:
  * {@link HttpServletRequest}, {@link HttpServletResponse},
- * {@link ServletContext}, {@link javax.servlet.ServletConfig} and {@link WebConfig}.
- * If this class is used as a Servlet then the {@link javax.servlet.ServletConfig} class may
+ * {@link ServletContext}, {@link jakarta.servlet.ServletConfig} and {@link WebConfig}.
+ * If this class is used as a Servlet then the {@link jakarta.servlet.ServletConfig} class may
  * be injected. If this class is used as a servlet filter then the {@link FilterConfig}
  * class may be injected. {@link WebConfig} may be injected to abstract
  * servlet or filter deployment.
@@ -120,7 +120,7 @@ import org.glassfish.jersey.uri.UriComponent;
  *     <param-value>persistence/widget</param-value>
  * </init-param>
  * }</pre>
- * Given the above, Jersey will inject the {@link javax.persistence.EntityManagerFactory EntityManagerFactory} found
+ * Given the above, Jersey will inject the {@link jakarta.persistence.EntityManagerFactory EntityManagerFactory} found
  * at {@code java:comp/env/persistence/widget} in JNDI when encountering a
  * field or parameter annotated with {@code @PersistenceUnit(unitName="WidgetPU")}.
  *
@@ -148,7 +148,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      * Initiate the Web component.
      *
      * @param webConfig the Web configuration.
-     * @throws javax.servlet.ServletException in case of an initialization failure
+     * @throws jakarta.servlet.ServletException in case of an initialization failure
      */
     protected void init(final WebConfig webConfig) throws ServletException {
         webComponent = new WebComponent(webConfig, resourceConfig);
@@ -187,7 +187,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *                          HTTP request
      * @throws ServletException if the HTTP request cannot
      *                          be handled
-     * @see javax.servlet.Servlet#service
+     * @see jakarta.servlet.Servlet#service
      */
     @Override
     public void service(final ServletRequest req, final ServletResponse res)
@@ -209,7 +209,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      * Receives standard HTTP requests from the public {@code service} method and dispatches
      * them to the {@code do}<i>XXX</i> methods defined in
      * this class. This method is an HTTP-specific version of the
-     * {@link javax.servlet.Servlet#service} method. There's no
+     * {@link jakarta.servlet.Servlet#service} method. There's no
      * need to override this method.
      *
      * @param request  the {@link HttpServletRequest} object that
@@ -223,7 +223,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *                          HTTP request
      * @throws ServletException if the HTTP request
      *                          cannot be handled
-     * @see javax.servlet.Servlet#service
+     * @see jakarta.servlet.Servlet#service
      */
     @Override
     protected void service(final HttpServletRequest request, final HttpServletResponse response)
@@ -352,9 +352,9 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *
      * @param baseUri    the base URI of the request.
      * @param requestUri the URI of the request.
-     * @param request    the {@link javax.servlet.http.HttpServletRequest} object that contains the request the client made to
+     * @param request    the {@link jakarta.servlet.http.HttpServletRequest} object that contains the request the client made to
      *                   the Web component.
-     * @param response   the {@link javax.servlet.http.HttpServletResponse} object that contains the response the Web component
+     * @param response   the {@link jakarta.servlet.http.HttpServletResponse} object that contains the response the Web component
      *                   returns to the client.
      * @return lazily initialized response status code {@link Value value provider}. If not resolved in the moment of call to
      * {@link Value#get()}, {@code -1} is returned.
@@ -372,9 +372,9 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *
      * @param baseUri    the base URI of the request.
      * @param requestUri the URI of the request.
-     * @param request    the {@link javax.servlet.http.HttpServletRequest} object that contains the request the client made to
+     * @param request    the {@link jakarta.servlet.http.HttpServletRequest} object that contains the request the client made to
      *                   the Web component.
-     * @param response   the {@link javax.servlet.http.HttpServletResponse} object that contains the response the Web component
+     * @param response   the {@link jakarta.servlet.http.HttpServletResponse} object that contains the response the Web component
      *                   returns to the client.
      * @return returns {@link ResponseWriter}, Servlet's {@link org.glassfish.jersey.server.spi.ContainerResponseWriter}
      *         implementation, into which processed request response was written to.
@@ -475,19 +475,19 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *                 to the client.
      * @param chain    the chain of filters from which the next filter can be invoked.
      * @throws java.io.IOException            in case of an I/O error.
-     * @throws javax.servlet.ServletException in case of an error while executing the
+     * @throws jakarta.servlet.ServletException in case of an error while executing the
      *                                        filter chain.
      */
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        if (request.getAttribute("javax.servlet.include.request_uri") != null) {
-            final String includeRequestURI = (String) request.getAttribute("javax.servlet.include.request_uri");
+        if (request.getAttribute("jakarta.servlet.include.request_uri") != null) {
+            final String includeRequestURI = (String) request.getAttribute("jakarta.servlet.include.request_uri");
 
             if (!includeRequestURI.equals(request.getRequestURI())) {
                 doFilter(request, response, chain,
                         includeRequestURI,
-                        (String) request.getAttribute("javax.servlet.include.servlet_path"),
-                        (String) request.getAttribute("javax.servlet.include.query_string"));
+                        (String) request.getAttribute("jakarta.servlet.include.servlet_path"),
+                        (String) request.getAttribute("jakarta.servlet.include.query_string"));
                 return;
             }
         }

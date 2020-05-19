@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.cdi.bv;
 
 import jakarta.ws.rs.ApplicationPath;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;

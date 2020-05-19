@@ -45,7 +45,7 @@ public final class JspMvcFeature implements Feature {
      * <li>{@link org.glassfish.jersey.server.mvc.ErrorTemplate ErrorTemplate}</li>
      * </ul>
      * <p/>
-     * Value can be absolute or relative to current {@link javax.servlet.ServletContext servlet context}.
+     * Value can be absolute or relative to current {@link jakarta.servlet.ServletContext servlet context}.
      * <p/>
      * There is no default value.
      * <p/>

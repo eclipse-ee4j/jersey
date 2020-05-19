@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.servlet.spi;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 import java.util.List;
 
 /**

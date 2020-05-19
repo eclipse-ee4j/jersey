@@ -114,7 +114,7 @@
                     <dependency>
                         <groupId>jakarta.xml.bind</groupId>
                         <artifactId>jakarta.xml.bind-api</artifactId>
-                        <version>${jaxb.api.version}</version>
+                        <version>${jakarta.jaxb.api.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.sun.xml.bind</groupId>

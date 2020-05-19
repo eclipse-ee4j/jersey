@@ -62,7 +62,7 @@ public class Jersey2184ITCase extends JerseyTest {
     }
 
     /**
-     * Tests if {@link javax.servlet.ServletContext} has been correctly injected into {@link App} constructor parameter;
+     * Tests if {@link jakarta.servlet.ServletContext} has been correctly injected into {@link App} constructor parameter;
      * The resource under this URL is being loaded dynamically based on a context parameter in the web.xml,
      * so if injection fails, the resource will not be available.
      */

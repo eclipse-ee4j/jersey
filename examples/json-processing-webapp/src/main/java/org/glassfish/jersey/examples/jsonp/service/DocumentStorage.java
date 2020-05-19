@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 /**
  * Storage of documents.

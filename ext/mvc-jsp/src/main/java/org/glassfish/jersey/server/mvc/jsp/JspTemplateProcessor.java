@@ -28,12 +28,13 @@ import jakarta.ws.rs.core.MultivaluedMap;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.message.internal.TracingLogger;
@@ -108,6 +109,15 @@ final class JspTemplateProcessor extends AbstractTemplateProcessor<String> {
             @Override
             public void write(final int b) throws IOException {
                 out.write(b);
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
             }
         };
         final PrintWriter responseWriter = new PrintWriter(new OutputStreamWriter(responseStream, getEncoding()));

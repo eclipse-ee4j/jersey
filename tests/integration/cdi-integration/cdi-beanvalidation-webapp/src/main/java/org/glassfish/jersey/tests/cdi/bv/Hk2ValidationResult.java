@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.cdi.bv;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.validation.ConstraintViolation;
 
 /**
