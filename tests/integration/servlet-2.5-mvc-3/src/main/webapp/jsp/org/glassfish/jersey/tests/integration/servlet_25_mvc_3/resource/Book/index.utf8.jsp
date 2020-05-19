@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 --%>
 
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
 <%--
 The taglib directive below imports the JSTL library. If you uncomment it,
 you must also add the JSTL library to the project. The Add Library... action

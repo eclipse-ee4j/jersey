@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,10 +53,7 @@ public class ItemITCase extends TestSupport {
 
     @Test
     public void testResourceAsHtmlIso88592() throws Exception {
-        final Response response = item1resource().path("iso").request()
-                // In Jetty 9 it has no effect <%@page contentType="text/html"%> <%@page pageEncoding="ISO-8859-2"%>
-                // We need to set it in a filter.
-                .header(CharacterEncodingFilter.CHARACTER_ENCODING, "ISO-8859-2").get();
+        final Response response = item1resource().path("iso").request().get();
         response.bufferEntity();
 
         final String htmlUtf8 = response.readEntity(String.class);
