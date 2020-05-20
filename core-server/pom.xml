@@ -266,6 +266,7 @@
                                 <exclude>org/glassfish/jersey/server/model/OptionsSubResourceMethodTest.java</exclude>
                                 <exclude>org/glassfish/jersey/server/model/OptionsTest.java</exclude>
                                 <exclude>org/glassfish/jersey/server/wadl/generators/resourcedoc/WadlGeneratorResourceDocSupportTest.java</exclude>
+                                <exclude>org/glassfish/jersey/server/ExtendedResourceContextTest.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
