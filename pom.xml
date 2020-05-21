@@ -1711,7 +1711,7 @@
             <dependency>
                 <groupId>jakarta.persistence</groupId>
                 <artifactId>jakarta.persistence-api</artifactId>
-                <version>${javax.persistence.version}</version>
+                <version>${jakarta.persistence.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -2126,32 +2126,32 @@
 
         <!-- do not need CQs -->
         <gf.impl.version>5.1.0</gf.impl.version>
-        <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
+        <istack.commons.runtime.version>4.0.0-M3</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.0-RC3</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.0-RC3</jakarta.activation.version>
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el.impl.version>4.0.0-RC1</jakarta.el.impl.version>
-        <javax.annotation.osgi.version>javax.annotation.*;version="[1.2,3)"</javax.annotation.osgi.version>
+<!--        <javax.annotation.osgi.version>javax.annotation.*;version="[1.2,3)"</javax.annotation.osgi.version>-->
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[1.2,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.0.0-RC1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.0-RC3</jakarta.inject.version>
         <javax.annotation.version>1.3.5</javax.annotation.version>
         <javax.interceptor.version>1.2.5</javax.interceptor.version>
-        <javax.persistence.version>2.2.3</javax.persistence.version>
+        <jakarta.persistence.version>3.0.0-RC2</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0-M1</jakarta.validation.api.version>
         <jaxb.api.version>3.0.0-RC2</jaxb.api.version>
-        <javax.jaxb.api.version>2.3.2</javax.jaxb.api.version>
+<!--        <javax.jaxb.api.version>2.3.2</javax.jaxb.api.version>-->
         <jaxb.ri.version>3.0.0-M1</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
         <jetty.version>9.4.27.v20200227</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
-        <jsonb.api.version>1.0.2</jsonb.api.version>
-        <jsonp.ri.version>1.1.6</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.6</jsonp.jaxrs.version>
+        <jsonb.api.version>2.0.0-RC1</jsonb.api.version>
+        <jsonp.ri.version>2.0.0-RC2</jsonp.ri.version>
+        <jsonp.jaxrs.version>2.0.0-RC2</jsonp.jaxrs.version>
         <mimepull.version>1.9.13</mimepull.version>
-        <moxy.version>2.7.6</moxy.version>
+        <moxy.version>3.0.0-M1</moxy.version>
         <yasson.version>1.0.6</yasson.version>
     </properties>
 </project>

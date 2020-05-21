@@ -120,7 +120,7 @@ import org.glassfish.jersey.uri.UriComponent;
  *     <param-value>persistence/widget</param-value>
  * </init-param>
  * }</pre>
- * Given the above, Jersey will inject the {@link javax.persistence.EntityManagerFactory EntityManagerFactory} found
+ * Given the above, Jersey will inject the {@link jakarta.persistence.EntityManagerFactory EntityManagerFactory} found
  * at {@code java:comp/env/persistence/widget} in JNDI when encountering a
  * field or parameter annotated with {@code @PersistenceUnit(unitName="WidgetPU")}.
  *

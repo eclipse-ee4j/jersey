@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.bookmark_em.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 /**
  * Primary Key class BookmarkEntityPK for entity class BookmarkEntity.

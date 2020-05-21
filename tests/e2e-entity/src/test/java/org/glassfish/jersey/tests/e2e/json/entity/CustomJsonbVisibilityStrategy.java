@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.json.entity;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import javax.json.bind.config.PropertyVisibilityStrategy;
+import jakarta.json.bind.config.PropertyVisibilityStrategy;
 
 /**
  * Custom, permissive {@link PropertyVisibilityStrategy}.

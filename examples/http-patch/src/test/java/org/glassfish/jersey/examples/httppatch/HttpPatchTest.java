@@ -14,8 +14,8 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 
-import javax.json.Json;
-import javax.json.JsonArray;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;

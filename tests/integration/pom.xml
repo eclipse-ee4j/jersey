@@ -62,7 +62,7 @@
         <module>jersey-2167</module>
         <module>jersey-2176</module>
         <module>jersey-2184</module>
-<!--        <module>jersey-2255</module> Moxy-->
+        <module>jersey-2255</module>
         <module>jersey-2322</module>
         <module>jersey-2335</module>
         <module>jersey-2421</module>
@@ -77,7 +77,7 @@
         <module>jersey-2794</module>
         <module>jersey-2846</module>
         <module>jersey-2878</module>
-<!--        <module>jersey-2892</module> Moxy-->
+        <module>jersey-2892</module>
 	    <module>jersey-3796</module>
         <module>jersey-780</module>
         <module>jersey-3670</module>
@@ -108,7 +108,7 @@
         <module>servlet-2.5-mvc-3</module>
         <module>servlet-2.5-reload</module>
         <module>servlet-3-async</module>
-<!--        <module>servlet-3-chunked-io</module> Moxy-->
+        <module>servlet-3-chunked-io</module>
         <module>servlet-3-filter</module>
         <module>servlet-3-gf-async</module>
         <module>servlet-3-inflector-1</module>

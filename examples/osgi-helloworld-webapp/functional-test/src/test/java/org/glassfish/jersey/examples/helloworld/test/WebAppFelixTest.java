@@ -35,6 +35,7 @@ public class WebAppFelixTest extends AbstractWebAppTest {
 
     private static final Logger LOGGER = Logger.getLogger(WebAppFelixTest.class.getName());
     private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "jakarta.ws.rs.ext.RuntimeDelegate";
+    private static final String JAXRS_CLIENT_BUILDER = "jakarta.ws.rs.client.ClientBuilder";
 
     @Override
     public List<Option> osgiRuntimeOptions() {

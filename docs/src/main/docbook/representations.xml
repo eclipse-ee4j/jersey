@@ -259,7 +259,7 @@ public Item getItem(@PathParam("itemid") String itemid) {
             response. For such cases it is possible to use a custom exception mapping provider. The provider must implement
             the &jaxrs.ext.ExceptionMapper; interface. For example, the following
             maps the
-            <link xlink:href="http://docs.oracle.com/javaee/5/api/javax/persistence/EntityNotFoundException.html">EntityNotFoundException</link>
+            <link xlink:href="http://docs.oracle.com/javaee/5/api/jakarta.persistence/EntityNotFoundException.html">EntityNotFoundException</link>
             to a HTTP 404 (Not Found) response:
         </para>
 
@@ -267,8 +267,8 @@ public Item getItem(@PathParam("itemid") String itemid) {
             <example>
                 <title>Mapping generic exceptions to responses</title>
                 <programlisting language="java" linenumbering="numbered">@Provider
-public class EntityNotFoundMapper implements ExceptionMapper&lt;javax.persistence.EntityNotFoundException&gt; {
-  public Response toResponse(javax.persistence.EntityNotFoundException ex) {
+public class EntityNotFoundMapper implements ExceptionMapper&lt;jakarta.persistence.EntityNotFoundException&gt; {
+  public Response toResponse(jakarta.persistence.EntityNotFoundException ex) {
     return Response.status(404).
       entity(ex.getMessage()).
       type("text/plain").
@@ -280,7 +280,7 @@ public class EntityNotFoundMapper implements ExceptionMapper&lt;javax.persistenc
 
         <para>The above class is annotated with &jaxrs.ext.Provider;, this declares that the class is of interest to the JAX-RS runtime. Such a
             class may be added to the set of classes of the &jaxrs.core.Application; instance that is configured. When an application throws an
-            <link xlink:href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityNotFoundException.html">EntityNotFoundException</link>
+            <link xlink:href="http://docs.oracle.com/javaee/6/api/jakarta.persistence/EntityNotFoundException.html">EntityNotFoundException</link>
             the
             <literal>toResponse</literal>
             method of the

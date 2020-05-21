@@ -23,8 +23,8 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
 
 import org.glassfish.jersey.examples.bookmark_em.entity.UserEntity;

@@ -22,8 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonString;
+import jakarta.json.Json;
+import jakarta.json.JsonString;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.client.ClientRequestContext;
