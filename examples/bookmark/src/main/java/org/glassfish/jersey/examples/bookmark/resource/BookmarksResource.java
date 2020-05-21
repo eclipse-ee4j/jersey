@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.glassfish.jersey.examples.bookmark.entity.BookmarkEntity;
 import org.glassfish.jersey.examples.bookmark.util.tx.TransactionManager;

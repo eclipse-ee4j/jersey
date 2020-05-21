@@ -209,6 +209,9 @@
                         <classpathDepenencyExclude>org.apache.felix:org.osgi.core</classpathDepenencyExclude>
                         <classpathDepenencyExclude>org.osgi:org.osgi.core</classpathDepenencyExclude>
                     </classpathDependencyExcludes>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/examples/helloworld/test/WebAppFelixTest.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

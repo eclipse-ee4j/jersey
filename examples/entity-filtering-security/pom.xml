@@ -70,6 +70,16 @@
                     <mainClass>org.glassfish.jersey.examples.entityfiltering.security.App</mainClass>
                 </configuration>
             </plugin>
+            <!-- TODO remove after jakartification is done -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/**/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

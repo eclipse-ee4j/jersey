@@ -27,8 +27,8 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 
 import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;

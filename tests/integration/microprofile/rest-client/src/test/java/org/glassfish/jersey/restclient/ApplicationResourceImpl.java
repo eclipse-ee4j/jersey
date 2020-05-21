@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonValue;
+import jakarta.json.Json;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.core.MediaType;
 
 /**

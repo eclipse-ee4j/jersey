@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InterceptionType;
 import jakarta.enterprise.inject.spi.Interceptor;
-import javax.json.JsonValue;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.CookieParam;
 import jakarta.ws.rs.DELETE;

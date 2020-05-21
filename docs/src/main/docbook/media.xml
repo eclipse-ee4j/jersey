@@ -489,7 +489,7 @@ final Application application = new ResourceConfig()
                         <listitem>
                             <para>
                                 <literal>JsonGenerator.PRETTY_PRINTING</literal>
-                                ("<literal>javax.json.stream.JsonGenerator.prettyPrinting</literal>")
+                                ("<literal>jakarta.json.stream.JsonGenerator.prettyPrinting</literal>")
                             </para>
                         </listitem>
                     </itemizedlist>

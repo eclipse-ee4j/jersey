@@ -19,7 +19,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.glassfish.jersey.examples.bookmark.entity.UserEntity;
 import org.glassfish.jersey.examples.bookmark.exception.ExtendedNotFoundException;

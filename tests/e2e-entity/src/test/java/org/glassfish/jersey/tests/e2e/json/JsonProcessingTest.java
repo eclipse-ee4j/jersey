@@ -27,13 +27,13 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
 import org.glassfish.jersey.jsonp.JsonProcessingFeature;
 import org.glassfish.jersey.server.JSONP;

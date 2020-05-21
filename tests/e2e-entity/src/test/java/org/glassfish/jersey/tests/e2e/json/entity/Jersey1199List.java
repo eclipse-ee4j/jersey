@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Formatter;
 
-import javax.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.tests.e2e.json.Jersey1199Test;

@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.bookmark_em.util.tx;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * @author Paul Sandoz

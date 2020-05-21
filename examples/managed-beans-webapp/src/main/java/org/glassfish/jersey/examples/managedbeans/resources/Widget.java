@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.managedbeans.resources;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 /**
  * Simple JPA entity made accessible via {@link ManagedBeanSingletonResource}.

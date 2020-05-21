@@ -19,7 +19,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.glassfish.jersey.examples.bookmark_em.entity.BookmarkEntity;
