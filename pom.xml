@@ -2093,8 +2093,8 @@
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.44</jmockit.version>
-        <jsp.version>2.3.6</jsp.version>
-        <jstl.version>1.2.7</jstl.version>
+        <jsp.version>3.0.0-M1</jsp.version>
+        <jstl.version>2.0.0-RC1</jstl.version>
         <jta.api.version>1.3.3</jta.api.version>
         <junit5.version>5.6.0</junit5.version>
         <kryo.version>4.0.1</kryo.version>
