@@ -436,7 +436,9 @@ class JettyConnector implements Connector {
                 @Override
                 public void onComplete(final Result result) {
                     entityStream.closeQueue();
-                    callback.response(jerseyResponse.get());
+                    if (!callbackInvoked.get()) {
+                        callback.response(jerseyResponse.get());
+                    }
                     responseFuture.complete(jerseyResponse.get());
                 }
 
