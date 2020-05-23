@@ -2139,9 +2139,9 @@
         <javax.interceptor.version>1.2.5</javax.interceptor.version>
         <jakarta.persistence.version>3.0.0-RC2</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0-M1</jakarta.validation.api.version>
-        <jaxb.api.version>3.0.0-RC2</jaxb.api.version>
+        <jaxb.api.version>3.0.0-RC3</jaxb.api.version>
 <!--        <javax.jaxb.api.version>2.3.2</javax.jaxb.api.version>-->
-        <jaxb.ri.version>3.0.0-M1</jaxb.ri.version>
+        <jaxb.ri.version>3.0.0-M3</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
