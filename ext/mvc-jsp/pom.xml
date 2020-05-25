@@ -53,7 +53,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            jakarta.servlet.jsp.*;version="[2.0,3.0)",
+                            jakarta.servlet.jsp.*;version="[2.0,4.0)",
                             javax.servlet.*;version="!",
                             *
                         </Import-Package>

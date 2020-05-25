@@ -57,7 +57,7 @@
                         <!-- TODO: change to ${range;[==,+);${jsonp.api.version}} once the version is final-->
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
-                            jakarta.json.*;version="[0,2)",
+                            jakarta.json.*;version="[0,3)",
                             org.glassfish.json.*;version="[0,3)",
                             *
                         </Import-Package>
