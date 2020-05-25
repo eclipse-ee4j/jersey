@@ -132,7 +132,7 @@ public abstract class AbstractWebAppTest {
                 //                 mavenBundle("org.ops4j.pax.logging", "pax-logging-api", "1.4"),
                 //                 mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
-                // javax.annotation must go first!
+                // jakarta.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 // pax exam dependencies
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),

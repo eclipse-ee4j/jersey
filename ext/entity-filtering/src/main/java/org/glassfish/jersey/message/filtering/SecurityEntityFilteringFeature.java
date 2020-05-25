@@ -24,14 +24,14 @@ import jakarta.ws.rs.core.FeatureContext;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 /**
- * {@link Feature} used to add support for Java Security annotations (<code>javax.annotation.security</code>) for Entity Data
+ * {@link Feature} used to add support for Java Security annotations (<code>jakarta.annotation.security</code>) for Entity Data
  * Filtering feature.
  * <p>
  * Supported annotations are:
  * <ul>
- * <li>{@link javax.annotation.security.PermitAll}</li>
- * <li>{@link javax.annotation.security.RolesAllowed}</li>
- * <li>{@link javax.annotation.security.DenyAll}</li>
+ * <li>{@link jakarta.annotation.security.PermitAll}</li>
+ * <li>{@link jakarta.annotation.security.RolesAllowed}</li>
+ * <li>{@link jakarta.annotation.security.DenyAll}</li>
  * </ul>
  * </p>
  * <p>

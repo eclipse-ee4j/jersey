@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.bv;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.GET;

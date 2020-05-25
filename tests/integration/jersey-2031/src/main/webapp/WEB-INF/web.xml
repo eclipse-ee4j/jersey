@@ -31,12 +31,4 @@
         <filter-name>jersey2031</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <jsp-config>
-        <taglib>
-            <taglib-uri>urn:org:glassfish:jersey:servlet:mvc</taglib-uri>
-            <taglib-location>
-                /WEB-INF/lib/jersey-mvc-jsp-2.29-SNAPSHOT.jar
-            </taglib-location>
-        </taglib>
-    </jsp-config>
 </web-app>

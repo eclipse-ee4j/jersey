@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.jersey2154;
 
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Stateless;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 

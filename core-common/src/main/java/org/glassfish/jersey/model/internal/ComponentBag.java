@@ -429,7 +429,7 @@ public class ComponentBag {
      *
      * @param componentClass  registered component class.
      * @param defaultPriority default component priority. If {@value ContractProvider#NO_PRIORITY},
-     *                        the value from the component class {@link javax.annotation.Priority} annotation will be used
+     *                        the value from the component class {@link jakarta.annotation.Priority} annotation will be used
      *                        (if any).
      * @param contractMap     map of contracts and their binding priorities. If {@code null}, the contracts will
      *                        gathered by introspecting the component class. Content of the contract map
@@ -478,7 +478,7 @@ public class ComponentBag {
      *
      * @param componentClass  component class to create contract provider model for.
      * @param defaultPriority default component priority. If {@value ContractProvider#NO_PRIORITY},
-     *                        the value from the component class {@link javax.annotation.Priority} annotation will be used
+     *                        the value from the component class {@link jakarta.annotation.Priority} annotation will be used
      *                        (if any).
      * @param contractMap     map of contracts and their binding priorities. If {@code null}, the contracts will
      *                        gathered by introspecting the component class. Content of the contract map

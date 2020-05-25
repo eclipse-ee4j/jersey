@@ -100,7 +100,7 @@ public final class CdiUtil {
      * @param clazz type of service to look for.
      * @param <T>   type of service to look for
      * @return instance of service with highest priority or {@code null} if service of given type cannot be found.
-     * @see javax.annotation.Priority
+     * @see jakarta.annotation.Priority
      */
     static <T> T lookupService(final Class<T> clazz) {
         final List<RankedProvider<T>> providers = new LinkedList<>();

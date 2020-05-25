@@ -43,7 +43,7 @@ public final class MvcFeature implements Feature {
      * </ul>
      * <p/>
      * Value can be absolute providing a full path to a system directory with templates or relative to current
-     * {@link javax.servlet.ServletContext servlet context}.
+     * {@link jakarta.servlet.ServletContext servlet context}.
      * <p/>
      * There is no default value.
      * <p/>

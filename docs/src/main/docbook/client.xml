@@ -546,8 +546,8 @@ String entity = client.target("http://example.com/rest")
                 do require running on another thread, should be executed using provided services.
             </para>
             <para>
-                Default values do depend on the environment - in Java EE container, it has to be &jee6.javax.enterprise.concurrent.ManagedExecutorService;
-                and &jee6.javax.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
+                Default values do depend on the environment - in Java EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
+                and &jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
                 <literal>ForkJoinPool.commonPool</literal> for Executor service and something undefined for Scheduled
                 executor service.
             </para>

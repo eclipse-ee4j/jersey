@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
 import jakarta.ws.rs.core.Configuration;
 
 import jakarta.inject.Inject;
@@ -41,15 +43,20 @@ public class DocumentBuilderFactoryInjectionProvider extends AbstractXmlFactory<
         super(config);
     }
 
+    @Inject
+    private InjectionManager injectionManager;
+
     @Override
     public DocumentBuilderFactory get() {
-        DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
 
         f.setNamespaceAware(true);
 
         if (!isXmlSecurityDisabled()) {
             f.setExpandEntityReferences(false);
         }
+
+        JaxbFeatureUtil.setProperties(injectionManager, DocumentBuilderFactory.class, f::setAttribute);
 
         return f;
     }

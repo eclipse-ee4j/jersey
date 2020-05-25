@@ -51,7 +51,7 @@ public class WaeExceptionMappingTest extends JerseyTest {
     }
 
     /**
-     * Test all {@javax.transaction.Transactional}
+     * Test all {@jakarta.transaction.Transactional}
      * annotated CDI beans. The test scenario is as follows.
      * Set two accounts via the CDI bean that avoids rollback.
      * Should any rollback happen there, we would not be able

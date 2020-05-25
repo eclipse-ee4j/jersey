@@ -41,7 +41,7 @@ import jakarta.annotation.PreDestroy;
  * it may not be desirable to shut down the released executor service in the {@link #dispose} method. Instead, to perform the
  * eventual shut-down procedure, the provider may either rely on an explicit invocation of it's specific clean-up method.
  * Since all Jersey providers operate in a <em>container</em> environment, a good clean-up strategy for a shared executor
- * service provider implementation is to expose a {@link javax.annotation.PreDestroy &#64;PreDestroy}-annotated method
+ * service provider implementation is to expose a {@link jakarta.annotation.PreDestroy &#64;PreDestroy}-annotated method
  * that will be invoked for all instances managed by the container, before the container shuts down.
  * </p>
  * <p>

@@ -81,7 +81,7 @@ public class Injections {
      * @param clazz type of service to look for.
      * @param <T>   type of service to look for.
      * @return instance of service with highest priority or {@code null} if service of given type cannot be found.
-     * @see javax.annotation.Priority
+     * @see jakarta.annotation.Priority
      */
     private static <T> Optional<T> lookupService(final Class<T> clazz) {
         List<RankedProvider<T>> providers = new LinkedList<>();

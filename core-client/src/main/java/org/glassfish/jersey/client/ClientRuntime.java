@@ -34,6 +34,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 
 import jakarta.inject.Provider;
 
+import org.glassfish.jersey.client.internal.ClientResponseProcessingException;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
@@ -299,6 +300,9 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
             }
 
             response = Stages.process(response, responseProcessingRoot);
+        } catch (final ClientResponseProcessingException crpe) {
+            processingException = crpe;
+            response = crpe.getClientResponse();
         } catch (final ProcessingException pe) {
             processingException = pe;
         } catch (final Throwable t) {

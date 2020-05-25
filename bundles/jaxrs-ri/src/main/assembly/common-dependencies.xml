@@ -30,10 +30,10 @@
                 <exclude>jakarta.ws.rs:*</exclude>
                 <exclude>org.glassfish.jersey.*:*</exclude>
                 <!-- CDI API dependencies come from yasson, cdi is optional there -->
-                <exclude>javax.enterprise:cdi-api:jar:*</exclude>
+                <exclude>jakarta.enterprise:cdi-api:jar:*</exclude>
                 <exclude>jakarta.el:el-api:jar:*</exclude>
                 <exclude>org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec:jar:*</exclude>
-                <exclude>javax.annotation:jsr250-api:jar:*</exclude>
+                <exclude>jakarta.annotation:jsr250-api:jar:*</exclude>
             </excludes>
         </dependencySet>
         <!-- JAX-RS RI provided dependencies -->

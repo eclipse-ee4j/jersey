@@ -278,12 +278,12 @@
                             jersey.repackaged.org.objectweb.asm.*;version=${project.version}
                         </Export-Package>
                         <Import-Package><![CDATA[
-                            javax.servlet.annotation.*;resolution:=optional;version="[2.4,5.0)",
-                            javax.servlet.descriptor.*;resolution:=optional;version="[2.4,5.0)",
-                            javax.servlet.*;version="[2.4,5.0)",
+                            javax.servlet.annotation.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.descriptor.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.*;version="[3.0,6.0)",
                             ${jakarta.annotation.osgi.version},
-                            javax.persistence.*;resolution:=optional,
-                            jakarta.validation.*;resolution:=optional;version="[2,4)",
+                            jakarta.persistence.*;resolution:=optional,
+                            jakarta.validation.*;resolution:=optional;version="[3,4)",
                             sun.misc.*;resolution:=optional,
                             ${hk2.osgi.version},
                             *
@@ -373,10 +373,10 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <jar destfile="${project.build.directory}/${artifactId}.jar" update="true">
+                                <jar destfile="${project.build.directory}/${project.artifactId}.jar" update="true">
                                     <zipfileset dir="../.." includes="NOTICE.md" prefix="META-INF" />
                                 </jar>
-                                <jar destfile="${project.build.directory}/${artifactId}-sources.jar" update="true">
+                                <jar destfile="${project.build.directory}/${project.artifactId}-sources.jar" update="true">
                                     <zipfileset dir="../.." includes="NOTICE.md" prefix="META-INF" />
                                 </jar>
                             </tasks>

@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.FeatureContext;
  * META-INF/services} directory.
  * <p/>
  * Almost all Jersey {@code AutoDiscoverable} implementations have
- * {@link #DEFAULT_PRIORITY} {@link javax.annotation.Priority priority} set.
+ * {@link #DEFAULT_PRIORITY} {@link jakarta.annotation.Priority priority} set.
  *
  * @author Michal Gajdos
  */

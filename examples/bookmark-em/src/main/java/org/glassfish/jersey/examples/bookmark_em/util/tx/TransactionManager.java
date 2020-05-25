@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.bookmark_em.util.tx;
 
 import jakarta.ws.rs.WebApplicationException;
 
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 /**
  * @author Paul Sandoz

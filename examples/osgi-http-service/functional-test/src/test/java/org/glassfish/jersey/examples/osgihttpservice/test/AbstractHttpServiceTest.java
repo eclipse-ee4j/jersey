@@ -86,7 +86,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(BundleLocationProperty).value(bundleLocation),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
                 systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
@@ -97,7 +97,7 @@ public abstract class AbstractHttpServiceTest {
                 // mavenBundle("org.ops4j.pax.logging", "pax-logging-api", "1.4"),
                 // mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
-                // javax.annotation has to go first!
+                // jakarta.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),

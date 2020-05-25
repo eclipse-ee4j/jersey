@@ -107,7 +107,7 @@ public class ServletDeploymentContext extends DeploymentContext {
     /**
      * Create new servlet deployment context builder bound to a Servlet instance.
      * <p>
-     * Note that the servlet instance will be discarded if one of the {@link Builder#servlet(javax.servlet.http.HttpServlet)},
+     * Note that the servlet instance will be discarded if one of the {@link Builder#servlet(jakarta.servlet.http.HttpServlet)},
      * {@link Builder#servletClass(Class)}, {@link Builder#filterClass(Class)} or
      * {@link Builder#filterClass(Class, java.util.Set)} is invoked on the builder.
      * </p>
@@ -124,7 +124,7 @@ public class ServletDeploymentContext extends DeploymentContext {
     /**
      * Create new servlet deployment context builder bound to a Servlet class.
      * <p>
-     * Note that the servlet instance will be discarded if one of the {@link Builder#servlet(javax.servlet.http.HttpServlet)},
+     * Note that the servlet instance will be discarded if one of the {@link Builder#servlet(jakarta.servlet.http.HttpServlet)},
      * {@link Builder#servletClass(Class)}, {@link Builder#filterClass(Class)} or
      * {@link Builder#filterClass(Class, java.util.Set)} is invoked on the builder.
      * </p>

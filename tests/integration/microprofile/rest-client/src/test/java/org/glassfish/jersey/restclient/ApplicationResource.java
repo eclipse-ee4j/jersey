@@ -19,7 +19,7 @@ package org.glassfish.jersey.restclient;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.JsonValue;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;

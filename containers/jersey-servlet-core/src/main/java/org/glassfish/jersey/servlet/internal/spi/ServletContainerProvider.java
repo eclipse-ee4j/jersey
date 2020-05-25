@@ -49,7 +49,7 @@ public interface ServletContainerProvider {
      *                       implement, or have been annotated with the class types {@link jakarta.ws.rs.Path},
      *                       {@link jakarta.ws.rs.ext.Provider} or {@link jakarta.ws.rs.ApplicationPath}.
      *                       May be empty, never {@code null}.
-     * @throws ServletException if an error has occurred. {@code javax.servlet.ServletContainerInitializer.onStartup}
+     * @throws ServletException if an error has occurred. {@code jakarta.servlet.ServletContainerInitializer.onStartup}
      *                          is interrupted.
      */
     public void preInit(ServletContext servletContext, Set<Class<?>> classes) throws ServletException;
@@ -66,7 +66,7 @@ public interface ServletContainerProvider {
      *                       {@link jakarta.ws.rs.ext.Provider} or {@link jakarta.ws.rs.ApplicationPath}.
      *                       May be empty, never {@code null}.
      * @param servletNames   the Immutable set of Jersey's ServletContainer names. May be empty, never {@code null}.
-     * @throws ServletException if an error has occurred. {@code javax.servlet.ServletContainerInitializer.onStartup}
+     * @throws ServletException if an error has occurred. {@code jakarta.servlet.ServletContainerInitializer.onStartup}
      *                          is interrupted.
      */
     public void postInit(ServletContext servletContext, Set<Class<?>> classes, final Set<String> servletNames)
@@ -87,7 +87,7 @@ public interface ServletContainerProvider {
      *
      * @param servletContext the {@code ServletContext} of the JAX-RS/Jersey web application that is being started.
      * @param servletNames   the Immutable set of Jersey's ServletContainer names. May be empty, never {@code null}.
-     * @throws ServletException if an error has occurred. {@code javax.servlet.ServletContainerInitializer.onStartup}
+     * @throws ServletException if an error has occurred. {@code jakarta.servlet.ServletContainerInitializer.onStartup}
      *                          is interrupted.
      */
     public void onRegister(ServletContext servletContext, final Set<String> servletNames) throws ServletException;

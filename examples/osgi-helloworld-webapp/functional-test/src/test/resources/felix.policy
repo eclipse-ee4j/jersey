@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
 //
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,6 +13,7 @@ allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*System*"] (org
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*additional-bundle*"] (java.security.AllPermission) } "allToAdditional";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*javassist*"] (java.security.AllPermission) } "allToJavassist";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jakarta.ws.rs*"] (java.security.AllPermission) } "allToJavaxWsRs";
+allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jakarta.xml.bind*"] (java.security.AllPermission) } "allToJaxB";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jetty*"] (java.security.AllPermission) } "allToJetty";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*hk2*"] (java.security.AllPermission) } "allToHk2";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*osgi*"] (java.security.AllPermission) } "allToOsgi";
@@ -36,6 +37,7 @@ allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.lang.RuntimePermission "accessClassInPackage.sun.misc") } "accessClassInPackageSunMisc";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.lang.RuntimePermission "getClassLoader") } "getCLToJerseyCommon";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.lang.RuntimePermission "modifyThread") } "modifyThreadToJerseyCommon";
+allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.lang.RuntimePermission "setContextClassLoader") } "setContextCLToJerseyCommon";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.util.PropertyPermission "*" "read") } "propReadToJerseyCommon";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-common*"] (java.io.FilePermission "<<ALL FILES>>" "read,write") } "fileReadToJerseyCommon";
 allow { [org.osgi.service.condpermadmin.BundleLocationCondition "*jersey-client*"] (java.security.AllPermission) } "allToJerseyClient";

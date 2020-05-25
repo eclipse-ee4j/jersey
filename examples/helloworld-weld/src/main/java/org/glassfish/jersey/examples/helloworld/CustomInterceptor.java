@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.helloworld;
 
 import java.io.IOException;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import jakarta.inject.Inject;
 

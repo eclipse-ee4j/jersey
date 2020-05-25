@@ -19,7 +19,7 @@ package org.glassfish.jersey.weld.se;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;

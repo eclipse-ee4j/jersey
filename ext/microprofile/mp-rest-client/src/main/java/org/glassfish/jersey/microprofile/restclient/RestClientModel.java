@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 

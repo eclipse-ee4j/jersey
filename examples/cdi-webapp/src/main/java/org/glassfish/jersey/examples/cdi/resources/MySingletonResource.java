@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Shows injection of context objects into the fields of a managed bean.

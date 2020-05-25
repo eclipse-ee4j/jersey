@@ -109,8 +109,8 @@
             <artifactId>org.eclipse.persistence.moxy</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.json</groupId>
-                    <artifactId>javax.json-api</artifactId>
+                    <groupId>jakarta.json</groupId>
+                    <artifactId>jakarta.json-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>jakarta.json</groupId>

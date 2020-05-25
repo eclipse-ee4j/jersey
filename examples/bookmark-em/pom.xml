@@ -45,7 +45,6 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>${ejb.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

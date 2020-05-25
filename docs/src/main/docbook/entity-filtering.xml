@@ -115,7 +115,7 @@
                 </listitem>
                 <listitem>
                     <para>&jersey.message.filtering.SecurityEntityFilteringFeature;</para>
-                    <para>Filtering based on security (<literal>javax.annotation.security</literal>) and entity-filtering
+                    <para>Filtering based on security (<literal>jakarta.annotation.security</literal>) and entity-filtering
                         annotations.</para>
                 </listitem>
                 <listitem>
@@ -660,13 +660,13 @@ public class ClientsResource {
     </section>
 
     <section xml:id="ef.security.annotations">
-        <title>Role-based Entity Filtering using (<literal>javax.annotation.security</literal>) annotations</title>
+        <title>Role-based Entity Filtering using (<literal>jakarta.annotation.security</literal>) annotations</title>
 
         <para>
             Filtering the content sent to the client (or server) based on the authorized security roles is a commonly
             required use case. By registering &jersey.message.filtering.SecurityEntityFilteringFeature; you can
             leverage the Jersey Entity Filtering facility in connection with standard
-            <literal>javax.annotation.security</literal> annotations exactly the same way as you would with custom
+            <literal>jakarta.annotation.security</literal> annotations exactly the same way as you would with custom
             entity-filtering annotations described in previous chapters. Supported security annotations are:
 
             <itemizedlist>

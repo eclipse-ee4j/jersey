@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import org.glassfish.jersey.message.MessageUtils;
 

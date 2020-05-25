@@ -53,7 +53,7 @@ final class FreemarkerViewProcessor extends AbstractTemplateProcessor<Template> 
 
     /**
      * Create an instance of this processor with injected {@link jakarta.ws.rs.core.Configuration config} and
-     * (optional) {@link javax.servlet.ServletContext servlet context}.
+     * (optional) {@link jakarta.servlet.ServletContext servlet context}.
      *
      * @param config           config to configure this processor from.
      * @param injectionManager injection manager.

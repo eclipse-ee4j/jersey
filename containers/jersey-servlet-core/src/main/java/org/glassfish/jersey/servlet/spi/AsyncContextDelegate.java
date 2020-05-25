@@ -34,7 +34,7 @@ public interface AsyncContextDelegate {
      * behavior).
      *
      * @see ContainerResponseWriter#suspend(long, java.util.concurrent.TimeUnit, org.glassfish.jersey.server.spi.ContainerResponseWriter.TimeoutHandler)
-     * @throws IllegalStateException if underlying {@link javax.servlet.ServletRequest servlet request} throws an exception.
+     * @throws IllegalStateException if underlying {@link jakarta.servlet.ServletRequest servlet request} throws an exception.
      */
     public void suspend() throws IllegalStateException;
 

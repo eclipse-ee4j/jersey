@@ -36,6 +36,7 @@ import org.glassfish.jersey.examples.extendedwadl.resources.ItemsResource;
 import org.glassfish.jersey.examples.extendedwadl.resources.MyApplication;
 import org.glassfish.jersey.examples.extendedwadl.util.Examples;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
 import org.glassfish.jersey.message.internal.MediaTypes;
@@ -96,11 +97,11 @@ public class ExtendedWadlWebappOsgiTest {
     public static Option[] configuration() {
         List<Option> options = Arrays.asList(options(
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
                 systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
-                // javax.annotation must go first!
+                // jakarta.annotation must go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 //JAXB-API
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
@@ -133,6 +134,7 @@ public class ExtendedWadlWebappOsgiTest {
 
                 //SUN JAXB IMPL OSGI
                 mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                getActivationBundle(),
                 systemPackage("com.sun.source.tree"),
                 systemPackage("com.sun.source.util"),
 
@@ -182,6 +184,12 @@ public class ExtendedWadlWebappOsgiTest {
             options.add(systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepository));
         }
         return options.toArray(new Option[options.size()]);
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 
     private ResourceConfig createResourceConfig() {

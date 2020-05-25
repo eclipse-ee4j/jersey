@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.ejb.resources;
 
 import java.util.logging.Logger;
 
-import javax.ejb.Asynchronous;
-import javax.ejb.Stateless;
+import jakarta.ejb.Asynchronous;
+import jakarta.ejb.Stateless;
 import jakarta.ws.rs.container.AsyncResponse;
 
 /**

@@ -67,6 +67,15 @@
             <artifactId>jersey-grizzly-connector</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+            <version>${istack.commons.runtime.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -76,6 +85,16 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>org.glassfish.jersey.examples.httppatch.App</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- TODO remove after jakartification -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/examples/httppatch/HttpPatchTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

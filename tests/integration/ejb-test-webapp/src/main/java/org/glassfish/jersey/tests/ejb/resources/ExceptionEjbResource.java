@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.ejb.resources;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import javax.ejb.EJBException;
-import javax.ejb.Singleton;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Singleton;
 
 /**
  * EJB backed JAX-RS resource to test if a custom exception info makes it to the client.

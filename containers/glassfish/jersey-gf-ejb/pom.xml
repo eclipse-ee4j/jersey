@@ -42,13 +42,12 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>${ejb.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.interceptor</groupId>
             <artifactId>jakarta.interceptor-api</artifactId>
-            <version>${javax.interceptor.version}</version>
+            <version>${jakarta.interceptor.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

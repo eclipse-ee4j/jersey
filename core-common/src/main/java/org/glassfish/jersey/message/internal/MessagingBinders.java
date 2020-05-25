@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -30,6 +31,7 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -44,6 +46,8 @@ import org.glassfish.jersey.spi.HeaderDelegateProvider;
  * @author Libor Kramolis
  */
 public final class MessagingBinders {
+
+    private static final Logger LOGGER = Logger.getLogger(MessagingBinders.class.getName());
 
     /**
      * Prevents instantiation.
@@ -213,6 +217,22 @@ public final class MessagingBinders {
                             break;
                     }
                     providerBinder.bind(binder, provider);
+                } else {
+                    switch (provider) {
+                        case DOMSOURCE:
+                        case SAXSOURCE:
+                        case STREAMSOURCE:
+                            LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(provider.className,
+                                    "MessageBodyReader<" + provider.className + ">")
+                            );
+                            break;
+                        case RENDEREDIMAGE:
+                        case SOURCE:
+                            LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(provider.className,
+                                    "MessageBodyWriter<" + provider.className + ">")
+                            );
+                            break;
+                    }
                 }
             }
         }
@@ -226,14 +246,14 @@ public final class MessagingBinders {
             void bind(AbstractBinder binder, Provider provider);
         }
 
-        private class DomSourceBinder implements ProviderBinder {
+        private static class DomSourceBinder implements ProviderBinder {
             @Override
             public void bind(AbstractBinder binder, Provider provider) {
                 binder.bind(SourceProvider.DomSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
             }
         }
 
-        private class RenderedImageBinder implements ProviderBinder {
+        private static class RenderedImageBinder implements ProviderBinder {
             @Override
             public void bind(AbstractBinder binder, Provider provider) {
                 binder.bind(RenderedImageProvider.class)
@@ -241,21 +261,21 @@ public final class MessagingBinders {
             }
         }
 
-        private class SaxSourceBinder implements ProviderBinder {
+        private static class SaxSourceBinder implements ProviderBinder {
             @Override
             public void bind(AbstractBinder binder, Provider provider) {
                 binder.bind(SourceProvider.SaxSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
             }
         }
 
-        private class SourceBinder implements ProviderBinder {
+        private static class SourceBinder implements ProviderBinder {
             @Override
             public void bind(AbstractBinder binder, Provider provider) {
                 binder.bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class);
             }
         }
 
-        private class StreamSourceBinder implements ProviderBinder {
+        private static class StreamSourceBinder implements ProviderBinder {
             @Override
             public void bind(AbstractBinder binder, Provider provider) {
                 binder.bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);

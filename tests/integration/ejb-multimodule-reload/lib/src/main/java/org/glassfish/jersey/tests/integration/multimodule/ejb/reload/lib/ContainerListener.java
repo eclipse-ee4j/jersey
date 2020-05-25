@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.multimodule.ejb.reload.lib;
 
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Singleton;
 import jakarta.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.server.spi.AbstractContainerLifecycleListener;

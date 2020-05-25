@@ -17,8 +17,8 @@
 package org.glassfish.jersey.tests.integration.jersey2137;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 /**
  * Entity bean that maintains information on account balance.

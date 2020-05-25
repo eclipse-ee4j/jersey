@@ -65,6 +65,17 @@
                     <mainClass>org.glassfish.jersey.examples.helloworld.cdi2se.App</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes> <!--JDK 11 -->
+                        <exclude>**/**/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -79,6 +90,20 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>jdk11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld.se</groupId>
+                    <artifactId>weld-se-core</artifactId>
+                    <version>3.1.1.Final</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
