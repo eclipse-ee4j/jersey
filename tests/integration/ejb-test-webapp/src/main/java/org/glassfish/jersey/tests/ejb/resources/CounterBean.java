@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.ejb.resources;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 
 /**
  * EJB singleton utilized as request counter in this test application.

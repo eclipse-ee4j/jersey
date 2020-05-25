@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 /**
  * Session bean capable of returning an echoed message back.

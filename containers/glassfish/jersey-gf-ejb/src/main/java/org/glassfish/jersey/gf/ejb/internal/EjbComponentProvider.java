@@ -42,9 +42,9 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
 import jakarta.annotation.Priority;
-import javax.ejb.Local;
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Singleton;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -117,7 +117,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                 }
                 return stateless.name();
             }
-            final javax.ejb.Singleton singleton = clazz.getAnnotation(javax.ejb.Singleton.class);
+            final jakarta.ejb.Singleton singleton = clazz.getAnnotation(jakarta.ejb.Singleton.class);
             if (singleton != null) {
                 if (singleton.name().isEmpty()) {
                     return clazz.getSimpleName();
@@ -139,9 +139,9 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
      * Annotations to determine EJB components.
      */
     private static final Set<String> EjbComponentAnnotations = Collections.unmodifiableSet(new HashSet<String>() {{
-        add("javax.ejb.Stateful");
-        add("javax.ejb.Stateless");
-        add("javax.ejb.Singleton");
+        add("jakarta.ejb.Stateful");
+        add("jakarta.ejb.Stateless");
+        add("jakarta.ejb.Singleton");
     }});
 
     private InjectionManager injectionManager = null;
@@ -380,7 +380,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
     }
 
     private static boolean isAcceptableLocalInterface(final Class<?> iface) {
-        if ("javax.ejb".equals(iface.getPackage().getName())) {
+        if ("jakarta.ejb".equals(iface.getPackage().getName())) {
             return false;
         }
         return !Serializable.class.equals(iface) && !Externalizable.class.equals(iface);

@@ -20,7 +20,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 

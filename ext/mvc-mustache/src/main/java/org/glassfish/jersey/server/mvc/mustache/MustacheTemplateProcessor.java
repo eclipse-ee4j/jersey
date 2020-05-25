@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.mvc.Viewable;

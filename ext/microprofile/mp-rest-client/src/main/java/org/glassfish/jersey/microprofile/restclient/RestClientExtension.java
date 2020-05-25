@@ -16,8 +16,7 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import jakarta.enterprise.event.Observes;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,9 +35,6 @@ import jakarta.inject.Qualifier;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Filters out all interfaces annotated with {@link RegisterRestClient}

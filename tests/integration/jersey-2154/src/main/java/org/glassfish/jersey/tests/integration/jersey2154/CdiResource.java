@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2154;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.ws.rs.GET;
@@ -24,7 +24,7 @@ import jakarta.ws.rs.Path;
 
 /**
  * Request scoped CDI bean injected with EJB bean.
- * Part of JERSEY-2154 reproducer. {@link javax.ejb.EJBException}
+ * Part of JERSEY-2154 reproducer. {@link jakarta.ejb.EJBException}
  * thrown in the injected EJB bean should get unwrapped
  * even when no EJB-backed JAX-RS resources have been registered.
  *

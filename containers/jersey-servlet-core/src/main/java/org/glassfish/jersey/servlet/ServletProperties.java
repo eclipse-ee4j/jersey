@@ -37,7 +37,7 @@ public final class ServletProperties {
      * without parsing the {@code web.xml}, hence why this property is necessary.)
      * <p>
      * The property is only applicable when {@link ServletContainer Jersey servlet
-     * container} is configured to run as a {@link javax.servlet.Filter}, otherwise this property
+     * container} is configured to run as a {@link jakarta.servlet.Filter}, otherwise this property
      * will be ignored.
      * <p>
      * The value of the property may consist of one or more path segments separate by
@@ -62,7 +62,7 @@ public final class ServletProperties {
      * may be invoked when this feature is enabled.
      * <p></p>
      * The property is only applicable when {@link ServletContainer Jersey servlet
-     * container} is configured to run as a {@link javax.servlet.Filter}, otherwise
+     * container} is configured to run as a {@link jakarta.servlet.Filter}, otherwise
      * this property will be ignored.
      * <p></p>
      * Application code, such as methods corresponding to sub-resource locators
@@ -80,7 +80,7 @@ public final class ServletProperties {
      * by the underlying servlet engine.
      * <p></p>
      * The property is only applicable when {@link ServletContainer Jersey servlet
-     * container} is configured to run as a {@link javax.servlet.Filter}, otherwise
+     * container} is configured to run as a {@link jakarta.servlet.Filter}, otherwise
      * this property will be ignored. If a servlet path matches this regular
      * expression then the filter forwards the request to the next filter in the
      * filter chain so that the underlying servlet engine can process the request

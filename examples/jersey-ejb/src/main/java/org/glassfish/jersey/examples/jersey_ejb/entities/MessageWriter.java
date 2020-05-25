@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 import org.glassfish.jersey.message.MessageUtils;
 
 /**

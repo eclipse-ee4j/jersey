@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  * EJB remote interface. Part of the reproducer for GLASSFISH-16199.

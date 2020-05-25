@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 
 import org.glassfish.jersey.examples.jersey_ejb.entities.Message;
 

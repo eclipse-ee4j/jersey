@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

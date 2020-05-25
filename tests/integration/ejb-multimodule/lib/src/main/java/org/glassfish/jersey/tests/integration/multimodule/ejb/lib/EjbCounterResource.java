@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.integration.multimodule.ejb.lib;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

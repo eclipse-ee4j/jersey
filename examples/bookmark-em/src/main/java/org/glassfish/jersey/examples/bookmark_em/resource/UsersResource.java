@@ -25,7 +25,7 @@ import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 import org.glassfish.jersey.examples.bookmark_em.entity.UserEntity;
 

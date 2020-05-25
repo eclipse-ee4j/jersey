@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 import org.glassfish.jersey.examples.bookmark_em.entity.UserEntity;
 import org.glassfish.jersey.examples.bookmark_em.exception.ExtendedNotFoundException;
