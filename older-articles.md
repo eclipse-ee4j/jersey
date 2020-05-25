@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
@@ -13,6 +13,18 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a></h4> 
+Jan 13, 2020 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=164" target="_blank">Jersey Apache Connector Hangs …?</a></h4>
+Jan 7, 2020 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=150" target="_blank">Configuring Jersey Application</a></h4>
+Oct 4, 2019 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=147" target="_blank">Jersey 2.29.1 Has Been Released</a></h4>
+Sep 10, 2019 | Jan Supol
 
 <h4><a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a></h4>
 Jan 28, 2019 | Jan Supol
