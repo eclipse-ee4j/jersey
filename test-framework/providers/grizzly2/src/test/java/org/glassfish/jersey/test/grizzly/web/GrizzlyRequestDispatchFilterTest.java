@@ -23,14 +23,14 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.client.WebTarget;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -50,7 +50,7 @@ import org.junit.Test;
  *
  * This is to make sure filters could be utilized even for filtering
  * requests that are being forwarded/included within the server side
- * using {@link javax.servlet.RequestDispatcher} mechanism.
+ * using {@link jakarta.servlet.RequestDispatcher} mechanism.
  *
  * @author Jakub Podlesak
  * @author Marek Potociar
@@ -190,9 +190,9 @@ public class GrizzlyRequestDispatchFilterTest extends JerseyTest {
     protected DeploymentContext configureDeployment() {
         return ServletDeploymentContext.forServlet(RequestDispatcherServlet.class)
                 .addFilter(ForwardFilter.class, "forwardFilter",
-                        EnumSet.of(javax.servlet.DispatcherType.FORWARD))
+                        EnumSet.of(jakarta.servlet.DispatcherType.FORWARD))
                 .addFilter(IncludeFilter.class, "includeFilter",
-                        EnumSet.of(javax.servlet.DispatcherType.INCLUDE))
+                        EnumSet.of(jakarta.servlet.DispatcherType.INCLUDE))
                 .addFilter(RegularFilter.class, "regularFilter")
                 .initParam(ServerProperties.PROVIDER_PACKAGES, this.getClass().getPackage().getName())
                 .build();

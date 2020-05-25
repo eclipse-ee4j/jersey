@@ -20,7 +20,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -32,7 +32,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 public final class Utils {
 
     /**
-     * Internal {@link javax.servlet.ServletContext servlet context} attribute name under which an instance of
+     * Internal {@link jakarta.servlet.ServletContext servlet context} attribute name under which an instance of
      * {@link org.glassfish.jersey.server.ResourceConfig resource config} can be stored. The instance is later used to initialize
      * servlet in {@link org.glassfish.jersey.servlet.WebConfig} instead of creating a new one.
      */
@@ -40,7 +40,7 @@ public final class Utils {
 
     /**
      * Store {@link org.glassfish.jersey.server.ResourceConfig resource config} as an attribute of given
-     * {@link javax.servlet.ServletContext servlet context}. If {@code config} is {@code null} then the previously stored value
+     * {@link jakarta.servlet.ServletContext servlet context}. If {@code config} is {@code null} then the previously stored value
      * (if any) is removed. The {@code configName} is used as an attribute name suffix.
      *
      * @param config resource config to be stored.
@@ -54,7 +54,7 @@ public final class Utils {
 
     /**
      * Load {@link org.glassfish.jersey.server.ResourceConfig resource config} from given
-     * {@link javax.servlet.ServletContext servlet context}. If found then the resource config is also removed from servlet
+     * {@link jakarta.servlet.ServletContext servlet context}. If found then the resource config is also removed from servlet
      * context. The {@code configName} is used as an attribute name suffix.
      *
      * @param context servlet context to load resource config from.

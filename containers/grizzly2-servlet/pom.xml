@@ -36,7 +36,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet4.version}</version>
+            <version>5.0.0-M1</version>
         </dependency>
 
         <dependency>
@@ -81,7 +81,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            javax.servlet.*;version="[2.4,5.0)",
+                            jakarta.servlet.*;version="[5.0,6.0)",
                             *
                         </Import-Package>
                     </instructions>

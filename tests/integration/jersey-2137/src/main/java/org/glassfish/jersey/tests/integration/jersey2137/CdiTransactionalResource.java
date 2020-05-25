@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 /**
  * Request scoped transactional CDI bean registered as JAX-RS resource class.

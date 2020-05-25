@@ -14,8 +14,8 @@ import jakarta.ws.rs.WebApplicationException;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 /**
  * @author Paul Sandoz

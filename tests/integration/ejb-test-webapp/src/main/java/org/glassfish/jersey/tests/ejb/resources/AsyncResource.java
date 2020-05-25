@@ -21,7 +21,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 /**
  * @author Jan Algermissen

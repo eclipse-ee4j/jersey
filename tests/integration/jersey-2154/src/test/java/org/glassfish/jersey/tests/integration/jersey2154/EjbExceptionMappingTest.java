@@ -17,7 +17,7 @@
 package org.glassfish.jersey.tests.integration.jersey2154;
 
 import java.net.URI;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.WebTarget;

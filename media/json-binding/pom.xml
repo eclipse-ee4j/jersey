@@ -72,7 +72,6 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
-            <version>${jsonp.ri.version}</version>
         </dependency>
 
         <!-- TODO - remove snapshot dependencies (will need yasson & API release, as there only is 2 month old M1 version -->

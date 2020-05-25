@@ -18,8 +18,8 @@ package org.glassfish.jersey.servlet.init;
 
 import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.FilterRegistration;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.FilterRegistration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

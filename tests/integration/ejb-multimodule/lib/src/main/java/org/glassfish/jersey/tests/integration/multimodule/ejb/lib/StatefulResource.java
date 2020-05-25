@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.integration.multimodule.ejb.lib;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateful;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateful;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

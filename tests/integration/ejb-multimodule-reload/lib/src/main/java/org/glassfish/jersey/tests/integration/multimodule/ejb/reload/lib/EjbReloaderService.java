@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.multimodule.ejb.reload.lib;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.spi.Container;

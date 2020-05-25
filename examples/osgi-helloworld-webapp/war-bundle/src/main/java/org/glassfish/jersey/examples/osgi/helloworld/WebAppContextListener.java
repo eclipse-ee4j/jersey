@@ -12,8 +12,8 @@ package org.glassfish.jersey.examples.osgi.helloworld;
 
 import java.util.HashMap;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
