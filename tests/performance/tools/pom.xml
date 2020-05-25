@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.performance</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.0-M3</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.jersey.tests.performance.tools</groupId>
     <artifactId>performance-test-tools</artifactId>
