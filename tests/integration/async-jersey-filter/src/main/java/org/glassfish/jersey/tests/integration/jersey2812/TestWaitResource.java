@@ -34,7 +34,7 @@ import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Context;
 
 import jakarta.inject.Singleton;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This resource provides a way to reproduce JERSEY-2818.

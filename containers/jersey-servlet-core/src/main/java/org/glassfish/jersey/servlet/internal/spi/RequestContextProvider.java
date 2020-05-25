@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.servlet.internal.spi;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Provide access to the actual servlet request/response.

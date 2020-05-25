@@ -19,7 +19,7 @@ package org.glassfish.jersey.servlet;
 import java.util.Collection;
 import java.util.Collections;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.glassfish.jersey.internal.PropertiesDelegate;
 
