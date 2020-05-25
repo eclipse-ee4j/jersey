@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.servlet.spi;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Factory to create {@link AsyncContextDelegate} to deal with asynchronous

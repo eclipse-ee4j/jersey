@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 
 import org.glassfish.jersey.server.internal.AbstractResourceFinderAdapter;
 import org.glassfish.jersey.server.internal.scanning.JarFileScanner;

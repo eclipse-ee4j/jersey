@@ -182,7 +182,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
+            <version>${servlet4.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -278,9 +278,9 @@
                             jersey.repackaged.org.objectweb.asm.*;version=${project.version}
                         </Export-Package>
                         <Import-Package><![CDATA[
-                            jakarta.servlet.annotation.*;resolution:=optional;version="[5.0,6.0)",
-                            jakarta.servlet.descriptor.*;resolution:=optional;version="[5.0,6.0)",
-                            jakarta.servlet.*;version="[5.0,6.0)",
+                            javax.servlet.annotation.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.descriptor.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.*;version="[3.0,6.0)",
                             ${jakarta.annotation.osgi.version},
                             jakarta.persistence.*;resolution:=optional,
                             jakarta.validation.*;resolution:=optional;version="[3,4)",
