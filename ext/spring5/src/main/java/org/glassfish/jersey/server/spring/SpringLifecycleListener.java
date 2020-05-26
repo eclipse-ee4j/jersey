@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.spring;
 
 import jakarta.ws.rs.ext.Provider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerLifecycleListener;

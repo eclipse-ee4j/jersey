@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.gf.ejb.internal;
 
-import javax.annotation.PostConstruct;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.interceptor.InvocationContext;
 
 import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;
 import org.glassfish.jersey.internal.inject.InjectionManager;

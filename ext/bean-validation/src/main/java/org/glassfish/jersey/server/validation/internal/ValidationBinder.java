@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -31,17 +33,17 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.validation.Configuration;
-import javax.validation.TraversableResolver;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
-import javax.validation.ValidationProviderResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
-import javax.validation.spi.ValidationProvider;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.validation.Configuration;
+import jakarta.validation.TraversableResolver;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
+import jakarta.validation.ValidationProviderResolver;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.spi.ValidationProvider;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -79,7 +81,7 @@ public final class ValidationBinder extends AbstractBinder {
     }
 
     /**
-     * Factory providing default {@link javax.validation.Configuration} instance.
+     * Factory providing default {@link jakarta.validation.Configuration} instance.
      */
     private static class DefaultConfigurationProvider implements Supplier<Configuration> {
 
@@ -256,8 +258,17 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorContext getDefaultValidatorContext(final ValidateOnExecutionHandler handler) {
             final ValidatorContext context = factory.usingContext();
 
-            // Default Configuration.
-            context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            // if CDI is available use composite factiry
+            if (AccessController.doPrivileged(
+                    ReflectionHelper.classForNamePA("jakarta.enterprise.inject.spi.BeanManager")) != null) {
+                // Composite Configuration - due to PAYARA-2491
+                // https://github.com/payara/Payara/issues/2245
+                context.constraintValidatorFactory(resourceContext.getResource(
+                        CompositeInjectingConstraintValidatorFactory.class));
+            } else {
+                // Default Configuration.
+                context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            }
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
@@ -266,7 +277,7 @@ public final class ValidationBinder extends AbstractBinder {
         }
 
         /**
-         * Create traversable resolver able to process {@link javax.validation.executable.ValidateOnExecution} annotation on
+         * Create traversable resolver able to process {@link jakarta.validation.executable.ValidateOnExecution} annotation on
          * beans.
          *
          * @param delegate resolver to be wrapped into the custom traversable resolver.

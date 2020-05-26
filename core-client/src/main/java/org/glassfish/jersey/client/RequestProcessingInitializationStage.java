@@ -24,7 +24,7 @@ import java.util.stream.StreamSupport;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;

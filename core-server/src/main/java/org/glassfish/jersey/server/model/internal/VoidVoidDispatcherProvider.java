@@ -22,7 +22,7 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Response;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.inject.ConfiguredValidator;

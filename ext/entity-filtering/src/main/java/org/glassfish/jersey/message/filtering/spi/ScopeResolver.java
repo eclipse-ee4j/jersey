@@ -31,8 +31,8 @@ import org.glassfish.jersey.spi.Contract;
  * <ul>
  * <li><code>@MyDetailedView</code> -&gt; <code>my.package.MyDetailedView</code></li>
  * <li>
- * <code>@RolesAllowed({"manager", "user"})</code> -&gt; <code>javax.annotation.security.RolesAllowed_manager</code> and
- * <code>javax.annotation.security.RolesAllowed_user</code>
+ * <code>@RolesAllowed({"manager", "user"})</code> -&gt; <code>jakarta.annotation.security.RolesAllowed_manager</code> and
+ * <code>jakarta.annotation.security.RolesAllowed_user</code>
  * </li>
  * </ul>
  * <p/>

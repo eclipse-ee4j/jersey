@@ -44,9 +44,9 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -325,10 +325,10 @@ public class WebComponent {
      *
      * @param baseUri         the base URI of the request.
      * @param requestUri      the URI of the request.
-     * @param servletRequest  the {@link javax.servlet.http.HttpServletRequest} object that
+     * @param servletRequest  the {@link jakarta.servlet.http.HttpServletRequest} object that
      *                        contains the request the client made to
      *                        the Web component.
-     * @param servletResponse the {@link javax.servlet.http.HttpServletResponse} object that
+     * @param servletResponse the {@link jakarta.servlet.http.HttpServletResponse} object that
      *                        contains the response the Web component returns
      *                        to the client.
      * @return lazily initialized response status code {@link Value value provider}. If not resolved in the moment of call to
@@ -336,7 +336,7 @@ public class WebComponent {
      * @throws java.io.IOException            if an input or output error occurs
      *                                        while the Web component is handling the
      *                                        HTTP request.
-     * @throws javax.servlet.ServletException if the HTTP request cannot be handled.
+     * @throws jakarta.servlet.ServletException if the HTTP request cannot be handled.
      */
     public Value<Integer> service(
             final URI baseUri,
@@ -357,10 +357,10 @@ public class WebComponent {
      *
      * @param baseUri         the base URI of the request.
      * @param requestUri      the URI of the request.
-     * @param servletRequest  the {@link javax.servlet.http.HttpServletRequest} object that
+     * @param servletRequest  the {@link jakarta.servlet.http.HttpServletRequest} object that
      *                        contains the request the client made to
      *                        the Web component.
-     * @param servletResponse the {@link javax.servlet.http.HttpServletResponse} object that
+     * @param servletResponse the {@link jakarta.servlet.http.HttpServletResponse} object that
      *                        contains the response the Web component returns
      *                        to the client.
      * @return returns {@link ResponseWriter}, Servlet's {@link org.glassfish.jersey.server.spi.ContainerResponseWriter}
@@ -368,7 +368,7 @@ public class WebComponent {
      * @throws java.io.IOException            if an input or output error occurs
      *                                        while the Web component is handling the
      *                                        HTTP request.
-     * @throws javax.servlet.ServletException if the HTTP request cannot be handled.
+     * @throws jakarta.servlet.ServletException if the HTTP request cannot be handled.
      */
      /* package */ ResponseWriter serviceImpl(
             final URI baseUri,

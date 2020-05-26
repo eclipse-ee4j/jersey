@@ -21,7 +21,7 @@ import java.util.Map;
 
 import jakarta.ws.rs.core.MediaType;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;

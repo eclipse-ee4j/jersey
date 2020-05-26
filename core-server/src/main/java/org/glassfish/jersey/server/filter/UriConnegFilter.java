@@ -33,7 +33,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.message.internal.LanguageTag;
 import org.glassfish.jersey.server.ResourceConfig;

@@ -25,7 +25,7 @@ import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseBroadcaster;
 import jakarta.ws.rs.sse.SseEventSink;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Resource that aggregates incoming messages and broadcasts them

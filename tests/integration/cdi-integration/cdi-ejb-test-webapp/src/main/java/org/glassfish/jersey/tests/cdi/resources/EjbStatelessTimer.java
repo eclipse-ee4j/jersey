@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * EJB session timer bean.

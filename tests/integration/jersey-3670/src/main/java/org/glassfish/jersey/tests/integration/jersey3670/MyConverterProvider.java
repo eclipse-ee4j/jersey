@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey3670;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import java.lang.annotation.Annotation;

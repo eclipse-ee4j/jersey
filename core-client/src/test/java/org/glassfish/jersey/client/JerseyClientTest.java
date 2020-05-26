@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;

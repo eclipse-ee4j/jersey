@@ -301,7 +301,7 @@ class JettyConnector implements Connector {
         request.method(clientRequest.getMethod());
 
         request.followRedirects(clientRequest.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true));
-        final Object readTimeout = clientRequest.getConfiguration().getProperties().get(ClientProperties.READ_TIMEOUT);
+        final Object readTimeout = clientRequest.resolveProperty(ClientProperties.READ_TIMEOUT, -1);
         if (readTimeout != null && readTimeout instanceof Integer && (Integer) readTimeout > 0) {
             request.timeout((Integer) readTimeout, TimeUnit.MILLISECONDS);
         }

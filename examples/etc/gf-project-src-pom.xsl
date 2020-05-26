@@ -33,8 +33,8 @@
             or pom:artifactId='jersey-bean-validation'
             or pom:groupId='com.sun.xml.bind'
             or pom:groupId='org.codehaus.jettison'
-            or pom:groupId='javax.annotation'
-            or pom:groupId='javax.enterprise'
+            or pom:groupId='jakarta.annotation'
+            or pom:groupId='jakarta.enterprise'
             or pom:groupId='javax.servlet'
             or pom:groupId='jakarta.ws.rs']/pom:scope[text()!=test]">
         <scope>provided</scope>
@@ -49,10 +49,10 @@
             or pom:artifactId='jersey-mvc-jsp'
             or pom:artifactId='jersey-bean-validation'
             or pom:groupId='com.sun.xml.bind'
-            or pom:groupId='javax.validation'
+            or pom:groupId='jakarta.validation'
             or pom:groupId='org.codehaus.jettison'
-            or pom:groupId='javax.annotation'
-            or pom:groupId='javax.enterprise'
+            or pom:groupId='jakarta.annotation'
+            or pom:groupId='jakarta.enterprise'
             or pom:groupId='javax.servlet'
             or pom:groupId='jakarta.ws.rs']">
         <xsl:copy>

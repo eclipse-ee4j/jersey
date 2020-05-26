@@ -33,8 +33,8 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -116,7 +116,7 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
      * This binder allows to inject underlying Grizzly HTTP request and response instances.
      * Note that since Grizzly {@code Request} class is not proxiable as it does not expose an empty constructor,
      * the injection of Grizzly request instance into singleton JAX-RS and Jersey providers is only supported via
-     * {@link javax.inject.Provider injection provider}.
+     * {@link jakarta.inject.Provider injection provider}.
      */
     static class GrizzlyBinder extends AbstractBinder {
 

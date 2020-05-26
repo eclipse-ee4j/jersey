@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.ext.cdi1x.internal.spi;
 
 /**
  * An extension interface for implementations of {@link InjectionManagerStore}. HK2 locator
- * managers implementing this interface are notified when an {@link javax.enterprise.inject.spi.InjectionTarget injection target}
+ * managers implementing this interface are notified when an {@link jakarta.enterprise.inject.spi.InjectionTarget injection target}
  * is processed by {@link org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider}. Locator managers can then set the
  * effective injection manager to the processed {@link InjectionManagerInjectedTarget target}.
  *

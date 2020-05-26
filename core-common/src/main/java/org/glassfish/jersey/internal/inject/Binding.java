@@ -24,7 +24,7 @@ import java.util.Set;
 
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 /**
  * Abstract injection binding description of a bean.

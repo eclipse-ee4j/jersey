@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.spring.test;
 
 import jakarta.ws.rs.core.Application;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.Binder;

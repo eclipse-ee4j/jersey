@@ -50,7 +50,7 @@ import org.junit.Test;
  *
  * This is to make sure filters could be utilized even for filtering
  * requests that are being forwarded/included within the server side
- * using {@link javax.servlet.RequestDispatcher} mechanism.
+ * using {@link jakarta.servlet.RequestDispatcher} mechanism.
  *
  * @author Jakub Podlesak
  * @author Marek Potociar

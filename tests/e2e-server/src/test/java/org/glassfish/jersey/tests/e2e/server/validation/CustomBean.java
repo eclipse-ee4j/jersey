@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server.validation;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 

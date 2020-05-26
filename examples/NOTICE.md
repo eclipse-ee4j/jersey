@@ -57,7 +57,7 @@ Google Guava Version 18.0
 * License: Apache License, 2.0
 * Copyright (C) 2009 The Guava Authors
 
-javax.inject Version: 1
+jakarta.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 

@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.tests.ejb.resources;
 
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Singleton;
 
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;

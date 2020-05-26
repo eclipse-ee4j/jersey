@@ -27,9 +27,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import javax.annotation.Priority;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ExtendedUriInfo;

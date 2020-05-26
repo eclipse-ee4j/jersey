@@ -42,18 +42,17 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>${ejb.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.interceptor</groupId>
             <artifactId>jakarta.interceptor-api</artifactId>
-            <version>${javax.interceptor.version}</version>
+            <version>${jakarta.interceptor.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -116,7 +115,7 @@
                         <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
                         <Import-Package>
                             com.sun.*;version="[4.0,7)",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             org.glassfish.ejb.*;version="[4.0,7)",
                             org.glassfish.internal.*;version="[4.0,7)",
                             ${hk2.osgi.version},

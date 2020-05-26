@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.jersey2689;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Path("/")
 public class Resource {

@@ -246,7 +246,7 @@ public final class ServerProperties {
      * A Bean Validation (JSR-349) support customization property.
      *
      * If {@code true} the check whether the overriding / implementing methods are annotated with
-     * {@link javax.validation.executable.ValidateOnExecution} as well as one of their predecessor (in hierarchy)
+     * {@link jakarta.validation.executable.ValidateOnExecution} as well as one of their predecessor (in hierarchy)
      * is disabled.
      * <p>
      * By default this checks is automatically enabled, unless the Bean Validation support is disabled explicitly (see
@@ -259,7 +259,7 @@ public final class ServerProperties {
      * The name of the configuration property is <tt>{@value}</tt>.
      * </p>
      *
-     * @see javax.validation.executable.ValidateOnExecution
+     * @see jakarta.validation.executable.ValidateOnExecution
      */
     public static final String BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK =
             "jersey.config.beanValidation.disable.validateOnExecutableCheck.server";

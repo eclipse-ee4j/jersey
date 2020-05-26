@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import jakarta.ws.rs.Priorities;

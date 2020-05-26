@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.spi.Contract;
@@ -37,7 +37,7 @@ public interface ConfiguredValidator extends Validator {
      * @param resource resource class instance.
      * @param resourceMethod invocable containing handling and validation methods.
      * @param args input method parameters.
-     * @throws ConstraintViolationException if {@link javax.validation.ConstraintViolation} occurs (should be mapped to HTTP
+     * @throws ConstraintViolationException if {@link jakarta.validation.ConstraintViolation} occurs (should be mapped to HTTP
      * 400 status).
      */
     void validateResourceAndInputParams(final Object resource, final Invocable resourceMethod, final Object[] args)
@@ -50,7 +50,7 @@ public interface ConfiguredValidator extends Validator {
      * @param resource resource class instance.
      * @param resourceMethod invocable containing handling and validation methods.
      * @param result response entity.
-     * @throws ConstraintViolationException if {@link javax.validation.ConstraintViolation} occurs (should be mapped to HTTP
+     * @throws ConstraintViolationException if {@link jakarta.validation.ConstraintViolation} occurs (should be mapped to HTTP
      * 500 status).
      */
     void validateResult(final Object resource, final Invocable resourceMethod, final Object result)

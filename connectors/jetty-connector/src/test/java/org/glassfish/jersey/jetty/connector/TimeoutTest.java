@@ -89,12 +89,30 @@ public class TimeoutTest extends JerseyTest {
     @Test
     public void testSlow() {
         final URI u = target().getUri();
-        ClientConfig config = new ClientConfig().property(ClientProperties.READ_TIMEOUT, 1000);
+        ClientConfig config = new ClientConfig().property(ClientProperties.READ_TIMEOUT, 1_000);
         config.connectorProvider(new JettyConnectorProvider());
         Client c = ClientBuilder.newClient(config);
         WebTarget t = c.target(u);
         try {
             t.path("test/timeout").request().get();
+            fail("Timeout expected.");
+        } catch (ProcessingException e) {
+            assertThat("Unexpected processing exception cause",
+                    e.getCause(), instanceOf(TimeoutException.class));
+        } finally {
+            c.close();
+        }
+    }
+
+    @Test
+    public void testTimeoutInRequest() {
+        final URI u = target().getUri();
+        ClientConfig config = new ClientConfig();
+        config.connectorProvider(new JettyConnectorProvider());
+        Client c = ClientBuilder.newClient(config);
+        WebTarget t = c.target(u);
+        try {
+            t.path("test/timeout").request().property(ClientProperties.READ_TIMEOUT, 1_000).get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
             assertThat("Unexpected processing exception cause",

@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.tests.cdi.bv;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.NotNull;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.constraints.NotNull;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

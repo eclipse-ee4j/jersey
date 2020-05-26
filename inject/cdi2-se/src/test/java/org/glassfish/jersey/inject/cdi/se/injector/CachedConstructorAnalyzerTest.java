@@ -25,7 +25,7 @@ import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 
-import javax.enterprise.inject.InjectionException;
+import jakarta.enterprise.inject.InjectionException;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

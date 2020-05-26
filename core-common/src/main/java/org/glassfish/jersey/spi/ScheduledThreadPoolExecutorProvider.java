@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 /**
  * Default implementation of the Jersey {@link org.glassfish.jersey.spi.ScheduledExecutorServiceProvider
@@ -41,7 +41,7 @@ import javax.annotation.PreDestroy;
  * it may not be desirable to shut down the released executor service in the {@link #dispose} method. Instead, to perform the
  * eventual shut-down procedure, the provider may either rely on an explicit invocation of it's specific clean-up method.
  * Since all Jersey providers operate in a <em>container</em> environment, a good clean-up strategy for a shared executor
- * service provider implementation is to expose a {@link javax.annotation.PreDestroy &#64;PreDestroy}-annotated method
+ * service provider implementation is to expose a {@link jakarta.annotation.PreDestroy &#64;PreDestroy}-annotated method
  * that will be invoked for all instances managed by the container, before the container shuts down.
  * </p>
  * <p>

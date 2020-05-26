@@ -44,8 +44,8 @@
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -70,9 +70,9 @@
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Import-Package>
-                            javax.persistence.*;resolution:=optional,
+                            jakarta.persistence.*;resolution:=optional,
                             javax.servlet.*;version="[2.4,5.0)",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.servlet.*</Export-Package>

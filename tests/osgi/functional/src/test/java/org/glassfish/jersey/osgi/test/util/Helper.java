@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -136,11 +137,11 @@ public class Helper {
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(TestProperties.CONTAINER_PORT).value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
                 systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
-                // javax.annotation has to go first!
+                // jakarta.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 junitBundles(),
@@ -160,8 +161,8 @@ public class Helper {
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-server").versionAsInProject(),
 
-                // javax.validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                // jakarta.validation
+                mavenBundle().groupId("jakarta.validation").artifactId("validation-api").versionAsInProject(),
 
                 // Jersey Grizzly
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-http")
@@ -180,14 +181,19 @@ public class Helper {
                     mavenBundle().groupId("org.glassfish.jersey.core").artifactId("jersey-client").versionAsInProject(),
 
                     // Jersey Injection provider
-                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject()
+                    mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    // not needed since Jackson 2.10.1
-                    // mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                    getActivationBundle()
             ));
         }
 
         return addPaxExamMavenLocalRepositoryProperty(options);
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 
     /**

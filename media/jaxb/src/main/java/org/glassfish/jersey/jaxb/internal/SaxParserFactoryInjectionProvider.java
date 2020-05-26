@@ -16,13 +16,26 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.jaxb.FeatureSupplier;
+
 import jakarta.ws.rs.core.Configuration;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Thread-scoped injection provider of {@link SAXParserFactory SAX parser factories}.
+ *
+ * If {@link org.glassfish.jersey.message.MessageProperties#XML_SECURITY_DISABLE} is not set,
+ * the {@link SecureSaxParserFactory} is returned. By default, the {@code http://apache.org/xml/features/disallow-doctype-decl}
+ * feature is set to {@code TRUE}. To override this settings, it is possible to register the
+ * {@link FeatureSupplier#allowDoctypeDeclFeature()}.
+ *
+ * @see FeatureSupplier
  *
  * @author Paul Sandoz
  * @author Marek Potociar
@@ -41,15 +54,21 @@ public class SaxParserFactoryInjectionProvider extends AbstractXmlFactory<SAXPar
         super(config);
     }
 
+    @Inject
+    private InjectionManager injectionManager;
+
     @Override
     public SAXParserFactory get() {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        final SecureSaxParserFactory factory
+                = new SecureSaxParserFactory(SAXParserFactory.newInstance(), !isXmlSecurityDisabled());
 
         factory.setNamespaceAware(true);
 
-        if (!isXmlSecurityDisabled()) {
-            factory = new SecureSaxParserFactory(factory);
-        }
+        final Map<String, Object> saxParserProperties = new LinkedHashMap<>();
+        JaxbFeatureUtil.setProperties(injectionManager, SAXParser.class, saxParserProperties::put);
+        factory.setSaxParserProperties(saxParserProperties);
+
+        JaxbFeatureUtil.setFeatures(injectionManager, SAXParserFactory.class, factory::setFeature);
 
         return factory;
     }

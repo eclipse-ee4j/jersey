@@ -23,9 +23,9 @@ import java.util.Map;
 
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Singleton;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.inject.Singleton;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 import javax.servlet.ServletConfig;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;

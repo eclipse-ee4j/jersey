@@ -21,7 +21,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * @author Michal Gajdos

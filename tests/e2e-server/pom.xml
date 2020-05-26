@@ -60,6 +60,8 @@
                                 <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlResourceTest*</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/server/validation/validateonexecution/ValidateOnExecutionBasicTest*</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlEmptyMediaTypeTest*</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/monitoring/MonitoringStatisticsLocatorTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/validateonexecution/ValidateOnExecutionOverrideTest.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>

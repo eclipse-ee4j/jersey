@@ -278,12 +278,12 @@
                             jersey.repackaged.org.objectweb.asm.*;version=${project.version}
                         </Export-Package>
                         <Import-Package><![CDATA[
-                            javax.servlet.annotation.*;resolution:=optional;version="[2.4,5.0)",
-                            javax.servlet.descriptor.*;resolution:=optional;version="[2.4,5.0)",
-                            javax.servlet.*;version="[2.4,5.0)",
-                            ${javax.annotation.osgi.version},
-                            javax.persistence.*;resolution:=optional,
-                            javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            javax.servlet.annotation.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.descriptor.*;resolution:=optional;version="[3.0,6.0)",
+                            javax.servlet.*;version="[3.0,6.0)",
+                            ${jakarta.annotation.osgi.version},
+                            jakarta.persistence.*;resolution:=optional,
+                            jakarta.validation.*;resolution:=optional;version="[3,4)",
                             sun.misc.*;resolution:=optional,
                             ${hk2.osgi.version},
                             *
@@ -320,11 +320,11 @@
                                     <excludes>
                                         <exclude>META-INF/DEPENDENCIES.txt</exclude>
                                         <exclude>META-INF/LICENSE.md</exclude>
-                                        <exclude>javax/annotation/**</exclude>
-                                        <exclude>javax/decorator/**</exclude>
-                                        <exclude>javax/el/**</exclude>
-                                        <exclude>javax/enterprise/**</exclude>
-                                        <exclude>javax/interceptor/**</exclude>
+                                        <exclude>jakarta/annotation/**</exclude>
+                                        <exclude>jakarta/decorator/**</exclude>
+                                        <exclude>jakarta/el/**</exclude>
+                                        <exclude>jakarta/enterprise/**</exclude>
+                                        <exclude>jakarta/interceptor/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -373,10 +373,10 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <jar destfile="${project.build.directory}/${artifactId}.jar" update="true">
+                                <jar destfile="${project.build.directory}/${project.artifactId}.jar" update="true">
                                     <zipfileset dir="../.." includes="NOTICE.md" prefix="META-INF" />
                                 </jar>
-                                <jar destfile="${project.build.directory}/${artifactId}-sources.jar" update="true">
+                                <jar destfile="${project.build.directory}/${project.artifactId}-sources.jar" update="true">
                                     <zipfileset dir="../.." includes="NOTICE.md" prefix="META-INF" />
                                 </jar>
                             </tasks>

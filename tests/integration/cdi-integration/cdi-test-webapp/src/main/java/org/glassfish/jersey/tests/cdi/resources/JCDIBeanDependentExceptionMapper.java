@@ -26,8 +26,8 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.PostConstruct;
 
 /**
  * JAX-RS exception mapper registered as a CDI managed bean.

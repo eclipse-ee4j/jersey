@@ -42,31 +42,31 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AfterTypeDiscovery;
-import javax.enterprise.inject.spi.Annotated;
-import javax.enterprise.inject.spi.AnnotatedCallable;
-import javax.enterprise.inject.spi.AnnotatedConstructor;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessInjectionTarget;
-import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Qualifier;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AfterTypeDiscovery;
+import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedCallable;
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -155,7 +155,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private final InjectionManagerStore injectionManagerStore;
 
     private volatile InjectionManager injectionManager;
-    private volatile javax.enterprise.inject.spi.BeanManager beanManager;
+    private volatile jakarta.enterprise.inject.spi.BeanManager beanManager;
 
     private volatile Map<Class<?>, Set<Method>> methodsToSkip = new HashMap<>();
     private volatile Map<Class<?>, Set<Field>> fieldsToSkip = new HashMap<>();
@@ -250,7 +250,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
          * @param beanManager    current application bean manager.
          * @return concrete JAX-RS parameter value for given injection point.
          */
-        @javax.enterprise.inject.Produces
+        @jakarta.enterprise.inject.Produces
         @JaxRsParamQualifier
         public String getParameterValue(final InjectionPoint injectionPoint, final BeanManager beanManager) {
             final Parameter parameter = parameterCache.apply(injectionPoint);
@@ -689,7 +689,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     private boolean isInjectionProvider(final Type injectedType) {
         return injectedType instanceof ParameterizedType
-                && ((ParameterizedType) injectedType).getRawType() == javax.inject.Provider.class;
+                && ((ParameterizedType) injectedType).getRawType() == jakarta.inject.Provider.class;
     }
 
     private boolean isProviderOfJerseyType(final ParameterizedType provider) {

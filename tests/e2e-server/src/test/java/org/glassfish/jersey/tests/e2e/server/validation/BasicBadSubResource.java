@@ -20,7 +20,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 
-import javax.validation.constraints.Null;
+import jakarta.validation.constraints.Null;
 
 /**
  * @author Michal Gajdos

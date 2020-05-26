@@ -12,7 +12,7 @@ Entity Data Filtering
 ### *Role-based Entity Filtering using security annotations*
 
 This example demonstrates how to use entity filtering feature together
-with security annotations (from `javax.annotation.security` package) and
+with security annotations (from `jakarta.annotation.security` package) and
 how to apply them on domain classes as well as on JAX-RS resource
 classes or JAX-RS resource methods.
 
@@ -29,7 +29,7 @@ Sections relevant to this example (describing this exact example) are:
 
 -   [Enabling and configuring Entity Filtering in your
     application](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14229)
--   [Role-based Entity Filtering using (javax.annotation.security)
+-   [Role-based Entity Filtering using (jakarta.annotation.security)
     annotations](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#ef.security.annotations)
 
 Contents

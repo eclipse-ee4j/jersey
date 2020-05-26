@@ -27,8 +27,8 @@
 <!ENTITY guava.version "$guava-version">
 <!ENTITY jaxb-api-jar.version "$jaxb-api-jar-version">
 <!ENTITY jax-rs.version "$jax-rs-api-jar-version">
-<!ENTITY javax-el.version "$javax-el-version">
-<!ENTITY javax-el-impl.version "$javax-el-impl-version">
+<!ENTITY jakarta.el.version "$jakarta.el-version">
+<!ENTITY jakarta.el-impl.version "$jakarta.el-impl-version">
 <!ENTITY jax-rs-api-jar.version "$jax-rs-api-jar-version">
 <!ENTITY jackson.javadoc.version "$jackson-version">
 <!-- temporary hardcoded javadoc version - the correct one is missing at the provider's web -->
@@ -105,18 +105,18 @@
 <!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
 
 <!-- API Docs links -->
-<!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Configuration.html'>Configuration</link>">
-<!ENTITY bv.Constraint "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Constraint.html'>@Constraint</link>">
-<!ENTITY bv.ConstraintValidator "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ConstraintValidator.html'>ConstraintValidator</link>">
-<!ENTITY bv.ConstraintValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ConstraintValidatorFactory.html'>ConstraintValidatorFactory</link>">
-<!ENTITY bv.ConstraintViolationException "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ConstraintViolationException.html'>ConstraintViolationException</link>">
-<!ENTITY bv.MessageInterpolator "<link xlink:href='&bv11.javadoc.uri;/javax/validation/MessageInterpolator.html'>MessageInterpolator</link>">
-<!ENTITY bv.ParameterNameProvider "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ParameterNameProvider.html'>ParameterNameProvider</link>">
-<!ENTITY bv.TraversableResolver "<link xlink:href='&bv11.javadoc.uri;/javax/validation/TraversableResolver.html'>TraversableResolver</link>">
-<!ENTITY bv.Valid "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Valid.html'>@Valid</link>">
-<!ENTITY bv.ValidationException "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ValidationException.html'>ValidationException</link>">
-<!ENTITY bv.Validator "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Validator.html'>Validator</link>">
-<!ENTITY bv.ValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/javax/validation/ValidatorFactory.html'>ValidatorFactory</link>">
+<!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Configuration.html'>Configuration</link>">
+<!ENTITY bv.Constraint "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Constraint.html'>@Constraint</link>">
+<!ENTITY bv.ConstraintValidator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintValidator.html'>ConstraintValidator</link>">
+<!ENTITY bv.ConstraintValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintValidatorFactory.html'>ConstraintValidatorFactory</link>">
+<!ENTITY bv.ConstraintViolationException "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintViolationException.html'>ConstraintViolationException</link>">
+<!ENTITY bv.MessageInterpolator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/MessageInterpolator.html'>MessageInterpolator</link>">
+<!ENTITY bv.ParameterNameProvider "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ParameterNameProvider.html'>ParameterNameProvider</link>">
+<!ENTITY bv.TraversableResolver "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/TraversableResolver.html'>TraversableResolver</link>">
+<!ENTITY bv.Valid "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Valid.html'>@Valid</link>">
+<!ENTITY bv.ValidationException "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ValidationException.html'>ValidationException</link>">
+<!ENTITY bv.Validator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Validator.html'>Validator</link>">
+<!ENTITY bv.ValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ValidatorFactory.html'>ValidatorFactory</link>">
 
 <!ENTITY guava.Futures "<link xlink:href='&guava.javadoc.uri;com/google/common/util/concurrent/Futures.html'>Futures</link>">
 <!ENTITY guava.ListenableFuture "<link xlink:href='&guava.javadoc.uri;com/google/common/util/concurrent/ListenableFuture.html'>ListenableFuture</link>">
@@ -276,18 +276,18 @@
 <!ENTITY jdk8.ForkJoinPool.commonPool "<link xlink:href='&jdk8.javadoc.uri;/java/util/concurrent/ForkJoinPool.html#commonPool--'>ForkJoinPool#commonPool()</link>">
 <!ENTITY jdk8.Stream "<link xlink:href='&jdk8.javadoc.uri;/java/util/stream/Stream.html'>Stream</link>">
 
-<!ENTITY jee6.annotations.DenyAll "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/DenyAll.html'>@DenyAll</link>">
-<!ENTITY jee6.annotations.PermitAll "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/PermitAll.html'>@PermitAll</link>">
-<!ENTITY jee6.annotations.RolesAllowed "<link xlink:href='&jee.javadoc.uri;/javax/annotation/security/RolesAllowed.html'>@RolesAllowed</link>">
-<!ENTITY jee6.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/javax/inject/Singleton.html'>@Singleton</link>">
-<!ENTITY jee6.javax.inject.Inject "<link xlink:href='&jee.javadoc.uri;/javax/inject/Inject.html'>@Inject</link>">
-<!ENTITY jee6.javax.inject.Provider "<link xlink:href='&jee.javadoc.uri;/javax/inject/Provider.html'>Provider</link>">
-<!ENTITY jee6.javax.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/javax/inject/Singleton.html'>@Singleton</link>">
+<!ENTITY jee6.annotations.DenyAll "<link xlink:href='&jee.javadoc.uri;/jakarta.annotation/security/DenyAll.html'>@DenyAll</link>">
+<!ENTITY jee6.annotations.PermitAll "<link xlink:href='&jee.javadoc.uri;/jakarta.annotation/security/PermitAll.html'>@PermitAll</link>">
+<!ENTITY jee6.annotations.RolesAllowed "<link xlink:href='&jee.javadoc.uri;/jakarta.annotation/security/RolesAllowed.html'>@RolesAllowed</link>">
+<!ENTITY jee6.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Singleton.html'>@Singleton</link>">
+<!ENTITY jee6.jakarta.inject.Inject "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Inject.html'>@Inject</link>">
+<!ENTITY jee6.jakarta.inject.Provider "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Provider.html'>Provider</link>">
+<!ENTITY jee6.jakarta.inject.Singleton "<link xlink:href='&jee.javadoc.uri;/jakarta.inject/Singleton.html'>@Singleton</link>">
 <!ENTITY jee6.servlet.HttpServletRequest "<link xlink:href='&jee.javadoc.uri;/javax/servlet/http/HttpServletRequest.html'>HttpServletRequest</link>">
 <!ENTITY jee6.servlet.HttpSession "<link xlink:href='&jee.javadoc.uri;/javax/servlet/http/HttpSession.html'>HttpSession</link>">
 
-<!ENTITY jee6.javax.enterprise.concurrent.ManagedExecutorService "<link xlink:href='&jee.javadoc.uri;/javax/enterprise/concurrent/ManagedExecutorService.html'>ManagedExecutorService</link>">
-<!ENTITY jee6.javax.enterprise.concurrent.ManagedScheduledExecutorService "<link xlink:href='&jee.javadoc.uri;/javax/enterprise/concurrent/ManagedScheduledExecutorService.html'>ManagedScheduledExecutorService</link>">
+<!ENTITY jee6.jakarta.enterprise.concurrent.ManagedExecutorService "<link xlink:href='&jee.javadoc.uri;/jakarta.enterprise/concurrent/ManagedExecutorService.html'>ManagedExecutorService</link>">
+<!ENTITY jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService "<link xlink:href='&jee.javadoc.uri;/jakarta.enterprise/concurrent/ManagedScheduledExecutorService.html'>ManagedScheduledExecutorService</link>">
 
 <!ENTITY jersey.apache.ApacheConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheConnectorProvider.html'>ApacheConnectorProvider</link>">
 <!ENTITY jersey.client.ChunkParser "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ChunkParser.html'>ChunkParser</link>">
@@ -789,9 +789,9 @@
 <!ENTITY lit.jee6.annotations.PermitAll "<literal>@PermitAll</literal>">
 <!ENTITY lit.jee6.annotations.RolesAllowed "<literal>@RolesAllowed</literal>">
 <!ENTITY lit.jee6.inject.Singleton "<literal>@Singleton</literal>">
-<!ENTITY lit.jee6.javax.inject.Inject "<literal>@Inject</literal>">
-<!ENTITY lit.jee6.javax.inject.Provider "<literal>Provider</literal>">
-<!ENTITY lit.jee6.javax.inject.Singleton "<literal>@Singleton</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Inject "<literal>@Inject</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Provider "<literal>Provider</literal>">
+<!ENTITY lit.jee6.jakarta.inject.Singleton "<literal>@Singleton</literal>">
 <!ENTITY lit.jee6.servlet.HttpServletRequest "<literal>HttpServletRequest</literal>">
 <!ENTITY lit.jee6.servlet.HttpSession "<literal>HttpSession</literal>">
 

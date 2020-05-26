@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.integration.servlet_25_autodiscovery_2;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * @author Michal Gajdos

@@ -41,8 +41,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -84,7 +84,7 @@
                             org.glassfish.jersey.ext.cdi1x.internal.spi
                         </Export-Package>
                         <Import-Package>
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             ${hk2.osgi.version},
                             *
                         </Import-Package>

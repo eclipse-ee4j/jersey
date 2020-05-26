@@ -33,7 +33,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Configuration;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;

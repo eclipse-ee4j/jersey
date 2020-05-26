@@ -30,8 +30,8 @@
     <title>Jersey configuration</title>
     <para>
         This chapter provides Jersey configuration basics which includes configuration using default configuration
-        provider (included in Jersey by default) using system properties. And micro-profile configuration extension
-        which allows plugging-in of configuration modules based on micro profile configuration specification
+        provider (included in Jersey by default) using system properties, and micro-profile configuration extension
+        which allows plugging-in of configuration modules based on micro profile configuration specification.
     </para>
     <section xml:id="default-config">
         <title>Jersey default configuration provider</title>

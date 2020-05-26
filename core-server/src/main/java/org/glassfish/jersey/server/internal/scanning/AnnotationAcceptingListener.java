@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.server.internal.scanning;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -24,10 +25,12 @@ import java.security.PrivilegedActionException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.ext.Provider;
 
+import jersey.repackaged.org.objectweb.asm.RecordComponentVisitor;
 import org.glassfish.jersey.internal.OsgiRegistry;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
@@ -145,7 +148,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
     }
 
     public void process(final String name, final InputStream in) throws IOException {
-        new ClassReader(in).accept(classVisitor, 0);
+        new ClassReaderWrapper(in).accept(classVisitor, 0);
     }
 
     //
@@ -166,9 +169,10 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
         private boolean isAnnotated;
 
         private AnnotatedClassVisitor() {
-            super(Opcodes.ASM7);
+            super(Opcodes.ASM8);
         }
 
+        @Override
         public void visit(final int version, final int access, final String name,
                           final String signature, final String superName, final String[] interfaces) {
             className = name;
@@ -176,11 +180,13 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             isAnnotated = false;
         }
 
+        @Override
         public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
             isAnnotated |= annotations.contains(desc);
             return null;
         }
 
+        @Override
         public void visitInnerClass(final String name, final String outerName,
                                     final String innerName, final int access) {
             // If the name of the class that was visited is equal
@@ -195,6 +201,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             }
         }
 
+        @Override
         public void visitEnd() {
             if (isScoped && isAnnotated) {
                 // Correctly scoped and annotated
@@ -203,11 +210,13 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             }
         }
 
+        @Override
         public void visitOuterClass(final String string, final String string0,
                                     final String string1) {
             // Do nothing
         }
 
+        @Override
         public FieldVisitor visitField(final int i, final String string,
                                        final String string0, final String string1,
                                        final Object object) {
@@ -215,14 +224,17 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             return null;
         }
 
+        @Override
         public void visitSource(final String string, final String string0) {
             // Do nothing
         }
 
+        @Override
         public void visitAttribute(final Attribute attribute) {
             // Do nothing
         }
 
+        @Override
         public MethodVisitor visitMethod(final int i, final String string,
                                          final String string0, final String string1,
                                          final String[] string2) {
@@ -230,19 +242,34 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             return null;
         }
 
+        @Override
         public ModuleVisitor visitModule(final String name, final int access, final String version) {
             // Do nothing
             return null;
         }
 
+        @Override
         public void visitNestHost(final String nestHost) {
             // do nothing
         }
 
+        @Override
         public void visitNestMember(final String nestMember) {
             // do nothing
         }
 
+        @Override
+        public void visitPermittedSubtypeExperimental(String permittedSubtype) {
+            // do nothing
+        }
+
+        @Override
+        public RecordComponentVisitor visitRecordComponent(String name, String descriptor, String signature) {
+            // do nothing
+            return null;
+        }
+
+        @Override
         public AnnotationVisitor visitTypeAnnotation(
                 final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
             //do nothing
@@ -272,5 +299,81 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             }
         }
 
+    }
+
+    private static class ClassReaderWrapper {
+        private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
+        private static final int WARN_VERSION = Opcodes.V15;
+        private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
+
+        private final byte[] b;
+        private ClassReaderWrapper(InputStream inputStream) throws IOException {
+            this.b = readStream(inputStream);
+        }
+
+        private void accept(final ClassVisitor classVisitor, final int parsingOptions) {
+            final int originalVersion = getMajorVersion(b);
+            if (originalVersion == WARN_VERSION + 1) {
+                // temporarily downgrade version to bypass check in ASM
+                setMajorVersion(WARN_VERSION, b);
+                LOGGER.warning("Unsupported class file major version " + originalVersion);
+            }
+            final ClassReader classReader = new ClassReader(b);
+            setMajorVersion(originalVersion, b);
+            classReader.accept(classVisitor, parsingOptions);
+        }
+
+        /**
+         * Sets major version number in given bytes of class (unsigned two bytes at
+         * offset 6).
+         *
+         * @param majorVersion
+         *            major version of bytecode to set
+         * @param b
+         *            bytes of class
+         * @see #getMajorVersion(byte[])
+         */
+        private static void setMajorVersion(final int majorVersion, final byte[] b) {
+            b[6] = (byte) (majorVersion >>> 8);
+            b[7] = (byte) majorVersion;
+        }
+
+        /**
+         * Gets major version number from given bytes of class (unsigned two bytes
+         * at offset 6).
+         *
+         * @param b
+         *            bytes of class
+         * @return major version of bytecode
+         * @see <a href=
+         *      "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.1">JVMS 4.1 - The class File Format</a>
+         */
+        private static int getMajorVersion(final byte[] b) {
+            return ((b[6] & 0xFF) << 8) | (b[7] & 0xFF);
+        }
+
+        /**
+         * Reads the given input stream and returns its content as a byte array.
+         *
+         * @param inputStream an input stream.
+         * @return the content of the given input stream.
+         * @throws IOException if a problem occurs during reading.
+         */
+        private static byte[] readStream(final InputStream inputStream) throws IOException {
+            if (inputStream == null) {
+                throw new IOException("Class not found");
+            }
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                byte[] data = new byte[INPUT_STREAM_DATA_CHUNK_SIZE];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
+                    outputStream.write(data, 0, bytesRead);
+                }
+                outputStream.flush();
+                return outputStream.toByteArray();
+            } finally {
+                inputStream.close();
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@
                 </para>
             </important>
             <para>
-                Jersey provides functionality for monitoring JAX-RS/Jersey applications. Application monitoring is useful in cases
+                Jersey provides functionality for monitoring JAX-RS/Jersey applications. Application monitoring is useful
                 when you need to identify the performance hot-spots in your JAX-RS application, observe
                 execution statistics of particular resources or listen to application
                 or request lifecycle events. Note that this functionality is Jersey-specific extension to JAX-RS API.
@@ -54,7 +54,7 @@
                         <listitem>
                             <para>
                                 Event listeners allow users to receive and process a predefined set of events that occur during
-                                a application lifecycle (such as application initialization, application destroy) as well as
+                                an application lifecycle (such as application initialization, application destroy) as well as
                                 request processing lifecycle events (request started, resource method finished, exception thrown,
                                 etc.). This feature is always enabled in Jersey server runtime and is leveraged by the other
                                 monitoring features.
@@ -82,7 +82,7 @@
                                 is able to expose the statistics as JMX MBeans (for example
                                 &jersey.server.monitoring.ApplicationMXBean;).
                                 Jersey monitoring MXBeans can be accessed programmatically using JMX APIs or browsed via JMX-enabled
-                                tool (<literal>JConsole</literal> for example). This functionality is, too,  by default disabled for
+                                tool (<literal>JConsole</literal> for example). This functionality is also disabled by default for
                                 performance reasons and must be enabled if needed.
                             </para>
                         </listitem>
@@ -196,7 +196,7 @@ public class TestResource {
             </para>
 
             <para>
-                Once the listeners and the monitored resource is defined, it's time to initialize our application. The following
+                Once the listeners and the monitored resource are defined, it's time to initialize our application. The following
                 piece of code shows a &jersey.server.ResourceConfig; that is used to initialize the application (please
                 note that only &lit.jersey.server.monitoring.ApplicationEventListener; is registered as provider).
 
@@ -220,7 +220,7 @@ public class TestResource {
                 from an <literal>ApplicationEventListener.onRequest</literal> method and not any other requests. In our case the
                 returned request event listener keeps information about the request number of the current request and a start time of
                 the request which is later used to print out the request processing times statistics. This demonstrates the principle
-                of listening to request events: for one request there is a one instance which can be used to hold all the information
+                of listening to request events: for one request there is one instance which can be used to hold all the information
                 about the particular request. In other words, &lit.jersey.server.monitoring.RequestEventListener; is designed to be
                 implicitly request-scoped.
             </para>
@@ -353,8 +353,8 @@ public static class StatisticsResource {
                 </example>
                 <para>
                     &jersey.server.monitoring.MonitoringStatistics; are
-                    injected into the resource using an &jee6.javax.inject.Inject; annotation.
-                    Please note the usage of the &jee6.javax.inject.Provider; for injection (it will be discussed later).
+                    injected into the resource using an &jee6.jakarta.inject.Inject; annotation.
+                    Please note the usage of the &jee6.jakarta.inject.Provider; for injection (it will be discussed later).
                     Firstly, the snapshot of statistics is retrieved by the <literal>snapshot()</literal> method.
                     The snapshot of statistics is an immutable copy of statistics which does not change over the time.
                     Additionally, data in a snapshot are consistent. It's recommended to create snapshots before working with
@@ -451,12 +451,12 @@ request count: 4, average request processing [ms]: 73</programlisting>
                     on &lit.jersey.server.monitoring.TimeWindowStatistics; again.
                 </para>
                 <para>
-                    Statistics are injected using the &jee6.javax.inject.Provider;. This is preferred way of
+                    Statistics are injected using the &jee6.jakarta.inject.Provider;. This is preferred way of
                     injecting statistics. The reason is simple. Statistics might change over time and contract
                     of &lit.jersey.server.monitoring.MonitoringStatistics; does not make any assumptions about mutability of
                     monitoring statistics instances (to allow future optimizations and changes in implementation strategy). In
-                    order to get always latest statistics, we recommend injecting a &jee6.javax.inject.Provider; rather than a
-                    direct reference and use it's <literal>get()</literal> method to retrieve the latest statistics. For example,
+                    order to get always latest statistics, we recommend injecting a &jee6.jakarta.inject.Provider; rather than a
+                    direct reference and use its <literal>get()</literal> method to retrieve the latest statistics. For example,
                     in singleton resources the use of the technique is very important otherwise statistics might correspond
                     to the time when singleton was firstly created and might not update since that time.
                 </para>
@@ -533,21 +533,21 @@ request count: 4, average request processing [ms]: 73</programlisting>
                     <link linkend="resource-builder">"Programmatic API for Building Resources"</link>), one Java resource class
                     can be an endpoint for resource methods on many different URIs. And also one URI can be served by method from
                     many different Java classes. Therefore both views are not to be compared 1:1. Instead they provide
-                    different loggical views on your JAX-RS application. This monitoring feature can also help when designing
+                    different loggical views on your JAX-RS application. This monitoring feature can also be helpful when designing
                     the JAX-RS APIs as it provides nice view on available root application URIs.
                 </para>
                 <para>
                     Both logical views on the resources exposed by application share few common principles. A single resource entry
                     is always a set of resource methods which are available under the <literal>methods</literal> sub-group. Statistics
                     can be found in MBeans <literal>MethodTimes</literal> and <literal>RequestTimes</literal>.
-                    <literal>MethodTimes</literal> contains statistics measured on on resource methods (duration of execution of a
+                    <literal>MethodTimes</literal> contains statistics measured on resource methods (duration of execution of a
                     code of the a resource method), whereas <literal>RequestTimes</literal> contains statistics of an entire request
                     execution (not only a time of the execution of the resource method but the overall time of the execution of whole
                     request by Jersey runtime). Another useful information is that statistics directly under resource (not under
                     the <literal>methods</literal> sub-group) contains summary of statistics for all resource methods grouped in the
                     resource entry.
                 </para>
-                <para>Additional useful details that about statistics</para>
+                <para>Additional useful details about statistics</para>
                 <itemizedlist>
                     <listitem><para><literal>Global->Configuration->Registered(Classes/Instances)</literal>:
                         registered resource classes and instances by the user (i.e., not added by &jersey.server.ModelProcessor;
@@ -612,7 +612,7 @@ request count: 4, average request processing [ms]: 73</programlisting>
                 </para>
                 <para>
                     To reiterate, exposing Jersey MXBeans and the calculating monitoring statistics may have an performance impact
-                    on your application and therefore should be enabled only when needed. Also, please note, that it Jersey
+                    on your application and therefore should be enabled only when needed. Also, please note, that Jersey
                     monitoring is exposing quite a lot of information about the monitored application which might be viewed as
                     problematic in some cases (e.g. in production server deployments).
                 </para>

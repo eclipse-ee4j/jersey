@@ -33,8 +33,8 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.HttpHeaders;
 
-import javax.annotation.Priority;
-import javax.inject.Inject;
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;

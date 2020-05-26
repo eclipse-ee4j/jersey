@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,12 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal.spi;
 
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
- * CDI {@link javax.enterprise.inject.spi.InjectionTarget injection target} that is co-injected by injection manager.
+ * CDI {@link jakarta.enterprise.inject.spi.InjectionTarget injection target} that is co-injected by injection manager.
  * The injection is done via given {@link InjectionManager injection manager}.
  *
  * @author Michal Gajdos

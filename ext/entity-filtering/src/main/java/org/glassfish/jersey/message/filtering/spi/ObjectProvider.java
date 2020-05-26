@@ -52,19 +52,19 @@ import org.glassfish.jersey.spi.Contract;
  *       // Scope.
  *       .in(Singleton.class);
  * </pre>
- * The custom provider can be then {@link javax.inject.Inject injected} as one these injection point types:
+ * The custom provider can be then {@link jakarta.inject.Inject injected} as one these injection point types:
  * <ul>
  * <li>{@code MyObjectProvider}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectProvider&lt;MyFilteringObject&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectProvider&lt;MyFilteringObject&gt;&gt;}</li>
  * </ul>
  * </p>
  * <p>
  * By default a {@code ObjectGraph} provider is available in the runtime. This object provider can be injected (via
- * {@link javax.inject.Inject @Inject}) into the following types:
+ * {@link jakarta.inject.Inject @Inject}) into the following types:
  * <ul>
  * <li>{@code ObjectProvider}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectProvider&lt;Object&gt;&gt;}</li>
- * <li>{@code javax.inject.Provider&lt;ObjectProvider&lt;ObjectGraph&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectProvider&lt;Object&gt;&gt;}</li>
+ * <li>{@code jakarta.inject.Provider&lt;ObjectProvider&lt;ObjectGraph&gt;&gt;}</li>
  * </ul>
  * </p>
  * <p>

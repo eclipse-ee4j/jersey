@@ -36,7 +36,7 @@ org.glassfish.jersey.server.internal.monitoring.core
 * Copyright (c) 2015-2018 Oracle and/or its affiliates. All rights reserved.
 * Copyright 2010-2013 Coda Hale and Yammer, Inc.
 
-org.objectweb.asm Version 7.2
+org.objectweb.asm Version 8.0
 * License: Modified BSD (http://asm.objectweb.org/license.html)
 * Copyright: (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -115,7 +115,7 @@
                 </listitem>
                 <listitem>
                     <para>&jersey.message.filtering.SecurityEntityFilteringFeature;</para>
-                    <para>Filtering based on security (<literal>javax.annotation.security</literal>) and entity-filtering
+                    <para>Filtering based on security (<literal>jakarta.annotation.security</literal>) and entity-filtering
                         annotations.</para>
                 </listitem>
                 <listitem>
@@ -217,7 +217,7 @@ final Client client = ClientClientBuilder.newClient(config);
 
         <para>
             In the next section the entity-filtering features will be illustrated on a project-tracking application that
-            contains three classes in it's domain model and few resources (only <literal>Project</literal> resource will be
+            contains three classes in its domain model and few resources (only <literal>Project</literal> resource will be
             shown in this chapter). The full source code for the example application can be found in Jersey
             &jersey.github.ef.example.link;.
         </para>
@@ -493,9 +493,9 @@ public @interface ProjectDetailedView {
             to all the child nodes. Fields and child nodes that do not match at least a single active scope are filtered out.
             When the scope matching is performed, annotations applied to the domain model classes and fields
             are used to compute the scope for each particular component of the model. If there are no annotations on the class
-            or it's fields, the default scope is assumed. During the filtering, first, the annotations on root model class
-            and it's fields are considered. For all composite fields that have not been filtered out, the annotations on the
-            referenced child class and it's fields are considered next, and so on.
+            or its fields, the default scope is assumed. During the filtering, first, the annotations on root model class
+            and its fields are considered. For all composite fields that have not been filtered out, the annotations on the
+            referenced child class and its fields are considered next, and so on.
         </para>
 
         <section>
@@ -625,7 +625,7 @@ public class ProjectsResource {
             <para>
                 As mentioned above you can define applied entity-filtering scopes using a property set either in the client
                 run-time &lit.jaxrs.core.Configuration; (see <xref linkend="ef.example.client.registration"/>) or by
-                passing the entity-filtering annotations during a creation of an individual request to be sent to server.
+                passing the entity-filtering annotations during a creation of an individual request to be sent to the server.
 
                 <example>
                     <title>Client - Request entity-filtering annotations</title>
@@ -660,13 +660,13 @@ public class ClientsResource {
     </section>
 
     <section xml:id="ef.security.annotations">
-        <title>Role-based Entity Filtering using (<literal>javax.annotation.security</literal>) annotations</title>
+        <title>Role-based Entity Filtering using (<literal>jakarta.annotation.security</literal>) annotations</title>
 
         <para>
             Filtering the content sent to the client (or server) based on the authorized security roles is a commonly
             required use case. By registering &jersey.message.filtering.SecurityEntityFilteringFeature; you can
             leverage the Jersey Entity Filtering facility in connection with standard
-            <literal>javax.annotation.security</literal> annotations exactly the same way as you would with custom
+            <literal>jakarta.annotation.security</literal> annotations exactly the same way as you would with custom
             entity-filtering annotations described in previous chapters. Supported security annotations are:
 
             <itemizedlist>
@@ -764,7 +764,7 @@ public class Address {
             <itemizedlist>
                 <listitem>
                     <para>&jersey.message.filtering.EntityProcessor;</para>
-                    <para>Implementations of this SPI are invoked to process entity class and it's members. Custom
+                    <para>Implementations of this SPI are invoked to process entity class and its members. Custom
                         implementations can extend from &jersey.message.filtering.AbstractEntityProcessor;.</para>
                 </listitem>
                 <listitem>

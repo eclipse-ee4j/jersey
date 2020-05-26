@@ -53,7 +53,7 @@ import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import javax.xml.XMLConstants;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;

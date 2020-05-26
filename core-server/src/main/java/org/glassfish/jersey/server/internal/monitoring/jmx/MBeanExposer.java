@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.ProcessingException;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;

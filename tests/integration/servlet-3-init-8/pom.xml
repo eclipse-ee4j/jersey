@@ -56,6 +56,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- TODO remove after jakartification -->
+                <configuration>
+                    <excludes> <!--JDK 11 -->
+                        <exclude>org/glassfish/jersey/tests/integration/servlet_3_init_8/HelloWorldResourceITCase.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/integration/servlet_3_init_8/HelloWorldUnreachableResourceITCase.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

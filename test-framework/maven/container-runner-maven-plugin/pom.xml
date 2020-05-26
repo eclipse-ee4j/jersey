@@ -36,9 +36,9 @@
     </description>
 
     <properties>
-        <groovy.version>2.4.9</groovy.version>
-        <groovy-eclipse-compiler.version>2.9.2-01</groovy-eclipse-compiler.version>
-        <groovy-eclipse-batch.version>2.5.7-01</groovy-eclipse-batch.version>
+        <groovy.version>3.0.2</groovy.version>
+        <groovy-eclipse-compiler.version>3.6.0-03</groovy-eclipse-compiler.version>
+        <groovy-eclipse-batch.version>3.0.2-02</groovy-eclipse-batch.version>
         <maven.version>3.6.0</maven.version>
         <maven-plugin.version>3.6.0</maven-plugin.version>
     </properties>
@@ -109,6 +109,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
+            <type>pom</type>
             <version>${groovy.version}</version>
         </dependency>
 

@@ -29,7 +29,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * This resource reproduces JERSEY-2800 when {@link #invokeBeanParamInject()} called repetitively.

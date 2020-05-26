@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.media.htmljson.internal;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.FeatureContext;
 

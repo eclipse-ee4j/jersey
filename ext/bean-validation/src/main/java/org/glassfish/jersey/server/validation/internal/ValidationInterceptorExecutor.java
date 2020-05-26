@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.validation.internal;
 
 import java.util.Iterator;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.ValidationInterceptor;

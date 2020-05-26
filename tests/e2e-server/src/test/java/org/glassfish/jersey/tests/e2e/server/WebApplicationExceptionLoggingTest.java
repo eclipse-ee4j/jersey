@@ -29,8 +29,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.validation.ValidationException;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotNull;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

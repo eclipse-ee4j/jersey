@@ -27,7 +27,7 @@ import java.util.Map;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -53,7 +53,7 @@ final class FreemarkerViewProcessor extends AbstractTemplateProcessor<Template> 
 
     /**
      * Create an instance of this processor with injected {@link jakarta.ws.rs.core.Configuration config} and
-     * (optional) {@link javax.servlet.ServletContext servlet context}.
+     * (optional) {@link jakarta.servlet.ServletContext servlet context}.
      *
      * @param config           config to configure this processor from.
      * @param injectionManager injection manager.

@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.ejb.resources;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

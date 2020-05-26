@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.model.internal;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
@@ -28,7 +28,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
  * Invokes {@link PreDestroy} methods on all registered objects, when the injection manager is shut down.
  * <p/>
  * Some objects managed by Jersey are created using {@link InjectionManager#createAndInitialize}. This means
- * that such objects are created, dependencies injected and methods annotated with {@link javax.annotation.PostConstruct}
+ * that such objects are created, dependencies injected and methods annotated with {@link jakarta.annotation.PostConstruct}
  * invoked. Therefore methods annotated with {@link PreDestroy} should be invoked on such objects too, when they are destroyed.
  * <p/>
  * This service invokes {@link PreDestroy} on all registered objects when {@link InjectionManager#shutdown()} is invoked

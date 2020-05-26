@@ -140,6 +140,7 @@
                     <!-- TODO remove after jakartification -->
                     <excludes>
                         <exclude>org/glassfish/jersey/tests/performance/benchmark/server/JacksonTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/performance/benchmark/server/LocatorTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

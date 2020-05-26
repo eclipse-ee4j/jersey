@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import jakarta.ws.rs.RuntimeType;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.ComponentBag;

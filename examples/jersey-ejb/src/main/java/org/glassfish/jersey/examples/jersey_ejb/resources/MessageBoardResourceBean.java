@@ -24,8 +24,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 
 import org.glassfish.jersey.examples.jersey_ejb.entities.Message;
 import org.glassfish.jersey.examples.jersey_ejb.exceptions.CustomNotFoundException;
@@ -69,7 +69,7 @@ public class MessageBoardResourceBean {
         if (m == null) {
             // This exception will be passed through to the JAX-RS runtime
             // No other runtime exception will behave this way unless the
-            // exception is annotated with javax.ejb.ApplicationException
+            // exception is annotated with jakarta.ejb.ApplicationException
             throw new NotFoundException();
         }
 

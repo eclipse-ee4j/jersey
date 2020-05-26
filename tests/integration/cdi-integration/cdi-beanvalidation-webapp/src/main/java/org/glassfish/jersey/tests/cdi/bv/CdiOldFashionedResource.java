@@ -20,8 +20,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 
-import javax.enterprise.context.RequestScoped;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * This CDI backed resource should get validated.

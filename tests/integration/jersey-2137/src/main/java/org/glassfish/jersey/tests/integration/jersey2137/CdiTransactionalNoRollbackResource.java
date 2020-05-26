@@ -22,17 +22,17 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
-import javax.enterprise.context.RequestScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 /**
  * Request scoped transactional CDI bean registered as JAX-RS resource class.
  * Part of JERSEY-2137 reproducer. {@link jakarta.ws.rs.WebApplicationException}
  * thrown in the resource method below should drive the response as specified
  * in the JAX-RS spec regardless
- * on the {@link javax.transaction.Transactional#dontRollbackOn()} value.
+ * on the {@link jakarta.transaction.Transactional#dontRollbackOn()} value.
  *
  * @author Jakub Podlesak
  */

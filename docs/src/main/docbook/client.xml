@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -233,7 +233,7 @@ target.request(MediaType.APPLICATION_JSON_TYPE)
             </title>
 
             <para>
-                JAX-RS Client API is a designed to allow fluent programming model. This means, a construction of a
+                JAX-RS Client API is designed to allow fluent programming model. This means, a construction of a
                 &lit.jaxrs.client.Client; instance, from which a &lit.jaxrs.client.WebTarget; is created, from which a
                 request &jaxrs.client.Invocation; is built and invoked can be chained in a single "flow" of invocations.
                 The individual steps of the flow will be shown in the following sections.
@@ -345,7 +345,7 @@ Configuration newConfiguration = client.getConfiguration();</programlisting>
 webTarget.register(FilterForExampleCom.class);</programlisting>
 
                 The configuration principles used in JAX-RS client API apply to &lit.jaxrs.client.WebTarget; as well. Each
-                &lit.jaxrs.client.WebTarget; instance inherits a configuration from it's parent (either a client or another
+                &lit.jaxrs.client.WebTarget; instance inherits a configuration from its parent (either a client or another
                 web target) and can be further custom-configured without affecting the configuration of the parent component.
                 In this case, the <literal>FilterForExampleCom</literal> will be registered only in the
                 <literal>webTarget</literal> and not in <literal>client</literal>. So, the <literal>client</literal>
@@ -546,8 +546,8 @@ String entity = client.target("http://example.com/rest")
                 do require running on another thread, should be executed using provided services.
             </para>
             <para>
-                Default values do depend on the environment - in Java EE container, it has to be &jee6.javax.enterprise.concurrent.ManagedExecutorService;
-                and &jee6.javax.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
+                Default values do depend on the environment - in Java EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
+                and &jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
                 <literal>ForkJoinPool.commonPool</literal> for Executor service and something undefined for Scheduled
                 executor service.
             </para>
@@ -739,7 +739,7 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
 clientConfig.connectorProvider(new GrizzlyConnectorProvider());
 Client client = ClientBuilder.newClient(clientConfig);</programlisting>
 
-            &lit.jaxrs.client.Client; accepts as as a constructor argument a &lit.jaxrs.core.Configurable; instance. Jersey
+            &lit.jaxrs.client.Client; accepts as a constructor argument a &lit.jaxrs.core.Configurable; instance. Jersey
             implementation of the &lit.jaxrs.core.Configurable; provider for the client is &lit.jersey.client.ClientConfig;.
             By using the Jersey &lit.jersey.client.ClientConfig; you can configure the custom
             &lit.jersey.client.ConnectorProvider;
@@ -965,7 +965,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                         <emphasis>UNIVERSAL:</emphasis> Combination of basic and digest authentication. The feature works in non-preemptive
                           mode which means that it sends requests without authentication information. If <literal>401</literal> status
                           code is returned, the request is repeated and an appropriate authentication is used based on the
-                          authentication requested in the response (defined in <literal>WWW-Authenticate</literal> HTTP header. The feature
+                          authentication requested in the response (defined in <literal>WWW-Authenticate</literal> HTTP header). The feature
                           remembers which authentication requests were successful for given URI and next time tries to preemptively
                           authenticate against this URI with latest successful authentication method.
                     </para>
@@ -998,5 +998,136 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
     </section>
 
 
+    </section>
+
+    <section>
+        <title>InvocationInterceptors</title>
+        <para>
+            Suppose a case that the start of the request is to be logged and even measured.
+            This can be done by <literal>ClientRequestFilter</literal>, which is usually invoked before the request is wired on the network.
+            However, the filter may be called as a last of the filters in the chain. Sure, it can have the highest priority,
+            but the other filters can have the very same priority! Some long-running operations can be performed before the
+            measuring can actually start. Even worse, the filter may even be skipped from the chain by the previous
+            <literal>#abortWith</literal>!
+        </para>
+        <section>
+            <title>PreInvocationInterceptor</title>
+            <para>
+                For this, <literal>PreInvocationInterceptor</literal>, the code that executes before the <literal>ClientRequestFilters</literal>
+                are invoked, has been added to the client request chain. Jersey ensures all the interceptors are invoked with each request.
+                The interceptor contains a single <literal>#beforeRequest</literal> method, which corresponds to <literal>ClientRequestFilter</literal>:
+            </para>
+            <programlisting language="java">
+                /**
+                * The method invoked before the request starts.
+                * @param requestContext the request context shared with
+                * ClientRequestFilter.
+                */
+                void beforeRequest(ClientRequestContext requestContext);
+            </programlisting>
+            <para>
+                Note that only a single <literal>#abortWith</literal> is allowed in all <literal>PreInvocationInterceptors</literal>,
+                otherwise an <literal>IllegalStateException</literal> is thrown.
+                All the exceptions accumulated in <literal>PreInvocationInterceptors</literal> are thrown in a single Exception,
+                available through <literal>#getSuppressed()</literal>.
+            </para>
+        </section>
+        <section>
+            <title>PostInvocationInterceptor</title>
+            <para>
+                Similarly, <literal>ClientResponseFilter</literal> seems to be a good place where the total time of the HTTP request can be measured,
+                but similarly to <literal>ClientRequestFilter</literal>, the response filter may not be invoked at all.
+                For this, <literal>PostInvocationInterceptor</literal> has been introduced. Jersey runtime ensures that every
+                <literal>PostInvocationInterceptor</literal> is called. Since an exception can occur during the HTTP request,
+                <literal>PostInvocationInterceptor</literal> comes with two methods:
+            </para>
+            <programlisting language="java">
+                /**
+                * The method is invoked after a request when no
+                * is thrown, or the Throwables are resolved
+                * by previous PostInvocationInterceptor.
+                *
+                * @param requestContext the request context.
+                * @param responseContext the response context
+                * of the original Response or response context
+                * defined by the new resolving Response.
+                */
+                void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext);
+
+                /**
+                * The method is invoked after a Throwable is caught
+                * during the client request chain processing.
+                *
+                * @param requestContext the request context.
+                * @param exceptionContext the context available to handle the
+                * caught Throwables.
+                */
+                void onException(ClientRequestContext requestContext, ExceptionContext exceptionContext);
+            </programlisting>
+            <para>
+                The <literal>#afterRequest</literal> method is executed when no exception has been thrown during the HTTP request,
+                <literal>#onException</literal> method is executed if the exception has been thrown during the request.
+                It is possible to set a response in <literal>#onException</literal>, and the consecutive <literal>PostInvocationInterceptor</literal> will
+                execute its <literal>#afterRequest</literal> method.
+
+                The measuring example can looks as follows, then:
+            </para>
+            <programlisting language="java" linenumbering="numbered">
+                String response = ClientBuilder.newClient().target("path")
+                    .register(new PreInvocationInterceptor() {
+                        @Override
+                        public void beforeRequest(ClientRequestContext requestContext) {
+                            startTime = System.currentTimeMillis();
+                        }
+                    })
+                    .register(new PostInvocationInterceptor() {
+                        @Override
+                        public void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext) {
+                            logDuration(System.currentTimeMillis() - startTime);
+                        }
+                        @Override
+                        public void onException(ClientRequestContext requestContext, ExceptionContext exceptionContext) {
+                            logDuration(System.currentTimeMillis() - startTime);
+                        }
+                    })
+                    .request().get().readEntity(String.class);
+            </programlisting>
+        </section>
+    </section>
+    <section>
+        <title>InvocationBuilderListener</title>
+        <para>
+            InvocationBuilderListener is an interface that is inspired by Microprofile REST Client <literal>RestClientBuilderListener</literal>
+            and it contains a single method:
+        </para>
+        <programlisting language="java">
+            /**
+            * Whenever an Invocation.Builder is created, (i.e. when
+            * WebTarget#request() is called, this method would be invoked.
+            *
+            * @param context the updated InvocationBuilderContext.
+            */
+            void onNewBuilder(InvocationBuilderContext context);
+        </programlisting>
+        <para>
+            <literal>InvocationBuilderContext</literal> a subset of methods of the <literal>Invocation.Builder</literal>. It can be used to call the default
+            values of the <literal>Invocation.Builder</literal>. Since it is invoked at the time <literal>Invocation.Builder</literal> is instantiated, any consequent
+            calls of the <literal>Invocation.Builder</literal>‘s methods will replace the defaults set by the <literal>InvocationBuilderListener</literal>.
+
+            For instance, if all the HTTP requests should contain a custom HTTP header,
+            there can be created a feature that would be registered on the client:
+        </para>
+        <programlisting language="java" linenumbering="numbered">
+            public static class MyFeature implements Feature {
+                @Override
+                public boolean configure(FeatureContext context) {
+                    context.register(
+                        (InvocationBuilderListener)(l)-&gt;
+                        l.getHeaders().add("MY_HEADER", "MY_VALUE")
+                    );
+                    return true;
+                }
+            }
+        </programlisting>
     </section>
 </chapter>

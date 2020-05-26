@@ -59,6 +59,7 @@ grant codebase "file:${project.build.directory}/test-classes/-" {
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc.*";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+  permission java.lang.RuntimePermission "accessClassInPackage.com.sun.xml.internal.bind.v2";
   permission java.lang.RuntimePermission "reflectionFactoryAccess";
 };
 
@@ -74,4 +75,5 @@ grant codebase "file:${project.build.directory}/classes/-" {
   permission java.net.SocketPermission "home", "connect,resolve";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc.*";
+  permission java.lang.RuntimePermission "accessClassInPackage.com.sun.xml.internal.bind.v2";
 };

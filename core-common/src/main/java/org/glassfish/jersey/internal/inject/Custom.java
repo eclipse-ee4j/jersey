@@ -19,7 +19,7 @@ package org.glassfish.jersey.internal.inject;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * {@link Qualifier Qualifier annotation} used to annotate HK2 injections and

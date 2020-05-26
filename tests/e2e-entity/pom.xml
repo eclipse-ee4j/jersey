@@ -71,6 +71,7 @@
                                 <exclude>org/glassfish/jersey/tests/e2e/entity/JAXBContextResolverTest*</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/entity/XXETest.java</exclude>
                                 <exclude>org/glassfish/jersey/tests/e2e/entity/XmlJaxBElementProviderTest.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/MoxyEntityFilteringTest.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>

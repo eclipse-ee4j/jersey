@@ -45,6 +45,8 @@
                     <excludes>
                         <exclude>org/glassfish/jersey/tests/e2e/oauth/OAuth2Test.java</exclude>
                         <exclude>org/glassfish/jersey/tests/e2e/common/NoEntityTest.java</exclude>
+                        <!--TODO remove after jakartification-->
+                        <exclude>org/glassfish/jersey/tests/e2e/server/wadl/NoJAXBNoWadlTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -71,6 +73,11 @@
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,6 +118,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>

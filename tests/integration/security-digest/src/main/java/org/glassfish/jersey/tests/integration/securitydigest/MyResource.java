@@ -21,7 +21,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.SecurityContext;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This resource contains methods that are secured using web.xml declarative security. Names of methods

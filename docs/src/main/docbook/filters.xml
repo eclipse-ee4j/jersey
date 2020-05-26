@@ -513,7 +513,7 @@ public class GZIPWriterInterceptor implements WriterInterceptor {
             it is annotated with &lit.jaxrs.NameBinding;. The <literal>@Compress</literal> is applied on the
             resource method <literal>getVeryLongString()</literal> and on the interceptor
             <literal>GZIPWriterInterceptor</literal>. The interceptor will be executed only if any resource method
-            with such a annotation will be executed. In our example case the interceptor will be executed only for
+            with such an annotation will be executed. In our example case the interceptor will be executed only for
             the <literal>getVeryLongString()</literal> method. The interceptor will not be executed for method
             <literal>getHello()</literal>. In this example the reason is probably clear. We would like to compress
             only long data and we do not need to compress the short response of "Hello World!".
@@ -536,7 +536,7 @@ public class GZIPWriterInterceptor implements WriterInterceptor {
             just an edge case which will not be used so often.
         </para>
         <para>
-            Note that <emphasis>global filters are executed always</emphasis>, so even for resource methods
+            Note that <emphasis>global filters are always executed</emphasis>, even for resource methods
             which have any name binding annotations.
         </para>
     </section>
@@ -623,7 +623,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
 
         <para>In case you register more filters and interceptors you might want to define an exact order in which
             they should be invoked. The order can be controlled by the <literal>@Priority</literal> annotation defined
-            by the <literal>javax.annotation.Priority</literal> class. The annotation accepts an integer parameter of priority.
+            by the <literal>jakarta.annotation.Priority</literal> class. The annotation accepts an integer parameter of priority.
             Providers used in request processing (&lit.jaxrs.container.ContainerRequestFilter;,
             &lit.jaxrs.client.ClientRequestFilter;) as well as entity interceptors (&lit.jaxrs.ReaderInterceptor;,
             &lit.jaxrs.WriterInterceptor;) are sorted based on the priority in an ascending manner. So, a request filter with
@@ -638,7 +638,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
         <para>
             It's a good practice to assign a priority to filters and interceptors. Use &jaxrs.Priorities; class which
             defines standardized priorities in JAX-RS for different usages, rather than inventing your
-            own priorities. So, when you for example write an authentication filter you would assign a priority 1000 which
+            own priorities. For example, when you write an authentication filter you would assign a priority 1000 which
             is the value of &lit.jaxrs.Priorities;<literal>.AUTHENTICATION</literal>. The following example
             shows the filter from the beginning
             of this chapter with a priority assigned.
@@ -648,7 +648,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
             <example>
                 <title>Priorities example</title>
                 <programlisting language="java" linenumbering="numbered">...
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 ...
 

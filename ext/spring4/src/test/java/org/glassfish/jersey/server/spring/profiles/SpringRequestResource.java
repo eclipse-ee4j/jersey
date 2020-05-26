@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.profiles;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

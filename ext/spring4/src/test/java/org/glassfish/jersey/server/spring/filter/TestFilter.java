@@ -17,8 +17,8 @@
 package org.glassfish.jersey.server.spring.filter;
 
 import java.io.IOException;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 

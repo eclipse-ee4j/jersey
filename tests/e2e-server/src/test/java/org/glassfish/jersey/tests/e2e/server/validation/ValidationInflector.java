@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.process.Inflector;

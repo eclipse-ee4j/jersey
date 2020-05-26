@@ -30,9 +30,9 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Response;
 
-import javax.annotation.Priority;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.oauth1.signature.OAuth1Parameters;

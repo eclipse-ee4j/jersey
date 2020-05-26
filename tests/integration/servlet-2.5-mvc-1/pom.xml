@@ -68,14 +68,49 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- TODO remove afer jakartification is done-->
+                <configuration>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/tests/integration/servlet_25_mvc_1/ItemITCase.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
-              <groupId>org.mortbay.jetty</groupId>
+              <groupId>org.eclipse.jetty</groupId>
               <artifactId>jetty-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-tld</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <target>
+                                <copy file="../../../ext/mvc-jsp/src/main/resources/META-INF/taglib.tld" todir="src/main/webapp/WEB-INF"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>delete-tld</id>
+                        <phase>post-integration-test</phase>
+                        <configuration>
+                            <target>
+                                <delete file="src/main/webapp/WEB-INF/taglib.tld"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>jdk11+</id>
@@ -92,20 +127,6 @@
                     <artifactId>jaxb-osgi</artifactId>
                 </dependency>
             </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/BookstoreITCase.java</exclude>
-                                <exclude>**/ItemITCase.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>jdk8</id>

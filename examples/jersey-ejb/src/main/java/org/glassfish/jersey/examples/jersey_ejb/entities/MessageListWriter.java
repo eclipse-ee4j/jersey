@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import org.glassfish.jersey.message.MessageUtils;
 
@@ -40,7 +40,7 @@ import org.glassfish.jersey.message.MessageUtils;
 public class MessageListWriter implements MessageBodyWriter<List<Message>> {
 
     @Context
-    private javax.inject.Provider<UriInfo> ui;
+    private jakarta.inject.Provider<UriInfo> ui;
 
     @Override
     public boolean isWriteable(final Class<?> clazz, final Type type, final Annotation[] annotation, final MediaType mediaType) {

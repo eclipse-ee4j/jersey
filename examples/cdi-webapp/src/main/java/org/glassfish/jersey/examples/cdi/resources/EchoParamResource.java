@@ -15,7 +15,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 
 /**
  * A managed bean that uses (but does not inject) a path parameter.

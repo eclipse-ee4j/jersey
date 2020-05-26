@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutorService;
  * {@link jakarta.ws.rs.client.ClientResponseFilter ClientResponseFilters} are executed.
  * <p/>
  * It is ensured that all {@code PostInvocationInterceptors} are executed after the request, in the reverse order given by the
- * {@link javax.annotation.Priority}, the higher the priority the later the execution. Any {@code Throwable} thrown when
+ * {@link jakarta.annotation.Priority}, the higher the priority the later the execution. Any {@code Throwable} thrown when
  * the {@link PostInvocationInterceptor#afterRequest(ClientRequestContext, ClientResponseContext)} or
  * {@link PostInvocationInterceptor#onException(ClientRequestContext, ExceptionContext)} is being processed is accumulated and
  * a multi RuntimeException with other {@link Throwable#addSuppressed(Throwable) exceptions supressed} is being thrown at the end

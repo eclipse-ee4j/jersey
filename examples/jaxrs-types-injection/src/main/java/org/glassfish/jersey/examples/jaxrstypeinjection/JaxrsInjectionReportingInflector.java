@@ -12,7 +12,7 @@ package org.glassfish.jersey.examples.jaxrstypeinjection;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.HttpHeaders;

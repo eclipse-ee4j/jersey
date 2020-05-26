@@ -20,7 +20,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Configuration;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.jersey.tests.e2e.server.scanning.ext.Ext1WriterInterceptor;
 import org.glassfish.jersey.tests.e2e.server.scanning.ext.Ext2WriterInterceptor;

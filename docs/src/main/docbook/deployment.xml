@@ -73,7 +73,7 @@
         <para>
             Compared to &lit.jaxrs.core.Application;, the &lit.jersey.server.ResourceConfig; provides advanced capabilities
             to simplify registration of JAX-RS components, such as scanning for root resource and provider classes in a provided
-            classpath or a in a set of package names etc. All JAX-RS component classes that are either manually registered or
+            classpath or a set of package names etc. All JAX-RS component classes that are either manually registered or
             found during scanning are automatically added to the set of classes that are returned by
             <literal>getClasses</literal>. For example, the following application class that extends from
             &lit.jersey.server.ResourceConfig; scans during deployment for JAX-RS components in packages
@@ -348,7 +348,7 @@ HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);</pro
                     <literal>org.glassfish.grizzly.http.server.Response</literal> instances into JAX-RS and Jersey
                     application resources and providers. However, since Grizzly <literal>Request</literal> is not proxiable,
                     the injection of Grizzly <literal>Request</literal> into singleton (by default) JAX-RS / Jersey providers
-                    is only possible via <literal>javax.inject.Provider</literal> instance. (Grizzly <literal>Response</literal>
+                    is only possible via <literal>jakarta.inject.Provider</literal> instance. (Grizzly <literal>Response</literal>
                     does not suffer the same restriction.)
                 </para>
 
@@ -426,7 +426,7 @@ HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);</pro
                     <literal>org.eclipse.jetty.server.Response</literal> instances into JAX-RS and Jersey
                     application resources and providers. However, since Jetty HTTP <literal>Request</literal> is not proxiable,
                     the injection of Jetty <literal>Request</literal> into singleton (by default) JAX-RS / Jersey providers
-                    is only possible via <literal>javax.inject.Provider</literal> instance. (Jetty <literal>Response</literal>
+                    is only possible via <literal>jakarta.inject.Provider</literal> instance. (Jetty <literal>Response</literal>
                     does not suffer the same restriction.)
                 </para>
 
@@ -1101,13 +1101,13 @@ public class StatelessEjbResource implements LocalEjb {
                 <para>
                     As explained in <link linkend="servlet-app-glassfish">2.3.1</link> , you don't need to add any specific
                     dependencies on GlassFish, Jersey is already packaged within GlassFish. You only need to add the
-                    <literal>provided</literal>-scoped dependencies to you project to be able to compile it. At runtime,
+                    <literal>provided</literal>-scoped dependencies to your project to be able to compile it. At runtime,
                     GlassFish will make sure that your application has access to the Jersey libraries.
                 </para>
 
                 <para>
                   Started with version 2.7, Jersey allows injecting Jersey specific types into CDI enabled JAX-RS components
-                  using the <literal>@javax.inject.Inject</literal> annotation. This covers also custom HK2 bindings, that are configured
+                  using the <literal>@jakarta.inject.Inject</literal> annotation. This covers also custom HK2 bindings, that are configured
                   as part of Jersey application. The feature specifically enables usage of Jersey monitoring statistics (provided that the statistic feature is turned on)
                   in CDI environment, where injection is the only mean to get access to monitoring data.
                 </para>

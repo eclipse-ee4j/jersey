@@ -28,8 +28,8 @@
     <description>OSGi HttpService example</description>
 
     <modules>
-        <module>bundle</module>
-        <module>functional-test</module>
+        <!--<module>bundle</module>-->
+<!--        <module>functional-test</module>-->
     </modules>
 
     <profiles>

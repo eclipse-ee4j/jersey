@@ -54,7 +54,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>App</mainClass>
+                    <mainClass>org.glassfish.jersey.examples.sse.jaxrs.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

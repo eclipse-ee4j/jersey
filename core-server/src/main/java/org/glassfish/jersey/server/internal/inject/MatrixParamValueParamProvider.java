@@ -22,8 +22,8 @@ import java.util.function.Function;
 import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.core.PathSegment;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.ContainerRequest;

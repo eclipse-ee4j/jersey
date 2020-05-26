@@ -18,13 +18,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptors;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * Shows injection of context objects and path parameters into the fields of a managed bean.

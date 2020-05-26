@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.json.entity;
 
-import javax.json.bind.annotation.JsonbVisibility;
+import jakarta.json.bind.annotation.JsonbVisibility;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 

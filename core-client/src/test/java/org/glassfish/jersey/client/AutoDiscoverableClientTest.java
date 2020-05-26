@@ -30,7 +30,7 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.core.Response;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;

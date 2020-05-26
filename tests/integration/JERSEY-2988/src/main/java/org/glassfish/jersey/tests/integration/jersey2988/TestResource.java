@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Path("/test")
 public class TestResource {

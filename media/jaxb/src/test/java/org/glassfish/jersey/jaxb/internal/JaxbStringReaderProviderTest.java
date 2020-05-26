@@ -22,6 +22,7 @@ package org.glassfish.jersey.jaxb.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.MediaType;
@@ -31,10 +32,11 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Providers;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.glassfish.jersey.jaxb.FeatureSupplier;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 
@@ -51,7 +53,13 @@ public class JaxbStringReaderProviderTest {
 
             @Override
             public SAXParserFactory get() {
-                return spf.get();
+                SAXParserFactory factory = spf.get();
+
+                for (Map.Entry<String, Boolean> entry : FeatureSupplier.allowDoctypeDeclFeature().getFeatures().entrySet()){
+                    JaxbFeatureUtil.setProperty(SAXParserFactory.class, entry, factory::setFeature);
+                }
+
+                return factory;
             }
         };
 

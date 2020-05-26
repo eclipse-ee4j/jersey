@@ -19,8 +19,8 @@ package org.glassfish.jersey.server.validation.internal;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
 
 /**
  * {@link ConstraintValidatorFactory} with support of injecting Jersey providers/resources.

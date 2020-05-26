@@ -26,8 +26,8 @@ import java.util.function.Function;
 
 import jakarta.ws.rs.core.Context;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.ContextInjectionResolver;
 import org.glassfish.jersey.internal.inject.ForeignRequestScopeBridge;

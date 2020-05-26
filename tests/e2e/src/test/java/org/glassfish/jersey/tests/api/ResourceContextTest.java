@@ -23,7 +23,7 @@ import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.server.ResourceConfig;

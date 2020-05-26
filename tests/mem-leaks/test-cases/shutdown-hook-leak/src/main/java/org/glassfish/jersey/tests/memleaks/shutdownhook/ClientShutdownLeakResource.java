@@ -25,7 +25,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * This resource reproduces JERSEY-2786 when {@link #invokeClient()} called repetitively.

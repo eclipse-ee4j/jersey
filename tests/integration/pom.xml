@@ -53,7 +53,7 @@
         <module>jersey-1928</module>
         <module>jersey-1960</module>
         <module>jersey-1964</module>
-        <!--<module>jersey-2031</module>-->
+        <module>jersey-2031</module>
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
@@ -62,7 +62,7 @@
         <module>jersey-2167</module>
         <module>jersey-2176</module>
         <module>jersey-2184</module>
-<!--        <module>jersey-2255</module> Moxy-->
+        <module>jersey-2255</module>
         <module>jersey-2322</module>
         <module>jersey-2335</module>
         <module>jersey-2421</module>
@@ -77,14 +77,17 @@
         <module>jersey-2794</module>
         <module>jersey-2846</module>
         <module>jersey-2878</module>
-<!--        <module>jersey-2892</module> Moxy-->
+        <module>jersey-2892</module>
 	    <module>jersey-3796</module>
         <module>jersey-780</module>
         <module>jersey-3670</module>
         <module>jersey-3992</module>
+        <module>jersey-4003</module>
         <module>jersey-4099</module>
         <module>jersey-4321</module>
-<!--        <module>portability-jersey-1</module>-->
+        <module>jetty-response-close</module>
+        <module>microprofile</module>
+<!--        <module>portability-jersey-1</module>--> <!--TODO remove when Jakartified -->
 <!--        <module>portability-jersey-2</module>-->
         <module>property-check</module>
         <module>security-digest</module>
@@ -105,7 +108,7 @@
         <module>servlet-2.5-mvc-3</module>
         <module>servlet-2.5-reload</module>
         <module>servlet-3-async</module>
-<!--        <module>servlet-3-chunked-io</module> Moxy-->
+        <module>servlet-3-chunked-io</module>
         <module>servlet-3-filter</module>
         <module>servlet-3-gf-async</module>
         <module>servlet-3-inflector-1</module>
@@ -127,9 +130,6 @@
         <module>spring4</module>
         <module>spring5</module>
         <module>tracing-support</module>
-        <module>microprofile/config/helidon</module>
-        <module>microprofile/config/webapp</module>
-<!--        <module>microprofile/rest-client</module>-->
     </modules>
 
     <profiles>

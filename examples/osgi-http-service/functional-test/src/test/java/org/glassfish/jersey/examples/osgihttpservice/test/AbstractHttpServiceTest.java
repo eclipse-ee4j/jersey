@@ -28,8 +28,9 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.UriBuilder;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import org.ops4j.pax.exam.Configuration;
@@ -85,7 +86,7 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(BundleLocationProperty).value(bundleLocation),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
-                systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
                 systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
                 systemProperty(JAXRS_CLIENT_BUILDER).value("org.glassfish.jersey.client.JerseyClientBuilder"),
 
@@ -96,7 +97,7 @@ public abstract class AbstractHttpServiceTest {
                 // mavenBundle("org.ops4j.pax.logging", "pax-logging-api", "1.4"),
                 // mavenBundle("org.ops4j.pax.logging", "pax-logging-service", "1.4"),
 
-                // javax.annotation has to go first!
+                // jakarta.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
                 mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),
@@ -115,6 +116,7 @@ public abstract class AbstractHttpServiceTest {
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 //SUN JAXB IMPL OSGI
                 mavenBundle().groupId("com.sun.xml.bind").artifactId("jaxb-osgi").versionAsInProject().versionAsInProject(),
+                getActivationBundle(),
                 systemPackage("com.sun.source.tree"),
                 systemPackage("com.sun.source.util"),
 
@@ -255,5 +257,11 @@ public abstract class AbstractHttpServiceTest {
         Dictionary result = new Hashtable();
         result.put(EventConstants.EVENT_TOPIC, topics);
         return result;
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 }

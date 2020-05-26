@@ -21,7 +21,7 @@ import java.util.Map;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.FeatureContext;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 

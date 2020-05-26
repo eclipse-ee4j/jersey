@@ -40,10 +40,11 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -399,6 +400,7 @@ public class LoggingFeatureTest {
             return new ResourceConfig(MyResource.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, "INFO")
+                    .property(ServerProperties.WADL_FEATURE_DISABLE, true)
                     .register(CustomFilter.class);
         }
 

@@ -127,7 +127,7 @@
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
                             javax.activation.*;version="!",
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
@@ -186,8 +186,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

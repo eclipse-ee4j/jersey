@@ -27,7 +27,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;

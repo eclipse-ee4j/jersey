@@ -24,8 +24,8 @@ import java.util.Map;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
 
 import org.glassfish.jersey.linking.mapping.ResourceMappingContext;
 import org.glassfish.jersey.uri.internal.UriTemplateParser;

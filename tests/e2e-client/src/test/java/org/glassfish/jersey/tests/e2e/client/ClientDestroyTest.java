@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import org.glassfish.jersey.client.ClientLifecycleListener;
 import org.glassfish.jersey.client.JerseyClient;
@@ -172,8 +172,9 @@ public class ClientDestroyTest extends JerseyTest {
     }
 
     public static class BarListener implements ClientRequestFilter, ClientLifecycleListener {
-        protected volatile boolean closed = false;
+        protected volatile boolean closedByClientClose = false;
         protected volatile boolean initialized = false;
+        protected volatile boolean closedByFinalize = false;
 
         @Override
         public void filter(final ClientRequestContext requestContext) throws IOException { /* do nothing */ }
@@ -185,11 +186,25 @@ public class ClientDestroyTest extends JerseyTest {
 
         @Override
         public synchronized void onClose() {
-            this.closed = true;
+            // There is the ClientRuntime created twice, each of which has filter "filterOnClient" registered.
+            // onClose can be called from Client#close or from ClientRuntime#finalize
+            if (ClientDestroyTest.isCalledFromFinalizer()) {
+                this.closedByFinalize = true;
+            } else {
+                closedByClientClose = true;
+            }
+        }
+
+        public boolean isClosedByClientClose() {
+            return closedByClientClose;
+        }
+
+        public boolean isClosedByFinalize() {
+            return closedByFinalize;
         }
 
         public boolean isClosed() {
-            return closed;
+            return closedByClientClose || closedByFinalize;
         }
 
         public boolean isInitialized() {
@@ -206,29 +221,39 @@ public class ClientDestroyTest extends JerseyTest {
         final JerseyClientBuilder builder = new JerseyClientBuilder();
         final JerseyClient client = builder.build();
 
-        final BarListener filter = new BarListener();
-        final BarListener filter2 = new BarListener2();
+        final BarListener filterOnClient = new BarListener();
+        final BarListener filterOnTarget = new BarListener2();
 
         // ClientRuntime initializes lazily, so it is forced by invoking a (dummy) request
-        client.register(filter2);                                                   // instance registered into client
-        client.target(getBaseUri()).register(filter).request().get(String.class);   // instance registration into target
+        client.register(filterOnTarget);                                                   // instance registered into client
+        client.target(getBaseUri()).register(filterOnClient).request().get(String.class);   // instance registration into target
 
-        assertTrue("Filter was expected to be already initialized.", filter.isInitialized());
-        assertTrue("Filter2 was expected to be already initialized.", filter2.isInitialized());
+        assertTrue("Filter registered on Client was expected to be already initialized.", filterOnClient.isInitialized());
+        assertTrue("Filter registered on Target was expected to be already initialized.", filterOnTarget.isInitialized());
 
         client.target(getBaseUri()).register(FooListener.class).request().get(String.class); // class registration into target
 
         assertTrue("Class-registered filter was expected to be already initialized", FooListener.isInitialized());
 
         assertFalse("Class-registered filter was expected to be still open.", FooListener.isClosed());
-        assertFalse("Filter was expected to be still open.", filter.isClosed());
-        assertFalse("Filter2 was expected to be still open.", filter2.isClosed());
+        assertFalse("Filter registered on Client was expected to be still open.", filterOnClient.isClosedByClientClose());
+        assertFalse("Filter registered on Target was expected to be still open.", filterOnTarget.isClosedByClientClose());
 
         client.close();
 
         assertTrue("Class-registered filter was expected to be closed.", FooListener.isClosed());
-        assertTrue("Filter was expected to be closed.", filter.isClosed());
-        assertTrue("Filter2 was expected to be closed.", filter2.isClosed());
+        assertTrue("Filter registered on Client was expected to be closed.", filterOnClient.isClosed());
+        assertTrue("Filter registered on Target was expected to be closed.", filterOnTarget.isClosed());
+    }
+
+    private static boolean isCalledFromFinalizer() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : stackTraceElements) {
+            if ("finalize".equals(element.getMethodName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

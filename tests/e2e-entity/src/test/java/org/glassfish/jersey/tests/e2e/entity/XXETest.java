@@ -35,6 +35,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.glassfish.jersey.jaxb.FeatureSupplier;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -118,7 +119,7 @@ public class XXETest extends JerseyTest {
 
     @Override
     public ResourceConfig configure() {
-        return new ResourceConfig(EntityHolderResource.class);
+        return new ResourceConfig(EntityHolderResource.class).register(FeatureSupplier.allowDoctypeDeclFeature());
     }
 
     @Test
@@ -200,6 +201,6 @@ public class XXETest extends JerseyTest {
 
     // NOTE - this is a tes migrated from Jersey 1.x tests. The original test class contains also insecure "versions" of the
     // methods above configured via FeaturesAndProperties.FEATURE_DISABLE_XML_SECURITY. Those methods are ommited,
-    // as Jersey 2 does not support such consturct.
+    // as Jersey 2 does not support such construct.
 
 }

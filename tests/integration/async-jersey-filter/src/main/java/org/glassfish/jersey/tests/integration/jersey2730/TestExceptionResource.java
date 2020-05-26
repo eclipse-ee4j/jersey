@@ -21,7 +21,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.servlet.internal.ResponseWriter;
 import org.glassfish.jersey.tests.integration.jersey2730.exception.MappedException;
