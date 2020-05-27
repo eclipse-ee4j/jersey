@@ -104,11 +104,12 @@ class ClientFilteringStages {
      */
     private static <T> Iterable<T> prependFilter(T filter, Iterable<T> filters) {
         return new Iterable<T>() {
-            boolean wasInterceptorFilterNext = false;
-            final Iterator<T> filterIterator = filters.iterator();
             @Override
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
+                    final Iterator<T> filterIterator = filters.iterator();
+                    boolean wasInterceptorFilterNext = false;
+
                     @Override
                     public boolean hasNext() {
                         return !wasInterceptorFilterNext || filterIterator.hasNext();
