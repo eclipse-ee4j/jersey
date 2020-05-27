@@ -21,15 +21,15 @@ import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.util.JdkVersion;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 import java.io.OutputStream;
 
 /**
  * Provider for Helidon WebClient {@link Connector} that utilizes the Helidon HTTP Client to send and receive
  * HTTP request and responses. JDK 8 is not supported by the Helidon Connector.
- * <p/>
+ * <p>
  * The following properties are only supported at construction of this class:
  * <ul>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#CONNECT_TIMEOUT}</li>
@@ -57,8 +57,8 @@ import java.io.OutputStream;
  * </p>
  * <p>
  * This connector uses {@link org.glassfish.jersey.client.ClientProperties#OUTBOUND_CONTENT_LENGTH_BUFFER} to buffer the entity
- * written for instance by {@link javax.ws.rs.core.StreamingOutput}. Should the buffer be small and
- * {@link javax.ws.rs.core.StreamingOutput#write(OutputStream)} be called many times, the performance can drop. The Content-Length
+ * written for instance by {@link jakarta.ws.rs.core.StreamingOutput}. Should the buffer be small and
+ * {@link jakarta.ws.rs.core.StreamingOutput#write(OutputStream)} be called many times, the performance can drop. The Content-Length
  * or the Content_Encoding header is set by the underlaying Helidon WebClient regardless of the
  * {@link org.glassfish.jersey.client.ClientProperties#OUTBOUND_CONTENT_LENGTH_BUFFER} size, however.
  * </p>

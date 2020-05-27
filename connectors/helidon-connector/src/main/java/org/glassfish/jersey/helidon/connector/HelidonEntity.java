@@ -32,7 +32,7 @@ import io.helidon.webclient.WebClientResponse;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;

@@ -31,8 +31,8 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
