@@ -30,16 +30,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
@@ -475,19 +475,19 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      *                 to the client.
      * @param chain    the chain of filters from which the next filter can be invoked.
      * @throws java.io.IOException            in case of an I/O error.
-     * @throws javax.servlet.ServletException in case of an error while executing the
+     * @throws jakarta.servlet.ServletException in case of an error while executing the
      *                                        filter chain.
      */
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        if (request.getAttribute("javax.servlet.include.request_uri") != null) {
-            final String includeRequestURI = (String) request.getAttribute("javax.servlet.include.request_uri");
+        if (request.getAttribute("jakarta.servlet.include.request_uri") != null) {
+            final String includeRequestURI = (String) request.getAttribute("jakarta.servlet.include.request_uri");
 
             if (!includeRequestURI.equals(request.getRequestURI())) {
                 doFilter(request, response, chain,
                         includeRequestURI,
-                        (String) request.getAttribute("javax.servlet.include.servlet_path"),
-                        (String) request.getAttribute("javax.servlet.include.query_string"));
+                        (String) request.getAttribute("jakarta.servlet.include.servlet_path"),
+                        (String) request.getAttribute("jakarta.servlet.include.query_string"));
                 return;
             }
         }

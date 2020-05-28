@@ -21,6 +21,7 @@ import org.glassfish.jersey.helidon.connector.HelidonConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import jakarta.annotation.PostConstruct;
@@ -106,6 +107,7 @@ public class SseTest extends JerseyTest {
     }
 
     @Test
+    @Ignore //TODO - remove after jakartification
     public void testSend() throws InterruptedException {
         final StringBuilder sb = new StringBuilder();
         final CountDownLatch latch = new CountDownLatch(10);

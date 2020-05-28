@@ -19,7 +19,7 @@ package org.glassfish.jersey.jetty.servlet;
 import java.net.URI;
 import java.util.Map;
 
-import javax.servlet.Servlet;
+import jakarta.servlet.Servlet;
 
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.servlet.ServletContainer;

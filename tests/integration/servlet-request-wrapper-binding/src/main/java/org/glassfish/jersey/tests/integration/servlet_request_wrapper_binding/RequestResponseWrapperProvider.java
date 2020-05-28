@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.tests.integration.servlet_request_wrapper_binding;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.server.spi.RequestScopedInitializer;
