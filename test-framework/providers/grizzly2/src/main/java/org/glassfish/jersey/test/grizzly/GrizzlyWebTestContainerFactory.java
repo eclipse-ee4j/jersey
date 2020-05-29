@@ -29,10 +29,10 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.UriBuilder;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletRegistration;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.http.HttpServlet;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
@@ -201,7 +201,7 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
 
         private EnumSet<DispatcherType> grizzlyDispatcherTypes(final Set<DispatcherType> dispatcherTypes) {
             final Set<DispatcherType> grizzlyDispatcherTypes = new HashSet<>();
-            for (final javax.servlet.DispatcherType servletDispatchType : dispatcherTypes) {
+            for (final jakarta.servlet.DispatcherType servletDispatchType : dispatcherTypes) {
                 grizzlyDispatcherTypes.add(DispatcherType.valueOf(servletDispatchType.name()));
             }
             return EnumSet.copyOf(grizzlyDispatcherTypes);

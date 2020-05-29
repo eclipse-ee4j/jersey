@@ -70,9 +70,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <!-- TODO remove afer jakartification is done-->
                 <configuration>
-                    <excludes>
-                        <exclude>org/glassfish/jersey/tests/integration/servlet_25_mvc_1/ItemITCase.java</exclude>
-                    </excludes>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
