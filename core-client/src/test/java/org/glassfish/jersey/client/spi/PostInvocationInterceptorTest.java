@@ -252,6 +252,19 @@ public class PostInvocationInterceptorTest {
         }
     }
 
+    @Test
+    public void testPostInvocationInterceptorIsHitforEachRequest() {
+        final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new CounterPostInvocationInterceptor((a, b) -> true, (a, b) -> false))
+                .register(new AbortRequestFilter()).build().target(URL).request();
+        for (int i = 1; i != 10; i++) {
+            try (Response response = builder.get()) {
+                Assert.assertEquals(200, response.getStatus());
+                Assert.assertEquals(i, counter.get());
+            }
+        }
+    }
+
     private static class TestInvocationCallback implements InvocationCallback<Response> {
         private final Predicate<Response> responsePredicate;
         private final Predicate<Throwable> throwablePredicate;

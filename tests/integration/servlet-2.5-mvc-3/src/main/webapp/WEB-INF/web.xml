@@ -27,7 +27,7 @@
         </init-param>
         <init-param>
             <param-name>jersey.config.server.mvc.templateBasePath.jsp</param-name>
-            <param-value>/jsp/</param-value>
+            <param-value>/jsp</param-value>
         </init-param>
         <!-- pass to next filter if Jersey/App returns 404 -->
         <init-param>

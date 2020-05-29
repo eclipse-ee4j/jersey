@@ -75,4 +75,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>HelidonConnector</id>
+            <activation>
+                <jdk>11</jdk>
+            </activation>
+            <modules>
+                <module>helidon-connector</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

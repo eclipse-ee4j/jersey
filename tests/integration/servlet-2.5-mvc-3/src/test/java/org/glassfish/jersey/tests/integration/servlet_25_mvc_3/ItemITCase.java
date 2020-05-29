@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_3.resource.Book;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -52,6 +52,7 @@ public class ItemITCase extends TestSupport {
     }
 
     @Test
+    @Ignore("Jetty 9 is ignoring the charset")
     public void testResourceAsHtmlIso88592() throws Exception {
         final Response response = item1resource().path("iso").request().get();
         response.bufferEntity();
