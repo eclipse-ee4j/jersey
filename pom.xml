@@ -939,7 +939,7 @@
                 </property>
             </activation>
             <properties>
-                <release.tests.args>-Dskip.tests=true</release.tests.args>
+<!--                <release.tests.args>-Dskip.tests=true</release.tests.args>-->
                 <skip.tests>true</skip.tests>
                 <skip.e2e>true</skip.e2e>
             </properties>
@@ -2041,12 +2041,12 @@
             javax.enterprise
         </findbugs.glassfish.logging.validLoggerPrefixes>
         <java.version>1.8</java.version>
-        <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>
-        <netbeans.hint.license>gf-cddl-gpl</netbeans.hint.license>
+<!--        <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>-->
+<!--        <netbeans.hint.license>gf-cddl-gpl</netbeans.hint.license>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <release.tests.args>-Dmaven.test.skip=false</release.tests.args>
-        <release.preparationGoals>clean install</release.preparationGoals>
+<!--        <release.tests.args>-Dmaven.test.skip=false</release.tests.args>-->
+<!--        <release.preparationGoals>clean install</release.preparationGoals>-->
         <skip.tests>false</skip.tests>
         <xdk.absolute.path />
         <surefire.security.argline />
@@ -2062,25 +2062,24 @@
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>8.0</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
-        <cdi.api.version>3.0.0-M2</cdi.api.version>
+
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <config.version>1.2.1</config.version>
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
         <checkstyle.version>8.28</checkstyle.version>
         <easymock.version>3.3</easymock.version>
-        <ejb.version>4.0.0-RC1</ejb.version>
+
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <findbugs.version>3.0.4</findbugs.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
-        <grizzly2.version>3.0.0-M1</grizzly2.version>
+
         <guava.version>18.0</guava.version>
         <hamcrest.version>1.3</hamcrest.version>
         <helidon.version>1.0.3</helidon.version>
         <xmlunit.version>1.6</xmlunit.version>
-        <hk2.version>3.0.0-M1</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
@@ -2093,9 +2092,6 @@
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.44</jmockit.version>
-        <jsp.version>3.0.0-M1</jsp.version>
-        <jstl.version>2.0.0-RC1</jstl.version>
-        <jta.api.version>2.0.0-RC1</jta.api.version>
         <junit5.version>5.6.0</junit5.version>
         <kryo.version>4.0.1</kryo.version>
         <mockito.version>1.10.19</mockito.version>
@@ -2113,21 +2109,32 @@
         <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
         <servlet4.version>4.0.3</servlet4.version>
-        <servlet5.version>5.0.0-M1</servlet5.version>
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
-        <validation.impl.version>7.0.0.Alpha1</validation.impl.version>
+
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
+        <!-- Jakartified, eligible for CQ -->
+        <validation.impl.version>7.0.0.Alpha1</validation.impl.version>
         <weld3.version>4.0.0.Alpha2</weld3.version>
         <weld4.version>4.0.0.Alpha2</weld4.version>
+        <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
 
-        <!-- do not need CQs -->
+        <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>5.1.0</gf.impl.version>
+        <!-- Jakartified -->
+        <cdi.api.version>3.0.0-M2</cdi.api.version>
+        <ejb.version>4.0.0-RC1</ejb.version>
+        <grizzly2.version>3.0.0-M1</grizzly2.version>
+        <hk2.version>3.0.0-M1</hk2.version>
+        <jsp.version>3.0.0-M1</jsp.version>
+        <jstl.version>2.0.0-RC1</jstl.version>
+        <jta.api.version>2.0.0-RC1</jta.api.version>
+        <servlet5.version>5.0.0-M1</servlet5.version>
         <istack.commons.runtime.version>4.0.0-M3</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.0-RC3</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.0-RC3</jakarta.activation.version>
@@ -2136,7 +2143,6 @@
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.0.0-RC1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.0-RC3</jakarta.inject.version>
-        <javax.annotation.version>1.3.5</javax.annotation.version>
         <jakarta.interceptor.version>2.0.0-RC2</jakarta.interceptor.version>
         <jakarta.persistence.version>3.0.0-RC2</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0-M1</jakarta.validation.api.version>
@@ -2144,14 +2150,20 @@
         <jaxb.ri.version>3.0.0-M3</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
-        <jetty.plugin.version>6.1.26</jetty.plugin.version>
-        <jetty.version>9.4.27.v20200227</jetty.version>
-        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0-RC1</jsonb.api.version>
         <jsonp.ri.version>2.0.0-RC2</jsonp.ri.version>
         <jsonp.jaxrs.version>2.0.0-RC2</jsonp.jaxrs.version>
-        <mimepull.version>1.9.13</mimepull.version>
         <moxy.version>3.0.0-M1</moxy.version>
         <yasson.version>2.0.0-M1</yasson.version>
+        <!-- END of Jakartified -->
+
+        <javax.annotation.version>1.3.5</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
+
+        <jetty.plugin.version>6.1.26</jetty.plugin.version>
+        <jetty.version>9.4.27.v20200227</jetty.version>
+        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
+
+        <mimepull.version>1.9.13</mimepull.version>
+
     </properties>
 </project>
