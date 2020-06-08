@@ -54,8 +54,9 @@
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
 <!ENTITY jaxrs.release.uri "https://github.com/jax-rs">
-<!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/&jax-rs.version;/">
-<!ENTITY jaxrs21.javadoc.uri "#/javax/ws/rs">   <!-- TODO - once we have published javadocs to link here -->
+<!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/2.1/javax/ws/rs">
+<!ENTITY jaxrs21.javadoc.uri "https://jax-rs.github.io/apidocs/2.1/javax/ws/rs">
+<!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
 <!ENTITY jersey.ext.declarative-linking.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-declarative-linking/dependencies.html'>jersey-declarative-linking</link>" >
@@ -67,6 +68,7 @@
 <!ENTITY jersey.media.json-jettison.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-json-jettison/dependencies.html'>jersey-media-json-jettison</link>" >
 <!ENTITY jersey.media.json-jackson.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-json-jackson/dependencies.html'>jersey-media-json-jackson</link>" >
 <!ENTITY jersey.media.json-jackson1.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-json-jackson1/dependencies.html'>jersey-media-json-jackson1</link>" >
+<!ENTITY jersey.media.json-binding.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-json-binding/dependencies.html'>jersey-media-json-binding</link>" >
 <!ENTITY jersey.media.moxy.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-moxy/dependencies.html'>jersey-media-moxy</link>" >
 <!ENTITY jersey.media.multipart.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-media-multipart/dependencies.html'>jersey-media-multipart</link>" >
 <!ENTITY jersey.ext.mvc.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-mvc/dependencies.html'>jersey-mvc</link>" >
@@ -103,6 +105,7 @@
 <!ENTITY microprofile.spec.link "<link xlink:href='https://microprofile.io/project/eclipse/microprofile-config'>Microprofile Config Specification</link>">
 <!ENTITY helidon.link "<link xlink:href='https://helidon.io/'>Helidon</link>">
 <!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
+<!ENTITY yasson.link "<link xlink:href='https://eclipse-ee4j.github.io/yasson/'>Yasson</link>">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Configuration.html'>Configuration</link>">
@@ -597,6 +600,8 @@
 <!ENTITY javax.ws.rs.sse.SseEventSource "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSource.html'>SseEventSource</link>">
 <!ENTITY javax.ws.rs.sse.InboundSseEvent "<link xlink:href='&jaxrs21.javadoc.uri;/sse/InboundSseEvent.html'>InboundSseEvent</link>">
 
+<!ENTITY jsonb.JsonbConfig "<link xlink:href='&jsonb.javadoc.uri;/JsonbConfig'>JsonbConfig</link>">
+
 <!-- Links to specific JIRA issues -->
 <!ENTITY jersey.jira.2883 "<link xlink:href='&jira.uri.prefix;/2838'>JERSEY-2838</link>">
 
@@ -636,6 +641,7 @@
 <!ENTITY lit.jersey-media-json-jettison "<literal>jersey-media-json-jettison</literal>" >
 <!ENTITY lit.jersey-media-json-jackson "<literal>jersey-media-json-jackson</literal>" >
 <!ENTITY lit.jersey-media-json-jackson1 "<literal>jersey-media-json-jackson1</literal>" >
+<!ENTITY lit.jersey-media-json-binding "<literal>jersey-media-json-binding</literal>" >
 <!ENTITY lit.jersey-media-moxy "<literal>jersey-media-moxy</literal>" >
 <!ENTITY lit.jersey-media-multipart "<literal>jersey-media-multipart</literal>" >
 <!ENTITY lit.jersey-rx-client "<literal>jersey-rx-client</literal>" >
@@ -903,6 +909,7 @@
 <!ENTITY lit.jersey.media.JettisonConfig "<literal>JettisonConfig</literal>" >
 <!ENTITY lit.jersey.media.JettisonJaxbContext "<literal>JettisonJaxbContext</literal>" >
 <!ENTITY lit.jersey.media.JsonProcessingFeature "<literal>JsonProcessingFeature</literal>" >
+<!ENTITY lit.jersey.media.JsonBindingFeature "<literal>JsonBindingFeature</literal>" >
 <!ENTITY lit.jersey.media.MoxyJsonConfig "<literal>MoxyJsonConfig</literal>" >
 <!ENTITY lit.jersey.media.MoxyJsonFeature "<literal>MoxyJsonFeature</literal>" >
 <!ENTITY lit.jersey.media.ObjectMapper "<literal>ObjectMapper</literal>" >
@@ -1036,3 +1043,5 @@
 <!ENTITY lit.jersey.test.spi.TestContainerFactory "<literal>TestContainerFactory</literal>">
 <!ENTITY lit.jersey.test.util.LoopBackConnectorProvider "<literal>LoopBackConnectorProvider</literal>">
 <!ENTITY lit.jersey.test.util.ContainerRequestBuilder "<literal>ContainerRequestBuilder</literal>">
+
+<!ENTITY lit.jsonb.Jsonb "<literal>Jsonb</literal>">
