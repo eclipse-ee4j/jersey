@@ -133,6 +133,7 @@
         <module>spring4</module>
         <module>spring5</module>
         <module>tracing-support</module>
+        <module>reactive-streams</module>
     </modules>
 
     <profiles>
