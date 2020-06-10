@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,11 +37,11 @@ import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.sse.SseEventSink;
 
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.server.model.internal.SseTypeResolver;
 import org.glassfish.jersey.server.spi.internal.ParameterValueHelper;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
@@ -85,7 +85,7 @@ class ResourceMethodValidator extends AbstractResourceModelVisitor {
         if ("GET".equals(method.getHttpMethod())) {
             final long eventSinkCount = invocable.getParameters()
                     .stream()
-                    .filter(parameter -> SseEventSink.class.equals(parameter.getRawType()))
+                    .filter(parameter -> SseTypeResolver.isSseSinkParam(parameter.getRawType()))
                     .count();
 
             final boolean isSse = eventSinkCount > 0;
@@ -213,7 +213,8 @@ class ResourceMethodValidator extends AbstractResourceModelVisitor {
     }
 
     private boolean isSseInjected(final Invocable invocable) {
-        return invocable.getParameters().stream().anyMatch(parameter -> SseEventSink.class.equals(parameter.getRawType()));
+        return invocable.getParameters().stream()
+                .anyMatch(parameter -> SseTypeResolver.isSseSinkParam(parameter.getRawType()));
     }
 
     private static final Set<Class> PARAM_ANNOTATION_SET = createParamAnnotationSet();

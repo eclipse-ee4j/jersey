@@ -299,6 +299,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
             closed = true;
             // remember the exception (it will get rethrown from finally clause, once it does it's work)
             ex = e;
+            onClose(e);
         } finally {
             if (closed) {
                 try {
@@ -347,6 +348,14 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      */
     public boolean isClosed() {
         return closed;
+    }
+
+    /**
+     * Executed only in case of close being triggered by client.
+     * @param e Exception causing the close
+     */
+    protected void onClose(Exception e){
+
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

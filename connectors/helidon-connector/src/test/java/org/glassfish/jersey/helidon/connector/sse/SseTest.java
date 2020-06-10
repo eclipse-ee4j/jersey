@@ -110,8 +110,10 @@ public class SseTest extends JerseyTest {
         final StringBuilder sb = new StringBuilder();
         final CountDownLatch latch = new CountDownLatch(10);
         try (SseEventSource source = SseEventSource.target(target().path("simple")).build()) {
-            source.register((event) -> sb.append(event.readData()));
-            source.register((event) -> latch.countDown());
+            source.register((event) -> {
+                sb.append(event.readData());
+                latch.countDown();
+            });
             source.open();
 
             latch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
@@ -158,9 +160,11 @@ public class SseTest extends JerseyTest {
 
         private void register() throws InterruptedException {
             final CountDownLatch latch = new CountDownLatch(1);
-            source.register((event) -> message.append(event.readData()));
-            source.register((event) -> latch.countDown());
-            source.register((event) -> messageLatch.countDown());
+            source.register((event) -> {
+                message.append(event.readData());
+                latch.countDown();
+                messageLatch.countDown();
+            });
             source.open();
 
             latch.await(WAIT_TIME, TimeUnit.MILLISECONDS);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -76,7 +76,7 @@ class JavaResourceMethodDispatcherProvider implements ResourceMethodDispatcher.P
             // return type is void
             int i = 0;
             for (final Parameter parameter : resourceMethod.getParameters()) {
-                if (SseEventSink.class.equals(parameter.getRawType())) {
+                if (SseTypeResolver.isSseSinkParam(parameter.getRawType())) {
                     resourceMethodDispatcher =
                             new SseEventSinkInvoker(resourceMethod, invocationHandler, valueProviders, validator, i);
                     break;
