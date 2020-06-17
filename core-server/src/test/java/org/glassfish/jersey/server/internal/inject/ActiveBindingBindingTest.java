@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,23 +31,21 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.PerLookup;
-import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.process.internal.RequestScoped;
+import org.glassfish.jersey.server.internal.process.RequestProcessingContextReference;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
 
 import org.glassfish.hk2.api.DescriptorType;
 import org.glassfish.hk2.api.DescriptorVisibility;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import org.jvnet.hk2.internal.ServiceHandleImpl;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
@@ -139,7 +137,6 @@ public class ActiveBindingBindingTest extends AbstractTest {
     }
 
     @Test
-    @Ignore("At the time of ignoring this test, ResourceConfig does not support HK2 Binder registering.")
     public void testReq() throws Exception {
 
         // bootstrap the test application
@@ -250,16 +247,16 @@ public class ActiveBindingBindingTest extends AbstractTest {
 
             boolean direct = false;
 
-            final javax.inject.Provider<Ref<RequestProcessingContext>> ctxRef =
-                    injectionManager.getInstance(new GenericType<Provider<Ref<RequestProcessingContext>>>() {
+            final Provider<RequestProcessingContextReference> ctxRef =
+                    injectionManager.getInstance(new GenericType<Provider<RequestProcessingContextReference>>() {
                                         }.getType());
 
             if (serviceHandle instanceof ServiceHandleImpl) {
                 final ServiceHandleImpl serviceHandleImpl = (ServiceHandleImpl) serviceHandle;
-                final Class<? extends Annotation> scopeAnnotation =
-                        serviceHandleImpl.getOriginalRequest().getInjecteeDescriptor().getScopeAnnotation();
+                final String scopeAnnotation =
+                        serviceHandleImpl.getOriginalRequest().getInjecteeDescriptor().getScope();
 
-                if (scopeAnnotation == RequestScoped.class || scopeAnnotation == null) {
+                if (RequestScoped.class.getName().equals(scopeAnnotation) || scopeAnnotation == null) {
                     direct = true;
                 }
             }
