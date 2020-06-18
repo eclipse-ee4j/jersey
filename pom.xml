@@ -2151,8 +2151,8 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
         <jsonb.api.version>2.0.0-RC1</jsonb.api.version>
-        <jsonp.ri.version>2.0.0-RC2</jsonp.ri.version>
-        <jsonp.jaxrs.version>2.0.0-RC2</jsonp.jaxrs.version>
+        <jsonp.ri.version>2.0.0-RC3</jsonp.ri.version>
+        <jsonp.jaxrs.version>2.0.0-RC3</jsonp.jaxrs.version>
         <moxy.version>3.0.0-M1</moxy.version>
         <yasson.version>2.0.0-M2</yasson.version>
         <!-- END of Jakartified -->
