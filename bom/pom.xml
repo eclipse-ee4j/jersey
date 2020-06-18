@@ -399,10 +399,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7.1</version>
-                <configuration>
-                    <generateProjectInfo>false</generateProjectInfo>
-                    <generateReports>true</generateReports>
-                </configuration>
             </plugin>
         </plugins>
     </build>
