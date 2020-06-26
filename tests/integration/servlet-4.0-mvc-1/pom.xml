@@ -26,9 +26,9 @@
         <version>2.32.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>servlet-2.5-mvc-4</artifactId>
+    <artifactId>servlet-4.0-mvc-1</artifactId>
     <packaging>war</packaging>
-    <name>jersey-tests-integration-servlet-2.5-mvc-4</name>
+    <name>jersey-tests-integration-servlet-4.0-mvc-1</name>
 
     <description>Servlet integration test - servlet-2.5-mvc-4 - filter - MVC - jersey.config.servlet.JspTemplatesBasePath</description>
 
@@ -47,9 +47,9 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet2.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet4.version}</version>
         </dependency>
 
         <dependency>

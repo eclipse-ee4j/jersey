@@ -107,7 +107,6 @@
         <module>servlet-2.5-mvc-1</module>
         <module>servlet-2.5-mvc-2</module>
         <module>servlet-2.5-mvc-3</module>
-	<module>servlet-2.5-mvc-4</module>
         <module>servlet-2.5-reload</module>
         <module>servlet-3-async</module>
         <module>servlet-3-chunked-io</module>
@@ -125,6 +124,7 @@
         <module>servlet-3-init-provider</module>
         <module>servlet-3-params</module>
         <module>servlet-3-sse-1</module>
+        <module>servlet-4.0-mvc-1</module>
         <module>servlet-request-wrapper-binding-2</module>
         <module>servlet-request-wrapper-binding</module>
         <module>servlet-tests</module>
