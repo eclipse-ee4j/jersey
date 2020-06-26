@@ -13,7 +13,7 @@ links:
   source: https://github.com/eclipse-ee4j/jersey
   docs: https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/index.html
   javadocs: https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/index.html
-  download: /download.html
+  download: https://eclipse-ee4j.github.io/jersey/download.html
   mailinglist: https://accounts.eclipse.org/mailing-list/jersey-dev
   hide_issuetracker: true
   honzablog: http://blog.supol.info
