@@ -14,13 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.integration.servlet_25_mvc_4;
+package org.glassfish.jersey.tests.integration.servlet_40_mvc_1;
 
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.EncodingFilter;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
-import org.glassfish.jersey.tests.integration.servlet_25_mvc_4.resource.ExampleResource;
+import org.glassfish.jersey.tests.integration.servlet_40_mvc_1.resource.ExampleResource;
 
 public class MyApplication extends ResourceConfig {
 

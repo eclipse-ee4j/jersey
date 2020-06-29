@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.integration.servlet_25_mvc_4;
+package org.glassfish.jersey.tests.integration.servlet_40_mvc_1;
 
 import javax.ws.rs.core.Application;
 
@@ -23,6 +23,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.tests.integration.servlet_40_mvc_1.MyApplication;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
