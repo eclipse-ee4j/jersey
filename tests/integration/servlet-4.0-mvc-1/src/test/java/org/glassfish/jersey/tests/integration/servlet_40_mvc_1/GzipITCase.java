@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.integration.servlet_25_mvc_4;
+package org.glassfish.jersey.tests.integration.servlet_40_mvc_1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
