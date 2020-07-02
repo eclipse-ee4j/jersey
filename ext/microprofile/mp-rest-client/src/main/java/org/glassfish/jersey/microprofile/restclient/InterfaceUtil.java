@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,6 +55,44 @@ class InterfaceUtil {
         Matcher m = PATTERN.matcher(template);
         while (m.find()) {
             allMatches.add(m.group());
+        }
+        return allMatches;
+    }
+
+    /**
+     * Parses all required parameters from expr string.
+     * Parameters encapsulated by {} or parameters with regexp expressions like {param: (regex_here)}
+     *
+     * @param expr string expression
+     * @return path params
+     */
+    static List<String> getAllMatchingParams(String expr) {
+        List<String> allMatches = new ArrayList<>();
+        if (expr == null || expr.isEmpty() || expr.indexOf('{') == -1) {
+            return allMatches;
+        }
+
+        boolean matching = false;
+        int parenthesisMatched = 0;
+        StringBuilder matchingParameter = new StringBuilder();
+        for (int i = 0; i < expr.length(); i++) {
+            char x = expr.charAt(i);
+
+            if (!matching && x == '{' && parenthesisMatched == 0) {
+                matching = true;
+            } else if (matching && x != ':' && x != '}') {
+                matchingParameter.append(x);
+            } else if (matching) {
+                allMatches.add(matchingParameter.toString());
+                matchingParameter.setLength(0);
+                matching = false;
+            }
+
+            if (x == '}') {
+                parenthesisMatched--;
+            } else if (x == '{') {
+                parenthesisMatched++;
+            }
         }
         return allMatches;
     }

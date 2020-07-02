@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonValue;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -73,6 +74,33 @@ public class ConsumesAndProducesTest extends JerseyTest {
                 .build(ApplicationResource.class);
 
         app.methodContentType(MediaType.TEXT_XML_TYPE, "something");
+    }
+
+    @Test
+    public void testMethodWithRegexPathParam() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        assertEquals(app.regex("bar"), "bar");
+    }
+
+    @Test
+    public void testMethodWithRegexPathParam0() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        assertEquals(app.regex0("foo", "1234"), "foo_1234");
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void testMethodWithRegexPathParam0Failure() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        app.regex0("foo", "12345");
     }
 
     private static class TestClientRequestFilter implements ClientRequestFilter {
