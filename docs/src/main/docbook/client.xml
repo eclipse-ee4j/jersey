@@ -1130,4 +1130,136 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             }
         </programlisting>
     </section>
+    <section>
+        <title>Jersey microprofile REST Client</title>
+        <section>
+            <title>Introduction</title>
+            <para>
+                Jersey provides a REST framework user friendly for all developer trying to build microservices.
+                In this chapter will be described basic features to get started.
+
+                Microservices is a type of application architecture. Instead of developing one big application, the application is built into a collection
+                of smaller services. All of the microservices work together to achieve bigger and more complex functionality.
+
+                First, add Jersey client dependency to your project and add the latest release under "version" tag.
+            </para>
+            <programlisting language="java">
+                <dependency>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-client</artifactId>
+                    <version></version>
+                </dependency>
+            </programlisting>
+        </section>
+        <section>
+            <title>Build Jersey REST client with builder</title>
+            <para>
+                Jersey provide a rest client builder to create the client in a programmatic way. The baseUri define the server endpoint.
+                The client use the interface implemented from the server side in order to communicate with it.
+                Use RestClientBuilder to build your client :
+            </para>
+            <programlisting language="java">
+                YourResource client = RestClientBuilder.newBuilder()
+                    .baseUri(new URI("http://localhost:8080/"))
+                    .build(YourResource.class);
+            </programlisting>
+            <para>
+                These 3 lines creates a proxy <literal>client</literal> which implement YourResource. You can now use the proxy to communicate with your server
+                by calling methods from the interface. It is the minimum requirement to build the rest client, nevertheless, it is possible to add
+                some configuration.
+
+                Consider this interface :
+            </para>
+            <programlisting language="java">
+                @Path("/resource")
+                public interface YourResource {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+            </programlisting>
+            <para>
+                This interface contains one method getTest() which return a String.
+
+                So, once the client is built, you can simply call the method from the client like this :
+            </para>
+            <programlisting language="java">
+                String testString = client.getTest();
+            </programlisting>
+            <para>
+                The Interface used by the rest client gather several concept from JAX-RS. For example, the HTTP verb annotations such as @GET, @POST etc ...
+                and the @Consumes and @Produces annotations are common with JAX-RS.
+                The parameter which can be injected with annotation like @PathParameter for example come from JAX-RS as well.
+                It makes the usage of jersey microprofile client very user friendly as it can re used component already develop in the JAX-RS server.
+            </para>
+            <programlisting language="java">
+                ResourceInterface client = RestClientBuilder.newBuilder()
+                    .baseUri(new URI("http://localhost:8080/"))
+                    .register(clientFilter.class)
+                    .build(ResourceInterface.class);
+            </programlisting>
+            <para>
+                .register method can be used to register an instance of a custom component.
+
+            </para>
+        </section>
+        <section>
+            <title>Build REST client with annotations - CDI</title>
+            <para>
+                Another way of building a microprofile rest client is to use the dedicated annotations @RegisterRestClient and @RestClient.
+                The interface used to create the microprofile rest client is considered as a CDI bean, and have to be annotated with @RegisterRestClient.
+                This annotation can be configured with the "baseUri" property to specify the base endpoint of the client.
+                The baseUri value can be overridden using configuration.
+                Once the rest client interface is annotated, it can be injected into any CDI bean thanks to @Inject.
+                The @Inject annotation will create an object and assign it to the variable during runtime.
+                @RestClient annotation will build the rest client during the injection using the interface annotated with @RegisterRestClient.
+
+                For example, annotation can be used in this way :
+            </para>
+            <programlisting language="java">
+                @RegisterRestClient("baseUri = http://localhost:8080/resource")
+                public interface YourResource {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+
+                public class Test {
+
+                    @Inject
+                    @RestClient
+                    YourResource restClient;
+
+                    public String testMethod(){
+                        return restClient.getTest();
+                    }
+                }
+            </programlisting>
+            <para>
+                Now restClient can be used in the same way as if it was built with the restClientBuilder.
+            </para>
+        </section>
+        <section>
+            <title>Register provider</title>
+            <para>
+                The programmatic way to register a provider is by using the .register() on the rest client as shown above. But there is another way to
+                achieve this goal by using @RegisterProvider on the target Interface.
+            </para>
+            <programlisting language="java">
+                @Path("resource")
+                @RegisterProvider(ResponseFilter.class)
+                public interface ResourceInterface {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+            </programlisting>
+            <para>
+                By using the @RegisterProvider annotation, there is no need to call the .register() method.
+            </para>
+        </section>
+    </section>
 </chapter>
