@@ -11,7 +11,6 @@
 package org.glassfish.jersey.example.bookshop.microprofile.server;
 
 import javax.ws.rs.BeanParam;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

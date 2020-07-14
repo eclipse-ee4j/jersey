@@ -87,10 +87,10 @@ public class LibraryClient {
                         .baseUri(new URI("http://localhost:8080/booking"))
                         .build(BookingFeatures.class);
 
-                ArrayList<Date> interval = randomDateArray();
+                ArrayList<Date> borrowingPeriod = randomDateArray();
 
                 Response response = bookingClient
-                        .reserveBookByName(customerName, randomBookName(), interval.get(0), interval.get(1));
+                        .reserveBookByName(customerName, randomBookName(), borrowingPeriod.get(0), borrowingPeriod.get(1));
 
                 String bookingFeedback = response.readEntity(String.class);
                 LOGGER.log(level, "Customer " + customerName + " : " + bookingFeedback);
@@ -104,7 +104,7 @@ public class LibraryClient {
                     LOGGER.log(level, "Customer " + customerName + " : " + response1.readEntity(String.class));
 
                     Response response2 = bookingClient
-                            .reserveBookByName(customerName, randomBookName(), interval.get(0), interval.get(1));
+                            .reserveBookByName(customerName, randomBookName(), borrowingPeriod.get(0), borrowingPeriod.get(1));
                     LOGGER.log(level, "Customer " + customerName + " : " + response2.readEntity(String.class));
                 }
                 LOGGER.log(level, "Customer " + customerName + " : Finished the book reservation. \n Close Thread.");
