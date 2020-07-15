@@ -1160,9 +1160,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             <title>Build Jersey REST client with builder</title>
             <para>
                 Jersey provides a microprofile rest client builder to create the client in a programmatic way. Use <literal>RestClientBuilder</literal>
-                class to build it with the <literal>newBuilder</literal> method. The baseUri define the server endpoint which will be reached by the client.
-                The client use an interface to communicate with the server.
-                Use RestClientBuilder to build your client :
+                class to build it with the <literal>newBuilder</literal> method. The <literal>baseUri</literal> define the server endpoint which will be reached by the client.
             </para>
             <programlisting language="java">
                 YourResource mpRestClient = RestClientBuilder.newBuilder()
