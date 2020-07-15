@@ -1186,7 +1186,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 Then the <literal>.keyStore</literal> containing client's private keys, and the certificates with their corresponding public keys.
                 Finally the <literal>.trustStore</literal> containing contain certificates from other parties the client is you expect to communicate with.
 
-                These are a none exhaustive list of possible configuration available, but it gives an insight of the microprofile rest client's configuration.
+                These are a non exhaustive list of possible configuration available, but it gives an insight of the microprofile rest client's configuration.
                 Once the client is configured, it is time to use it with the following example.
 
                 Consider this interface :
