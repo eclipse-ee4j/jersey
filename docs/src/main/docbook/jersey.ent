@@ -327,7 +327,7 @@
 <!ENTITY jersey.client.HttpUrlConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnector.html'>HttpUrlConnectorProvider</link>">
 <!ENTITY jersey.client.HttpUrlConnectorProvider.SET_METHOD_WORKAROUND "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnectorProvider.html#SET_METHOD_WORKAROUND'>HttpUrlConnector.SET_METHOD_WORKAROUND</link>" >
 <!ENTITY jersey.client.HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnectorProvider.html#USE_FIXED_LENGTH_STREAMING'>HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING</link>">
-<!ENTITY jersey.client.ServiceLocatorClientProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ServiceLocatorClientProvider.html'>ServiceLocatorClientProvider</link>">
+<!ENTITY jersey.client.InjectionManagerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/InjectionManagerProvider.html'>InjectionManagerProvider</link>">
 <!ENTITY jersey.client.oauth1.AccessToken "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/AccessToken.html'>AccessToken</link>">
 <!ENTITY jersey.client.oauth1.ConsumerCredentials "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/ConsumerCredentials.html'>ConsumerCredentials</link>">
 <!ENTITY jersey.client.oauth1.OAuth1AuthorizationFlow "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/OAuth1AuthorizationFlow.html'>OAuth1AuthorizationFlow</link>">
@@ -834,6 +834,7 @@
 <!ENTITY lit.jersey.client.EncodingFeature "<literal>EncodingFeature</literal>">
 <!ENTITY lit.jersey.client.HttpAuthenticationFeature "<literal>HttpAuthenticationFeature</literal>">
 <!ENTITY lit.jersey.client.HttpUrlConnectorProvider "<literal>HttpUrlConnectorProvider</literal>">
+<!ENTITY lit.jersey.client.InjectionManagerProvider "<literal>InjectionManagerProvider</literal>">
 <!ENTITY lit.jersey.client.ServiceLocatorClientProvider "<literal>ServiceLocatorClientProvider</literal>">
 <!ENTITY lit.jersey.client.oauth1.AccessToken "<literal>AccessToken</literal>">
 <!ENTITY lit.jersey.client.oauth1.ConsumerCredentials "<literal>ConsumerCredentials</literal>">
