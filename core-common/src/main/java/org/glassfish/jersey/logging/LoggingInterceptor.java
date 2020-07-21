@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -284,6 +284,24 @@ abstract class LoggingInterceptor implements WriterInterceptor {
                 baos.write(i);
             }
             out.write(i);
+        }
+
+        @Override
+        public void write(byte[] ba, int off, int len) throws IOException {
+            if ((off | len | ba.length - (len + off) | off + len) < 0) {
+                throw new IndexOutOfBoundsException();
+            } else {
+                if ((baos.size() + len) <= maxEntitySize) {
+                    for(int i = 0; i < len; ++i) {
+                        baos.write(ba[off + i]);
+                        out.write(ba[off + i]);
+                    }
+                } else {
+                    for(int i = 0; i < len; ++i) {
+                        out.write(ba[off + i]);
+                    }
+                }
+            }
         }
     }
 
