@@ -838,12 +838,12 @@ System.out.println("Now the connection is closed.");</programlisting>
         // @Inject
         // MyInjectedService service;
 
-        &#64;Override
+        @Override
         public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-        InjectionManager injectionManager = InjectionManagerProvider.getInjectionManager(context);
-        MyInjectedService service = injectionManager.getInstance(MyInjectedService.class);
-        Something something = service.getSomething();
-        ...
+            InjectionManager injectionManager = InjectionManagerProvider.getInjectionManager(context);
+            MyInjectedService service = injectionManager.getInstance(MyInjectedService.class);
+            Something something = service.getSomething();
+            ...
     }
 }</programlisting>
         </example>
