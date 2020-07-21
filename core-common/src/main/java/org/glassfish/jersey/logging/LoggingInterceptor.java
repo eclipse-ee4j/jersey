@@ -292,12 +292,12 @@ abstract class LoggingInterceptor implements WriterInterceptor {
                 throw new IndexOutOfBoundsException();
             } else {
                 if ((baos.size() + len) <= maxEntitySize) {
-                    for(int i = 0; i < len; ++i) {
+                    for (int i = 0; i < len; ++i) {
                         baos.write(ba[off + i]);
                         out.write(ba[off + i]);
                     }
                 } else {
-                    for(int i = 0; i < len; ++i) {
+                    for (int i = 0; i < len; ++i) {
                         out.write(ba[off + i]);
                     }
                 }
