@@ -413,14 +413,16 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
                             /* This should never happen. If we are here and not handshaking, it means a bug
                             in the state machine of this class, because we stopped handshaking and did not exit this while loop.
                             The could be caused either by overlooking FINISHED state or incorrectly treating an error. */
-
-                            throw new IllegalStateException("Trying to handshake, but SSL engine not in HANDSHAKING state."
-                                    + "SSL filter state: \n" + getDebugState());
+                            throw new IllegalStateException(
+                                    LocalizationMessages.HTTP_CONNECTION_INVALID_HANDSHAKE_STATUS(getDebugState()));
                         }
-
                         case FINISHED: {
-                            throw new IllegalStateException("Trying to handshake, but SSL engine not in HANDSHAKING state."
-                                    + "SSL filter state: \n" + getDebugState());
+                            /* According to SSLEngine javadoc FINISHED status can be returned only in SSLEngineResult,
+                            but just to make sure we don't end up in an infinite loop when presented with an SSLEngine
+                            implementation that does not respect this:*/
+                            stepFinished = true;
+                            handshakeFinished = true;
+                            break;
                         }
                         // needs to write data to the network
                         case NEED_WRAP: {

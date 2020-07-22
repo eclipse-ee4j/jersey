@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -39,9 +43,10 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 import org.glassfish.jersey.SslConfigurator;
-
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -49,16 +54,26 @@ import static org.junit.Assert.fail;
 /**
  * @author Petr Janouch
  */
+@RunWith(Parameterized.class)
 public class SslFilterTest {
 
     private static final int PORT = 8321;
 
-    @Before
-    public void beforeTest() {
-        System.setProperty("javax.net.ssl.keyStore", this.getClass().getResource("/keystore_server").getPath());
+    static {
+        System.setProperty("javax.net.ssl.keyStore", SslFilterTest.class.getResource("/keystore_server").getPath());
         System.setProperty("javax.net.ssl.keyStorePassword", "asdfgh");
-        System.setProperty("javax.net.ssl.trustStore", this.getClass().getResource("/truststore_server").getPath());
+        System.setProperty("javax.net.ssl.trustStore", SslFilterTest.class.getResource("/truststore_server").getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "asdfgh");
+    }
+
+    public SslFilterTest(String sslProtocol) {
+        System.setProperty("jdk.tls.server.protocols", sslProtocol);
+        System.setProperty("jdk.tls.client.protocols", sslProtocol);
+    }
+
+    @Parameterized.Parameters
+    public static Collection<String> supportedSslProtocols() throws NoSuchAlgorithmException {
+        return Arrays.asList(SSLContext.getDefault().getSupportedSSLParameters().getProtocols());
     }
 
     @Test
