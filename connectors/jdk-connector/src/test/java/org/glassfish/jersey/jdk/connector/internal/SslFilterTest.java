@@ -24,9 +24,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -44,8 +40,6 @@ import javax.net.ssl.SSLSocket;
 
 import org.glassfish.jersey.SslConfigurator;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -54,8 +48,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Petr Janouch
  */
-@RunWith(Parameterized.class)
-public class SslFilterTest {
+public abstract class SslFilterTest {
 
     private static final int PORT = 8321;
 
@@ -64,16 +57,6 @@ public class SslFilterTest {
         System.setProperty("javax.net.ssl.keyStorePassword", "asdfgh");
         System.setProperty("javax.net.ssl.trustStore", SslFilterTest.class.getResource("/truststore_server").getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "asdfgh");
-    }
-
-    public SslFilterTest(String sslProtocol) {
-        System.setProperty("jdk.tls.server.protocols", sslProtocol);
-        System.setProperty("jdk.tls.client.protocols", sslProtocol);
-    }
-
-    @Parameterized.Parameters
-    public static Collection<String> supportedSslProtocols() throws NoSuchAlgorithmException {
-        return Arrays.asList(SSLContext.getDefault().getSupportedSSLParameters().getProtocols());
     }
 
     @Test
