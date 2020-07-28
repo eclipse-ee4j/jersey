@@ -1173,7 +1173,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 some configuration.
             </para>
             <programlisting language="java">
-                ResourceInterface client = RestClientBuilder.newBuilder()
+                YourResource client = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:8080/"))
                 .register(clientFilter.class)
                 .build(YourResource.class);
@@ -1262,7 +1262,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             <programlisting language="java">
                 @Path("resource")
                 @RegisterProvider(CustomResponseFilter.class)
-                public interface ResourceInterface {
+                public interface YourResource {
 
                     @Path("/test")
                     @GET
