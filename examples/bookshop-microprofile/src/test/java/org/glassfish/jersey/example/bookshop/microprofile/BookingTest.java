@@ -10,81 +10,105 @@
 
 package org.glassfish.jersey.example.bookshop.microprofile;
 
-import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.glassfish.jersey.example.bookshop.microprofile.ressources.BookingInfo;
 import org.glassfish.jersey.example.bookshop.microprofile.server.BookingFeatures;
-import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 public class BookingTest extends TestSupport {
 
+    private final DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+
     @Test
-    @Ignore
     public void reserveBookTwiceTest() throws URISyntaxException {
+
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.JULY, 1);
+        calendar.set(2020, Calendar.JULY, 2, 0, 0, 0);
         Date fromDate = calendar.getTime();
 
-        calendar.set(2020, Calendar.JULY, 2);
+        calendar.set(2020, Calendar.JULY, 3, 0, 0, 0);
         Date toDate = calendar.getTime();
 
         BookingFeatures bookingClient = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:8080/booking"))
                 .build(BookingFeatures.class);
 
-        Response response = bookingClient.reserveBookByName("Harry", "Harry Potter", fromDate, toDate);
+        BookingInfo bookingInfo = new BookingInfo(
+                "Harry",
+                "Harry Potter",
+                fromDate,
+                toDate);
+
+        Response response = bookingClient.reserveBookByName(bookingInfo);
 
         assertEquals("Book : Harry Potter is successfully booked from "
-                + fromDate.toString() + " to " + toDate.toString(), response.readEntity(String.class));
+                + format.format(fromDate) + " to " + format.format(toDate), response.readEntity(String.class));
 
-        Response response1 = bookingClient.reserveBookByName("Harry", "Harry Potter", fromDate, toDate);
+        Response response1 = bookingClient.reserveBookByName(bookingInfo);
 
         assertEquals("Book : Harry Potter is already booked by someone else ... ", response1.readEntity(String.class));
+
     }
 
     @Test
     public void reserveWrongBookName() throws URISyntaxException {
+
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.JULY, 1);
+        calendar.set(2020, Calendar.JULY, 1, 0, 0, 0);
         Date fromDate = calendar.getTime();
 
-        calendar.set(2020, Calendar.JULY, 2);
+        calendar.set(2020, Calendar.JULY, 2, 0, 0, 0);
         Date toDate = calendar.getTime();
 
-        String wrongName = "wrongName";
+        BookingInfo bookingInfo = new BookingInfo(
+                "Harry",
+                "wrongName",
+                fromDate,
+                toDate);
 
         BookingFeatures bookingClient = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:8080/booking"))
                 .build(BookingFeatures.class);
 
-        Response response = bookingClient.reserveBookByName("Harry", wrongName, fromDate, toDate);
+        Response response = bookingClient.reserveBookByName(bookingInfo);
 
-        assertEquals(wrongName + " is not at the library", response.readEntity(String.class));
+        assertEquals("wrongName is not at the library", response.readEntity(String.class));
     }
 
     @Test
     public void reserveWrongCustomerName() throws URISyntaxException {
+
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.JULY, 1);
+        calendar.set(2020, Calendar.JULY, 1, 0, 0, 0);
         Date fromDate = calendar.getTime();
 
-        calendar.set(2020, Calendar.JULY, 2);
+        calendar.set(2020, Calendar.JULY, 2, 0, 0, 0);
         Date toDate = calendar.getTime();
 
-        String wrongName = "wrongName";
+        BookingInfo bookingInfo = new BookingInfo(
+                "wrongName",
+                "Harry Potter",
+                fromDate,
+                toDate);
 
         BookingFeatures bookingClient = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:8080/booking"))
                 .build(BookingFeatures.class);
 
-        Response response = bookingClient.reserveBookByName(wrongName, "Harry Potter", fromDate, toDate);
+        Response response = bookingClient.reserveBookByName(bookingInfo);
 
-        assertEquals(wrongName + " is not a customer of the library", response.readEntity(String.class));
+        assertEquals("wrongName is not a customer of the library", response.readEntity(String.class));
     }
+
 }

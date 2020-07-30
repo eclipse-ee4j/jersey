@@ -40,9 +40,9 @@
             <artifactId>jersey-mp-rest-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.geronimo.config</groupId>
-            <artifactId>geronimo-config-impl</artifactId>
-            <version>1.0</version>
+            <groupId>io.helidon.microprofile.config</groupId>
+            <artifactId>helidon-microprofile-config</artifactId>
+            <version>${helidon.version}</version>
         </dependency>
     </dependencies>
 
@@ -58,6 +58,7 @@
                 <version>3.0.0</version>
                 <configuration>
                     <mainClass>org.glassfish.jersey.example.bookshop.microprofile.client.LibraryClient</mainClass>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
                     <arguments>
                         <argument>5</argument>
                     </arguments>

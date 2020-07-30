@@ -10,10 +10,13 @@
 
 package org.glassfish.jersey.example.bookshop.microprofile.client;
 
+import org.glassfish.jersey.example.bookshop.microprofile.ressources.BookingInfo;
 import org.glassfish.jersey.example.bookshop.microprofile.server.BookingFeatures;
 import org.glassfish.jersey.example.bookshop.microprofile.server.LibraryFeatures;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +25,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +86,7 @@ public class LibraryClient {
             try {
 
                 final String customerName = randomCustomerName();
+                final String bookName = randomBookName();
 
                 System.out.println("Thread with customer " + customerName + " started !");
 
@@ -89,8 +96,13 @@ public class LibraryClient {
 
                 ArrayList<Date> borrowingPeriod = randomDateArray();
 
-                Response response = bookingClient
-                        .reserveBookByName(customerName, randomBookName(), borrowingPeriod.get(0), borrowingPeriod.get(1));
+                BookingInfo bookingInfo = new BookingInfo(
+                        customerName,
+                        bookName,
+                        borrowingPeriod.get(0),
+                        borrowingPeriod.get(1));
+
+                Response response = bookingClient.reserveBookByName(bookingInfo);
 
                 String bookingFeedback = response.readEntity(String.class);
                 LOGGER.log(level, "Customer " + customerName + " : " + bookingFeedback);
@@ -103,8 +115,7 @@ public class LibraryClient {
                     Response response1 = libraryClient.registerCustomer(customerName);
                     LOGGER.log(level, "Customer " + customerName + " : " + response1.readEntity(String.class));
 
-                    Response response2 = bookingClient
-                            .reserveBookByName(customerName, randomBookName(), borrowingPeriod.get(0), borrowingPeriod.get(1));
+                    Response response2 = bookingClient.reserveBookByName(bookingInfo);
                     LOGGER.log(level, "Customer " + customerName + " : " + response2.readEntity(String.class));
                 }
                 LOGGER.log(level, "Customer " + customerName + " : Finished the book reservation. \n Close Thread.");
@@ -141,11 +152,11 @@ public class LibraryClient {
         Calendar calendar = Calendar.getInstance();
 
         int randomDay = (int) (Math.random() * 31);
-        calendar.set(2020, Calendar.JULY, randomDay);
+        calendar.set(2020, Calendar.JULY, randomDay, 0, 0, 0);
         Date fromDate = calendar.getTime();
 
         randomDay = (int) (Math.random() * (31 - randomDay + 1) - randomDay);
-        calendar.set(2020, Calendar.JULY, randomDay);
+        calendar.set(2020, Calendar.JULY, randomDay, 0, 0, 0);
         Date toDate = calendar.getTime();
 
         ArrayList<Date> history = new ArrayList<Date>();

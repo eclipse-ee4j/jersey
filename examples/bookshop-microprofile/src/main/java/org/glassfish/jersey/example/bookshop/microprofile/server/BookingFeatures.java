@@ -10,16 +10,14 @@
 
 package org.glassfish.jersey.example.bookshop.microprofile.server;
 
-import javax.ws.rs.BeanParam;
+import org.glassfish.jersey.example.bookshop.microprofile.ressources.BookingInfo;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
-import java.util.Date;
 
 /**
  * Interface which gather the booking method used by microprofile rest client
@@ -27,10 +25,8 @@ import java.util.Date;
 public interface BookingFeatures {
 
     @POST
-    @Path("/{customerName}/{bookName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response reserveBookByName(@PathParam("customerName") String customerName, @PathParam("bookName") String bookName,
-                               @BeanParam Date fromDate, Date toDate) throws URISyntaxException;
+    Response reserveBookByName(BookingInfo bookingInfo) throws URISyntaxException;
 
 }

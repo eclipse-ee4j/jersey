@@ -11,17 +11,21 @@
 package org.glassfish.jersey.example.bookshop.microprofile.server;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.glassfish.jersey.example.bookshop.microprofile.ressources.BookingInfo;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
- * The booking service manage the borrowingHistory of all book from the library.
+ * The booking service manages the borrowingHistory of all book from the library.
  * It is in charge of checking book's availability as well as customer registration.
  *
  * Booking service can be found at http://localhost:8080/booking.
@@ -40,16 +44,24 @@ public class BookingService implements BookingFeatures {
     /**
      * Process book and customer check up.
      *
-     * @param customerName Customer name.
-     * @param bookName     Book name.
-     * @param fromDate     Picking up date of the book.
-     * @param toDate       Return date of the book.
-     * @return             Status of the request as an entity inside the Response.
-     * @throws URISyntaxException
+     * @param bookingInfo Contains reservation data from the client
+     *                    customerName Customer name.
+     *                    bookName     Book name.
+     *                    fromDate     Picking up date of the book.
+     *                    toDate       Return date of the book.
+     * @return Status of the request as an entity inside the Response.
+     * @throws URISyntaxException Exception is thrown if wrong Uri syntax
      */
     @Override
-    public Response reserveBookByName(String customerName, String bookName, Date fromDate, Date toDate)
+    public Response reserveBookByName(BookingInfo bookingInfo)
             throws URISyntaxException {
+
+        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+
+        String customerName = bookingInfo.getCustomerName();
+        String bookName = bookingInfo.getBookName();
+        Date fromDate = bookingInfo.getFromDate();
+        Date toDate = bookingInfo.getToDate();
 
         LibraryFeatures libraryClient = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:8080/library"))
@@ -68,7 +80,7 @@ public class BookingService implements BookingFeatures {
             return Response
                     .ok()
                     .entity("Book : " + bookName + " is successfully booked from "
-                            + fromDate.toString() + " to " + toDate.toString())
+                            + format.format(fromDate) + " to " + format.format(toDate))
                     .build();
         }
 
@@ -93,20 +105,23 @@ public class BookingService implements BookingFeatures {
             return true;
         }
 
-        for (int i = 0; i < (dueDate.size() / 2);  i++){
+        for (int i = 0; i < (dueDate.size() / 2);  i++) {
             //Check if the booking is inside another booking planning
             if (fromDate.after(dueDate.get(i)) && fromDate.before(dueDate.get(i + 1))){
                 return false;
             }
-            if (toDate.after(dueDate.get(i)) && toDate.before(dueDate.get(i + 1))){
+            if (toDate.after(dueDate.get(i)) && toDate.before(dueDate.get(i + 1))) {
                 return false;
             }
             //Check if the booking date is around booking planning
-            if (fromDate.before(dueDate.get(i)) && toDate.after(dueDate.get(i + 1))){
+            if (fromDate.before(dueDate.get(i)) && toDate.after(dueDate.get(i + 1))) {
                 return false;
             }
             //Check if the booking dates are inside a booking planning
-            if (fromDate.after(dueDate.get(i)) && toDate.before(dueDate.get(i + 1))){
+            if (fromDate.after(dueDate.get(i)) && toDate.before(dueDate.get(i + 1))) {
+                return false;
+            }
+            if (fromDate.equals(dueDate.get(i)) || toDate.equals(dueDate.get(i + 1))) {
                 return false;
             }
         }
