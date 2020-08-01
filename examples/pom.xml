@@ -56,7 +56,7 @@
         <!--<module>bean-validation-webapp</module>-->
         <module>bookmark</module>
         <module>bookmark-em</module>
-        <module>bookshop-microprofile</module>
+        <module>library-mp-rest-client</module>
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
