@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,25 +16,22 @@
 
 package org.glassfish.jersey.kryo;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.TestProperties;
 
 import javax.ws.rs.core.Application;
 
-/**
- * Test case JAX-RS application.
- *
- * @author Libor Kramolis
- */
-public class JaxRsApplication extends Application {
-
-    static final Set<Class<?>> APP_CLASSES = new HashSet<Class<?>>() {{
-        add(PersonResource.class);
-    }};
-
+public class PersonResourceRegistrationNotRequiredTest extends PersonResourceBaseTest {
     @Override
-    public Set<Class<?>> getClasses() {
-        return APP_CLASSES;
+    protected Application configure() {
+        enable(TestProperties.LOG_TRAFFIC);
+        enable(TestProperties.DUMP_ENTITY);
+        return new ResourceConfig().register(PersonResource.class).register(KryoFeature.registrationRequired(false));
     }
 
+    @Override
+    protected void configureClient(final ClientConfig config) {
+        config.register(KryoFeature.registrationRequired(false));
+    }
 }
