@@ -109,19 +109,34 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         private final Class<? extends Feature> featureClass;
         private final Feature feature;
         private final RuntimeType runtimeType;
+        private final int priority;
 
-        private FeatureRegistration(final Class<? extends Feature> featureClass) {
+        private FeatureRegistration(final Class<? extends Feature> featureClass, int priority) {
             this.featureClass = featureClass;
             this.feature = null;
             final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
             this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
+            this.priority = priority(featureClass, priority);
         }
 
-        private FeatureRegistration(final Feature feature) {
+        private FeatureRegistration(final Feature feature, int priority) {
             this.featureClass = feature.getClass();
             this.feature = feature;
             final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
             this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
+            this.priority = priority(featureClass, priority);
+        }
+
+        private static int priority(Class<? extends Feature> featureClass, int priority) {
+            if (priority != ContractProvider.NO_PRIORITY) {
+                return priority;
+            }
+            final Priority priorityAnnotation = featureClass.getAnnotation(Priority.class);
+            if (priorityAnnotation != null) {
+                return priorityAnnotation.value();
+            } else {
+                return Priorities.USER;
+            }
         }
 
         /**
@@ -400,7 +415,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -410,7 +425,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass, final int bindingPriority) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, bindingPriority, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, bindingPriority);
         }
 
         return this;
@@ -424,7 +439,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             return this;
         }
         if (componentBag.register(componentClass, asNewIdentitySet(contracts), getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -434,7 +449,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass, final Map<Class<?>, Integer> contracts) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, contracts, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -446,7 +461,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
 
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -457,7 +472,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         checkProviderNotNull(component);
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, bindingPriority, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, bindingPriority);
         }
 
         return this;
@@ -472,7 +487,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             return this;
         }
         if (componentBag.register(component, asNewIdentitySet(contracts), getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -483,19 +498,19 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         checkProviderNotNull(component);
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, contracts, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
     }
 
-    private void processFeatureRegistration(final Object component, final Class<?> componentClass) {
+    private void processFeatureRegistration(final Object component, final Class<?> componentClass, int priority) {
         final ContractProvider model = componentBag.getModel(componentClass);
         if (model.getContracts().contains(Feature.class)) {
             @SuppressWarnings("unchecked")
             final FeatureRegistration registration = (component != null)
-                    ? new FeatureRegistration((Feature) component)
-                    : new FeatureRegistration((Class<? extends Feature>) componentClass);
+                    ? new FeatureRegistration((Feature) component, priority)
+                    : new FeatureRegistration((Class<? extends Feature>) componentClass, priority);
             newFeatureRegistrations.add(registration);
         }
     }
@@ -524,7 +539,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             this.enabledFeatureClasses.clear();
 
             componentBag.clear();
-            resetRegistrations();
+            resetFeatureRegistrations();
 
             for (final Class<?> clazz : config.getClasses()) {
                 if (Feature.class.isAssignableFrom(clazz) && config.isEnabled((Class<? extends Feature>) clazz)) {
@@ -629,7 +644,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             // Next, register external meta objects
             configureExternalObjects(injectionManager, configuredExternals);
             // Configure all features
-            configureFeatures(injectionManager, new HashSet<>(), resetRegistrations(), finalizer);
+            configureFeatures(injectionManager, new HashSet<>(), resetFeatureRegistrations(), finalizer);
             // Next, register external meta objects registered by features
             configureExternalObjects(injectionManager, configuredExternals);
             // At last, configure any new binders added by features
@@ -718,16 +733,17 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 if (providerModel != null) {
                     ProviderBinder.bindProvider(feature, providerModel, injectionManager);
                 }
-                configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
+                configureFeatures(injectionManager, processed, resetFeatureRegistrations(), managedObjectsFinalizer);
                 enabledFeatureClasses.add(registration.getFeatureClass());
                 enabledFeatures.add(feature);
             }
         }
     }
 
-    private List<FeatureRegistration> resetRegistrations() {
+    private List<FeatureRegistration> resetFeatureRegistrations() {
         final List<FeatureRegistration> result = new ArrayList<>(newFeatureRegistrations);
         newFeatureRegistrations.clear();
+        Collections.sort(result, (o1, o2) -> o1.priority < o2.priority ? -1 : 1);
         return result;
     }
 
