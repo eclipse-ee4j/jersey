@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,35 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.performance.mbw.kryo;
+package org.glassfish.jersey.kryo;
+
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.kryo.KryoFeature;
-import org.glassfish.jersey.test.JerseyTest;
-
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test for kryo resource.
- *
- * @author Libor Kramolis
- */
-public class PersonResourceTest extends JerseyTest {
-
-    @Override
-    protected Application configure() {
-        return new JaxRsApplication();
-    }
-
-    @Override
-    protected void configureClient(final ClientConfig config) {
-        config.register(KryoFeature.registrationRequired(false));
-    }
+public abstract class PersonResourceBaseTest extends JerseyTest {
 
     @Test
     public void testGet() {
