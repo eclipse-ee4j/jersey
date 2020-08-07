@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -55,6 +58,8 @@ import org.glassfish.jersey.model.Parameter;
  * @author Tomas Langer
  */
 class InterfaceModel {
+
+    private static final Logger LOGGER = Logger.getLogger(InterfaceModel.class.getName());
 
     private final InjectionManager injectionManager;
     private final Class<?> restClientClass;
@@ -336,9 +341,15 @@ class InterfaceModel {
         }
 
         Builder clientHeadersFactory(RegisterClientHeaders registerClientHeaders) {
-            clientHeadersFactory = registerClientHeaders != null
-                    ? ReflectionUtil.createInstance(registerClientHeaders.value())
-                    : null;
+            if (registerClientHeaders != null) {
+                Class<? extends ClientHeadersFactory> value = registerClientHeaders.value();
+                try {
+                    clientHeadersFactory = CDI.current().select(value).get();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.FINEST, ex, () -> "This class is not a CDI bean. " + value);
+                    clientHeadersFactory = ReflectionUtil.createInstance(value);
+                }
+            }
             return this;
         }
 
