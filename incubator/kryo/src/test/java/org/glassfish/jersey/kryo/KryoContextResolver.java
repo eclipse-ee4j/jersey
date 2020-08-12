@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,25 +16,16 @@
 
 package org.glassfish.jersey.kryo;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.esotericsoftware.kryo.Kryo;
 
-import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.ext.ContextResolver;
 
-/**
- * Test case JAX-RS application.
- *
- * @author Libor Kramolis
- */
-public class JaxRsApplication extends Application {
-
-    static final Set<Class<?>> APP_CLASSES = new HashSet<Class<?>>() {{
-        add(PersonResource.class);
-    }};
-
+public class KryoContextResolver implements ContextResolver<Kryo> {
     @Override
-    public Set<Class<?>> getClasses() {
-        return APP_CLASSES;
+    public Kryo getContext(Class<?> type) {
+        Kryo kryo = new Kryo();
+        kryo.setRegistrationRequired(true);
+        kryo.register(Person.class);
+        return kryo;
     }
-
 }

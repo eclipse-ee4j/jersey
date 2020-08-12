@@ -26,6 +26,7 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -66,4 +67,13 @@ public interface ApplicationResource {
     @Path("methodContent")
     String methodContentType(@HeaderParam(HttpHeaders.CONTENT_TYPE) MediaType contentType, String entity);
 
+    @GET
+    @Path("{content: [a-zA-Z]+}")
+    @Produces(MediaType.TEXT_PLAIN)
+    String regex(@PathParam("content") String content);
+
+    @GET
+    @Path("content1/{content1}/content0/{content0: [0-9]{4}}")
+    @Produces(MediaType.TEXT_PLAIN)
+    String regex0(@PathParam("content1") String context0, @PathParam("content0") String context1);
 }

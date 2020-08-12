@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.kryo.KryoFeature;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class PersonResourceTest extends JerseyTest {
 
     @Override
     protected void configureClient(final ClientConfig config) {
+        config.register(KryoFeature.registrationRequired(false));
     }
 
     @Test

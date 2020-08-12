@@ -655,7 +655,7 @@ class MethodModel {
 
         private void validateParameters() {
             UriBuilder uriBuilder = UriBuilder.fromUri(interfaceModel.getPath()).path(pathValue);
-            List<String> parameters = InterfaceUtil.parseParameters(uriBuilder.toTemplate());
+            List<String> parameters = InterfaceUtil.getAllMatchingParams(uriBuilder.toTemplate());
             List<String> methodPathParameters = new ArrayList<>();
             List<ParamModel> pathHandlingParams = parameterModels.stream()
                     .filter(parameterModel -> parameterModel.handles(PathParam.class))

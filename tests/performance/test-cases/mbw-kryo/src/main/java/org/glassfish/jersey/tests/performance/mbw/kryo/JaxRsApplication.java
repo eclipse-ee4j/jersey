@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.tests.performance.mbw.kryo;
 
+import org.glassfish.jersey.kryo.KryoFeature;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,4 +40,8 @@ public class JaxRsApplication extends Application {
         return APP_CLASSES;
     }
 
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.singleton(KryoFeature.registrationRequired(false));
+    }
 }

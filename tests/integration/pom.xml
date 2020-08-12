@@ -85,6 +85,7 @@
         <module>jersey-4003</module>
         <module>jersey-4099</module>
         <module>jersey-4321</module>
+        <module>jersey-4507</module>
         <module>jetty-response-close</module>
         <module>microprofile</module>
 <!--        <module>portability-jersey-1</module>--> <!--TODO remove when Jakartified -->
@@ -123,6 +124,7 @@
         <module>servlet-3-init-provider</module>
         <module>servlet-3-params</module>
         <module>servlet-3-sse-1</module>
+        <module>servlet-4.0-mvc-1</module>
         <module>servlet-request-wrapper-binding-2</module>
         <module>servlet-request-wrapper-binding</module>
         <module>servlet-tests</module>

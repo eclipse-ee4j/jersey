@@ -61,19 +61,6 @@
                 <inherited>true</inherited>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/java</directory>
-                <includes>
-                    <include>META-INF/**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
 </project>

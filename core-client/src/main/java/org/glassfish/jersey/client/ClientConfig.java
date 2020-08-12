@@ -414,12 +414,17 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
 
             BootstrapBag bootstrapBag = new ClientBootstrapBag();
             bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
-            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(new RequestScope.RequestScopeConfigurator(),
+
+            final ClientMessageBodyFactory.MessageBodyWorkersConfigurator messageBodyWorkersConfigurator =
+                    new ClientMessageBodyFactory.MessageBodyWorkersConfigurator();
+
+            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
+                    new RequestScope.RequestScopeConfigurator(),
                     new ParamConverterConfigurator(),
                     new ParameterUpdaterConfigurator(),
                     new RuntimeConfigConfigurator(runtimeCfgState),
                     new ContextResolverFactory.ContextResolversConfigurator(),
-                    new MessageBodyFactory.MessageBodyWorkersConfigurator(),
+                    messageBodyWorkersConfigurator,
                     new ExceptionMapperFactory.ExceptionMappersConfigurator(),
                     new JaxrsProviders.ProvidersConfigurator(),
                     new AutoDiscoverableConfigurator(RuntimeType.CLIENT));
@@ -455,6 +460,8 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             final ClientRuntime crt = new ClientRuntime(configuration, connector, injectionManager, bootstrapBag);
 
             client.registerShutdownHook(crt);
+            messageBodyWorkersConfigurator.setClientRuntime(crt);
+
             return crt;
         }
 
