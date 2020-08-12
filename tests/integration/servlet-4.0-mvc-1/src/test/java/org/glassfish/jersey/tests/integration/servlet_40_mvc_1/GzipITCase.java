@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.integration.servlet_40_mvc_1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.message.GZipEncoder;
 import org.junit.Test;

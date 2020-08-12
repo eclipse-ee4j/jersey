@@ -18,7 +18,7 @@ package org.glassfish.jersey.client.spi;
 
 import org.glassfish.jersey.Beta;
 
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientBuilder;
 
 /**
  * <p>

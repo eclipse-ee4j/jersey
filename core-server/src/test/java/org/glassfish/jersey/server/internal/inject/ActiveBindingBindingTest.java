@@ -247,9 +247,9 @@ public class ActiveBindingBindingTest extends AbstractTest {
 
             boolean direct = false;
 
-            final jakarta.inject.Provider<Ref<RequestProcessingContext>> ctxRef =
-                    injectionManager.getInstance(new GenericType<Provider<Ref<RequestProcessingContext>>>() {
-                                        }.getType());
+            final Provider<RequestProcessingContextReference> ctxRef =
+                    injectionManager.getInstance(new GenericType<Provider<RequestProcessingContextReference>>() {
+                    }.getType());
 
             if (serviceHandle instanceof ServiceHandleImpl) {
                 final ServiceHandleImpl serviceHandleImpl = (ServiceHandleImpl) serviceHandle;
@@ -265,11 +265,11 @@ public class ActiveBindingBindingTest extends AbstractTest {
                     ? new MyRequestDataDirect(ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER))
                     // in case of singleton, we need to make sure request scoped data are still accessible
                     : new MyRequestData() {
-                        @Override
-                        public String getReqInfo() {
-                            return PROXY_TAG + ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER);
-                        }
-                };
+                @Override
+                public String getReqInfo() {
+                    return PROXY_TAG + ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER);
+                }
+            };
         }
 
         @Override

@@ -30,8 +30,8 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;

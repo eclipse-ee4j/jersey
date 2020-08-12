@@ -20,7 +20,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 public class PersonResourceRegistrationNotRequiredTest extends PersonResourceBaseTest {
     @Override

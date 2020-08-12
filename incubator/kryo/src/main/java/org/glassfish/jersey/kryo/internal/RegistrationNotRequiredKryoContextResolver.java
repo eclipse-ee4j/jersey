@@ -18,7 +18,7 @@ package org.glassfish.jersey.kryo.internal;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.ContextResolver;
 
 /**
  * Backwards compatibility ContextResolver.
