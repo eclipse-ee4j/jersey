@@ -445,7 +445,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
@@ -457,7 +457,7 @@
                         </bottom>
                         <links>
                             <link>https://jax-rs.github.io/apidocs/2.1/</link>
-                            <link>http://hk2.java.net/nonav/hk2-api/apidocs</link>
+                            <link>https://javaee.github.io/hk2/apidocs/</link>
                         </links>
                         <excludePackageNames>
                             *.internal.*:*.tests.*
@@ -467,8 +467,9 @@
                             <fileExclude>module-info.java</fileExclude>
                         </sourceFileExcludes>
                         <verbose>true</verbose>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                         <maxmemory>256m</maxmemory>
+                        <source>8</source>
                     </configuration>
                     <executions>
                         <execution>
@@ -1386,7 +1387,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.2.0</version>
                 <!-- Run this plugin report sets only in the main Jersey pom -->
                 <inherited>false</inherited>
                 <configuration>
@@ -1405,7 +1406,7 @@
                         <link>https://jax-rs.github.io/apidocs/2.1</link>
                         <link>https://javaee.github.io/hk2/apidocs/</link>
                     </links>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <doclint>none</doclint>
                     <sourceFileExcludes>
                         <fileExclude>module-info.java</fileExclude>
                     </sourceFileExcludes>
