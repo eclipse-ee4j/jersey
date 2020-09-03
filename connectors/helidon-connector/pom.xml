@@ -78,6 +78,7 @@
                <artifactId>maven-javadoc-plugin</artifactId>
                <configuration>
                     <source>8</source>
+                   <detectJavaApiLink>false</detectJavaApiLink>
                </configuration>
             </plugin>
         </plugins>
