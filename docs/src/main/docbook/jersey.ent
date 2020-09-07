@@ -53,9 +53,9 @@
 <!ENTITY hk2.spring-bridge.link "<link xlink:href='https://javaee.github.io/hk2/spring-bridge/'>The Spring/HK2 Bridge</link>">
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/javax/xml/bind">
-<!ENTITY jaxrs.release.uri "https://github.com/jax-rs">
-<!ENTITY jaxrs.javadoc.uri "https://jax-rs.github.io/apidocs/2.1/javax/ws/rs">
-<!ENTITY jaxrs21.javadoc.uri "https://jax-rs.github.io/apidocs/2.1/javax/ws/rs">
+<!ENTITY jaxrs.release.uri "https://github.com/eclipse-ee4j/jaxrs-api">
+<!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/javax/ws/rs">
+<!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/javax/ws/rs">
 <!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
