@@ -37,7 +37,7 @@
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>9.0.0-RC1</version>
+            <version>9.0.0-RC2</version>
             <scope>provided</scope>
         </dependency>
 
