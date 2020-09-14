@@ -62,4 +62,13 @@ public class ApplicationResourceImpl implements ApplicationResource {
         return null;
     }
 
+    @Override
+    public String regex(String content) {
+        return content;
+    }
+
+    @Override
+    public String regex0(String context0, String context1) {
+        return context0 + "_" + context1;
+    }
 }

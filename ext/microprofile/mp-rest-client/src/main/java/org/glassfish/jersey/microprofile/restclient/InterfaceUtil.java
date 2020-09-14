@@ -60,6 +60,44 @@ class InterfaceUtil {
     }
 
     /**
+     * Parses all required parameters from expr string.
+     * Parameters encapsulated by {} or parameters with regexp expressions like {param: (regex_here)}
+     *
+     * @param expr string expression
+     * @return path params
+     */
+    static List<String> getAllMatchingParams(String expr) {
+        List<String> allMatches = new ArrayList<>();
+        if (expr == null || expr.isEmpty() || expr.indexOf('{') == -1) {
+            return allMatches;
+        }
+
+        boolean matching = false;
+        int parenthesisMatched = 0;
+        StringBuilder matchingParameter = new StringBuilder();
+        for (int i = 0; i < expr.length(); i++) {
+            char x = expr.charAt(i);
+
+            if (!matching && x == '{' && parenthesisMatched == 0) {
+                matching = true;
+            } else if (matching && x != ':' && x != '}') {
+                matchingParameter.append(x);
+            } else if (matching) {
+                allMatches.add(matchingParameter.toString());
+                matchingParameter.setLength(0);
+                matching = false;
+            }
+
+            if (x == '}') {
+                parenthesisMatched--;
+            } else if (x == '{') {
+                parenthesisMatched++;
+            }
+        }
+        return allMatches;
+    }
+
+    /**
      * Validates and returns proper compute method defined in {@link ClientHeaderParam}.
      *
      * @param iClass interface class

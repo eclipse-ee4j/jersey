@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
 package org.glassfish.jersey.restclient;
 
 import java.net.URI;
@@ -6,6 +22,7 @@ import java.util.List;
 
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -73,6 +90,33 @@ public class ConsumesAndProducesTest extends JerseyTest {
                 .build(ApplicationResource.class);
 
         app.methodContentType(MediaType.TEXT_XML_TYPE, "something");
+    }
+
+    @Test
+    public void testMethodWithRegexPathParam() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        assertEquals(app.regex("bar"), "bar");
+    }
+
+    @Test
+    public void testMethodWithRegexPathParam0() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        assertEquals(app.regex0("foo", "1234"), "foo_1234");
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void testMethodWithRegexPathParam0Failure() throws URISyntaxException {
+        ApplicationResource app = RestClientBuilder.newBuilder()
+            .baseUri(new URI("http://localhost:9998"))
+            .build(ApplicationResource.class);
+
+        app.regex0("foo", "12345");
     }
 
     private static class TestClientRequestFilter implements ClientRequestFilter {

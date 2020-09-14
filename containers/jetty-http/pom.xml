@@ -74,28 +74,10 @@
 
         <resources>
             <resource>
-                <directory>${basedir}/src/main/java</directory>
-                <includes>
-                    <include>META-INF/**/*</include>
-                </includes>
-            </resource>
-            <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
     </build>
-
-    <profiles>
-        <profile>
-            <id>testsSkipJdk6</id>
-            <activation>
-                <jdk>1.6</jdk>
-            </activation>
-            <properties>
-                <skip.tests>true</skip.tests>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

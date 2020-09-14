@@ -134,6 +134,15 @@ final class JspTemplateProcessor extends AbstractTemplateProcessor<String> {
                 public PrintWriter getWriter() throws IOException {
                     return responseWriter;
                 }
+
+                @Override
+                public void flushBuffer() throws IOException {
+                    /*
+                     *  Need to avoid different implementations to do something else, like invalidating new
+                     *  headers after flushBuffer, because later when ContainerResponse.closes it flushBuffer again.
+                     */
+                    getOutputStream().flush();
+                }
             });
         } catch (final Exception e) {
             throw new ContainerException(e);

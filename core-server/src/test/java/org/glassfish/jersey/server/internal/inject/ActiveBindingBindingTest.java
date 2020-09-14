@@ -31,23 +31,21 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.PerLookup;
-import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.process.internal.RequestScoped;
+import org.glassfish.jersey.server.internal.process.RequestProcessingContextReference;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
 
 import org.glassfish.hk2.api.DescriptorType;
 import org.glassfish.hk2.api.DescriptorVisibility;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import org.jvnet.hk2.internal.ServiceHandleImpl;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
@@ -139,7 +137,6 @@ public class ActiveBindingBindingTest extends AbstractTest {
     }
 
     @Test
-    @Ignore("At the time of ignoring this test, ResourceConfig does not support HK2 Binder registering.")
     public void testReq() throws Exception {
 
         // bootstrap the test application
@@ -250,16 +247,16 @@ public class ActiveBindingBindingTest extends AbstractTest {
 
             boolean direct = false;
 
-            final jakarta.inject.Provider<Ref<RequestProcessingContext>> ctxRef =
-                    injectionManager.getInstance(new GenericType<Provider<Ref<RequestProcessingContext>>>() {
-                                        }.getType());
+            final Provider<RequestProcessingContextReference> ctxRef =
+                    injectionManager.getInstance(new GenericType<Provider<RequestProcessingContextReference>>() {
+                    }.getType());
 
             if (serviceHandle instanceof ServiceHandleImpl) {
                 final ServiceHandleImpl serviceHandleImpl = (ServiceHandleImpl) serviceHandle;
-                final Class<? extends Annotation> scopeAnnotation =
-                        serviceHandleImpl.getOriginalRequest().getInjecteeDescriptor().getScopeAnnotation();
+                final String scopeAnnotation =
+                        serviceHandleImpl.getOriginalRequest().getInjecteeDescriptor().getScope();
 
-                if (scopeAnnotation == RequestScoped.class || scopeAnnotation == null) {
+                if (RequestScoped.class.getName().equals(scopeAnnotation) || scopeAnnotation == null) {
                     direct = true;
                 }
             }
@@ -268,11 +265,11 @@ public class ActiveBindingBindingTest extends AbstractTest {
                     ? new MyRequestDataDirect(ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER))
                     // in case of singleton, we need to make sure request scoped data are still accessible
                     : new MyRequestData() {
-                        @Override
-                        public String getReqInfo() {
-                            return PROXY_TAG + ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER);
-                        }
-                };
+                @Override
+                public String getReqInfo() {
+                    return PROXY_TAG + ctxRef.get().get().request().getHeaderString(X_COUNTER_HEADER);
+                }
+            };
         }
 
         @Override

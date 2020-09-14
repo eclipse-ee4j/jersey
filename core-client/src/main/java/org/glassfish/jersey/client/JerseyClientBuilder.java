@@ -17,6 +17,9 @@
 package org.glassfish.jersey.client;
 
 import java.security.KeyStore;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,8 +33,12 @@ import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.spi.ClientBuilderListener;
+import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Values;
+import org.glassfish.jersey.model.internal.RankedComparator;
+import org.glassfish.jersey.model.internal.RankedProvider;
 
 /**
  * Jersey provider of {@link jakarta.ws.rs.client.ClientBuilder JAX-RS client builder}.
@@ -44,6 +51,23 @@ public class JerseyClientBuilder extends ClientBuilder {
     private HostnameVerifier hostnameVerifier;
     private SslConfigurator sslConfigurator;
     private SSLContext sslContext;
+
+    private static final List<ClientBuilderListener> CLIENT_BUILDER_LISTENERS;
+
+    static {
+        final List<RankedProvider<ClientBuilderListener>> listeners = new LinkedList<>();
+        for (ClientBuilderListener listener : ServiceFinder.find(ClientBuilderListener.class)) {
+            listeners.add(new RankedProvider<>(listener));
+        }
+        listeners.sort(new RankedComparator<>(RankedComparator.Order.ASCENDING));
+
+        final List<ClientBuilderListener> sortedList = new LinkedList<>();
+        for (RankedProvider<ClientBuilderListener> listener : listeners) {
+            sortedList.add(listener.getProvider());
+        }
+
+        CLIENT_BUILDER_LISTENERS = Collections.unmodifiableList(sortedList);
+    }
 
     /**
      * Create a new custom-configured {@link JerseyClient} instance.
@@ -72,6 +96,14 @@ public class JerseyClientBuilder extends ClientBuilder {
      */
     public JerseyClientBuilder() {
         this.config = new ClientConfig();
+
+        init(this);
+    }
+
+    private static void init(ClientBuilder builder) {
+        for (ClientBuilderListener listener : CLIENT_BUILDER_LISTENERS) {
+            listener.onNewBuilder(builder);
+        }
     }
 
     @Override
