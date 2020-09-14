@@ -2133,30 +2133,30 @@
         <ejb.version>4.0.0-RC2</ejb.version>
         <grizzly2.version>3.0.0-M1</grizzly2.version>
         <hk2.version>3.0.0-M2</hk2.version>
-        <jsp.version>3.0.0-M1</jsp.version>
-        <jstl.version>2.0.0-RC1</jstl.version>
-        <jta.api.version>2.0.0-RC1</jta.api.version>
-        <servlet5.version>5.0.0-M1</servlet5.version>
-        <istack.commons.runtime.version>4.0.0-M3</istack.commons.runtime.version>
-        <jakarta.activation-api.version>2.0.0-RC3</jakarta.activation-api.version>
-        <jakarta.activation.version>2.0.0-RC3</jakarta.activation.version>
-        <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
-        <jakarta.el.impl.version>4.0.0-RC1</jakarta.el.impl.version>
+        <jsp.version>3.0.0</jsp.version>
+        <jstl.version>2.0.0</jstl.version>
+        <jta.api.version>2.0.0-RC2</jta.api.version>
+        <servlet5.version>5.0.0</servlet5.version>
+        <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
+        <jakarta.activation-api.version>2.0.0</jakarta.activation-api.version>
+        <jakarta.activation.version>2.0.0</jakarta.activation.version>
+        <jakarta.el.version>4.0.0</jakarta.el.version>
+        <jakarta.el.impl.version>4.0.0</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
-        <jakarta.annotation.version>2.0.0-RC1</jakarta.annotation.version>
-        <jakarta.inject.version>2.0.0-RC4</jakarta.inject.version>
-        <jakarta.interceptor.version>2.0.0-RC2</jakarta.interceptor.version>
-        <jakarta.persistence.version>3.0.0-RC2</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.0-M1</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>3.0.0-RC3</jakarta.jaxb.api.version>
-        <jaxb.ri.version>3.0.0-M4</jaxb.ri.version>
+        <jakarta.annotation.version>2.0.0</jakarta.annotation.version>
+        <jakarta.inject.version>2.0.0</jakarta.inject.version>
+        <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
+        <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
+        <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version>
+        <jakarta.jaxb.api.version>3.0.0</jakarta.jaxb.api.version>
+        <jaxb.ri.version>3.0.0-M5</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>3.0.0-M1</jaxrs.api.impl.version>
-        <jsonb.api.version>2.0.0-RC1</jsonb.api.version>
-        <jsonp.ri.version>2.0.0-RC3</jsonp.ri.version>
-        <jsonp.jaxrs.version>2.0.0-RC3</jsonp.jaxrs.version>
+        <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
+        <jsonb.api.version>2.0.0</jsonb.api.version>
+        <jsonp.ri.version>2.0.0</jsonp.ri.version>
+        <jsonp.jaxrs.version>2.0.0</jsonp.jaxrs.version>
         <moxy.version>3.0.0-M1</moxy.version>
-        <yasson.version>2.0.0-M2</yasson.version>
+        <yasson.version>2.0.0</yasson.version>
         <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.5</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
