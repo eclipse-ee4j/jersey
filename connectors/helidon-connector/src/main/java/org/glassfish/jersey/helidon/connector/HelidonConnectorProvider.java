@@ -66,12 +66,12 @@ import java.io.OutputStream;
  * @since 2.31
  */
 @Beta
-public class HelidonConnectorProvider implements ConnectorProvider {
+public class HelidonConnectorProvider extends io.helidon.jersey.connector.HelidonConnectorProvider {
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        return new HelidonConnector(client, runtimeConfig);
+        return super.getConnector(client, runtimeConfig);
     }
 }
