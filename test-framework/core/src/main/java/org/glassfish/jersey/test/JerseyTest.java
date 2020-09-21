@@ -35,6 +35,7 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -42,7 +43,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -420,7 +420,7 @@ public abstract class JerseyTest {
      */
     protected DeploymentContext configureDeployment() {
         DeploymentContext.Builder contextBuilder = DeploymentContext.builder(configure());
-        getSslEngineConfigurator().ifPresent(contextBuilder::sslEngineConfigurator);
+        getSslContext().ifPresent(contextBuilder::sslContext);
         return contextBuilder.build();
     }
 
@@ -458,16 +458,16 @@ public abstract class JerseyTest {
     }
 
     /**
-     * Return an optional instance of {@link SSLEngineConfigurator} class.
+     * Return an optional instance of {@link SSLContext} class.
      * <p>
      * <p>
      * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
      * By default the ssl configuration is absent, to enable it please override this method.
      * </p>
      * </p>
-     * @return an optional instance of {@link SSLEngineConfigurator} class.
+     * @return an optional instance of {@link SSLContext} class.
      */
-    protected Optional<SSLEngineConfigurator> getSslEngineConfigurator() {
+    protected Optional<SSLContext> getSslContext() {
         return Optional.empty();
     }
 

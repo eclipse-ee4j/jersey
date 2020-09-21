@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -56,10 +57,10 @@ public class GrizzlyTestContainerFactory implements TestContainerFactory {
                         + TestHelper.zeroPortToAvailablePort(baseUri));
             }
 
-            if (context.getSslEngineConfigurator().isPresent()) {
+            if (context.getSslContext().isPresent()) {
                 this.server = GrizzlyHttpServerFactory.createHttpServer(
                         this.baseUri, context.getResourceConfig(),
-                        true, context.getSslEngineConfigurator().get(), false);
+                        true, new SSLEngineConfigurator(context.getSslContext().get()), false);
                 return;
             }
 

@@ -194,9 +194,9 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
 
             boolean secure = false;
             SSLEngineConfigurator sslEngineConfigurator = null;
-            if (deploymentContext.getSslEngineConfigurator().isPresent()) {
+            if (deploymentContext.getSslContext().isPresent()) {
                 secure = true;
-                sslEngineConfigurator = deploymentContext.getSslEngineConfigurator().get();
+                sslEngineConfigurator = new SSLEngineConfigurator(deploymentContext.getSslContext().get());
             }
 
             try {
