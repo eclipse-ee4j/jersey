@@ -56,6 +56,11 @@ public class GrizzlyTestContainerFactory implements TestContainerFactory {
                         + TestHelper.zeroPortToAvailablePort(baseUri));
             }
 
+            if (context.getSslEngineConfigurator().isPresent()) {
+                this.server = GrizzlyHttpServerFactory.createHttpServer(this.baseUri, context.getResourceConfig(), true, context.getSslEngineConfigurator().get(), false);
+                return;
+            }
+
             this.server = GrizzlyHttpServerFactory.createHttpServer(this.baseUri, context.getResourceConfig(), false);
         }
 

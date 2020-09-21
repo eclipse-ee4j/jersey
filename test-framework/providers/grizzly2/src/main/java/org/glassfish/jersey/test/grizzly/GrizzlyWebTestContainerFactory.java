@@ -34,6 +34,7 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServlet;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -191,8 +192,15 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
                 }
             }
 
+            boolean secure = false;
+            SSLEngineConfigurator sslEngineConfigurator = null;
+            if (deploymentContext.getSslEngineConfigurator().isPresent()) {
+                secure = true;
+                sslEngineConfigurator = deploymentContext.getSslEngineConfigurator().get();
+            }
+
             try {
-                server = GrizzlyHttpServerFactory.createHttpServer(baseUri, (GrizzlyHttpContainer) null, false, null, false);
+                server = GrizzlyHttpServerFactory.createHttpServer(baseUri, (GrizzlyHttpContainer) null, secure, sslEngineConfigurator, false);
                 context.deploy(server);
             } catch (final ProcessingException ex) {
                 throw new TestContainerException(ex);

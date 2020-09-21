@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -41,6 +42,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -417,7 +419,9 @@ public abstract class JerseyTest {
      * @since 2.8
      */
     protected DeploymentContext configureDeployment() {
-        return DeploymentContext.builder(configure()).build();
+        DeploymentContext.Builder contextBuilder = DeploymentContext.builder(configure());
+        getSslEngineConfigurator().ifPresent(contextBuilder::sslEngineConfigurator);
+        return contextBuilder.build();
     }
 
     /**
@@ -451,6 +455,20 @@ public abstract class JerseyTest {
             testContainerFactory = getDefaultTestContainerFactory();
         }
         return testContainerFactory;
+    }
+
+    /**
+     * Return an optional instance of {@link SSLEngineConfigurator} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method.
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLEngineConfigurator} class.
+     */
+    protected Optional<SSLEngineConfigurator> getSslEngineConfigurator() {
+        return Optional.empty();
     }
 
     private static synchronized TestContainerFactory getDefaultTestContainerFactory() {

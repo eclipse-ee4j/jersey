@@ -18,7 +18,10 @@ package org.glassfish.jersey.test;
 
 import javax.ws.rs.core.Application;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import java.util.Optional;
 
 /**
  * Basic application deployment context.
@@ -122,6 +125,7 @@ public class DeploymentContext {
 
         private final ResourceConfig resourceConfig;
         private String contextPath = DEFAULT_CONTEXT_PATH;
+        private SSLEngineConfigurator sslEngineConfigurator;
 
         /**
          * Create new deployment context builder instance not explicitly bound to the JAX-RS / Jersey application class.
@@ -176,6 +180,23 @@ public class DeploymentContext {
         }
 
         /**
+         * Set the application ssl engine configurator.
+         *
+         * @param sslEngineConfigurator application ssl configuration.
+         * @return this application deployment context builder.
+         *
+         * @throws NullPointerException if {@code sslEngineConfigurator} is {@code null}.
+         */
+        public Builder sslEngineConfigurator(final SSLEngineConfigurator sslEngineConfigurator) {
+            if (sslEngineConfigurator == null) {
+                throw new NullPointerException("The ssl engine configurator must not be null");
+            }
+
+            this.sslEngineConfigurator = sslEngineConfigurator;
+            return this;
+        }
+
+        /**
          * Build a new application deployment context configured by the current state of this
          * application deployment context builder.
          *
@@ -201,6 +222,7 @@ public class DeploymentContext {
 
     private final ResourceConfig resourceConfig;
     private final String contextPath;
+    private final SSLEngineConfigurator sslEngineConfigurator;
 
     /**
      * Create new application deployment context.
@@ -210,6 +232,7 @@ public class DeploymentContext {
     protected DeploymentContext(final Builder b) {
         this.contextPath = b.contextPath;
         this.resourceConfig = b.resourceConfig;
+        this.sslEngineConfigurator = b.sslEngineConfigurator;
     }
 
     /**
@@ -233,5 +256,15 @@ public class DeploymentContext {
     public final String getContextPath() {
         return contextPath;
     }
+
+    /**
+     * Get the deployed application ssl engine configurator.
+     *
+     * @return the deployed application context path.
+     */
+    public Optional<SSLEngineConfigurator> getSslEngineConfigurator() {
+        return Optional.ofNullable(sslEngineConfigurator);
+    }
+
 }
 
