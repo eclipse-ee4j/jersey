@@ -200,7 +200,9 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
             }
 
             try {
-                server = GrizzlyHttpServerFactory.createHttpServer(baseUri, (GrizzlyHttpContainer) null, secure, sslEngineConfigurator, false);
+                server = GrizzlyHttpServerFactory.createHttpServer(
+                        baseUri, (GrizzlyHttpContainer) null,
+                        secure, sslEngineConfigurator, false);
                 context.deploy(server);
             } catch (final ProcessingException ex) {
                 throw new TestContainerException(ex);
