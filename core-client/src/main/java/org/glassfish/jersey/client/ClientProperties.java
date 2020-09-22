@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -404,6 +404,31 @@ public final class ClientProperties {
      * @since 2.5
      */
     public static final String REQUEST_ENTITY_PROCESSING = "jersey.config.client.request.entity.processing";
+
+    /**
+     * Registers 100-Continue value for Expect header processing to be set in HttpUrlConnector (default Jersey
+     * connector)
+     *
+     * @since 2.32
+     */
+    public static final String EXPECT_100_CONTINUE = "jersey.config.client.request.expect.100.continue.processing";
+
+    /**
+     * Property for threshold size for content length after which Expect:100-Continue header would be applied
+     * before the main request
+     *
+     * @since 2.32
+     */
+    public static final String
+            EXPECT_100_CONTINUE_THRESHOLD_SIZE = "jersey.config.client.request.expect.100.continue.threshold.size";
+
+    /**
+     * Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+     * the main request
+     *
+     * @since 2.32
+     */
+    public static final Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 64000L;
 
     private ClientProperties() {
         // prevents instantiation
