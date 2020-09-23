@@ -406,8 +406,8 @@ public final class ClientProperties {
     public static final String REQUEST_ENTITY_PROCESSING = "jersey.config.client.request.entity.processing";
 
     /**
-     * Registers 100-Continue value for Expect header processing to be set in HttpUrlConnector (default Jersey
-     * connector)
+     * Allows for HTTP Expect:100-Continue being handled by the HttpUrlConnector (default Jersey
+     * connector).
      *
      * @since 2.32
      */
@@ -415,7 +415,7 @@ public final class ClientProperties {
 
     /**
      * Property for threshold size for content length after which Expect:100-Continue header would be applied
-     * before the main request
+     * before the main request.
      *
      * @since 2.32
      */
@@ -424,11 +424,11 @@ public final class ClientProperties {
 
     /**
      * Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
-     * the main request
+     * the main request.
      *
      * @since 2.32
      */
-    public static final Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 64000L;
+    public static final Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 65536L;
 
     private ClientProperties() {
         // prevents instantiation

@@ -28,8 +28,28 @@ public class Expect100ContinueFeature implements Feature {
     public Expect100ContinueFeature() {
         this(ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
     }
-    public Expect100ContinueFeature(long thresholdSize) {
+
+    private Expect100ContinueFeature(long thresholdSize) {
         this.thresholdSize = thresholdSize;
+    }
+
+    /**
+     * Creates Expect100ContinueFeature with custom (not default) threshold size for content length.
+     *
+     * @param thresholdSize size of threshold
+     * @return Expect100Continue Feature
+     */
+    public static Expect100ContinueFeature withCustomThreshold(long thresholdSize) {
+        return new Expect100ContinueFeature(thresholdSize);
+    }
+
+    /**
+     * Creates Expect100Continue Feature with default threshold size
+     *
+     * @return Expect100Continue Feature
+     */
+    public static Expect100ContinueFeature basic() {
+        return new Expect100ContinueFeature();
     }
 
     @Override

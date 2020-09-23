@@ -333,14 +333,8 @@ public class HttpUrlConnector implements Connector {
             if (entity != null) {
                 RequestEntityProcessing entityProcessing = request.resolveProperty(
                         ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
-                final Long expectContinueSizeThreshold = ClientProperties.getValue(
-                        request.getConfiguration().getProperties(),
-                        ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                        ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE, Long.class);
 
                 final long length = request.getLengthLong();
-                final boolean allowStreaming = length > expectContinueSizeThreshold
-                        || entityProcessing == RequestEntityProcessing.CHUNKED;
 
                 if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
                     if (fixLengthStreaming && length > 0) {
@@ -358,7 +352,7 @@ public class HttpUrlConnector implements Connector {
                     }
                 }
 
-                processExpect100Continue(request, uc, allowStreaming);
+                processExpect100Continue(request, uc, length, entityProcessing);
 
                 request.setStreamProvider(contentLength -> {
                     setOutboundHeaders(request.getStringHeaders(), uc);
@@ -536,10 +530,18 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private void processExpect100Continue(ClientRequest request, HttpURLConnection uc, boolean allowStreaming) {
+    private void processExpect100Continue(ClientRequest request, HttpURLConnection uc,
+                                          long length, RequestEntityProcessing entityProcessing) {
 
         final Boolean expectContinueActivated = ClientProperties.getValue(request.getConfiguration().getProperties(),
                 ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
+        final Long expectContinueSizeThreshold = ClientProperties.getValue(
+                request.getConfiguration().getProperties(),
+                ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
+                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE, Long.class);
+
+        final boolean allowStreaming = length > expectContinueSizeThreshold
+                || entityProcessing == RequestEntityProcessing.CHUNKED;
 
         if (!Boolean.TRUE.equals(expectContinueActivated)
                 || !("POST".equals(uc.getRequestMethod()) || "PUT".equals(uc.getRequestMethod()))

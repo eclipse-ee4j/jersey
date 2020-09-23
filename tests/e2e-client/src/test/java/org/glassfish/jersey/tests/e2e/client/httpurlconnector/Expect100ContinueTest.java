@@ -38,6 +38,9 @@ import static org.junit.Assert.assertEquals;
 public class Expect100ContinueTest extends JerseyTest {
 
     private static final String RESOURCE_PATH = "expect";
+    private static final String ENTITY_STRING = "1234567890123456789012345678901234567890123456789012"
+           + "3456789012345678901234567890";
+
 
     @Path(RESOURCE_PATH)
     public static class Expect100ContinueResource {
@@ -73,52 +76,50 @@ public class Expect100ContinueTest extends JerseyTest {
 
     @Test
     public void testExpect100Continue() {
-       final Response response =  target(RESOURCE_PATH).request().post(Entity.text("123456789012345678901234"
-               + "56789012345678901234567890123456789012345678901234567890"));
+       final Response response =  target(RESOURCE_PATH).request().post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 200", 200, response.getStatus()); //no Expect header sent - responce OK
     }
 
     @Test
     public void testExpect100ContinueChunked() {
-       final Response response =  target(RESOURCE_PATH).register(new Expect100ContinueFeature())
+       final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.basic())
                .property(ClientProperties.REQUEST_ENTITY_PROCESSING,
-               RequestEntityProcessing.CHUNKED).request().post(Entity.text("123456789012345678901234"
-               + "56789012345678901234567890123456789012345678901234567890"));
+               RequestEntityProcessing.CHUNKED).request().post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
     }
 
     @Test
     public void testExpect100ContinueBuffered() {
-       final Response response =  target(RESOURCE_PATH).register(new Expect100ContinueFeature())
+       final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.basic())
                .property(ClientProperties.REQUEST_ENTITY_PROCESSING,
-               RequestEntityProcessing.BUFFERED).request().header(HttpHeaders.CONTENT_LENGTH, 65000L)
-               .post(Entity.text("12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+               RequestEntityProcessing.BUFFERED).request().header(HttpHeaders.CONTENT_LENGTH, 67000L)
+               .post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
     }
 
     @Test
     public void testExpect100ContinueCustomLength() {
-       final Response response =  target(RESOURCE_PATH).register(new Expect100ContinueFeature(100L))
+       final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L))
                .request().header(HttpHeaders.CONTENT_LENGTH, 101L)
-               .post(Entity.text("12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+               .post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
     }
 
     @Test
     public void testExpect100ContinueCustomLengthWrong() {
-       final Response response =  target(RESOURCE_PATH).register(new Expect100ContinueFeature(100L))
+       final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L))
                .request().header(HttpHeaders.CONTENT_LENGTH, 99L)
-               .post(Entity.text("12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
-       assertEquals("Expected 200", 200, response.getStatus()); //Expect header sent - No Content response
+               .post(Entity.text(ENTITY_STRING));
+       assertEquals("Expected 200", 200, response.getStatus()); //Expect header NOT sent - low request size
     }
 
     @Test
     public void testExpect100ContinueCustomLengthProperty() {
        final Response response =  target(RESOURCE_PATH)
                .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 555L)
-               .register(new Expect100ContinueFeature())
+               .register(Expect100ContinueFeature.basic())
                .request().header(HttpHeaders.CONTENT_LENGTH, 666L)
-               .post(Entity.text("12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+               .post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
     }
 
@@ -128,7 +129,7 @@ public class Expect100ContinueTest extends JerseyTest {
                .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 43L)
                .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
                .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
-               .post(Entity.text("12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+               .post(Entity.text(ENTITY_STRING));
        assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
     }
 }
