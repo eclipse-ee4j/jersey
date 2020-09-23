@@ -18,7 +18,6 @@ package org.glassfish.jersey.helidon.connector;
 
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.client.spi.Connector;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.util.JdkVersion;
 
 import javax.ws.rs.ProcessingException;
@@ -38,7 +37,7 @@ import java.io.OutputStream;
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT}</li>
- * <li>{@link HelidonProperties#CONFIG}</li>
+ * <li>{@link HelidonClientProperties#CONFIG}</li>
  * </ul>
  * <p>
  * If a {@link org.glassfish.jersey.client.ClientResponse} is obtained and an
