@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.Response;
 
@@ -36,6 +37,7 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  * Jersey implementation of Netty channel handler.
@@ -50,6 +52,8 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     private NettyInputStream nis;
     private ClientResponse jerseyResponse;
+
+    private boolean readTimedOut;
 
     JerseyClientHandler(ClientRequest request,
                         CompletableFuture<ClientResponse> responseAvailable,
@@ -67,7 +71,12 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
        // assert: no-op, if channel is closed after LastHttpContent has been consumed
-       responseDone.completeExceptionally(new IOException("Stream closed"));
+
+       if (readTimedOut) {
+          responseDone.completeExceptionally(new TimeoutException("Stream closed: read timeout"));
+       } else {
+          responseDone.completeExceptionally(new IOException("Stream closed"));
+       }
     }
 
     protected void notifyResponse() {
@@ -144,5 +153,15 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, final Throwable cause) {
         responseDone.completeExceptionally(cause);
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+       if (evt instanceof IdleStateEvent) {
+          readTimedOut = true;
+          ctx.close();
+       } else {
+           super.userEventTriggered(ctx, evt);
+       }
     }
 }

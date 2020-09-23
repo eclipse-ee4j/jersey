@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -37,6 +37,8 @@ import javax.ws.rs.core.Configuration;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -58,6 +60,9 @@ import io.netty.handler.proxy.HttpProxyHandler;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.JdkSslContext;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
@@ -79,9 +84,30 @@ class NettyConnector implements Connector {
     final Client client;
     final HashMap<String, ArrayList<Channel>> connections = new HashMap<>();
 
+    // If HTTP keepalive is enabled the value of "http.maxConnections" determines the maximum number
+    // of idle connections that will be simultaneously kept alive, per destination.
+    private static final String HTTP_KEEPALIVE_STRING = System.getProperty("http.keepAlive");
+    // http.keepalive (default: true)
+    private static final Boolean HTTP_KEEPALIVE =
+            HTTP_KEEPALIVE_STRING == null ? Boolean.TRUE : Boolean.parseBoolean(HTTP_KEEPALIVE_STRING);
+
+    // http.maxConnections (default: 5)
+    private static final int DEFAULT_MAX_POOL_SIZE = 5;
+    private static final int MAX_POOL_SIZE = Integer.getInteger("http.maxConnections", DEFAULT_MAX_POOL_SIZE);
+    private static final int MAX_POOL_IDLE = 60;
+
+    private final Integer maxPoolSize; // either from system property, or from Jersey config, or default
+    private final Integer maxPoolIdle; // either from Jersey config, or default
+
+    private static final String INACTIVE_POOLED_CONNECTION_HANDLER = "inactive_pooled_connection_handler";
+    private static final String PRUNE_INACTIVE_POOL = "prune_inactive_pool";
+    private static final String READ_TIMEOUT_HANDLER = "read_timeout_handler";
+    private static final String REQUEST_HANDLER = "request_handler";
+
     NettyConnector(Client client) {
 
-        final Object threadPoolSize = client.getConfiguration().getProperties().get(ClientProperties.ASYNC_THREADPOOL_SIZE);
+        final Map<String, Object> properties = client.getConfiguration().getProperties();
+        final Object threadPoolSize = properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE);
 
         if (threadPoolSize != null && threadPoolSize instanceof Integer && (Integer) threadPoolSize > 0) {
             executorService = Executors.newFixedThreadPool((Integer) threadPoolSize);
@@ -92,20 +118,31 @@ class NettyConnector implements Connector {
         }
 
         this.client = client;
+
+        final Object maxPoolIdleProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS_TOTAL);
+        final Object maxPoolSizeProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS);
+
+        maxPoolIdle = maxPoolIdleProperty != null ? (Integer) maxPoolIdleProperty : MAX_POOL_IDLE;
+        maxPoolSize = maxPoolSizeProperty != null
+                ? (Integer) maxPoolSizeProperty
+                : (HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
+
+        if (maxPoolIdle == null || maxPoolIdle < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_IDLE(maxPoolIdle));
+        }
+
+        if (maxPoolSize == null || maxPoolSize < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolIdle));
+        }
     }
 
     @Override
     public ClientResponse apply(ClientRequest jerseyRequest) {
         try {
-            CompletableFuture<ClientResponse> resultFuture = execute(jerseyRequest);
-
-            Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
-
-            return (timeout != null && timeout > 0) ? resultFuture.get(timeout, TimeUnit.MILLISECONDS)
-                                                    : resultFuture.get();
-        } catch (ExecutionException ex) {
-            Throwable e = ex.getCause() == null ? ex : ex.getCause();
-            throw new ProcessingException(e.getMessage(), e);
+            return execute(jerseyRequest).join();
+        } catch (CompletionException cex) {
+            final Throwable t = cex.getCause() == null ? cex : cex.getCause();
+            throw new ProcessingException(t.getMessage(), t);
         } catch (Exception ex) {
             throw new ProcessingException(ex.getMessage(), ex);
         }
@@ -120,6 +157,11 @@ class NettyConnector implements Connector {
     }
 
     protected CompletableFuture<ClientResponse> execute(final ClientRequest jerseyRequest) {
+        Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
+        if (timeout == null || timeout < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(timeout));
+        }
+
         final CompletableFuture<ClientResponse> responseAvailable = new CompletableFuture<>();
         final CompletableFuture<?> responseDone = new CompletableFuture<>();
 
@@ -128,6 +170,7 @@ class NettyConnector implements Connector {
         int port = requestUri.getPort() != -1 ? requestUri.getPort() : "https".equals(requestUri.getScheme()) ? 443 : 80;
 
         try {
+
             String key = requestUri.getScheme() + "://" + host + ":" + port;
             ArrayList<Channel> conns;
             synchronized (connections) {
@@ -138,9 +181,16 @@ class NettyConnector implements Connector {
                }
             }
 
-            Channel chan;
+            Channel chan = null;
             synchronized (conns) {
-               chan = conns.size() == 0 ? null : conns.remove(conns.size() - 1);
+               while (chan == null && !conns.isEmpty()) {
+                  chan = conns.remove(conns.size() - 1);
+                  chan.pipeline().remove(INACTIVE_POOLED_CONNECTION_HANDLER);
+                  chan.pipeline().remove(PRUNE_INACTIVE_POOL);
+                  if (!chan.isOpen()) {
+                     chan = null;
+                  }
+               }
             }
 
             if (chan == null) {
@@ -199,16 +249,30 @@ class NettyConnector implements Connector {
             //         will leak
             final Channel ch = chan;
             JerseyClientHandler clientHandler = new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone);
-            ch.pipeline().addLast(clientHandler);
+            // read timeout makes sense really as an inactivity timeout
+            ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
+                                  new IdleStateHandler(0, 0, timeout, TimeUnit.MILLISECONDS));
+            ch.pipeline().addLast(REQUEST_HANDLER, clientHandler);
 
             responseDone.whenComplete((_r, th) -> {
+               ch.pipeline().remove(READ_TIMEOUT_HANDLER);
                ch.pipeline().remove(clientHandler);
 
                if (th == null) {
+                  ch.pipeline().addLast(INACTIVE_POOLED_CONNECTION_HANDLER, new IdleStateHandler(0, 0, maxPoolIdle));
+                  ch.pipeline().addLast(PRUNE_INACTIVE_POOL, new PruneIdlePool(connections, key));
                   synchronized (connections) {
                      ArrayList<Channel> conns1 = connections.get(key);
-                     synchronized (conns1) {
+                     if (conns1 == null) {
+                        conns1 = new ArrayList<>(1);
                         conns1.add(ch);
+                        connections.put(key, conns1);
+                     } else {
+                        synchronized (conns1) {
+                           if (conns1.size() < maxPoolSize) {
+                              conns1.add(ch);
+                           } // else do not add the Channel to the idle pool
+                        }
                      }
                   }
                } else {
@@ -330,5 +394,36 @@ class NettyConnector implements Connector {
         } else {
             throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
         }
+    }
+
+    protected static class PruneIdlePool extends ChannelDuplexHandler {
+       HashMap<String, ArrayList<Channel>> connections;
+       String key;
+
+       public PruneIdlePool(HashMap<String, ArrayList<Channel>> connections, String key) {
+          this.connections = connections;
+          this.key = key;
+       }
+
+       @Override
+       public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+          if (evt instanceof IdleStateEvent) {
+             IdleStateEvent e = (IdleStateEvent) evt;
+             if (e.state() == IdleState.ALL_IDLE) {
+                ctx.close();
+                synchronized (connections) {
+                   ArrayList<Channel> chans = connections.get(key);
+                   synchronized (chans) {
+                      chans.remove(ctx.channel());
+                      if (chans.isEmpty()) {
+                         connections.remove(key);
+                      }
+                   }
+                }
+             }
+          } else {
+              super.userEventTriggered(ctx, evt);
+          }
+       }
     }
 }

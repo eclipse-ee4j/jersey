@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.netty.connector;
 
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.GET;
@@ -80,6 +81,7 @@ public class TimeoutTest extends JerseyTest {
             target("test/timeout").property(ClientProperties.READ_TIMEOUT, 1_000).request().get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
+            assertEquals(e.getMessage(), "Stream closed: read timeout");
             assertThat("Unexpected processing exception cause",
                        e.getCause(), instanceOf(TimeoutException.class));
         }
@@ -91,8 +93,41 @@ public class TimeoutTest extends JerseyTest {
             target("test/timeout").request().property(ClientProperties.READ_TIMEOUT, 1_000).get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
+            assertEquals(e.getMessage(), "Stream closed: read timeout");
             assertThat("Unexpected processing exception cause",
-                    e.getCause(), instanceOf(TimeoutException.class));
+                       e.getCause(), instanceOf(TimeoutException.class));
+        }
+    }
+
+    @Test
+    public void testRxSlow() {
+        try {
+            target("test/timeout").property(ClientProperties.READ_TIMEOUT, 1_000).request()
+               .rx().get().toCompletableFuture().join();
+            fail("Timeout expected.");
+        } catch (CompletionException cex) {
+            assertThat("Unexpected async cause",
+                       cex.getCause(), instanceOf(ProcessingException.class));
+            ProcessingException e = (ProcessingException) cex.getCause();
+            assertThat("Unexpected processing exception cause",
+                       e.getCause(), instanceOf(TimeoutException.class));
+            assertEquals(e.getCause().getMessage(), "Stream closed: read timeout");
+        }
+    }
+
+    @Test
+    public void testRxTimeoutInRequest() {
+        try {
+            target("test/timeout").request().property(ClientProperties.READ_TIMEOUT, 1_000)
+               .rx().get().toCompletableFuture().join();
+            fail("Timeout expected.");
+        } catch (CompletionException cex) {
+            assertThat("Unexpected async cause",
+                       cex.getCause(), instanceOf(ProcessingException.class));
+            ProcessingException e = (ProcessingException) cex.getCause();
+            assertThat("Unexpected processing exception cause",
+                       e.getCause(), instanceOf(TimeoutException.class));
+            assertEquals(e.getCause().getMessage(), "Stream closed: read timeout");
         }
     }
 }
