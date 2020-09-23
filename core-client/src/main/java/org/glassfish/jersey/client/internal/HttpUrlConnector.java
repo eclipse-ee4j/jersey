@@ -530,15 +530,13 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private void processExpect100Continue(ClientRequest request, HttpURLConnection uc,
+    private static void processExpect100Continue(ClientRequest request, HttpURLConnection uc,
                                           long length, RequestEntityProcessing entityProcessing) {
-
-        final Boolean expectContinueActivated = ClientProperties.getValue(request.getConfiguration().getProperties(),
+        final Boolean expectContinueActivated = request.resolveProperty(
                 ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
-        final Long expectContinueSizeThreshold = ClientProperties.getValue(
-                request.getConfiguration().getProperties(),
+        final Long expectContinueSizeThreshold = request.resolveProperty(
                 ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE, Long.class);
+                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
 
         final boolean allowStreaming = length > expectContinueSizeThreshold
                 || entityProcessing == RequestEntityProcessing.CHUNKED;

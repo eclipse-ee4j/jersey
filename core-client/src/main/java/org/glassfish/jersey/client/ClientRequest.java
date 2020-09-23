@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -167,7 +167,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
 
     private <T> T resolveProperty(final String name, Object defaultValue, final Class<T> type) {
         // Check runtime configuration first
-        Object result = clientConfig.getProperty(name);
+        Object result = getConfiguration().getProperty(name);
         if (result != null) {
             defaultValue = result;
         }
