@@ -69,11 +69,6 @@ public class Expect100ContinueTest extends JerseyTest {
         return new ResourceConfig(Expect100ContinueTest.Expect100ContinueResource.class);
     }
 
-    @Override
-    protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new HttpUrlConnectorProvider());
-    }
-
     @Test
     public void testExpect100Continue() {
        final Response response =  target(RESOURCE_PATH).request().post(Entity.text(ENTITY_STRING));
