@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -173,10 +173,15 @@ public class ExecutionStatisticsDynamicBean implements DynamicMBean {
 
     @Override
     public AttributeList getAttributes(String[] attributes) {
-        AttributeList x = new AttributeList();
-        for (String k : attributes) {
-            Attribute a = new Attribute(k, attributeValues.get(k).get());
-            x.add(a);
+        final AttributeList x = new AttributeList();
+        if (attributes == null) {
+            return x;
+        }
+        for (final String k : attributes) {
+            final Value<?> value = attributeValues.get(k);
+            if (value != null) {
+                x.add(new Attribute(k, value.get()));
+            }
         }
         return x;
     }
