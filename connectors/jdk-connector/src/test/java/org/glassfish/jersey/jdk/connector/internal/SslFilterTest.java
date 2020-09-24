@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,9 +39,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 import org.glassfish.jersey.SslConfigurator;
-
-import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -49,15 +48,14 @@ import static org.junit.Assert.fail;
 /**
  * @author Petr Janouch
  */
-public class SslFilterTest {
+public abstract class SslFilterTest {
 
     private static final int PORT = 8321;
 
-    @Before
-    public void beforeTest() {
-        System.setProperty("javax.net.ssl.keyStore", this.getClass().getResource("/keystore_server").getPath());
+    static {
+        System.setProperty("javax.net.ssl.keyStore", SslFilterTest.class.getResource("/keystore_server").getPath());
         System.setProperty("javax.net.ssl.keyStorePassword", "asdfgh");
-        System.setProperty("javax.net.ssl.trustStore", this.getClass().getResource("/truststore_server").getPath());
+        System.setProperty("javax.net.ssl.trustStore", SslFilterTest.class.getResource("/truststore_server").getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "asdfgh");
     }
 
