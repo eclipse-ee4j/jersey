@@ -65,6 +65,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
+                <artifactId>jersey-helidon-connector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-grizzly-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -268,11 +273,14 @@
                 <artifactId>jersey-media-json-jackson</artifactId>
                 <version>${project.version}</version>
             </dependency>
+<!--
+            Legacy Jackson1 is removed from bom pom, as obsolete.
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-json-jackson1</artifactId>
                 <version>${project.version}</version>
             </dependency>
+-->
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-json-jettison</artifactId>
