@@ -184,7 +184,8 @@ public class DeploymentContext {
         /**
          * Set the application ssl properties.
          *
-         * @param sslContext application ssl configuration.
+         * @param sslContext application ssl context.
+         * @param sslParameters application ssl parameters
          * @return this application deployment context builder.
          *
          * @throws NullPointerException if {@code sslContext} is {@code null}.
