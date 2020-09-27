@@ -63,7 +63,7 @@ public class GrizzlyTestContainerFactory implements TestContainerFactory {
                 this.server = GrizzlyHttpServerFactory.createHttpServer(
                         this.baseUri, context.getResourceConfig(),
                         true, new SSLEngineConfigurator(
-                                context.getSslContext().get(),false,
+                                context.getSslContext().get(), false,
                                 sslParameters.getNeedClientAuth(), sslParameters.getWantClientAuth()),
                         false);
                 return;
