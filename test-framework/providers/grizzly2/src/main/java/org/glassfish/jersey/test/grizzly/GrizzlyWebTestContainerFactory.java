@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.UriBuilder;
 
@@ -194,9 +195,13 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
 
             boolean secure = false;
             SSLEngineConfigurator sslEngineConfigurator = null;
-            if (deploymentContext.getSslContext().isPresent()) {
+            if (deploymentContext.getSslContext().isPresent() && deploymentContext.getSslParameters().isPresent()) {
                 secure = true;
-                sslEngineConfigurator = new SSLEngineConfigurator(deploymentContext.getSslContext().get());
+                SSLParameters sslParameters = deploymentContext.getSslParameters().get();
+                sslEngineConfigurator = new SSLEngineConfigurator(
+                        deploymentContext.getSslContext().get(), false,
+                        sslParameters.getNeedClientAuth(), sslParameters.getWantClientAuth()
+                );
             }
 
             try {

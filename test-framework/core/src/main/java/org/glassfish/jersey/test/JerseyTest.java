@@ -36,6 +36,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -420,7 +421,9 @@ public abstract class JerseyTest {
      */
     protected DeploymentContext configureDeployment() {
         DeploymentContext.Builder contextBuilder = DeploymentContext.builder(configure());
-        getSslContext().ifPresent(contextBuilder::sslContext);
+        if (getSslContext().isPresent() && getSslParameters().isPresent()) {
+            contextBuilder.ssl(getSslContext().get(), getSslParameters().get());
+        }
         return contextBuilder.build();
     }
 
@@ -462,12 +465,26 @@ public abstract class JerseyTest {
      * <p>
      * <p>
      * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
-     * By default the ssl configuration is absent, to enable it please override this method.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslParameters()}
      * </p>
      * </p>
      * @return an optional instance of {@link SSLContext} class.
      */
     protected Optional<SSLContext> getSslContext() {
+        return Optional.empty();
+    }
+
+    /**
+     * Return an optional instance of {@link SSLParameters} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslContext()} ()}
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLContext} class.
+     */
+    protected Optional<SSLParameters> getSslParameters() {
         return Optional.empty();
     }
 
