@@ -78,8 +78,8 @@
         <module>helloworld-pure-jax-rs</module>
         <module>helloworld-webapp</module>
         <module>helloworld-weld</module>
-        <module>helloworld-spring-webapp</module>
-        <module>helloworld-spring-annotations</module>
+<!--        <module>helloworld-spring-webapp</module>-->
+<!--        <module>helloworld-spring-annotations</module>-->
         <module>http-patch</module>
         <module>http-trace</module>
         <module>https-clientserver-grizzly</module>
@@ -89,8 +89,8 @@
         <module>jaxrs-types-injection</module>
         <module>jersey-ejb</module>
         <module>json-binding-webapp</module>
-        <module>json-jackson</module>
-        <module>json-jettison</module>
+<!--        <module>json-jackson</module>-->
+<!--        <module>json-jettison</module>-->
         <module>json-moxy</module>
 <!--        <module>json-processing-webapp</module> JSONP-->
         <module>json-with-padding</module>
