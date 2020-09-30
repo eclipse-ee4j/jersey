@@ -87,9 +87,7 @@
         <module>jersey-4321</module>
         <module>jersey-4507</module>
         <module>jetty-response-close</module>
-        <module>microprofile</module>
-<!--        <module>portability-jersey-1</module>--> <!--TODO remove when Jakartified -->
-<!--        <module>portability-jersey-2</module>-->
+<!--        <module>microprofile</module> -->  <!--TODO remove when Jakartified -->
         <module>property-check</module>
         <module>security-digest</module>
         <module>servlet-2.5-autodiscovery-1</module>
@@ -129,8 +127,8 @@
         <module>servlet-request-wrapper-binding</module>
         <module>servlet-tests</module>
         <module>sonar-test</module>
-        <module>spring4</module>
-        <module>spring5</module>
+<!--        <module>spring4</module>-->
+<!--        <module>spring5</module>-->
         <module>tracing-support</module>
     </modules>
 
