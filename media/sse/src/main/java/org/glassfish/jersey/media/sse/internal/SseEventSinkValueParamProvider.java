@@ -29,6 +29,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.inject.AbstractValueParamProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.server.model.internal.SseTypeResolver;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**
@@ -59,7 +60,8 @@ public class SseEventSinkValueParamProvider extends AbstractValueParamProvider {
         }
 
         final Class<?> rawParameterType = parameter.getRawType();
-        if (rawParameterType == SseEventSink.class && parameter.isAnnotationPresent(Context.class)) {
+        if (SseTypeResolver.isSseSinkParam(rawParameterType)
+                && parameter.isAnnotationPresent(Context.class)) {
             return new SseEventSinkValueSupplier(asyncContextSupplier);
         }
         return null;

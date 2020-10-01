@@ -28,7 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -489,14 +491,12 @@ public class ServerRuntime {
         private Response mapException(final Throwable originalThrowable) throws Throwable {
             LOGGER.log(Level.FINER, LocalizationMessages.EXCEPTION_MAPPING_START(), originalThrowable);
 
-            Throwable throwable = originalThrowable;
-            boolean inMappable = false;
-            boolean mappingNotFound = false;
+            final ThrowableWrap wrap = new ThrowableWrap(originalThrowable);
+            wrap.tryMappableException();
 
             do {
-                if (throwable instanceof MappableException) {
-                    inMappable = true;
-                } else if (inMappable || throwable instanceof WebApplicationException) {
+                final Throwable throwable = wrap.getCurrent();
+                if (wrap.isInMappable() || throwable instanceof WebApplicationException) {
                     // in case ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED is true, allow
                     // wrapped MessageBodyProviderNotFoundException to propagate
                     if (runtime.processResponseErrors && throwable instanceof InternalServerErrorException
@@ -568,8 +568,6 @@ public class ServerRuntime {
 
                         return waeResponse;
                     }
-
-                    mappingNotFound = true;
                 }
                 // internal mapping
                 if (throwable instanceof HeaderValueException) {
@@ -578,18 +576,17 @@ public class ServerRuntime {
                     }
                 }
 
-                if (!inMappable || mappingNotFound) {
+                if (!wrap.isInMappable() || !wrap.isWrapped()) {
                     // user failures (thrown from Resource methods or provider methods)
 
                     // spec: Unchecked exceptions and errors that have not been mapped MUST be re-thrown and allowed to
                     // propagate to the underlying container.
 
                     // not logged on this level.
-                    throw throwable;
+                    throw wrap.getWrappedOrCurrent();
                 }
 
-                throwable = throwable.getCause();
-            } while (throwable != null);
+            } while (wrap.unwrap() != null);
             // jersey failures (not thrown from Resource methods or provider methods) -> rethrow
             throw originalThrowable;
         }
@@ -1179,6 +1176,93 @@ public class ServerRuntime {
                     callback.onDisconnect(disconnected);
                 }
             });
+        }
+    }
+
+    /**
+     * The structure that holds original {@link Throwable}, top most wrapped {@link Throwable} for the cases where the
+     * exception is to be tried to be mapped but is wrapped in a known wrapping {@link Throwable}, and the current unwrapped
+     * {@link Throwable}. For instance, the original is {@link MappableException}, the wrapped is {@link CompletionException},
+     * and the current is {@code IllegalStateException}.
+     */
+    private static class ThrowableWrap {
+        private final Throwable original;
+        private Throwable wrapped = null;
+        private Throwable current;
+        private boolean inMappable = false;
+
+        private ThrowableWrap(Throwable original) {
+            this.original = original;
+            this.current = original;
+        }
+
+        /**
+         * Gets the original {@link Throwable} to be mapped to an {@link ExceptionMapper}.
+         * @return the original Throwable.
+         */
+        private Throwable getOriginal() {
+            return original;
+        }
+
+        /**
+         * Some exceptions can be unwrapped. If an {@link ExceptionMapper} is not found for them, the original wrapping
+         * {@link Throwable} is to be returned. If the exception was not wrapped, return current.
+         * @return the wrapped or current {@link Throwable}.
+         */
+        private Throwable getWrappedOrCurrent() {
+            return wrapped != null ? wrapped : current;
+        }
+
+        /**
+         * Get current unwrapped {@link Throwable}.
+         * @return current {@link Throwable}.
+         */
+        private Throwable getCurrent() {
+            return current;
+        }
+
+        /**
+         * Check whether the current is a known wrapping exception.
+         * @return true if the current is a known wrapping exception.
+         */
+        private boolean isWrapped() {
+            final boolean isConcurrentWrap =
+                    CompletionException.class.isInstance(current) || ExecutionException.class.isInstance(current);
+
+            return isConcurrentWrap;
+        }
+
+        /**
+         * Store the top most wrap exception and return the cause.
+         * @return the cause of the current {@link Throwable}.
+         */
+        private Throwable unwrap() {
+            if (wrapped == null) {
+                wrapped = current;
+            }
+            current = current.getCause();
+            return current;
+        }
+
+        /**
+         * Set flag that the original {@link Throwable} is {@link MappableException} and unwrap the nested {@link Throwable}.
+         * @return true if the original {@link Throwable} is {@link MappableException}.
+         */
+        private boolean tryMappableException() {
+            if (MappableException.class.isInstance(original)) {
+                inMappable = true;
+                current = original.getCause();
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Return the flag that original {@link Throwable} is {@link MappableException}.
+         * @return true if the original {@link Throwable} is {@link MappableException}.
+         */
+        private boolean isInMappable() {
+            return inMappable;
         }
     }
 }

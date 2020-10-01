@@ -127,10 +127,28 @@ public class CompletionStageTest extends JerseyTest {
         assertThat(response.readEntity(String.class), is(ENTITY));
     }
 
+    @Test
+    public void test4463() {
+        Response response = target("cs/exceptionally").request().get();
+
+        assertThat(response.getStatus(), is(406));
+    }
+
     @Path("/cs")
     public static class CompletionStageResource {
 
         private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+
+        @GET
+        @Path("exceptionally")
+        public CompletionStage<String> failAsyncLater() {
+            CompletableFuture<String> fail = new CompletableFuture<>();
+            fail.completeExceptionally(new IllegalStateException("Uh-oh"));
+
+            return fail.exceptionally(ex -> {
+                throw new WebApplicationException("OOPS", Response.Status.NOT_ACCEPTABLE.getStatusCode());
+            });
+        }
 
         @GET
         @Path("/completed")

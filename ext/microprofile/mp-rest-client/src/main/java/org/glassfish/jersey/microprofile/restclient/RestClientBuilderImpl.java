@@ -140,13 +140,12 @@ class RestClientBuilderImpl implements RestClientBuilder {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T build(Class<T> interfaceClass) throws IllegalStateException, RestClientDefinitionException {
+        for (RestClientListener restClientListener : ServiceFinder.find(RestClientListener.class)) {
+            restClientListener.onNewClient(interfaceClass, this);
+        }
 
         if (uri == null) {
             throw new IllegalStateException("Base uri/url cannot be null!");
-        }
-
-        for (RestClientListener restClientListener : ServiceFinder.find(RestClientListener.class)) {
-            restClientListener.onNewClient(interfaceClass, this);
         }
 
         //Provider registration part

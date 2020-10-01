@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +18,6 @@
 package org.glassfish.jersey.server.validation.internal;
 
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -258,9 +258,8 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorContext getDefaultValidatorContext(final ValidateOnExecutionHandler handler) {
             final ValidatorContext context = factory.usingContext();
 
-            // if CDI is available use composite factiry
-            if (AccessController.doPrivileged(
-                    ReflectionHelper.classForNamePA("jakarta.enterprise.inject.spi.BeanManager")) != null) {
+            // if CDI is available use composite factory
+            if (isCDIAvailable()) {
                 // Composite Configuration - due to PAYARA-2491
                 // https://github.com/payara/Payara/issues/2245
                 context.constraintValidatorFactory(resourceContext.getResource(
@@ -274,6 +273,15 @@ public final class ValidationBinder extends AbstractBinder {
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));
 
             return context;
+        }
+
+        private boolean isCDIAvailable() {
+            // Both CDI & Jersey CDI modules must be available
+            return AccessController.doPrivileged(
+                        ReflectionHelper.classForNamePA("jakarta.enterprise.inject.spi.BeanManager")) != null
+                   &&
+                   AccessController.doPrivileged(
+                        ReflectionHelper.classForNamePA("org.glassfish.jersey.ext.cdi1x.internal.CdiUtil")) != null;
         }
 
         /**

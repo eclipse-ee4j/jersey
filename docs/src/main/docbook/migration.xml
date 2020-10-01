@@ -28,9 +28,9 @@
          xml:id="migration">
     <title>Migration Guide</title>
 
-    <section xml:id="mig-2.27">
-        <title>Migrating from Jersey 2.23 to 2.27</title>
-        <section xml:id="mig-2.27-breaking-changes">
+    <section xml:id="mig-2.26">
+        <title>Migrating from Jersey 2.25 to &version;.</title>
+        <section xml:id="mig-2.26-breaking-changes">
             <title>Breaking Changes</title>
             <para>
                 <itemizedlist>
@@ -49,7 +49,7 @@
                         </para>
                         <para>
                             Spring version used in the extension module was upgraded to 4.2.1.RELEASE. The reason for that is lack
-                            of Java 8 support with Spring 3.x versions.
+                            of Java 8 support with Spring 3.x versions. Optionally, an extension module for Spring 5 can be used.
                         </para>
                         <para>
                             Jersey proprietary reactive client API has been dropped and replaced by JAX-RS 2.1 Reactive Client API.
@@ -60,7 +60,7 @@
                 </itemizedlist>
             </para>
         </section>
-        <section xml:id="mig-2.27-injection-manager">
+        <section xml:id="mig-2.26-injection-manager">
             <title>Breaking Changes - Injection Manager</title>
             <para>Following breaking changes are caused by removing and replacing HK2 (<literal>ServiceLocator</literal>) by
             &jersey.common.internal.inject.InjectionManager;. Jersey injection API is considered as an internal API (except
@@ -118,6 +118,21 @@
                             to Jersey with an adjusted package.
                         </para>
                     </listitem>
+                    <listitem>
+                        If the internal Jersey injection API is to be backed by HK2, since 2.26, the following additional HK2
+                        support module is required:
+                        <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
+  &lt;groupId&gt;org.glassfish.jersey.inject&lt;/groupId&gt;
+  &lt;artifactId&gt;jersey-hk2&lt;/artifactId&gt;
+  &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+                    </listitem>
+                    <listitem>
+                        The direct support for <literal>HK2 Binder</literal> being able to be registered as in pre 2.26 Jersey has
+                        been returned back in Jersey 2.29. Note, however, this is for backward compatibility purposes and
+                        not a preferred way of registering injectables; the <literal>HK2 Binder</literal> support may be removed
+                        in the future versions of Jersey.
+                    </listitem>
                 </itemizedlist>
             </para>
         </section>
@@ -138,7 +153,7 @@
     </section>
 
     <section>
-        <title>Migrating from Jersey 2.22.1 to 2.23</title>
+        <title>Migrating from Jersey 2.22.1 to 2.25</title>
         <section xml:id="mig-2.23-highlights">
             <title>Release 2.23 Highlights</title>
 

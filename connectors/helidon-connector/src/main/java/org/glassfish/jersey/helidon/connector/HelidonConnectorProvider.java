@@ -18,7 +18,6 @@ package org.glassfish.jersey.helidon.connector;
 
 import org.glassfish.jersey.Beta;
 import org.glassfish.jersey.client.spi.Connector;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.util.JdkVersion;
 
 import jakarta.ws.rs.ProcessingException;
@@ -38,7 +37,7 @@ import java.io.OutputStream;
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT}</li>
- * <li>{@link HelidonProperties#CONFIG}</li>
+ * <li>{@link HelidonClientProperties#CONFIG}</li>
  * </ul>
  * <p>
  * If a {@link org.glassfish.jersey.client.ClientResponse} is obtained and an
@@ -66,12 +65,12 @@ import java.io.OutputStream;
  * @since 2.31
  */
 @Beta
-public class HelidonConnectorProvider implements ConnectorProvider {
+public class HelidonConnectorProvider extends io.helidon.jersey.connector.HelidonConnectorProvider {
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        return new HelidonConnector(client, runtimeConfig);
+        return super.getConnector(client, runtimeConfig);
     }
 }

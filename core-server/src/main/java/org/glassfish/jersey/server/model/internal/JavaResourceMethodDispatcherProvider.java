@@ -76,7 +76,7 @@ class JavaResourceMethodDispatcherProvider implements ResourceMethodDispatcher.P
             // return type is void
             int i = 0;
             for (final Parameter parameter : resourceMethod.getParameters()) {
-                if (SseEventSink.class.equals(parameter.getRawType())) {
+                if (SseTypeResolver.isSseSinkParam(parameter.getRawType())) {
                     resourceMethodDispatcher =
                             new SseEventSinkInvoker(resourceMethod, invocationHandler, valueProviders, validator, i);
                     break;

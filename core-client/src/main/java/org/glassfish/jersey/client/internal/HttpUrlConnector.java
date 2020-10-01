@@ -334,8 +334,9 @@ public class HttpUrlConnector implements Connector {
                 RequestEntityProcessing entityProcessing = request.resolveProperty(
                         ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
 
+                final long length = request.getLengthLong();
+
                 if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
-                    final long length = request.getLengthLong();
                     if (fixLengthStreaming && length > 0) {
                         uc.setFixedLengthStreamingMode(length);
                     } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
@@ -350,6 +351,8 @@ public class HttpUrlConnector implements Connector {
                         logger.log(Level.INFO, LocalizationMessages.HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY());
                     }
                 }
+
+                processExpect100Continue(request, uc, length, entityProcessing);
 
                 request.setStreamProvider(contentLength -> {
                     setOutboundHeaders(request.getStringHeaders(), uc);
@@ -525,6 +528,26 @@ public class HttpUrlConnector implements Connector {
                 }
             }
         }
+    }
+
+    private static void processExpect100Continue(ClientRequest request, HttpURLConnection uc,
+                                          long length, RequestEntityProcessing entityProcessing) {
+        final Boolean expectContinueActivated = request.resolveProperty(
+                ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
+        final Long expectContinueSizeThreshold = request.resolveProperty(
+                ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
+                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
+
+        final boolean allowStreaming = length > expectContinueSizeThreshold
+                || entityProcessing == RequestEntityProcessing.CHUNKED;
+
+        if (!Boolean.TRUE.equals(expectContinueActivated)
+                || !("POST".equals(uc.getRequestMethod()) || "PUT".equals(uc.getRequestMethod()))
+                || !allowStreaming
+        ) {
+            return;
+        }
+        uc.setRequestProperty("Expect", "100-Continue");
     }
 
     @Override

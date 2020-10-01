@@ -49,6 +49,7 @@ import org.glassfish.jersey.internal.util.Tokenizer;
 import org.glassfish.jersey.server.ManagedAsync;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.model.internal.ModelHelper;
+import org.glassfish.jersey.server.model.internal.SseTypeResolver;
 
 /**
  * Utility class for constructing resource model from JAX-RS annotated POJO.
@@ -298,7 +299,7 @@ final class IntrospectionModeller {
         }
 
         for (Class<?> paramType : am.getParameterTypes()) {
-            if (SseEventSink.class.equals(paramType)) {
+            if (SseTypeResolver.isSseSinkParam(paramType)) {
                 resourceMethodBuilder.sse();
             }
         }
