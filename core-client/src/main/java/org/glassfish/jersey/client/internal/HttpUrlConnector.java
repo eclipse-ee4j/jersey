@@ -389,14 +389,21 @@ public class HttpUrlConnector implements Connector {
         }
 
         ClientResponse responseContext = new ClientResponse(status, request, resolvedRequestUri);
-        responseContext.headers(
+        if (!(storedException instanceof ProtocolException
+                  && storedException.getMessage().equals("Server rejected operation"))) {
+            // Set the headers only when the request was not rejected by the server based on 'Expect' header.
+            // If the request contains 'Expect' header and server returned non-100 response then both input
+            // and output streams are null. Calling getHeaderFields in turn calls getInputStream which again
+            // sends the request to server.
+            responseContext.headers(
                 uc.getHeaderFields()
-                  .entrySet()
-                  .stream()
-                  .filter(stringListEntry -> stringListEntry.getKey() != null)
-                  .collect(Collectors.toMap(Map.Entry::getKey,
-                                            Map.Entry::getValue))
-        );
+                    .entrySet()
+                    .stream()
+                    .filter(stringListEntry -> stringListEntry.getKey() != null)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue))
+            );
+        }
 
         try {
             InputStream inputStream = getInputStream(uc);
