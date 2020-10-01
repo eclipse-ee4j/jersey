@@ -20,10 +20,10 @@ import org.glassfish.jersey.message.internal.InboundMessageContext;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ReaderInterceptor;
 import java.io.InputStream;
 
 public class ClientResponseTest {

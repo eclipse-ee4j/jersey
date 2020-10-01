@@ -79,9 +79,10 @@
     <profiles>
         <profile>
             <id>HelidonConnector</id>
-            <activation>
+            <!-- TODO: activate after Helidon is jakartified -->
+            <!--<activation>
                 <jdk>11</jdk>
-            </activation>
+            </activation>-->
             <modules>
                 <module>helidon-connector</module>
             </modules>

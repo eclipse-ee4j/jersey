@@ -33,7 +33,7 @@ public final class SseTypeResolver {
         Set<Class<?>> set = new HashSet<>(8);
 
         set.add(org.glassfish.jersey.internal.jsr166.Flow.Subscriber.class);
-        set.add(javax.ws.rs.sse.SseEventSink.class);
+        set.add(jakarta.ws.rs.sse.SseEventSink.class);
         Class<?> clazz = AccessController
                 .doPrivileged(ReflectionHelper.classForNamePA("java.util.concurrent.Flow$Subscriber", null));
 
