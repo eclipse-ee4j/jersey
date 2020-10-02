@@ -18,9 +18,9 @@ package org.glassfish.jersey.tests.integration.jersey4542;
 
 import java.io.IOException;
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.process.Inflector;
