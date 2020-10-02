@@ -86,6 +86,7 @@
         <module>jersey-4099</module>
         <module>jersey-4321</module>
         <module>jersey-4507</module>
+        <module>jersey-4542</module>
         <module>jetty-response-close</module>
 <!--        <module>microprofile</module> -->  <!--TODO remove when Jakartified -->
         <module>property-check</module>
@@ -130,6 +131,7 @@
 <!--        <module>spring4</module>-->
 <!--        <module>spring5</module>-->
         <module>tracing-support</module>
+        <module>reactive-streams</module>
     </modules>
 
     <profiles>

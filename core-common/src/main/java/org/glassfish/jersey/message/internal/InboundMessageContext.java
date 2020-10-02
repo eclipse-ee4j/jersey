@@ -780,7 +780,7 @@ public abstract class InboundMessageContext {
         entityContent.ensureNotClosed();
 
         try {
-            return !entityContent.isEmpty();
+            return entityContent.isBuffered() || !entityContent.isEmpty();
         } catch (IllegalStateException ex) {
             // input stream has been closed.
             return false;

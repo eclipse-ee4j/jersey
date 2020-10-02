@@ -57,6 +57,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -995,6 +996,74 @@ public class CommonConfigTest {
 
         assertThat("Feature instance not injected", config.getProperty("instance-injected").toString(), is("true"));
         assertThat("Feature class not injected", config.getProperty("class-injected").toString(), is("true"));
+    }
+
+    // ===========================================================================================================================
+
+    @Test
+    public void testFeatureBindingPriority() {
+        final InjectionManager injectionManager = Injections.createInjectionManager();
+        final ManagedObjectsFinalizer finalizer = new ManagedObjectsFinalizer(injectionManager);
+        config.register(new OrderedFeature(Priorities.USER){}, Priorities.USER);
+        config.register(new OrderedFeature(Priorities.USER - 100){}, Priorities.USER - 100);
+        config.register(new OrderedFeature(Priorities.USER + 100){}, Priorities.USER + 100);
+        config.configureMetaProviders(injectionManager, finalizer);
+        int value = (int) config.getProperty(OrderedFeature.PROPERTY_NAME);
+
+        assertEquals(Priorities.USER + 100, value);
+    }
+
+    private static class OrderedFeature implements Feature {
+        private final int orderId;
+        private static final String PROPERTY_NAME = "ORDER_ID";
+
+        private OrderedFeature(int orderId) {
+            this.orderId = orderId;
+        }
+
+        @Override
+        public boolean configure(FeatureContext context) {
+            Integer previousId = (Integer) context.getConfiguration().getProperty(PROPERTY_NAME);
+            if (previousId != null) {
+                assertThat(previousId, lessThan(orderId));
+            }
+            context.property(PROPERTY_NAME, orderId);
+            return false;
+        }
+    }
+
+    @Test
+    public void testFeatureAnnotatedPriority() {
+        final InjectionManager injectionManager = Injections.createInjectionManager();
+        final ManagedObjectsFinalizer finalizer = new ManagedObjectsFinalizer(injectionManager);
+        config.register(PriorityFeature1.class);
+        config.register(PriorityFeature2.class);
+        config.register(PriorityFeature3.class);
+        config.configureMetaProviders(injectionManager, finalizer);
+        int value = (int) config.getProperty(OrderedFeature.PROPERTY_NAME);
+
+        assertEquals(Priorities.USER + 100, value);
+    }
+
+    @Priority(Priorities.USER)
+    private static class PriorityFeature1 extends OrderedFeature {
+        private PriorityFeature1() {
+            super(Priorities.USER);
+        }
+    }
+
+    @Priority(Priorities.USER - 100)
+    private static class PriorityFeature2 extends OrderedFeature {
+        private PriorityFeature2() {
+            super(Priorities.USER - 100);
+        }
+    }
+
+    @Priority(Priorities.USER + 100)
+    private static class PriorityFeature3 extends OrderedFeature {
+        private PriorityFeature3() {
+            super(Priorities.USER + 100);
+        }
     }
 
 }

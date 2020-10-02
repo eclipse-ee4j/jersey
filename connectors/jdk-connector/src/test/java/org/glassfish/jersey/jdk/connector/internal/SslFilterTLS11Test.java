@@ -13,21 +13,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.jersey.helidon.connector;
 
-import org.glassfish.jersey.internal.util.PropertiesClass;
+package org.glassfish.jersey.jdk.connector.internal;
 
-import io.helidon.config.Config;
-import io.helidon.webclient.WebClient;
+public class SslFilterTLS11Test extends SslFilterTest {
 
-/**
- * Configuration options specific to the Client API that utilizes {@link HelidonConnector}
- */
-@PropertiesClass
-public final class HelidonProperties {
+    public SslFilterTLS11Test() {
+        System.setProperty("jdk.tls.server.protocols", "TLSv1.1");
+        System.setProperty("jdk.tls.client.protocols", "TLSv1.1");
+    }
 
-    /**
-     * A Helidon {@link Config} instance that is passed to {@link WebClient.Builder#config(Config)} if available
-     */
-    public static final String CONFIG = "jersey.config.helidon.client.config";
 }

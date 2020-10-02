@@ -167,7 +167,7 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
 
     private <T> T resolveProperty(final String name, Object defaultValue, final Class<T> type) {
         // Check runtime configuration first
-        Object result = clientConfig.getProperty(name);
+        Object result = getConfiguration().getProperty(name);
         if (result != null) {
             defaultValue = result;
         }

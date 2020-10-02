@@ -42,6 +42,7 @@ import jakarta.ws.rs.sse.SseEventSink;
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.server.model.internal.SseTypeResolver;
 import org.glassfish.jersey.server.spi.internal.ParameterValueHelper;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
@@ -85,7 +86,7 @@ class ResourceMethodValidator extends AbstractResourceModelVisitor {
         if ("GET".equals(method.getHttpMethod())) {
             final long eventSinkCount = invocable.getParameters()
                     .stream()
-                    .filter(parameter -> SseEventSink.class.equals(parameter.getRawType()))
+                    .filter(parameter -> SseTypeResolver.isSseSinkParam(parameter.getRawType()))
                     .count();
 
             final boolean isSse = eventSinkCount > 0;
@@ -213,7 +214,8 @@ class ResourceMethodValidator extends AbstractResourceModelVisitor {
     }
 
     private boolean isSseInjected(final Invocable invocable) {
-        return invocable.getParameters().stream().anyMatch(parameter -> SseEventSink.class.equals(parameter.getRawType()));
+        return invocable.getParameters().stream()
+                .anyMatch(parameter -> SseTypeResolver.isSseSinkParam(parameter.getRawType()));
     }
 
     private static final Set<Class> PARAM_ANNOTATION_SET = createParamAnnotationSet();

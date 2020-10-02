@@ -42,6 +42,9 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
+                    <systemPropertyVariables>
+                        <sun.net.http.allowRestrictedHeaders>true</sun.net.http.allowRestrictedHeaders>
+                    </systemPropertyVariables>
                     <excludes>
                         <exclude>org/glassfish/jersey/tests/e2e/client/AbortResponseClientTest.java</exclude>
                     </excludes>
