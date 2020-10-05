@@ -12,7 +12,6 @@ package org.glassfish.jersey.examples.entityfiltering;
 
 import jakarta.ws.rs.ApplicationPath;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.server.ResourceConfig;

@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedEntity;
 import org.glassfish.jersey.examples.entityfiltering.security.domain.RestrictedSubEntity;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.filtering.SecurityEntityFilteringFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -42,7 +42,7 @@ public class RestrictedResourceTest extends JerseyTest {
 
     @Parameterized.Parameters(name = "Provider: {0}")
     public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}});
+        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}/*, {JacksonFeature.class}*/});
     }
 
     public RestrictedResourceTest(final Class<Feature> filteringProvider) {

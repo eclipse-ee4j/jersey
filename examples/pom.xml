@@ -64,14 +64,14 @@
         <module>entity-filtering</module>
         <module>entity-filtering-selectable</module>
         <module>entity-filtering-security</module>
-        <!-- <module>extended-wadl-webapp</module> -->
+<!--        <module>extended-wadl-webapp</module> Jakartification -->
         <module>exception-mapping</module>
         <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
         <!--<module>flight-mgmt-webapp</module>-->
         <module>groovy</module>
         <module>helloworld</module>
-        <module>helloworld-benchmark</module>
+<!--        <module>helloworld-benchmark</module> Jakartification -->
         <module>helloworld-cdi2-se</module>
         <module>helloworld-netty</module>
         <module>helloworld-programmatic</module>
@@ -89,10 +89,10 @@
         <module>jaxrs-types-injection</module>
         <module>jersey-ejb</module>
         <module>json-binding-webapp</module>
-<!--        <module>json-jackson</module>-->
-<!--        <module>json-jettison</module>-->
+<!--        <module>json-jackson</module> Jakartification-->
+        <module>json-jettison</module>
         <module>json-moxy</module>
-<!--        <module>json-processing-webapp</module> JSONP-->
+        <module>json-processing-webapp</module>
         <module>json-with-padding</module>
         <module>managed-beans-webapp</module>
         <module>managed-client</module>
@@ -103,12 +103,12 @@
         <module>open-tracing</module>
         <module>osgi-helloworld-webapp</module>
         <module>osgi-http-service</module>
-        <module>oauth-client-twitter</module>
+<!--        <module>oauth-client-twitter</module> Jakartification -->
         <!--<module>oauth2-client-google-webapp</module>-->
         <module>reload</module>
-        <module>rx-client-webapp</module>
+<!--        <module>rx-client-webapp</module> Jakartification-->
         <module>server-async</module>
-        <module>server-async-managed</module>
+<!--        <module>server-async-managed</module> Jakartification-->
         <module>server-async-standalone</module>
         <module>server-sent-events-jersey</module>
         <module>server-sent-events-jaxrs</module>
@@ -124,12 +124,6 @@
         <module>webapp-example-parent</module>
         <module>xml-moxy</module>
     </modules>
-    <profiles>
-        <profile>
-            <id>exluded_due_to_jakartification</id>
-            <modules><module>extended-wadl-webapp</module></modules>
-        </profile>
-    </profiles>
 
     <dependencyManagement>
         <dependencies>

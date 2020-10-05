@@ -37,7 +37,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -47,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test-case for JERSEY-1481.
  *
- * {@link JacksonFeature Jackson provider} should not take precedence over our
+ * {@link MoxyJsonFeature Moxy provider} should not take precedence over our
  * custom provider.
  *
  * @author Michal Gajdos
@@ -182,7 +182,7 @@ public class MessageBodyWorkerInheritanceTest extends JerseyTest {
         return new ResourceConfig(Resource.class)
                 .register(GenericModelWriter.class)
                 .register(ModelReader.class)
-                .register(JacksonFeature.class);
+                .register(MoxyJsonFeature.class);
     }
 
     @Test

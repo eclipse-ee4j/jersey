@@ -38,12 +38,14 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jackson.JacksonFeature;
+//import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jsonb.JsonBindingFeature;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -157,13 +159,15 @@ public class MultipartTest extends JerseyTest {
     protected Application configure() {
         return new ResourceConfig(MultipartResource.class, MessageBodyProvider.class)
                 .register(MultiPartFeature.class)
-                .register(JacksonFeature.class);
+//                .register(JacksonFeature.class);
+                .register(JsonBindingFeature.class);
     }
 
     @Override
     protected void configureClient(final ClientConfig config) {
         config.register(MultiPartFeature.class);
-        config.register(JacksonFeature.class);
+        //config.register(JacksonFeature.class);
+        config.register(JsonBindingFeature.class);
     }
 
     @Test

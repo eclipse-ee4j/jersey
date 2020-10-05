@@ -30,7 +30,7 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
+//import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jettison.JettisonConfig;
 import org.glassfish.jersey.jettison.JettisonFeature;
 import org.glassfish.jersey.jsonb.JsonBindingFeature;
@@ -45,7 +45,7 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 public abstract class JsonTestProvider {
 
     public static final Collection<JsonTestProvider> JAXB_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
-        add(new JacksonJsonTestProvider());
+//        add(new JacksonJsonTestProvider());
         add(new JettisonMappedJsonTestProvider());
         add(new JettisonBadgerfishJsonTestProvider());
         add(new MoxyJsonTestProvider());
@@ -54,13 +54,13 @@ public abstract class JsonTestProvider {
 
     //  TODO add MoxyJsonTestProvider once MOXy supports POJO
     public static final Collection<JsonTestProvider> POJO_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
-        add(new JacksonJsonTestProvider());
+//        add(new JacksonJsonTestProvider());
     }};
 
     private Feature feature;
     private JettisonConfig configuration;
     private Set<Object> providers = new LinkedHashSet<>();
-/*
+
     public static class JettisonMappedJsonTestProvider extends JsonTestProvider {
 
         public JettisonMappedJsonTestProvider() {
@@ -125,7 +125,7 @@ public abstract class JsonTestProvider {
             return JsonbBuilder.create(config);
         }
     }
-
+/*
     public static class JacksonJsonTestProvider extends JsonTestProvider {
 
         public JacksonJsonTestProvider() {
@@ -134,11 +134,7 @@ public abstract class JsonTestProvider {
 
     }
 
-    public static class Jackson1JsonTestProvider extends JsonTestProvider {
-        public Jackson1JsonTestProvider() {
-            setFeature(new Jackson1Feature());
-        }
-    }
+*/
 
     public static class JsonbTestProvider extends JsonTestProvider {
         public JsonbTestProvider() {
@@ -146,7 +142,6 @@ public abstract class JsonTestProvider {
             getProviders().add(new JsonbContextResolver());
         }
     }
-    */
 
     public JettisonConfig getConfiguration() {
         return configuration;

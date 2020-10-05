@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.JSONP;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -176,9 +176,9 @@ public class JsonWithPaddingTest extends JerseyTest {
         final Response response = target("jsonp").path("PureJson").request("application/x-javascript").get();
 
         // Method is invoked but we do not have a MBW for application/x-javascript.
-        if (jsonTestProvider.getFeature().getClass() == JacksonFeature.class) {
+        /* if (jsonTestProvider.getFeature().getClass() == JacksonFeature.class) {
             assertThat(response.getStatus(), equalTo(200));
-        } else {
+        } else */ {
             assertThat(response.getStatus(), equalTo(500));
         }
     }

@@ -42,56 +42,34 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
-                    <excludes>
-                        <exclude>org/glassfish/jersey/tests/e2e/json/AbstractJsonTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/json/JsonTestProvider.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/json/JsonProcessingTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/JsonMoxyTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringClientTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringScopesTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringServerTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnPropertiesTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/XmlMoxyTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnClassTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEmptyEntityTest.java</exclude>
-                    </excludes>
                 </configuration>
-                <!-- TODO remove after jakartification -->
-                <executions>
-                    <execution>
-                        <id>default-test</id> <!-- jakartification-excluded-tests -->
-                        <configuration>
-                            <excludes>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/MultipartTest.java</exclude>
-                                <!--JDK 8 -->
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/CharsetTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/EmptyRequestWithJaxbTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/EntityTypesTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/JAXBContextResolverTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/JAXBContextResolverTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/XXETest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/XmlJaxBElementProviderTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/MoxyEntityFilteringTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <testExcludes>
-                        <exclude>org/glassfish/jersey/tests/e2e/json/*</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/json/**/*</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/JsonMoxyTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringClientTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringScopesTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringServerTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnPropertiesTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/XmlMoxyTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEntityFilteringOnClassTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/JsonEmptyEntityTest.java</exclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/domain/*.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringClientTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringOnClassTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringOnPropertiesTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringServerTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringScopesTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/Json*.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/InheritanceTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/JacksonJsonViewTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/JsonWithoutExceptionMapperTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/JsonEntityFilteringScopesTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/GenericTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/Jersey1199Test.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/PojoTest.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/pojo/*</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Animal.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/AnimalList.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/AnotherCat.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Cat.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Dog.java</testExclude>
+                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Jersey1199List.java</testExclude>
                     </testExcludes>
                 </configuration>
             </plugin>
@@ -125,26 +103,26 @@
             <artifactId>jersey-mvc-mustache</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jettison</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jersey.media</groupId>-->
-<!--            <artifactId>jersey-media-moxy</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jersey.media</groupId>-->
-<!--            <artifactId>jersey-media-json-processing</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
@@ -235,6 +213,18 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
             <scope>test</scope>
@@ -242,19 +232,6 @@
     </dependencies>
 
     <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>xdk</id>
             <properties>

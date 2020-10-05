@@ -70,24 +70,23 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
+            <classifier>module</classifier>
         </dependency>
 
-        <!-- TODO - remove snapshot dependencies (will need yasson & API release, as there only is 2 month old M1 version -->
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
             <exclusions>
-                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>el-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>jakarta.el-api</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>jakarta.json.bind</groupId>
                     <artifactId>jakarta.json.bind-api</artifactId>
@@ -97,18 +96,6 @@
                     <artifactId>jakarta.json-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.json.bind</groupId>
-            <artifactId>jakarta.json.bind-api</artifactId>
-            <version>${jsonb.api.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-api</artifactId>
-            <version>${jsonp.ri.version}</version>
         </dependency>
 
         <dependency>

@@ -81,7 +81,6 @@ public class ClientExecutorTest extends JerseyTest {
     }
 
     @Test
-    @Ignore //TODO - remove after jakartification
     public void testDefaultExecutorRx() throws InterruptedException {
         Client client = ClientBuilder.newClient();
         testRx(client, latch);

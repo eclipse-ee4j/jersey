@@ -132,6 +132,10 @@
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -216,6 +220,9 @@
                 <configuration>
                     <forkMode>always</forkMode>
                     <enableAssertions>false</enableAssertions>
+                    <excludes>
+                        <exclude>org/glassfish/jersey/examples/extendedwadl/ExtendedWadlWebappOsgiTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -234,18 +241,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>testsJdk11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>pre-release</id>
             <build>

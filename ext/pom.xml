@@ -56,9 +56,7 @@
         <module>spring5</module>
         -->
         <module>wadl-doclet</module>
-        <!-- do not release MP modules with Jersey 3.x
         <module>microprofile</module>
-        -->
     </modules>
 
     <dependencies>

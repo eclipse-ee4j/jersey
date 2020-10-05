@@ -32,7 +32,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -103,15 +103,15 @@ public class EntityTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        ResourceConfig config = new ResourceConfig(EntityResource.class, JacksonFeature.class);
+        ResourceConfig config = new ResourceConfig(EntityResource.class/*, JacksonFeature.class*/);
         config.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
         return config;
     }
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new JettyConnectorProvider())
-                .register(JacksonFeature.class);
+        config.connectorProvider(new JettyConnectorProvider());
+                //.register(/*JacksonFeature.class*/);
     }
 
     @Test

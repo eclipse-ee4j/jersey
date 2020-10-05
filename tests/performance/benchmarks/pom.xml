@@ -34,15 +34,22 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
             <version>${project.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-entity-filtering</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
@@ -142,6 +149,38 @@
                         <exclude>org/glassfish/jersey/tests/performance/benchmark/server/JacksonTest.java</exclude>
                         <exclude>org/glassfish/jersey/tests/performance/benchmark/server/LocatorTest.java</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>org/glassfish/jersey/tests/performance/benchmark/entity/json/JacksonApplication.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/performance/benchmark/JacksonBenchmark.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>base-compile</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>org/glassfish/jersey/tests/performance/benchmark/entity/json/JacksonApplication.java</exclude>
+                                <exclude>org/glassfish/jersey/tests/performance/benchmark/JacksonBenchmark.java</exclude>
+                            </excludes>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/tests/performance/benchmark/server/JacksonTest.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <testExcludes>
+                        <testExclude>org/glassfish/jersey/tests/performance/benchmark/server/JacksonTest.java</testExclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
         </plugins>
