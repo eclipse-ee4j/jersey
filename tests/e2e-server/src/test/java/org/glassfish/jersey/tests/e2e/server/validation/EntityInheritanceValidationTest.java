@@ -28,7 +28,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jsonb.JsonBindingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -154,12 +155,14 @@ public class EntityInheritanceValidationTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(Resource.class)
-                .register(JacksonFeature.class);
+                // .register(JacksonFeature.class);
+                .register(JsonBindingFeature.class);
     }
 
     @Override
     protected void configureClient(final ClientConfig config) {
-        config.register(JacksonFeature.class);
+        // config.register(JacksonFeature.class);
+        config.register(JsonBindingFeature.class);
     }
 
     @Test

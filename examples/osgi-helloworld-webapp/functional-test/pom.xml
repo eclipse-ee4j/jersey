@@ -147,6 +147,11 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>${jakarta.activation.version}</version>
+        </dependency>
          <!-- uncomment the following dependency to get ability
               to run felix console in the test -->
          <!--dependency>
@@ -227,19 +232,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>testsJdk11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                    <version>${jakarta.activation.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>release</id>
             <!-- do not create source zip bundles -->

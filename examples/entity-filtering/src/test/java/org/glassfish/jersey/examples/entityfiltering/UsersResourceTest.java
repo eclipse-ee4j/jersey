@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.examples.entityfiltering.domain.User;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -41,7 +41,7 @@ public class UsersResourceTest extends JerseyTest {
 
     @Parameterized.Parameters(name = "Provider: {0}")
     public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}});
+        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}/*, {JacksonFeature.class}*/});
     }
 
     public UsersResourceTest(final Class<Feature> filteringProvider) {

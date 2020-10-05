@@ -21,7 +21,7 @@ import org.glassfish.jersey.examples.entityfiltering.selectable.domain.Address;
 import org.glassfish.jersey.examples.entityfiltering.selectable.domain.Person;
 import org.glassfish.jersey.examples.entityfiltering.selectable.domain.PhoneNumber;
 import org.glassfish.jersey.examples.entityfiltering.selectable.resource.PersonResource;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.filtering.SelectableEntityFilteringFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -46,7 +46,7 @@ public class PersonResourceTest extends JerseyTest {
 
     @Parameterized.Parameters(name = "Provider: {0}")
     public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}});
+        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class} /*, {JacksonFeature.class} */});
     }
 
     private final Class<Feature> filteringProvider;
@@ -94,12 +94,12 @@ public class PersonResourceTest extends JerseyTest {
         assertThat(phoneNumbers, notNullValue());
 
         // TODO: enable for MOXy as well when JERSEY-2751 gets fixed.
-        if (JacksonFeature.class.isAssignableFrom(filteringProvider)) {
-            phoneNumber = phoneNumbers.get("HOME");
-            assertThat(phoneNumber, notNullValue());
-            assertThat(phoneNumber.getAreaCode(), notNullValue());
-            assertThat(phoneNumber.getNumber(), notNullValue());
-        }
+//        if (JacksonFeature.class.isAssignableFrom(filteringProvider)) {
+//            phoneNumber = phoneNumbers.get("HOME");
+//            assertThat(phoneNumber, notNullValue());
+//            assertThat(phoneNumber.getAreaCode(), notNullValue());
+//            assertThat(phoneNumber.getNumber(), notNullValue());
+//        }
     }
 
     @Test

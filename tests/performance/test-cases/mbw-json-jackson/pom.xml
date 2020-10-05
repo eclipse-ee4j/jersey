@@ -48,10 +48,10 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -68,6 +68,18 @@
                     <excludes>
                         <exclude>org/glassfish/jersey/tests/performance/mbw/json/JsonEntityTest.java</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*</exclude>
+                    </excludes>
+                    <testExcludes>
+                        <testExclude>**/*</testExclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
         </plugins>

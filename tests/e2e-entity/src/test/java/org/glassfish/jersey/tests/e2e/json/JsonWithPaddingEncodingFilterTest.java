@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
+//import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.DeflateEncoder;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.JSONP;
@@ -50,7 +50,7 @@ public class JsonWithPaddingEncodingFilterTest extends JerseyTest {
     protected ResourceConfig configure() {
         enable(TestProperties.LOG_TRAFFIC);
         return new ResourceConfig(MyResource.class)
-                .register(JacksonFeature.class)
+//                .register(JacksonFeature.class)
                 .register(EncodingFilter.class)
                 .register(GZipEncoder.class)
                 .register(DeflateEncoder.class);

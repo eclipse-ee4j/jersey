@@ -38,7 +38,7 @@
     <modules>
         <module>jaxb</module>
         <module>json-binding</module>
-        <module>json-jackson</module>
+<!--        <module>json-jackson</module>-->
         <module>json-jettison</module>
         <module>json-processing</module>
         <module>moxy</module>

@@ -63,15 +63,15 @@
         <module>jersey-2176</module>
         <module>jersey-2184</module>
         <module>jersey-2255</module>
-        <module>jersey-2322</module>
+<!--        <module>jersey-2322</module> Jakartification-->
         <module>jersey-2335</module>
         <module>jersey-2421</module>
         <module>jersey-2551</module>
         <module>jersey-2612</module>
         <module>jersey-2637</module>
         <module>jersey-2654</module>
-        <module>jersey-2673</module>
-        <module>jersey-2689</module>
+<!--        <module>jersey-2673</module> Jakartification-->
+<!--        <module>jersey-2689</module> Jakartification-->
         <module>jersey-2704</module>
         <module>jersey-2776</module>
         <module>jersey-2794</module>
@@ -88,7 +88,7 @@
         <module>jersey-4507</module>
         <module>jersey-4542</module>
         <module>jetty-response-close</module>
-<!--        <module>microprofile</module> -->  <!--TODO remove when Jakartified -->
+        <module>microprofile</module>
         <module>property-check</module>
         <module>security-digest</module>
         <module>servlet-2.5-autodiscovery-1</module>

@@ -87,16 +87,6 @@
                     <mainClass>org.glassfish.jersey.examples.httppatch.App</mainClass>
                 </configuration>
             </plugin>
-            <plugin>
-                <!-- TODO remove after jakartification -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>org/glassfish/jersey/examples/httppatch/HttpPatchTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

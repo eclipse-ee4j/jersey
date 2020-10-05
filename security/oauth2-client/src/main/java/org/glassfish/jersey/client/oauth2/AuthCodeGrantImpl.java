@@ -47,7 +47,7 @@ import jakarta.inject.Provider;
 
 import org.glassfish.jersey.client.oauth2.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
-import org.glassfish.jersey.jackson.JacksonFeature;
+// import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 /**
@@ -233,9 +233,9 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
         if (!config.isRegistered(AuthCodeGrantImpl.DefaultTokenMessageBodyReader.class)) {
             client.register(AuthCodeGrantImpl.DefaultTokenMessageBodyReader.class);
         }
-        if (!config.isRegistered(JacksonFeature.class)) {
-            client.register(JacksonFeature.class);
-        }
+//        if (!config.isRegistered(JacksonFeature.class)) {
+//            client.register(JacksonFeature.class);
+//        }
 
         return client;
     }

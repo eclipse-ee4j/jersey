@@ -127,14 +127,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <!-- TODO remove after jakartification -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

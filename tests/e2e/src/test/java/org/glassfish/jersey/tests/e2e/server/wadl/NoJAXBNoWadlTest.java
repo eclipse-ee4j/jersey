@@ -70,7 +70,7 @@ public class NoJAXBNoWadlTest extends JerseyTest {
         final boolean shouldHaveJaxb = JdkVersion.getJdkVersion().getMajor() == 1;
 
         // Make sure the test does not have JAX-B on a classpath
-        Assert.assertFalse(ServiceFinder.find("javax.xml.bind.JAXBContext").iterator().hasNext());
+        Assert.assertFalse(ServiceFinder.find("jakarta.xml.bind.JAXBContext").iterator().hasNext());
 
         try (Response r = target("dummy").request(MediaTypes.WADL_TYPE).options()) {
             String headers = r.getHeaderString(HttpHeaders.ALLOW);

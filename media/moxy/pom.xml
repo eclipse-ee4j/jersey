@@ -95,13 +95,15 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
-            <version>${jsonp.ri.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
-            <version>${jsonp.ri.version}</version>
+            <classifier>module</classifier>
         </dependency>
 
         <dependency>
@@ -109,12 +111,8 @@
             <artifactId>org.eclipse.persistence.moxy</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>jakarta.json</groupId>
-                    <artifactId>jakarta.json-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.json</groupId>
-                    <artifactId>jakarta.json-api</artifactId>
+                    <groupId>jakarta.json.bind</groupId>
+                    <artifactId>jakarta.json.bind-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -134,20 +132,4 @@
             <layout>default</layout>
         </repository>
     </repositories>
-
-    <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
 </project>
