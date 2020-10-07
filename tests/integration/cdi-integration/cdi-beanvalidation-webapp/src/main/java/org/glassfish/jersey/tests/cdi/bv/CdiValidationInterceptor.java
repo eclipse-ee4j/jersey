@@ -16,17 +16,16 @@
 
 package org.glassfish.jersey.tests.cdi.bv;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.glassfish.jersey.server.spi.ValidationInterceptor;
 import org.glassfish.jersey.server.spi.ValidationInterceptorContext;
-
 import org.jboss.weld.interceptor.util.proxy.TargetInstanceProxy;
 
 /**
@@ -66,7 +65,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
 
         final Object resource = ctx.getResource();
         if (resource instanceof TargetInstanceProxy) {
-            ctx.setResource(((TargetInstanceProxy) resource).getTargetInstance());
+            ctx.setResource(((TargetInstanceProxy) resource).weld_getTargetInstance());
         }
 
         try {
@@ -79,6 +78,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
                 ValidationResultUtil.updateValidationResultProperty(resource, validationResultGetter,
                         constraintViolationException.getConstraintViolations());
                 pir.setValidationResult(validationResult);
+                ctx.getArgs()[0] = ""; // Let it not be null
             } else {
                 // Then check for a field
                 final Field vr = ValidationResultUtil.getValidationResultField(resource);
@@ -88,6 +88,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
                 } else {
                     if (isValidationResultInArgs(ctx.getArgs())) {
                         this.validationResult.setViolations(constraintViolationException.getConstraintViolations());
+                        ctx.getArgs()[0] = ""; // Let it not be null
                     } else {
                         throw constraintViolationException;
                     }

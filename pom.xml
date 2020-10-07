@@ -2118,18 +2118,16 @@
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
 
-        <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
+        <weld.version>4.0.0.Beta1</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <!-- Jakartified, eligible for CQ -->
-        <validation.impl.version>7.0.0.Alpha1</validation.impl.version>
-        <weld3.version>4.0.0.Alpha2</weld3.version>
-        <weld4.version>4.0.0.Alpha2</weld4.version>
+        <validation.impl.version>7.0.0.Alpha6</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>5.1.0</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>3.0.0-M4</cdi.api.version>
+        <cdi.api.version>3.0.0</cdi.api.version>
         <ejb.version>4.0.0-RC2</ejb.version>
         <grizzly2.version>3.0.0-M1</grizzly2.version>
         <hk2.version>3.0.0-M2</hk2.version>

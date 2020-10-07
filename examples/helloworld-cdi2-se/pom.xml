@@ -26,10 +26,6 @@
 
     <description>Jersey "Hello world" example with CDI 2 SE.</description>
 
-    <properties>
-        <weld.version>${weld3.version}</weld.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>

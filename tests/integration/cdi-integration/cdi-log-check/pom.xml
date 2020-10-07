@@ -110,22 +110,5 @@
                 <maven.test.skip>false</maven.test.skip>
             </properties>
         </profile>
-        <profile>
-            <id>jakartification_exclude_tests</id> <!-- TODO remove after jakartification -->
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 </project>
