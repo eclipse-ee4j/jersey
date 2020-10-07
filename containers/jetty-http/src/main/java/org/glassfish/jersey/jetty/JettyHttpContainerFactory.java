@@ -205,7 +205,8 @@ public final class JettyHttpContainerFactory {
      * @throws ProcessingException      in case of any failure when creating a new Jetty {@code Server} instance.
      * @throws IllegalArgumentException if {@code uri} is {@code null}.
      */
-    public static Server createServer(final URI uri, final SslContextFactory sslContextFactory, final ResourceConfig config)
+    public static Server createServer(final URI uri, final SslContextFactory.Server sslContextFactory,
+                                      final ResourceConfig config)
             throws ProcessingException {
         final JettyHttpContainer container = ContainerFactory.createContainer(JettyHttpContainer.class, config);
         return createServer(uri, sslContextFactory, container, true);
@@ -232,7 +233,7 @@ public final class JettyHttpContainerFactory {
      * @see JettyHttpContainer
      */
     public static Server createServer(final URI uri,
-                                      final SslContextFactory sslContextFactory,
+                                      final SslContextFactory.Server sslContextFactory,
                                       final JettyHttpContainer handler,
                                       final boolean start) {
         if (uri == null) {

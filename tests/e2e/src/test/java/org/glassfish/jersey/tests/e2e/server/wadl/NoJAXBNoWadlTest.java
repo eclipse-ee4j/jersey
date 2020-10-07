@@ -67,8 +67,6 @@ public class NoJAXBNoWadlTest extends JerseyTest {
 
     @Test
     public void testOptionsNoWadl() {
-        final boolean shouldHaveJaxb = JdkVersion.getJdkVersion().getMajor() == 1;
-
         // Make sure the test does not have JAX-B on a classpath
         Assert.assertFalse(ServiceFinder.find("jakarta.xml.bind.JAXBContext").iterator().hasNext());
 
@@ -77,6 +75,6 @@ public class NoJAXBNoWadlTest extends JerseyTest {
             Assert.assertEquals("OPTIONS,PUT", headers);
         }
         System.out.println(readableStream.toString());
-        Assert.assertEquals(!shouldHaveJaxb, readableStream.toString().contains(LocalizationMessages.WADL_FEATURE_DISABLED()));
+        Assert.assertTrue(readableStream.toString().contains(LocalizationMessages.WADL_FEATURE_DISABLED()));
     }
 }

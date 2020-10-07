@@ -40,7 +40,6 @@
         <module>jdk-http</module>
         <module>jersey-servlet-core</module>
         <module>jersey-servlet</module>
-        <module>jetty-http</module>
         <!-- TODO jakartify this -->
 <!--        <module>jetty-servlet</module>-->
         <module>netty-http</module>
@@ -76,4 +75,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Jetty11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <modules>
+                <module>jetty-http</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

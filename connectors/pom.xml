@@ -37,7 +37,6 @@
         <module>apache-connector</module>
         <module>grizzly-connector</module>
         <module>jdk-connector</module>
-        <module>jetty-connector</module>
         <module>netty-connector</module>
     </modules>
 
@@ -85,6 +84,15 @@
             </activation>-->
             <modules>
                 <module>helidon-connector</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>Jetty11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <modules>
+                <module>jetty-connector</module>
             </modules>
         </profile>
     </profiles>

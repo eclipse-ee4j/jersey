@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieStore;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -35,16 +36,27 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
+import org.eclipse.jetty.client.ConnectionPool;
+import org.eclipse.jetty.client.HttpClientTransport;
+import org.eclipse.jetty.client.HttpDestination;
+import org.eclipse.jetty.client.HttpRequest;
+import org.eclipse.jetty.client.Origin;
+import org.eclipse.jetty.client.http.HttpClientTransportOverHTTP;
+import org.eclipse.jetty.io.ClientConnector;
+import org.eclipse.jetty.io.Connection;
+import org.eclipse.jetty.io.EndPoint;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -149,9 +161,12 @@ class JettyConnector implements Connector {
         }
         if (httpClient == null) {
             final SSLContext sslContext = jaxrsClient.getSslContext();
-            final SslContextFactory sslContextFactory = new SslContextFactory();
+            final SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
             sslContextFactory.setSslContext(sslContext);
-            httpClient = new HttpClient(sslContextFactory);
+            final ClientConnector connector = new ClientConnector();
+            connector.setSslContextFactory(sslContextFactory);
+            final HttpClientTransport transport = new HttpClientTransportOverHTTP(connector);
+            httpClient = new HttpClient(transport);
         }
         this.client = httpClient;
 
@@ -240,6 +255,7 @@ class JettyConnector implements Connector {
 
     @Override
     public ClientResponse apply(final ClientRequest jerseyRequest) throws ProcessingException {
+        applyUserAgentHeader(jerseyRequest.getHeaders());
         final Request jettyRequest = translateRequest(jerseyRequest);
         final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest);
         final ContentProvider entity = getBytesProvider(jerseyRequest);
@@ -308,14 +324,34 @@ class JettyConnector implements Connector {
         return request;
     }
 
+    /**
+     * Re-write User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
+     * it shall be propagated to Jetty client before HttpRequest instance is created.
+     * HttpRequest takes User Agent header from client then.
+     *
+     * @param headers - map of Jersey headers
+     */
+    private void applyUserAgentHeader(final MultivaluedMap<String, Object> headers) {
+        if (headers.containsKey(HttpHeaders.USER_AGENT)) {
+            final Map<String, String> stringHeaders =
+                    HeaderUtils.asStringHeadersSingleValue(headers, configuration);
+            client.setUserAgentField(
+                    new HttpField(HttpHeader.USER_AGENT,
+                            HttpHeader.USER_AGENT.name(),
+                            stringHeaders.get(HttpHeaders.USER_AGENT))
+            );
+        }
+    }
+
     private Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
         final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers, configuration);
 
-        // remove User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
-        request.getHeaders().remove(HttpHeader.USER_AGENT);
-        for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
-            request.getHeaders().add(e.getKey(), e.getValue());
-        }
+         if (request instanceof HttpRequest) {
+             final HttpRequest httpRequest = (HttpRequest) request;
+             for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
+                 httpRequest.addHeader(new HttpField(e.getKey(), e.getValue()));
+             }
+         }
         return stringHeaders;
     }
 
@@ -372,6 +408,7 @@ class JettyConnector implements Connector {
 
     @Override
     public Future<?> apply(final ClientRequest jerseyRequest, final AsyncConnectorCallback callback) {
+        applyUserAgentHeader(jerseyRequest.getHeaders());
         final Request jettyRequest = translateRequest(jerseyRequest);
         final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest);
         final ContentProvider entity = getStreamProvider(jerseyRequest);

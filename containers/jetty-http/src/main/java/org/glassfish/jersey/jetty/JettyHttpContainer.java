@@ -31,15 +31,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncEvent;
+import jakarta.servlet.AsyncListener;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.SecurityContext;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -58,9 +61,6 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerResponseWriter;
 
-import org.eclipse.jetty.continuation.Continuation;
-import org.eclipse.jetty.continuation.ContinuationListener;
-import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
@@ -251,12 +251,12 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private static final class ResponseWriter implements ContainerResponseWriter {
 
         private final Response response;
-        private final Continuation continuation;
+        private final AsyncContext context;
         private final boolean configSetStatusOverSendError;
 
         ResponseWriter(final Request request, final Response response, final boolean configSetStatusOverSendError) {
             this.response = response;
-            this.continuation = ContinuationSupport.getContinuation(request);
+            this.context = request.startAsync();
             this.configSetStatusOverSendError = configSetStatusOverSendError;
         }
 
@@ -293,21 +293,31 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
             try {
                 if (timeOut > 0) {
                     final long timeoutMillis = TimeUnit.MILLISECONDS.convert(timeOut, timeUnit);
-                    continuation.setTimeout(timeoutMillis);
+                    context.setTimeout(timeoutMillis);
                 }
-                continuation.addContinuationListener(new ContinuationListener() {
+                context.addListener(new AsyncListener() {
                     @Override
-                    public void onComplete(final Continuation continuation) {
+                    public void onComplete(AsyncEvent asyncEvent) throws IOException {
+
                     }
 
                     @Override
-                    public void onTimeout(final Continuation continuation) {
+                    public void onTimeout(AsyncEvent asyncEvent) throws IOException {
                         if (timeoutHandler != null) {
                             timeoutHandler.onTimeout(ResponseWriter.this);
                         }
                     }
+
+                    @Override
+                    public void onError(AsyncEvent asyncEvent) throws IOException {
+
+                    }
+
+                    @Override
+                    public void onStartAsync(AsyncEvent asyncEvent) throws IOException {
+
+                    }
                 });
-                continuation.suspend(response);
                 return true;
             } catch (final Exception ex) {
                 return false;
@@ -318,7 +328,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         public void setSuspendTimeout(final long timeOut, final TimeUnit timeUnit) throws IllegalStateException {
             if (timeOut > 0) {
                 final long timeoutMillis = TimeUnit.MILLISECONDS.convert(timeOut, timeUnit);
-                continuation.setTimeout(timeoutMillis);
+                context.setTimeout(timeoutMillis);
             }
         }
 
@@ -329,8 +339,8 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
             } catch (final IOException e) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.UNABLE_TO_CLOSE_RESPONSE(), e);
             } finally {
-                if (continuation.isSuspended()) {
-                    continuation.complete();
+                if (context.getRequest().isAsyncStarted()) {
+                    context.complete();
                 }
                 LOGGER.log(Level.FINEST, "commit() called");
             }
