@@ -53,7 +53,6 @@
         <module>jersey-1928</module>
         <module>jersey-1960</module>
         <module>jersey-1964</module>
-        <module>jersey-2031</module>
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
@@ -87,12 +86,9 @@
         <module>jersey-4321</module>
         <module>jersey-4507</module>
         <module>jersey-4542</module>
-        <module>jetty-response-close</module>
         <module>microprofile</module>
-        <module>property-check</module>
         <module>security-digest</module>
         <module>servlet-2.5-autodiscovery-1</module>
-        <module>servlet-2.5-autodiscovery-2</module>
         <module>servlet-2.5-filter</module>
         <module>servlet-2.5-inflector-1</module>
         <module>servlet-2.5-init-1</module>
@@ -103,9 +99,7 @@
         <module>servlet-2.5-init-6</module>
         <module>servlet-2.5-init-7</module>
         <module>servlet-2.5-init-8</module>
-        <module>servlet-2.5-mvc-1</module>
         <module>servlet-2.5-mvc-2</module>
-        <module>servlet-2.5-mvc-3</module>
         <module>servlet-2.5-reload</module>
         <module>servlet-3-async</module>
         <module>servlet-3-chunked-io</module>
@@ -123,10 +117,8 @@
         <module>servlet-3-init-provider</module>
         <module>servlet-3-params</module>
         <module>servlet-3-sse-1</module>
-        <module>servlet-4.0-mvc-1</module>
         <module>servlet-request-wrapper-binding-2</module>
         <module>servlet-request-wrapper-binding</module>
-        <module>servlet-tests</module>
         <module>sonar-test</module>
 <!--        <module>spring4</module>-->
 <!--        <module>spring5</module>-->
@@ -192,7 +184,22 @@
                 </pluginManagement>
             </build>
         </profile>
-
+        <profile>
+            <id>Jetty11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <modules>
+                <module>jersey-2031</module>
+                <module>jetty-response-close</module>
+                <module>property-check</module>
+                <module>servlet-2.5-autodiscovery-2</module>
+                <module>servlet-2.5-mvc-1</module>
+                <module>servlet-2.5-mvc-3</module>
+                <module>servlet-4.0-mvc-1</module>
+                <module>servlet-tests</module>
+            </modules>
+        </profile>
     </profiles>
 
     <build>
