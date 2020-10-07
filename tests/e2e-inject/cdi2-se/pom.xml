@@ -32,10 +32,6 @@
 
     <description>Jersey E2E Inject CDI SE tests</description>
 
-    <properties>
-        <weld.version>${weld3.version}</weld.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>

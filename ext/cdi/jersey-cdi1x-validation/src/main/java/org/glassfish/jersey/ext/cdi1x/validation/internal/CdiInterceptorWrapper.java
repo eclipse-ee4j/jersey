@@ -60,13 +60,13 @@ public class CdiInterceptorWrapper {
 
     @AroundInvoke
     public Object validateMethodInvocation(InvocationContext ctx) throws Exception {
-        final boolean isJaxRsMethod = extension.jaxRsResourceCache.apply(ctx.getMethod().getDeclaringClass());
+        final boolean isJaxRsMethod = extension.getJaxRsResourceCache().apply(ctx.getMethod().getDeclaringClass());
         return isJaxRsMethod ? ctx.proceed() : interceptor.validateMethodInvocation(ctx);
     }
 
     @AroundConstruct
     public void validateConstructorInvocation(InvocationContext ctx) throws Exception {
-        final boolean isJaxRsConstructor = extension.jaxRsResourceCache.apply(ctx.getConstructor().getDeclaringClass());
+        final boolean isJaxRsConstructor = extension.getJaxRsResourceCache().apply(ctx.getConstructor().getDeclaringClass());
         if (!isJaxRsConstructor) {
             interceptor.validateConstructorInvocation(ctx);
         }

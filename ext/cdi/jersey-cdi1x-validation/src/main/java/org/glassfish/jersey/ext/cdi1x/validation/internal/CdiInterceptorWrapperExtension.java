@@ -40,6 +40,7 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.interceptor.Interceptor;
 
+import org.glassfish.jersey.ext.cdi1x.internal.JerseyVetoed;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.model.Resource;
 
@@ -51,12 +52,13 @@ import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
  * @author Jakub Podlesak
  */
 @Priority(value = Interceptor.Priority.PLATFORM_BEFORE + 199)
+@JerseyVetoed
 public class CdiInterceptorWrapperExtension implements Extension {
 
     public static final AnnotationLiteral<Default> DEFAULT_ANNOTATION_LITERAL = new AnnotationLiteral<Default>() {};
     public static final AnnotationLiteral<Any> ANY_ANNOTATION_LITERAL = new AnnotationLiteral<Any>() {};
 
-    final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(clazz -> Resource.from(clazz) != null);
+    private Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(clazz -> Resource.from(clazz) != null);
 
     private AnnotatedType<ValidationInterceptor> interceptorAnnotatedType;
 
@@ -82,7 +84,10 @@ public class CdiInterceptorWrapperExtension implements Extension {
      * @param afterTypeDiscovery CDI bootstrap event.
      */
     private void afterTypeDiscovery(@Observes final AfterTypeDiscovery afterTypeDiscovery) {
-        afterTypeDiscovery.getInterceptors().removeIf(ValidationInterceptor.class::equals);
+        // Does throw java.lang.IndexOutOfBoundsException in Weld 4
+        // afterTypeDiscovery.getInterceptors().removeIf(ValidationInterceptor.class::equals);
+        // iterator.remove throws as well
+        afterTypeDiscovery.getInterceptors().remove(ValidationInterceptor.class);
     }
 
     /**
@@ -170,5 +175,13 @@ public class CdiInterceptorWrapperExtension implements Extension {
                 ctx.release();
             }
         });
+    }
+
+    /* package */ Cache<Class<?>, Boolean> getJaxRsResourceCache() {
+        /* CDI injection hack */
+        if (jaxRsResourceCache == null) {
+            jaxRsResourceCache = new Cache<>(clazz -> Resource.from(clazz) != null);
+        }
+        return jaxRsResourceCache;
     }
 }

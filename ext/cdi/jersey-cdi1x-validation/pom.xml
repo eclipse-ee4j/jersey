@@ -47,15 +47,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
             <exclusions>
                 <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>el-api</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>jakarta.el</groupId>
                     <artifactId>jakarta.el-api</artifactId>
