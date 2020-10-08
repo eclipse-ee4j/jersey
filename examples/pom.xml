@@ -89,7 +89,7 @@
         <module>jaxrs-types-injection</module>
         <module>jersey-ejb</module>
         <module>json-binding-webapp</module>
-<!--        <module>json-jackson</module> Jakartification-->
+        <module>json-jackson</module>
         <module>json-jettison</module>
         <module>json-moxy</module>
         <module>json-processing-webapp</module>
@@ -106,9 +106,9 @@
 <!--        <module>oauth-client-twitter</module> Jakartification -->
         <!--<module>oauth2-client-google-webapp</module>-->
         <module>reload</module>
-<!--        <module>rx-client-webapp</module> Jakartification-->
+        <module>rx-client-webapp</module>
         <module>server-async</module>
-<!--        <module>server-async-managed</module> Jakartification-->
+        <module>server-async-managed</module>
         <module>server-async-standalone</module>
         <module>server-sent-events-jersey</module>
         <module>server-sent-events-jaxrs</module>

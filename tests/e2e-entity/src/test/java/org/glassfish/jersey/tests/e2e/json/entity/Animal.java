@@ -22,13 +22,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * @author Jakub Podlesak
  * @author Michal Gajdos
  */
-// Jackson 1
-@org.codehaus.jackson.annotate.JsonTypeInfo(
-        use = org.codehaus.jackson.annotate.JsonTypeInfo.Id.NAME,
-        include = org.codehaus.jackson.annotate.JsonTypeInfo.As.PROPERTY)
-@org.codehaus.jackson.annotate.JsonSubTypes({
-        @org.codehaus.jackson.annotate.JsonSubTypes.Type(value = Cat.class),
-        @org.codehaus.jackson.annotate.JsonSubTypes.Type(value = Dog.class) })
 // Jackson 2
 @com.fasterxml.jackson.annotation.JsonTypeInfo(
         use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME,
