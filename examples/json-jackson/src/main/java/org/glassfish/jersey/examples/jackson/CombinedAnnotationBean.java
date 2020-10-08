@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.jackson;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author Jakub Podlesak
  */
+// Jackson works with javax API, do not change it to jakarta API.
 @XmlRootElement(name = "account")
 public class CombinedAnnotationBean {
 

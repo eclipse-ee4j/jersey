@@ -52,13 +52,6 @@ public class Jersey1199List {
         this.total = objects.length;
     }
 
-    // Jackson 1
-    @org.codehaus.jackson.annotate.JsonTypeInfo(
-            use = org.codehaus.jackson.annotate.JsonTypeInfo.Id.NAME,
-            include = org.codehaus.jackson.annotate.JsonTypeInfo.As.PROPERTY)
-    @org.codehaus.jackson.annotate.JsonSubTypes({
-            @org.codehaus.jackson.annotate.JsonSubTypes.Type(value = ColorHolder.class)
-    })
     // Jackson 2
     @com.fasterxml.jackson.annotation.JsonTypeInfo(
             use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME,
