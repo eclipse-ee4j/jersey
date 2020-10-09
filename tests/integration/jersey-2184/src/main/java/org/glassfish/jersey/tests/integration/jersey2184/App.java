@@ -22,7 +22,7 @@ import java.util.Set;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * Test Application subclass for JERSEY-2184 integration test.

@@ -60,17 +60,12 @@
                         <java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties
                         </java.util.logging.config.file>
                     </systemPropertyVariables>
-                    <!-- TODO remove after jakartification -->
-                    <excludes> <!--JDK 11 -->
-                        <exclude>**/**/*.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip> <!-- TODO jakartify this -->
                     <connectors>
                         <connector>
                             <responseHeaderSize>16192</responseHeaderSize>
