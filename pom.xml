@@ -701,7 +701,7 @@
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>maven-jetty-plugin</artifactId>
-                    <version>${jetty.plugin.version}</version>
+                    <version>${mortbay.jetty.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
@@ -711,7 +711,7 @@
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${jetty.version}</version>
+                    <version>${jetty.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -1916,14 +1916,14 @@
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty</artifactId>
-                <version>${jetty.plugin.version}</version>
+                <version>${mortbay.jetty.plugin.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
-                <version>${jetty.plugin.version}</version>
+                <version>${mortbay.jetty.plugin.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2145,6 +2145,8 @@
         <jaxb.ri.version>3.0.0-M5</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
+        <jetty.version>11.0.0.beta2</jetty.version>
+        <jetty.plugin.version>11.0.0.beta2</jetty.plugin.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>2.0.0</jsonp.ri.version>
         <jsonp.jaxrs.version>2.0.0</jsonp.jaxrs.version>
@@ -2154,8 +2156,7 @@
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
 
-        <jetty.plugin.version>6.1.26</jetty.plugin.version>
-        <jetty.version>11.0.0.beta2</jetty.version>
+        <mortbay.jetty.plugin.version>6.1.26</mortbay.jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
 
         <mimepull.version>1.9.13</mimepull.version>

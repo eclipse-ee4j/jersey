@@ -55,15 +55,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- TODO remove after jakartification -->
-                <configuration>
-                    <excludes> <!--JDK 11 -->
-                        <exclude>org/glassfish/jersey/tests/integration/jersey1928/Jersey1928ITCase.java</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
             </plugin>
         </plugins>

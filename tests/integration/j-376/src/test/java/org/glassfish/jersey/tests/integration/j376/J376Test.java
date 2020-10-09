@@ -47,7 +47,6 @@ public class J376Test {
     }
 
     @Test
-    @Ignore //TODO - remove after Jakartification
     public void testConstructorInjection() {
         final String response = target.path("constructor").request().post(Entity.entity("name=John&age=32",
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
@@ -56,7 +55,6 @@ public class J376Test {
     }
 
     @Test
-    @Ignore //TODO - remove after Jakartification
     public void testFieldInjection() {
         final String response = target.path("field").request().post(Entity.entity("name=Bill&age=21",
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
@@ -65,7 +63,6 @@ public class J376Test {
     }
 
     @Test
-    @Ignore //TODO - remove after Jakartification
     public void testMethodInjection() {
         final String response = target.path("method").request().post(Entity.entity("name=Mike&age=42",
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
@@ -90,7 +87,6 @@ public class J376Test {
     }
 
     @Test
-    @Ignore //TODO - remove after Jakartification
     public void testBeanParamInAppScoped() {
         final String response = target.path("appScope").request().post(Entity.entity("name=John&age=35",
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
