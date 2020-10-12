@@ -13,6 +13,14 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=202" target="_blank">Understanding Jakarta EE 9</a></h4> 
+Oct 12, 2020 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=195" target="_blank">What is new in Jersey 2.32</a></h4> 
+Oct 10, 2020 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Jersey 2.30.1 Has Been Released</a></h4>
+March 1, 2020 | Jan Supol
 
 <h4> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a></h4> 
 Jan 13, 2020 | Jan Supol

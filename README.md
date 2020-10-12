@@ -5,9 +5,14 @@ variety of representation media types and abstract away the low-level details
 of the client-server communication is not an easy task without a good toolkit.
 In order to simplify development of RESTful Web services and their clients in Java,
 a standard and portable [JAX-RS API][jax-rs] has been designed.
-Jersey RESTful Web Services framework is open source, production quality,
+
+Jersey RESTful Web Services 2.x framework is open source, production quality,
 framework for developing RESTful Web Services in Java that provides support for
-JAX-RS APIs and serves as a JAX-RS (JSR 311 & JSR 339) Reference Implementation.
+JAX-RS APIs and serves as a JAX-RS (JSR 311 & JSR 339 & JSR 370) Reference Implementation.
+
+Jersey RESTful Web Services 3.x framework is open source, production quality,
+framework for developing RESTful Web Services in Java that provides support for
+Jakarta RESTful Web Services 3.0.
 
 Jersey framework is more than the JAX-RS Reference Implementation. Jersey provides
 it's own [API][jersey-api] that extend the JAX-RS toolkit with additional features
@@ -86,7 +91,7 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 
 [jersey-api]: {{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html
 [dwnld]: download.html
-[jax-rs]: http://jax-rs-spec.java.net/
+[jax-rs]: https://jakarta.ee/specifications/restful-ws/
 
 <table style="border:none">
 <tr>
@@ -97,7 +102,8 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 <h3> <a name="Links"></a>Links</h3>
 
 - <a href="https://projects.eclipse.org/projects/ee4j.jersey">Jersey project page</a><br/>
-- <a href="{{ site.links.newJerseyURL }}">jersey.github.io</a><br/>
+- <a href="TCK-Results.html">TCK Results</a><br/>
+- <a href="{{ site.links.newJerseyURL }}">jersey.github.io (obsolete)</a><br/>
 - <a href="https://jcp.org/en/jsr/detail?id=370">JSR-370 page on JCP site</a><br/>
 - <a href="https://stackoverflow.com/questions/tagged/jersey">Stack Overflow</a><br/>
 </td>
@@ -105,13 +111,12 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
  <h3>Latest Articles</h3>
 
 <table>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Understanding Jakarta EE 9</a>                         </td><td> Oct 12, 2020 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">What is new in Jersey 2.32</a>                         </td><td> Oct 10, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Jersey 2.30.1 has been released</a>                         </td><td> March 1, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a>                         </td><td> Jan 13, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=164" target="_blank">Jersey Apache Connector Hangs …?</a>                      </td><td> Jan 7, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=150" target="_blank">Configuring Jersey Application</a>                        </td><td> Oct 4, 2019 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=147" target="_blank">Jersey 2.29.1 Has Been Released</a>                       </td><td> Sep 10, 2019 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=144" target="_blank">Jersey 2.29 Has Been Released</a>                         </td><td> Jun 25, 2019 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=130" target="_blank">Jersey 2.28 Has Been Released</a>                         </td><td> Jan 28, 2019 </td><td> Jan Supol </td> </tr>
 </table>
 
 
