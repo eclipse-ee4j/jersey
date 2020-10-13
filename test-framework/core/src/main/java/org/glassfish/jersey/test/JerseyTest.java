@@ -237,7 +237,7 @@ public abstract class JerseyTest {
      *
      * @return a test container instance or {@code null} if the container is not set.
      */
-    /* package */ TestContainer getTestContainer() {
+    protected TestContainer getTestContainer() {
         return testContainer;
     }
 
@@ -247,7 +247,7 @@ public abstract class JerseyTest {
      * @param testContainer a test container instance or {@code null} it the current test container should be released.
      * @return old test container instance.
      */
-    /* package */ TestContainer setTestContainer(final TestContainer testContainer) {
+    protected TestContainer setTestContainer(final TestContainer testContainer) {
         final TestContainer old = this.testContainer;
         this.testContainer = testContainer;
         return old;
