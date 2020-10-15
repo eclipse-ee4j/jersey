@@ -51,7 +51,7 @@ public enum JaxRSFeature implements ConfigFeature
 
     /**
      * Feature that may be enabled to force dynamic lookup of <code>ObjectMapper</code>
-     * via JAX-RS Provider interface, regardless of whether <code>MapperConfigurator<code>
+     * via JAX-RS Provider interface, regardless of whether <code>MapperConfigurator</code>
      * has explicitly configured mapper or not; if disabled, static configuration will
      * take precedence.
      * Note that if this feature is enabled, it typically makes sense to also disable
