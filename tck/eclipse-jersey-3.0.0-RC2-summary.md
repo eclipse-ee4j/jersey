@@ -3,8 +3,8 @@
 ***                        TCK bundle information                               ***
 *** Name:       restful-ws-tck-3.0.0.zip                                        ***
 *** Download URL:	https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-restful-ws-tck-3.0.0.zip ***
-*** Date and size: date: 2020-08-26 05:19:03.000000000 +0000, size(b): 28873841 ***
-*** SHA256SUM: b986ce7ab0cde26316aad44c7ae656f659dd3296d846df2baf18a177261887a2 ***
+*** Date and size: date: 2020-10-15 16:15:47.000000000 +0000, size(b): 28850817 ***
+*** SHA256SUM: 39081f393f495d2363ae66c487f83a171cb52a8038930bd1af7829f5757a9aa7 ***
 ***                                                                             ***
 ***********************************************************************************
 ***                        TCK results summary                                  ***

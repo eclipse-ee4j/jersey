@@ -38,7 +38,7 @@ the following is a summary of the TCK results for release of Eclipse Jersey 3.0.
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services 3.0.0](https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/ws/rs/jakarta.ws.rs-api/3.0.0/jakarta.ws.rs-api-3.0.0.jar)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL<br/>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services TCK 3.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-restful-ws-tck-3.0.0.zip)<br/>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SHA-256: b986ce7ab0cde26316aad44c7ae656f659dd3296d846df2baf18a177261887a2
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SHA-256: 39081f393f495d2363ae66c487f83a171cb52a8038930bd1af7829f5757a9aa7
 - [x] Public URL of TCK Results Summary<br/>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [TCK results summary](eclipse-jersey-3.0.0-RC2-summary)
 - [x] Any Additional Specification Certification Requirements<br/>
