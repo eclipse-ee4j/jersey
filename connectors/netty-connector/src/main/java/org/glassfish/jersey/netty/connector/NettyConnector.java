@@ -261,6 +261,7 @@ class NettyConnector implements Connector {
                if (th == null) {
                   ch.pipeline().addLast(INACTIVE_POOLED_CONNECTION_HANDLER, new IdleStateHandler(0, 0, maxPoolIdle));
                   ch.pipeline().addLast(PRUNE_INACTIVE_POOL, new PruneIdlePool(connections, key));
+                  boolean added = true;
                   synchronized (connections) {
                      ArrayList<Channel> conns1 = connections.get(key);
                      if (conns1 == null) {
@@ -271,9 +272,15 @@ class NettyConnector implements Connector {
                         synchronized (conns1) {
                            if (conns1.size() < maxPoolSize) {
                               conns1.add(ch);
-                           } // else do not add the Channel to the idle pool
+                           } else { // else do not add the Channel to the idle pool
+                              added = false;
+                           }
                         }
                      }
+                  }
+
+                  if (!added) {
+                      ch.close();
                   }
                } else {
                   ch.close();
