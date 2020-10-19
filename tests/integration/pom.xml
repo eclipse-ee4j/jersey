@@ -122,6 +122,7 @@
         <module>servlet-3-init-6</module>
         <module>servlet-3-init-7</module>
         <module>servlet-3-init-8</module>
+        <module>servlet-3-init-9</module>
         <module>servlet-3-init-provider</module>
         <module>servlet-3-params</module>
         <module>servlet-3-sse-1</module>
