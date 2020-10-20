@@ -2113,8 +2113,8 @@
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
 
-        <weld.version>4.0.0.Beta1</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <!-- Jakartified, eligible for CQ -->
+        <weld.version>4.0.0.Beta5</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <validation.impl.version>7.0.0.Alpha6</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
