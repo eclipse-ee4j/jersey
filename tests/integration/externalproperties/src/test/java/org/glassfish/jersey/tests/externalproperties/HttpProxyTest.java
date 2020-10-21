@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.e2e.common;
+package org.glassfish.jersey.tests.externalproperties;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -23,6 +23,7 @@ import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
-public class TestExternalProperties extends JerseyTest {
+public class HttpProxyTest extends JerseyTest {
 
     private static final String PROXY_HOST = "localhost";
     private static final String PROXY_PORT = "9997";
@@ -53,10 +54,19 @@ public class TestExternalProperties extends JerseyTest {
         return new ResourceConfig(ProxyTestResource.class);
     }
 
+    @Before
+    public void startFakeProxy() {
+        Server server = new Server(Integer.parseInt(PROXY_PORT));
+        server.setHandler(new ProxyHandler(false));
+        try {
+            server.start();
+        } catch (Exception e) {
+
+        }
+    }
+
     @Test
     public void testProxy() {
-        startFakeProxy();
-
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
         System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         System.setProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS, "");
@@ -68,8 +78,6 @@ public class TestExternalProperties extends JerseyTest {
 
     @Test
     public void testNonProxy() {
-        startFakeProxy();
-
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
         System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         System.setProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS, "localhost");
@@ -79,16 +87,6 @@ public class TestExternalProperties extends JerseyTest {
         Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals("OK", response.readEntity(String.class));
         Assert.assertFalse(proxyHit);
-    }
-
-    private void startFakeProxy() {
-        Server server = new Server(9997);
-        server.setHandler(new ProxyHandler(false));
-        try {
-            server.start();
-        } catch (Exception e) {
-
-        }
     }
 
     class ProxyHandler extends AbstractHandler {
