@@ -27,7 +27,7 @@ import java.net.ProtocolException;
 class HttpUrlExpect100ContinueConnectorExtension
         implements ConnectorExtension<HttpURLConnection, IOException> {
 
-    private final static String EXCEPTION_MESSAGE = "Server rejected operation";
+    private static final String EXCEPTION_MESSAGE = "Server rejected operation";
 
     @Override
     public  void invoke(ClientRequest request, HttpURLConnection uc) {
