@@ -41,8 +41,7 @@
         <module>jersey-servlet-core</module>
         <module>jersey-servlet</module>
         <module>jetty-http</module>
-        <!-- TODO jakartify this -->
-<!--        <module>jetty-servlet</module>-->
+        <module>jetty-servlet</module>
         <module>netty-http</module>
         <module>simple-http</module>
     </modules>
