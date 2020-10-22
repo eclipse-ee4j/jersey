@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_params;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 /**
  * @author Pavel Bucek

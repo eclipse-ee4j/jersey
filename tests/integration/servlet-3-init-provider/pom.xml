@@ -62,13 +62,13 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <!-- TODO remove after jakartification -->
                 <configuration>
-                    <excludes> <!--JDK 11 -->
-                        <exclude>**/**/*.java</exclude>
+                    <excludes>
+                        <exclude>**/**/HelloWorld3ResourceITCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
             </plugin>
         </plugins>

@@ -41,9 +41,9 @@
             <artifactId>jersey-container-servlet</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet3.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet5.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -63,15 +63,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- TODO remove after jakartification -->
-                <configuration>
-                    <excludes> <!--JDK 8 -->
-                        <exclude>org/glassfish/jersey/tests/integration/servlet_3_inflector_1/InflectorInjectionTestITCase.java</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
             </plugin>
         </plugins>
