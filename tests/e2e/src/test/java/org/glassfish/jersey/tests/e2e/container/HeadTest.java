@@ -18,7 +18,6 @@ package org.glassfish.jersey.tests.e2e.container;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,11 +49,12 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 public class HeadTest extends JerseyContainerTest {
 
-    private static final List<TestContainerFactory> FACTORIES = Arrays.asList(
+    private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
             new GrizzlyTestContainerFactory(),
             new InMemoryTestContainerFactory(),
             new SimpleTestContainerFactory(),
-            new JettyTestContainerFactory());
+            new JettyTestContainerFactory()
+    );
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<TestContainerFactory[]> parameters() throws Exception {

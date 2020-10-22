@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 
+import org.glassfish.jersey.tests.e2e.client.connector.ProviderFiltering;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -56,12 +57,12 @@ public abstract class AbstractConnectorServerTest {
      */
     @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][] {
                 {new HttpUrlConnectorProvider()},
                 {new GrizzlyConnectorProvider()},
                 {new JettyConnectorProvider()},
                 {new ApacheConnectorProvider()}
-        });
+        }));
     }
 
     @Parameterized.Parameter(0)
