@@ -34,7 +34,6 @@
 
     <modules>
         <module>asm</module>
-        <module>async-jersey-filter</module>
         <module>cdi-integration</module>
         <module>client-connector-provider</module>
         <module>ejb-multimodule</module>
@@ -46,7 +45,6 @@
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
-<!--        <module>jersey-2322</module> Jakartification-->
         <module>jersey-2421</module>
 <!--        <module>jersey-2673</module> Jakartification-->
 <!--        <module>jersey-2689</module> Jakartification-->
@@ -59,37 +57,6 @@
         <module>jersey-4507</module>
         <module>jersey-4542</module>
         <module>microprofile</module>
-        <module>servlet-2.5-autodiscovery-1</module>
-        <module>servlet-2.5-filter</module>
-        <module>servlet-2.5-inflector-1</module>
-        <module>servlet-2.5-init-1</module>
-        <module>servlet-2.5-init-2</module>
-        <module>servlet-2.5-init-3</module>
-        <module>servlet-2.5-init-4</module>
-        <module>servlet-2.5-init-5</module>
-        <module>servlet-2.5-init-6</module>
-        <module>servlet-2.5-init-7</module>
-        <module>servlet-2.5-init-8</module>
-        <module>servlet-2.5-mvc-2</module>
-        <module>servlet-2.5-reload</module>
-        <module>servlet-3-async</module>
-        <module>servlet-3-chunked-io</module>
-        <module>servlet-3-filter</module>
-        <module>servlet-3-gf-async</module>
-        <module>servlet-3-inflector-1</module>
-        <module>servlet-3-init-1</module>
-        <module>servlet-3-init-2</module>
-        <module>servlet-3-init-3</module>
-        <module>servlet-3-init-4</module>
-        <module>servlet-3-init-5</module>
-        <module>servlet-3-init-6</module>
-        <module>servlet-3-init-7</module>
-        <module>servlet-3-init-8</module>
-        <module>servlet-3-init-provider</module>
-        <module>servlet-3-params</module>
-        <module>servlet-3-sse-1</module>
-        <module>servlet-request-wrapper-binding-2</module>
-        <module>servlet-request-wrapper-binding</module>
         <module>sonar-test</module>
 <!--        <module>spring4</module>-->
 <!--        <module>spring5</module>-->
@@ -161,6 +128,7 @@
                 <jdk>[11,)</jdk>
             </activation>
             <modules>
+                <module>async-jersey-filter</module>
                 <module>jaxrs-component-inject</module>
                 <module>jersey-780</module>
                 <module>jersey-1107</module>
@@ -179,6 +147,7 @@
                 <module>jersey-2176</module>
                 <module>jersey-2184</module>
                 <module>jersey-2255</module>
+                <module>jersey-2322</module>
                 <module>jersey-2335</module>
                 <module>jersey-2551</module>
                 <module>jersey-2612</module>
@@ -188,16 +157,46 @@
                 <module>jersey-2794</module>
                 <module>jersey-2846</module>
                 <module>jersey-2878</module>
-<!--                <module>jersey-2892</module> Jakartification-->
+                <module>jersey-2892</module>
 <!--                <module>jersey-3796</module> jakartification -->
-                <module>jetty-response-close</module>
                 <module>property-check</module>
                 <module>security-digest</module>
+                <module>servlet-2.5-autodiscovery-1</module>
                 <module>servlet-2.5-autodiscovery-2</module>
+                <module>servlet-2.5-filter</module>
+                <module>servlet-2.5-inflector-1</module>
+                <module>servlet-2.5-init-1</module>
+                <module>servlet-2.5-init-2</module>
+                <module>servlet-2.5-init-3</module>
+                <module>servlet-2.5-init-4</module>
+                <module>servlet-2.5-init-5</module>
+                <module>servlet-2.5-init-6</module>
+                <module>servlet-2.5-init-7</module>
+                <module>servlet-2.5-init-8</module>
                 <module>servlet-2.5-mvc-1</module>
+                <module>servlet-2.5-mvc-2</module>
                 <module>servlet-2.5-mvc-3</module>
+                <module>servlet-2.5-reload</module>
+                <module>servlet-3-async</module>
+                <module>servlet-3-chunked-io</module>
+                <module>servlet-3-filter</module>
+                <module>servlet-3-gf-async</module>
+                <module>servlet-3-inflector-1</module>
+                <module>servlet-3-init-1</module>
+                <module>servlet-3-init-2</module>
+                <module>servlet-3-init-3</module>
+                <module>servlet-3-init-4</module>
+                <module>servlet-3-init-5</module>
+                <module>servlet-3-init-6</module>
+                <module>servlet-3-init-7</module>
+                <module>servlet-3-init-8</module>
+                <module>servlet-3-init-provider</module>
+                <module>servlet-3-params</module>
+                <module>servlet-3-sse-1</module>
                 <module>servlet-4.0-mvc-1</module>
                 <module>servlet-tests</module>
+                <module>servlet-request-wrapper-binding</module>
+                <module>servlet-request-wrapper-binding-2</module>
                 <module>tracing-support</module>
             </modules>
         </profile>

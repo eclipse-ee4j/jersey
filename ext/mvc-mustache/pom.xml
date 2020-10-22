@@ -67,12 +67,6 @@
             <artifactId>compiler</artifactId>
             <version>${mustache.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet2.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
