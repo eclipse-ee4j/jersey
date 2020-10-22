@@ -39,6 +39,7 @@ import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.glassfish.jersey.tests.e2e.client.connector.ProviderFiltering;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,12 +73,12 @@ public class ShutdownHookMemoryLeakTest extends JerseyTest {
 
     @Parameterized.Parameters
     public static List<ConnectorProvider[]> connectionProviders() {
-        return Arrays.asList(new ConnectorProvider[][] {
+        return Arrays.asList(ProviderFiltering.filterProviders(new ConnectorProvider[][] {
                 {new GrizzlyConnectorProvider()},
                 {new JettyConnectorProvider()},
                 {new ApacheConnectorProvider()},
                 {new HttpUrlConnectorProvider()}
-        });
+        }));
     }
 
     @Path(PATH)

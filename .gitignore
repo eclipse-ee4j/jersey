@@ -1,6 +1,7 @@
 # maven noise
 target/
 target-*/
+target11/
 
 # gradle noise
 .gradle
