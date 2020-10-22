@@ -103,7 +103,7 @@ public class HttpUrlConnector implements Connector {
     private final LazyValue<SSLSocketFactory> sslSocketFactory;
 
     private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
-            = new HttpUrlConnectorExtension();
+            = new HttpUrlExpect100ContinueConnectorExtension();
 
     /**
      * Create new {@code HttpUrlConnector} instance.
