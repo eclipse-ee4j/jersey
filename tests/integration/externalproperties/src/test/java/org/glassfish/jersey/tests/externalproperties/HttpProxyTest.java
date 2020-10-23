@@ -56,6 +56,8 @@ public class HttpProxyTest extends JerseyTest {
 
     @Before
     public void startFakeProxy() {
+        System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
+        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         Server server = new Server(Integer.parseInt(PROXY_PORT));
         server.setHandler(new ProxyHandler(false));
         try {
@@ -67,8 +69,6 @@ public class HttpProxyTest extends JerseyTest {
 
     @Test
     public void testProxy() {
-        System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         System.setProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS, "");
 
         Response response = target("resource").request().get();
@@ -78,8 +78,6 @@ public class HttpProxyTest extends JerseyTest {
 
     @Test
     public void testNonProxy() {
-        System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         System.setProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS, "localhost");
 
         Response response = target("resource").request().get();
