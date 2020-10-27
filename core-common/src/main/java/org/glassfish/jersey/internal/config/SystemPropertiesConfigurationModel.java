@@ -44,6 +44,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     private static final Logger log = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
     static final List<String> PROPERTY_CLASSES = Arrays.asList(
+            "org.glassfish.jersey.ExternalProperties",
             "org.glassfish.jersey.server.ServerProperties",
             "org.glassfish.jersey.client.ClientProperties",
             "org.glassfish.jersey.servlet.ServletProperties",
