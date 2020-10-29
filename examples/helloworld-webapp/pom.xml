@@ -33,6 +33,7 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>${servlet5.version}</version>
+<!--            <scope>provided</scope> Make this provided for jetty:run -->
         </dependency>
 
         <dependency>
@@ -44,14 +45,28 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <!-- Run the application using "mvn jetty:run" to deploy to Jetty-->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <webApp>
+                        <contextPath>/helloworld-webapp</contextPath>
+                    </webApp>
+                </configuration>
             </plugin>
             <!-- Run the application using "mvn exec:java" to deploy to Grizzly Servlet-->
             <plugin>

@@ -52,7 +52,7 @@ wire differ for each of these two views. For basic view it looks like:
 
 ```javascript
 {
-   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web services.",
+   "description" : "Jersey 3 is the open source (see NOTICE.md for license information) Jakarta RESTful Web Services 3.0 production quality compatible implementation for building RESTful Web services.",
    "id" : 1,
    "name" : "Jersey"
 }
@@ -62,7 +62,7 @@ And for detailed view it looks like:
 
 ```javascript
 {
-   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web services.",
+   "description" : "Jersey 3 is the open source (see NOTICE.md for license information) Jakarta RESTful Web Services 3.0 production quality compatible implementation for building RESTful Web services.",
    "id" : 1,
    "name" : "Jersey",
    "tasks" : [ {

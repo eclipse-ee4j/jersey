@@ -55,23 +55,17 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <!-- TODO: Remove the version when JERSEY-2743 is resolved. -->
-                <version>9.2.6.v20141205</version>
                 <configuration>
-                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <stopWait>5</stopWait>
                     <stopPort>9999</stopPort>
                     <stopKey>STOP</stopKey>
                     <webApp>
                         <contextPath>/</contextPath>
                         <webInfIncludeJarPattern>.*/.*jersey-[^/]\.jar$</webInfIncludeJarPattern>
                     </webApp>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>jetty.port</name>
-                            <value>${jersey.config.test.container.port}</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <war>${project.build.directory}/${project.build.finalName}.war</war>
+                    <httpConnector>
+                        <port>${jersey.config.test.container.port}</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
         </plugins>

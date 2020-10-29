@@ -95,7 +95,7 @@
                         </Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
-                            jakarta.validation.*;resolution:=optional;version="[2,4)",
+                            jakarta.validation.*;resolution:=optional;version="[3,4)",
                             *
                         </Import-Package>
                     </instructions>

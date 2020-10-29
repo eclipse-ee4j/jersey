@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -11,7 +11,7 @@ Resource Configuration Reload Example
 
 This example demonstrates how to create a simple Jersey application with
 resource reloading capability using
-[Grizzly HTTP Server container](http://grizzly.java.net).
+[Grizzly HTTP Server container](https://projects.eclipse.org/projects/ee4j.grizzly).
 
 Contents
 --------
@@ -39,7 +39,7 @@ Run the example as follows:
 >     mvn clean compile exec:java
 
 This deploys current example using[Grizzly
-container](http://grizzly.java.net/). StatsResource should be available
+container](https://projects.eclipse.org/projects/ee4j.grizzly). StatsResource should be available
 at <http://localhost:8080/flights/stats>
 
 You may want to check the other resources as well:

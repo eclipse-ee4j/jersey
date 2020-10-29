@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@
     <section xml:id="cdi.support.intro">
         <title>Introduction</title>
         <para>
-          At the time of this writing, Java SE support is being discussed as one of important additions to CDI 2.0 specification.
+          At the time of this writing, Java SE support is being discussed as one of important additions to CDI 3.0 specification.
           Existing CDI implementations brought this feature already, only container bootstrapping has not yet been standardized.
           In Jersey version 2.15 we introduced Weld SE support, so that people could take advantage of CDI features 
           also when running in Java SE environment. As part of this work, the old Jersey CDI module has been refactored
@@ -93,7 +93,7 @@
     <section xml:id="cdi.support.weld.se">
         <title>Jersey Weld SE Support</title>
         <para>
-            The extra work to align HTTP request with CDI request scope was already done by Jersey team for Weld 2.x implementation.
+            The extra work to align HTTP request with CDI request scope was already done by Jersey team for Weld 4.x implementation.
             In order to utilize Jersey/Weld request scope binding, you need to use the following module:
             <programlisting language="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.ext.cdi&lt;/groupId&gt;
@@ -117,7 +117,7 @@
             </example>
         </para>
         <para>
-          The above pattern could be applied also for other Jersey supported HTTP containers as long as you stick with CDI Weld 2.x implementation.
+          The above pattern could be applied also for other Jersey supported HTTP containers as long as you stick with CDI Weld 4.x implementation.
           You simply add the above mentioned <literal>jersey-weld2-se</literal> module into you class-path and bootstrap the Weld container manually
           before starting the HTTP container.
         </para>

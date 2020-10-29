@@ -126,7 +126,7 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jaxrs-ri/pom.xml. -->
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            javax.activation.*;version="!",
+                            jakarta.activation.*;version="!",
                             ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
@@ -178,8 +178,8 @@
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -297,12 +297,6 @@
             <activation>
                 <jdk>[11,)</jdk>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -690,7 +684,6 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 
     <properties>

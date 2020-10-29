@@ -328,11 +328,11 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
             if (a instanceof XmlHeader) {
                 try {
                     // standalone jaxb ri
-                    marshaller.setProperty("com.sun.xml.bind.xmlHeaders", ((XmlHeader) a).value());
+                    marshaller.setProperty("org.glassfish.jaxb.xmlHeaders", ((XmlHeader) a).value());
                 } catch (PropertyException e) {
                     try {
-                        // jaxb ri from jdk
-                        marshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders", ((XmlHeader) a).value());
+                        // older name
+                        marshaller.setProperty("com.sun.xml.bind.xmlHeaders", ((XmlHeader) a).value());
                     } catch (PropertyException ex) {
                         // other jaxb implementation
                         Logger.getLogger(AbstractJaxbProvider.class.getName()).log(

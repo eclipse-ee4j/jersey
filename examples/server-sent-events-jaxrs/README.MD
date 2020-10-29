@@ -9,7 +9,7 @@
 Server-Sent Events (SSE) Example
 ================================
 
-This example demonstrates JAX-RS 2.1 server-sent events support.
+This example demonstrates Jakarta RESTful Web Services server-sent events support.
 
 The full description how to add support for server-sent events to your application can be found in Jersey User Guide, 
 chapter
@@ -67,4 +67,4 @@ Run the example as follows:
 
 >     mvn clean compile exec:java
 
-This deploys the example using [Grizzly](http://grizzly.java.net/) container.
+This deploys the example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly) container.

@@ -9,7 +9,7 @@
 Server Asynchronous Standalone Example
 ======================================
 
-This example demonstrates JAX-RS 2.0 asynchronous API, both on the client and
+This example demonstrates Jakarta RESTful Web Services 3.0 asynchronous API, both on the client and
 server side.
 
 The  goal of the sample is to demonstrate that with limited I/O processing threads
@@ -33,7 +33,7 @@ The example consists of 2 modules:
 
   2. client module "client" (produces client.jar)
 
-     - the module contains the web application client developed using JAX-RS 2.0
+     - the module contains the web application client developed using the
        client API & leveraging the asynchronous client execution for spawning
        multiple simultaneous client requests with subsequent asynchronous response
        processing.

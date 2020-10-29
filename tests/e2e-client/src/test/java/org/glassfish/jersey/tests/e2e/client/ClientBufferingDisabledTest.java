@@ -147,7 +147,7 @@ public class ClientBufferingDisabledTest extends JerseyTest {
      * Content-length request attribute. This cause problems for large entities.
      * <p>
      * In Jersey 1.x chunk encoding with {@code HttpURLConnection} was causing bugs
-     * which occurred from time to time. This looks to be a case also in Jersey 2.x. This test
+     * which occurred from time to time. This looks to be a case also in Jersey 3.x. This test
      * has failed unpredictably on some machines. Therefore it is disabled now.
      * </p>
      */

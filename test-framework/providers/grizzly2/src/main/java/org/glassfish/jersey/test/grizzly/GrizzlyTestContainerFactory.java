@@ -34,7 +34,7 @@ import org.glassfish.jersey.test.spi.TestHelper;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 /**
- * Jersey test framework container factory implementation based on Grizzly 2.x HTTP server.
+ * Jersey test framework container factory implementation based on Grizzly 3.x HTTP server.
  *
  * @author Marek Potociar
  */

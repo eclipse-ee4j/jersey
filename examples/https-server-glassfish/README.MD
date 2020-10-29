@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -36,7 +36,7 @@ Create war package
 
 >     mvn clean package
 
-Setup GlassFish 4.0 (installed at `AS_HOME=<install_dir>/glassfish4`):
+Setup GlassFish 6.0 (installed at `AS_HOME=<install_dir>/glassfish4`):
 
 Add new security realm called "`myRealm`"
 -   Start GlassFish using asadmin `$AS_HOME/bin/asadmin start-domain`
@@ -86,10 +86,10 @@ Run the example as follows:
 
     >     mvn clean package
 
-2.  setup GlassFish 4.0 (installed at
-    `AS_HOME=<install_dir>/glassfish4`):
+2.  setup GlassFish 6.0 (installed at
+    `AS_HOME=<install_dir>/glassfish6`):
 
-    -   Follow the steps described in the "**setup GlassFish 3.1**"
+    -   Follow the steps described in the "**setup GlassFish 6.0**"
         section from the previous chapter "**Running the Example**" but
         instead of adding the user "`joeUser`" to the "`Group List:`" of
         "`Users`" set "`Group List:`" for this user to "`OtherUsers`"
