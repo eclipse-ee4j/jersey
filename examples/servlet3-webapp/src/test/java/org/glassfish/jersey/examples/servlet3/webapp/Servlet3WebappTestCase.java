@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+package org.glassfish.jersey.examples.servlet3.webapp;
+
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
@@ -29,23 +31,24 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Adam Lindenthal
  */
-public class Servlet3WebappITCase extends JerseyTest {
+public class Servlet3WebappTestCase extends JerseyTest {
 
     @Override
     protected Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
-        return new Application(); // dummy Application instance for test framework
+        //return new Application(); // dummy Application instance for test framework
+        return new App();
     }
 
-    @Override
-    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-        return new ExternalTestContainerFactory();
-    }
-
-    @Override
-    protected URI getBaseUri() {
-        return UriBuilder.fromUri(super.getBaseUri()).path("animals").build();
-    }
+//    @Override
+//    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
+//        return new ExternalTestContainerFactory();
+//    }
+//
+//    @Override
+//    protected URI getBaseUri() {
+//        return UriBuilder.fromUri(super.getBaseUri()).path("animals").build();
+//    }
 
     @Test
     public void testClientStringResponse() {

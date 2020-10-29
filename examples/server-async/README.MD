@@ -12,7 +12,7 @@ Server Asynchronous Example
 The full description how to create an asynchronous resource can be found in Jersey User Guide, chapter 
 [Asynchronous Services and Clients](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/async.html).
 
-This example demonstrates JAX-RS 2.0 server-side non-blocking API in comparison to blocking and long-running
+This example demonstrates Jakarta RESTful Web Services 3.0 server-side non-blocking API in comparison to blocking and long-running
 asynchronous operations.
 
 The  goal of the sample is to demonstrate that with limited I/O processing threads
@@ -77,4 +77,4 @@ Run the example as follows:
 
 >     mvn clean compile exec:java
 
-This deploys the example using [Grizzly](http://grizzly.java.net/) container.
+This deploys the example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly) container.

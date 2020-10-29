@@ -69,4 +69,4 @@ Run the example as follows:
 
 >     mvn clean compile exec:java
 
-This deploys the example using [Grizzly](http://grizzly.java.net/) container.
+This deploys the example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly) container.

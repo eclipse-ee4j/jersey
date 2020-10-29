@@ -95,7 +95,7 @@ public final class MessageProperties {
      * {@link jakarta.ws.rs.ext.MessageBodyWriter MessageBodyWriters} will be ordered by rules from JAX-RS 1.x, where custom
      * providers have always precedence; providers are sorted by {@link jakarta.ws.rs.core.MediaType} and afterwards by
      * declaration distance - see {@link org.glassfish.jersey.message.internal.MessageBodyFactory.DeclarationDistanceComparator}.
-     * Otherwise JAX-RS 2.x ordering will be used, which sorts providers firstly by declaration distance, then by
+     * Otherwise JAX-RS 3.x ordering will be used, which sorts providers firstly by declaration distance, then by
      * {@link jakarta.ws.rs.core.MediaType} and by origin (custom/provided).
      * <p />
      * The default value is {@code false}.

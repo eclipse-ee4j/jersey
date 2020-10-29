@@ -65,7 +65,6 @@ public class JaxbTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("Jakartification")
     public void testRootElementWithHeader() {
         String e1 = target().path("jaxb/XmlRootElement").request().get(String.class);
 

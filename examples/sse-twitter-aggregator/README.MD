@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -19,7 +19,7 @@ Contents
 --------
 
 The example consists of a Swing GUI client application and a server-side
-application deployed on a [Grizzly container](http://grizzly.java.net).
+application deployed on a [Grizzly container](https://projects.eclipse.org/projects/ee4j.grizzly).
 
 The Swing client application opens in a single window split into
 multiple configuration panels. The top-left panel allows to select which

@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -6,10 +6,10 @@
 [//]: # " "
 [//]: # " SPDX-License-Identifier: BSD-3-Clause "
 
-Jersey HTTP PATCH
+Jersey HTTP TRACE
 =================
 
-### *Jersey HTTP PATCH Support Example*
+### *Jersey HTTP TRACE Support Example*
 
 This example demonstrates how to implement a support for **HTTP TRACE method** via **HttpMethod** annotation in Jersey.
 
@@ -43,4 +43,4 @@ Run the example as follows:
 
 >     mvn clean compile exec:java
 
-This deploys the example using [Grizzly](http://grizzly.java.net/) container.
+This deploys the example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly) container.

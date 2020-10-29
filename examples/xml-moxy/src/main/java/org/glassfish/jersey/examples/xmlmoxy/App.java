@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -42,7 +42,7 @@ public class App {
             server.start();
 
             System.out.println(String.format("Application started.%nTry out %s%nStop the application using CTRL+C",
-                    BASE_URI + "/customer"));
+                    BASE_URI + "customer"));
 
             Thread.currentThread().join();
         } catch (IOException | InterruptedException ex) {
