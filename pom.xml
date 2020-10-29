@@ -2145,8 +2145,8 @@
         <jaxb.ri.version>3.0.0-M5</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.0.beta2</jetty.version>
-        <jetty.plugin.version>11.0.0.beta2</jetty.plugin.version>
+        <jetty.version>11.0.0.beta3</jetty.version>
+        <jetty.plugin.version>11.0.0.beta3</jetty.plugin.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>2.0.0</jsonp.ri.version>
         <jsonp.jaxrs.version>2.0.0</jsonp.jaxrs.version>
