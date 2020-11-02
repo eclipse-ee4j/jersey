@@ -1937,7 +1937,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -2057,7 +2057,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>8.0</asm.version>
+        <asm.version>9.0</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <commons-lang3.version>3.3.2</commons-lang3.version>
@@ -2081,7 +2081,7 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>6.0.0-RC1</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.11.3</jackson.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>

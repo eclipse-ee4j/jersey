@@ -39,6 +39,7 @@
         <module>ejb-multimodule</module>
         <module>ejb-multimodule-reload</module>
         <module>ejb-test-webapp</module>
+        <module>externalproperties</module>
         <module>j-376</module>
         <module>j-441</module>
         <module>j-59</module>
@@ -189,6 +190,7 @@
                 <module>servlet-3-init-6</module>
                 <module>servlet-3-init-7</module>
                 <module>servlet-3-init-8</module>
+                <module>servlet-3-init-9</module>
                 <module>servlet-3-init-provider</module>
                 <module>servlet-3-params</module>
                 <module>servlet-3-sse-1</module>

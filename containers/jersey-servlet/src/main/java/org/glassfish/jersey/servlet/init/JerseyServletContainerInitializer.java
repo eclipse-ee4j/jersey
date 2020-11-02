@@ -128,12 +128,15 @@ public final class JerseyServletContainerInitializer implements ServletContainer
     }
 
     private void onStartupImpl(final Set<Class<?>> classes, final ServletContext servletContext) throws ServletException {
+        final Set<ServletRegistration> registrationsWithApplication = new HashSet<>();
+
         // first see if there are any application classes in the web app
         for (final Class<? extends Application> applicationClass : getApplicationClasses(classes)) {
             final ServletRegistration servletRegistration = servletContext.getServletRegistration(applicationClass.getName());
 
             if (servletRegistration != null) {
                 addServletWithExistingRegistration(servletContext, servletRegistration, applicationClass, classes);
+                registrationsWithApplication.add(servletRegistration);
             } else {
                 // Servlet is not registered with app name or the app name is used to register a different servlet
                 // check if some servlet defines the app in init params
@@ -145,17 +148,21 @@ public final class JerseyServletContainerInitializer implements ServletContainer
                         if (sr instanceof ServletRegistration) {
                             addServletWithExistingRegistration(servletContext, (ServletRegistration) sr,
                                     applicationClass, classes);
+                            registrationsWithApplication.add((ServletRegistration) sr);
                         }
                     }
                 } else {
                     // app not handled by any servlet/filter -> add it
-                    addServletWithApplication(servletContext, applicationClass, classes);
+                    final ServletRegistration sr = addServletWithApplication(servletContext, applicationClass, classes);
+                    if (sr != null) {
+                        registrationsWithApplication.add(sr);
+                    }
                 }
             }
         }
 
         // check for jakarta.ws.rs.core.Application registration
-        addServletWithDefaultConfiguration(servletContext, classes);
+        addServletWithDefaultConfiguration(servletContext, registrationsWithApplication, classes);
     }
 
     /**
@@ -211,12 +218,14 @@ public final class JerseyServletContainerInitializer implements ServletContainer
      * Enhance default servlet (named {@link Application}) configuration.
      */
     private static void addServletWithDefaultConfiguration(final ServletContext context,
+                                                           final Set<ServletRegistration> registrationsWithApplication,
                                                            final Set<Class<?>> classes) throws ServletException {
 
         ServletRegistration registration = context.getServletRegistration(Application.class.getName());
 
+        final Set<Class<?>> appClasses = getRootResourceAndProviderClasses(classes);
+
         if (registration != null) {
-            final Set<Class<?>> appClasses = getRootResourceAndProviderClasses(classes);
             final ResourceConfig resourceConfig = ResourceConfig.forApplicationClass(ResourceConfig.class, appClasses)
                     .addProperties(getInitParams(registration))
                     .addProperties(Utils.getContextParams(context));
@@ -239,13 +248,26 @@ public final class JerseyServletContainerInitializer implements ServletContainer
                 }
             }
         }
+
+        // make <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> without init params
+        // work the same as <servlet-name>javax.ws.rs.Application</servlet-name>
+        for (ServletRegistration servletRegistration : context.getServletRegistrations().values()) {
+            if (isJerseyServlet(servletRegistration.getClassName())
+                    && servletRegistration != registration
+                    && !registrationsWithApplication.contains(servletRegistration)
+                    && getInitParams(servletRegistration).isEmpty()) {
+                final ResourceConfig resourceConfig = ResourceConfig.forApplicationClass(ResourceConfig.class, appClasses)
+                        .addProperties(Utils.getContextParams(context));
+                Utils.store(resourceConfig, context, servletRegistration.getName());
+            }
+        }
     }
 
     /**
      * Add new servlet according to {@link Application} subclass with {@link ApplicationPath} annotation or existing
      * {@code servlet-mapping}.
      */
-    private static void addServletWithApplication(final ServletContext context,
+    private static ServletRegistration addServletWithApplication(final ServletContext context,
                                                   final Class<? extends Application> clazz,
                                                   final Set<Class<?>> defaultClasses) throws ServletException {
         final ApplicationPath ap = clazz.getAnnotation(ApplicationPath.class);
@@ -266,7 +288,9 @@ public final class JerseyServletContainerInitializer implements ServletContainer
             } else {
                 LOGGER.log(Level.WARNING, LocalizationMessages.JERSEY_APP_MAPPING_CONFLICT(clazz.getName(), mapping));
             }
+            return dsr;
         }
+        return null;
     }
 
     /**

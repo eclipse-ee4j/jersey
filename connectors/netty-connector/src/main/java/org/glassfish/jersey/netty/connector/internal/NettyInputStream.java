@@ -160,6 +160,12 @@ public class NettyInputStream extends InputStream {
 
     public void clear() {
         end = false;
+        reading = false;
+
+        cause = null;
+        buffer = null;
+        current = null;
+
         isList.clear();
     }
 }
