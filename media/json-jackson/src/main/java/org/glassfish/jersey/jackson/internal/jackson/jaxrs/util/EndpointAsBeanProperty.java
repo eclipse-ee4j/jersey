@@ -22,6 +22,7 @@ public class EndpointAsBeanProperty
     extends BeanProperty.Std
 {
     private static final long serialVersionUID = 1L;
+
     public final static PropertyName ENDPOINT_NAME = new PropertyName("JAX-RS/endpoint");
 
     private final static AnnotationMap NO_ANNOTATIONS = new AnnotationMap();

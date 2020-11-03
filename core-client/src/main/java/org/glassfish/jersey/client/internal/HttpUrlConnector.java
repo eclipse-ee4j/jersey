@@ -102,6 +102,9 @@ public class HttpUrlConnector implements Connector {
     private final boolean isRestrictedHeaderPropertySet;
     private final LazyValue<SSLSocketFactory> sslSocketFactory;
 
+    private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
+            = new HttpUrlExpect100ContinueConnectorExtension();
+
     /**
      * Create new {@code HttpUrlConnector} instance.
      *
@@ -352,7 +355,7 @@ public class HttpUrlConnector implements Connector {
                     }
                 }
 
-                processExpect100Continue(request, uc, length, entityProcessing);
+                processExtentions(request, uc);
 
                 request.setStreamProvider(contentLength -> {
                     setOutboundHeaders(request.getStringHeaders(), uc);
@@ -364,11 +367,7 @@ public class HttpUrlConnector implements Connector {
                 setOutboundHeaders(request.getStringHeaders(), uc);
             }
         } catch (IOException ioe) {
-            if (uc.getResponseCode() == -1) {
-                throw ioe;
-            } else {
-                storedException = ioe;
-            }
+            storedException = handleException(request, ioe, uc);
         }
 
         final int code = uc.getResponseCode();
@@ -530,24 +529,19 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private static void processExpect100Continue(ClientRequest request, HttpURLConnection uc,
-                                          long length, RequestEntityProcessing entityProcessing) {
-        final Boolean expectContinueActivated = request.resolveProperty(
-                ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
-        final Long expectContinueSizeThreshold = request.resolveProperty(
-                ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
+    private void processExtentions(ClientRequest request, HttpURLConnection uc) {
+        connectorExtension.invoke(request, uc);
+    }
 
-        final boolean allowStreaming = length > expectContinueSizeThreshold
-                || entityProcessing == RequestEntityProcessing.CHUNKED;
-
-        if (!Boolean.TRUE.equals(expectContinueActivated)
-                || !("POST".equals(uc.getRequestMethod()) || "PUT".equals(uc.getRequestMethod()))
-                || !allowStreaming
-        ) {
-            return;
+    private IOException handleException(ClientRequest request, IOException ex, HttpURLConnection uc) throws IOException {
+        if (connectorExtension.handleException(request, uc, ex)) {
+            return null;
         }
-        uc.setRequestProperty("Expect", "100-Continue");
+        if (uc.getResponseCode() == -1) {
+            throw ex;
+        } else {
+            return ex;
+        }
     }
 
     @Override

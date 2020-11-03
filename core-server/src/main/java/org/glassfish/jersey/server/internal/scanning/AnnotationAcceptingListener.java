@@ -169,7 +169,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
         private boolean isAnnotated;
 
         private AnnotatedClassVisitor() {
-            super(Opcodes.ASM8);
+            super(Opcodes.ASM9);
         }
 
         @Override
@@ -259,7 +259,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
         }
 
         @Override
-        public void visitPermittedSubtypeExperimental(String permittedSubtype) {
+        public void visitPermittedSubclass(final String permittedSubclass) {
             // do nothing
         }
 
@@ -303,7 +303,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V15;
+        private static final int WARN_VERSION = Opcodes.V16;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;
