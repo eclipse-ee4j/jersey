@@ -55,7 +55,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-external</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

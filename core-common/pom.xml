@@ -126,7 +126,7 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jaxrs-ri/pom.xml. -->
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            javax.activation.*;version="!",
+                            javax.activation.*;version="!";resolution:=optional,
                             ${javax.annotation.osgi.version},
                             *
                         </Import-Package>
@@ -297,6 +297,8 @@
                 <dependency>
                     <groupId>com.sun.activation</groupId>
                     <artifactId>jakarta.activation</artifactId>
+                    <scope>provided</scope>
+                    <optional>true</optional>
                 </dependency>
             </dependencies>
             <build>
@@ -686,7 +688,6 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 
     <properties>

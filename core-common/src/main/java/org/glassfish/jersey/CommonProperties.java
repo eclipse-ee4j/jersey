@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -230,13 +230,15 @@ public final class CommonProperties {
      * Disable some of the default providers from being loaded. The following providers extend application footprint
      * by XML dependencies, which is too heavy for native image, or by AWT which may possibly be not available by JDK 11 desktop:
      * <ul>
+     *     <li>javax.activation.DataSource</li>
      *     <li>java.awt.image.RenderedImage</li>
      *     <li>javax.xml.transform.Source</li>
      *     <li>javax.xml.transform.dom.DOMSource</li>
      *     <li>javax.xml.transform.sax.SAXSource</li>
      *     <li>javax.xml.transform.stream.StreamSource</li>
      * </ul>
-     * The following are the options to disable the provides: {@code DOMSOURCE, RENDEREDIMAGE, SAXSOURCE, SOURCE, STREAMSOURCE},
+     * The following are the options to disable the provides:
+     * {@code DATASOURCE, DOMSOURCE, RENDEREDIMAGE, SAXSOURCE, SOURCE, STREAMSOURCE},
      * or to disable all: {@code ALL}. Multiple options can be disabled by adding multiple comma separated values.
      *
      * @since 2.30
