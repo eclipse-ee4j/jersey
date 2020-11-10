@@ -106,6 +106,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.cm</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam</artifactId>
             <scope>test</scope>
@@ -388,7 +403,7 @@
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JsonProcessingTest.java</exclude>
                                 <!-- TODO remove after jakartification -->
-                                <exclude>org/glassfish/jersey/osgi/test/basic/ApacheOsgiIntegrationTest.java</exclude>
+                                <!--<exclude>org/glassfish/jersey/osgi/test/basic/ApacheOsgiIntegrationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BasicOsgiIntegrationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BeanValidationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JaxRsRiBundleTest.java</exclude>
@@ -398,7 +413,7 @@
                                 <exclude>org/glassfish/jersey/osgi/test/basic/PackageScanningTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/ResourceBundleTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/SseTest.java</exclude>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/WebResourceFactoryTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/WebResourceFactoryTest.java</exclude>-->
                             </excludes>
                         </configuration>
                     </plugin>
@@ -418,7 +433,7 @@
                         <configuration>
                             <!-- Exclude unit tests on jdk 11 for now -->
                             <excludes>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/ApacheOsgiIntegrationTest.java</exclude>
+                                <!--<exclude>org/glassfish/jersey/osgi/test/basic/ApacheOsgiIntegrationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BasicOsgiIntegrationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/BeanValidationTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/JaxRsRiBundleTest.java</exclude>
@@ -430,7 +445,7 @@
                                 <exclude>org/glassfish/jersey/osgi/test/basic/PackageScanningTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/ResourceBundleTest.java</exclude>
                                 <exclude>org/glassfish/jersey/osgi/test/basic/SseTest.java</exclude>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/WebResourceFactoryTest.java</exclude>
+                                <exclude>org/glassfish/jersey/osgi/test/basic/WebResourceFactoryTest.java</exclude>-->
                             </excludes>
                         </configuration>
                     </plugin>

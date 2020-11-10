@@ -57,6 +57,7 @@ public class ApacheOsgiIntegrationTest {
         final List<Option> options = Helper.getCommonOsgiOptions();
         options.addAll(Helper.expandedList(
                 mavenBundle().groupId("org.ops4j.pax.logging").artifactId("pax-logging-api").versionAsInProject(),
+                mavenBundle().groupId("org.osgi").artifactId("org.osgi.service.cm").versionAsInProject(),
                 mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpcore-osgi").versionAsInProject(),
                 mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpclient-osgi").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.connectors").artifactId("jersey-apache-connector")

@@ -143,6 +143,8 @@ public class Helper {
 
                 // jakarta.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.activation").artifactId("jakarta.activation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.inject").artifactId("jakarta.inject-api").versionAsInProject(),
                 mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").versionAsInProject(),
                 junitBundles(),
 
