@@ -71,6 +71,7 @@ public class BeanValidationTest {
                 mavenBundle().groupId("org.hibernate.validator").artifactId("hibernate-validator").versionAsInProject(),
                 mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml").artifactId("classmate").versionAsInProject(),
+                mavenBundle().groupId("jakarta.el").artifactId("jakarta.el-api").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish").artifactId("jakarta.el").versionAsInProject()
 
         ));
