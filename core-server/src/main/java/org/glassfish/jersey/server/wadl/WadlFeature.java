@@ -30,7 +30,6 @@ import org.glassfish.jersey.server.model.ModelProcessor;
 import org.glassfish.jersey.server.wadl.internal.WadlApplicationContextImpl;
 import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
 
-import java.security.AccessController;
 import java.util.logging.Logger;
 
 
@@ -53,7 +52,17 @@ public class WadlFeature implements Feature {
             return false;
         }
 
-        if (!ReflectionHelper.isJaxbAvailable() || !WadlApplicationContextImpl.isJaxbImplAvailable()) {
+        if (!ReflectionHelper.isJaxbAvailable()) {
+            LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED_NOJAXB());
+            return false;
+        }
+
+        if (!ReflectionHelper.isXmlTransformAvailable()) {
+            LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED_NOTRANSFORM());
+            return false;
+        }
+
+        if (!WadlApplicationContextImpl.isJaxbImplAvailable()) {
             LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED());
             return false;
         }
