@@ -38,6 +38,12 @@ public final class ExternalProperties {
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 
     /**
+     * This integer value determines the maximum number, for a given request,
+     * of HTTP redirects that will be automatically followed by the protocol handler.
+     */
+    public static final String HTTP_MAX_REDIRECTS = "http.maxRedirects";
+
+    /**
      * Prevent instantiation.
      */
     private ExternalProperties() {
