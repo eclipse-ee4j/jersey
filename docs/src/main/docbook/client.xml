@@ -1130,4 +1130,61 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             }
         </programlisting>
     </section>
+    <section>
+        <title>Header Expect:100-continue support</title>
+        <para>
+        This section describes support of Expect:100-continue in Jersey client using Expect100Continue feature.
+        Jersey client supports given header for default JDK HTTP connector only.
+        </para>
+        <para>
+        <emphasis>Jersey client Expect100Continue feature</emphasis>
+        </para>
+        <para>
+            Since Jersey 2.32 it is possible to send Expect:100-continue header from Jersey client. Feature shall be
+            registered in client using (for example)
+            <programlisting language="java" linenumbering="numbered">
+                target(RESOURCE_PATH).register(Expect100ContinueFeature.basic());
+            </programlisting>
+            Note that registration can be done in several ways: with basic settings, and with custom settings:
+            <programlisting language="java" linenumbering="numbered">
+                target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L));
+            </programlisting>
+            Basic registration means that default sending threshold will be used. Value of the default threshold is
+            <programlisting language="java" linenumbering="numbered">
+                DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 65536L;
+            </programlisting>
+            Threshold is used to determine allowed size of request after which 100-continue header shall be sent before
+            sending request itself.
+        </para>
+        <para>
+            <emphasis>Environment properties configuration</emphasis>
+        </para>
+        <para>
+            Previous paragraph described programmatic way of configuration. However the Expect100Continue feature can
+            be configured using environment variables as well.
+        </para>
+        <para>
+            Since Jersey client can be influenced through environment variables, there are two variables which come
+            since Jersey 2.32:
+            <programlisting language="bash" linenumbering="unnumbered">
+                -Djersey.config.client.request.expect.100.continue.processing=true/false
+                -Djersey.config.client.request.expect.100.continue.threshold.size=12345
+            </programlisting>
+        </para>
+        <para>
+            First variable can be used to forbid the Expect (100-continue) header be sent at all even though it is
+            registered as described in the previous paragraph. If this property is not provided (or true) and the
+            Expect100Continue feature is registered, sending of the Expect header is enabled.
+        </para>
+        <para>
+            The second property defines (or modifies) threshold size. So, if the Expect100Continue feature is registered
+            using basic (default threshold size) parameters, value of the threshold can be modified using this property.
+            This is valid for custom threshold as well - when the Expect100Continue feature is registered using
+            withCustomThreshold method its value can be modified anyway by the environment property
+            <literal>jersey.config.client.request.expect.100.continue.threshold.size</literal>.
+            <important>
+                In other words this variable has precedence over any programmatically set value of the threshold.
+            </important>
+        </para>
+    </section>
 </chapter>
