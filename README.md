@@ -29,7 +29,10 @@ Goals of Jersey project can be summarized in the following points:
 *   Make it easy to build RESTful Web services utilising Java and the
     Java Virtual Machine.
 
-The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
+---
+
+*   The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
+*   The latest published release of Jakartified (3.x) Jersey is [{{ site.latest3xVersion }}][dwnld].
 
 ---
 
@@ -41,15 +44,23 @@ The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 </a></h3>
 
 <a href ="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">Learn</a> how to use Jersey in your projects.
-</td><td style="border:none;vertical-align: top;">
+</td><td style="width:40%;border:none;vertical-align: top;">
 
 <h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">
     <var class="icon-book"></var> Documentation
 </a></h3>
 
-Read  <a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey User Guide</a> or browse <a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey API</a>.
-
-Jersey 1.x users may access the <a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a> and <a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a>.
+<h4>Jersey 3.x</h4>
+	<ul>
+		<li><a href="{{ site.links.newJerseyURL }}/documentation/3.0.0/index.html">latest Jakartified (3.0.0) Jersey User Guide</a></li>
+		<li><a href="{{ site.links.newJerseyURL }}/apidocs/3.0.0/jersey/index.html">latest Jakartified (3.0.0) Jersey API</a></li>
+        </ul>
+<h4>Jersey 2.x</h4>
+	<ul><li><a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey {{ site.latestVersion }} User Guide</a></li>
+	<li><a href="{{ site.links.newJerseyURL }}/apidocs/latest/jersey/index.html">latest Jersey {{ site.latestVersion }} API</a></li></ul>
+<h4>Jersey 1.x</h4>
+	<ul><li><a href="{{ site.links.newJerseyURL }}/documentation/1.19.1/index.html">Jersey 1.19.1 User Guide</a></li>
+	<li><a href="{{ site.links.newJerseyURL }}/apidocs/1.19.1/jersey/index.html">Jersey 1.19.1 API</a></li></ul>
 </td><td style="border:none;vertical-align: top;">
 
 <h3><a class="headerlink" href="download.html">
