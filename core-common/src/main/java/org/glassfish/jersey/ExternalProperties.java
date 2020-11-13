@@ -38,6 +38,11 @@ public final class ExternalProperties {
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 
     /**
+     * Property used to indicates if persistent connections should be supported.
+     */
+    public static final String HTTP_KEEPALIVE = "http.keepAlive";
+
+    /**
      * Prevent instantiation.
      */
     private ExternalProperties() {
