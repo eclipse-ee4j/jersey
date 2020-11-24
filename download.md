@@ -13,7 +13,7 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 
-<h3>Jakarta RESTful WebServices 3.0.0-M1 / Jersey {{ site.latest3xVersion }}</h3>                             
+<h3>Jakarta RESTful WebServices 3.0.0 / Jersey {{ site.latest3xVersion }}</h3>                             
 
 Jersey&nbsp;{{ site.latest3xVersion }}, that implements [Jakarta RESTful WebServices 3.0][jaxrs-3.0] API is the future release of Jersey. 
 Note that Jersey 2.x releases will continue along with Jersey 3.x releases.             
@@ -21,7 +21,7 @@ Note that Jersey 2.x releases will continue along with Jersey 3.x releases.
 For the convenience of non-maven developers the following links are provided:
 
 *   [<var class="icon-cloud-download"></var> Jersey 3.x bundle][zip-3.x] bundle contains
-    the Jakarta RESTful WebServices 3.0.0-M1 API jar, all the core Jersey module jars as well as all the required 3rd-party
+    the Jakarta RESTful WebServices 3.0.0-RC2 API jar, all the core Jersey module jars as well as all the required 3rd-party
     dependencies.
 
 All the Jersey 3 release binaries, including the source & apidocs jars, are available for
@@ -142,7 +142,7 @@ the following links are provided:
 [jaxrs-3.0]: https://jakarta.ee/specifications/restful-ws/3.0/
 [jaxrs-2.1]: https://jcp.org/en/jsr/detail?id=370
 [jaxrs-2.0]: https://jcp.org/en/jsr/detail?id=339
-[zip-3.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/3.0.0-M6/jaxrs-ri-3.0.0-M6.zip
+[zip-3.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latest3xVersion }}/jaxrs-ri-{{ site.latest3xVersion }}.zip
 [zip-2.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latestVersion }}/jaxrs-ri-{{ site.latestVersion }}.zip
 [zip-2.25.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/2.25.1/jaxrs-ri-2.25.1.zip
 [examples-2.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/{{ site.latestVersion }}/jersey-examples-{{ site.latestVersion }}-all.zip
