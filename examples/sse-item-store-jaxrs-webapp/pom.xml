@@ -26,7 +26,7 @@
     <packaging>war</packaging>
     <name>jersey-examples-sse-item-store-jaxrs-webapp</name>
 
-    <description>Jersey JAX-RS 2.1 SSE API-based item store example.</description>
+    <description>Jersey Jakarta RESTful WebServices SSE API-based item store example.</description>
 
     <dependencies>
         <dependency>
@@ -60,18 +60,15 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopWait>10</stopWait>
                     <stopPort>9999</stopPort>
                     <stopKey>STOP</stopKey>
                     <webApp>
                         <contextPath>/${project.artifactId}</contextPath>
                     </webApp>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>jetty.port</name>
-                            <value>${jersey.config.test.container.port}</value>
-                        </systemProperty>
-                    </systemProperties>
+                    <httpConnector>
+                        <port>${jersey.config.test.container.port}</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
         </plugins>

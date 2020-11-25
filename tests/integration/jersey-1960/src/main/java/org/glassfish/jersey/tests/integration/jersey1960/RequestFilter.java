@@ -25,10 +25,10 @@ import jakarta.ws.rs.container.PreMatching;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.message.MessageUtils;
 

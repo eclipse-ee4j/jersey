@@ -56,12 +56,14 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet4.version}</version>
+            <version>${servlet5.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <version>${jstl.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -69,18 +71,15 @@
         <plugins>
             <!-- Run the application using "mvn jetty:run" -->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
                     <webApp>
                         <contextPath>/bookstore-webapp</contextPath>
                     </webApp>
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>8080</port>
-                            <responseHeaderSize>16192</responseHeaderSize>
-                        </connector>
-                    </connectors>
+                    <httpConnector>
+                        <port>8080</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
         </plugins>

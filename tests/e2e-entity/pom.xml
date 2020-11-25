@@ -44,35 +44,6 @@
                     <skipTests>${skip.e2e}</skipTests>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <testExcludes>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/domain/*.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringClientTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringOnClassTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringOnPropertiesTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringServerTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/EntityFilteringScopesTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/entity/filtering/json/Json*.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/InheritanceTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/JacksonJsonViewTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/JsonWithoutExceptionMapperTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/JsonEntityFilteringScopesTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/GenericTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/Jersey1199Test.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/PojoTest.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/pojo/*</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Animal.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/AnimalList.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/AnotherCat.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Cat.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Dog.java</testExclude>
-                        <testExclude>org/glassfish/jersey/tests/e2e/json/entity/Jersey1199List.java</testExclude>
-                    </testExcludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
@@ -103,11 +74,11 @@
             <artifactId>jersey-mvc-mustache</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jersey.media</groupId>-->
-<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jettison</artifactId>
@@ -251,20 +222,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>Jetty11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.jersey.connectors</groupId>
-                    <artifactId>jersey-jetty-connector</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 

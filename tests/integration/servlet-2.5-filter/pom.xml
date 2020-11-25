@@ -58,49 +58,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- TODO remove after jakartification is done -->
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
             <plugin>
-              <groupId>org.mortbay.jetty</groupId>
+              <groupId>org.eclipse.jetty</groupId>
               <artifactId>jetty-maven-plugin</artifactId>
-                <!--TODO jakartify this -->
-                <dependencies>
-                    <dependency>
-                        <groupId>jakarta.servlet</groupId>
-                        <artifactId>jakarta.servlet-api</artifactId>
-                        <version>${servlet5.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-               <plugins>
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-failsafe-plugin</artifactId>
-                       <configuration>
-                           <excludes>
-                               <exclude>org/glassfish/jersey/tests/integration/servlet_2_5_filter/MyResourceITCase.java</exclude>
-                           </excludes>
-                       </configuration>
-                   </plugin>
-               </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>

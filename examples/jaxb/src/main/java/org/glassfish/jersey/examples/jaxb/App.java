@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -27,7 +27,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/jaxb/");
+    private static final URI BASE_URI = URI.create("http://localhost:8080/jaxb");
 
     public static void main(String[] args) {
         try {
@@ -43,7 +43,8 @@ public class App {
             server.start();
 
             System.out.println(
-                    String.format("Application started.%nTry out %s%nStop the application using CTRL+C", BASE_URI));
+                    String.format("Application started.%nTry out %s%nStop the application using CTRL+C",
+                            BASE_URI + "/application.wadl"));
 
             Thread.currentThread().join();
         } catch (IOException | InterruptedException ex) {

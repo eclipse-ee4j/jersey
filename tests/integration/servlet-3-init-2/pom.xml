@@ -43,8 +43,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -63,15 +61,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- TODO remove after jakartification -->
-                <configuration>
-                    <excludes> <!--JDK 11 -->
-                        <exclude>org/glassfish/jersey/tests/integration/servlet_3_init_2/HelloWorldResourceITCase.java</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
-              <groupId>org.mortbay.jetty</groupId>
+              <groupId>org.eclipse.jetty</groupId>
               <artifactId>jetty-maven-plugin</artifactId>
             </plugin>
         </plugins>

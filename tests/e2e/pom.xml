@@ -83,11 +83,6 @@
             <artifactId>jersey-mvc-mustache</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jersey.media</groupId>-->
-<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
@@ -142,6 +137,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-jdk-connector</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jetty-connector</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -216,36 +217,12 @@
                         <configuration>
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/Jersey2462Test.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/EscapedUriTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/GzipContentEncodingTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/HeadTest.java</testExclude>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/JettyEmptyHeaderParamTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/LeadingSlashesTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/MatrixParamTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/QueryParamTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/ResponseWriterMetadataTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/ResponseWriterOutputStreamTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/TrailingSlashTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/container/JerseyContainerTest.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>Jetty11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.jersey.connectors</groupId>
-                    <artifactId>jersey-jetty-connector</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
         <profile>
             <id>sonar</id>

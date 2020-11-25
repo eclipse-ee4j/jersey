@@ -30,7 +30,7 @@
     <packaging>jar</packaging>
     <name>jersey-ext-weld2-se</name>
 
-    <description>WELD 2.x SE support</description>
+    <description>WELD 4.x SE support</description>
 
     <dependencies>
         <dependency>

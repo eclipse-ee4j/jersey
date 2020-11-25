@@ -58,7 +58,7 @@ public class HttpPatchTest extends JerseyTest {
 
     @Parameterized.Parameters(name = "{index}: {0}")
     public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][]{
+        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][]{
                 // {HttpUrlConnectorProvider.class}, // cannot process PATCH without additional configuration
                 {GrizzlyConnectorProvider.class},
                 {JettyConnectorProvider.class}, // unstable.
@@ -66,7 +66,7 @@ public class HttpPatchTest extends JerseyTest {
                 {GrizzlyConnectorProvider.class},
                 {NettyConnectorProvider.class},
                 {JdkConnectorProvider.class},
-                });
+                }));
     }
 
     private final ConnectorProvider connectorProvider;

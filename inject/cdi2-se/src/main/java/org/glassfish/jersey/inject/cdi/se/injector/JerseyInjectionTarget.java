@@ -127,6 +127,13 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
     }
 
     @Override
+    protected void checkDelegateInjectionPoints() {
+        if (getAnnotatedType().getAnnotation(jakarta.decorator.Decorator.class) == null) {
+            super.checkDelegateInjectionPoints();
+        }
+    }
+
+    @Override
     public void inject(T instance, CreationalContext<T> ctx) {
         /*
          * If an instance contains any fields which be injected by Jersey then Jersey attempts to inject them using annotations

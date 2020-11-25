@@ -52,7 +52,6 @@ public class ItemITCase extends TestSupport {
     }
 
     @Test
-    @Ignore("Jetty 9 is ignoring the charset")
     public void testResourceAsHtmlIso88592() throws Exception {
         final Response response = item1resource().path("iso").request().get();
         response.bufferEntity();

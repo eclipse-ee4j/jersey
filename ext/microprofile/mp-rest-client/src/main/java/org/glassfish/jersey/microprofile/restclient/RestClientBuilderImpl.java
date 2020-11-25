@@ -83,6 +83,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
 
     private final Set<ResponseExceptionMapper> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
+    private final Set<InboundHeadersProvider> inboundHeaderProviders;
     private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
     private final Config config;
     private final ConfigWrapper configWrapper;
@@ -100,6 +101,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         clientBuilder = ClientBuilder.newBuilder();
         responseExceptionMappers = new HashSet<>();
         paramConverterProviders = new HashSet<>();
+        inboundHeaderProviders = new HashSet<>();
         asyncInterceptorFactories = new ArrayList<>();
         config = ConfigProvider.getConfig();
         configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
@@ -194,6 +196,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
+                                                               inboundHeaderProviders,
                                                                new ArrayList<>(asyncInterceptorFactories),
                                                                injectionManagerExposer.injectionManager,
                                                                CdiUtil.getBeanManager());
@@ -389,7 +392,8 @@ class RestClientBuilderImpl implements RestClientBuilder {
         return ResponseExceptionMapper.class.isAssignableFrom(providerClass)
                 || ParamConverterProvider.class.isAssignableFrom(providerClass)
                 || AsyncInvocationInterceptorFactory.class.isAssignableFrom(providerClass)
-                || ConnectorProvider.class.isAssignableFrom(providerClass);
+                || ConnectorProvider.class.isAssignableFrom(providerClass)
+                || InboundHeadersProvider.class.isAssignableFrom(providerClass);
     }
 
     private void registerCustomProvider(Object instance, Integer priority) {
@@ -413,6 +417,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
         }
         if (instance instanceof ConnectorProvider) {
             connector = (ConnectorProvider) instance;
+        }
+        if (instance instanceof InboundHeadersProvider) {
+            inboundHeaderProviders.add((InboundHeadersProvider) instance);
         }
     }
 

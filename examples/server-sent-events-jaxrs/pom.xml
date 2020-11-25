@@ -24,7 +24,7 @@
     <packaging>jar</packaging>
     <name>jersey-examples-server-sent-events-jaxrs</name>
 
-    <description>Jersey JAX-RS 2.1 Server-Sent Events example.</description>
+    <description>Jersey Jakarta RESTfule Web Services 3.0 Server-Sent Events example.</description>
 
     <dependencies>
         <dependency>

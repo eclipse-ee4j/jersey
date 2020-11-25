@@ -39,18 +39,8 @@
         <module>grizzly2</module>
         <module>inmemory</module>
         <module>jdk-http</module>
+        <module>jetty</module>
         <module>netty</module>
         <module>simple</module>
     </modules>
-    <profiles>
-        <profile>
-            <id>Jetty11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <modules>
-                <module>jetty</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>

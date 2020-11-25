@@ -28,6 +28,6 @@
 
     <servlet-mapping>
         <servlet-name>org.glassfish.jersey.examples.jsonp.MyApplication</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/jsonp-webapp/*</url-pattern>
     </servlet-mapping>
 </web-app>

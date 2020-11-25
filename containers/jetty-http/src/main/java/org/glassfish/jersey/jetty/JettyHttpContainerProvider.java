@@ -19,9 +19,9 @@ package org.glassfish.jersey.jetty;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Application;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.server.spi.ContainerProvider;
-
-import org.eclipse.jetty.server.Handler;
 
 /**
  * Container provider for containers based on Jetty Server {@link org.eclipse.jetty.server.Handler}.
@@ -33,7 +33,13 @@ public final class JettyHttpContainerProvider implements ContainerProvider {
 
     @Override
     public <T> T createContainer(final Class<T> type, final Application application) throws ProcessingException {
-        if (Handler.class == type || JettyHttpContainer.class == type) {
+        if (JdkVersion.getJdkVersion().getMajor() < 11) {
+            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
+        }
+        if (type != null
+                && ("org.eclipse.jetty.server.Handler".equalsIgnoreCase(type.getCanonicalName())
+                        || JettyHttpContainer.class == type)
+        ) {
             return type.cast(new JettyHttpContainer(application));
         }
         return null;

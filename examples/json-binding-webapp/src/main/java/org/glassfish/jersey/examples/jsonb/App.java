@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -37,7 +37,8 @@ public class App {
             server.start();
 
             System.out.println(
-                    String.format("Application started.%nTry out %s%nStop the application using CTRL+C", BASE_URI));
+                    String.format("Application started.%nTry out %s%nStop the application using CTRL+C",
+                            BASE_URI + "application.wadl"));
 
             Thread.currentThread().join();
         } catch (IOException | InterruptedException ex) {

@@ -98,7 +98,7 @@ public class RequestHeaderModificationsTest extends JerseyTest {
 
     @Parameterized.Parameters(name = "{index}: {0} / modificationSupported= {1} / addHeader= {2}")
     public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][] {
                 {HttpUrlConnectorProvider.class, true, false},
                 {GrizzlyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {JettyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
@@ -107,7 +107,7 @@ public class RequestHeaderModificationsTest extends JerseyTest {
                 {GrizzlyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {JettyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {ApacheConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
-        });
+        }));
     }
 
     private final ConnectorProvider connectorProvider;

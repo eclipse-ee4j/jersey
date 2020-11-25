@@ -43,40 +43,6 @@
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
                 </configuration>
-                <!-- TODO remove after jakartification -->
-                <executions>
-                    <execution>
-                        <id>default-test</id> <!-- jakartification-excluded-tests -->
-                        <configuration>
-                            <excludes>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/ContentNegotiationTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/BeanParamExceptionTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/EntityInheritanceValidationTest.java</exclude>
-                                <!--JDK 8 -->
-                                <exclude>org/glassfish/jersey/tests/e2e/server/ResourceConfigTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/EntityExpansionTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/ResourceExtendedFlagTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlBeanParamTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlResourceTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/validateonexecution/ValidateOnExecutionBasicTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/wadl/WadlEmptyMediaTypeTest*</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/monitoring/MonitoringStatisticsLocatorTest.java</exclude>
-                                <exclude>org/glassfish/jersey/tests/e2e/server/validation/validateonexecution/ValidateOnExecutionOverrideTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <testExcludes>
-                        <exclude>org/glassfish/jersey/tests/e2e/server/mvc/TemplateMethodSelectionTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/server/validation/CustomConfigValidationTest.java</exclude>
-                        <exclude>org/glassfish/jersey/tests/e2e/server/validation/BasicValidationTest.java</exclude>
-                    </testExcludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -108,11 +74,11 @@
             <artifactId>jersey-mvc-mustache</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jersey.media</groupId>-->
-<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jettison</artifactId>
@@ -164,6 +130,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jetty-connector</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-signature</artifactId>
             <version>${project.version}</version>
@@ -187,7 +158,11 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -216,19 +191,6 @@
 
     <profiles>
         <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>xdk</id>
             <properties>
                 <!-- do not use security manager for xdk -->
@@ -252,42 +214,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>JettyExclude</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <testExcludes>
-                                <testExclude>org/glassfish/jersey/tests/e2e/server/mvc/spi/AbstractTemplateProcessorTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/server/monitoring/StatisticsDestroyTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/tests/e2e/server/monitoring/ReloadApplicationEventTest.java</testExclude>
-                            </testExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>Jetty11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.jersey.connectors</groupId>
-                    <artifactId>jersey-jetty-connector</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 

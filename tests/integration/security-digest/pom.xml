@@ -56,17 +56,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- TODO remove after jakartification is done -->
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
 
                 <configuration>
-                    <skip>true</skip> <!-- TODO remove after jakartification -->
                     <!-- define login service for jetty and the realm to be used -->
                     <loginServices>
                         <loginService implementation="org.eclipse.jetty.security.HashLoginService">

@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -11,7 +11,7 @@ Multipart Web app Example
 
 This example demonstrates how to develop RESTful web service with
 demonstrating JAX-RS Integration with MIME MultiPart Message Formats and
-an EE 6 compliant Web container.
+an Jakarta EE 9 compliant Web container.
 
 Contents
 --------
