@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -29,9 +29,9 @@ public final class EntityStore {
 
     static {
         // Projects.
-        final Project project = createProject("Jersey", "Jersey is the open source (see NOTICE.md for license "
-                + "information) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web "
-                + "services.");
+        final Project project = createProject("Jersey", "Jersey 3 is the open source (see NOTICE.md for license "
+                + "information) Jakarta RESTful Web Services 3.0 production quality compatible implementation for building "
+                + "RESTful Web services.");
 
         // Users.
         final User robot = createUser("Jersey Robot", "very@secret.com");

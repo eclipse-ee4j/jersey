@@ -21,8 +21,8 @@ import jakarta.ws.rs.core.Response;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.process.Inflector;
 

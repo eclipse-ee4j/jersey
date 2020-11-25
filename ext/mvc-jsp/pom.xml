@@ -53,8 +53,8 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            jakarta.servlet.jsp.*;version="[2.0,4.0)",
-                            javax.servlet.*;version="!",
+                            jakarta.servlet.jsp.*;version="[3.0,4.0)",
+                            jakarta.servlet.*;version="!",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.jsp.*;version=${project.version}</Export-Package>

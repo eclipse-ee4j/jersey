@@ -30,7 +30,7 @@
     <packaging>jar</packaging>
     <name>jersey-container-servlet-core</name>
 
-    <description>Jersey core Servlet 2.x implementation</description>
+    <description>Jersey core Servlet 3.x implementation</description>
 
     <dependencies>
         <dependency>
@@ -71,7 +71,7 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Import-Package>
                             jakarta.persistence.*;resolution:=optional,
-                            javax.servlet.*;version="[2.4,5.0)",
+                            jakarta.servlet.*;version="[5.0,6.0)",
                             ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>

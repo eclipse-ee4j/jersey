@@ -317,7 +317,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
 
     /**
      * {@link AbstractEntityProviderModel} comparator
-     * which works as it is described in JAX-RS 2.x specification.
+     * which works as it is described in JAX-RS 3.x specification.
      *
      * Pairs are sorted by distance from required type, media type and custom/provided (provided goes first).
      *

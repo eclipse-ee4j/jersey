@@ -33,7 +33,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            System.out.println("\"JAX-RS 2.1 Server-Sent Events\" Jersey Example App");
+            System.out.println("\"Jakarta RESTfule Web Services Server-Sent Events\" Jersey Example App");
 
             final ResourceConfig resourceConfig = new ResourceConfig(JaxRsServerSentEventsResource.class);
 

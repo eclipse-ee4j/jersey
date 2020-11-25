@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,12 @@
 
 package org.glassfish.jersey.tests.e2e.container;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
@@ -39,7 +40,7 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public abstract class JerseyContainerTest extends JerseyTest {
 
-    private static final List<TestContainerFactory> FACTORIES = Arrays.asList(
+    private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
             new GrizzlyTestContainerFactory(),
             new InMemoryTestContainerFactory(),
             new SimpleTestContainerFactory(),
@@ -60,5 +61,17 @@ public abstract class JerseyContainerTest extends JerseyTest {
     @Override
     protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
         return factory;
+    }
+
+    protected static List<TestContainerFactory> listContainerFactories(TestContainerFactory...factories) {
+        final JdkVersion version = JdkVersion.getJdkVersion();
+        boolean isJDK8 = version.getMajor() == 1;
+        final List<TestContainerFactory> filtered = new LinkedList<>();
+        for (TestContainerFactory factory : factories) {
+            if (!isJDK8 || !JettyTestContainerFactory.class.isInstance(factory)) {
+                filtered.add(factory);
+            }
+        }
+        return filtered;
     }
 }

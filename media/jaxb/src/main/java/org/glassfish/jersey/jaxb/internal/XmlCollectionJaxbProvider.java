@@ -128,14 +128,14 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
 
         entityStream.write(
                 String.format("<?xml version=\"1.0\" encoding=\"%s\" standalone=\"yes\"?>", cName).getBytes(cName));
-        String property = "com.sun.xml.bind.xmlHeaders";
+        String property = "org.glassfish.jaxb.xmlHeaders";
         String header;
         try {
             // standalone jaxb ri?
             header = (String) m.getProperty(property);
         } catch (PropertyException e) {
-            // jaxb ri from jdk?
-            property = "com.sun.xml.internal.bind.xmlHeaders";
+            // older jaxb property
+            property = "com.sun.xml.bind.xmlHeaders";
             try {
                 header = (String) m.getProperty(property);
             } catch (PropertyException ex) {

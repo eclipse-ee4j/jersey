@@ -76,13 +76,13 @@ URI path                            | Resource class   | HTTP methods   | Notes
 Running the Example
 -------------------
 
-Bookstore example runs on Glassfish 4.0 application server
+Bookstore example runs on Glassfish 6.0 application server
 ([https://javaee.github.io/glassfish/](https://javaee.github.io/glassfish/)), which can be
 run as an embedded container or Jetty.
 
 If you are working with Jersey GlassFish update center module installed
 into your existing GlassFish instance, you will need to follow
-instructions at [the module README file](../../README.html) in order to
+instructions at [the module README file](../../README.md) in order to
 deploy the example.
 
 Otherwise, you can run the example using embedded GlassFish as follows:

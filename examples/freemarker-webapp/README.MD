@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -38,7 +38,7 @@ Run the tests of the example as follows:
 
 >     mvn clean test
 
-This deploys this example using [Grizzly](http://grizzly.java.net/) and
+This deploys this example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly) and
 executes the Jersey Test Framework using the unit test framework.
 
 You can see test classes at `src/main/test` subdirectory for detailed

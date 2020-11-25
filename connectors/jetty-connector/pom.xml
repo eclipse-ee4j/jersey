@@ -34,6 +34,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java8.build.outputDirectory>${project.basedir}/target</java8.build.outputDirectory>
+        <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
+        <java11.build.outputDirectory>${project.basedir}/target11</java11.build.outputDirectory>
+        <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
     </properties>
 
     <dependencies>
@@ -118,6 +122,140 @@
             <properties>
                 <skip.tests>true</skip.tests>
             </properties>
+        </profile>
+        <profile>
+            <id>JettyExclude</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <directory>${java8.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java8.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/jetty/connector/*.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>Jetty11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <build>
+                <directory>${java11.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java11.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK11FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java11.build.outputDirectory} does not work here -->
+                    <exists>target11/classes/org/glassfish/jersey/jetty/connector/JettyConnectorProvider.class</exists>
+                </file>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk11-classes</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${java8.build.outputDirectory}/classes/META-INF/versions/11</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java11.build.outputDirectory}/classes</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk11-sources</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <property name="sources-jar" value="${java8.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
+                                        <echo>sources-jar: ${sources-jar}</echo>
+                                        <zip destfile="${sources-jar}" update="true">
+                                            <zipfileset dir="${java11.sourceDirectory}" prefix="META-INF/versions/11"/>
+                                        </zip>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

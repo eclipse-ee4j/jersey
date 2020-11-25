@@ -1556,8 +1556,8 @@
                 <version>${hk2.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>javax.inject</groupId>
-                        <artifactId>javax.inject</artifactId>
+                        <groupId>jakarta.inject</groupId>
+                        <artifactId>jakarta.inject-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -1937,7 +1937,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -2057,7 +2057,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>8.0</asm.version>
+        <asm.version>9.0</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <commons-lang3.version>3.3.2</commons-lang3.version>
@@ -2079,9 +2079,9 @@
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>5.1.0</hk2.config.version>
+        <hk2.config.version>6.0.0-RC1</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.11.3</jackson.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
@@ -2113,19 +2113,19 @@
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
 
-        <weld.version>4.0.0.Beta1</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <!-- Jakartified, eligible for CQ -->
+        <weld.version>4.0.0.Beta5</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <validation.impl.version>7.0.0.Alpha6</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>5.1.0</gf.impl.version>
+        <gf.impl.version>6.0.0-RC1</gf.impl.version>
         <!-- Jakartified -->
         <cdi.api.version>3.0.0</cdi.api.version>
-        <ejb.version>4.0.0-RC2</ejb.version>
+        <ejb.version>4.0.0</ejb.version>
         <grizzly2.version>3.0.0-M1</grizzly2.version>
-        <hk2.version>3.0.0-M2</hk2.version>
+        <hk2.version>3.0.0-RC1</hk2.version>
         <jsp.version>3.0.0</jsp.version>
         <jstl.version>2.0.0</jstl.version>
         <jta.api.version>2.0.0</jta.api.version>
@@ -2145,12 +2145,12 @@
         <jaxb.ri.version>3.0.0-M5</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.0.beta2</jetty.version>
-        <jetty.plugin.version>11.0.0.beta2</jetty.plugin.version>
+        <jetty.version>11.0.0.beta3</jetty.version>
+        <jetty.plugin.version>11.0.0.beta3</jetty.plugin.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>2.0.0</jsonp.ri.version>
         <jsonp.jaxrs.version>2.0.0</jsonp.jaxrs.version>
-        <moxy.version>3.0.0-M1</moxy.version>
+        <moxy.version>3.0.0-M2</moxy.version>
         <yasson.version>2.0.1</yasson.version>
         <!-- END of Jakartified -->
 

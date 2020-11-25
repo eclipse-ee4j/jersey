@@ -54,8 +54,8 @@
     <modules>
         <module>assemblies</module>
         <!--<module>bean-validation-webapp</module>-->
-        <module>bookmark</module>
-        <module>bookmark-em</module>
+<!--        <module>bookmark</module> Jakartification -->
+<!--        <module>bookmark-em</module> Jakartification-->
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
@@ -71,7 +71,7 @@
         <!--<module>flight-mgmt-webapp</module>-->
         <module>groovy</module>
         <module>helloworld</module>
-<!--        <module>helloworld-benchmark</module> Jakartification -->
+        <module>helloworld-benchmark</module>
         <module>helloworld-cdi2-se</module>
         <module>helloworld-netty</module>
         <module>helloworld-programmatic</module>
@@ -101,11 +101,11 @@
         <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
         <module>open-tracing</module>
-        <module>osgi-helloworld-webapp</module>
-        <module>osgi-http-service</module>
+<!--        <module>osgi-helloworld-webapp</module> Jakartification-->
+<!--        <module>osgi-http-service</module> Jakartification -->
 <!--        <module>oauth-client-twitter</module> Jakartification -->
         <!--<module>oauth2-client-google-webapp</module>-->
-        <module>reload</module>
+<!--        <module>reload</module> Jakartification-->
         <module>rx-client-webapp</module>
         <module>server-async</module>
         <module>server-async-managed</module>

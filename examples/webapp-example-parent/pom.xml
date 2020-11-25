@@ -168,14 +168,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
-                    <configuration>
-                        <webApp>${project.build.directory}/${project.artifactId}.war</webApp>
-                        <contextPath>${project.artifactId}</contextPath>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>

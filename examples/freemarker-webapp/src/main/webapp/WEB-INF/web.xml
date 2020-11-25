@@ -32,7 +32,8 @@
 
     <servlet-mapping>
         <servlet-name>org.glassfish.jersey.examples.freemarker.MyApplication</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <!-- TODO jetty 11 beta does not use glassfish-web.xml -->
+        <url-pattern>/freemarker-webapp/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

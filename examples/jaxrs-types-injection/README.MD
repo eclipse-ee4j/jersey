@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -45,7 +45,7 @@ Run the example as follows:
 
 >     mvn clean compile exec:java
 
-This deploys the JAX-RS Types Injection Example using [Grizzly](http://grizzly.java.net/)
+This deploys the JAX-RS Types Injection Example using [Grizzly](https://projects.eclipse.org/projects/ee4j.grizzly)
 
 A [WADL description](http://wadl.java.net/#spec) may be accessed at the URL:
 
