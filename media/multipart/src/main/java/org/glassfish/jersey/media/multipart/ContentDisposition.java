@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
@@ -40,6 +41,8 @@ public class ContentDisposition {
     private Date modificationDate;
     private Date readDate;
     private long size;
+    private static final Pattern FILENAME_EXT_VALUE_PATTERN =
+            Pattern.compile("(UTF-8|ISO-8859-1)'([a-z]{2,8}(-[a-z0-9]+)?)?'(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+");
 
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
@@ -182,6 +185,11 @@ public class ContentDisposition {
 
     private void createParameters() throws ParseException {
         fileName = parameters.get("filename");
+
+        String fileNameExt = parameters.get("filename*");
+        if (fileNameExt != null && FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt).matches()) {
+            fileName = fileNameExt;
+        }
 
         creationDate = createDate("creation-date");
 

@@ -97,6 +97,29 @@ public class ContentDispositionTest {
         assertEquals(header, contentDisposition.toString());
     }
 
+    @Test
+    public void testFileNameExt() {
+        final Date date = new Date();
+        final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+        final String fileName = "test.file";
+        String fileNameExt = "testExt.file";
+        final String prefixHeader = contentDispositionType + ";filename=\"" + fileName + "\";"
+                + "creation-date=\"" + dateString + "\";modification-date=\"" + dateString + "\";read-date=\""
+                + dateString + "\";size=1222" + ";name=\"testData\";" + "filename*=\"";
+        String header = prefixHeader + fileNameExt + "\"";
+        try {
+            ContentDisposition contentDisposition =
+                    new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+        } catch (ParseException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
     protected void assertContentDisposition(final ContentDisposition contentDisposition, Date date) {
         assertNotNull(contentDisposition);
         assertEquals(contentDispositionType, contentDisposition.getType());
