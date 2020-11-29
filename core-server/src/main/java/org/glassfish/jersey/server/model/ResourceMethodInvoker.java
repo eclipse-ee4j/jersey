@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,6 +59,7 @@ import org.glassfish.jersey.model.internal.RankedProvider;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ContainerResponse;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.ProcessingProviders;
 import org.glassfish.jersey.server.internal.inject.ConfiguredValidator;
@@ -83,6 +84,8 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
     private final Annotation[] methodAnnotations;
     private final Type invocableResponseType;
     private final boolean canUseInvocableResponseType;
+    private final boolean isCompletionStageResponseType;
+    private final Type completionStageResponseType;
     private final ResourceMethodDispatcher dispatcher;
     private final Method resourceMethod;
     private final Class<?> resourceClass;
@@ -306,7 +309,10 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
                 && Void.class != invocableResponseType
                 && // Do NOT change the entity type for Response or it's subclasses.
                 !((invocableResponseType instanceof Class) && Response.class.isAssignableFrom((Class) invocableResponseType));
-
+        this.isCompletionStageResponseType = ParameterizedType.class.isInstance(invocableResponseType)
+                && CompletionStage.class.isAssignableFrom((Class<?>) ((ParameterizedType) invocableResponseType).getRawType());
+        this.completionStageResponseType =
+                isCompletionStageResponseType ? ((ParameterizedType) invocableResponseType).getActualTypeArguments()[0] : null;
     }
 
     private <T> void addNameBoundProviders(
@@ -459,7 +465,7 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
             if (canUseInvocableResponseType
                     && response.hasEntity()
                     && !(response.getEntityType() instanceof ParameterizedType)) {
-                response.setEntityType(invocableResponseType);
+                response.setEntityType(unwrapInvocableResponseType(context.request()));
             }
 
             return response;
@@ -476,6 +482,14 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
         }
 
         return jaxrsResponse;
+    }
+
+    private Type unwrapInvocableResponseType(ContainerRequest request) {
+        if (isCompletionStageResponseType
+                && request.resolveProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.FALSE)) {
+            return completionStageResponseType;
+        }
+        return invocableResponseType;
     }
 
     /**
