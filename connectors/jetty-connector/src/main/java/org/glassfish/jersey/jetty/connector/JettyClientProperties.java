@@ -76,6 +76,16 @@ public final class JettyClientProperties {
             "jersey.config.jetty.client.enableSslHostnameVerification";
 
     /**
+     * Overrides the default Jetty synchronous listener response max buffer size.
+     * In practise, this allows you to read larger responses.
+     * Size in bytes.
+     * <p/>
+     * If the property is absent, the value is such as specified by Jetty (currently 2MiB).
+     */
+    public static final String SYNC_LISTENER_RESPONSE_MAX_SIZE =
+        "jersey.config.jetty.client.syncListenerResponseMaxSize";
+
+    /**
      * Get the value of the specified property.
      *
      * If the property is not set or the real value type is not compatible with the specified value type, returns {@code null}.
