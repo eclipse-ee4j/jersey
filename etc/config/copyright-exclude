@@ -24,6 +24,8 @@
 .zip
 .dat
 .lua
+.md
+.markdown
 travis.sh
 .travis.yml
 /docs/src/main/docbook/inc/modules_table_footer.src
@@ -85,3 +87,6 @@ build.readme
 NOTICE.md
 /ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessAllAnnotatedTypes.java 
 /ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessJAXRSAnnotatedTypes.java
+/media/json-binding/src/test/java/org/glassfish/jersey/jsonb/internal/JsonBindingProviderTest.java
+/connectors/jdk-connector/src/test/resources
+/tools
