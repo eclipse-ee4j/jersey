@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.jaxb.internal;
 
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
 import javax.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
@@ -40,13 +42,18 @@ public class XmlInputFactoryInjectionProvider extends AbstractXmlFactory<XMLInpu
         super(config);
     }
 
+    @Inject
+    private InjectionManager injectionManager;
+
     @Override
     public XMLInputFactory get() {
-        XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
 
         if (!isXmlSecurityDisabled()) {
             factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
         }
+
+        JaxbFeatureUtil.setProperties(injectionManager, XMLInputFactory.class, factory::setProperty);
 
         return factory;
     }

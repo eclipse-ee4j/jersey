@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -166,6 +166,27 @@ public final class ClientProperties {
      * </p>
      */
     public static final String USE_ENCODING = "jersey.config.client.useEncoding";
+
+    /**
+     * Ignore a response in an exception thrown by the client API by not forwarding
+     * it to this service's client. A value of {@code true} indicates that responses
+     * will be ignored, and only the response status will return to the client. This
+     * property will normally be specified as a system property; note that system
+     * properties are only visible if {@link CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER}
+     * is set to {@code true}.
+     * <p>
+     * The value MUST be an instance convertible to {@link java.lang.Boolean}.
+     * </p>
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @see org.glassfish.jersey.CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER
+     */
+    public static final String IGNORE_EXCEPTION_RESPONSE = "jersey.config.client.ignoreExceptionResponse";
 
     /**
      * If {@code true} then disable auto-discovery on the client.
@@ -404,6 +425,31 @@ public final class ClientProperties {
      * @since 2.5
      */
     public static final String REQUEST_ENTITY_PROCESSING = "jersey.config.client.request.entity.processing";
+
+    /**
+     * Allows for HTTP Expect:100-Continue being handled by the HttpUrlConnector (default Jersey
+     * connector).
+     *
+     * @since 2.32
+     */
+    public static final String EXPECT_100_CONTINUE = "jersey.config.client.request.expect.100.continue.processing";
+
+    /**
+     * Property for threshold size for content length after which Expect:100-Continue header would be applied
+     * before the main request.
+     *
+     * @since 2.32
+     */
+    public static final String
+            EXPECT_100_CONTINUE_THRESHOLD_SIZE = "jersey.config.client.request.expect.100.continue.threshold.size";
+
+    /**
+     * Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+     * the main request.
+     *
+     * @since 2.32
+     */
+    public static final Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 65536L;
 
     private ClientProperties() {
         // prevents instantiation

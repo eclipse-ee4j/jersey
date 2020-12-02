@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -122,6 +123,7 @@ class MethodModel {
             subResourceModel = RestClientModel.from(returnType.getRawType(),
                                                     interfaceModel.getResponseExceptionMappers(),
                                                     interfaceModel.getParamConverterProviders(),
+                                                    interfaceModel.getInboundHeadersProviders(),
                                                     interfaceModel.getAsyncInterceptorFactories(),
                                                     interfaceModel.getInjectionManager(),
                                                     interfaceModel.getBeanManager());
@@ -374,11 +376,17 @@ class MethodModel {
                                                                           args[parameterModel.getParamPosition()]));
 
         MultivaluedMap<String, String> inbound = new MultivaluedHashMap<>();
-        HeadersContext.get().ifPresent(headersContext -> inbound.putAll(headersContext.inboundHeaders()));
+        Optional<HeadersContext> headersContext = HeadersContext.get();
+        headersContext.ifPresent(hc -> inbound.putAll(hc.inboundHeaders()));
+        if (!headersContext.isPresent()) {
+            for (InboundHeadersProvider provider : interfaceModel.getInboundHeadersProviders()) {
+                inbound.putAll(provider.inboundHeaders());
+            }
+        }
 
         AtomicReference<MultivaluedMap<String, String>> toReturn = new AtomicReference<>(customHeaders);
-        interfaceModel.getClientHeadersFactory().ifPresent(clientHeadersFactory -> toReturn
-                .set(clientHeadersFactory.update(inbound, customHeaders)));
+        interfaceModel.getClientHeadersFactory()
+                .ifPresent(clientHeadersFactory -> toReturn.set(clientHeadersFactory.update(inbound, customHeaders)));
         return toReturn.get();
     }
 
@@ -655,7 +663,7 @@ class MethodModel {
 
         private void validateParameters() {
             UriBuilder uriBuilder = UriBuilder.fromUri(interfaceModel.getPath()).path(pathValue);
-            List<String> parameters = InterfaceUtil.parseParameters(uriBuilder.toTemplate());
+            List<String> parameters = InterfaceUtil.getAllMatchingParams(uriBuilder.toTemplate());
             List<String> methodPathParameters = new ArrayList<>();
             List<ParamModel> pathHandlingParams = parameterModels.stream()
                     .filter(parameterModel -> parameterModel.handles(PathParam.class))

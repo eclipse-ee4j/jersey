@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -376,12 +376,15 @@ class ApacheConnector implements Connector {
             }
         }
 
+        final boolean useSystemProperties =
+            PropertiesHelper.isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
+
         // Create custom connection manager.
         return createConnectionManager(
                 client,
                 config,
                 sslContext,
-                false);
+            useSystemProperties);
     }
 
     private HttpClientConnectionManager createConnectionManager(
@@ -616,6 +619,10 @@ class ApacheConnector implements Connector {
             return null;
         }
 
+        if (HttpEntity.class.isInstance(entity)) {
+            return wrapHttpEntity(clientRequest, (HttpEntity) entity);
+        }
+
         final AbstractHttpEntity httpEntity = new AbstractHttpEntity() {
             @Override
             public boolean isRepeatable() {
@@ -655,6 +662,70 @@ class ApacheConnector implements Connector {
             }
         };
 
+        return bufferEntity(httpEntity, bufferingEnabled);
+    }
+
+    private HttpEntity wrapHttpEntity(final ClientRequest clientRequest, final HttpEntity originalEntity) {
+        final boolean bufferingEnabled = BufferedHttpEntity.class.isInstance(originalEntity);
+
+        try {
+            clientRequest.setEntity(originalEntity.getContent());
+        } catch (IOException e) {
+            throw new ProcessingException(LocalizationMessages.ERROR_READING_HTTPENTITY_STREAM(e.getMessage()), e);
+        }
+
+        final AbstractHttpEntity httpEntity = new AbstractHttpEntity() {
+            @Override
+            public boolean isRepeatable() {
+                return originalEntity.isRepeatable();
+            }
+
+            @Override
+            public long getContentLength() {
+                return originalEntity.getContentLength();
+            }
+
+            @Override
+            public Header getContentType() {
+                return originalEntity.getContentType();
+            }
+
+            @Override
+            public Header getContentEncoding() {
+                return originalEntity.getContentEncoding();
+            }
+
+            @Override
+            public InputStream getContent() throws IOException, IllegalStateException {
+               return originalEntity.getContent();
+            }
+
+            @Override
+            public void writeTo(final OutputStream outputStream) throws IOException {
+                clientRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
+                    @Override
+                    public OutputStream getOutputStream(final int contentLength) throws IOException {
+                        return outputStream;
+                    }
+                });
+                clientRequest.writeEntity();
+            }
+
+            @Override
+            public boolean isStreaming() {
+                return originalEntity.isStreaming();
+            }
+
+            @Override
+            public boolean isChunked() {
+                return originalEntity.isChunked();
+            }
+        };
+
+        return bufferEntity(httpEntity, bufferingEnabled);
+    }
+
+    private static HttpEntity bufferEntity(HttpEntity httpEntity, boolean bufferingEnabled) {
         if (bufferingEnabled) {
             try {
                 return new BufferedHttpEntity(httpEntity);

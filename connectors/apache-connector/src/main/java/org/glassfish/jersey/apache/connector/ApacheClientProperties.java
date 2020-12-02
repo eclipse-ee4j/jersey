@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -171,6 +171,20 @@ public final class ApacheClientProperties {
      * The value MUST be a subclass of {@link RedirectStrategy}.
      */
     public static final String REDIRECT_STRATEGY = "jersey.config.apache.client.redirectStrategy";
+
+     /**
+     * A value of {@code false} indicates the client will use default ApacheConnector params. A value
+     * of {@code true} will cause the client to take into account the system properties
+     * {@code https.protocols}, {@code https.cipherSuites}, {@code http.keepAlive},
+     * {@code http.maxConnections}.
+     * <p/>
+     * The value MUST be an instance of {@link java.lang.Boolean}.
+     * <p/>
+     * The default value is {@code false}.
+     * <p/>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     */
+    public static final String USE_SYSTEM_PROPERTIES = "jersey.config.apache.client.useSystemProperties";
 
     /**
      * Get the value of the specified property.

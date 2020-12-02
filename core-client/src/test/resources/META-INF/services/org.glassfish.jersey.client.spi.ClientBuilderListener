@@ -1,0 +1,3 @@
+org.glassfish.jersey.client.spi.ClientBuilderListenerTest$ThirdClientBuilderListener
+org.glassfish.jersey.client.spi.ClientBuilderListenerTest$FirstClientBuilderListener
+org.glassfish.jersey.client.spi.ClientBuilderListenerTest$SecondClientBuilderListener

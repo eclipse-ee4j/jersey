@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.tests.performance.mbw.kryo;
 
+import org.glassfish.jersey.kryo.KryoFeature;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,4 +40,8 @@ public class JaxRsApplication extends Application {
         return APP_CLASSES;
     }
 
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.singleton(KryoFeature.registrationRequired(false));
+    }
 }

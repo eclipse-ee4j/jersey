@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -104,11 +104,12 @@ class ClientFilteringStages {
      */
     private static <T> Iterable<T> prependFilter(T filter, Iterable<T> filters) {
         return new Iterable<T>() {
-            boolean wasInterceptorFilterNext = false;
-            final Iterator<T> filterIterator = filters.iterator();
             @Override
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
+                    final Iterator<T> filterIterator = filters.iterator();
+                    boolean wasInterceptorFilterNext = false;
+
                     @Override
                     public boolean hasNext() {
                         return !wasInterceptorFilterNext || filterIterator.hasNext();

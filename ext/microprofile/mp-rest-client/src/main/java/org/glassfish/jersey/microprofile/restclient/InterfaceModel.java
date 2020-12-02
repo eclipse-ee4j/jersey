@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -56,6 +59,8 @@ import org.glassfish.jersey.model.Parameter;
  */
 class InterfaceModel {
 
+    private static final Logger LOGGER = Logger.getLogger(InterfaceModel.class.getName());
+
     private final InjectionManager injectionManager;
     private final Class<?> restClientClass;
     private final String[] produces;
@@ -68,6 +73,7 @@ class InterfaceModel {
     private final List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
     private final Set<ResponseExceptionMapper> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
+    private final Set<InboundHeadersProvider> inboundHeadersProviders;
     private final Set<Annotation> interceptorAnnotations;
     private final BeanManager beanManager;
 
@@ -77,6 +83,7 @@ class InterfaceModel {
      * @param restClientClass           interface class
      * @param responseExceptionMappers  registered exception mappers
      * @param paramConverterProviders   registered parameter providers
+     * @param inboundHeadersProviders   registered inbound header providers
      * @param asyncInterceptorFactories async interceptor factories
      * @param injectionManager
      * @return new model instance
@@ -84,6 +91,7 @@ class InterfaceModel {
     static InterfaceModel from(Class<?> restClientClass,
                                Set<ResponseExceptionMapper> responseExceptionMappers,
                                Set<ParamConverterProvider> paramConverterProviders,
+                               Set<InboundHeadersProvider> inboundHeadersProviders,
                                List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
                                InjectionManager injectionManager,
                                BeanManager beanManager) {
@@ -91,6 +99,7 @@ class InterfaceModel {
                            responseExceptionMappers,
                            paramConverterProviders,
                            asyncInterceptorFactories,
+                           inboundHeadersProviders,
                            injectionManager,
                            beanManager).build();
     }
@@ -108,6 +117,7 @@ class InterfaceModel {
         this.interceptorAnnotations = builder.interceptorAnnotations;
         this.creationalContext = builder.creationalContext;
         this.asyncInterceptorFactories = builder.asyncInterceptorFactories;
+        this.inboundHeadersProviders = builder.inboundHeadersProviders;
         this.beanManager = builder.beanManager;
     }
 
@@ -184,6 +194,15 @@ class InterfaceModel {
     }
 
     /**
+     * Returns {@link Set} of registered {@link InboundHeadersProvider}
+     *
+     * @return registered inbound header providers
+     */
+    Set<InboundHeadersProvider> getInboundHeadersProviders() {
+        return inboundHeadersProviders;
+    }
+
+    /**
      * Returns {@link Set} of registered {@link ParamConverterProvider}
      *
      * @return registered param converter providers
@@ -244,6 +263,7 @@ class InterfaceModel {
 
         private final Class<?> restClientClass;
 
+        private final Set<InboundHeadersProvider> inboundHeadersProviders;
         private final InjectionManager injectionManager;
         private final BeanManager beanManager;
         private String pathValue;
@@ -261,6 +281,7 @@ class InterfaceModel {
                         Set<ResponseExceptionMapper> responseExceptionMappers,
                         Set<ParamConverterProvider> paramConverterProviders,
                         List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
+                        Set<InboundHeadersProvider> inboundHeadersProviders,
                         InjectionManager injectionManager,
                         BeanManager beanManager) {
             this.injectionManager = injectionManager;
@@ -268,6 +289,7 @@ class InterfaceModel {
             this.responseExceptionMappers = responseExceptionMappers;
             this.paramConverterProviders = paramConverterProviders;
             this.asyncInterceptorFactories = asyncInterceptorFactories;
+            this.inboundHeadersProviders = inboundHeadersProviders;
             this.beanManager = beanManager;
             filterAllInterceptorAnnotations();
         }
@@ -336,9 +358,15 @@ class InterfaceModel {
         }
 
         Builder clientHeadersFactory(RegisterClientHeaders registerClientHeaders) {
-            clientHeadersFactory = registerClientHeaders != null
-                    ? ReflectionUtil.createInstance(registerClientHeaders.value())
-                    : null;
+            if (registerClientHeaders != null) {
+                Class<? extends ClientHeadersFactory> value = registerClientHeaders.value();
+                try {
+                    clientHeadersFactory = CDI.current().select(value).get();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.FINEST, ex, () -> "This class is not a CDI bean. " + value);
+                    clientHeadersFactory = ReflectionUtil.createInstance(value);
+                }
+            }
             return this;
         }
 

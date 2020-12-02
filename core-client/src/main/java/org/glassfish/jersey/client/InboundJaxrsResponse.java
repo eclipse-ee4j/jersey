@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.EntityTag;
@@ -51,6 +52,7 @@ class InboundJaxrsResponse extends Response {
     private final ClientResponse context;
     private final RequestScope scope;
     private final RequestContext requestContext;
+    private final AtomicBoolean isClosed = new AtomicBoolean(false);
 
     /**
      * Create new scoped client response.
@@ -139,11 +141,13 @@ class InboundJaxrsResponse extends Response {
 
     @Override
     public void close() throws ProcessingException {
-        try {
-            context.close();
-        } finally {
-            if (requestContext != null) {
-                requestContext.release();
+        if (isClosed.compareAndSet(false, true)) {
+            try {
+                context.close();
+            } finally {
+                if (requestContext != null) {
+                    requestContext.release();
+                }
             }
         }
     }

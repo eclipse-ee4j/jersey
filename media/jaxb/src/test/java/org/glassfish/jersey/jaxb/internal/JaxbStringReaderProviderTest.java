@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ package org.glassfish.jersey.jaxb.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.MediaType;
@@ -35,6 +36,7 @@ import javax.inject.Provider;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.glassfish.jersey.jaxb.FeatureSupplier;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 
@@ -51,7 +53,13 @@ public class JaxbStringReaderProviderTest {
 
             @Override
             public SAXParserFactory get() {
-                return spf.get();
+                SAXParserFactory factory = spf.get();
+
+                for (Map.Entry<String, Boolean> entry : FeatureSupplier.allowDoctypeDeclFeature().getFeatures().entrySet()){
+                    JaxbFeatureUtil.setProperty(SAXParserFactory.class, entry, factory::setFeature);
+                }
+
+                return factory;
             }
         };
 

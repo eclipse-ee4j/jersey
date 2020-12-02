@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>2.31-SNAPSHOT</version>
+        <version>2.33-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.jersey.core</groupId>
@@ -130,6 +130,7 @@
                             ${javax.annotation.osgi.version},
                             *
                         </Import-Package>
+                        <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
                         <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
                     </instructions>

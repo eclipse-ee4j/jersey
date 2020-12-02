@@ -188,6 +188,19 @@ public class PreInvocationInterceptorTest {
         }
     }
 
+    @Test
+    public void testPreInvocationInterceptorIsHitforEachRequest() {
+        final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new CounterPreInvocationInterceptor(counter -> true))
+                .register(new AbortRequestFilter()).build().target(URL).request();
+        for (int i = 1; i != 10; i++) {
+            try (Response response = builder.get()) {
+                Assert.assertEquals(200, response.getStatus());
+                Assert.assertEquals(i, counter.get());
+            }
+        }
+    }
+
     private static class AbortRequestFilter implements ClientRequestFilter {
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -32,42 +33,17 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Libor Kramolis
  */
-public class PersonResourceTest extends JerseyTest {
+public class PersonResourceTest extends PersonResourceBaseTest {
 
     @Override
     protected Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
-        return new JaxRsApplication();
+        return new ResourceConfig().register(PersonResource.class).register(KryoContextResolver.class);
     }
 
     @Override
     protected void configureClient(final ClientConfig config) {
+        config.register(KryoContextResolver.class);
     }
-
-    @Test
-    public void testGet() {
-        final Person getResponse = target().request().get(Person.class);
-        assertEquals("Wolfgang", getResponse.name);
-        assertEquals(21, getResponse.age);
-        assertEquals("Salzburg", getResponse.address);
-    }
-
-    @Test
-    public void testPost() {
-        final Person[] testData = new Person[] {new Person("Joseph", 23, "Nazareth"), new Person("Mary", 18, "Nazareth")};
-        for (Person original : testData) {
-            final Person postResponse = target().request()
-                    .post(Entity.entity(original, "application/x-kryo"), Person.class);
-            assertEquals(original, postResponse);
-        }
-    }
-
-    @Test
-    public void testPut() {
-        final Response putResponse = target().request().put(Entity.entity(new Person("Jules", 12, "Paris"),
-                "application/x-kryo"));
-        assertEquals(204, putResponse.getStatus());
-    }
-
 }

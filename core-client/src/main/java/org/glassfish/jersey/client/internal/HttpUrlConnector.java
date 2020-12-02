@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -101,6 +101,9 @@ public class HttpUrlConnector implements Connector {
     private final boolean setMethodWorkaround;
     private final boolean isRestrictedHeaderPropertySet;
     private final LazyValue<SSLSocketFactory> sslSocketFactory;
+
+    private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
+            = new HttpUrlExpect100ContinueConnectorExtension();
 
     /**
      * Create new {@code HttpUrlConnector} instance.
@@ -328,51 +331,60 @@ public class HttpUrlConnector implements Connector {
         secureConnection(request.getClient(), uc);
 
         final Object entity = request.getEntity();
-        if (entity != null) {
-            RequestEntityProcessing entityProcessing = request.resolveProperty(
-                    ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
+        Exception storedException = null;
+        try {
+            if (entity != null) {
+                RequestEntityProcessing entityProcessing = request.resolveProperty(
+                        ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
 
-            if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
                 final long length = request.getLengthLong();
-                if (fixLengthStreaming && length > 0) {
-                    // uc.setFixedLengthStreamingMode(long) was introduced in JDK 1.7 and Jersey client supports 1.6+
-                    if ("1.6".equals(Runtime.class.getPackage().getSpecificationVersion())) {
-                        uc.setFixedLengthStreamingMode(request.getLength());
-                    } else {
+
+                if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
+                    if (fixLengthStreaming && length > 0) {
                         uc.setFixedLengthStreamingMode(length);
+                    } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
+                        uc.setChunkedStreamingMode(chunkSize);
                     }
-                } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
-                    uc.setChunkedStreamingMode(chunkSize);
                 }
-            }
-            uc.setDoOutput(true);
+                uc.setDoOutput(true);
 
-            if ("GET".equalsIgnoreCase(httpMethod)) {
-                final Logger logger = Logger.getLogger(HttpUrlConnector.class.getName());
-                if (logger.isLoggable(Level.INFO)) {
-                    logger.log(Level.INFO, LocalizationMessages.HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY());
+                if ("GET".equalsIgnoreCase(httpMethod)) {
+                    final Logger logger = Logger.getLogger(HttpUrlConnector.class.getName());
+                    if (logger.isLoggable(Level.INFO)) {
+                        logger.log(Level.INFO, LocalizationMessages.HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY());
+                    }
                 }
-            }
 
-            request.setStreamProvider(contentLength -> {
+                processExtentions(request, uc);
+
+                request.setStreamProvider(contentLength -> {
+                    setOutboundHeaders(request.getStringHeaders(), uc);
+                    return uc.getOutputStream();
+                });
+                request.writeEntity();
+
+            } else {
                 setOutboundHeaders(request.getStringHeaders(), uc);
-                return uc.getOutputStream();
-            });
-            request.writeEntity();
-
-        } else {
-            setOutboundHeaders(request.getStringHeaders(), uc);
+            }
+        } catch (IOException ioe) {
+            storedException = handleException(request, ioe, uc);
         }
 
         final int code = uc.getResponseCode();
         final String reasonPhrase = uc.getResponseMessage();
         final Response.StatusType status =
                 reasonPhrase == null ? Statuses.from(code) : Statuses.from(code, reasonPhrase);
-        final URI resolvedRequestUri;
+
+        URI resolvedRequestUri = null;
         try {
             resolvedRequestUri = uc.getURL().toURI();
         } catch (URISyntaxException e) {
-            throw new ProcessingException(e);
+            // if there is already an exception stored, the stored exception is what matters most
+            if (storedException == null) {
+                storedException = e;
+            } else {
+                storedException.addSuppressed(e);
+            }
         }
 
         ClientResponse responseContext = new ClientResponse(status, request, resolvedRequestUri);
@@ -384,7 +396,22 @@ public class HttpUrlConnector implements Connector {
                   .collect(Collectors.toMap(Map.Entry::getKey,
                                             Map.Entry::getValue))
         );
-        responseContext.setEntityStream(getInputStream(uc));
+
+        try {
+            InputStream inputStream = getInputStream(uc);
+            responseContext.setEntityStream(inputStream);
+        } catch (IOException ioe) {
+            // allow at least a partial response in a ResponseProcessingException
+            if (storedException == null) {
+                storedException = ioe;
+            } else {
+                storedException.addSuppressed(ioe);
+            }
+        }
+
+        if (storedException != null) {
+            throw new ClientResponseProcessingException(responseContext, storedException);
+        }
 
         return responseContext;
     }
@@ -499,6 +526,21 @@ public class HttpUrlConnector implements Connector {
                     throw new RuntimeException(cause);
                 }
             }
+        }
+    }
+
+    private void processExtentions(ClientRequest request, HttpURLConnection uc) {
+        connectorExtension.invoke(request, uc);
+    }
+
+    private IOException handleException(ClientRequest request, IOException ex, HttpURLConnection uc) throws IOException {
+        if (connectorExtension.handleException(request, uc, ex)) {
+            return null;
+        }
+        if (uc.getResponseCode() == -1) {
+            throw ex;
+        } else {
+            return ex;
         }
     }
 

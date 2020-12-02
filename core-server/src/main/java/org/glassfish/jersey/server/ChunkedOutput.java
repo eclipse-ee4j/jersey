@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,8 +53,11 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private final BlockingDeque<T> queue = new LinkedBlockingDeque<>();
     private final byte[] chunkDelimiter;
     private final AtomicBoolean resumed = new AtomicBoolean(false);
+    private final Object lock = new Object();
 
+    // the following flushing and touchingEntityStream variables are used in a synchronized block exclusively
     private boolean flushing = false;
+    private boolean touchingEntityStream = false;
 
     private volatile boolean closed = false;
 
@@ -198,7 +201,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                     boolean shouldClose;
                     T t;
 
-                    synchronized (ChunkedOutput.this) {
+                    synchronized (lock) {
                         if (flushing) {
                             // if another thread is already flushing the queue, we don't have to do anything
                             return null;
@@ -220,6 +223,10 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
                     while (t != null) {
                         try {
+                            synchronized (lock) {
+                                touchingEntityStream = true;
+                            }
+
                             final OutputStream origStream = responseContext.getEntityStream();
                             final OutputStream writtenStream = requestContext.getWorkers().writeTo(
                                     t,
@@ -256,10 +263,15 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                                 connectionCallback.onDisconnect(asyncContext);
                             }
                             throw mpe;
+                        } finally {
+                           synchronized (lock) {
+                               touchingEntityStream = false;
+                           }
                         }
+
                         t = queue.poll();
                         if (t == null) {
-                            synchronized (ChunkedOutput.this) {
+                            synchronized (lock) {
                                 // queue seems empty
                                 // check again in the synchronized block before clearing the flushing flag
                                 // first remember the closed flag (this has to be before polling the queue,
@@ -287,10 +299,15 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
             closed = true;
             // remember the exception (it will get rethrown from finally clause, once it does it's work)
             ex = e;
+            onClose(e);
         } finally {
             if (closed) {
                 try {
-                    responseContext.close();
+                    synchronized (lock) {
+                        if (!touchingEntityStream) {
+                            responseContext.close();
+                        } // else the next thread will close responseContext
+                    }
                 } catch (final Exception e) {
                     // if no exception remembered before, remember this one
                     // otherwise the previously remembered exception (from catch clause) takes precedence
@@ -331,6 +348,14 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      */
     public boolean isClosed() {
         return closed;
+    }
+
+    /**
+     * Executed only in case of close being triggered by client.
+     * @param e Exception causing the close
+     */
+    protected void onClose(Exception e){
+
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
