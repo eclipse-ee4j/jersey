@@ -47,6 +47,7 @@ mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
 ```
 
 For the full list of updates for Jersey {{ site.latest3xVersion }}, see  [Jersey {{ site.latest3xVersion }}][tag-3.x] tag.
+To see the details about all changes, bug fixed and updates, please check the [Jersey {{ site.latest3xVersion }} Release Notes][rn-3.x].
 
 <h3>JAX-RS 2.1 / Jersey 2.26+</h3>
 
@@ -152,3 +153,4 @@ the following links are provided:
 [rn-2.x]: {{ site.links.newJerseyURL }}/release-notes/{{ site.latestVersion }}.html
 [rn-2.25.x]: {{ site.links.newJerseyURL }}/release-notes/2.25.1.html
 [tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
+[rn-3.x]: {{ site.links.newJerseyURL }}/release-notes/{{ site.latest3xVersion }}.html
