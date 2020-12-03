@@ -21,7 +21,7 @@ Note that Jersey 2.x releases will continue along with Jersey 3.x releases.
 For the convenience of non-maven developers the following links are provided:
 
 *   [<var class="icon-cloud-download"></var> Jersey 3.x bundle][zip-3.x] bundle contains
-    the Jakarta RESTful WebServices 3.0.0-RC2 API jar, all the core Jersey module jars as well as all the required 3rd-party
+    the Jakarta RESTful WebServices 3.0.0 API jar, all the core Jersey module jars as well as all the required 3rd-party
     dependencies.
 
 All the Jersey 3 release binaries, including the source & apidocs jars, are available for
