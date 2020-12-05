@@ -52,10 +52,10 @@ import java.util.Optional;
  */
 public class GrizzlyOneWaySslWebTest extends JerseyTest {
 
-    private static final String SERVER_IDENTITY_PATH = "ssl/server-identity.jks";
+    private static final String SERVER_IDENTITY_PATH = "server-identity.jks";
     private static final char[] SERVER_IDENTITY_PASSWORD = "secret".toCharArray();
 
-    private static final String CLIENT_TRUSTSTORE_PATH = "ssl/client-truststore.jks";
+    private static final String CLIENT_TRUSTSTORE_PATH = "client-truststore.jks";
     private static final char[] CLIENT_TRUSTSTORE_PASSWORD = "secret".toCharArray();
 
     private static SSLContext serverSslContext;
