@@ -102,19 +102,126 @@ public class ContentDispositionTest {
         final Date date = new Date();
         final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
         final String fileName = "test.file";
-        String fileNameExt = "testExt.file";
-        final String prefixHeader = contentDispositionType + ";filename=\"" + fileName + "\";"
-                + "creation-date=\"" + dateString + "\";modification-date=\"" + dateString + "\";read-date=\""
-                + dateString + "\";size=1222" + ";name=\"testData\";" + "filename*=\"";
-        String header = prefixHeader + fileNameExt + "\"";
+
         try {
+            //correct fileNameExt
+            String fileNameExt = "testExt.file";
+            final String prefixHeader = contentDispositionType + ";filename=\"" + fileName + "\";"
+                    + "creation-date=\"" + dateString + "\";modification-date=\"" + dateString + "\";read-date=\""
+                    + dateString + "\";size=1222" + ";name=\"testData\";" + "filename*=\"";
+            String header = prefixHeader + fileNameExt + "\"";
             ContentDisposition contentDisposition =
                     new ContentDisposition(HttpHeaderReader.newInstance(header), true);
             assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
             fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
             header = prefixHeader + fileNameExt + "\"";
             contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
             assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "UTF-8'us'fileName.txt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "utf-8'languageTooLong'fileName.txt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "utf-8''a";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "utf-8'lang-'a";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'a";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'a%a1";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'a%z1";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'a%";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "iso-8859-1'language-us'abc.TXT";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'c:\\file.txt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'home/file.txt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //incorrect fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'李.txt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileName, contentDisposition.getFileName());
+
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'FILEname.tXt";
+            header = prefixHeader + fileNameExt + "\"";
+            contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
+            assertEquals(fileNameExt, contentDisposition.getFileName());
+
         } catch (ParseException ex) {
             fail(ex.getMessage());
         }
