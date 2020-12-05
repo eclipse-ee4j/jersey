@@ -65,19 +65,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/test/resources/ssl</directory>
-                <includes>
-                    <include>identity.jks</include>
-                    <include>truststore.jks</include>
-                    <include>application.yml</include>
-                    <include>cucumber.properties</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
-
 </project>
