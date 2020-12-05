@@ -21,6 +21,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.hamcrest.core.StringContains;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,6 +63,8 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
     private static final String CLIENT_TRUSTSTORE_PATH = "client-truststore.jks";
     private static final char[] CLIENT_TRUSTSTORE_PASSWORD = "secret".toCharArray();
 
+    private static final String KEYSTORE_TYPE = "PKCS12";
+
     private SSLContext serverSslContext;
     private SSLParameters serverSslParameters;
 
@@ -98,8 +101,8 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
     protected Optional<SSLContext> getSslContext() {
         if (serverSslContext == null) {
             serverSslContext = SSLFactory.builder()
-                    .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD)
-                    .withTrustMaterial(SERVER_TRUSTSTORE_PATH, SERVER_TRUSTSTORE_PASSWORD)
+                    .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD, KEYSTORE_TYPE)
+                    .withTrustMaterial(SERVER_TRUSTSTORE_PATH, SERVER_TRUSTSTORE_PASSWORD, KEYSTORE_TYPE)
                     .build()
                     .getSslContext();
         }
@@ -120,8 +123,8 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
     @Test
     public void testGet() {
         SSLContext clientSslContext = SSLFactory.builder()
-                .withIdentityMaterial(CLIENT_IDENTITY_PATH, CLIENT_IDENTITY_PASSWORD)
-                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD)
+                .withIdentityMaterial(CLIENT_IDENTITY_PATH, CLIENT_IDENTITY_PASSWORD, KEYSTORE_TYPE)
+                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD, KEYSTORE_TYPE)
                 .build()
                 .getSslContext();
 
@@ -138,7 +141,7 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
     @Test
     public void testGetFailsWhenClientDoesNotTrustsServer() {
         SSLContext clientSslContext = SSLFactory.builder()
-                .withIdentityMaterial(CLIENT_IDENTITY_PATH, CLIENT_IDENTITY_PASSWORD)
+                .withIdentityMaterial(CLIENT_IDENTITY_PATH, CLIENT_IDENTITY_PASSWORD, KEYSTORE_TYPE)
                 .withDefaultTrustMaterial()
                 .build()
                 .getSslContext();
@@ -150,7 +153,7 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
         WebTarget target = client.target(getBaseUri()).path("more-secure");
 
         exception.expect(ProcessingException.class);
-        exception.expectMessage("javax.net.ssl.SSLHandshakeException: None of the TrustManagers trust this certificate chain");
+        exception.expectMessage(StringContains.containsString("None of the TrustManagers trust this certificate chain"));
 
         target.request().get(String.class);
     }
@@ -158,7 +161,7 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
     @Test
     public void testGetFailsWhenClientCanNotIdentifyItselfToTheServer() {
         SSLContext clientSslContext = SSLFactory.builder()
-                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD)
+                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD, KEYSTORE_TYPE)
                 .build()
                 .getSslContext();
 

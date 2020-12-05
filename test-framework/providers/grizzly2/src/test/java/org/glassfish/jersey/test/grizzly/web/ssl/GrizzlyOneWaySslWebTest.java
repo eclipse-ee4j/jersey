@@ -21,6 +21,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.hamcrest.core.StringContains;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +57,8 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
 
     private static final String CLIENT_TRUSTSTORE_PATH = "client-truststore.jks";
     private static final char[] CLIENT_TRUSTSTORE_PASSWORD = "secret".toCharArray();
+
+    private static final String KEYSTORE_TYPE = "PKCS12";
 
     private SSLContext serverSslContext;
     private SSLParameters serverSslParameters;
@@ -93,7 +96,7 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
     protected Optional<SSLContext> getSslContext() {
         if (serverSslContext == null) {
             serverSslContext = SSLFactory.builder()
-                    .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD)
+                    .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD, KEYSTORE_TYPE)
                     .build()
                     .getSslContext();
         }
@@ -114,7 +117,7 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
     @Test
     public void testGet() {
         SSLContext clientSslContext = SSLFactory.builder()
-                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD)
+                .withTrustMaterial(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD, KEYSTORE_TYPE)
                 .build()
                 .getSslContext();
 
@@ -142,7 +145,7 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
         WebTarget target = client.target(getBaseUri()).path("secure");
 
         exception.expect(ProcessingException.class);
-        exception.expectMessage("javax.net.ssl.SSLHandshakeException: None of the TrustManagers trust this certificate chain");
+        exception.expectMessage(StringContains.containsString("None of the TrustManagers trust this certificate chain"));
 
         target.request().get(String.class);
     }
