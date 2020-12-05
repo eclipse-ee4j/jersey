@@ -22,7 +22,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -58,22 +57,11 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
     private static final String CLIENT_TRUSTSTORE_PATH = "client-truststore.jks";
     private static final char[] CLIENT_TRUSTSTORE_PASSWORD = "secret".toCharArray();
 
-    private static SSLContext serverSslContext;
-    private static SSLParameters serverSslParameters;
+    private SSLContext serverSslContext;
+    private SSLParameters serverSslParameters;
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
-
-    @BeforeClass
-    public static void setup() {
-        serverSslContext = SSLFactory.builder()
-                .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD)
-                .build()
-                .getSslContext();
-
-        serverSslParameters = new SSLParameters();
-        serverSslParameters.setNeedClientAuth(false);
-    }
 
     @Override
     protected TestContainerFactory getTestContainerFactory() {
@@ -103,11 +91,23 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
 
     @Override
     protected Optional<SSLContext> getSslContext() {
+        if (serverSslContext == null) {
+            serverSslContext = SSLFactory.builder()
+                    .withIdentityMaterial(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD)
+                    .build()
+                    .getSslContext();
+        }
+
         return Optional.of(serverSslContext);
     }
 
     @Override
     protected Optional<SSLParameters> getSslParameters() {
+        if (serverSslParameters == null) {
+            serverSslParameters = new SSLParameters();
+            serverSslParameters.setNeedClientAuth(false);
+        }
+
         return Optional.of(serverSslParameters);
     }
 
