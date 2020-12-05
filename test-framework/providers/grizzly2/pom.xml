@@ -32,6 +32,10 @@
 
     <description>Jersey Test Framework - Grizzly2 container</description>
 
+    <properties>
+        <version.sslcontext-kickstart>5.4.0</version.sslcontext-kickstart>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -54,5 +58,26 @@
             <artifactId>jersey-container-grizzly2-servlet</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.hakky54</groupId>
+            <artifactId>sslcontext-kickstart</artifactId>
+            <version>${version.sslcontext-kickstart}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/test/resources/ssl</directory>
+                <includes>
+                    <include>identity.jks</include>
+                    <include>truststore.jks</include>
+                    <include>application.yml</include>
+                    <include>cucumber.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 </project>
