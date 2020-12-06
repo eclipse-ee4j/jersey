@@ -150,4 +150,15 @@ public class GrizzlyOneWaySslWebTest extends JerseyTest {
         target.request().get(String.class);
     }
 
+    @Test
+    public void testGetFailsWhenClientExecutesRequestWithoutHavingSslConfigured() {
+        Client client = ClientBuilder.newClient();
+
+        WebTarget target = client.target(getBaseUri()).path("secure");
+
+        exception.expect(ProcessingException.class);
+
+        target.request().get(String.class);
+    }
+
 }
