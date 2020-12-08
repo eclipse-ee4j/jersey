@@ -193,7 +193,7 @@
         <javanet.repository.id>snapshots</javanet.repository.id>
         <jersey.docs.version>snapshot</jersey.docs.version>
         <jersey.apidocs.version>snapshot</jersey.apidocs.version>
-        <jersey.src.branch>master</jersey.src.branch>
+        <jersey.src.branch>3.x</jersey.src.branch>
         <jaxrs.version>${jaxrs.api.spec.version}</jaxrs.version>
         <jaxrs.impl.version>${jaxrs.api.impl.version}</jaxrs.impl.version>
     </properties>

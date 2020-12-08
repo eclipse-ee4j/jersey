@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,25 +33,18 @@
         <title>Java SE Compatibility</title>
 
         <para>
-            <emphasis>2.x branch: </emphasis>
+            <emphasis>3.x branch: </emphasis>
             <itemizedlist>
                 <listitem>
-                    <para>Until version 2.6, Jersey was compiled with Java SE 6. This has changed in Jersey 2.7.</para>
+                    <para>This user guide refers only to version 3 and above of Jersey, its compatibility is described below</para>
                 </listitem>
                 <listitem>
-                    <para>Up to version 2.25.x almost all Jersey components are compiled with Java SE 7 target.
-                    It means, that you will need at least Java
-                    SE 7 to be able to compile and run your application that is using latest Jersey.
-                    Only <literal>core-common</literal> and <literal>core-client</literal> modules are still compiled with Java class
-                    version runnable with Java SE 6.</para>
-                </listitem>
-                <listitem>
-                    <para>Since Jersey 2.26, all modules are build using Java SE 8 and there is no support for running it
-                    on older Java SE distributions.</para>
-                </listitem>
-                <listitem>
-                    <para>Since Jersey 2.29, all modules can be built using Java SE 11 and all distributed modules provide support
-                        for Java SE 8+ (9,11).</para>
+                    <para>Since version 3.0.0* all Jersey components are compiled with Java SE 1.8 target.
+                    It means, that you will need at least Java SE 1.8 to be able to compile and run your application
+                        which uses the latest Jersey 3.x.
+                    All modules however are fully compatible with JDK 11 and above. So, it's possible to use JDK 11+ to
+                        build your app.
+                    </para>
                 </listitem>
             </itemizedlist>
         </para>
@@ -62,7 +55,7 @@
         <para>
             Jersey is built, assembled and installed using <link xlink:href="http://maven.apache.org/">Apache Maven</link>.
             Non-snapshot Jersey releases are deployed to the
-            <link xlink:href="http://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
+            <link xlink:href="https://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
             <link xlink:href="https://oss.sonatype.org/">Sonatype Maven repositories</link>, which contain also Jersey SNAPSHOT
             versions. In case you would want to test the latest development builds check out the
             <link xlink:href="https://oss.sonatype.org/content/repositories/snapshots/org/glassfish/jersey">
@@ -70,10 +63,10 @@
         </para>
 
         <para>
-            An application that uses Jersey and depends on Jersey modules is in turn required to also include in the application
-            dependencies the set of 3rd party modules that Jersey modules depend on. Jersey is designed as a pluggable component
+            An application that uses Jersey and depends on Jersey modules is in turn required to also include a set
+            of 3rd party modules that Jersey modules depend on. Jersey is designed as a pluggable component
             architecture and different applications can therefore require different sets of Jersey modules. This also means that
-            the set of external Jersey dependencies required to be included in the application dependencies may vary in each
+            set of external Jersey dependencies required to be included in the application dependencies may vary in each
             application based on the Jersey modules that are being used by the application.
         </para>
 
@@ -129,7 +122,6 @@
 
             <programlisting language="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
-    &lt;!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  --&gt;
     &lt;artifactId&gt;jersey-container-servlet&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
@@ -170,7 +162,7 @@
     &lt;artifactId&gt;jersey-apache-connector&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
-
+<!-- Requires JDK 11+ -->
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
     &lt;artifactId&gt;jersey-jetty-connector&lt;/artifactId&gt;
@@ -181,9 +173,10 @@
         <section xml:id="server-jdk">
             <title>Server-side application on supported containers</title>
             <para>Apart for a standard JAX-RS Servlet-based deployment that works with any Servlet container that
-                supports Servlet 2.5 and higher,
-                Jersey provides support for programmatic deployment to the following containers: Grizzly 2 (HTTP and Servlet),
-                JDK Http server, Simple Http server and Jetty Http server. This chapter presents only required maven dependencies,
+                supports Servlet 5 and higher,
+                Jersey provides support for programmatic deployment to the following containers: Grizzly 3 (HTTP and Servlet),
+                JDK Http server, Simple Http server and Jetty Http server (requires JDK 11+). This chapter presents only
+                required maven dependencies,
                 more information can be found in <xref linkend="deployment"/>.
             </para>
 

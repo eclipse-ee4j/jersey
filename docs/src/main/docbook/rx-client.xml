@@ -38,6 +38,7 @@
     <warning>
         <para>
             Jersey 2.26 (JAX-RS 2.1 implementation) dropped Jersey-proprietary API in favor of JAX-RS 2.1 Reactive Client API.
+            for Jersey 3.x this approach is still valid
         </para>
     </warning>
 
@@ -479,7 +480,7 @@ return recommended.thenCompose(destinations -&gt; {
 client.register(RxFlowableInvokerProvider.class);
 
 Flowable&lt;String&gt; responseFlowable =
-        client.target("http://jersey.java.net")
+        client.target("http://eclipse-ee4j.github.io/jersey")
               .request()
               .rx(RxFlowableInvoker.class)
               .get(String.class);
@@ -722,7 +723,7 @@ client.register(RxListenableFutureInvokerProvider.class);</programlisting>
                         <title>Obtaining ListenableFuture&lt;Response&gt; from Jersey/Guava Client</title>
 
                         <programlisting language="java" linenumbering="numbered">
-ListenableFuture&lt;Response&gt; response = client.target("http://jersey.java.net")
+ListenableFuture&lt;Response&gt; response = client.target("http://eclipse-ee4j.github.io/jersey")
                                             .request()
                                             .rx(RxListenableFutureInvoker.class)
                                             .get();
@@ -827,7 +828,7 @@ ListenableFuture&lt;Response&gt; response = client.target("http://jersey.java.ne
 client.register(CompletionStageRxInvokerProvider.class);
 
 CompletionStage&lt;Response&gt; response =
-        client.target("http://jersey.java.net")
+        client.target("http://eclipse-ee4j.github.io/jersey")
               .request()
               .rx(CompletionStageRxInvoker.class)
               // Now we have an instance of CompletionStageRxInvoker returned from our registered RxInvokerProvider,

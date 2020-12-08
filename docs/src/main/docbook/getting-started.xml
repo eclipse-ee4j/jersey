@@ -33,7 +33,7 @@
         This chapter provides a quick introduction on how to get started building RESTful services using Jersey.
         The example described here uses the lightweight Grizzly HTTP server. At the end of this chapter you will
         see how to implement equivalent functionality as a JavaEE web application you can deploy on any servlet
-        container supporting Servlet 2.5 and higher.
+        container supporting Servlet 5 and higher.
     </para>
 
     <section xml:id="new-from-archetype">
@@ -211,7 +211,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 [INFO] Total time: 34.527s
-[INFO] Finished at: Sun May 26 19:26:24 CEST 2013
+[INFO] Finished at: Sun May 26 19:26:24 CEST 2020
 [INFO] Final Memory: 17M/490M
 [INFO] ------------------------------------------------------------------------</screen>
 
@@ -222,9 +222,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
             The application starts and you should soon see the following notification in your console:
 
-            <screen linenumbering="unnumbered">May 26, 2013 8:08:45 PM org.glassfish.grizzly.http.server.NetworkListener start
+            <screen linenumbering="unnumbered">May 26, 2020 8:08:45 PM org.glassfish.grizzly.http.server.NetworkListener start
 INFO: Started listener bound to [localhost:8080]
-May 26, 2013 8:08:45 PM org.glassfish.grizzly.http.server.HttpServer start
+May 26, 2020 8:08:45 PM org.glassfish.grizzly.http.server.HttpServer start
 INFO: [HttpServer] Started.
 Jersey app started with WADL available at http://localhost:8080/myapp/application.wadl
 Hit enter to stop it...</screen>
@@ -251,7 +251,7 @@ Got it!</screen>
             <screen language="bash" linenumbering="unnumbered">curl -i http://localhost:8080/myapp/myresource
 HTTP/1.1 200 OK
 Content-Type: text/plain
-Date: Sun, 26 May 2013 18:27:19 GMT
+Date: Sun, 26 May 2020 18:27:19 GMT
 Content-Length: 7
 
 Got it!</screen>
@@ -280,7 +280,7 @@ Got it!</screen>
 >
 < HTTP/1.1 200 OK
 < Content-Type: text/plain
-< Date: Sun, 26 May 2013 18:29:18 GMT
+< Date: Sun, 26 May 2020 18:29:18 GMT
 < Content-Length: 7
 <
 * Connection #0 to host localhost left intact
@@ -341,29 +341,29 @@ Got it!* Closing connection #0]]></screen>
 Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 
 [INFO]
-[INFO] --- maven-war-plugin:2.1.1:war (default-war) @ simple-service-webapp ---
+[INFO] --- maven-war-plugin:2.2:war (default-war) @ simple-service-webapp ---
 [INFO] Packaging webapp
-[INFO] Assembling webapp [simple-service-webapp] in [.../simple-service-webapp/target/simple-service-webapp]
+[INFO] Assembling webapp [simple-service-webapp] in
+[.../simple-service-webapp/target/simple-service-webapp]
 [INFO] Processing war project
 [INFO] Copying webapp resources [.../simple-service-webapp/src/main/webapp]
-[INFO] Webapp assembled in [75 msecs]
+[INFO] Webapp assembled in [117 msecs]
 [INFO] Building war: .../simple-service-webapp/target/simple-service-webapp.war
 [INFO] WEB-INF/web.xml already added, skipping
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 9.067s
-[INFO] Finished at: Sun May 26 21:07:44 CEST 2013
-[INFO] Final Memory: 17M/490M
-[INFO] ------------------------------------------------------------------------</screen>
+[INFO] Total time: 3.419 s
+[INFO] Finished at: 2020-11-25T09:34:59+01:00
+[INFO] ------------------------------------------------------------------------
+            </screen>
 
             Now you are ready to take the packaged WAR (located under <literal>./target/simple-service-webapp.war</literal>)
             and deploy it to a Servlet container of your choice.
             <important>
                 <para>
-                    To deploy a Jersey application, you will need a Servlet container that supports Servlet 2.5 or later.
-                    For full set of advanced features (such as JAX-RS 2.0 Async Support) you will need a Servlet 3.0 or later
-                    compliant container.
+                    To deploy a Jersey application, with full set of advanced features (such as JAX-RS 2.0 Async Support)
+                    you will need a Servlet 5.0 or later  compliant container.
                 </para>
             </important>
         </para>
@@ -428,42 +428,45 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     [INFO] Assembling webapp [simple-heroku-webapp] in [.../simple-heroku-webapp/target/simple-heroku-webapp]
     [INFO] Processing war project
     [INFO] Copying webapp resources [.../simple-heroku-webapp/src/main/webapp]
-    [INFO] Webapp assembled in [57 msecs]
+    [INFO] Webapp assembled in [109 msecs]
     [INFO] Building war: .../simple-heroku-webapp/target/simple-heroku-webapp.war
     [INFO] WEB-INF/web.xml already added, skipping
     [INFO]
     [INFO] --- maven-dependency-plugin:2.8:copy-dependencies (copy-dependencies) @ simple-heroku-webapp ---
-    [INFO] Copying hk2-locator-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/hk2-locator-2.2.0-b21.jar
-    [INFO] Copying jetty-security-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-security-9.0.6.v20130930.jar
-    [INFO] Copying asm-all-repackaged-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/asm-all-repackaged-2.2.0-b21.jar
-    [INFO] Copying jersey-common-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-common-2.5.jar
-    [INFO] Copying validation-api-1.1.0.Final.jar to .../simple-heroku-webapp/target/dependency/validation-api-1.1.0.Final.jar
-    [INFO] Copying jetty-webapp-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-webapp-9.0.6.v20130930.jar
-    [INFO] Copying jersey-container-servlet-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-2.5.jar
-    [INFO] Copying cglib-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/cglib-2.2.0-b21.jar
-    [INFO] Copying osgi-resource-locator-1.0.1.jar to .../simple-heroku-webapp/target/dependency/osgi-resource-locator-1.0.1.jar
-    [INFO] Copying hk2-utils-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/hk2-utils-2.2.0-b21.jar
-    [INFO] Copying hk2-api-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/hk2-api-2.2.0-b21.jar
-    [INFO] Copying jetty-io-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-io-9.0.6.v20130930.jar
-    [INFO] Copying jetty-server-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-server-9.0.6.v20130930.jar
+    [INFO] Copying jakarta.validation-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.validation-api-3.0.0.jar
+    [INFO] Copying jersey-client-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-client-3.0.0-RC2.jar
     [INFO] Copying jetty-util-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-util-9.0.6.v20130930.jar
-    [INFO] Copying jersey-client-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-client-2.5.jar
-    [INFO] Copying jetty-http-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-http-9.0.6.v20130930.jar
-    [INFO] Copying guava-14.0.1.jar to .../simple-heroku-webapp/target/dependency/guava-14.0.1.jar
-    [INFO] Copying jetty-xml-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-xml-9.0.6.v20130930.jar
-    [INFO] Copying jersey-server-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-server-2.5.jar
-    [INFO] Copying jersey-container-servlet-core-2.5.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-2.5.jar
-    [INFO] Copying jakarta.ws.rs-api-2.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-2.0.jar
+    [INFO] Copying javassist-3.25.0-GA.jar to .../simple-heroku-webapp/target/dependency/javassist-3.25.0-GA.jar
+    [INFO] Copying jersey-hk2-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-hk2-3.0.0-RC2.jar
+    [INFO] Copying jersey-media-jaxb-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-media-jaxb-3.0.0-RC2.jar
+    [INFO] Copying hk2-utils-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-utils-3.0.0-M2.jar
+    [INFO] Copying jersey-common-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-common-3.0.0-RC2.jar
+    [INFO] Copying jersey-container-servlet-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-3.0.0-RC2.jar
+    [INFO] Copying jakarta.annotation-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.annotation-api-2.0.0.jar
+    [INFO] Copying jetty-webapp-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-webapp-9.0.6.v20130930.jar
+    [INFO] Copying jakarta.activation-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.activation-2.0.0.jar
+    [INFO] Copying osgi-resource-locator-1.0.3.jar to .../simple-heroku-webapp/target/dependency/osgi-resource-locator-1.0.3.jar
     [INFO] Copying jetty-servlet-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-servlet-9.0.6.v20130930.jar
-    [INFO] Copying jakarta.inject-2.2.0-b21.jar to .../simple-heroku-webapp/target/dependency/jakarta.inject-2.2.0-b21.jar
+    [INFO] Copying jetty-xml-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-xml-9.0.6.v20130930.jar
+    [INFO] Copying jersey-container-servlet-core-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-3.0.0-RC2.jar
+    [INFO] Copying jetty-io-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-io-9.0.6.v20130930.jar
+    [INFO] Copying jakarta.ws.rs-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-3.0.0.jar
+    [INFO] Copying jakarta.activation-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.activation-api-2.0.0.jar
+    [INFO] Copying jakarta.xml.bind-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.xml.bind-api-3.0.0.jar
+    [INFO] Copying jetty-security-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-security-9.0.6.v20130930.jar
+    [INFO] Copying jetty-server-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-server-9.0.6.v20130930.jar
     [INFO] Copying javax.servlet-3.0.0.v201112011016.jar to .../simple-heroku-webapp/target/dependency/javax.servlet-3.0.0.v201112011016.jar
-    [INFO] Copying jakarta.annotation-api-1.2.jar to .../simple-heroku-webapp/target/dependency/jakarta.annotation-api-1.2.jar
+    [INFO] Copying hk2-api-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-api-3.0.0-M2.jar
+    [INFO] Copying jersey-server-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-server-3.0.0-RC2.jar
+    [INFO] Copying hk2-locator-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-locator-3.0.0-M2.jar
+    [INFO] Copying jetty-http-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-http-9.0.6.v20130930.jar
+    [INFO] Copying aopalliance-repackaged-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/aopalliance-repackaged-3.0.0-M2.jar
+    [INFO] Copying jakarta.inject-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.inject-api-2.0.0.jar
     [INFO] ------------------------------------------------------------------------
     [INFO] BUILD SUCCESS
     [INFO] ------------------------------------------------------------------------
-    [INFO] Total time: 4.401s
-    [INFO] Finished at: Mon Dec 09 20:19:06 CET 2013
-    [INFO] Final Memory: 20M/246M
+    [INFO] Total time:  12.567 s
+    [INFO] Finished at: 2020-11-25T09:31:26+01:00
     [INFO] ------------------------------------------------------------------------</screen>
 
             Now that you know everything went as expected you are ready to:
@@ -645,7 +648,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
             Feel free to browse through the code of individual
             <link xlink:href="&jersey.github.examples.uri;">Jersey Examples</link> in the Jersey source repository.
             For off-line browsing, you can also download a bundle with all the examples from
-            <link xlink:href="http://central.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/&version;/">here</link>.
+            <link xlink:href="https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/&version;/">here</link>.
         </para>
     </section>
 </chapter>
