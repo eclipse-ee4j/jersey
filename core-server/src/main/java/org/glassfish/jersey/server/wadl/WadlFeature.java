@@ -20,15 +20,14 @@ import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
 import javax.inject.Singleton;
-import javax.xml.bind.JAXBException;
 
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.model.ModelProcessor;
 import org.glassfish.jersey.server.wadl.internal.WadlApplicationContextImpl;
-import org.glassfish.jersey.server.wadl.internal.generators.WadlGeneratorJAXBGrammarGenerator;
 import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
 
 import java.util.logging.Logger;
@@ -53,7 +52,17 @@ public class WadlFeature implements Feature {
             return false;
         }
 
-        if (!isJaxB()) {
+        if (!ReflectionHelper.isJaxbAvailable()) {
+            LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED_NOJAXB());
+            return false;
+        }
+
+        if (!ReflectionHelper.isXmlTransformAvailable()) {
+            LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED_NOTRANSFORM());
+            return false;
+        }
+
+        if (!WadlApplicationContextImpl.isJaxbImplAvailable()) {
             LOGGER.warning(LocalizationMessages.WADL_FEATURE_DISABLED());
             return false;
         }
@@ -67,13 +76,5 @@ public class WadlFeature implements Feature {
         });
 
         return true;
-    }
-
-    private static boolean isJaxB() {
-        try {
-            return null != WadlApplicationContextImpl.getJAXBContextFromWadlGenerator(new WadlGeneratorJAXBGrammarGenerator());
-        } catch (JAXBException je) {
-            return false;
-        }
     }
 }

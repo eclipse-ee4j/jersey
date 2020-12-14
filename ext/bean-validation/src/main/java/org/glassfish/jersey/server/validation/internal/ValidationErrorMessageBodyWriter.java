@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,10 +30,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.message.MessageUtils;
-import org.glassfish.jersey.server.validation.ValidationError;
+import org.glassfish.jersey.server.validation.ValidationErrorData;
 
 /**
- * {@link MessageBodyWriter} providing support for (collections of) {@link ValidationError}
+ * {@link MessageBodyWriter} providing support for (collections of) {@link ValidationErrorData}
  * that is able to output instances to {@code text/plain}/{@code text/html}.
  *
  * @author Michal Gajdos
@@ -49,10 +49,10 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
     }
 
     private static boolean isSupportedType(final Class<?> type, final Type genericType) {
-        if (ValidationError.class.isAssignableFrom(type)) {
+        if (ValidationErrorData.class.isAssignableFrom(type)) {
             return true;
         } else if (Collection.class.isAssignableFrom(type) && (genericType instanceof ParameterizedType)) {
-            return ValidationError.class
+            return ValidationErrorData.class
                     .isAssignableFrom((Class) ((ParameterizedType) genericType).getActualTypeArguments()[0]);
         }
         return false;
@@ -79,13 +79,13 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
                         final MediaType mediaType,
                         final MultivaluedMap<String, Object> httpHeaders,
                         final OutputStream entityStream) throws IOException, WebApplicationException {
-        final Collection<ValidationError> errors;
+        final Collection<ValidationErrorData> errors;
 
-        if (entity instanceof ValidationError) {
-            errors = Collections.singleton((ValidationError) entity);
+        if (entity instanceof ValidationErrorData) {
+            errors = Collections.singleton((ValidationErrorData) entity);
         } else {
             //noinspection unchecked
-            errors = (Collection<ValidationError>) entity;
+            errors = (Collection<ValidationErrorData>) entity;
         }
 
         final boolean isPlain = MediaType.TEXT_PLAIN_TYPE.getSubtype().equals(mediaType.getSubtype());
@@ -97,7 +97,7 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
             builder.append("<div class=\"validation-errors\">");
         }
 
-        for (final ValidationError error : errors) {
+        for (final ValidationErrorData error : errors) {
             if (!isPlain) {
                 builder.append("<div class=\"validation-error\">");
             }
