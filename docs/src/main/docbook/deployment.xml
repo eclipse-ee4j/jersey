@@ -34,7 +34,7 @@
         <para>
             This chapter is an overview of various server-side environments currently capable of running JAX-RS applications
             on top of Jersey server runtime. Jersey supports wide range of server environments from lightweight http containers
-            up to full-fledged Java EE servers. Jersey applications can also run in an OSGi runtime.
+            up to full-fledged Java/Jakarta EE servers. Jersey applications can also run in an OSGi runtime.
             The way how the application is published depends on whether the application shall run in a Java SE environment or
             within a container.
         </para>
@@ -978,18 +978,18 @@ public class MyApplication extends ResourceConfig {
     </section>
 
     <section xml:id="deployment.javaee">
-        <title>Java EE Platform</title>
+        <title>Jakarta EE Platform</title>
         <para>
-            This section describes, how you can publish Jersey JAX-RS resources as various Java EE platform elements.
+            This section describes, how you can publish Jersey JAX-RS resources as various Jakarta EE platform elements.
             JAX-RS and Jersey give you wide choice of possibilities and it is up to your taste (and design of your application),
-            what Java EE technology you decide to use for the management of your resources.
+            what Jakarta EE technology you decide to use for the management of your resources.
         </para>
 
         <section xml:id="deployment.javaee.managed">
             <title>Managed Beans</title>
 
             <para>
-                Jersey supports the use of Java EE Managed beans as root resource classes, providers as well as
+                Jersey supports the use of Jakarta EE Managed beans as root resource classes, providers as well as
                 &lit.jaxrs.core.Application; subclasses.
             </para>
 
@@ -1044,9 +1044,9 @@ public class CdiBeanResource {
 }</programlisting>
             </para>
             <para>
-              The above works naturally inside any Java EE compliant AS container. In Jersey version 2.15, container agnostic CDI support was introduced.
+              The above works naturally inside any Java/Jakarta EE compliant AS container. In Jersey version 2.15, container agnostic CDI support was introduced.
               This feature allows you to publish CDI based JAX-RS resources also in other containers. Jersey cdi-webapp example shows Jersey/CDI integration
-              in Grizzly HTTP and Apache Tomcat server. Detailed description of Jersey CDI support outside of a fully fledged Java EE application container
+              in Grizzly HTTP and Apache Tomcat server. Detailed description of Jersey CDI support outside of a fully fledged Java/Jakarta EE application container
               could be found in <xref linkend="cdi.support"/>.
             </para>
         </section>
@@ -1093,7 +1093,7 @@ public class StatelessEjbResource implements LocalEjb {
         </section>
 
         <section xml:id="deployment.appservers">
-            <title>Java EE Servers</title>
+            <title>Jakarta EE Servers</title>
 
             <section xml:id="deployment.appservers.glassfish">
                 <title>GlassFish Application Server</title>
@@ -1143,7 +1143,7 @@ public class StatelessEjbResource implements LocalEjb {
                 <title>Other Application Servers</title>
 
                 <para>
-                    Third party Java EE application servers usually ship with a JAX-RS implementation. If you want to
+                    Third party Java/Jakarta EE application servers usually ship with a JAX-RS implementation. If you want to
                     use Jersey instead of the default JAX-RS provider, you need to add Jersey libraries to your classpath and
                     disable the default JAX-RS provider in the container.
                 </para>
@@ -1170,7 +1170,7 @@ public class StatelessEjbResource implements LocalEjb {
                 <listitem>HTTP Service</listitem>
             </itemizedlist>
 
-            WAB is in fact just an OSGified WAR archive. HTTP Service feature allows you to publish Java EE Servlets in
+            WAB is in fact just an OSGified WAR archive. HTTP Service feature allows you to publish Jakarta EE Servlets in
             the OSGi runtime.
         </para>
         <para>

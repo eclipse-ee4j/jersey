@@ -324,7 +324,7 @@ Got it!* Closing connection #0]]></screen>
 
             The project contains the same <literal>MyResouce</literal> JAX-RS resource class. It does not contain any unit tests
             as well as it does not contain a <literal>Main</literal> class that was used to setup Grizzly container in the
-            previous project. Instead, it contains the standard Java EE web application <literal>web.xml</literal> deployment
+            previous project. Instead, it contains the standard Java/Jakarta EE web application <literal>web.xml</literal> deployment
             descriptor under <literal>src/main/webapp/WEB-INF</literal>.
             The last component in the project is an <literal>index.jsp</literal> page that serves as a client for the
             <literal>MyResource</literal> resource class that is packaged and deployed with the application.
@@ -407,7 +407,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
             The project contains one JAX-RS resource class, <literal>MyResouce</literal>, and one resource method which returns
             simple text message. To make sure the resource is properly tested there is also a end-to-end test-case
             in <literal>MyResourceTest</literal> (the test is based on &jersey.test.JerseyTest; from our <xref linkend="test-framework" />).
-            Similarly to <literal>simple-service-webapp</literal>, the project contains the standard Java EE web application
+            Similarly to <literal>simple-service-webapp</literal>, the project contains the standard Java/Jakarta EE web application
             <literal>web.xml</literal> deployment descriptor under <literal>src/main/webapp/WEB-INF</literal> since the goal is to
             deploy the application in a Servlet container (the application will run in Jetty on Heroku).
         </para>

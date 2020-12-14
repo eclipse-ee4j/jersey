@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -88,7 +88,7 @@ public class UsersResource {
         </para>
 
         <para>
-            The <literal>getUsersAsJsonArray</literal> method constructs a <literal>JSONArrray</literal>, where each element
+            The <literal>getUsersAsJsonArray</literal> method constructs a <literal>JSONArray</literal>, where each element
             is a URI identifying a specific user resource. The URI is built from the absolute path of the request URI by
             calling
             <link xlink:href="&jaxrs.javadoc.uri;/core/UriInfo.html#getAbsolutePathBuilder()">UriInfo.getAbsolutePathBuilder()</link>.
@@ -159,7 +159,7 @@ uri.toString(); // returns "http://localhost/myApp?q=value"</programlisting>
         </para>
 
         <para>
-            A &lit.jaxrs.core.Link; can be serialized to an HTTP message (tyically a response) as additional HTTP header
+            A &lit.jaxrs.core.Link; can be serialized to an HTTP message (typically a response) as additional HTTP header
             (there might be multiple &lit.jaxrs.core.Link; headers provided, thus multiple links can be served in a single
             message). Such HTTP header may look like:
             <screen language="text" linenumbering="unnumbered">Link: &lt;http://example.com/TheBook/chapter2&gt;; rel="prev"; title="previous chapter"</screen>

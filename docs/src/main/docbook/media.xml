@@ -188,8 +188,9 @@ public class MyJaxbBean {
 
                 <para>
                     JSON Processing API is a new standard API for parsing and processing JSON structures in similar way to what
-                    SAX and StAX parsers provide for XML. The API is part of Java EE 7 and later. Another such JSON
-                    parsing/processing API is provided by Jettison framework. Both APIs provide a low-level access to producing
+                    SAX and StAX parsers provide for XML. The API is part of Jakarta EE 9 and later. Another such JSON
+                    parsing/processing API is provided by Jettison framework (which is also supported in jakartified environment).
+                    Both APIs provide a low-level access to producing
                     and consuming JSON data structures. By adopting this low-level approach you would be working with
                     <literal>JsonObject</literal> (or <literal>JSONObject</literal> respectively) and/or
                     <literal>JsonArray</literal> (or <literal>JSONArray</literal> respectively) classes when processing your
@@ -219,7 +220,7 @@ public class MyJaxbBean {
                 <para>
                     Now to build an equivalent <literal>JsonObject</literal>/<literal>JSONObject</literal> (in terms of
                     resulting JSON expression), you would need several more lines of code. The following example illustrates
-                    how to construct the same JSON data using the standard Java EE 7 JSON-Processing API.
+                    how to construct the same JSON data using the standard Jakarta EE 9 JSON-Processing API.
                     <example>
                         <title>Constructing a <literal>JsonObject</literal> (JSON-Processing)</title>
                         <programlisting language="java" linenumbering="numbered">JsonObject myObject = Json.createObjectBuilder()
@@ -532,7 +533,7 @@ final Application application = new ResourceConfig()
             </section>
         </section>
         <section xml:id="json.jackson">
-            <title>Jackson (1.x and 2.x)</title>
+            <title>Jackson (2.x)</title>
 
             <section>
                 <title>Dependency</title>
@@ -547,16 +548,8 @@ final Application application = new ResourceConfig()
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
-                    To use Jackson 1.x it'll look like:
-
-                    <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
-    &lt;groupId&gt;org.glassfish.jersey.media&lt;/groupId&gt;
-    &lt;artifactId&gt;jersey-media-json-jackson1&lt;/artifactId&gt;
-    &lt;version&gt;&version;&lt;/version&gt;
-&lt;/dependency&gt;</programlisting>
-
-                    If you're not using Maven make sure to have all needed dependencies (see &jersey.media.json-jackson.deps.link; or
-                    &jersey.media.json-jackson1.deps.link;) on the classpath.
+                    If you're not using Maven make sure to have all needed dependencies (see &jersey.media.json-jackson.deps.link;)
+                    on the classpath.
                 </para>
             </section>
             <section xml:id="jackson-registration">
@@ -564,23 +557,21 @@ final Application application = new ResourceConfig()
 
                 <note>
                     <para>
-                        Note that there is a difference in namespaces between Jackson 1.x (<literal>org.codehaus.jackson</literal>)
-                        and Jackson 2.x (<literal>com.fasterxml.jackson</literal>).
+                        Note that namespace for Jackson 2.x is (<literal>com.fasterxml.jackson</literal>).
                     </para>
                 </note>
 
                 <para>
-                    Jackson JSON processor could be controlled via providing a custom Jackson 2 &jersey.media.ObjectMapper; (or
-                    &jersey.media.ObjectMapper1; for Jackson 1) instance.
+                    Jackson JSON processor could be controlled via providing a custom Jackson 2 &jersey.media.ObjectMapper; instance.
                     This could be handy if you need to redefine the default Jackson behaviour and to fine-tune how your JSON data
                     structures look like. Detailed description of all Jackson features is out of scope of this guide. The example
-                    below gives you a hint on how to wire your &lit.jersey.media.ObjectMapper; (&jersey.media.ObjectMapper1;)
+                    below gives you a hint on how to wire your &lit.jersey.media.ObjectMapper;
                     instance into your Jersey application.
                 </para>
 
                 <para>
                     In order to use Jackson as your JSON (JAXB/POJO) provider you need to register &jersey.media.JacksonFeature;
-                    (&jersey.media.Jackson1Feature;) and a &lit.jaxrs.ext.ContextResolver; for &lit.jersey.media.ObjectMapper;,
+                    and a &lit.jaxrs.ext.ContextResolver; for &lit.jersey.media.ObjectMapper;,
                     if needed, in your &jaxrs.core.Configurable; (client/server).
 
                     <example>
@@ -642,8 +633,7 @@ final Application application = new ResourceConfig()
 
                 <para>
                     Jersey provides <link xlink:href='&jersey.github.examples.uri;/json-jackson'>JSON Jackson (2.x) example</link>
-                    and <link xlink:href='&jersey.github.examples.uri;/json-jackson1'>JSON Jackson (1.x) example</link> showing
-                    how to use Jackson to consume/produce JSON.
+                    showing how to use Jackson to consume/produce JSON.
                 </para>
             </section>
         </section>
@@ -1418,7 +1408,7 @@ public class PlanetJAXBContextProvider implements ContextResolver&lt;JAXBContext
                 Sample above shows simple &lit.jaxb.JAXBContext; creation, all you need to do is put
                 this &lit.jaxrs.ext.Provider; annotated class somewhere where Jersey can find it. Users sometimes
                 have problems with using provider classes on client side, so just to reminder - you have to
-                declare them in the client config (client does not do anything like package scanning done by server).
+                register them in the client config (client does not do anything like package scanning done by server).
             </para>
 
             <example>
@@ -1752,7 +1742,7 @@ public MultiPart post(final FormDataMultiPart multiPart) {
                 <title>Injecting with &lit.jersey.media.multipart.FormDataParam;</title>
 
                 <para>
-                    If you just need to bin the named body part(s) of a <literal>multipart/form-data</literal> request
+                    If you just need to bind the named body part(s) of a <literal>multipart/form-data</literal> request
                     entity body to a resource method parameter you can use &jersey.media.multipart.FormDataParam; annotation.
                 </para>
                 <para>

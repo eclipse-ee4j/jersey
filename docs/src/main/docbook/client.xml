@@ -31,7 +31,7 @@
 
     <para>
         This section introduces the JAX-RS Client API, which is a fluent Java based API for communication with RESTful Web
-        services. This standard API that is also part of Java EE 7 is designed to make it very easy to consume a Web service
+        services. This standard API that is also part of Jakarta EE 9 is designed to make it very easy to consume a Web service
         exposed via HTTP protocol and enables developers to concisely and efficiently implement portable client-side solutions
         that leverage existing and well established client-side HTTP connector implementations.
     </para>
@@ -546,7 +546,7 @@ String entity = client.target("http://example.com/rest")
                 do require running on another thread, should be executed using provided services.
             </para>
             <para>
-                Default values do depend on the environment - in Java EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
+                Default values do depend on the environment - in Java/Jakarta EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
                 and &jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
                 <literal>ForkJoinPool.commonPool</literal> for Executor service and something undefined for Scheduled
                 executor service.

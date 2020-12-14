@@ -226,7 +226,7 @@
             In the example above the <literal>Resource</literal> is built from
             a <literal>HelloWorldResource</literal> resource class. The resource model built this way
             contains a &lit.http.GET; method producing <literal>'text/plain'</literal> responses with "Hello World!" entity.
-            This is quite important as it allows you to whatever Resource objects based on introspecting
+            This is quite important as it allows you to build whatever Resource objects based on introspecting
             existing JAX-RS resources and use builder API to enhance such these standard resources.
             In the example we used already implemented <literal>HelloWorldResource</literal> resource class
             and enhanced it by &lit.http.OPTIONS; method. The &lit.http.OPTIONS; method is handled by an Inflector which
@@ -240,7 +240,7 @@
             <example>
                 <title>A programmatic resource</title>
                 <programlisting language="java" linenumbering="numbered">
-                    final Resource.Builder resourceBuilder = Resource.builder("helloworld");
+                    final Resource.Builder resourceBuilder = Resource.Builder("helloworld");
 
                     final Resource.Builder childResource = resourceBuilder.addChildResource("subresource");
                     childResource.addMethod("GET").handledBy(new GetInflector());
@@ -267,7 +267,7 @@
         </para>
         <para>
             See the javadocs of the resource builder API for more information.
-            <!--TODO javadoc link-->
+            <link xlink:href="&jersey.javadoc.root.uri;/org/glassfish/jersey/server/model/Resource.Builder.html">Resource.Builder</link>
         </para>
     </section>
     <section>
@@ -350,8 +350,8 @@
         <para>
             Note that you only need to register such a ModelProcessor as your custom extension provider in the same way as you
             would register any standard JAX-RS extension provider. During an application deployment, Jersey will look for any
-            registered model processor and execute them. As you can seem, model processors are very powerful as they can do
-            whatever manipulation with the resource model they like. A model processor can even, for example, completely ignore
+            registered model processor and execute them. As you can see, model processors are very powerful as they can do
+            any manipulations with the resource models. A model processor can even, for example, completely ignore
             the old resource model and return a new custom resource model with a single "Hello world!" resource, which would
             result in only the "Hello world!" resource being deployed in your application. Of course, it would not not make
             much sense to implement such model processor, but the scenario demonstrates how powerful the model processor concept

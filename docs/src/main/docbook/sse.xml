@@ -135,9 +135,8 @@
         <title>Server-Sent Events API</title>
         <para>
             In previous JAX-RS versions, no standard API for server-sent events was defined. The SSE support bundled with
-            Jersey was Jersey-specific. With JAX-RS 2.1, situation changed and SSE API is well defined in the
-            <literal>jakarta.ws.rs.sse</literal>
-            package.
+            Jersey was Jersey-specific. With JAX-RS 2.1 (with respect to namespace change after jakartification),
+            situation changed and SSE API is well defined in the <literal>jakarta.ws.rs.sse</literal> package.
         </para>
         <para>Following chapters will describe the new SSE API. For backwards compatibility reasons, the original
             Jersey-specific API remains valid and will be described in
@@ -325,7 +324,7 @@ data: Hello world 9!
                 clients. A simple broadcasting implementation is shown in the following example:
 
                 <example>
-                    <title>Broadcasting SSE messages (with JAX-RS 2.1 API)</title>
+                    <title>Broadcasting SSE messages (with JAX-RS 3.0 API)</title>
                     <programlisting language="java" linenumbering="numbered">...
 import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
@@ -367,7 +366,7 @@ public static class BroadcasterResource {
                     </programlisting>
                 </example>
                 Let's explore the example together. The <literal>BroadcasterResource</literal> resource class is annotated with
-                &jee6.inject.Singleton; annotation which tells Jersey runtime that only a single instance of the resource
+                &jee9.inject.Singleton; annotation which tells Jersey runtime that only a single instance of the resource
                 class should be used to serve all the incoming requests to <literal>/broadcast</literal> path. This is needed as
                 we want to keep an application-wide single reference to the private <literal>broadcaster</literal> field so
                 we can use the same instance for all requests. Clients that want to listen to SSE events first send a
@@ -507,7 +506,7 @@ Runnable
 onComplete);
                 </programlisting>
             </example>
-            <para>
+
                 Few notes to the <literal>subscribe()</literal> methods:
                 <itemizedlist>
                     <listitem>
@@ -539,7 +538,7 @@ onComplete);
                     <listitem>
                         <para>
                             The complete <literal>subscribe()</literal> method adds the <literal>onSubscribe()</literal> callback.
-                            This gives the subscriber a tool to manage the load and do a back-pressure by incrementaly
+                            This gives the subscriber a tool to manage the load and do a back-pressure by incrementally
                             requesting only certain amount of items. When <literal>SseEventSource</literal> registers a new
                             subscriber, it calls its <literal>onSubscribe</literal> handler and hands over the
                             <literal>jakarta.ws.rs.sse.SseSubscription</literal>
@@ -570,7 +569,7 @@ onComplete);
                     </listitem>
                 </itemizedlist>
 
-            </para>
+
 
         </para>
         <section xml:id="sse-event-source-reconnect">
@@ -619,9 +618,6 @@ onComplete);
         </section>
     </section>
 
-    <!--TODO - describes the Jersey-specific legacy API, change and only mention the differences -->
-
-
     <section xml:id="overview-jersey-specific">
         <title>Jersey-specific Server-Sent Events API</title>
         <important>
@@ -632,8 +628,8 @@ onComplete);
                 with common JAX-RS resources the same way as the JAX-RS 2.1 based implementation does.
             </para>
             <para>
-                Both implementations are compatible, which means client based on Jersey-specific SSE implementation can "talk"
-                to server resource implemetned using JAX-RS 2.1 based implementation and vice versa.
+                After the jakartification Jersey complies with JAX-RS 3.0 and SSE implementation may not be backward compatible due to
+                namespace change. When the 3.x version is being used, it's required to comply to JAX-RS 3.0 SSE spec.
             </para>
         </important>
         <para>
@@ -989,8 +985,8 @@ eventSource.close();
                     &lit.jersey.sse.EventSource;<literal>.register(EventListener, String)</literal>
                     method. The next method
                     arguments define the names of the events to receive and can be omitted. If names are defined, the listener
-                    will be associated with the named events and will only invoked for events with a name from the set of defined
-                    event names. It will not be invoked for events with any other name or for events without a name.
+                    will be associated with the named events and will only be invoked for events with a name from the set of defined
+                    event names. It will not be invoked for events with any other names or for events without a name.
 
                     <important>
                         <para>
