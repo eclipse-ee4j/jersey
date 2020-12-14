@@ -32,10 +32,6 @@
 
     <description>Jersey Test Framework - Grizzly2 container</description>
 
-    <properties>
-        <version.sslcontext-kickstart>5.4.0</version.sslcontext-kickstart>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -57,12 +53,6 @@
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-servlet</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.hakky54</groupId>
-            <artifactId>sslcontext-kickstart</artifactId>
-            <version>${version.sslcontext-kickstart}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
