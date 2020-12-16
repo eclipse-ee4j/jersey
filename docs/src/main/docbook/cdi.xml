@@ -50,7 +50,7 @@
     <section xml:id="cdi.support.existing.containers">
         <title>Containers Known to Work With Jersey CDI Support</title>
         <para>
-          To stick with JAX-RS specification, Jersey has to support JAX-RS/CDI integration in Java EE environment.
+          To stick with JAX-RS specification, Jersey has to support JAX-RS/CDI integration in Java/Jakarta EE environment.
           The two containers supporting JAX-RS/CDI integration out of the box are Oracle GlassFish and Oracle WebLogic application server.
         </para>
         <para>

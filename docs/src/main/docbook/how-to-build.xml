@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,17 +64,17 @@
     <section xml:id="building">
         <title>Building the Source</title>
         <para>
-            Jersey source code requires Java SE 7 or higher. The build is based on Maven.
-            Maven 3.1 or higher is highly recommended. Also it is recommended you use the following
-            Maven options when building the workspace (can be set in <literal>MAVEN_OPTS</literal> environment
-            variable):
+            Jersey source code requires Java SE 8 or higher. Support of Jetty HTTP container/client requires DJK 11+.
+            The build is based on Maven. Maven 3.6.3 or higher is highly recommended. Also it is recommended you use
+            the following Maven options when building the workspace (can be set in <literal>MAVEN_OPTS</literal>
+            environment variable):
             <programlisting language="bash" linenumbering="unnumbered">-Xmx1048m -XX:PermSize=64M -XX:MaxPermSize=128M</programlisting>
         </para>
         <para>
             It is recommended to build all of Jersey after you cloned the source code repository.
             To do that execute the following commands in the directory where jersey source repository
             was cloned (typically the directory named "jersey"):
-            <programlisting language="bash" linenumbering="unnumbered">mvn -Dmaven.test.skip=true clean install</programlisting>
+            <programlisting language="bash" linenumbering="unnumbered">mvn -Dmaven.test.skip=true -DskipTests clean install</programlisting>
             This command will build Jersey, but skip the test execution.
             If you don't want to skip the tests, execute the following instead:
             <programlisting language="bash" linenumbering="unnumbered">mvn clean install</programlisting>
@@ -88,11 +88,13 @@
             Jersey contains many tests. Unit tests are in the individual Jersey modules,
             integration and end-to-end tests are in <literal>jersey/tests/e2e</literal> directory.
             You can run tests related to a particular area using the following command:
-            <programlisting language="bash" linenumbering="unnumbered">mvn -Dtest=&lt;pattern&gt; test</programlisting>
+            <programlisting language="bash" linenumbering="unnumbered">mvn -Dtest=&lt;pattern&gt; test -pl :[modulename]</programlisting>
             where
             <literal>pattern</literal>
             may be a comma separated set of names matching tests classes or individual methods (like
-            <literal>LinkTest#testDelimiters</literal>).
+            <literal>LinkTest#testDelimiters</literal>)
+            and [modulename] is name of a module from which tests are called. If module does not contain those tests
+            build failure (as no tests run) occurs.
         </para>
     </section>
     <section xml:id="netbeans-build">

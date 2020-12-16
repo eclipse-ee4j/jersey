@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,7 @@
                 Security information of a request is available by injecting a JAX-RS &jaxrs.core.SecurityContext; instance
                 using &jaxrs.core.Context;
                 annotation. The injected security context instance provides the equivalent of the functionality available on
-                &jee6.servlet.HttpServletRequest; API.
+                &jee9.servlet.HttpServletRequest; API.
                 The injected security context depends on the actual Jersey application deployment. For example, for a
                 Jersey application deployed in a Servlet container, the Jersey &lit.jaxrs.core.SecurityContext; will
                 encapsulate information from a security context retrieved from the Servlet request.
@@ -126,7 +126,7 @@ public static class MyResource {
                 <title>Security resources with <literal>web.xml</literal></title>
                 <para>
                     In cases where a Jersey application is deployed in a Servlet container you can rely only on
-                    the standard Java EE Web application security mechanisms offered by the Servlet container and
+                    the standard Java/Jakarta EE Web application security mechanisms offered by the Servlet container and
                     configurable via application's <literal>web.xml</literal> descriptor.
                     You need to define the <literal>&lt;security-constraint&gt;</literal> elements in the
                     <literal>web.xml</literal> and assign roles which are able to access these resources. You can also
@@ -166,7 +166,7 @@ public static class MyResource {
                     classes you may need to update also the <literal>web.xml</literal>
                     security configurations to reflect the changed JAX-RS resource paths. Therefore Jersey offers a
                     <link linkend="annotation-based-security">more flexible solution</link>
-                    based on placing standard Java EE security annotations directly on JAX-RS resource classes and methods.
+                    based on placing standard Java/Jakarta EE security annotations directly on JAX-RS resource classes and methods.
                 </para>
             </section>
 
@@ -225,17 +225,17 @@ public class Resource {
                     </example>
 
                     The resource class <literal>Resource</literal> defined in the example is annotated with a
-                    &jee6.annotations.PermitAll; annotation. This means that all methods in the class which do not
+                    &jee9.annotations.PermitAll; annotation. This means that all methods in the class which do not
                     override this
                     annotation will be permitted for all user groups (no restrictions are defined). In our example, the
                     annotation will only apply to the <literal>getSubResource()</literal> method as it is the only method
                     that does not override the annotation by defining custom role-based security settings using the
-                    &jee6.annotations.RolesAllowed; annotation.
-                    &lit.jee6.annotations.RolesAllowed; annotations present on the other methods define a role or a set of
+                    &jee9.annotations.RolesAllowed; annotation.
+                    &lit.jee9.annotations.RolesAllowed; annotations present on the other methods define a role or a set of
                     roles that are allowed to execute a particular method.
                 </para>
                 <para>
-                    These Java EE security annotations are processed internally in the request filter registered using
+                    These Java/Jakarta EE security annotations are processed internally in the request filter registered using
                     the Jersey &lit.jersey.server.RolesAllowedDynamicFeature;. The roles defined in the annotations are
                     tested against current roles set in the &lit.jaxrs.core.SecurityContext; using
                     the &lit.jaxrs.core.SecurityContext;<literal>.isUserInRole(String role)</literal> method. In case the caller
@@ -510,8 +510,9 @@ public class Resource {
                         </listitem>
                     </itemizedlist>
 
-                    An example of how Jersey OAuth 1 client API is used can be found in
-                    the &jersey.github.oauth1.twitter.client.example.link;. The following code snippets are extracted from the
+                    An example of how Jersey OAuth 1 client API is used was in
+                    the &jersey.github.oauth1.twitter.client.example.link; but for now it's temporally removed from examples.
+                    The following code snippets are extracted from the
                     example and explain how to use the Jersey OAuth client API.
                 </para>
                 <para>
@@ -571,9 +572,9 @@ AccessToken accessToken = authFlow.finish(verifier);]]></programlisting>
                     of our application.
                     Then the user gets a verifier and enters it back to the console. However, if our application would be a
                     web application, we would need to return a redirection response to the user in order to redirect the user
-                    automatically to the <literal>authorizationUri</literal>. For more information about server deployment,
+                    automatically to the <literal>authorizationUri</literal>. <!--For more information about server deployment,
                     check our &jersey.github.oauth2.google.client.example.link;, where the client is part of the
-                    web application (the client API for OAuth 2 is similar to OAuth 1).
+                    web application (the client API for OAuth 2 is similar to OAuth 1).-->
                 </para>
 
                 <para>
@@ -841,8 +842,8 @@ System.out.println("Access Token: " + result.get);]]></programlisting>
                     Between the calls to <literal>flow.start()</literal> and <literal>flow.finish()</literal>, a user
                     must be redirected to the authorization URI. This means that the code will not be executed in
                     a single method and the finish part will be invoked as a handler of redirect request back to our web from
-                    authorization URI. Check the &jersey.github.oauth2.google.client.example.link; for more details on
-                    this approach.
+                    authorization URI. <!--Check the &jersey.github.oauth2.google.client.example.link; for more details on
+                    this approach.-->
                 </para>
             </section>
         </section>

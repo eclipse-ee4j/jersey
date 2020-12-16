@@ -96,7 +96,8 @@
             &jersey.test.JerseyTest; supports deploying applications on various containers, all (except the external container
             wrapper) need to have some "glue" code to be supported. Currently Jersey Test Framework provides support for
             Grizzly, In-Memory, JDK (<literal>com.sun.net.httpserver.HttpServer</literal>), Simple HTTP container
-            (<literal>org.simpleframework.http</literal>) and Jetty HTTP container (<literal>org.eclipse.jetty</literal>).
+            (<literal>org.simpleframework.http</literal>) and Jetty HTTP container (<literal>org.eclipse.jetty</literal>)
+            - since Jersey 3.x HTTP Jetty container requires JDK 11+.
         </para>
 
         <para>
@@ -149,7 +150,7 @@
                 </listitem>
                 <listitem>
                     <para>
-                        <literal>HttpServer</literal> from Oracle JDK is another supported test container.
+                        <literal>HttpServer</literal> from JDK is another supported test container.
 
                         <programlisting language="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.test-framework.providers&lt;/groupId&gt;
@@ -173,7 +174,7 @@
                 <listitem>
                     <para>
                         Jetty container (<literal>org.eclipse.jetty</literal>) is another high-performance, light-weight HTTP server
-                        that integrates with Jersey and is supported by Jersey Test Framework.
+                        that integrates with Jersey and is supported by Jersey Test Framework. Shall be used along with JDK 11+
 
                         <programlisting language="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.test-framework.providers&lt;/groupId&gt;

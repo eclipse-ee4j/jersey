@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,7 @@
                 Jersey Logging supports the logging request and response via internal client and server filters, which are
                 configured and registered by &jersey.logging.LoggingFeature; 's properties. &lit.jersey.logging.LoggingFeature;
                 has been introduced in Jersey 2.23 version and deprecates an older &lit.jersey.logging.LoggingFilter;.
+                Jersey of version 3.x fully support all logging features of Jersey's 2.x.
             </para>
             <para>
                 &lit.jersey.logging.LoggingFeature; might be discovered by
@@ -204,16 +205,16 @@
                 <para>An example of server-side logging with entity
                     <literal>Hello World!</literal>
                 </para>
-                <screen linenumbering="numbered"><![CDATA[May 09, 2016 2:55:33 PM org.glassfish.jersey.logging.LoggingInterceptor log
+                <screen linenumbering="numbered"><![CDATA[May 09, 2020 2:55:33 PM org.glassfish.jersey.logging.LoggingInterceptor log
 INFO: 1 * Server has received a request on thread grizzly-http-server-0
 1 > GET http://localhost:9998/helloworld
 1 > accept: text/plain
 1 > accept-encoding: gzip,deflate
 1 > connection: Keep-Alive
 1 > host: localhost:9998
-1 > user-agent: Jersey/3.0-SNAPSHOT (Apache HttpClient 4.5)
+1 > user-agent: Jersey/3.0.0 (Apache HttpClient 4.5.9)
 
-May 09, 2016 2:55:33 PM org.glassfish.jersey.logging.LoggingInterceptor log
+May 09, 2020 2:55:33 PM org.glassfish.jersey.logging.LoggingInterceptor log
 INFO: 1 * Server responded with a response on thread grizzly-http-server-0
 1 < 200
 1 < Content-Type: text/plain
