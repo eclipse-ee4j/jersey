@@ -2099,7 +2099,7 @@
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
-        <httpclient.version>4.5.9</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.11.3</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.25.0-GA</javassist.version>
