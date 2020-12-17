@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.UriBuilder;
 
@@ -34,6 +35,7 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServlet;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -191,8 +193,21 @@ public class GrizzlyWebTestContainerFactory implements TestContainerFactory {
                 }
             }
 
+            boolean secure = false;
+            SSLEngineConfigurator sslEngineConfigurator = null;
+            if (deploymentContext.getSslContext().isPresent() && deploymentContext.getSslParameters().isPresent()) {
+                secure = true;
+                SSLParameters sslParameters = deploymentContext.getSslParameters().get();
+                sslEngineConfigurator = new SSLEngineConfigurator(
+                        deploymentContext.getSslContext().get(), false,
+                        sslParameters.getNeedClientAuth(), sslParameters.getWantClientAuth()
+                );
+            }
+
             try {
-                server = GrizzlyHttpServerFactory.createHttpServer(baseUri, (GrizzlyHttpContainer) null, false, null, false);
+                server = GrizzlyHttpServerFactory.createHttpServer(
+                        baseUri, (GrizzlyHttpContainer) null,
+                        secure, sslEngineConfigurator, false);
                 context.deploy(server);
             } catch (final ProcessingException ex) {
                 throw new TestContainerException(ex);

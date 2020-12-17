@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,10 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.core.UriBuilder;
 
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -54,6 +56,17 @@ public class GrizzlyTestContainerFactory implements TestContainerFactory {
             if (LOGGER.isLoggable(Level.INFO)) {
                 LOGGER.info("Creating GrizzlyTestContainer configured at the base URI "
                         + TestHelper.zeroPortToAvailablePort(baseUri));
+            }
+
+            if (context.getSslContext().isPresent() && context.getSslParameters().isPresent()) {
+                SSLParameters sslParameters = context.getSslParameters().get();
+                this.server = GrizzlyHttpServerFactory.createHttpServer(
+                        this.baseUri, context.getResourceConfig(),
+                        true, new SSLEngineConfigurator(
+                                context.getSslContext().get(), false,
+                                sslParameters.getNeedClientAuth(), sslParameters.getWantClientAuth()),
+                        false);
+                return;
             }
 
             this.server = GrizzlyHttpServerFactory.createHttpServer(this.baseUri, context.getResourceConfig(), false);
