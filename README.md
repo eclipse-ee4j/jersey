@@ -122,7 +122,8 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
  <h3>Latest Articles</h3>
 
 <table>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Understanding Jakarta EE 9</a>                         </td><td> Oct 12, 2020 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=235" target="_blank">Happy Jakarta EE 9 with Jersey 3.0.0</a>               </td><td> Dec 03, 2020 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=202" target="_blank">Understanding Jakarta EE 9</a>                         </td><td> Oct 12, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">What is new in Jersey 2.32</a>                         </td><td> Oct 10, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Jersey 2.30.1 has been released</a>                         </td><td> March 1, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a>                         </td><td> Jan 13, 2020 </td><td> Jan Supol </td> </tr>

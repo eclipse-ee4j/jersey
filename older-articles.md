@@ -13,6 +13,9 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=235" target="_blank">Happy Jakarta EE 9 with Jersey 3.0.0</a></h4>
+Dec 03, 2020 | Jan Supol
+
 <h4> <a class="article" href="{{ site.links.honzablog }}/?p=202" target="_blank">Understanding Jakarta EE 9</a></h4> 
 Oct 12, 2020 | Jan Supol
 
