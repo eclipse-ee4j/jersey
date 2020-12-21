@@ -158,7 +158,7 @@ public final class MessagingBinders {
 
     private static final class EnabledProvidersBinder {
         private enum Provider {
-            DATASOURCE("javax.activation.DataSource"),
+            DATASOURCE("jakarta.activation.DataSource"),
             DOMSOURCE("javax.xml.transform.dom.DOMSource"),
             RENDEREDIMAGE("java.awt.image.RenderedImage"),
             SAXSOURCE("javax.xml.transform.sax.SAXSource"),

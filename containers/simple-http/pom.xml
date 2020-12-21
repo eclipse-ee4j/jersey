@@ -49,6 +49,11 @@
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

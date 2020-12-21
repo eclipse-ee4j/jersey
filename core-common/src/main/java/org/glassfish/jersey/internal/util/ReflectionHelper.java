@@ -1562,7 +1562,7 @@ public final class ReflectionHelper {
      * Returns true iff JAX-B API is available on classpath.
      */
     public static boolean isJaxbAvailable() {
-        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.bind.JAXBException"));
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("jakarta.xml.bind.JAXBException"));
         return aClass != null;
     }
 

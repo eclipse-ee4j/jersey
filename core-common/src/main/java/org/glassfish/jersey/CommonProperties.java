@@ -230,7 +230,7 @@ public final class CommonProperties {
      * Disable some of the default providers from being loaded. The following providers extend application footprint
      * by XML dependencies, which is too heavy for native image, or by AWT which may possibly be not available by JDK 11 desktop:
      * <ul>
-     *     <li>javax.activation.DataSource</li>
+     *     <li>jakarta.activation.DataSource</li>
      *     <li>java.awt.image.RenderedImage</li>
      *     <li>javax.xml.transform.Source</li>
      *     <li>javax.xml.transform.dom.DOMSource</li>
