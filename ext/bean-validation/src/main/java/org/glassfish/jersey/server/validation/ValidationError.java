@@ -25,15 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @SuppressWarnings("UnusedDeclaration")
-public final class ValidationError {
-
-    private String message;
-
-    private String messageTemplate;
-
-    private String path;
-
-    private String invalidValue;
+public final class ValidationError extends ValidationErrorData {
 
     /**
      * Create a {@code ValidationError} instance. Constructor for JAXB providers.
@@ -50,81 +42,6 @@ public final class ValidationError {
      * @param invalidValue value that failed to pass constraints.
      */
     public ValidationError(final String message, final String messageTemplate, final String path, final String invalidValue) {
-        this.message = message;
-        this.messageTemplate = messageTemplate;
-        this.path = path;
-        this.invalidValue = invalidValue;
-    }
-
-    /**
-     * Return the interpolated error message for this validation error.
-     *
-     * @return the interpolated error message for this validation error.
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Return the interpolated error message for this validation error.
-     *
-     * @param message the interpolated error message for this validation error.
-     */
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-    /**
-     * Return the string representation of the property path to the value.
-     *
-     * @return the string representation of the property path to the value.
-     */
-    public String getPath() {
-        return path;
-    }
-
-    /**
-     * Set the string representation of the property path to the value.
-     *
-     * @param path the string representation of the property path to the value.
-     */
-    public void setPath(final String path) {
-        this.path = path;
-    }
-
-    /**
-     * Returns the string representation of the value failing to pass the constraint.
-     *
-     * @return the value failing to pass the constraint.
-     */
-    public String getInvalidValue() {
-        return invalidValue;
-    }
-
-    /**
-     * Set the value failing to pass the constraint.
-     *
-     * @param invalidValue the value failing to pass the constraint.
-     */
-    public void setInvalidValue(final String invalidValue) {
-        this.invalidValue = invalidValue;
-    }
-
-    /**
-     * Return the non-interpolated error message for this validation error.
-     *
-     * @return the non-interpolated error message for this validation error.
-     */
-    public String getMessageTemplate() {
-        return messageTemplate;
-    }
-
-    /**
-     * Set the non-interpolated error message for this validation error.
-     *
-     * @param messageTemplate the non-interpolated error message for this validation error.
-     */
-    public void setMessageTemplate(final String messageTemplate) {
-        this.messageTemplate = messageTemplate;
+        super(message, messageTemplate, path, invalidValue);
     }
 }

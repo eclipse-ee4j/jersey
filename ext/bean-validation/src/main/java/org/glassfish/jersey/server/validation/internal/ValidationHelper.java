@@ -27,7 +27,7 @@ import jakarta.validation.ElementKind;
 import jakarta.validation.Path;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.server.validation.ValidationError;
+import org.glassfish.jersey.server.validation.ValidationErrorData;
 
 /**
  * Utility methods for Bean Validation processing.
@@ -39,13 +39,13 @@ public final class ValidationHelper {
 
     /**
      * Extract {@link ConstraintViolation constraint violations} from given exception and transform them into a list of
-     * {@link ValidationError validation errors}.
+     * {@link ValidationErrorData validation errors}.
      *
      * @param violation exception containing constraint violations.
      * @return list of validation errors (not {@code null}).
      */
-    public static List<ValidationError> constraintViolationToValidationErrors(final ConstraintViolationException violation) {
-        return violation.getConstraintViolations().stream().map(violation1 -> new ValidationError(
+    public static List<ValidationErrorData> constraintViolationToValidationErrors(final ConstraintViolationException violation) {
+        return violation.getConstraintViolations().stream().map(violation1 -> ValidationErrorData.createValidationError(
                 violation1.getMessage(),
                 violation1.getMessageTemplate(),
                 getViolationPath(violation1),

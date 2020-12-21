@@ -95,6 +95,14 @@
                         </Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
+                            jakarta.xml.bind;version="!";resolution:=optional,
+                            jakarta.xml.bind.annotation;version="!";resolution:=optional,
+                            jakarta.xml.bind.annotation.adapters;version="!";resolution:=optional,
+                            javax.xml.namespace;resolution:=optional,
+                            javax.xml.parsers;resolution:=optional,
+                            javax.xml.transform;resolution:=optional,
+                            javax.xml.transform.sax;resolution:=optional,
+                            javax.xml.transform.stream;resolution:=optional,
                             jakarta.validation.*;resolution:=optional;version="[3,4)",
                             *
                         </Import-Package>
@@ -173,12 +181,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-jaxb</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
@@ -209,7 +211,18 @@
             <artifactId>org.osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-jaxb</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

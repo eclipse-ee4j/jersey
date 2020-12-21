@@ -47,6 +47,7 @@ import com.sun.research.ws.wadl.Grammars;
 import com.sun.research.ws.wadl.Include;
 import com.sun.research.ws.wadl.Resource;
 import com.sun.research.ws.wadl.Resources;
+import org.glassfish.jersey.server.wadl.internal.generators.WadlGeneratorJAXBGrammarGenerator;
 
 /**
  * WADL application context implementation.
@@ -261,6 +262,14 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
             }
         } catch (final Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_WADL_EXTERNAL_GRAMMAR(), e);
+        }
+    }
+
+    public static boolean isJaxbImplAvailable() {
+        try {
+            return null != WadlApplicationContextImpl.getJAXBContextFromWadlGenerator(new WadlGeneratorJAXBGrammarGenerator());
+        } catch (JAXBException je) {
+            return false;
         }
     }
 }

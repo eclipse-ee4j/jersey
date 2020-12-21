@@ -52,6 +52,7 @@ import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.model.internal.RankedComparator;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -1066,4 +1067,40 @@ public class CommonConfigTest {
         }
     }
 
+    // Binder ordering -------------------------------------------------------------------------
+
+    @Test
+    public void testBinderOrderingInGetClasses() {
+        config.register(ContractBinderOne.class).register(ContractBinderTwo.class).register(ContractBinder.class);
+
+        InjectionManager injectionManager = Injections.createInjectionManager();
+        ManagedObjectsFinalizer finalizer = new ManagedObjectsFinalizer(injectionManager);
+        config.configureMetaProviders(injectionManager, finalizer);
+
+        Object[] classes = config.getComponentBag().getClasses(contractProvider -> true).toArray();
+        Assert.assertEquals(classes[0], ContractBinderOne.class);
+        Assert.assertEquals(classes[1], ContractBinderTwo.class);
+        Assert.assertEquals(classes[2], ContractBinder.class);
+    }
+
+    @Test
+    public void testBinderOrderingInGetInstances() {
+        ContractBinder[] binders = {new ContractBinderOne(), new ContractBinderTwo(), new ContractBinder()};
+        config.register(binders[2]).register(binders[1]).register(binders[0]);
+
+        InjectionManager injectionManager = Injections.createInjectionManager();
+        ManagedObjectsFinalizer finalizer = new ManagedObjectsFinalizer(injectionManager);
+        config.configureMetaProviders(injectionManager, finalizer);
+
+        Object[] instances = config.getComponentBag().getInstances(contractProvider -> true).toArray();
+        Assert.assertEquals(instances[0], binders[2]);
+        Assert.assertEquals(instances[1], binders[1]);
+        Assert.assertEquals(instances[2], binders[0]);
+    }
+
+    public static class ContractBinderOne extends ContractBinder {
+    }
+
+    public static class ContractBinderTwo extends ContractBinder {
+    }
 }

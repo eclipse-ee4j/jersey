@@ -80,7 +80,7 @@ public final class MessagingBinders {
 
             // Message body providers (both readers & writers)
             bindSingletonWorker(ByteArrayProvider.class);
-            bindSingletonWorker(DataSourceProvider.class);
+            // bindSingletonWorker(DataSourceProvider.class);
             bindSingletonWorker(FileProvider.class);
             bindSingletonWorker(FormMultivaluedMapProvider.class);
             bindSingletonWorker(FormProvider.class);
@@ -158,6 +158,7 @@ public final class MessagingBinders {
 
     private static final class EnabledProvidersBinder {
         private enum Provider {
+            DATASOURCE("javax.activation.DataSource"),
             DOMSOURCE("javax.xml.transform.dom.DOMSource"),
             RENDEREDIMAGE("java.awt.image.RenderedImage"),
             SAXSOURCE("javax.xml.transform.sax.SAXSource"),
@@ -200,6 +201,9 @@ public final class MessagingBinders {
             for (Provider provider : enabledProviders) {
                 if (isClass(provider.className)) {
                     switch (provider) {
+                        case DATASOURCE:
+                            providerBinder = new DataSourceBinder();
+                            break;
                         case DOMSOURCE:
                             providerBinder = new DomSourceBinder();
                             break;
@@ -226,6 +230,7 @@ public final class MessagingBinders {
                                     "MessageBodyReader<" + provider.className + ">")
                             );
                             break;
+                        case DATASOURCE:
                         case RENDEREDIMAGE:
                         case SOURCE:
                             LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(provider.className,
@@ -241,9 +246,16 @@ public final class MessagingBinders {
             return null != AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
         }
 
-
         private interface ProviderBinder {
             void bind(AbstractBinder binder, Provider provider);
+        }
+
+        private static class DataSourceBinder implements ProviderBinder {
+            @Override
+            public void bind(AbstractBinder binder, Provider provider) {
+                binder.bind(DataSourceProvider.class)
+                        .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class);
+            }
         }
 
         private static class DomSourceBinder implements ProviderBinder {

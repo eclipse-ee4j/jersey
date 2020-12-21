@@ -588,7 +588,7 @@ public class ComponentBag {
                               final ContractProvider model = getModel(input);
                               return filter.test(model);
                           })
-                          .collect(Collectors.toSet());
+                          .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -607,7 +607,7 @@ public class ComponentBag {
                                 final ContractProvider model = getModel(input.getClass());
                                 return filter.test(model);
                             })
-                            .collect(Collectors.toSet());
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**

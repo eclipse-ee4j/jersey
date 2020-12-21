@@ -82,6 +82,8 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
     // Copy request context when invoke or submit methods are invoked.
     private final boolean copyRequestContext;
 
+    private boolean ignoreResponseException;
+
     private JerseyInvocation(final Builder builder) {
         this(builder, false);
     }
@@ -91,6 +93,15 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
 
         this.requestContext = new ClientRequest(builder.requestContext);
         this.copyRequestContext = copyRequestContext;
+
+        Object value = builder.requestContext.getConfiguration()
+                .getProperty(ClientProperties.IGNORE_EXCEPTION_RESPONSE);
+        if (value != null) {
+            Boolean booleanValue = PropertiesHelper.convertValue(value, Boolean.class);
+            if (booleanValue != null) {
+                this.ignoreResponseException = booleanValue;
+            }
+        }
     }
 
     private enum EntityPresence {
@@ -875,56 +886,60 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
     }
 
     private ProcessingException convertToException(final Response response) {
+        // Use an empty response if ignoring response in exception
+        final int statusCode = response.getStatus();
+        final Response finalResponse = ignoreResponseException ? Response.status(statusCode).build() : response;
+
         try {
             // Buffer and close entity input stream (if any) to prevent
             // leaking connections (see JERSEY-2157).
             response.bufferEntity();
 
             final WebApplicationException webAppException;
-            final int statusCode = response.getStatus();
             final Response.Status status = Response.Status.fromStatusCode(statusCode);
 
             if (status == null) {
-                final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
-                webAppException = createExceptionForFamily(response, statusFamily);
+                final Response.Status.Family statusFamily = finalResponse.getStatusInfo().getFamily();
+                webAppException = createExceptionForFamily(finalResponse, statusFamily);
             } else {
                 switch (status) {
                     case BAD_REQUEST:
-                        webAppException = new BadRequestException(response);
+                        webAppException = new BadRequestException(finalResponse);
                         break;
                     case UNAUTHORIZED:
-                        webAppException = new NotAuthorizedException(response);
+                        webAppException = new NotAuthorizedException(finalResponse);
                         break;
                     case FORBIDDEN:
-                        webAppException = new ForbiddenException(response);
+                        webAppException = new ForbiddenException(finalResponse);
                         break;
                     case NOT_FOUND:
-                        webAppException = new NotFoundException(response);
+                        webAppException = new NotFoundException(finalResponse);
                         break;
                     case METHOD_NOT_ALLOWED:
-                        webAppException = new NotAllowedException(response);
+                        webAppException = new NotAllowedException(finalResponse);
                         break;
                     case NOT_ACCEPTABLE:
-                        webAppException = new NotAcceptableException(response);
+                        webAppException = new NotAcceptableException(finalResponse);
                         break;
                     case UNSUPPORTED_MEDIA_TYPE:
-                        webAppException = new NotSupportedException(response);
+                        webAppException = new NotSupportedException(finalResponse);
                         break;
                     case INTERNAL_SERVER_ERROR:
-                        webAppException = new InternalServerErrorException(response);
+                        webAppException = new InternalServerErrorException(finalResponse);
                         break;
                     case SERVICE_UNAVAILABLE:
-                        webAppException = new ServiceUnavailableException(response);
+                        webAppException = new ServiceUnavailableException(finalResponse);
                         break;
                     default:
-                        final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
-                        webAppException = createExceptionForFamily(response, statusFamily);
+                        final Response.Status.Family statusFamily = finalResponse.getStatusInfo().getFamily();
+                        webAppException = createExceptionForFamily(finalResponse, statusFamily);
                 }
             }
 
-            return new ResponseProcessingException(response, webAppException);
+            return new ResponseProcessingException(finalResponse, webAppException);
         } catch (final Throwable t) {
-            return new ResponseProcessingException(response, LocalizationMessages.RESPONSE_TO_EXCEPTION_CONVERSION_FAILED(), t);
+            return new ResponseProcessingException(finalResponse,
+                    LocalizationMessages.RESPONSE_TO_EXCEPTION_CONVERSION_FAILED(), t);
         }
     }
 

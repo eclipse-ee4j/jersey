@@ -1557,4 +1557,20 @@ public final class ReflectionHelper {
 
         return null;
     }
+
+    /**
+     * Returns true iff JAX-B API is available on classpath.
+     */
+    public static boolean isJaxbAvailable() {
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.bind.JAXBException"));
+        return aClass != null;
+    }
+
+    /**
+     * Returns true iff javax.xml.transform package is available on classpath.
+     */
+    public static boolean isXmlTransformAvailable() {
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.transform.Source"));
+        return aClass != null;
+    }
 }

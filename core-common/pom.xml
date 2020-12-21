@@ -126,7 +126,21 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jaxrs-ri/pom.xml. -->
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            jakarta.activation.*;version="!",
+                            jakarta.activation.*;version="!";resolution:=optional,
+                            javax.imageio;resolution:=optional,
+                            javax.imageio.spi;resolution:=optional,
+                            javax.imageio.stream;resolution:=optional,
+                            jakarta.xml.bind;version="!";resolution:=optional,
+                            jakarta.xml.bind.annotation;version="!";resolution:=optional,
+                            jakarta.xml.bind.annotation.adapters;version="!";resolution:=optional,
+                            javax.xml.namespace;resolution:=optional,
+                            javax.xml.parsers;resolution:=optional,
+                            javax.xml.transform;resolution:=optional,
+                            javax.xml.transform.dom;resolution:=optional,
+                            javax.xml.transform.sax;resolution:=optional,
+                            javax.xml.transform.stream;resolution:=optional,
+                            org.w3c.dom;resolution:=optional,
+                            org.xml.sax;resolution:=optional,
                             ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
