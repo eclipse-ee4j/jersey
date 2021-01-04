@@ -20,10 +20,12 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
+import org.glassfish.jersey.uri.UriComponent;
 
 /**
  * A content disposition header.
@@ -41,8 +43,15 @@ public class ContentDisposition {
     private Date modificationDate;
     private Date readDate;
     private long size;
+
+    private static final String CHARSET_GROUP_NAME = "charset";
+    private static final String CHARSET_REGEX = "(?<" + CHARSET_GROUP_NAME + ">UTF-8|ISO-8859-1)";
+    private static final String LANG_GROUP_NAME = "lang";
+    private static final String LANG_REGEX = "(?<" + LANG_GROUP_NAME + ">[a-z]{2,8}(-[a-z0-9-]+)?)?";
+    private static final String FILENAME_GROUP_NAME = "filename";
+    private static final String FILENAME_REGEX = "(?<" + FILENAME_GROUP_NAME + ">.+)";
     private static final Pattern FILENAME_EXT_VALUE_PATTERN =
-            Pattern.compile("(UTF-8|ISO-8859-1)'([a-z]{2,8}(-[a-z0-9]+)?)?'(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+",
+            Pattern.compile(CHARSET_REGEX + "'" + LANG_REGEX + "'" + FILENAME_REGEX,
                     Pattern.CASE_INSENSITIVE);
 
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
@@ -185,12 +194,7 @@ public class ContentDisposition {
     }
 
     private void createParameters() throws ParseException {
-        fileName = parameters.get("filename");
-
-        String fileNameExt = parameters.get("filename*");
-        if (fileNameExt != null && FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt).matches()) {
-            fileName = fileNameExt;
-        }
+        fileName = defineFileName();
 
         creationDate = createDate("creation-date");
 
@@ -199,6 +203,42 @@ public class ContentDisposition {
         readDate = createDate("read-date");
 
         size = createLong("size");
+    }
+
+    private String defineFileName() throws ParseException {
+        final String fileName = parameters.get("filename");
+
+        final String fileNameExt = parameters.get("filename*");
+        if (fileNameExt == null) {
+            return fileName;
+        }
+
+        final Matcher matcher = FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt);
+        if (matcher.matches()) {
+            if (isEncodedInUriFormat(fileNameExt)) {
+                return fileNameExt;
+            } else {
+                if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
+                    return new StringBuilder(matcher.group(CHARSET_GROUP_NAME))
+                            .append("'")
+                            .append(matcher.group(LANG_GROUP_NAME) == null ? "" : matcher.group(LANG_GROUP_NAME))
+                            .append("'")
+                            .append(encodeToUriFormat(matcher.group(FILENAME_GROUP_NAME)))
+                            .toString();
+                }
+                throw new ParseException(matcher.group(CHARSET_GROUP_NAME) + " charset is not supported", 0);
+            }
+        }
+
+        throw new ParseException(fileNameExt + " - unsupported filename parameter", 0);
+    }
+
+    private String encodeToUriFormat(final String parameter) {
+        return UriComponent.contextualEncode(parameter, UriComponent.Type.UNRESERVED);
+    }
+
+    private boolean isEncodedInUriFormat(final String parameter) {
+        return UriComponent.valid(parameter, UriComponent.Type.UNRESERVED);
     }
 
     private Date createDate(final String name) throws ParseException {

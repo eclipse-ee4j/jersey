@@ -24,9 +24,11 @@ import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
 
 /**
  * @author Imran@SmartITEngineering.Com
@@ -100,81 +102,115 @@ public class ContentDispositionTest {
     @Test
     public void testFileNameExt() {
         final String fileName = "test.file";
+        String fileNameExt;
+        String encodedFilename;
         try {
             //incorrect fileNameExt - does not contain charset''
-            String fileNameExt = "testExt.file";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            try {
+                fileNameExt = "testExt.file";
+                assertFileNameExt(fileName, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
 
-            //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
-            assertFileNameExt(fileNameExt, fileName, fileNameExt);
+            //correct fileNameExt, but unsupported charset (support only UTF-8)
+            try {
+                fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+                assertFileNameExt(fileNameExt, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
+
+            //correct fileNameExt with encoding
+            fileNameExt = "UTF-8'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+            encodedFilename = "UTF-8'language-us'abc%a1abc%a2%b1%21%23%24%26%2B.%5E_%60%7C~-";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
             //correct fileNameExt
             fileNameExt = "UTF-8'us'fileName.txt";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
             //incorrect fileNameExt - too long language tag
-            fileNameExt = "utf-8'languageTooLong'fileName.txt";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            try {
+                fileNameExt = "utf-8'languageTooLong'fileName.txt";
+                assertFileNameExt(fileName, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
 
             //correct fileNameExt
             fileNameExt = "utf-8''a";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
             //incorrect fileNameExt - language tag does not match to pattern
-            fileNameExt = "utf-8'lang-'a";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            try {
+                fileNameExt = "utf-8'lang-'a";
+                assertFileNameExt(fileName, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
+
+            //incorrect fileNameExt - ext-value contains an inappropriate symbol sequence (%z1). Jersey encodes it.
+            fileNameExt = "utf-8'language-us'a%z1";
+            encodedFilename = "utf-8'language-us'a%25z1";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
             //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'a";
+            fileNameExt = "UTF-8'language-us'abc%a1abc%a2%b1";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
+            //incorrect fileNameExt - unsupported charset
+            try {
+                fileNameExt = "Windows-1251'sr-Latn-RS'a";
+                assertFileNameExt(fileName, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
+
             //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'a%a1";
+            fileNameExt = "utf-8'sr-Latn-RS'a";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
-            //incorrect fileNameExt - ext-value contains an inappropriate symbol sequence (%z1)
-            fileNameExt = "ISO-8859-1'language-us'a%z1";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            //incorrect fileNameExt - ext-value contains % without two HEXDIG. Jersey encodes it.
+            fileNameExt = "utf-8'language-us'a%";
+            encodedFilename = "utf-8'language-us'a%25";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
             //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1";
-            assertFileNameExt(fileNameExt, fileName, fileNameExt);
-
-            //incorrect fileNameExt - ext-value contains % without two HEXDIG
-            fileNameExt = "ISO-8859-1'language-us'a%";
-            assertFileNameExt(fileName, fileName, fileNameExt);
-
-            //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
-            assertFileNameExt(fileNameExt, fileName, fileNameExt);
-
-            //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
-            assertFileNameExt(fileNameExt, fileName, fileNameExt);
-
-            //correct fileNameExt
-            fileNameExt = "iso-8859-1'language-us'abc.TXT";
+            fileNameExt = "UTF-8'language-us'abc.TXT";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
             //incorrect fileNameExt - no ext-value
-            fileNameExt = "ISO-8859-1'language-us'";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            try {
+                fileNameExt = "utf-8'language-us'";
+                assertFileNameExt(fileName, fileName, fileNameExt);
+                fail("ParseException was expected to be thrown.");
+            } catch (ParseException e) {
+                //expected
+            }
 
-            //incorrect fileNameExt - ext-value contains forbidden symbol (\)
-            fileNameExt = "ISO-8859-1'language-us'c:\\file.txt";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            //incorrect fileNameExt - ext-value contains forbidden symbol (\). Jersey encodes it.
+            fileNameExt = "utf-8'language-us'c:\\\\file.txt";
+            encodedFilename = "utf-8'language-us'c%3A%5Cfile.txt";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
-            //incorrect fileNameExt - ext-value contains forbidden symbol (/)
-            fileNameExt = "ISO-8859-1'language-us'home/file.txt";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            //incorrect fileNameExt - ext-value contains forbidden symbol (/). Jersey encodes it.
+            fileNameExt = "utf-8'language-us'home/file.txt";
+            encodedFilename = "utf-8'language-us'home%2Ffile.txt";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
-            //incorrect fileNameExt - ext-value contains forbidden symbol (李)
-            fileNameExt = "ISO-8859-1'language-us'李.txt";
-            assertFileNameExt(fileName, fileName, fileNameExt);
+            //incorrect fileNameExt - ext-value contains forbidden symbol (李). Jersey encodes it.
+            fileNameExt = "utf-8'language-us'李.txt";
+            encodedFilename = "utf-8'language-us'%E6%9D%8E.txt";
+            assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
             //correct fileNameExt
-            fileNameExt = "ISO-8859-1'language-us'FILEname.tXt";
+            fileNameExt = "utf-8'language-us'FILEname.tXt";
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
         } catch (ParseException ex) {
