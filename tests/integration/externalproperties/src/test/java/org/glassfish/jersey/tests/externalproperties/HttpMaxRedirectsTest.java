@@ -53,24 +53,9 @@ public class HttpMaxRedirectsTest extends JerseyTest {
     protected Application configure() {
         return new ResourceConfig(RedirectResource.class);
     }
-/*
-    @Test
-    public void testHttpMaxRedirect() {
-        System.setProperty(ExternalProperties.HTTP_MAX_REDIRECTS, "4");
 
-        Response response = target("resource")
-                .request()
-                .get();
-
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("You have been redirected 3 times !", response.readEntity(String.class));
-
-        response.close();
-    }
-*/
     @Test
     public void testFailRedirect() {
-
         System.setProperty(ExternalProperties.HTTP_MAX_REDIRECTS, "1");
 
         try {
