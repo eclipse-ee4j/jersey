@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,7 @@
                 Jersey Logging supports the logging request and response via internal client and server filters, which are
                 configured and registered by &jersey.logging.LoggingFeature; 's properties. &lit.jersey.logging.LoggingFeature;
                 has been introduced in Jersey 2.23 version and deprecates an older &lit.jersey.logging.LoggingFilter;.
-                Jersey of version 3.x fully support all logging features of Jersey's 2.x.
+                Jersey of version 3.x fully support all logging features of Jersey 2.x.
             </para>
             <para>
                 &lit.jersey.logging.LoggingFeature; might be discovered by
