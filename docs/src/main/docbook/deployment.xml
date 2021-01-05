@@ -563,6 +563,16 @@ Channel server = NettyHttpContainerProvider.createServer(baseUri, resourceConfig
                 </example>
             </para>
 
+            <important>
+                <para>
+                    Since pure Servlet 2.x way deployment does not provide a way how to programmatically read the filter
+                    mappings in order to make application with filter work correctly, the context path of the app needs
+                    to be defined using init parameter <literal>jersey.config.servlet.filter.contextPath</literal> for
+                    <literal>jersey-container-servlet-core</literal>.
+                    Or <literal>jersey-container-servlet</literal> shall be used.
+                </para>
+            </important>
+
             <para>
                 The content of the <literal>&lt;init-param&gt;</literal> element will vary depending on the way you decide to
                 configure Jersey resources.
@@ -916,7 +926,7 @@ public class MyApplication extends ResourceConfig {
 
             <para>
                 Jersey uses its own <literal>&jersey.servlet.ServletContainer;</literal> implementation of Servlet and
-                Servlet Filter API to integrate with Servlet containers. As any Jakartified JAX-RS runtime (JAX-RS spec 3.0.0),
+                Servlet Filter API to integrate with Servlet containers. As any Jakartified JAX-RS runtime (JAX-RS spec 3.0),
                 Jersey provides support for Servlet containers that support Servlet specification version 5.0 or higher
                 is required.
             </para>

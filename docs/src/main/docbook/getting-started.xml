@@ -433,40 +433,38 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     [INFO] WEB-INF/web.xml already added, skipping
     [INFO]
     [INFO] --- maven-dependency-plugin:2.8:copy-dependencies (copy-dependencies) @ simple-heroku-webapp ---
-    [INFO] Copying jakarta.validation-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.validation-api-3.0.0.jar
-    [INFO] Copying jersey-client-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-client-3.0.0-RC2.jar
-    [INFO] Copying jetty-util-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-util-9.0.6.v20130930.jar
-    [INFO] Copying javassist-3.25.0-GA.jar to .../simple-heroku-webapp/target/dependency/javassist-3.25.0-GA.jar
-    [INFO] Copying jersey-hk2-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-hk2-3.0.0-RC2.jar
-    [INFO] Copying jersey-media-jaxb-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-media-jaxb-3.0.0-RC2.jar
-    [INFO] Copying hk2-utils-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-utils-3.0.0-M2.jar
-    [INFO] Copying jersey-common-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-common-3.0.0-RC2.jar
-    [INFO] Copying jersey-container-servlet-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-3.0.0-RC2.jar
-    [INFO] Copying jakarta.annotation-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.annotation-api-2.0.0.jar
-    [INFO] Copying jetty-webapp-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-webapp-9.0.6.v20130930.jar
-    [INFO] Copying jakarta.activation-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.activation-2.0.0.jar
-    [INFO] Copying osgi-resource-locator-1.0.3.jar to .../simple-heroku-webapp/target/dependency/osgi-resource-locator-1.0.3.jar
-    [INFO] Copying jetty-servlet-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-servlet-9.0.6.v20130930.jar
-    [INFO] Copying jetty-xml-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-xml-9.0.6.v20130930.jar
-    [INFO] Copying jersey-container-servlet-core-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-3.0.0-RC2.jar
-    [INFO] Copying jetty-io-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-io-9.0.6.v20130930.jar
-    [INFO] Copying jakarta.ws.rs-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-3.0.0.jar
-    [INFO] Copying jakarta.activation-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.activation-api-2.0.0.jar
-    [INFO] Copying jakarta.xml.bind-api-3.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.xml.bind-api-3.0.0.jar
-    [INFO] Copying jetty-security-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-security-9.0.6.v20130930.jar
-    [INFO] Copying jetty-server-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-server-9.0.6.v20130930.jar
-    [INFO] Copying javax.servlet-3.0.0.v201112011016.jar to .../simple-heroku-webapp/target/dependency/javax.servlet-3.0.0.v201112011016.jar
-    [INFO] Copying hk2-api-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-api-3.0.0-M2.jar
-    [INFO] Copying jersey-server-3.0.0-RC2.jar to .../simple-heroku-webapp/target/dependency/jersey-server-3.0.0-RC2.jar
-    [INFO] Copying hk2-locator-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/hk2-locator-3.0.0-M2.jar
-    [INFO] Copying jetty-http-9.0.6.v20130930.jar to .../simple-heroku-webapp/target/dependency/jetty-http-9.0.6.v20130930.jar
-    [INFO] Copying aopalliance-repackaged-3.0.0-M2.jar to .../simple-heroku-webapp/target/dependency/aopalliance-repackaged-3.0.0-M2.jar
-    [INFO] Copying jakarta.inject-api-2.0.0.jar to .../simple-heroku-webapp/target/dependency/jakarta.inject-api-2.0.0.jar
+    [INFO] Copying jakarta.validation-api-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jakarta.validation-api-3.0.0.jar
+    [INFO] Copying javassist-3.25.0-GA.jar to ../simple-heroku-webapp/target/dependency/javassist-3.25.0-GA.jar
+    [INFO] Copying jersey-client-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-client-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jersey-hk2-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-hk2-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jetty-util-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-util-11.0.0.beta3.jar
+    [INFO] Copying jakarta.annotation-api-2.0.0.jar to ../simple-heroku-webapp/target/dependency/jakarta.annotation-api-2.0.0.jar
+    [INFO] Copying jersey-common-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-common-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jersey-container-servlet-core-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-container-servlet-core-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jakarta.activation-2.0.0.jar to ../simple-heroku-webapp/target/dependency/jakarta.activation-2.0.0.jar
+    [INFO] Copying jetty-webapp-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-webapp-11.0.0.beta3.jar
+    [INFO] Copying osgi-resource-locator-1.0.3.jar to ../simple-heroku-webapp/target/dependency/osgi-resource-locator-1.0.3.jar
+    [INFO] Copying jersey-container-servlet-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-container-servlet-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jetty-io-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-io-11.0.0.beta3.jar
+    [INFO] Copying slf4j-api-2.0.0-alpha1.jar to ../simple-heroku-webapp/target/dependency/slf4j-api-2.0.0-alpha1.jar
+    [INFO] Copying jetty-server-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-server-11.0.0.beta3.jar
+    [INFO] Copying jakarta.ws.rs-api-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jakarta.ws.rs-api-3.0.0.jar
+    [INFO] Copying jetty-servlet-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-servlet-11.0.0.beta3.jar
+    [INFO] Copying hk2-locator-3.0.0-RC1.jar to ../simple-heroku-webapp/target/dependency/hk2-locator-3.0.0-RC1.jar
+    [INFO] Copying hk2-utils-3.0.0-RC1.jar to ../simple-heroku-webapp/target/dependency/hk2-utils-3.0.0-RC1.jar
+    [INFO] Copying jetty-xml-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-xml-11.0.0.beta3.jar
+    [INFO] Copying hk2-api-3.0.0-RC1.jar to ../simple-heroku-webapp/target/dependency/hk2-api-3.0.0-RC1.jar
+    [INFO] Copying jetty-security-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-security-11.0.0.beta3.jar
+    [INFO] Copying jetty-http-11.0.0.beta3.jar to ../simple-heroku-webapp/target/dependency/jetty-http-11.0.0.beta3.jar
+    [INFO] Copying jersey-server-3.0.0.jar to ../simple-heroku-webapp/target/dependency/jersey-server-3.1.0-SNAPSHOT.jar
+    [INFO] Copying jakarta.inject-api-2.0.0.jar to ../simple-heroku-webapp/target/dependency/jakarta.inject-api-2.0.0.jar
+    [INFO] Copying jetty-jakarta-servlet-api-5.0.1.jar to ../simple-heroku-webapp/target/dependency/jetty-jakarta-servlet-api-5.0.1.jar
+    [INFO] Copying aopalliance-repackaged-3.0.0-RC1.jar to ../simple-heroku-webapp/target/dependency/aopalliance-repackaged-3.0.0-RC1.jar
     [INFO] ------------------------------------------------------------------------
     [INFO] BUILD SUCCESS
     [INFO] ------------------------------------------------------------------------
     [INFO] Total time:  12.567 s
-    [INFO] Finished at: 2020-11-25T09:31:26+01:00
+    [INFO] Finished at: 2021-01-05T15:16:05+01:00
     [INFO] ------------------------------------------------------------------------</screen>
 
             Now that you know everything went as expected you are ready to:
