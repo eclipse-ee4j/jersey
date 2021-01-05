@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,24 @@ public final class ExternalProperties {
      * without going through the proxy.
      */
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+
+    /**
+     * The name of the property that contains the name of the class capable
+     * of creating new {@code JAXBContext} objects.
+     */
+    public static final String JAXB_CONTEXT_FACTORY = "javax.xml.bind.JAXBContextFactory";
+
+    /**
+     * The name of the property that contains the name of the class capable
+     * of creating new {@code JAXBContext} objects.
+     */
+    public static final String CONTEXT_FACTORY = "javax.xml.bind.context.factory";
+
+    /**
+     * The name of the property that contains the name of the class capable
+     * of creating new {@code JAXBContext} objects.
+     */
+    public static final String JAXB_CONTEXT = "javax.xml.bind.JAXBContext";
 
     /**
      * Prevent instantiation.
