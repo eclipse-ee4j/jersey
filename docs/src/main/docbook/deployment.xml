@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -509,6 +509,156 @@ Channel server = NettyHttpContainerProvider.createServer(baseUri, resourceConfig
             In a Servlet container, JAX-RS defines multiple deployment options depending on the Servlet API version supported by
             the Servlet container. Following sections describe these options in detail.
         </para>
+
+        <section xml:id="deployment.servlet.2">
+            <title>Servlet 2.x way</title>
+            <para>
+                Jersey integrates with any Servlet containers supporting at least Servlet 2.5 specification. Running on a
+                Servlet container that supports Servlet API 5.0 it's required to adjust this approach to jakartified Servlet API.
+                This includes Jakarta EE 9 namespaces which is applied since the 5.x Servlet API version.
+                In this section we will focus on the basic deployment models available in any Servlet 2.5 container.
+            </para>
+            <para>
+                Using Servlet 2.x way, you have to explicitly declare the Jersey container Servlet in your Web application's
+                <literal>web.xml</literal> deployment descriptor file.
+
+                <example>
+                    <title>Hooking up Jersey as a Servlet</title>
+                    <programlisting language="xml" linenumbering="numbered">&lt;web-app&gt;
+                        &lt;servlet&gt;
+                        &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+                        &lt;servlet-class&gt;org.glassfish.jersey.servlet.ServletContainer&lt;/servlet-class&gt;
+                        &lt;init-param&gt;
+                        ...
+                        &lt;/init-param&gt;
+                        &lt;/servlet&gt;
+                        ...
+                        &lt;servlet-mapping&gt;
+                        &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+                        &lt;url-pattern&gt;/myApp/*&lt;/url-pattern&gt;
+                        &lt;/servlet-mapping&gt;
+                        ...
+                        &lt;/web-app&gt;</programlisting>
+                </example>
+
+                Alternatively, you can register Jersey container as a <emphasis>filter</emphasis>:
+
+                <example>
+                    <title>Hooking up Jersey as a Servlet Filter</title>
+                    <programlisting language="xml" linenumbering="numbered">&lt;web-app&gt;
+                        &lt;filter&gt;
+                        &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+                        &lt;filter-class&gt;org.glassfish.jersey.servlet.ServletContainer&lt;/filter-class&gt;
+                        &lt;init-param&gt;
+                        ...
+                        &lt;/init-param&gt;
+                        &lt;/filter&gt;
+                        ...
+                        &lt;filter-mapping&gt;
+                        &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+                        &lt;url-pattern&gt;/myApp/*&lt;/url-pattern&gt;
+                        &lt;/filter-mapping&gt;
+                        ...
+                        &lt;/web-app&gt;</programlisting>
+                </example>
+            </para>
+
+            <para>
+                The content of the <literal>&lt;init-param&gt;</literal> element will vary depending on the way you decide to
+                configure Jersey resources.
+            </para>
+
+            <section xml:id="deployment.servlet.2.application">
+                <title>Custom &lit.jaxrs.core.Application; subclass</title>
+                <para>
+                    If you extend the &jaxrs.core.Application; class to provide the list of relevant root resource
+                    classes (<literal>getClasses()</literal>) and singletons (<literal>getSingletons()</literal>),
+                    i.e. your JAX-RS application model, you then need to register it in your web application
+                    <literal>web.xml</literal> deployment descriptor using a Servlet or Servlet filter initialization
+                    parameter with a name of  <literal>jakarta.ws.rs.Application</literal> [<emphasis>sic</emphasis>] as follows:
+
+                    <example>
+                        <title>
+                            Configuring Jersey container Servlet or Filter to use custom &lit.jaxrs.core.Application; subclass
+                        </title>
+                        <programlisting language="xml" linenumbering="numbered">&lt;init-param&gt;
+                            &lt;param-name&gt;jakarta.ws.rs.Application&lt;/param-name&gt;
+                            &lt;param-value&gt;org.foo.MyApplication&lt;/param-value&gt;
+                            &lt;/init-param&gt;</programlisting>
+                    </example>
+
+                    Jersey will consider all the classes returned by <literal>getClasses()</literal> and
+                    <literal>getSingletons()</literal> methods of your &lit.jaxrs.core.Application; implementation.
+                </para>
+
+                <note>
+                    <para>
+                        The name of the configuration property as defined by JAX-RS specification is indeed
+                        <literal>jakarta.ws.rs.Application</literal> and not <literal>jakarta.ws.rs.core.Application</literal>
+                        as one might expect.
+                    </para>
+                </note>
+            </section>
+
+            <section xml:id="deployment.servlet.2.package">
+                <title>Jersey package scanning</title>
+                <para>
+                    If there is no configuration properties to be set and deployed application consists only from resources
+                    and providers stored in particular packages, you can instruct Jersey to scan these packages
+                    and register any found resources and providers automatically:
+
+                    <example>
+                        <title>Configuring Jersey container Servlet or Filter to use package scanning</title>
+                        <programlisting language="xml" linenumbering="numbered">&lt;init-param&gt;
+                            &lt;param-name&gt;jersey.config.server.provider.packages&lt;/param-name&gt;
+                            &lt;param-value&gt;
+                            org.foo.myresources,org.bar.otherresources
+                            &lt;/param-value&gt;
+                            &lt;/init-param&gt;
+                            &lt;init-param&gt;
+                            &lt;param-name&gt;jersey.config.server.provider.scanning.recursive&lt;/param-name&gt;
+                            &lt;param-value&gt;false&lt;/param-value&gt;
+                            &lt;/init-param&gt;</programlisting>
+                    </example>
+
+                    Jersey will automatically discover the resources and providers in the selected packages.
+                    You can also decide whether Jersey should recursively scan also sub-packages by setting the
+                    <literal>jersey.config.server.provider.scanning.recursive</literal> property.
+                    The default value is <literal>true</literal>, i.e. the recursive scanning of sub-packages is enabled.
+                </para>
+            </section>
+
+            <section xml:id="deployment.servlet.2.classes">
+                <title>Selecting concrete resource and provider classes</title>
+
+                <para>
+                    While the above-mentioned package scanning is useful esp. for development and testing, you may want to
+                    have a little bit more control when it comes to production deployment in terms of being able to enumerate
+                    specific resource and provider classes. In Jersey it is possible to achieve this even without a need to
+                    implement a custom &lit.jaxrs.core.Application; subclass. The specific resource and provider
+                    fully-qualified class names can be provided in a comma-separated value of
+                    <literal>jersey.config.server.provider.classnames</literal> initialization parameter.
+                </para>
+                <example>
+                    <title>Configuring Jersey container Servlet or Filter to use a list of classes</title>
+                    <programlisting language="xml" linenumbering="numbered">&lt;init-param&gt;
+                        &lt;param-name&gt;jersey.config.server.provider.classnames&lt;/param-name&gt;
+                        &lt;param-value&gt;
+                        org.foo.myresources.MyDogResource,
+                        org.bar.otherresources.MyCatResource
+                        &lt;/param-value&gt;
+                        &lt;/init-param&gt;</programlisting>
+                </example>
+            </section>
+
+            <note>
+                <para>
+                    All of the techniques that have been described in this section also apply to Servlet containers that
+                    support Servlet API 5.0 with jakartified adjustments. Newer Servlet specifications only give you additional
+                    features, deployment options and more flexibility.
+                </para>
+            </note>
+        </section>
 
         <section xml:id="deployment.servlet.5">
             <title>Servlet 5.x Container</title>

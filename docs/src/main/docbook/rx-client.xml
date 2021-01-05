@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@
     <warning>
         <para>
             Jersey 2.26 (JAX-RS 2.1 implementation) dropped Jersey-proprietary API in favor of JAX-RS 2.1 Reactive Client API.
-            for Jersey 3.x this approach is still valid
+            For Jersey 3.x this approach is still valid.
         </para>
     </warning>
 

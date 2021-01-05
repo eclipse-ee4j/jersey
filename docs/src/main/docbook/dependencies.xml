@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,7 +66,7 @@
             An application that uses Jersey and depends on Jersey modules is in turn required to also include a set
             of 3rd party modules that Jersey modules depend on. Jersey is designed as a pluggable component
             architecture and different applications can therefore require different sets of Jersey modules. This also means that
-            set of external Jersey dependencies required to be included in the application dependencies may vary in each
+            a set of external Jersey dependencies required to be included in the application dependencies may vary in each
             application based on the Jersey modules that are being used by the application.
         </para>
 
