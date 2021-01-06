@@ -77,7 +77,12 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.jackson.*</Export-Package>
-                        <Import-Package>${jakarta.annotation.osgi.version},*</Import-Package>
+                        <Import-Package>
+                            ${jakarta.annotation.osgi.version},
+                            <!-- compatibility with GF 5.1 -->
+                            <!-- com.fasterxml.jackson.*;version="[2.9,3)", -->
+                            *
+                        </Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>
