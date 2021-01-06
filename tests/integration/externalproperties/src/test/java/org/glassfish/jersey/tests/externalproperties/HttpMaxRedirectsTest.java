@@ -72,8 +72,6 @@ public class HttpMaxRedirectsTest extends JerseyTest {
 
     @Test
     public void testFailRedirect() {
-        System.setProperty(ExternalProperties.HTTP_MAX_REDIRECTS, "1");
-
         try {
             target("resource").request().get();
             Assert.fail("Should have thrown ProcessingException"
