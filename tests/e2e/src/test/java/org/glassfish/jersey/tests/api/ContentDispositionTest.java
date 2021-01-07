@@ -114,19 +114,13 @@ public class ContentDispositionTest {
                 //expected
             }
 
-            //correct fileNameExt, but unsupported charset (support only UTF-8)
-            try {
-                fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
-                assertFileNameExt(fileNameExt, fileName, fileNameExt);
-                fail("ParseException was expected to be thrown.");
-            } catch (ParseException e) {
-                //expected
-            }
+            //correct fileNameExt
+            fileNameExt = "ISO-8859-1'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
+            assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
-            //correct fileNameExt with encoding
+            //correct fileNameExt
             fileNameExt = "UTF-8'language-us'abc%a1abc%a2%b1!#$&+.^_`|~-";
-            encodedFilename = "UTF-8'language-us'abc%a1abc%a2%b1%21%23%24%26%2B.%5E_%60%7C~-";
-            assertFileNameExt(encodedFilename, fileName, fileNameExt);
+            assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
             //correct fileNameExt
             fileNameExt = "UTF-8'us'fileName.txt";
@@ -159,18 +153,27 @@ public class ContentDispositionTest {
             encodedFilename = "utf-8'language-us'a%25z1";
             assertFileNameExt(encodedFilename, fileName, fileNameExt);
 
-            //correct fileNameExt
-            fileNameExt = "UTF-8'language-us'abc%a1abc%a2%b1";
-            assertFileNameExt(fileNameExt, fileName, fileNameExt);
-
-            //incorrect fileNameExt - unsupported charset
+            //Incorrect fileNameExt - ext-value contains an inappropriate symbol sequence (%z1).
+            //Jersey won't encodes it because of the unsupported charset.
             try {
-                fileNameExt = "Windows-1251'sr-Latn-RS'a";
+                fileNameExt = "windows-1251'ru-ru'a%z1";
                 assertFileNameExt(fileName, fileName, fileNameExt);
                 fail("ParseException was expected to be thrown.");
             } catch (ParseException e) {
                 //expected
             }
+
+            //correct fileNameExt
+            fileNameExt = "UTF-8'language-us'abc%a1abc%a2%b1";
+            assertFileNameExt(fileNameExt, fileName, fileNameExt);
+
+            //correct fileNameExt - encoded with other charset
+            fileNameExt = "UTF-16'language-us'abc%a1abc%a2%b1";
+            assertFileNameExt(fileNameExt, fileName, fileNameExt);
+
+            //correct fileNameExt - unsupported charset, but fileName contains only valid characters
+            fileNameExt = "Windows-1251'sr-Latn-RS'abc";
+            assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
             //correct fileNameExt
             fileNameExt = "utf-8'sr-Latn-RS'a";

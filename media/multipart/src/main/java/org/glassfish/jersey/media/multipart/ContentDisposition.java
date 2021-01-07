@@ -45,7 +45,7 @@ public class ContentDisposition {
     private long size;
 
     private static final String CHARSET_GROUP_NAME = "charset";
-    private static final String CHARSET_REGEX = "(?<" + CHARSET_GROUP_NAME + ">UTF-8|ISO-8859-1)";
+    private static final String CHARSET_REGEX = "(?<" + CHARSET_GROUP_NAME + ">[^']+)";
     private static final String LANG_GROUP_NAME = "lang";
     private static final String LANG_REGEX = "(?<" + LANG_GROUP_NAME + ">[a-z]{2,8}(-[a-z0-9-]+)?)?";
     private static final String FILENAME_GROUP_NAME = "filename";
@@ -53,6 +53,8 @@ public class ContentDisposition {
     private static final Pattern FILENAME_EXT_VALUE_PATTERN =
             Pattern.compile(CHARSET_REGEX + "'" + LANG_REGEX + "'" + FILENAME_REGEX,
                     Pattern.CASE_INSENSITIVE);
+    private static final Pattern FILENAME_VALUE_CHARS_PATTERN =
+            Pattern.compile("(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+", Pattern.CASE_INSENSITIVE);
 
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
@@ -206,26 +208,31 @@ public class ContentDisposition {
     }
 
     private String defineFileName() throws ParseException {
-        final String fileName = parameters.get("filename");
 
+        final String fileName = parameters.get("filename");
         final String fileNameExt = parameters.get("filename*");
+
         if (fileNameExt == null) {
             return fileName;
         }
 
         final Matcher matcher = FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt);
+
         if (matcher.matches()) {
-            if (isEncodedInUriFormat(fileNameExt)) {
+
+            final String fileNameValueChars = matcher.group(FILENAME_GROUP_NAME);
+            if (isFilenameValueCharsEncoded(fileNameValueChars)) {
                 return fileNameExt;
+            }
+
+            if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
+                return new StringBuilder(matcher.group(CHARSET_GROUP_NAME))
+                        .append("'")
+                        .append(matcher.group(LANG_GROUP_NAME) == null ? "" : matcher.group(LANG_GROUP_NAME))
+                        .append("'")
+                        .append(encodeToUriFormat(fileNameValueChars))
+                        .toString();
             } else {
-                if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
-                    return new StringBuilder(matcher.group(CHARSET_GROUP_NAME))
-                            .append("'")
-                            .append(matcher.group(LANG_GROUP_NAME) == null ? "" : matcher.group(LANG_GROUP_NAME))
-                            .append("'")
-                            .append(encodeToUriFormat(matcher.group(FILENAME_GROUP_NAME)))
-                            .toString();
-                }
                 throw new ParseException(matcher.group(CHARSET_GROUP_NAME) + " charset is not supported", 0);
             }
         }
@@ -237,8 +244,8 @@ public class ContentDisposition {
         return UriComponent.contextualEncode(parameter, UriComponent.Type.UNRESERVED);
     }
 
-    private boolean isEncodedInUriFormat(final String parameter) {
-        return UriComponent.valid(parameter, UriComponent.Type.UNRESERVED);
+    private boolean isFilenameValueCharsEncoded(final String parameter) {
+        return FILENAME_VALUE_CHARS_PATTERN.matcher(parameter).matches();
     }
 
     private Date createDate(final String name) throws ParseException {
