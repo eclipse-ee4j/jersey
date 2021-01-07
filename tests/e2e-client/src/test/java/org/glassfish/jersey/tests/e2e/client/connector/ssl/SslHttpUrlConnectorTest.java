@@ -17,10 +17,18 @@
 package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -77,6 +85,61 @@ public class SslHttpUrlConnectorTest extends AbstractConnectorServerTest {
         final Response response = client.target(Server.BASE_URI).path("/").request().get();
         assertEquals(200, response.getStatus());
         assertTrue(socketFactory.isVisited());
+    }
+
+    /**
+     * Test for https://github.com/jersey/jersey/issues/3293
+     *
+     * @author Kevin Conaway
+     */
+    @Test
+    public void testConcurrentRequestsWithCustomSSLContext() throws Exception {
+        final SSLContext sslContext = getSslContext();
+
+        final Client client = ClientBuilder.newBuilder()
+            .sslContext(sslContext)
+            .register(HttpAuthenticationFeature.basic("user", "password"))
+            .register(LoggingFeature.class)
+            .build();
+
+        int numThreads = 5;
+        CyclicBarrier barrier = new CyclicBarrier(numThreads);
+        ExecutorService service = Executors.newFixedThreadPool(numThreads);
+        List<Exception> exceptions = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < numThreads; i++) {
+            service.submit(() -> {
+                try {
+                    barrier.await(1, TimeUnit.MINUTES);
+                    for (int call = 0; call < 10; call++) {
+                        final Response response = client.target(Server.BASE_URI).path("/").request().get();
+                        assertEquals(200, response.getStatus());
+                    }
+                } catch (Exception ex) {
+                    exceptions.add(ex);
+                }
+            });
+        }
+
+        service.shutdown();
+
+        assertTrue(
+            service.awaitTermination(1, TimeUnit.MINUTES)
+        );
+
+        assertTrue(
+            toString(exceptions),
+            exceptions.isEmpty()
+        );
+    }
+
+    private String toString(List<Exception> exceptions) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+
+        exceptions.forEach(e -> e.printStackTrace(printWriter));
+
+        return writer.toString();
     }
 
     public static class CustomSSLSocketFactory extends SSLSocketFactory {
