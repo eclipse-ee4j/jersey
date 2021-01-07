@@ -58,7 +58,7 @@
             </note>
 
             This module depends directly on
-            <link xlink:href="http://www.hibernate.org/subprojects/validator.html">Hibernate Validator</link>
+            <link xlink:href="http://hibernate.org/validator/">Hibernate Validator</link>
             which provides a most commonly used implementation of the Bean Validation API spec.
         </para>
         <para>
@@ -242,9 +242,7 @@ public class ValidationConfigurationContextResolver implements ContextResolver&l
         .register( ... );</programlisting>
 
                 <note>
-                    <para>This code snippet has been taken from
-                        <link xlink:href='&jersey.github.examples.uri;/bean-validation-webapp'>Bean Validation example</link>.
-                    </para>
+                    <para>This code snippet is based on CustomConfigValidationTest (from Jersey's source codes)</para>
                 </note>
             </example>
         </para>
@@ -277,7 +275,7 @@ public class ValidationConfigurationContextResolver implements ContextResolver&l
             </para>
             <para>
                 The Bean Validation specification supports the use of <emphasis>constraint annotations</emphasis>
-                as a way of declaratively validating beans, method parameters and method returned values. For example, consider
+                as a way of declarative validating beans, method parameters and method returned values. For example, consider
                 resource class from <xref linkend="bv.example.constraints"/> augmented with constraint annotations.
 
                 <example xml:id="bv.example.constraints">
@@ -723,7 +721,7 @@ public final class ValidationError {
 Content-Length: 114
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(11.0.0.beta3)
 
 Contact with given ID does not exist. (path = ContactCardResource.getContact.&lt;return value&gt;, invalidValue = null)</screen>
                 </example>
@@ -734,7 +732,7 @@ Contact with given ID does not exist. (path = ContactCardResource.getContact.&lt
 Content-Length: ...
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(11.0.0.beta3)
 
 <![CDATA[<div class="validation-errors">
     <div class="validation-error">
@@ -760,7 +758,7 @@ Server: Jetty(6.1.24)
 Content-Length: ...
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(11.0.0.beta3)
 
 <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <validationErrors>
@@ -778,7 +776,7 @@ Server: Jetty(6.1.24)
 Content-Length: 174
 Content-Type: application/json
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(11.0.0.beta3)
 
 [ {
    "message" : "Contact with given ID does not exist.",
@@ -793,7 +791,6 @@ Server: Jetty(6.1.24)
     <section>
         <title>Example</title>
 
-        <para>To see a complete working example of using Bean Validation (JSR-349) with Jersey refer to the
-            <link xlink:href='&jersey.github.examples.uri;/bean-validation-webapp'>Bean Validation Example</link>.</para>
+        <para>Examples are being processed to comply with Jakarta EE standards.</para>
     </section>
 </chapter>

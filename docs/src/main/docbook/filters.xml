@@ -257,7 +257,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
                 To summarize the workflow, for any client request invoked from the client API
                 the client request filters (&jaxrs.client.ClientRequestFilter;)
                 are executed that could manipulate the request.
-                If not aborted, the outcoming request is then physically sent over to the server side
+                If not aborted, the outgoing request is then physically sent over to the server side
                 and once a response is received back from the server the client response
                 filters (&jaxrs.client.ClientResponseFilter;)
                 are executed that might again manipulate the returned response.
@@ -308,7 +308,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
             </example>
         </para>
         <para>
-            The interceptor gets a output stream from the &jaxrs.WriterInterceptorContext; and sets
+            The interceptor gets an output stream from the &jaxrs.WriterInterceptorContext; and sets
             a new one which is a GZIP wrapper of the original output stream. After all interceptors are executed the
             output stream lastly set to the &lit.jaxrs.WriterInterceptorContext; will be used for serialization of the entity. In the
             example above the entity bytes will be written to the GZIPOutputStream which will compress the stream data
@@ -320,7 +320,8 @@ public class PreMatchingFilter implements ContainerRequestFilter {
             The interceptors wrap the streams and they itself work as wrappers. This means that each interceptor is a wrapper
             of another interceptor and it is responsibility of each interceptor implementation to call the wrapped interceptor.
             This is achieved by calling the <literal>proceed()</literal> method on the &lit.jaxrs.WriterInterceptorContext;.
-            This method will call the next registered interceptor in the chain, so effectivelly this will call all remaining registered interceptors. Calling <literal>proceed()</literal> from the last
+            This method will call the next registered interceptor in the chain, so effectively this will call all remaining
+            registered interceptors. Calling <literal>proceed()</literal> from the last
             interceptor in the chain will call the appropriate message body reader. Therefore every interceptor must call the
             <literal>proceed()</literal> method otherwise the entity would not be written. The wrapping principle is reflected
             also in the method name, aroundWriteTo, which says that the method is wrapping the writing of the entity.
@@ -389,11 +390,12 @@ public class PreMatchingFilter implements ContainerRequestFilter {
                 <listitem>Client request invoked: The POST request with attached entity is built on the client and invoked.</listitem>
                 <listitem>ClientRequestFilters: client request filters are executed on the client and they
                     manipulate the request headers.</listitem>
-                <listitem>Client &lit.jaxrs.WriterInterceptor;: As the request contains an entity, writer interceptor registered on the client is executed before
+                <listitem>Client &lit.jaxrs.WriterInterceptor;: As the request contains an entity, writer interceptor registered
+                    on the client is executed before
                     a MessageBodyWriter is executed. It wraps the entity output stream with the GZipOutputStream.</listitem>
                 <listitem>Client MessageBodyWriter: message body writer is executed on the client which serializes the entity
                     into the new GZipOutput stream. This stream zips the data and sends it to the "wire".</listitem>
-                <listitem>Server: server receives a request. Data of entity is compressed which means that pure read from
+                <listitem>Server: server receives a request. Data of the entity is compressed which means that pure read from
                     the entity input stream would return compressed data.</listitem>
                 <listitem>Server pre-matching ContainerRequestFilters: ContainerRequestFilters are executed that can manipulate
                     resource method matching process.</listitem>

@@ -85,7 +85,7 @@ public class AsyncResource {
             when the method returns. Instead, the injected &lit.jaxrs.container.AsyncResponse; instance (that represents the
             suspended client request connection) will be used to explicitly send the response back to the client using some other
             thread. In other words, Jersey runtime knows that when the <literal>asyncGet</literal> method completes, the response
-            to the client may not be ready yet and the processing must be suspended and wait to be explictly resumed with a
+            to the client may not be ready yet and the processing must be suspended and wait to be explicitly resumed with a
             response once it becomes available. Note that the method <literal>asyncGet</literal> returns <literal>void</literal>
             in our example. This is perfectly valid in case of an asynchronous JAX-RS resource method, even for a &jaxrs.GET;
             method, as the response is never returned directly from the resource method as its return value. Instead, the response
@@ -250,7 +250,7 @@ public class AsyncResource {
                 In Jersey you can use &jersey.server.ChunkedOutput; to send response to a client in chunks. Chunks are strictly
                 defined pieces of a response body can be marshalled as a separate entities using Jersey/JAX-RS
                 &jaxrs.ext.MessageBodyWriter; providers. A chunk can be String, Long or JAXB bean serialized to XML or JSON or
-                any other dacustom type for which a &lit.jaxrs.ext.MessageBodyWriter; is available.
+                any other defined custom type for which a &lit.jaxrs.ext.MessageBodyWriter; is available.
             </para>
             <para>
                 The resource method
@@ -484,7 +484,7 @@ while ((chunk = chunkedInput.read()) != null) {
                 &lit.jersey.client.ChunkedInput; does not know how to distinguish chunks in the byte stream unless being told by
                 the developer. In order to define custom chunks boundaries,
                 the &lit.jersey.client.ChunkedInput; offers possibility to register a &jersey.client.ChunkParser; which
-                reads chunks from the input stream and separates them. Jersey provides several chunk parser implementation and
+                reads chunks from the input stream and separates them. Jersey provides several chunk parser implementations and
                 you can implement your own parser to separate your chunks if you need. In our example above the default parser
                 provided by Jersey is used that separates chunks based on presence of a <literal>\r\n</literal> delimiting
                 character sequence.

@@ -470,7 +470,7 @@ public @interface ProjectDetailedView {
 
             <itemizedlist>
                 <listitem>
-                    <para>Out-bound client request or server response programmatically created with entity-filtering annotations
+                    <para>Outbound client request or server response programmatically created with entity-filtering annotations
                         that identify the scopes to be applied (available on both, client and server)</para>
                 </listitem>
                 <listitem>
@@ -580,7 +580,7 @@ public class ProjectsResource {
                 Or, to illustrate this in JSON format:
 
                 <programlisting language="xml" linenumbering="numbered">{
-   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web services.",
+   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 3.0 production quality Reference Implementation for building RESTful Web services.",
    "id" : 1,
    "name" : "Jersey",
    "tasks" : [ {
@@ -612,7 +612,7 @@ public class ProjectsResource {
                 Or in JSON format:
 
                 <programlisting language="xml" linenumbering="numbered">{
-   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370) production quality Reference Implementation for building RESTful Web services.",
+   "description" : "Jersey is the open source (under dual EPL+GPL license) JAX-RS 3.0 production quality Reference Implementation for building RESTful Web services.",
    "id" : 1,
    "name" : "Jersey"
 }</programlisting>
@@ -671,13 +671,13 @@ public class ClientsResource {
 
             <itemizedlist>
                 <listitem>
-                    <para>&jee6.annotations.PermitAll;,</para>
+                    <para>&jee9.annotations.PermitAll;,</para>
                 </listitem>
                 <listitem>
-                    <para>&jee6.annotations.RolesAllowed;, and</para>
+                    <para>&jee9.annotations.RolesAllowed;, and</para>
                 </listitem>
                 <listitem>
-                    <para>&jee6.annotations.DenyAll;</para>
+                    <para>&jee9.annotations.DenyAll;</para>
                 </listitem>
             </itemizedlist>
         </para>
@@ -690,13 +690,13 @@ public class ClientsResource {
                 <listitem>
                     <para>
                         Custom &jaxrs.core.SecurityContext; should be set by a container request filter in order to use
-                        &lit.jee6.annotations.RolesAllowed; for role-based filtering of domain model data (server-side)
+                        &lit.jee9.annotations.RolesAllowed; for role-based filtering of domain model data (server-side)
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                         There is no need to provide entity-filtering (or security) annotations on resource methods in order to
-                        define entity-filtering scopes for &lit.jee6.annotations.RolesAllowed; that is applied to the domain model
+                        define entity-filtering scopes for &lit.jee9.annotations.RolesAllowed; that is applied to the domain model
                         components, as all the available roles for the current user are automatically determined using
                         the information from the provided &lit.jaxrs.core.SecurityContext; (server-side only).
                     </para>
