@@ -834,7 +834,7 @@ public static class WorkersResource {
                 &jdk6.File; (<literal>*/*</literal>)
             </member>
             <member>
-                &jdk6.DataSource; (<literal>*/*</literal>)
+                &jee9.DataSource; (<literal>*/*</literal>)
             </member>
             <member>
                 &jdk6.Source; (<literal>text/xml</literal>, <literal>application/xml</literal> and media types of the form

@@ -49,8 +49,22 @@
                 </thead>
                 <tbody>
                     <row>
-                        <entry>&jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE;</entry>
-                        <entry><literal>jersey.config.disableAutoDiscovery</literal></entry>
+                        <entry>&jersey.common.CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER;</entry>
+                        <entry><literal>jersey.config.allowSystemPropertiesProvider</literal></entry>
+                        <entry>
+                            <para>
+                                Property which allows (if true) default System properties configuration provider.
+                                Default value is <literal>true</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE; /
+                            &jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableAutoDiscovery</literal>/
+                            <literal>jersey.config.client.disableAutoDiscovery</literal>/
+                            <literal>jersey.config.server.disableAutoDiscovery</literal></entry>
                         <entry>
                             <para>
                                 Disables feature auto discovery globally on client/server. Default value is <literal>false</literal>.
@@ -58,8 +72,12 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE;</entry>
-                        <entry><literal>jersey.config.disableJsonProcessing</literal></entry>
+                        <entry>&jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE; /
+                            &jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableJsonProcessing</literal> /
+                            <literal>jersey.config.client.disableJsonProcessing</literal> /
+                            <literal>jersey.config.server.disableJsonProcessing</literal></entry>
                         <entry>
                             <para>
                                 Disables configuration of Json Processing (JSR-353) feature. Default value is <literal>false</literal>.
@@ -67,8 +85,12 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE;</entry>
-                        <entry><literal>jersey.config.disableMetainfServicesLookup</literal></entry>
+                        <entry>&jersey.common.CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE; /
+                            &jersey.common.CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableMetainfServicesLookup</literal> /
+                            <literal>jersey.config.client.disableMetainfServicesLookup</literal> /
+                            <literal>jersey.config.server.disableMetainfServicesLookup</literal></entry>
                         <entry>
                             <para>
                                 Disables META-INF/services lookup globally on client/server. Default value is <literal>false</literal>.
@@ -76,8 +98,12 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.MOXY_JSON_FEATURE_DISABLE;</entry>
-                        <entry><literal>jersey.config.disableMoxyJson</literal></entry>
+                        <entry>&jersey.common.CommonProperties.MOXY_JSON_FEATURE_DISABLE; /
+                            &jersey.common.CommonProperties.MOXY_JSON_FEATURE_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.MOXY_JSON_FEATURE_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableMoxyJson</literal> /
+                            <literal>jersey.config.client.disableMoxyJson</literal> /
+                            <literal>jersey.config.server.disableMoxyJson</literal></entry>
                         <entry>
                             <para>
                                 Disables configuration of MOXy Json feature. Default value is <literal>false</literal>.
@@ -85,14 +111,40 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER;</entry>
-                        <entry><literal>jersey.config.contentLength.buffer</literal></entry>
+                        <entry>&jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER; /
+                            &jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT; /
+                            &jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER;</entry>
+                        <entry><literal>jersey.config.contentLength.buffer</literal> /
+                            <literal>jersey.config.client.contentLength.buffer</literal> /
+                            <literal>jersey.config.server.contentLength.buffer</literal></entry>
                         <entry>
                             <para>
                                 An integer value that defines the buffer size used to buffer the outbound message entity in order to
                                 determine its size and set the value of HTTP <literal>Content-Length</literal> header. Default
                                 value is <literal>8192</literal>.
                             </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.disableDefaultProvider</literal>
+                        </entry>
+                        <entry>
+                             Disable some of the default providers from being loaded. The following providers extend application footprint
+                             by XML dependencies, which is too heavy for native image, or by AWT which may possibly be not available by JDK 11 desktop:
+
+                                 <simplelist><member>java.awt.image.RenderedImage</member>
+                                 <member>javax.xml.transform.Source</member>
+                                 <member>javax.xml.transform.dom.DOMSource</member>
+                                 <member>javax.xml.transform.sax.SAXSource</member>
+                                 <member>javax.xml.transform.stream.StreamSource</member></simplelist>
+
+                             The following are the options to disable the provides: {@code DOMSOURCE, RENDEREDIMAGE, SAXSOURCE, SOURCE, STREAMSOURCE},
+                             or to disable all: {@code ALL}. Multiple options can be disabled by adding multiple comma separated values.
+                             Default value is <literal>NULL</literal>
+                             @since 2.30
                         </entry>
                     </row>
                     <row>
@@ -503,8 +555,8 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.server.ServerProperties.SUBRESOURCE_LOCATOR_CACHE_SIZE;</entry>
-                        <entry><literal>jersey.config.server.subresource.cache.size</literal></entry>
+                        <entry>&jersey.server.ServerProperties.SUBRESOURCE_LOCATOR_CACHE_AGE;</entry>
+                        <entry><literal>jersey.config.server.subresource.cache.age</literal></entry>
                         <entry>
                             <para>
                                 An integer value that defines the maximum age (in seconds) for cached for sub-resource locator
@@ -523,6 +575,17 @@
                                 is effective in this case you need to return same Jersey Resource instances for same input
                                 parameters from resource method. This means that generating new Jersey Resource instances for same
                                 input parameters would not have any performance effect and it would only fill-up the cache.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.server.ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231;</entry>
+                        <entry><literal>jersey.config.server.headers.location.relative.resolution.rfc7231</literal></entry>
+                        <entry>
+                            <para>
+                                If <literal>true</literal> then Jersey will resolve relative URIs in the
+                                <literal>Location</literal> http header against the request URI according to <literal>RFC7231</literal>
+                                (new HTTP Specification)
                             </para>
                         </entry>
                     </row>
@@ -711,11 +774,21 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.BACKGROUND_SCHEDULER_THREADPOOL_SIZE;</entry>
+                        <entry><literal>jersey.config.client.backgroundScheduler.threadPoolSize</literal></entry>
+                        <entry>
+                            <para>
+                                Scheduler thread pool size. Default value is not set.
+                                <emphasis>Support is undefined</emphasis>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.CHUNKED_ENCODING_SIZE;</entry>
                         <entry><literal>jersey.config.client.chunkedEncodingSize</literal></entry>
                         <entry>
                             <para>
-                                Chunked encoding size. Default value is not set.
+                                Chunked encoding size. Default value is  <literal>4096</literal>.
                             </para>
                         </entry>
                     </row>
@@ -860,6 +933,38 @@
                             <para>
                                 Indicates the value of <literal>Content-Encoding</literal> property the
                                 &jersey.client.EncodingFilter; should be adding. Default value is not set.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT;</entry>
+                        <entry><literal>jersey.config.client.digestAuthUriCacheSizeLimit</literal></entry>
+                        <entry>
+                            <para>
+                                The property defines a URI of a HTTP proxy the client connector should use.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.processing</literal></entry>
+                        <entry>
+                            <para>
+                                Allows for HTTP Expect:100-Continue being handled by the HttpUrlConnector (default Jersey
+                                connector). <literal>Since 2.32</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.threshold.size</literal></entry>
+                        <entry>
+                            <para>
+                                Property for threshold size for content length after which Expect:100-Continue header would be applied
+                                before the main request.
+                                Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+                                the main request.
+                                <literal>Since 2.32</literal>
                             </para>
                         </entry>
                     </row>

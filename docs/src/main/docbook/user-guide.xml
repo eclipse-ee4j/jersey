@@ -115,7 +115,7 @@ This line fits the page width.
     <xi:include href="monitoring.xml" />
     <xi:include href="custom-di.xml" />
     <xi:include href="cdi.xml" />
-    <xi:include href="spring.xml" />
+<!--    <xi:include href="spring.xml" />--> <!--Spring is not supported in Jakarta -->
     <xi:include href="test-framework.xml" />
     <xi:include href="how-to-build.xml" />
     <xi:include href="migration.xml" />

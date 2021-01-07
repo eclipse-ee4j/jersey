@@ -353,8 +353,8 @@ public static class StatisticsResource {
                 </example>
                 <para>
                     &jersey.server.monitoring.MonitoringStatistics; are
-                    injected into the resource using an &jee6.jakarta.inject.Inject; annotation.
-                    Please note the usage of the &jee6.jakarta.inject.Provider; for injection (it will be discussed later).
+                    injected into the resource using an &jee9.jakarta.inject.Inject; annotation.
+                    Please note the usage of the &jee9.jakarta.inject.Provider; for injection (it will be discussed later).
                     Firstly, the snapshot of statistics is retrieved by the <literal>snapshot()</literal> method.
                     The snapshot of statistics is an immutable copy of statistics which does not change over the time.
                     Additionally, data in a snapshot are consistent. It's recommended to create snapshots before working with
@@ -451,11 +451,11 @@ request count: 4, average request processing [ms]: 73</programlisting>
                     on &lit.jersey.server.monitoring.TimeWindowStatistics; again.
                 </para>
                 <para>
-                    Statistics are injected using the &jee6.jakarta.inject.Provider;. This is preferred way of
+                    Statistics are injected using the &jee9.jakarta.inject.Provider;. This is preferred way of
                     injecting statistics. The reason is simple. Statistics might change over time and contract
                     of &lit.jersey.server.monitoring.MonitoringStatistics; does not make any assumptions about mutability of
                     monitoring statistics instances (to allow future optimizations and changes in implementation strategy). In
-                    order to get always latest statistics, we recommend injecting a &jee6.jakarta.inject.Provider; rather than a
+                    order to get always latest statistics, we recommend injecting a &jee9.jakarta.inject.Provider; rather than a
                     direct reference and use its <literal>get()</literal> method to retrieve the latest statistics. For example,
                     in singleton resources the use of the technique is very important otherwise statistics might correspond
                     to the time when singleton was firstly created and might not update since that time.
@@ -475,14 +475,6 @@ request count: 4, average request processing [ms]: 73</programlisting>
             </section>
             <section>
                 <title>Monitoring Statistics as MBeans</title>
-                <note>
-                    <para>
-                        Jersey examples contains a
-                        <link xlink:href='&jersey.github.examples.uri;/monitoring-webapp'>Monitoring Web Application Example</link>
-                        which demonstrates usage of MBean statistics.
-                    </para>
-                </note>
-
                 <para>
                     Jersey provides feature to expose monitoring statistics as JMX MXBeans.
                     In order to enable monitoring statistics MXBeans exposure, the
@@ -533,7 +525,7 @@ request count: 4, average request processing [ms]: 73</programlisting>
                     <link linkend="resource-builder">"Programmatic API for Building Resources"</link>), one Java resource class
                     can be an endpoint for resource methods on many different URIs. And also one URI can be served by method from
                     many different Java classes. Therefore both views are not to be compared 1:1. Instead they provide
-                    different loggical views on your JAX-RS application. This monitoring feature can also be helpful when designing
+                    different logical views on your JAX-RS application. This monitoring feature can also be helpful when designing
                     the JAX-RS APIs as it provides nice view on available root application URIs.
                 </para>
                 <para>

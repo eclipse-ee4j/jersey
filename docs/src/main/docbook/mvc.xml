@@ -38,8 +38,7 @@
 
     <note>
         <para>
-            Some of the passages/examples from this chapter have been taken from
-            <link xlink:href="https://blogs.oracle.com/sandoz/entry/mvcj">MVCJ</link> blog article written by Paul Sandoz.
+            Some of the passages/examples from this chapter have been created by Paul Sandoz.
         </para>
     </note>
 
@@ -56,7 +55,7 @@
         <para>
             In this approach a resource method explicitly returns a reference to a view template and the data model to be
             used. For this purpose the &jersey.server.mvc.Viewable; class has been introduced in Jersey 1 and is also
-            present (under a different package) in Jersey 2. A simple example of usage can be seen in
+            present (under a different package) in Jersey 2 and 3. A simple example of usage can be seen in
             <xref linkend="mvc.example.viewable.simple"/>.
 
             <example xml:id="mvc.example.viewable.simple">
@@ -285,10 +284,10 @@ public Viewable get() {
 
         <para>
             In addition to &jersey.server.mvc.Template; an &jersey.server.mvc.ErrorTemplate; annotation has been introduced in
-            Jersey 2.3. The purpose of this annotation is to bind the model to an error view in case an exception has been raised during
-            processing of a request. This is true for any exception thrown after the resource matching phase (i.e. this not only
-            applies to JAX-RS resources but providers and even Jersey runtime as well). The model in this case is the thrown exception
-            itself.
+            Jersey 2.3 (valid for Jersey 3.x as well). The purpose of this annotation is to bind the model to an error view in
+            case an exception has been raised during processing of a request. This is true for any exception thrown after the
+            resource matching phase (i.e. this not only applies to JAX-RS resources but providers and even Jersey runtime as
+            well). The model in this case is the thrown exception itself.
         </para>
         <para>
             <xref linkend="mvc.example.error.simple"/> shows how to use &lit.jersey.server.mvc.ErrorTemplate; on a resource method.
@@ -522,7 +521,7 @@ public ShortenedLink createLink(@NotEmpty @FormParam("link") final String link) 
             <title>Freemarker</title>
 
             <para>
-                An integration module for <link xlink:href="http://freemarker.org/">Freemarker</link>-based templating engine.
+                An integration module for <link xlink:href="https://freemarker.apache.org/">Freemarker</link>-based templating engine.
             </para>
 
             <para>
