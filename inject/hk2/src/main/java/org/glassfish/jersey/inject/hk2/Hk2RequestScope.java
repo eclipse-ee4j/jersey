@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,7 @@ public class Hk2RequestScope extends RequestScope {
      */
     public static final class Instance implements org.glassfish.jersey.process.internal.RequestContext {
 
-        private final ExtendedLogger logger = new ExtendedLogger(Logger.getLogger(Instance.class.getName()), Level.FINEST);
+        private static final ExtendedLogger logger = new ExtendedLogger(Logger.getLogger(Instance.class.getName()), Level.FINEST);
 
         /*
          * Scope instance UUID.
