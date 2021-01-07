@@ -35,7 +35,7 @@
     </para>
 
     <para>The JAX-RS &jax-rs.version; specification draft can be found online <link
-            xlink:href="http://jcp.org/en/jsr/summary?id=339">here</link>.
+            xlink:href="https://jakarta.ee/specifications/restful-ws/3.0/jakarta-restful-ws-spec-3.0.pdf">here</link>.
     </para>
 
     <section>
@@ -53,7 +53,7 @@
             resource class using JAX-RS annotations. The example code shown here is
             from one of the samples that ships with Jersey, the zip file of which can
             be found in the maven repository
-            <link xlink:href="http://central.maven.org/maven2/org/glassfish/jersey/examples/helloworld//&version;/">here</link>.
+            <link xlink:href="https://repo1.maven.org/maven2/org/glassfish/jersey/examples/helloworld/&version;/">here</link>.
         </para>
         <para>
             <example>
@@ -87,15 +87,20 @@ public class HelloWorldResource {
 
             <para>
                 <emphasis>URI path templates</emphasis>
-                are URIs with variables embedded within the URI syntax. These variables are substituted at runtime in order for a resource to respond to a request based on the substituted URI. Variables are denoted by curly braces. For example, look at the following &jaxrs.Path; annotation:
+                are URIs with variables embedded within the URI syntax. These variables are substituted at runtime in order
+                for a resource to respond to a request based on the substituted URI. Variables are denoted by curly braces.
+                For example, look at the following &jaxrs.Path; annotation:
 
                 <programlisting language="java" linenumbering="unnumbered">@Path("/users/{username}")</programlisting>
 
-                In this type of example, a user will be prompted to enter their name, and then a Jersey web service configured to respond to requests to this URI path template will respond. For example, if the user entered their username as "Galileo", the web service will respond to the following URL:
+                In this type of example, a user will be prompted to enter their name, and then a Jersey web service configured
+                to respond to requests to this URI path template will respond. For example, if the user entered their username
+                as "Galileo", the web service will respond to the following URL:
                 <literal>http://example.com/users/Galileo</literal>
             </para>
 
-            <para>To obtain the value of the username variable the &jaxrs.PathParam; may be used on method parameter of a request method, for example:
+            <para>To obtain the value of the username variable the &jaxrs.PathParam; may be used on method parameter of a
+                request method, for example:
                 <example>
                     <title>Specifying URI path parameter</title>
                     <programlisting language="java" linenumbering="numbered">@Path("/users/{username}")
@@ -113,11 +118,14 @@ public class UserResource {
                 particular regular expression, which overrides the default regular
                 expression, "[^/]+", for example:
                 <programlisting language="java">@Path("users/{username: [a-zA-Z][a-zA-Z_0-9]*}")</programlisting>
-                In this type of example the username variable will only match user names that begin with one upper or lower case letter and zero or more alpha numeric characters and the underscore character. If a user name does not match that a 404 (Not Found) response will occur.
+                In this type of example the username variable will only match user names that begin with one upper or lower
+                case letter and zero or more alpha numeric characters and the underscore character. If a user name does not
+                match that a 404 (Not Found) response will occur.
             </para>
 
-            <para>A &jaxrs.Path; value may or may not begin with a '/', it makes no difference. Likewise, by default, a &jaxrs.Path; value may or may not end in a '/', it makes no difference, and thus request URLs that end or do not end in a '/' will both
-                be matched.
+            <para>A &jaxrs.Path; value may or may not begin with a '/', it makes no difference. Likewise, by default, a
+                &jaxrs.Path; value may or may not end in a '/', it makes no difference, and thus request URLs that end or
+                do not end in a '/' will both be matched.
             </para>
         </section>
 
@@ -165,7 +173,7 @@ public Response putContainer() {
                 response entity (if set). A response returned for the OPTIONS method depends on the requested media type
                 defined in the 'Accept' header. The OPTIONS method can return a response with a set of supported
                 resource methods in the 'Allow' header or return
-                a <link xlink:href="http://wadl.java.net/">WADL</link> document.
+                a <link xlink:href="https://javaee.github.io/wadl/">WADL</link> document.
                 See <link linkend="wadl">wadl section</link> for more information.
             </para>
         </section>
@@ -1074,11 +1082,11 @@ public static class SubResource {
         </para>
 
         <para>When deploying a JAX-RS application using servlet then
-            <link xlink:href="http://docs.oracle.com/javaee/5/api/javax/servlet/ServletConfig.html">ServletConfig</link>,
-            <link xlink:href="http://docs.oracle.com/javaee/5/api/javax/servlet/ServletContext.html">ServletContext</link>,
-            <link xlink:href="http://docs.oracle.com/javaee/5/api/javax/servlet/http/HttpServletRequest.html">HttpServletRequest</link>
+            <link xlink:href="https://jakarta.ee/specifications/servlet/5.0/apidocs/jakarta/servlet/ServletConfig.html">ServletConfig</link>,
+            <link xlink:href="https://jakarta.ee/specifications/servlet/5.0/apidocs/jakarta/servlet/ServletContext.html">ServletContext</link>,
+            <link xlink:href="https://jakarta.ee/specifications/servlet/5.0/apidocs/jakarta/servlet/http/HttpServletRequest.html">HttpServletRequest</link>
             and
-            <link xlink:href="http://docs.oracle.com/javaee/5/api/javax/servlet/http/HttpServletResponse.html">HttpServletResponse</link>
+            <link xlink:href="https://jakarta.ee/specifications/servlet/5.0/apidocs/jakarta/servlet/http/HttpServletResponse.html">HttpServletResponse</link>
             are available using &jaxrs.core.Context;.
         </para>
     </section>

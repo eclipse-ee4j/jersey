@@ -39,9 +39,9 @@
         </para>
         <para>
             If you would like to contribute to the guide or have questions on things not covered in our docs, please
-            contact us at <link xlink:href="mailto:jersey-dev@eclipse.org">users@jersey.java.net</link>. Similarly,
+            contact us at <link xlink:href="mailto:jersey-dev@eclipse.org">jersey-dev@eclipse.org</link>. Similarly,
             in case you spot any errors in the Jersey documentation, please report them by filing a new issue in our
-            <link xlink:href="https://github.com/eclipse-ee4j/jersey/issues">Jersey JIRA Issue Tracker</link>
+            <link xlink:href="https://github.com/eclipse-ee4j/jersey/issues">Jersey Issue Tracker</link>
             under
             <literal>docs</literal>
             component. Please make sure to specify the version of the Jersey User Guide where the error has been spotted
