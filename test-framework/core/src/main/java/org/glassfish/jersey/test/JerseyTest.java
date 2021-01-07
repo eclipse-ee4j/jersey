@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,6 +35,8 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
@@ -417,7 +420,11 @@ public abstract class JerseyTest {
      * @since 2.8
      */
     protected DeploymentContext configureDeployment() {
-        return DeploymentContext.builder(configure()).build();
+        DeploymentContext.Builder contextBuilder = DeploymentContext.builder(configure());
+        if (getSslContext().isPresent() && getSslParameters().isPresent()) {
+            contextBuilder.ssl(getSslContext().get(), getSslParameters().get());
+        }
+        return contextBuilder.build();
     }
 
     /**
@@ -451,6 +458,34 @@ public abstract class JerseyTest {
             testContainerFactory = getDefaultTestContainerFactory();
         }
         return testContainerFactory;
+    }
+
+    /**
+     * Return an optional instance of {@link SSLContext} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslParameters()}
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLContext} class.
+     */
+    protected Optional<SSLContext> getSslContext() {
+        return Optional.empty();
+    }
+
+    /**
+     * Return an optional instance of {@link SSLParameters} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslContext()} ()}
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLContext} class.
+     */
+    protected Optional<SSLParameters> getSslParameters() {
+        return Optional.empty();
     }
 
     private static synchronized TestContainerFactory getDefaultTestContainerFactory() {

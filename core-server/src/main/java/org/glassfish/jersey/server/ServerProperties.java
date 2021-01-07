@@ -724,6 +724,23 @@ public final class ServerProperties {
     public static final String LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED =
             "jersey.config.server.headers.location.relative.resolution.disabled";
 
+
+    /**
+     * If {@code true} message body writer will not use {@code CompletionStage} as a generic type.
+     * The {@code CompletionStage} value will be unwrapped and the message body writer will be invoked with the unwrapped type.
+     *
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @since 2.33
+     */
+    public static final String UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE =
+            "jersey.config.server.unwrap.completion.stage.writer.enable";
+
     private ServerProperties() {
         // prevents instantiation
     }

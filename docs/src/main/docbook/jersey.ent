@@ -27,6 +27,7 @@
 <!ENTITY guava.version "$guava-version">
 <!ENTITY jaxb-api-jar.version "$jaxb-api-jar-version">
 <!ENTITY jax-rs.version "$jax-rs-api-jar-version">
+<!ENTITY jax-rs21.version "2.1.6">
 <!ENTITY jakarta.el.version "$jakarta.el-version">
 <!ENTITY jakarta.el-impl.version "$jakarta.el-impl-version">
 <!ENTITY jax-rs-api-jar.version "$jax-rs-api-jar-version">
@@ -36,11 +37,14 @@
 <!--<!ENTITY repository "$repository">-->
 <!ENTITY src.branch "$src.branch">
 <!ENTITY version "$version">
+<!ENTITY smallrye.version "1.5.0">
+<!ENTITY helidon.version "2.1.0">
 
 <!-- External Path and Link Base Entities -->
 
 <!ENTITY bv.project.link "<link xlink:href='http://beanvalidation.org/'>Bean Validation</link>">
 <!ENTITY bv11.javadoc.uri "http://docs.jboss.org/hibernate/beanvalidation/spec/1.1/api">
+<!ENTITY bv30.javadoc.uri "https://jakarta.ee/specifications/bean-validation/3.0/apidocs/">
 <!ENTITY cloud.guide "<link xlink:href='http://docs.oracle.com/cloud/131/developer_services/CSJSU/java-develop.htm#BABHDAJH'>guide</link>">
 <!ENTITY felix.link "<link xlink:href='https://felix.apache.org/'>Apache Felix</link>">
 <!ENTITY grizzly.link "<link xlink:href='https://javaee.github.io/grizzly/'>Grizzly</link>">
@@ -54,8 +58,8 @@
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/jakarta.xml.bind">
 <!ENTITY jaxrs.release.uri "https://github.com/eclipse-ee4j/jaxrs-api">
-<!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs.version;/javax/ws/rs">
-<!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs.version;/javax/ws/rs">
+<!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs.version;/jakarta/ws/rs">
+<!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs21.version;/javax/ws/rs">
 <!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
@@ -85,7 +89,7 @@
 <!ENTITY jersey.javadoc.root.uri "https://eclipse-ee4j.github.io/jersey.github.io/apidocs/&apidocs.version;/jersey">
 <!ENTITY jersey.javadoc.uri.prefix "&jersey.javadoc.root.uri;/org/glassfish/jersey">
 <!ENTITY jersey.project-info.uri.prefix "https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project">
-<!ENTITY jee.javadoc.uri "http://docs.oracle.com/javaee/7/api">
+<!ENTITY jee.javadoc.uri "https://jakarta.ee/specifications/">
 <!ENTITY jdk6.javadoc.uri "http://docs.oracle.com/javase/6/docs/api">
 <!ENTITY jdk7.javadoc.uri "http://docs.oracle.com/javase/7/docs/api">
 <!ENTITY jdk8.javadoc.uri "http://docs.oracle.com/javase/8/docs/api">
@@ -94,7 +98,8 @@
 <!ENTITY jsr166.javadoc.uri "http://gee.cs.oswego.edu/dl/jsr166/dist/jsr166edocs/">
 <!ENTITY jsr311.link "<link xlink:href='&jsr.uri.prefix;311'>JSR 311</link>">
 <!ENTITY jsr315.link "<link xlink:href='&jsr.uri.prefix;315'>JSR 315</link>">
-<!ENTITY maven.central.repo.link "<link xlink:href='http://search.maven.org/'>Central Maven Repository</link>">
+<!ENTITY servlet5.link "<link xlink:href='https://jakarta.ee/specifications/servlet/5.0/'>Servlet 5 spec</link>">
+<!ENTITY maven.central.repo.link "<link xlink:href='https://search.maven.org/'>Central Maven Repository</link>">
 <!ENTITY maven.link "<link xlink:href='http://maven.apache.org/'>Apache Maven</link>">
 <!ENTITY maven.java.net.releases.link "https://maven.java.net/content/repositories/releases/">
 <!ENTITY rxjava.javadoc.uri "http://reactivex.io/RxJava/javadoc/">
@@ -108,18 +113,18 @@
 <!ENTITY yasson.link "<link xlink:href='https://eclipse-ee4j.github.io/yasson/'>Yasson</link>">
 
 <!-- API Docs links -->
-<!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Configuration.html'>Configuration</link>">
-<!ENTITY bv.Constraint "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Constraint.html'>@Constraint</link>">
-<!ENTITY bv.ConstraintValidator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintValidator.html'>ConstraintValidator</link>">
-<!ENTITY bv.ConstraintValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintValidatorFactory.html'>ConstraintValidatorFactory</link>">
-<!ENTITY bv.ConstraintViolationException "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ConstraintViolationException.html'>ConstraintViolationException</link>">
-<!ENTITY bv.MessageInterpolator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/MessageInterpolator.html'>MessageInterpolator</link>">
-<!ENTITY bv.ParameterNameProvider "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ParameterNameProvider.html'>ParameterNameProvider</link>">
-<!ENTITY bv.TraversableResolver "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/TraversableResolver.html'>TraversableResolver</link>">
-<!ENTITY bv.Valid "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Valid.html'>@Valid</link>">
-<!ENTITY bv.ValidationException "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ValidationException.html'>ValidationException</link>">
-<!ENTITY bv.Validator "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/Validator.html'>Validator</link>">
-<!ENTITY bv.ValidatorFactory "<link xlink:href='&bv11.javadoc.uri;/jakarta.validation/ValidatorFactory.html'>ValidatorFactory</link>">
+<!ENTITY bv.Configuration "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/configuration'>Configuration</link>">
+<!ENTITY bv.Constraint "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/constraint'>@Constraint</link>">
+<!ENTITY bv.ConstraintValidator "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/constraintvalidator'>ConstraintValidator</link>">
+<!ENTITY bv.ConstraintValidatorFactory "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/constraintvalidatorfactory'>ConstraintValidatorFactory</link>">
+<!ENTITY bv.ConstraintViolationException "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/constraintviolationexception'>ConstraintViolationException</link>">
+<!ENTITY bv.MessageInterpolator "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/messageinterpolator'>MessageInterpolator</link>">
+<!ENTITY bv.ParameterNameProvider "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/parameternameprovider'>ParameterNameProvider</link>">
+<!ENTITY bv.TraversableResolver "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/traversableresolver'>TraversableResolver</link>">
+<!ENTITY bv.Valid "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/valid'>@Valid</link>">
+<!ENTITY bv.ValidationException "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/validationexception'>ValidationException</link>">
+<!ENTITY bv.Validator "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/validator'>Validator</link>">
+<!ENTITY bv.ValidatorFactory "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/validatorfactory'>ValidatorFactory</link>">
 
 <!ENTITY guava.Futures "<link xlink:href='&guava.javadoc.uri;com/google/common/util/concurrent/Futures.html'>Futures</link>">
 <!ENTITY guava.ListenableFuture "<link xlink:href='&guava.javadoc.uri;com/google/common/util/concurrent/ListenableFuture.html'>ListenableFuture</link>">
@@ -131,12 +136,12 @@
 <!ENTITY hk2.ServiceLocator "<link xlink:href='&hk2.javadoc.uri;/org/glassfish/hk2/api/ServiceLocator.html'>ServiceLocator</link>">
 
 <!-- RxJava -->
-<!ENTITY rxjava.Observable "<link xlink:href='&rxjava.javadoc.uri;/rx/Observable.html'>Observable</link>">
-<!ENTITY rxjava.Observable.onserveOn "<link xlink:href='&rxjava.javadoc.uri;/rx/Observable.html#observeOn(rx.Scheduler)'>Observable#observeOn(rx.Scheduler)</link>">
-<!ENTITY rxjava.Observable.subscribeOn "<link xlink:href='&rxjava.javadoc.uri;/rx/Observable.html#subscribeOn(rx.Scheduler)'>Observable#subscribeOn(rx.Scheduler)</link>">
-<!ENTITY rxjava.Scheduler "<link xlink:href='&rxjava.javadoc.uri;/rx/Scheduler.html'>Scheduler</link>">
+<!ENTITY rxjava.Observable "<link xlink:href='&rxjava.javadoc.uri;/io/reactivex/Observable.html'>Observable</link>">
+<!ENTITY rxjava.Observable.onserveOn "<link xlink:href='&rxjava.javadoc.uri;/io/reactivex/Observable.html#observeOn-io.reactivex.Scheduler-'>Observable#observeOn(rx.Scheduler)</link>">
+<!ENTITY rxjava.Observable.subscribeOn "<link xlink:href='&rxjava.javadoc.uri;/io/reactivex/Observable.html#subscribeOn-io.reactivex.Scheduler-'>Observable#subscribeOn(rx.Scheduler)</link>">
+<!ENTITY rxjava.Scheduler "<link xlink:href='&rxjava.javadoc.uri;/io/reactivex/Scheduler.html'>Scheduler</link>">
 
-<!ENTITY rxjava2.Flowable "<link xlink:href='&rxjava.javadoc.uri;/rx/Flowable.html'>Flowable</link>">
+<!ENTITY rxjava2.Flowable "<link xlink:href='&rxjava.javadoc.uri;/io/reactivex/Flowable.html'>Flowable</link>">
 
 <!ENTITY jsr166e.CompletableFuture "<link xlink:href='&jsr166.javadoc.uri;/jsr166e/CompletableFuture.html'>CompletableFuture</link>">
 <!ENTITY jsr166e.ForkJoinPool.commonPool "<link xlink:href='&jsr166.javadoc.uri;/jsr166e/ForkJoinPool.html#commonPool()'>ForkJoinPool.html#commonPool()</link>">
@@ -330,7 +335,7 @@
 <!ENTITY jersey.client.HttpUrlConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnector.html'>HttpUrlConnectorProvider</link>">
 <!ENTITY jersey.client.HttpUrlConnectorProvider.SET_METHOD_WORKAROUND "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnectorProvider.html#SET_METHOD_WORKAROUND'>HttpUrlConnector.SET_METHOD_WORKAROUND</link>" >
 <!ENTITY jersey.client.HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/HttpUrlConnectorProvider.html#USE_FIXED_LENGTH_STREAMING'>HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING</link>">
-<!ENTITY jersey.client.ServiceLocatorClientProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ServiceLocatorClientProvider.html'>ServiceLocatorClientProvider</link>">
+<!ENTITY jersey.client.InjectionManagerClientProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/InjectionManagerClientProvider.html'>InjectionManagerClientProvider</link>">
 <!ENTITY jersey.client.oauth1.AccessToken "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/AccessToken.html'>AccessToken</link>">
 <!ENTITY jersey.client.oauth1.ConsumerCredentials "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/ConsumerCredentials.html'>ConsumerCredentials</link>">
 <!ENTITY jersey.client.oauth1.OAuth1AuthorizationFlow "<link xlink:href='&jersey.javadoc.uri.prefix;/client/oauth1/OAuth1AuthorizationFlow.html'>OAuth1AuthorizationFlow</link>">
@@ -365,7 +370,7 @@
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
 <!ENTITY jersey.common.internal.inject.Binder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/Binder.html'>Binder</link>">
-<!ENTITY jersey.common.ServiceLocatorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/ServiceLocatorProvider.html'>ServiceLocatorProvider</link>">
+<!ENTITY jersey.common.InjectionManagerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/InjectionManagerProvider.html'>InjectionManagerProvider</link>">
 <!ENTITY jersey.common.SslConfigurator "<link xlink:href='&jersey.javadoc.uri.prefix;/SslConfigurator.html'>SslConfigurator</link>">
 <!ENTITY jersey.common.spi.AbstractThreadPoolProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/spi/AbstractThreadPoolProvider.html>AbstractThreadPoolProvider</link>">
 <!ENTITY jersey.common.spi.ContentEncoder "<link xlink:href='&jersey.javadoc.uri.prefix;/spi/ContentEncoder.html'>ContentEncoder</link>">
@@ -436,7 +441,6 @@
 <!ENTITY jersey.logging.LoggingFeature.Verbosity.HEADERS_ONLY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html#HEADERS_ONLY'>LoggingFeature.Verbosity.HEADERS_ONLY</link>">
 <!ENTITY jersey.logging.LoggingFeature.Verbosity.PAYLOAD_ANY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html#PAYLOAD_ANY'>LoggingFeature.Verbosity.PAYLOAD_ANY</link>">
 <!ENTITY jersey.logging.LoggingFeature.Verbosity.PAYLOAD_TEXT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html#PAYLOAD_TEXT'>LoggingFeature.Verbosity.PAYLOAD_TEXT</link>">
-<!ENTITY jersey.media.Jackson1Feature "<link xlink:href='&jersey.javadoc.uri.prefix;/jackson1/Jackson1Feature.html'>Jackson1Feature</link>" >
 <!ENTITY jersey.media.JacksonFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/jackson/JacksonFeature.html'>JacksonFeature</link>" >
 <!ENTITY jersey.media.JettisonConfig "<link xlink:href='&jersey.javadoc.uri.prefix;/jettison/JettisonConfig.html'>JettisonConfig</link>" >
 <!ENTITY jersey.media.JettisonFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/jettison/JettisonFeature.html'>JettisonFeature</link>" >
@@ -448,7 +452,6 @@
 <!ENTITY jersey.media.MoxyJsonFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/moxy/json/MoxyJsonFeature.html'>MoxyJsonFeature</link>">
 <!ENTITY jersey.media.MoxyJsonFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/moxy/json/MoxyJsonFeature.html'>MoxyJsonFeature</link>">
 <!ENTITY jersey.media.ObjectMapper "<link xlink:href='http://fasterxml.github.io/jackson-databind/javadoc/&jackson.javadoc.temp.version;/com/fasterxml/jackson/databind/ObjectMapper.html'>ObjectMapper</link>" >
-<!ENTITY jersey.media.ObjectMapper1 "<link xlink:href='http://jackson.codehaus.org/1.9.9/javadoc/org/codehaus/jackson/map/ObjectMapper.html'>ObjectMapper</link>" > <!-- old jackson version -->
 <!ENTITY jersey.media.multipart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/package-summary.html'>Multi Part</link>">
 <!ENTITY jersey.media.multipart.BodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/BodyPart.html'>BodyPart</link>" >
 <!ENTITY jersey.media.multipart.FileDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/FileDataBodyPart.html'>FileDataBodyPart</link>" >
@@ -807,14 +810,14 @@
 <!ENTITY lit.jdk8.CompletableFuture "<literal>CompletableFuture</literal>">
 <!ENTITY lit.jdk8.CompletionStage "<literal>CompletionStage</literal>">
 
-<!ENTITY lit.jee6.annotations.PermitAll "<literal>@PermitAll</literal>">
-<!ENTITY lit.jee6.annotations.RolesAllowed "<literal>@RolesAllowed</literal>">
-<!ENTITY lit.jee6.inject.Singleton "<literal>@Singleton</literal>">
-<!ENTITY lit.jee6.jakarta.inject.Inject "<literal>@Inject</literal>">
-<!ENTITY lit.jee6.jakarta.inject.Provider "<literal>Provider</literal>">
-<!ENTITY lit.jee6.jakarta.inject.Singleton "<literal>@Singleton</literal>">
-<!ENTITY lit.jee6.servlet.HttpServletRequest "<literal>HttpServletRequest</literal>">
-<!ENTITY lit.jee6.servlet.HttpSession "<literal>HttpSession</literal>">
+<!ENTITY lit.jee9.annotations.PermitAll "<literal>@PermitAll</literal>">
+<!ENTITY lit.jee9.annotations.RolesAllowed "<literal>@RolesAllowed</literal>">
+<!ENTITY lit.jee9.inject.Singleton "<literal>@Singleton</literal>">
+<!ENTITY lit.jee9.jakarta.inject.Inject "<literal>@Inject</literal>">
+<!ENTITY lit.jee9.jakarta.inject.Provider "<literal>Provider</literal>">
+<!ENTITY lit.jee9.jakarta.inject.Singleton "<literal>@Singleton</literal>">
+<!ENTITY lit.jee9.servlet.HttpServletRequest "<literal>HttpServletRequest</literal>">
+<!ENTITY lit.jee9.servlet.HttpSession "<literal>HttpSession</literal>">
 
 <!ENTITY lit.jersey.apache.ApacheConnectorProvider "<literal>ApacheConnectorProvider</literal>">
 <!ENTITY lit.jersey.client.ChunkParser "<literal>ChunkParser</literal>">
@@ -849,7 +852,7 @@
 <!ENTITY lit.jersey.client.EncodingFeature "<literal>EncodingFeature</literal>">
 <!ENTITY lit.jersey.client.HttpAuthenticationFeature "<literal>HttpAuthenticationFeature</literal>">
 <!ENTITY lit.jersey.client.HttpUrlConnectorProvider "<literal>HttpUrlConnectorProvider</literal>">
-<!ENTITY lit.jersey.client.ServiceLocatorClientProvider "<literal>ServiceLocatorClientProvider</literal>">
+<!ENTITY lit.jersey.client.InjectionManagerClientProvider "<literal>InjectionManagerClientProvider</literal>">
 <!ENTITY lit.jersey.client.oauth1.AccessToken "<literal>AccessToken</literal>">
 <!ENTITY lit.jersey.client.oauth1.ConsumerCredentials "<literal>ConsumerCredentials</literal>">
 <!ENTITY lit.jersey.client.oauth1.OAuth1AuthorizationFlow "<literal>OAuth1AuthorizationFlow</literal>">
@@ -869,7 +872,7 @@
 <!ENTITY lit.jersey.common.CommonProperties.MOXY_JSON_FEATURE_DISABLE "<literal>CommonProperties.MOXY_JSON_FEATURE_DISABLE</literal>" >
 <!ENTITY lit.jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER "<literal>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER</literal>" >
 <!ENTITY lit.jersey.common.internal.inject.InjectionManager "<literal>InjectionManager</literal>">
-<!ENTITY lit.jersey.common.ServiceLocatorProvider "<literal>ServiceLocatorProvider</literal>">
+<!ENTITY lit.jersey.common.InjectionManagerProvider "<literal>InjectionManagerProvider</literal>">
 <!ENTITY lit.jersey.common.SslConfigurator "<literal>SslConfigurator</literal>">
 <!ENTITY lit.jersey.common.spi.AbstractThreadPoolProvider "<literal>AbstractThreadPoolProvider</literal>">
 <!ENTITY lit.jersey.common.spi.ContentEncoder "<literal>ContentEncoder</literal>">

@@ -49,8 +49,12 @@ import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.internal.PropertiesResolver;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.message.internal.InboundMessageContext;
@@ -80,7 +84,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
  * @author Marek Potociar
  */
 public class ContainerRequest extends InboundMessageContext
-        implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate {
+        implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate, PropertiesResolver {
 
     private static final URI DEFAULT_BASE_URI = URI.create("/");
 
@@ -114,6 +118,10 @@ public class ContainerRequest extends InboundMessageContext
     private ContainerResponseWriter responseWriter;
     // True if the request is used in the response processing phase (for example in ContainerResponseFilter)
     private boolean inResponseProcessingPhase;
+    // lazy PropertiesResolver
+    private LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
+            (Value<PropertiesResolver>) () -> PropertiesResolver.create(getConfiguration(), getPropertiesDelegate())
+    );
 
     private static final String ERROR_REQUEST_SET_ENTITY_STREAM_IN_RESPONSE_PHASE =
             LocalizationMessages.ERROR_REQUEST_SET_ENTITY_STREAM_IN_RESPONSE_PHASE();
@@ -272,6 +280,16 @@ public class ContainerRequest extends InboundMessageContext
      */
     public <T> T readEntity(final Class<T> rawType, final Type type, final Annotation[] annotations) {
         return super.readEntity(rawType, type, annotations, propertiesDelegate);
+    }
+
+    @Override
+    public <T> T resolveProperty(final String name, final Class<T> type) {
+        return propertiesResolver.get().resolveProperty(name, type);
+    }
+
+    @Override
+    public <T> T resolveProperty(final String name, final T defaultValue) {
+        return propertiesResolver.get().resolveProperty(name, defaultValue);
     }
 
     @Override

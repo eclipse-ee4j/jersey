@@ -68,7 +68,7 @@
                 &lt;dependency>
                     &lt;groupId>org.glassfish.jersey.ext.microprofile&lt;/groupId>
                     &lt;artifactId>jersey-mp-config&lt;/artifactId>
-                    &lt;version>2.30&lt;/scope>
+                    &lt;version>&version;&lt;/scope>
                 &lt;/dependency>
             </programlisting>
             And the Microprofile Config implementation, such as Helidon:
@@ -76,7 +76,7 @@
                 &lt;dependency>
                     &lt;groupId>io.helidon.microprofile.config&lt;/groupId>
                     &lt;artifactId>helidon-microprofile-config&lt;/artifactId>
-                    &lt;version>1.3.1&lt;/version>
+                    &lt;version>&helidon.version;&lt;/version>
                 &lt;/dependency>
             </programlisting>
             Or SmallRye:
@@ -84,7 +84,7 @@
                 &lt;dependency>
                     &lt;groupId>io.smallrye&lt;/groupId>
                     &lt;artifactId>smallrye-config&lt;/artifactId>
-                    &lt;version>1.3.6&lt;/version>
+                    &lt;version>&smallrye.version;&lt;/version>
                 &lt;/dependency>
             </programlisting>
             or any other suitable Microprofile Config implementation.

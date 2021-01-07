@@ -16,6 +16,13 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
@@ -29,15 +36,23 @@ import java.util.function.Function;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Pavel Bucek
@@ -50,7 +65,7 @@ public class CompletionStageTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(CompletionStageResource.class);
+        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class);
     }
 
     @Test
@@ -132,6 +147,14 @@ public class CompletionStageTest extends JerseyTest {
         Response response = target("cs/exceptionally").request().get();
 
         assertThat(response.getStatus(), is(406));
+    }
+
+    @Test
+    public void testCompletionStageUnwrappedInGenericType() {
+        try (Response r = target("cs/databeanlist").request().get()){
+            assertEquals(200, r.getStatus());
+            assertTrue(r.readEntity(String.class).startsWith(ENTITY));
+        }
     }
 
     @Path("/cs")
@@ -227,6 +250,13 @@ public class CompletionStageTest extends JerseyTest {
         @Path("/custom")
         public CompletionStage<String> getCustomCompletionStage() {
             return new CustomCompletionStage<>(CompletableFuture.completedFuture(ENTITY));
+        }
+
+        @GET
+        @Path("/databeanlist")
+        public CompletionStage<List<DataBean>> getDataBeanList(@Context ContainerRequestContext requestContext) {
+            requestContext.setProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
+            return CompletableFuture.completedFuture(Collections.singletonList(new DataBean(ENTITY)));
         }
 
         /**
@@ -464,6 +494,35 @@ public class CompletionStageTest extends JerseyTest {
         @Override
         public CompletableFuture<T> toCompletableFuture() {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    private static class DataBean {
+        private final String data;
+
+        private DataBean(String data) {
+            this.data = data;
+        }
+    }
+
+    private static class DataBeanWriter implements MessageBodyWriter<List<DataBean>> {
+
+        @Override
+        public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+            return List.class.isAssignableFrom(type)
+                    && ParameterizedType.class.isInstance(genericType)
+                    && ((ParameterizedType) genericType).getRawType() != CompletionStage.class;
+        }
+
+        @Override
+        public void writeTo(List<DataBean> dataBeans, Class<?> type, Type genericType, Annotation[] annotations,
+                            MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
+                            OutputStream entityStream) throws IOException, WebApplicationException {
+            for (DataBean bean: dataBeans) {
+                entityStream.write(bean.data.getBytes());
+                entityStream.write(',');
+            }
+            entityStream.flush();
         }
     }
 }

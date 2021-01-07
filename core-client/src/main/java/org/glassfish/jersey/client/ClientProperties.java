@@ -168,6 +168,27 @@ public final class ClientProperties {
     public static final String USE_ENCODING = "jersey.config.client.useEncoding";
 
     /**
+     * Ignore a response in an exception thrown by the client API by not forwarding
+     * it to this service's client. A value of {@code true} indicates that responses
+     * will be ignored, and only the response status will return to the client. This
+     * property will normally be specified as a system property; note that system
+     * properties are only visible if {@link CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER}
+     * is set to {@code true}.
+     * <p>
+     * The value MUST be an instance convertible to {@link java.lang.Boolean}.
+     * </p>
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @see org.glassfish.jersey.CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER
+     */
+    public static final String IGNORE_EXCEPTION_RESPONSE = "jersey.config.client.ignoreExceptionResponse";
+
+    /**
      * If {@code true} then disable auto-discovery on the client.
      * <p>
      * By default auto-discovery on client is automatically enabled if global

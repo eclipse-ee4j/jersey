@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,7 @@
 
     <para>
         This section introduces the JAX-RS Client API, which is a fluent Java based API for communication with RESTful Web
-        services. This standard API that is also part of Java EE 7 is designed to make it very easy to consume a Web service
+        services. This standard API that is also part of Jakarta EE 9 is designed to make it very easy to consume a Web service
         exposed via HTTP protocol and enables developers to concisely and efficiently implement portable client-side solutions
         that leverage existing and well established client-side HTTP connector implementations.
     </para>
@@ -546,7 +546,7 @@ String entity = client.target("http://example.com/rest")
                 do require running on another thread, should be executed using provided services.
             </para>
             <para>
-                Default values do depend on the environment - in Java EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
+                Default values do depend on the environment - in Java/Jakarta EE container, it has to be &jee6.jakarta.enterprise.concurrent.ManagedExecutorService;
                 and &jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService;, for Java SE it would be
                 <literal>ForkJoinPool.commonPool</literal> for Executor service and something undefined for Scheduled
                 executor service.
@@ -746,7 +746,7 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
             into the &lit.jersey.client.ClientConfig;. The &lit.jersey.grizzly.GrizzlyConnectorProvider; is used as a custom
             connector provider in the example above. Please note that the connector provider cannot be registered as a provider
             using &lit.jaxrs.core.Configurable;<literal>.register(...)</literal>. Also, please note that in this API has changed
-            in Jersey 2.5, where the &lit.jersey.client.ConnectorProvider; SPI has been introduced in order to decouple client
+            since Jersey 2.5, where the &lit.jersey.client.ConnectorProvider; SPI has been introduced in order to decouple client
             initialization from the connector instantiation. Starting with Jersey 2.5 it is therefore not possible to directly
             register &lit.jersey.client.Connector; instances in the Jersey &jersey.client.ClientConfig;. The new
             &lit.jersey.client.ConnectorProvider; SPI must be used instead to configure a custom client-side transport connector.
@@ -822,12 +822,12 @@ System.out.println("Now the connection is closed.");</programlisting>
         </para>
         <para>
             To solve injection of a custom type into a client provider instance
-            use &jersey.client.ServiceLocatorClientProvider; to
+            use &jersey.client.InjectionManagerClientProvider; to
             extract &hk2.ServiceLocator; which can return the required injection. The following example shows how to utilize
-            &lit.jersey.client.ServiceLocatorClientProvider;:
+            &lit.jersey.client.InjectionManagerClientProvider;:
         </para>
         <example>
-            <title>ServiceLocatorClientProvider example</title>
+            <title>InjectionManagerClientProvider example</title>
             <programlisting language="java" linenumbering="numbered">public static class MyRequestFilter implements ClientRequestFilter {
     // this injection does not work as filter is registered as an instance:
     // @Inject
@@ -835,11 +835,11 @@ System.out.println("Now the connection is closed.");</programlisting>
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        // use ServiceLocatorClientProvider to extract HK2 ServiceLocator from request
-        final ServiceLocator locator = ServiceLocatorClientProvider.getServiceLocator(requestContext);
+        // use InjectionManagerClientProvider to extract InjectionManager from request
+        final InjectionManager injectionManager = InjectionManagerClientProvider.getInjectionManager(requestContext);
 
         // and ask for MyInjectedService:
-        final MyInjectedService service = locator.getService(MyInjectedService.class);
+        final MyInjectedService service = injectionManager.getInstance(MyInjectedService.class);
 
         final String name = service.getName();
         ...
@@ -847,8 +847,8 @@ System.out.println("Now the connection is closed.");</programlisting>
 }</programlisting>
         </example>
         <para>
-            For more information see javadoc of &jersey.client.ServiceLocatorClientProvider;
-            (and javadoc of &jersey.common.ServiceLocatorProvider; which supports common JAX-RS components).
+            For more information see javadoc of &jersey.client.InjectionManagerClientProvider;
+            (and javadoc of &jersey.common.InjectionManagerProvider; which supports common JAX-RS components).
         </para>
     </section>
 
@@ -897,7 +897,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 A behaviour of &jdk6.HostnameVerifier; is dependent on an http client implementation.
                 &lit.jersey.client.HttpUrlConnectorProvider; and &lit.jersey.apache.ApacheConnectorProvider; work properly, that means that after
                 the unsuccessful URL verification &lit.jdk6.HostnameVerifier; is called and by means of it is possible to
-                revalidate URL using a custom implementation of &lit.jdk6.HostnameVerifier; and go on in a handskahe processing.
+                revalidate URL using a custom implementation of &lit.jdk6.HostnameVerifier; and go on in a handshake processing.
                 &lit.jersey.jetty.JettyConnectorProvider; and &lit.jersey.grizzly.GrizzlyConnectorProvider; provide only host URL verification
                 and throw a &lit.jdk6.CertificateException; without any possibility to use custom &lit.jdk6.HostnameVerifier;.
                 Moreover, in case of &lit.jersey.jetty.JettyConnectorProvider; there is a property
@@ -923,12 +923,11 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             <para>Jersey supports Basic and Digest HTTP Authentication.</para>
             <important>
                 <para>
-                    In version prior to Jersey 2.5 the support was
-                    provided by <literal>org.glassfish.jersey.client.filter.HttpBasicAuthFilter</literal>
-                    and <literal>org.glassfish.jersey.client.filter.HttpDigestAuthFilter</literal>. Since Jersey
-                    2.5 these filters are deprecated (and removed in 2.6) and both authentication methods
-                    are provided by single &lit.jaxrs.core.Feature;
+                    In version of Jersey 3.x both authentication methods are provided by single &lit.jaxrs.core.Feature;
                     &jersey.client.HttpAuthenticationFeature;.
+                    For migration of older applications: <literal>org.glassfish.jersey.client.filter.HttpBasicAuthFilter</literal>
+                    and <literal>org.glassfish.jersey.client.filter.HttpDigestAuthFilter</literal> shall be replaced by
+                    those two authentication methods.
                 </para>
             </important>
 

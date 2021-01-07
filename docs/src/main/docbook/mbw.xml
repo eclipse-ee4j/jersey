@@ -404,7 +404,7 @@ public MyBean readFrom(Class<MyBean> type,
             <section>
                 <title><literal>MessageBodyReader.isReadable</literal></title>
                 <para>
-                    It defines the method <literal>isReadable()</literal> which has a very simliar meaning as method
+                    It defines the method <literal>isReadable()</literal> which has a very similar meaning as method
                     <literal>isWriteable()</literal> in &lit.jaxrs.ext.MessageBodyWriter;. The method returns &lit.true;
                     if it is able to de-serialize the given type. The <literal>annotations</literal> parameter contains annotations
                     that are attached to the entity parameter in the resource method. In our &lit.http.POST; resource
@@ -663,7 +663,7 @@ MyBean{anyString='Hello World!', anyNumber=42}]]></screen>
         </procedure>
         <note>
             <para>
-                JAX-RS 2.0 is incompatible with JAX-RS 1.x in one step of the entity provider selection algorithm.
+                JAX-RS 3.x/2.x is incompatible with JAX-RS 1.x in one step of the entity provider selection algorithm.
                 JAX-RS 1.x defines sorting keys priorities in the <xref linkend="mbw.writer.selection.algorithm.sortStep" />
                 in exactly opposite order. So, in JAX-RS 1.x the keys are defined in the order: primary media type,
                 secondary type declaration distance where custom providers have always precedence to internal providers.
@@ -679,7 +679,7 @@ MyBean{anyString='Hello World!', anyNumber=42}]]></screen>
 
         <para>
             The algorithm for selection of &lit.jaxrs.ext.MessageBodyReader; is similar, including the incompatibility
-            between JAX-RS 2.0 and JAX-RS 1.x and the property to workaround it. The algorithm is defined as follows:
+            between JAX-RS 3.x/2.x and JAX-RS 1.x and the property to workaround it. The algorithm is defined as follows:
         </para>
         <procedure xml:id="mbw.reader.selection.algorithm">
             <title>&lit.jaxrs.ext.MessageBodyReader; Selection Algorithm</title>

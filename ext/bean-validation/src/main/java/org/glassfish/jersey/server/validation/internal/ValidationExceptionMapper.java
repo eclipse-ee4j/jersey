@@ -35,12 +35,12 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 
 import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.validation.ValidationError;
+import org.glassfish.jersey.server.validation.ValidationErrorData;
 
 /**
  * {@link ExceptionMapper} for {@link ValidationException}.
  * <p/>
- * If {@value ServerProperties#BV_SEND_ERROR_IN_RESPONSE} property is enabled then a list of {@link ValidationError}
+ * If {@value ServerProperties#BV_SEND_ERROR_IN_RESPONSE} property is enabled then a list of {@link ValidationErrorData}
  * instances is sent in {@link Response} as well (in addition to HTTP 400/500 status code). Supported media types are:
  * {@code application/json}/{@code application/xml} (in appropriate provider is registered on server) or
  * {@code text/html}/{@code text/plain} (via custom {@link ValidationErrorMessageBodyWriter}).
@@ -85,7 +85,7 @@ public final class ValidationExceptionMapper implements ExceptionMapper<Validati
                 response.entity(
                         new GenericEntity<>(
                                 ValidationHelper.constraintViolationToValidationErrors(cve),
-                                new GenericType<List<ValidationError>>() {}.getType()
+                                new GenericType<List<ValidationErrorData>>() {}.getType()
                         )
                 );
             }
