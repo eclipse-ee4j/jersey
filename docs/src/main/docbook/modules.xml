@@ -144,7 +144,7 @@
     jersey-container-servlet-core
 </link>
 </entry>
-<entry>Jersey core Servlet 2.x way implementation with jakartified adjustments</entry>
+<entry>Jersey core Servlet 2.x way implementation with Jakarta EE 9 adjustments</entry>
 </row>
 <row>
 <entry>
@@ -153,6 +153,14 @@
 </link>
 </entry>
 <entry>Simple Http Container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-gf-ejb/dependencies.html">
+    jersey-gf-ejb
+</link>
+</entry>
+<entry>Jersey EJB for GlassFish integration</entry>
 </row>
         </tbody>
     </tgroup>
@@ -260,7 +268,7 @@
     jersey-media-json-processing
 </link>
 </entry>
-<entry>Jersey JSON-P (Jakartified JSR 353) entity providers support proxy module.</entry>
+<entry>Jersey Jakarta JSON Processing entity providers support proxy module.</entry>
 </row>
 <row>
 <entry>
@@ -508,6 +516,70 @@
 </link>
 </entry>
 <entry>Jersey Test Framework Core</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-bundle/dependencies.html">
+    jersey-test-framework-provider-bundle
+</link>
+</entry>
+<entry>Jersey Test Framework Providers Bundle</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-external/dependencies.html">
+    jersey-test-framework-provider-external
+</link>
+</entry>
+<entry>Jersey Test Framework - External container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-grizzly2/dependencies.html">
+    jersey-test-framework-provider-grizzly2
+</link>
+</entry>
+<entry>Jersey Test Framework - Grizzly2 container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-inmemory/dependencies.html">
+    jersey-test-framework-provider-inmemory
+</link>
+</entry>
+<entry>Jersey Test Framework - InMemory container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jdk-http/dependencies.html">
+    jersey-test-framework-provider-jdk-http
+</link>
+</entry>
+<entry>Jersey Test Framework - JDK HTTP container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-jetty/dependencies.html">
+    jersey-test-framework-provider-jetty
+</link>
+</entry>
+<entry>Jersey Test Framework - Jetty HTTP container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-netty/dependencies.html">
+    jersey-test-framework-provider-netty
+</link>
+</entry>
+<entry>Jersey Test Framework - Netty container</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-test-framework-provider-simple/dependencies.html">
+    jersey-test-framework-provider-simple
+</link>
+</entry>
+<entry>Jersey Test Framework - Simple HTTP container</entry>
 </row>
 <row>
 <entry>
@@ -949,7 +1021,7 @@
     json-processing-webapp
 </link>
 </entry>
-<entry>Jersey JSON-P (Jakartified JSR 353) example.</entry>
+<entry>Jersey Jakarta JSON Processing example.</entry>
 </row>
 <row>
 <entry>
