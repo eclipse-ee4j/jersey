@@ -48,7 +48,7 @@
             <type>zip</type>
         </dependency>
 -->
-        <dependency>
+        <!--<dependency>   TODO - jakartification
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>bookmark</artifactId>
             <version>${project.version}</version>
@@ -75,7 +75,7 @@
             <version>${project.version}</version>
             <classifier>gf-project-src</classifier>
             <type>zip</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>bookstore-webapp</artifactId>
@@ -168,7 +168,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
-        <dependency>
+        <!--<dependency>  //TODO jakartification
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>extended-wadl-webapp</artifactId>
             <version>${project.version}</version>
@@ -181,7 +181,7 @@
             <version>${project.version}</version>
             <classifier>gf-project-src</classifier>
             <type>zip</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>freemarker-webapp</artifactId>
@@ -231,7 +231,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
-        <dependency>
+        <!--<dependency> //TODO Jakartification
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>helloworld-spring-annotations</artifactId>
             <version>${project.version}</version>
@@ -244,7 +244,7 @@
             <version>${project.version}</version>
             <classifier>project-src</classifier>
             <type>zip</type>
-        </dependency>
+        </dependency>-->
         <!-- There is problem to run Spring example on GF - https://java.net/jira/browse/JERSEY-2032
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
@@ -452,13 +452,13 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
-        <dependency>
+        <!--<dependency> // TODO Jakartification
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>oauth-client-twitter</artifactId>
             <version>${project.version}</version>
             <classifier>project-src</classifier>
             <type>zip</type>
-        </dependency>
+        </dependency>-->
 <!--
         <dependency>
            <groupId>org.glassfish.jersey.examples</groupId>
@@ -468,7 +468,7 @@
             <type>zip</type>
         </dependency>
 -->
-        <dependency>
+        <!--<dependency>  //TODO Jakartification
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>osgi-helloworld-webapp</artifactId>
             <version>${project.version}</version>
@@ -488,7 +488,7 @@
             <version>${project.version}</version>
             <classifier>project-src</classifier>
             <type>zip</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>rx-client-webapp</artifactId>

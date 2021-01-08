@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -467,14 +467,6 @@
 </link>
 </entry>
 <entry>Jersey Reactive Client - RxJava2 (Flowable) provider.</entry>
-</row>
-<row>
-<entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-servlet-portability/dependencies.html">
-    jersey-servlet-portability
-</link>
-</entry>
-<entry>Library that enables writing web applications that run with both Jersey 1.x and Jersey 2.x servlet containers.</entry>
 </row>
 <row>
 <entry>

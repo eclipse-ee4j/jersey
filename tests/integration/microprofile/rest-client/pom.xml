@@ -32,6 +32,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext.microprofile</groupId>
             <artifactId>jersey-mp-rest-client</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Overrides CDI from parent pom -->
@@ -43,7 +44,6 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <version>4.0.0.Alpha1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
