@@ -225,15 +225,17 @@ public class ContentDisposition {
                 return fileNameExt;
             }
 
+            final String charset = matcher.group(CHARSET_GROUP_NAME);
             if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
-                return new StringBuilder(matcher.group(CHARSET_GROUP_NAME))
+                final String language = matcher.group(LANG_GROUP_NAME);
+                return new StringBuilder(charset)
                         .append("'")
-                        .append(matcher.group(LANG_GROUP_NAME) == null ? "" : matcher.group(LANG_GROUP_NAME))
+                        .append(language == null ? "" : language)
                         .append("'")
                         .append(encodeToUriFormat(fileNameValueChars))
                         .toString();
             } else {
-                throw new ParseException(matcher.group(CHARSET_GROUP_NAME) + " charset is not supported", 0);
+                throw new ParseException(charset + " charset is not supported", 0);
             }
         }
 
