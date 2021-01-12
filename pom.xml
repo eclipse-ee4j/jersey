@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -698,11 +698,6 @@
                     <version>1.1</version>
                 </plugin>
                 <!-- TODO: remove the old jetty plugin dependencies -->
-                <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
-                    <version>${mortbay.jetty.plugin.version}</version>
-                </plugin>
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
@@ -1912,28 +1907,6 @@
                 <version>${pax.exam.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty</artifactId>
-                <version>${mortbay.jetty.plugin.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${mortbay.jetty.plugin.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>servlet-api-2.5</artifactId>
-                <version>${jetty.servlet.api.25.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -2079,7 +2052,7 @@
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>6.0.0-RC1</hk2.config.version>
+        <hk2.config.version>6.0.0</hk2.config.version>
         <httpclient.version>4.5.9</httpclient.version>
         <jackson.version>2.11.3</jackson.version>
         <javassist.version>3.25.0-GA</javassist.version>
@@ -2103,7 +2076,6 @@
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
         <rxjava2.version>2.0.4</rxjava2.version>
-        <servlet2.version>2.4</servlet2.version>
         <servlet3.version>3.0.1</servlet3.version>
         <servlet4.version>4.0.3</servlet4.version>
         <simple.version>6.0.1</simple.version>
@@ -2114,18 +2086,18 @@
         <surefire.version>3.0.0-M3</surefire.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>4.0.0.Beta5</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
-        <validation.impl.version>7.0.0.Alpha6</validation.impl.version>
+        <weld.version>4.0.0.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
+        <validation.impl.version>7.0.0.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>6.0.0-RC1</gf.impl.version>
+        <gf.impl.version>6.0.0</gf.impl.version>
         <!-- Jakartified -->
         <cdi.api.version>3.0.0</cdi.api.version>
         <ejb.version>4.0.0</ejb.version>
-        <grizzly2.version>3.0.0-M1</grizzly2.version>
-        <hk2.version>3.0.0-RC1</hk2.version>
+        <grizzly2.version>3.0.0</grizzly2.version>
+        <hk2.version>3.0.1</hk2.version>
         <jsp.version>3.0.0</jsp.version>
         <jstl.version>2.0.0</jstl.version>
         <jta.api.version>2.0.0</jta.api.version>
@@ -2142,24 +2114,19 @@
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>3.0.0</jakarta.jaxb.api.version>
-        <jaxb.ri.version>3.0.0-M5</jaxb.ri.version>
+        <jaxb.ri.version>3.0.0</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.0.beta3</jetty.version>
-        <jetty.plugin.version>11.0.0.beta3</jetty.plugin.version>
+        <jetty.version>11.0.0</jetty.version>
+        <jetty.plugin.version>11.0.0</jetty.plugin.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>2.0.0</jsonp.ri.version>
         <jsonp.jaxrs.version>2.0.0</jsonp.jaxrs.version>
-        <moxy.version>3.0.0-M2</moxy.version>
+        <moxy.version>3.0.0</moxy.version>
         <yasson.version>2.0.1</yasson.version>
         <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
-
-        <mortbay.jetty.plugin.version>6.1.26</mortbay.jetty.plugin.version>
-        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
-
         <mimepull.version>1.9.13</mimepull.version>
-
     </properties>
 </project>
