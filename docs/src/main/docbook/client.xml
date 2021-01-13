@@ -1130,4 +1130,148 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             }
         </programlisting>
     </section>
+    <section>
+        <title>Jersey microprofile REST Client</title>
+        <section>
+            <title>Introduction</title>
+            <para>
+                Jersey provides a REST framework user friendly for all developer trying to build microservices.
+
+                Microservices is a type of application architecture. Instead of developing one big application, the application is built into a collection
+                of smaller services. All of the microservices work together to achieve bigger and more complex features which improve the sustainability
+                and maintainability of your project.
+
+                In this chapter will be described basic features to get started.
+                First, add Jersey client dependency to your project and add the latest release under <literal>version</literal> tag.
+            </para>
+            <programlisting language="java">
+                <dependency>
+                    <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+                    <artifactId>jersey-mp-rest-client</artifactId>
+                    <version>${jersey.version}</version>
+                </dependency>
+            </programlisting>
+            <para>
+                To create the microprofile rest client and use it into your code, two options are available. It can be either programmatically, either annotated.
+                Be aware that creating the client with annotations will required CDI (Contexts and Dependency Injection) to be enable.
+            </para>
+        </section>
+        <section>
+            <title>Build Jersey REST client with builder</title>
+            <para>
+                Jersey provides a microprofile rest client builder to create the client in a programmatic way. Use <literal>RestClientBuilder</literal>
+                class to build it with the <literal>newBuilder</literal> method. The <literal>baseUri</literal> define the server endpoint which will be reached by the client.
+            </para>
+            <programlisting language="java">
+                YourResource mpRestClient = RestClientBuilder.newBuilder()
+                    .baseUri(new URI("http://localhost:8080/"))
+                    .build(YourResource.class);
+            </programlisting>
+            <para>
+                These 3 lines creates a proxy <literal>mpRestClient</literal> which implement YourResource. You can now use the proxy to communicate with your server
+                by calling methods from the YourResource. It is the minimum requirement to build the rest client, nevertheless, it is possible to add
+                some configuration.
+            </para>
+            <programlisting language="java">
+                YourResource client = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:8080/"))
+                .register(clientFilter.class)
+                .build(YourResource.class);
+            </programlisting>
+            <para>
+                The <literal>.register</literal> method can be used to register an instance of a custom component.
+
+                It is possible to configure a custome SSL connection with the server thanks to
+                <literal>.sslcontext</literal> which represent a secure socket protocol implementation.
+                Then the <literal>.keyStore</literal> containing client's private keys, and the certificates with their corresponding public keys.
+                Finally the <literal>.trustStore</literal> containing contain certificates from other parties the client is you expect to communicate with.
+
+                These are a non exhaustive list of possible configuration available, but it gives an insight of the microprofile rest client's configuration.
+                Once the client is configured, it is time to use it with the following example.
+
+                Consider this interface :
+            </para>
+            <programlisting language="java">
+                @Path("/resource")
+                public interface YourResource {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+            </programlisting>
+            <para>
+                This interface contains one method getTest() which return a String.
+
+                So, once the client is built, you can simply call the method from the client like this :
+            </para>
+            <programlisting language="java">
+                String testString = client.getTest();
+            </programlisting>
+            <para>
+                The interface used by the rest client gather several concept from JAX-RS. For example, the HTTP verb annotations such as @GET, @POST etc ...
+                and the @Consumes and @Produces annotations are common with JAX-RS.
+                The parameter which can be injected with annotation like @PathParameter for example come from JAX-RS as well.
+                It makes the usage of Jersey microprofile client very user friendly as it can re used component already develop in the JAX-RS server.
+
+                Jersey has a microprofile rest client example to show how it can be used with a slightly more complex interface.
+            </para>
+        </section>
+        <section>
+            <title>Build REST client with annotations - CDI</title>
+            <para>
+                Another way of building a microprofile rest client is to use the dedicated annotations <literal>@RegisterRestClient</literal> and <literal>@RestClient</literal>.
+                The interface used to create the microprofile rest client is considered as a CDI bean, and have to be annotated with <literal>@RegisterRestClient</literal>.
+                This annotation can be configured with the <literal>baseUri</literal> property to specify the base endpoint of the client.
+                Its value can be overridden using configuration.
+                Once the rest client interface is annotated, it can be injected into any CDI bean thanks to <literal>@Inject</literal>.
+                @RestClient annotation will build the rest client during the injection using the interface annotated with <literal>@RegisterRestClient</literal>.
+
+                For example, annotation can be used in this way :
+            </para>
+            <programlisting language="java">
+                @RegisterRestClient("baseUri = http://localhost:8080/resource")
+                public interface YourResource {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+
+                public class Test {
+
+                    @Inject
+                    @RestClient
+                    YourResource restClient;
+
+                    public String testMethod(){
+                        return restClient.getTest();
+                    }
+                }
+            </programlisting>
+            <para>
+                Now <literal>restClient</literal> can be used in the same way as if it was built with the <literal>restClientBuilder</literal>.
+            </para>
+        </section>
+        <section>
+            <title>Register provider</title>
+            <para>
+                The programmatic way to register a provider is by using the <literal>.register()</literal> method on the rest client as shown above.
+                But there is another way to achieve this goal by using <literal>@RegisterProvider</literal> on the target interface.
+            </para>
+            <programlisting language="java">
+                @Path("resource")
+                @RegisterProvider(CustomResponseFilter.class)
+                public interface YourResource {
+
+                    @Path("/test")
+                    @GET
+                    String getTest();
+                }
+            </programlisting>
+            <para>
+                By using the <literal>@RegisterProvider</literal> annotation, there is no need to call the <literal>.register()</literal> method.
+            </para>
+        </section>
+    </section>
 </chapter>
