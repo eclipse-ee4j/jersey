@@ -388,45 +388,6 @@
 
     <profiles>
         <profile>
-            <id>testsSkipJdk8</id>
-            <activation>
-                <jdk>[1.8,11)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <!-- Exclude unit tests JSONP & MOXY for now -->
-                            <excludes>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonMoxyTest.java</exclude>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonProcessingTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>testsSkipJdk6</id>
-            <activation>
-                <jdk>1.6</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/PackageScanningTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>sonar</id>
             <build>
                 <pluginManagement>
