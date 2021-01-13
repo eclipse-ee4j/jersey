@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import java.net.CookiePolicy;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -33,7 +34,6 @@ import org.glassfish.jersey.jdk.connector.JdkConnectorProperties;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -52,6 +52,17 @@ public class CookieTest extends JerseyTest {
             Cookie c = h.getCookies().get("name");
             String e = (c == null) ? "NO-COOKIE" : c.getValue();
             return Response.ok(e).cookie(new NewCookie("name", "value")).build();
+        }
+
+        @Path("/issue4678")
+        @GET
+        public Response issue4678(@Context HttpHeaders h) {
+            // Read the cookie
+            Cookie c = h.getCookies().get("foo");
+            // Write the value in a new cookie foo2. So we test cookies in both ways.
+            return Response.ok().header(HttpHeaders.SET_COOKIE,
+                    "foo2=" + c.getValue() + "; expires=Wed, 10-Feb-2021 16:16:26 GMT; HttpOnly; Path=/; SameSite=Lax")
+                    .build();
         }
     }
 
@@ -82,4 +93,18 @@ public class CookieTest extends JerseyTest {
         assertEquals("NO-COOKIE", target.request().get(String.class));
         assertEquals("NO-COOKIE", target.request().get(String.class));
     }
+
+    @Test
+    public void testIssue4678() {
+        Response response = target("/CookieResource/issue4678")
+                .request().header(HttpHeaders.COOKIE,
+                        "foo=bar; expires=Wed, 10-Feb-2021 16:16:26 GMT; HttpOnly; Path=/; SameSite=Lax")
+                .get();
+        // Issue 4678 happens here. HttpParser splits the headers value by comma.
+        List<Object> setCookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
+        assertEquals("Expected 1 cookie, but it received: " + setCookies, 1, setCookies.size());
+        NewCookie newCookie = response.getCookies().get("foo2");
+        assertEquals("bar", newCookie.getValue());
+    }
+
 }
