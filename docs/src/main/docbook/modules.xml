@@ -759,12 +759,56 @@
         <tbody>
 <row>
 <entry>
+<!--
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/additional-bundle/dependencies.html">
+    additional-bundle
+</link>
+</entry>
+<entry>OSGi Helloworld Webapp - additional bundle</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/alternate-version-bundle/dependencies.html">
+    alternate-version-bundle
+</link>
+</entry>
+<entry>OSGi Helloworld Webapp - alternate version bundle</entry>
+</row>
+<row>
+<entry>
+-->
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/assemblies/dependencies.html">
     assemblies
 </link>
 </entry>
 <entry>Jersey examples shared assembly types.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bean-validation-webapp/dependencies.html">
+    bean-validation-webapp
+</link>
+</entry>
+<entry>Jersey Bean Validation (JSR-349) example.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark/dependencies.html">
+    bookmark
+</link>
+</entry>
+<entry>Jersey Bookmark example.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookmark-em/dependencies.html">
+    bookmark-em
+</link>
+</entry>
+<entry>Jersey Bookmark example using EntityManager.</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookstore-webapp/dependencies.html">
@@ -773,6 +817,16 @@
 </entry>
 <entry>Jersey MVC Bookstore example.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/bundle/dependencies.html">
+    bundle
+</link>
+</entry>
+<entry>OSGi HttpService example bundle</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/cdi-webapp/dependencies.html">
@@ -837,6 +891,32 @@
 </entry>
 <entry>Jersey example showing exception mappers in action.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/extended-wadl-webapp/dependencies.html">
+    extended-wadl-webapp
+</link>
+</entry>
+<entry>Extended WADL example.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/feed-combiner-java8-webapp/dependencies.html">
+    feed-combiner-java8-webapp
+</link>
+</entry>
+<entry>Jersey Web Application (Servlet) examples parent POM.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/flight-management-webapp/dependencies.html">
+    flight-management-webapp
+</link>
+</entry>
+<entry>Jersey Flight Management Demo Web Application Example</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/freemarker-webapp/dependencies.html">
@@ -845,6 +925,24 @@
 </entry>
 <entry>Jersey Freemarker example.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/functional-test/dependencies.html">
+    functional-test
+</link>
+</entry>
+<entry>Jersey examples</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/functional-test/dependencies.html">
+    functional-test
+</link>
+</entry>
+<entry>OSGi HttpService example</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/groovy/dependencies.html">
@@ -1031,6 +1129,16 @@
 </entry>
 <entry>Jersey JSON with Padding example.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/lib-bundle/dependencies.html">
+    lib-bundle
+</link>
+</entry>
+<entry>OSGi Helloworld Webapp - lib bundle</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-beans-webapp/dependencies.html">
@@ -1063,6 +1171,16 @@
 </entry>
 <entry>Jersey managed client web application example.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/monitoring-webapp/dependencies.html">
+    monitoring-webapp
+</link>
+</entry>
+<entry>Jersey Web Application (Servlet) examples parent POM.</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/multipart-webapp/dependencies.html">
@@ -1079,6 +1197,32 @@
 </entry>
 <entry>Jersey OpenTracing example</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/dependencies.html">
+    osgi-helloworld-webapp
+</link>
+</entry>
+<entry>Jersey examples</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/dependencies.html">
+    osgi-http-service
+</link>
+</entry>
+<entry>OSGi HttpService example</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/reload/dependencies.html">
+    reload
+</link>
+</entry>
+<entry>Jersey resource configuration reload example.</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/rx-client-webapp/dependencies.html">
@@ -1151,6 +1295,16 @@
 </entry>
 <entry>Jersey Servlet 3 example with missing servlet-class in the web.xml file</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/shortener-webapp/dependencies.html">
+    shortener-webapp
+</link>
+</entry>
+<entry>Jersey Shortener Webapp (MVC + Bean Validation).</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/simple-console/dependencies.html">
@@ -1159,6 +1313,16 @@
 </entry>
 <entry>Jersey Simple Console example</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/sparklines/dependencies.html">
+    sparklines
+</link>
+</entry>
+<entry>Jersey examples</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jaxrs-webapp/dependencies.html">
@@ -1191,6 +1355,24 @@
 </entry>
 <entry>Jersey system properties example.</entry>
 </row>
+<!--
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/tone-generator/dependencies.html">
+    tone-generator
+</link>
+</entry>
+<entry>Jersey examples</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/war-bundle/dependencies.html">
+    war-bundle
+</link>
+</entry>
+<entry>OSGi Helloworld Webapp WAR bundle</entry>
+</row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/dependencies.html">
