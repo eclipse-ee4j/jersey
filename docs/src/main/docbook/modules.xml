@@ -112,7 +112,7 @@
     jersey-container-jetty-http
 </link>
 </entry>
-<entry>Jetty Http Container</entry>
+<entry>Jetty Http Container (for JDK 11+)</entry>
 </row>
 <row>
 <entry>
@@ -136,7 +136,7 @@
     jersey-container-servlet
 </link>
 </entry>
-<entry>Jersey core Servlet 3.x implementation</entry>
+<entry>Jersey core Servlet 3.x/5.x implementation</entry>
 </row>
 <row>
 <entry>
@@ -144,7 +144,7 @@
     jersey-container-servlet-core
 </link>
 </entry>
-<entry>Jersey core Servlet 2.x implementation</entry>
+<entry>Jersey core Servlet 2.x way implementation with Jakarta EE 9 adjustments</entry>
 </row>
 <row>
 <entry>
@@ -206,7 +206,7 @@
     jersey-jetty-connector
 </link>
 </entry>
-<entry>Jersey Client Transport via Jetty</entry>
+<entry>Jersey Client Transport via Jetty (for JDK 11+)</entry>
 </row>
 <row>
 <entry>
@@ -256,14 +256,6 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jackson1/dependencies.html">
-    jersey-media-json-jackson1
-</link>
-</entry>
-<entry>Jersey JSON Jackson (1.x) entity providers support module.</entry>
-</row>
-<row>
-<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-media-json-jettison/dependencies.html">
     jersey-media-json-jettison
 </link>
@@ -276,7 +268,7 @@
     jersey-media-json-processing
 </link>
 </entry>
-<entry>Jersey JSON-P (JSR 353) entity providers support proxy module.</entry>
+<entry>Jersey Jakarta JSON Processing entity providers support proxy module.</entry>
 </row>
 <row>
 <entry>
@@ -470,14 +462,6 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-spring4/dependencies.html">
-    jersey-spring4
-</link>
-</entry>
-<entry>Jersey extension module providing support for Spring 4 integration.</entry>
-</row>
-<row>
-<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-wadl-doclet/dependencies.html">
     jersey-wadl-doclet
 </link>
@@ -514,7 +498,7 @@
     container-runner-maven-plugin
 </link>
 </entry>
-<entry>The container runner maven plugin provides means to start and stop a container (currently, Weblogic, Tomcat and Glassfish4
+<entry>The container runner maven plugin provides means to start and stop a container (currently Tomcat 10 and Glassfish 6
         are supported). To deploy an application to this container or to repetitively redeploy and test an application in the container.</entry>
 </row>
 <row>
@@ -673,7 +657,7 @@
     jersey-test-framework-provider-jetty
 </link>
 </entry>
-<entry>Jersey Test Framework - Jetty HTTP container</entry>
+<entry>Jersey Test Framework - Jetty HTTP container (for JDK 11+)</entry>
 </row>
 <row>
 <entry>
@@ -775,6 +759,7 @@
         <tbody>
 <row>
 <entry>
+<!--
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/additional-bundle/dependencies.html">
     additional-bundle
 </link>
@@ -791,12 +776,14 @@
 </row>
 <row>
 <entry>
+-->
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/assemblies/dependencies.html">
     assemblies
 </link>
 </entry>
 <entry>Jersey examples shared assembly types.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bean-validation-webapp/dependencies.html">
@@ -821,6 +808,7 @@
 </entry>
 <entry>Jersey Bookmark example using EntityManager.</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/bookstore-webapp/dependencies.html">
@@ -829,6 +817,7 @@
 </entry>
 <entry>Jersey MVC Bookstore example.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-http-service/bundle/dependencies.html">
@@ -837,6 +826,7 @@
 </entry>
 <entry>OSGi HttpService example bundle</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/cdi-webapp/dependencies.html">
@@ -901,6 +891,7 @@
 </entry>
 <entry>Jersey example showing exception mappers in action.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/extended-wadl-webapp/dependencies.html">
@@ -925,6 +916,7 @@
 </entry>
 <entry>Jersey Flight Management Demo Web Application Example</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/freemarker-webapp/dependencies.html">
@@ -933,6 +925,7 @@
 </entry>
 <entry>Jersey Freemarker example.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/functional-test/dependencies.html">
@@ -949,6 +942,7 @@
 </entry>
 <entry>OSGi HttpService example</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/groovy/dependencies.html">
@@ -1004,22 +998,6 @@
 </link>
 </entry>
 <entry>Example using only the standard JAX-RS API's and the lightweight HTTP server bundled in JDK.</entry>
-</row>
-<row>
-<entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-annotations/dependencies.html">
-    helloworld-spring-annotations
-</link>
-</entry>
-<entry>Spring 4 Integration Jersey Example</entry>
-</row>
-<row>
-<entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/helloworld-spring-webapp/dependencies.html">
-    helloworld-spring-webapp
-</link>
-</entry>
-<entry>Spring 4 Integration Jersey Example</entry>
 </row>
 <row>
 <entry>
@@ -1121,14 +1099,6 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-jackson1/dependencies.html">
-    json-jackson1
-</link>
-</entry>
-<entry>Jersey JSON with Jackson 1.x example.</entry>
-</row>
-<row>
-<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/json-jettison/dependencies.html">
     json-jettison
 </link>
@@ -1149,7 +1119,7 @@
     json-processing-webapp
 </link>
 </entry>
-<entry>Jersey JSON-P (JSR 353) example.</entry>
+<entry>Jersey Jakarta JSON Processing example.</entry>
 </row>
 <row>
 <entry>
@@ -1159,6 +1129,7 @@
 </entry>
 <entry>Jersey JSON with Padding example.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/lib-bundle/dependencies.html">
@@ -1167,6 +1138,7 @@
 </entry>
 <entry>OSGi Helloworld Webapp - lib bundle</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/managed-beans-webapp/dependencies.html">
@@ -1199,6 +1171,7 @@
 </entry>
 <entry>Jersey managed client web application example.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/monitoring-webapp/dependencies.html">
@@ -1207,6 +1180,7 @@
 </entry>
 <entry>Jersey Web Application (Servlet) examples parent POM.</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/multipart-webapp/dependencies.html">
@@ -1217,29 +1191,13 @@
 </row>
 <row>
 <entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth-client-twitter/dependencies.html">
-    oauth-client-twitter
-</link>
-</entry>
-<entry>Twitter client using OAuth 1 support for Jersey that retrieves Tweets from the home timeline of a
-        registered Twitter account.</entry>
-</row>
-<row>
-<entry>
-<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/oauth2-client-google-webapp/dependencies.html">
-    oauth2-client-google-webapp
-</link>
-</entry>
-<entry>Google API data retrieving example using OAuth2 for authentication and authorization</entry>
-</row>
-<row>
-<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/open-tracing/dependencies.html">
     open-tracing
 </link>
 </entry>
 <entry>Jersey OpenTracing example</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/osgi-helloworld-webapp/dependencies.html">
@@ -1264,6 +1222,7 @@
 </entry>
 <entry>Jersey resource configuration reload example.</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/rx-client-webapp/dependencies.html">
@@ -1318,7 +1277,7 @@
     server-sent-events-jaxrs
 </link>
 </entry>
-<entry>Jersey JAX-RS 2.1 Server-Sent Events example.</entry>
+<entry>Jersey JAX-RS 2.1/3.0 Server-Sent Events example.</entry>
 </row>
 <row>
 <entry>
@@ -1336,6 +1295,7 @@
 </entry>
 <entry>Jersey Servlet 3 example with missing servlet-class in the web.xml file</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/shortener-webapp/dependencies.html">
@@ -1344,6 +1304,7 @@
 </entry>
 <entry>Jersey Shortener Webapp (MVC + Bean Validation).</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/simple-console/dependencies.html">
@@ -1352,6 +1313,7 @@
 </entry>
 <entry>Jersey Simple Console example</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/sparklines/dependencies.html">
@@ -1360,13 +1322,14 @@
 </entry>
 <entry>Jersey examples</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/sse-item-store-jaxrs-webapp/dependencies.html">
     sse-item-store-jaxrs-webapp
 </link>
 </entry>
-<entry>Jersey JAX-RS 2.1 SSE API-based item store example.</entry>
+<entry>Jersey JAX-RS 2.1/3.0 SSE API-based item store example.</entry>
 </row>
 <row>
 <entry>
@@ -1392,6 +1355,7 @@
 </entry>
 <entry>Jersey system properties example.</entry>
 </row>
+<!--
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/tone-generator/dependencies.html">
@@ -1408,6 +1372,7 @@
 </entry>
 <entry>OSGi Helloworld Webapp WAR bundle</entry>
 </row>
+-->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/webapp-example-parent/dependencies.html">
