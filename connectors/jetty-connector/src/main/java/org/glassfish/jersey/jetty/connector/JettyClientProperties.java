@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,6 +74,16 @@ public final class JettyClientProperties {
      */
     public static final String ENABLE_SSL_HOSTNAME_VERIFICATION =
             "jersey.config.jetty.client.enableSslHostnameVerification";
+
+    /**
+     * Overrides the default Jetty synchronous listener response max buffer size.
+     * In practise, this allows you to read larger responses.
+     * Size in bytes.
+     * <p/>
+     * If the property is absent, the value is such as specified by Jetty (currently 2MiB).
+     */
+    public static final String SYNC_LISTENER_RESPONSE_MAX_SIZE =
+        "jersey.config.jetty.client.syncListenerResponseMaxSize";
 
     /**
      * Get the value of the specified property.
