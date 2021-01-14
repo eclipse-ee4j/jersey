@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,12 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
+import org.glassfish.jersey.uri.UriComponent;
 
 /**
  * A content disposition header.
@@ -40,6 +43,18 @@ public class ContentDisposition {
     private Date modificationDate;
     private Date readDate;
     private long size;
+
+    private static final String CHARSET_GROUP_NAME = "charset";
+    private static final String CHARSET_REGEX = "(?<" + CHARSET_GROUP_NAME + ">[^']+)";
+    private static final String LANG_GROUP_NAME = "lang";
+    private static final String LANG_REGEX = "(?<" + LANG_GROUP_NAME + ">[a-z]{2,8}(-[a-z0-9-]+)?)?";
+    private static final String FILENAME_GROUP_NAME = "filename";
+    private static final String FILENAME_REGEX = "(?<" + FILENAME_GROUP_NAME + ">.+)";
+    private static final Pattern FILENAME_EXT_VALUE_PATTERN =
+            Pattern.compile(CHARSET_REGEX + "'" + LANG_REGEX + "'" + FILENAME_REGEX,
+                    Pattern.CASE_INSENSITIVE);
+    private static final Pattern FILENAME_VALUE_CHARS_PATTERN =
+            Pattern.compile("(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+", Pattern.CASE_INSENSITIVE);
 
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
@@ -181,7 +196,7 @@ public class ContentDisposition {
     }
 
     private void createParameters() throws ParseException {
-        fileName = parameters.get("filename");
+        fileName = defineFileName();
 
         creationDate = createDate("creation-date");
 
@@ -190,6 +205,49 @@ public class ContentDisposition {
         readDate = createDate("read-date");
 
         size = createLong("size");
+    }
+
+    private String defineFileName() throws ParseException {
+
+        final String fileName = parameters.get("filename");
+        final String fileNameExt = parameters.get("filename*");
+
+        if (fileNameExt == null) {
+            return fileName;
+        }
+
+        final Matcher matcher = FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt);
+
+        if (matcher.matches()) {
+
+            final String fileNameValueChars = matcher.group(FILENAME_GROUP_NAME);
+            if (isFilenameValueCharsEncoded(fileNameValueChars)) {
+                return fileNameExt;
+            }
+
+            final String charset = matcher.group(CHARSET_GROUP_NAME);
+            if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
+                final String language = matcher.group(LANG_GROUP_NAME);
+                return new StringBuilder(charset)
+                        .append("'")
+                        .append(language == null ? "" : language)
+                        .append("'")
+                        .append(encodeToUriFormat(fileNameValueChars))
+                        .toString();
+            } else {
+                throw new ParseException(charset + " charset is not supported", 0);
+            }
+        }
+
+        throw new ParseException(fileNameExt + " - unsupported filename parameter", 0);
+    }
+
+    private String encodeToUriFormat(final String parameter) {
+        return UriComponent.contextualEncode(parameter, UriComponent.Type.UNRESERVED);
+    }
+
+    private boolean isFilenameValueCharsEncoded(final String parameter) {
+        return FILENAME_VALUE_CHARS_PATTERN.matcher(parameter).matches();
     }
 
     private Date createDate(final String name) throws ParseException {
