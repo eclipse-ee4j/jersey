@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -25,19 +25,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
+import javax.inject.Singleton;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
 
-import javax.inject.Singleton;
-
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;
+import org.glassfish.jersey.internal.inject.PrimitiveMapper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.model.Parameter;
-import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.server.internal.LocalizationMessages;
 
 /**
  * Implementation of {@link MultivaluedParameterExtractorProvider}. For each
@@ -119,6 +118,20 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
                 } catch (final Exception e) {
                     throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
                 }
+            }
+        } else if (rawType.isArray()) {
+            converter = paramConverterFactory.getConverter(rawType.getComponentType(),
+                    rawType.getComponentType(),
+                    annotations);
+            if (converter == null) {
+                return null;
+            }
+            try {
+                return ArrayExtractor.getInstance(rawType.getComponentType(), converter, parameterName, defaultValue);
+            } catch (final ExtractorException e) {
+                throw e;
+            } catch (final Exception e) {
+                throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
             }
         }
 
