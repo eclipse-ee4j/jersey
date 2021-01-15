@@ -64,7 +64,6 @@ public class IPAddressTest {
     @Before
     public void startServer() {
         server = GrizzlyHttpServerFactory.createHttpServer(iPv4Uri);
-        Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
 
         try {
             server.start();
