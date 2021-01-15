@@ -51,7 +51,6 @@ public class HttpKeepAliveTest {
     @Before
     public void startServer()  {
         server = GrizzlyHttpServerFactory.createHttpServer(BASE_URI);
-        Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
 
         try {
             server.start();
