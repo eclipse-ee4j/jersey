@@ -20,13 +20,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static org.glassfish.jersey.client.proxy.MyId.myId;
 
 public class MyResource implements MyResourceIfc {
 
     @Context HttpHeaders headers;
+
+    private static final Map<MyId, MyBean> beans = new HashMap<>();
+
+    static {
+        beans.put(myId(123L), new MyBean("Ahoj"));
+        beans.put(myId(456L), new MyBean("Got it!"));
+    }
 
     @Override
     public String getIt() {
@@ -44,8 +60,16 @@ public class MyResource implements MyResourceIfc {
     }
 
     @Override
-    public String getId(String id) {
-        return id;
+    public MyBean getById(MyId id) {
+        return beans.get(id);
+    }
+
+    @Override
+    public List<MyBean> getByIds(Collection<MyId> ids) {
+        List<MyBean> beans = ids.stream()
+                                .map(this::getById)
+                                .collect(toList());
+        return beans;
     }
 
     @Override

@@ -16,13 +16,9 @@
 
 package org.glassfish.jersey.client;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.glassfish.jersey.internal.inject.CalendarConverter;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,11 +26,16 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.ReaderInterceptorContext;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
-
-import org.junit.Before;
-import org.junit.Test;
+import static java.util.Calendar.NOVEMBER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -50,7 +51,7 @@ public class JerseyWebTargetTest {
 
     @Before
     public void setUp() {
-        this.client = (JerseyClient) ClientBuilder.newClient();
+        this.client = (JerseyClient) ClientBuilder.newClient(new ClientConfig().register(new CalendarConverter()));
         this.target = client.target("/");
     }
 
@@ -127,7 +128,7 @@ public class JerseyWebTargetTest {
     @Test
     public void testResolveTemplate2() {
         final JerseyWebTarget newTarget = target.path("path/{a}").queryParam("query", "{q}").resolveTemplate("a", "param-a");
-        final JerseyUriBuilder uriBuilder = (JerseyUriBuilder) newTarget.getUriBuilder();
+        final UriBuilder uriBuilder = newTarget.getUriBuilder();
         uriBuilder.resolveTemplate("q", "param-q").resolveTemplate("a", "will-be-ignored");
         assertEquals(URI.create("/path/param-a?query=param-q"), uriBuilder.build());
 
@@ -149,11 +150,11 @@ public class JerseyWebTargetTest {
         assertEquals("/path/param-a/{b}?query=param-q", webTarget.getUriBuilder().toTemplate());
 
         // resolve b in UriBuilder
-        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), ((JerseyUriBuilder) webTarget.getUriBuilder())
+        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), webTarget.getUriBuilder()
                 .resolveTemplate("b", "param-b").build());
 
         // resolve in build method
-        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), ((JerseyUriBuilder) webTarget.getUriBuilder())
+        assertEquals(URI.create("/path/param-a/param-b?query=param-q"), webTarget.getUriBuilder()
                 .build("param-b"));
     }
 
@@ -307,6 +308,22 @@ public class JerseyWebTargetTest {
     }
 
     @Test
+    // Reproducer JERSEY-4315
+    public void testQueryParams_whenGregorianCalendarIsPassed_thenUseRegisteredCalendarConverter() {
+        GregorianCalendar calendar = new GregorianCalendar(2019, NOVEMBER, 15);
+        URI uri = target.path("a").queryParam("date", calendar).getUri();
+        assertEquals("/a?date=15-11-2019", uri.toString());
+    }
+
+    @Test
+    // Reproducer JERSEY-4315
+    public void testMatrixParams_whenGregorianCalendarIsPassed_thenUseRegisteredCalendarConverter() {
+        GregorianCalendar calendar = new GregorianCalendar(2019, NOVEMBER, 15);
+        URI uri = target.path("a").matrixParam("date", calendar).getUri();
+        assertEquals("/a;date=15-11-2019", uri.toString());
+    }
+
+    @Test
     public void testMatrixParams() {
         URI uri;
 
@@ -442,7 +459,6 @@ public class JerseyWebTargetTest {
 
         assertEquals(target, wt);
     }
-
 }
 
 
