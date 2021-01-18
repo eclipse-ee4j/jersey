@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -464,7 +464,8 @@ class HttpParser {
         /* Authenticate headers contain comma separated list of properties, which would be normally treated as separate header
          values */
         return Constants.WWW_AUTHENTICATE.equalsIgnoreCase(headerParsingState.headerName)
-                || Constants.PROXY_AUTHENTICATE.equalsIgnoreCase(headerParsingState.headerName);
+                || Constants.PROXY_AUTHENTICATE.equalsIgnoreCase(headerParsingState.headerName)
+                || HttpHeaders.SET_COOKIE.equalsIgnoreCase(headerParsingState.headerName);
 
     }
 
