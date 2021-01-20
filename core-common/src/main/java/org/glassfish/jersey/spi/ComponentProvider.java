@@ -23,7 +23,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 /**
  * Component provider interface to allow custom management of 3rd party
  * components life-cycle and dependency injection.
- * 
+ *
  * @author Jakub Podlesak
  */
 public interface ComponentProvider {
