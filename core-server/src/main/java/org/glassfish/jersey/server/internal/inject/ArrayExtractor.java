@@ -68,7 +68,7 @@ class ArrayExtractor<T> extends AbstractParamValueExtractor<T> implements Multiv
      *
      * @param type           the type class to manage runtime generic.
      * @param parameterName  extracted parameter name.
-     * @param defaultValue   default parameter value.
+     * @param defaultValueString   default parameter value.
      * @return string array extractor instance.
      */
     public static <T> ArrayExtractor<T> getInstance(Class<?> type,
