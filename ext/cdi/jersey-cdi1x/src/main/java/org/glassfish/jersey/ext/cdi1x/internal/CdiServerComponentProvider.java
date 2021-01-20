@@ -17,7 +17,6 @@
 package org.glassfish.jersey.ext.cdi1x.internal;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 
 import javax.enterprise.inject.spi.BeanManager;
@@ -43,11 +42,6 @@ public class CdiServerComponentProvider implements ComponentProvider {
     @Override
     public boolean bind(Class<?> component, Set<Class<?>> providerContracts) {
         return componentProvider != null ? componentProvider.bind(component, providerContracts) : false;
-    }
-
-    @Override
-    public boolean bind(Class<?> component, ContractProvider contractProvider) {
-        return componentProvider != null ? componentProvider.bind(component, contractProvider) : false;
     }
 
     @Override
