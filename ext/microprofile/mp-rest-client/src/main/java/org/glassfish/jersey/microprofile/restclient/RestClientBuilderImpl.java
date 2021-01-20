@@ -159,6 +159,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         processProviders(interfaceClass);
         InjectionManagerExposer injectionManagerExposer = new InjectionManagerExposer();
         register(injectionManagerExposer);
+        register(SseMessageBodyReader.class);
 
         //We need to check first if default exception mapper was not disabled by property on builder.
         registerExceptionMapper();
