@@ -64,9 +64,9 @@ public class JerseyUriBuilder extends UriBuilder {
 
     private MultivaluedMap<String, String> matrixParams;
 
-    private final StringBuilder query;
+    protected final StringBuilder query;
 
-    private MultivaluedMap<String, String> queryParams;
+    protected MultivaluedMap<String, String> queryParams;
 
     private String fragment;
 
@@ -78,7 +78,7 @@ public class JerseyUriBuilder extends UriBuilder {
         query = new StringBuilder();
     }
 
-    private JerseyUriBuilder(final JerseyUriBuilder that) {
+    protected JerseyUriBuilder(final JerseyUriBuilder that) {
         this.scheme = that.scheme;
         this.ssp = that.ssp;
         this.authority = that.authority;
@@ -685,7 +685,7 @@ public class JerseyUriBuilder extends UriBuilder {
         return this;
     }
 
-    private void checkSsp() {
+    protected void checkSsp() {
         if (ssp != null) {
             throw new IllegalArgumentException(LocalizationMessages.URI_BUILDER_SCHEMA_PART_OPAQUE());
         }
@@ -768,7 +768,7 @@ public class JerseyUriBuilder extends UriBuilder {
         queryParams = null;
     }
 
-    private String encode(final String s, final UriComponent.Type type) {
+    protected String encode(final String s, final UriComponent.Type type) {
         return UriComponent.contextualEncode(s, type, true);
     }
 

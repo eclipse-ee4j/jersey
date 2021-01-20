@@ -17,6 +17,7 @@
 package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.ws.rs.QueryParam;
@@ -43,8 +44,10 @@ class QueryParamModel extends ParamModel<Map<String, Object[]>> {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
         if (resolvedValue instanceof Object[]) {
             requestPart.put(queryParamName, (Object[]) resolvedValue);
+        } else if (resolvedValue instanceof Collection) {
+            requestPart.put(queryParamName, ((Collection) resolvedValue).toArray());
         } else {
-            requestPart.put(queryParamName, new Object[] {resolvedValue});
+            requestPart.put(queryParamName, new Object[]{resolvedValue});
         }
         return requestPart;
     }
