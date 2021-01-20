@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
-            <version>${config.version}</version>
+            <version>${microprofile.config.version}</version>
         </dependency>
 
         <dependency>
