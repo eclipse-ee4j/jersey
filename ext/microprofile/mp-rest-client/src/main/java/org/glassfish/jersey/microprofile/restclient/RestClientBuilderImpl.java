@@ -99,6 +99,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private char[] sslKeyStorePassword;
     private ConnectorProvider connector;
     private QueryParamStyle queryParamStyle;
+    private boolean followRedirects;
 
     RestClientBuilderImpl() {
         clientBuilder = new JerseyRestClientBuilder();
@@ -195,6 +196,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
             ((Initializable) client).preInitialize();
         }
         WebTarget webTarget = client.target(this.uri);
+        webTarget.property(ClientProperties.FOLLOW_REDIRECTS, followRedirects);
 
         if (queryParamStyle != null) {
             webTarget.property(QueryParamStyle.class.getSimpleName(), queryParamStyle);
@@ -428,6 +430,12 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (instance instanceof InboundHeadersProvider) {
             inboundHeaderProviders.add((InboundHeadersProvider) instance);
         }
+    }
+
+    @Override
+    public RestClientBuilder followRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+        return this;
     }
 
     @Override
