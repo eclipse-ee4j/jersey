@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -100,7 +100,7 @@ public final class TestInjectionManagerFactory {
                 new ParamExtractorConfigurator(),
                 new ValueParamProviderConfigurator(),
                 new JerseyResourceContextConfigurator(),
-                new ComponentProviderConfigurator(),
+                new ServerComponentProviderConfigurator(),
                 new TestConfigConfigurator(runtimeConfig),
                 new ContextResolverFactory.ContextResolversConfigurator(),
                 new MessageBodyFactory.MessageBodyWorkersConfigurator(),

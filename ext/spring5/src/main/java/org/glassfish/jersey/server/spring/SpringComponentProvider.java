@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,6 @@ import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.ApplicationHandler;
-import org.glassfish.jersey.server.spi.ComponentProvider;
 
 import org.jvnet.hk2.spring.bridge.api.SpringBridge;
 import org.jvnet.hk2.spring.bridge.api.SpringIntoHK2Bridge;
@@ -40,6 +39,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.glassfish.jersey.server.spi.ServerComponentProvider;
 
 /**
  * Custom ComponentProvider class.
@@ -48,7 +48,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author Marko Asplund (marko.asplund at yahoo.com)
  */
-public class SpringComponentProvider implements ComponentProvider {
+public class SpringComponentProvider implements ServerComponentProvider {
 
     private static final Logger LOGGER = Logger.getLogger(SpringComponentProvider.class.getName());
     private static final String DEFAULT_CONTEXT_CONFIG_LOCATION = "applicationContext.xml";

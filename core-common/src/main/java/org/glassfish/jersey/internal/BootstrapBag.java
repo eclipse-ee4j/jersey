@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,15 +17,19 @@
 package org.glassfish.jersey.internal;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.RequestScope;
+import org.glassfish.jersey.spi.ComponentProvider;
 import org.glassfish.jersey.spi.ContextResolvers;
 import org.glassfish.jersey.spi.ExceptionMappers;
 
@@ -45,6 +49,7 @@ public class BootstrapBag {
     private ContextResolvers contextResolvers;
     private ManagedObjectsFinalizer managedObjectsFinalizer;
     private List<AutoDiscoverable> autoDiscoverables;
+    private LazyValue<Collection<ComponentProvider>> componentProviders;
 
     /**
      * Gets a list of {@link AutoDiscoverable}.
@@ -187,4 +192,13 @@ public class BootstrapBag {
     protected static void requireNonNull(Object object, Type type) {
         Objects.requireNonNull(object, type + " has not been added into BootstrapBag yet");
     }
+
+    public LazyValue<Collection<ComponentProvider>> getComponentProviders() {
+        return componentProviders;
+    }
+
+    public void setComponentProviders(LazyValue<Collection<ComponentProvider>> componentProviders) {
+        this.componentProviders = componentProviders;
+    }
 }
+

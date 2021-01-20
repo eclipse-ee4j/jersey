@@ -422,6 +422,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
                     new RequestScope.RequestScopeConfigurator(),
                     new ParamConverterConfigurator(),
                     new ParameterUpdaterConfigurator(),
+                    new ClientComponentProviderConfigurator(),
                     new RuntimeConfigConfigurator(runtimeCfgState),
                     new ContextResolverFactory.ContextResolversConfigurator(),
                     messageBodyWorkersConfigurator,
@@ -442,7 +443,13 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             runtimeCfgState.configureMetaProviders(injectionManager, bootstrapBag.getManagedObjectsFinalizer());
 
             // Bind providers.
-            ProviderBinder.bindProviders(runtimeCfgState.getComponentBag(), RuntimeType.CLIENT, null, injectionManager);
+            ProviderBinder.bindProviders(
+                    bootstrapBag,
+                    runtimeCfgState.getComponentBag(),
+                    RuntimeType.CLIENT,
+                    null,
+                    injectionManager
+            );
 
             ClientExecutorProvidersConfigurator executorProvidersConfigurator =
                     new ClientExecutorProvidersConfigurator(runtimeCfgState.getComponentBag(),

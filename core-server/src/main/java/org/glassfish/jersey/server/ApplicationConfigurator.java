@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,8 @@ import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.collection.Value;
-import org.glassfish.jersey.server.spi.ComponentProvider;
+import org.glassfish.jersey.server.spi.ServerComponentProvider;
+import org.glassfish.jersey.spi.ComponentProvider;
 
 /**
  * Configurator which initializes and register {@link Application} instance into {@link InjectionManager} and

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,7 @@ import org.glassfish.jersey.ext.cdi1x.internal.GenericCdiBeanSupplier;
 import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.server.spi.ComponentProvider;
+import org.glassfish.jersey.server.spi.ServerComponentProvider;
 
 /**
  * Jersey CDI extension that provides means to retain {@link WebApplicationException}
@@ -56,7 +56,7 @@ import org.glassfish.jersey.server.spi.ComponentProvider;
  * @author Jakub Podlesak
  */
 @Priority(value = Interceptor.Priority.PLATFORM_BEFORE + 199)
-public class TransactionalExceptionInterceptorProvider implements ComponentProvider, Extension {
+public class TransactionalExceptionInterceptorProvider implements ServerComponentProvider, Extension {
 
     private InjectionManager injectionManager;
     private BeanManager beanManager;

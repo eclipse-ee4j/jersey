@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,6 +41,7 @@ import javax.annotation.Priority;
 import javax.inject.Inject;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
+import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
@@ -578,12 +579,13 @@ public class CommonConfigTest {
     @Test
     public void testProviderOrderManual() throws Exception {
         InjectionManager injectionManager = Injections.createInjectionManager();
+        BootstrapBag bootstrapBag = new BootstrapBag();
 
         config.register(MidPriorityProvider.class, 500);
         config.register(LowPriorityProvider.class, 20);
         config.register(HighPriorityProvider.class, 150);
 
-        ProviderBinder.bindProviders(config.getComponentBag(), injectionManager);
+        ProviderBinder.bindProviders(bootstrapBag, config.getComponentBag(), injectionManager);
 
         injectionManager.completeRegistration();
         final Iterable<WriterInterceptor> allProviders =
@@ -600,12 +602,13 @@ public class CommonConfigTest {
     @Test
     public void testProviderOrderSemiAutomatic() throws Exception {
         InjectionManager injectionManager = Injections.createInjectionManager();
+        BootstrapBag bootstrapBag = new BootstrapBag();
 
         config.register(MidPriorityProvider.class, 50);
         config.register(LowPriorityProvider.class, 2000);
         config.register(HighPriorityProvider.class);
 
-        ProviderBinder.bindProviders(config.getComponentBag(), injectionManager);
+        ProviderBinder.bindProviders(bootstrapBag, config.getComponentBag(), injectionManager);
         injectionManager.completeRegistration();
         final Iterable<WriterInterceptor> allProviders =
                 Providers.getAllProviders(injectionManager, WriterInterceptor.class, new RankedComparator<>());
@@ -621,11 +624,13 @@ public class CommonConfigTest {
     @Test
     public void testProviderOrderAutomatic() throws Exception {
         InjectionManager injectionManager = Injections.createInjectionManager();
+        BootstrapBag bootstrapBag = new BootstrapBag();
+
         config.register(MidPriorityProvider.class);
         config.register(LowPriorityProvider.class);
         config.register(HighPriorityProvider.class);
 
-        ProviderBinder.bindProviders(config.getComponentBag(), injectionManager);
+        ProviderBinder.bindProviders(bootstrapBag, config.getComponentBag(), injectionManager);
         injectionManager.completeRegistration();
 
         final Iterable<WriterInterceptor> allProviders =
@@ -660,7 +665,8 @@ public class CommonConfigTest {
         contracts.clear();
 
         InjectionManager injectionManager = Injections.createInjectionManager();
-        ProviderBinder.bindProviders(config.getComponentBag(), injectionManager);
+        BootstrapBag bootstrapBag = new BootstrapBag();
+        ProviderBinder.bindProviders(bootstrapBag, config.getComponentBag(), injectionManager);
 
         injectionManager.completeRegistration();
         final Iterable<WriterInterceptor> writerInterceptors =

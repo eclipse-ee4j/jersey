@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -85,7 +85,6 @@ import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.Resource;
-import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 import org.glassfish.hk2.api.ClassAnalyzer;
@@ -95,10 +94,11 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.glassfish.jersey.server.spi.ServerComponentProvider;
 
 /**
  * Jersey CDI integration implementation.
- * Implements {@link ComponentProvider Jersey component provider} to serve CDI beans
+ * Implements {@link ServerComponentProvider Jersey component provider} to serve CDI beans
  * obtained from the actual CDI bean manager.
  * To properly inject JAX-RS/Jersey managed beans into CDI, it also
  * serves as a {@link Extension CDI Extension}, that intercepts CDI injection targets.
@@ -106,7 +106,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Jakub Podlesak
  */
 @Priority(200)
-public class CdiComponentProvider implements ComponentProvider, Extension {
+public class CdiComponentProvider implements ServerComponentProvider, Extension {
 
     private static final Logger LOGGER = Logger.getLogger(CdiComponentProvider.class.getName());
 
@@ -344,7 +344,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
     }
 
-    private boolean isCdiComponent(final Class<?> component) {
+    boolean isCdiComponent(final Class<?> component) {
         final Annotation[] qualifiers = CdiUtil.getQualifiers(component.getAnnotations());
         return !beanManager.getBeans(component, qualifiers).isEmpty();
     }

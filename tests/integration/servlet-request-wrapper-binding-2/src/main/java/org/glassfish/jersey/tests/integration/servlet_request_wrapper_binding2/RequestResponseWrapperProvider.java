@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,6 @@ import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.RequestScopedInitializer;
 import org.glassfish.jersey.servlet.internal.spi.NoOpServletContainerProvider;
 import org.glassfish.jersey.servlet.internal.spi.RequestContextProvider;
@@ -77,6 +76,7 @@ import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 import org.jvnet.hk2.internal.ServiceHandleImpl;
+import org.glassfish.jersey.server.spi.ServerComponentProvider;
 
 /**
  * Servlet container provider that wraps the original Servlet request/response.
@@ -92,7 +92,7 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
     private final Type RESPONSE_TYPE = (new TypeLiteral<Ref<HttpServletResponseWrapper>>() {
     }).getType();
 
-    public static class DescriptorProvider implements ComponentProvider {
+    public static class DescriptorProvider implements ServerComponentProvider {
 
         @Override
         public void initialize(InjectionManager injectionManager) {

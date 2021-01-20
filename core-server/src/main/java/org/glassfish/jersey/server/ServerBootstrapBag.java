@@ -22,16 +22,12 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.BootstrapBag;
-import org.glassfish.jersey.internal.util.collection.LazyValue;
-import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.server.internal.JerseyResourceContext;
 import org.glassfish.jersey.server.internal.ProcessingProviders;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
-import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
 import org.glassfish.jersey.server.model.ModelProcessor;
 import org.glassfish.jersey.server.model.ResourceMethodInvoker;
 import org.glassfish.jersey.server.model.ResourceModel;
-import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**
@@ -49,7 +45,6 @@ public class ServerBootstrapBag extends BootstrapBag {
     private MultivaluedParameterExtractorProvider multivaluedParameterExtractorProvider;
     private ProcessingProviders processingProviders;
     private JerseyResourceContext resourceContext;
-    private LazyValue<Collection<ComponentProvider>> componentProviders;
     private ResourceMethodInvoker.Builder resourceMethodInvokerBuilder;
     private ResourceBag resourceBag;
     private ResourceModel resourceModel;
@@ -128,15 +123,6 @@ public class ServerBootstrapBag extends BootstrapBag {
 
     public void setResourceContext(JerseyResourceContext resourceContext) {
         this.resourceContext = resourceContext;
-    }
-
-    public LazyValue<Collection<ComponentProvider>> getComponentProviders() {
-        requireNonNull(componentProviders, new GenericType<LazyValue<Collection<ComponentProvider>>>() {}.getType());
-        return componentProviders;
-    }
-
-    public void setComponentProviders(LazyValue<Collection<ComponentProvider>> componentProviders) {
-        this.componentProviders = componentProviders;
     }
 
     public ResourceMethodInvoker.Builder getResourceMethodInvokerBuilder() {

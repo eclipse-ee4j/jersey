@@ -275,7 +275,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
                 new ParamExtractorConfigurator(),
                 new ValueParamProviderConfigurator(),
                 new JerseyResourceContextConfigurator(),
-                new ComponentProviderConfigurator(),
+                new ServerComponentProviderConfigurator(),
                 new JaxrsProviders.ProvidersConfigurator(),
                 applicationConfigurator,
                 new RuntimeConfigConfigurator(),
