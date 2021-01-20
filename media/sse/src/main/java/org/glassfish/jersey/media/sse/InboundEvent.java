@@ -56,7 +56,7 @@ public class InboundEvent implements InboundSseEvent {
     /**
      * Inbound event builder. This implementation is not thread-safe.
      */
-    static class Builder {
+    public static class Builder {
 
         private String name;
         private String id;
