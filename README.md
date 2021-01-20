@@ -52,8 +52,8 @@ Goals of Jersey project can be summarized in the following points:
 
 <h4>Jersey 3.x</h4>
 	<ul>
-		<li><a href="{{ site.links.newJerseyURL }}/documentation/3.0.0/index.html">latest Jakartified (3.0.0) Jersey User Guide</a></li>
-		<li><a href="{{ site.links.newJerseyURL }}/apidocs/3.0.0/jersey/index.html">latest Jakartified (3.0.0) Jersey API</a></li>
+		<li><a href="{{ site.links.newJerseyURL }}/documentation/{{ site.latest3xFolder }}/index.html">latest Jakarta EE9 ({{ site.latest3xVersion }}) Jersey User Guide</a></li>
+		<li><a href="{{ site.links.newJerseyURL }}/apidocs/{{ site.latest3xFolder }}/jersey/index.html">latest Jakarta EE9 ({{ site.latest3xVersion }}) Jersey API</a></li>
         </ul>
 <h4>Jersey 2.x</h4>
 	<ul><li><a href="{{ site.links.newJerseyURL }}/documentation/latest/index.html">latest Jersey {{ site.latestVersion }} User Guide</a></li>
