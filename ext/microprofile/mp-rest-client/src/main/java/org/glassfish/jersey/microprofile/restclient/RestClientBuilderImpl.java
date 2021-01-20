@@ -56,9 +56,11 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
@@ -96,9 +98,10 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private KeyStore sslKeyStore;
     private char[] sslKeyStorePassword;
     private ConnectorProvider connector;
+    private QueryParamStyle queryParamStyle;
 
     RestClientBuilderImpl() {
-        clientBuilder = ClientBuilder.newBuilder();
+        clientBuilder = new JerseyRestClientBuilder();
         responseExceptionMappers = new HashSet<>();
         paramConverterProviders = new HashSet<>();
         inboundHeaderProviders = new HashSet<>();
@@ -185,13 +188,17 @@ class RestClientBuilderImpl implements RestClientBuilder {
             ClientConfig config = new ClientConfig();
             config.loadFrom(getConfiguration());
             config.connectorProvider(connector);
-            client = ClientBuilder.newClient(config);
+            client = clientBuilder.withConfig(config).build();
         }
 
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();
         }
         WebTarget webTarget = client.target(this.uri);
+
+        if (queryParamStyle != null) {
+            webTarget.property(QueryParamStyle.class.getSimpleName(), queryParamStyle);
+        }
 
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
@@ -421,6 +428,12 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (instance instanceof InboundHeadersProvider) {
             inboundHeaderProviders.add((InboundHeadersProvider) instance);
         }
+    }
+
+    @Override
+    public RestClientBuilder queryParamStyle(QueryParamStyle queryParamStyle) {
+        this.queryParamStyle = queryParamStyle;
+        return this;
     }
 
     private static class InjectionManagerExposer implements Feature {

@@ -47,10 +47,10 @@ import org.glassfish.jersey.model.internal.RankedProvider;
  */
 public class JerseyClientBuilder extends ClientBuilder {
 
-    private final ClientConfig config;
-    private HostnameVerifier hostnameVerifier;
-    private SslConfigurator sslConfigurator;
-    private SSLContext sslContext;
+    protected final ClientConfig config;
+    protected HostnameVerifier hostnameVerifier;
+    protected SslConfigurator sslConfigurator;
+    protected SSLContext sslContext;
 
     private static final List<ClientBuilderListener> CLIENT_BUILDER_LISTENERS;
 
