@@ -84,6 +84,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
     private static final String CONFIG_SSL_KEY_STORE_PASSWORD = "/mp-rest/keyStorePassword";
     private static final String CONFIG_SSL_HOSTNAME_VERIFIER = "/mp-rest/hostnameVerifier";
     private static final String CONFIG_PROVIDERS = "/mp-rest/providers";
+    private static final String CONFIG_FOLLOW_REDIRECTS = "/mp-rest/followRedirects";
     private static final String CONFIG_QUERY_PARAM_STYLE = "/mp-rest/queryParamStyle";
     private static final String DEFAULT_KEYSTORE_TYPE = "JKS";
     private static final String CLASSPATH_LOCATION = "classpath:";
@@ -137,6 +138,8 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         getConfigOption(Long.class, CONFIG_READ_TIMEOUT)
                 .ifPresent(aLong -> restClientBuilder.readTimeout(aLong, TimeUnit.MILLISECONDS));
 
+        getConfigOption(Boolean.class, CONFIG_FOLLOW_REDIRECTS)
+                .ifPresent(value -> restClientBuilder.followRedirects(value));
         getConfigOption(String.class, CONFIG_QUERY_PARAM_STYLE)
                 .ifPresent(value -> restClientBuilder.queryParamStyle(QueryParamStyle.valueOf(value)));
 
