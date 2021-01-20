@@ -17,6 +17,7 @@
 package org.glassfish.jersey.ext.cdi1x.internal;
 
 import java.lang.annotation.Annotation;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -31,6 +32,7 @@ import javax.inject.Qualifier;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.BeanManagerProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
 import org.glassfish.jersey.internal.ServiceFinder;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.model.internal.RankedComparator;
 import org.glassfish.jersey.model.internal.RankedProvider;
 
@@ -145,5 +147,13 @@ public final class CdiUtil {
             return b.getScope();
         }
         return null;
+    }
+
+    static final boolean IS_SERVER_AVAILABLE = isServerAvailable();
+
+    private static boolean isServerAvailable() {
+        final String serverComponentProvider = "org.glassfish.jersey.server.spi.ComponentProvider";
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(serverComponentProvider));
+        return aClass != null;
     }
 }
