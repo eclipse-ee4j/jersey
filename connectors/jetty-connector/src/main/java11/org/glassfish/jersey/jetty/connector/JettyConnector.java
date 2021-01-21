@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieStore;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,15 +46,14 @@ import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
-import org.eclipse.jetty.client.ConnectionPool;
 import org.eclipse.jetty.client.HttpClientTransport;
-import org.eclipse.jetty.client.HttpDestination;
 import org.eclipse.jetty.client.HttpRequest;
-import org.eclipse.jetty.client.Origin;
 import org.eclipse.jetty.client.http.HttpClientTransportOverHTTP;
 import org.eclipse.jetty.io.ClientConnector;
-import org.eclipse.jetty.io.Connection;
-import org.eclipse.jetty.io.EndPoint;
+import org.eclipse.jetty.client.util.BasicAuthentication;
+import org.eclipse.jetty.client.util.BytesContentProvider;
+import org.eclipse.jetty.client.util.FutureResponseListener;
+import org.eclipse.jetty.client.util.OutputStreamContentProvider;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -77,9 +74,6 @@ import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.api.Result;
-import org.eclipse.jetty.client.util.BasicAuthentication;
-import org.eclipse.jetty.client.util.BytesContentProvider;
-import org.eclipse.jetty.client.util.OutputStreamContentProvider;
 import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http.HttpFields;
 import org.eclipse.jetty.http.HttpHeader;
@@ -142,6 +136,7 @@ class JettyConnector implements Connector {
     private final HttpClient client;
     private final CookieStore cookieStore;
     private final Configuration configuration;
+    private final Optional<Integer> syncListenerResponseMaxSize;
 
     /**
      * Create the new Jetty client connector.
@@ -214,6 +209,16 @@ class JettyConnector implements Connector {
             client.setCookieStore(new HttpCookieStore.Empty());
         }
 
+        final Object slResponseMaxSize = configuration.getProperties()
+            .get(JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE);
+        if (slResponseMaxSize != null && slResponseMaxSize instanceof Integer
+            && (Integer) slResponseMaxSize > 0) {
+            this.syncListenerResponseMaxSize = Optional.of((Integer) slResponseMaxSize);
+        }
+        else {
+            this.syncListenerResponseMaxSize = Optional.empty();
+        }
+
         try {
             client.start();
         } catch (final Exception e) {
@@ -264,7 +269,16 @@ class JettyConnector implements Connector {
         }
 
         try {
-            final ContentResponse jettyResponse = jettyRequest.send();
+            final ContentResponse jettyResponse;
+            if (!syncListenerResponseMaxSize.isPresent()) {
+                jettyResponse = jettyRequest.send();
+            }
+            else {
+                final FutureResponseListener listener
+                    = new FutureResponseListener(jettyRequest, syncListenerResponseMaxSize.get());
+                jettyRequest.send(listener);
+                jettyResponse = listener.get();
+            }
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
                                            JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());
 
