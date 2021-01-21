@@ -201,6 +201,23 @@ public class ProviderBinder {
      * @param constrainedTo      current runtime (client or server).
      * @param registeredClasses  classes which are manually registered by the user (not found by the classpath scanning).
      * @param injectionManager   injection manager the binder will use to bind the providers into.
+     */
+    @Deprecated // backward compatibility until JPMS
+    public static void bindProviders(ComponentBag componentBag,
+                                     RuntimeType constrainedTo,
+                                     Set<Class<?>> registeredClasses,
+                                     InjectionManager injectionManager) {
+        bindProviders(componentBag, constrainedTo, registeredClasses, injectionManager, null);
+    }
+
+    /**
+     * Bind all providers contained in {@code providerBag} (classes and instances) using injection manager. Configuration is
+     * also committed.
+     *
+     * @param componentBag       bag of provider classes and instances.
+     * @param constrainedTo      current runtime (client or server).
+     * @param registeredClasses  classes which are manually registered by the user (not found by the classpath scanning).
+     * @param injectionManager   injection manager the binder will use to bind the providers into.
      * @param componentProviders available component providers capable of registering the classes
      */
     @Deprecated // backward compatibility until JPMS

@@ -38,8 +38,10 @@ public class CdiEnabledClientOnServerResource {
     @Path("main")
     @GET
     public Response getResponse() {
-        try (Response r = ClientBuilder.newBuilder().register(CdiClientFilter.class).build()
-                .target(uriInfo.getBaseUri()).path("/resource/nomain").request().get()) {
+        try (Response r = ClientBuilder.newBuilder()
+                .register(CdiClientFilter.class, Priorities.USER - 500)
+                .register(CdiLowerPriorityClientFilter.class, Priorities.USER)
+                .build().target(uriInfo.getBaseUri()).path("/resource/nomain").request().get()) {
             return Response.status(r.getStatus()).build();
         }
     }

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.ws.rs.Priorities;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import java.security.AccessController;
@@ -55,7 +56,9 @@ public class BeanManagerInjectedOnClientTest {
         Assertions.assertNull(aClass);
 
         // test CDI injection
-        try (Response r = ClientBuilder.newClient().register(CdiClientFilter.class)
+        try (Response r = ClientBuilder.newClient()
+                .register(CdiClientFilter.class, Priorities.USER - 500)
+                .register(CdiLowerPriorityClientFilter.class, Priorities.USER)
                 .target("http://localhost:8080/abort").request().get()) {
             Assertions.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
         }
