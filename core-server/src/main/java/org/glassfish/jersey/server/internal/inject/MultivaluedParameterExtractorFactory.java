@@ -120,21 +120,29 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
                 }
             }
         } else if (rawType.isArray()) {
-            converter = paramConverterFactory.getConverter(rawType.getComponentType(),
-                    rawType.getComponentType(),
-                    annotations);
-            if (converter == null) {
-                return null;
-            }
-            try {
+            if (rawType.getComponentType().isPrimitive()) {
+                MultivaluedParameterExtractor<?> primitiveExtractor =
+                        createPrimitiveExtractor(rawType.getComponentType(), parameterName, defaultValue);
+                if (primitiveExtractor == null) {
+                    return null;
+                }
+                return ArrayExtractor.getInstance(rawType.getComponentType(), primitiveExtractor, parameterName, defaultValue);
+            } else {
+                converter = paramConverterFactory.getConverter(rawType.getComponentType(),
+                        rawType.getComponentType(),
+                        annotations);
+                if (converter == null) {
+                    return null;
+                }
                 return ArrayExtractor.getInstance(rawType.getComponentType(), converter, parameterName, defaultValue);
-            } catch (final ExtractorException e) {
-                throw e;
-            } catch (final Exception e) {
-                throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
             }
         }
+        // Check primitive types.
+        return createPrimitiveExtractor(rawType, parameterName, defaultValue);
+    }
 
+    private MultivaluedParameterExtractor<?> createPrimitiveExtractor(Class<?> rawType, String parameterName,
+            String defaultValue){
         // Check primitive types.
         if (rawType == String.class) {
             return new SingleStringValueExtractor(parameterName, defaultValue);
@@ -170,7 +178,6 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
             }
 
         }
-
         return null;
     }
 }

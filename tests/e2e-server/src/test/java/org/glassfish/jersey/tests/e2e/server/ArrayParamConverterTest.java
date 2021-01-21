@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -53,7 +54,7 @@ public class ArrayParamConverterTest extends JerseyTest {
 
         @Path("/queryIntArray")
         @GET
-        public Response queryIntArray(@QueryParam(PARAM_NAME) Integer[] data) {
+        public Response queryIntArray(@QueryParam(PARAM_NAME) @DefaultValue("3") Integer[] data) {
             StringBuilder sb = new StringBuilder(data.length);
             for (int d : data) {
               sb.append(d);
@@ -119,6 +120,22 @@ public class ArrayParamConverterTest extends JerseyTest {
             StringBuilder sb = new StringBuilder(data.length);
             for (ArrayTestBeanWithValueOf d : data) {
               sb.append(d.value);
+            }
+            return Response.ok(sb.toString()).build();
+        }
+
+        @Path("/querySingleInt")
+        @GET
+        public Response querySingleInt(@QueryParam(PARAM_NAME) int data) {
+            return Response.ok(String.valueOf(data)).build();
+        }
+
+        @Path("/queryArrayInt")
+        @GET
+        public Response queryArrayInt(@QueryParam(PARAM_NAME) int[] data) {
+            StringBuilder sb = new StringBuilder(data.length);
+            for (int d : data) {
+              sb.append(d);
             }
             return Response.ok(sb.toString()).build();
         }
@@ -193,7 +210,8 @@ public class ArrayParamConverterTest extends JerseyTest {
 
     @Test
     public void queryArrayTestBeanWithFromString() {
-        Response expected = target("/test/queryArrayTestBeanWithFromStringList").queryParam(PARAM_NAME, "1", "2").request().get();
+        Response expected = target("/test/queryArrayTestBeanWithFromStringList").queryParam(PARAM_NAME, "1", "2")
+                .request().get();
         Response arrayResponse = target("/test/queryArrayTestBeanWithFromStringArray")
                 .queryParam(PARAM_NAME, "1", "2").request().get();
         verifyStr(expected, arrayResponse);
@@ -204,6 +222,37 @@ public class ArrayParamConverterTest extends JerseyTest {
         Response response = target("/test/queryArrayTestBeanWithValueOf").queryParam(PARAM_NAME, 1, 2).request().get();
         assertEquals(200, response.getStatus());
         assertEquals("12", response.readEntity(String.class));
+    }
+
+    @Test
+    public void querySingleInt() {
+        Response response = target("/test/querySingleInt").queryParam(PARAM_NAME, 1).request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("1", response.readEntity(String.class));
+    }
+
+    @Test
+    public void queryArrayInt() {
+        Response response = target("/test/queryArrayInt").queryParam(PARAM_NAME, 1, 2).request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("12", response.readEntity(String.class));
+    }
+
+    @Test
+    public void queryEmptyArray() {
+        Response response = target("/test/queryArrayInt").queryParam(PARAM_NAME).request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("", response.readEntity(String.class));
+        response = target("/test/queryArrayTestBeanWithValueOf").queryParam(PARAM_NAME).request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("", response.readEntity(String.class));
+    }
+
+    @Test
+    public void queryDefault() {
+        Response response = target("/test/queryIntArray").queryParam(PARAM_NAME).request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("3", response.readEntity(String.class));
     }
 
     private void verifyStr(Response expected, Response arrayResponse) {

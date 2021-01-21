@@ -18,64 +18,92 @@ package org.glassfish.jersey.server.internal.inject;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.function.Function;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ParamConverter;
 
 /**
- * Extract parameter value as a typed array.
+ * Extract parameter value as an array.
  *
- * @param <T> parameter value type.
  */
-class ArrayExtractor<T> extends AbstractParamValueExtractor<T> implements MultivaluedParameterExtractor<T[]> {
+class ArrayExtractor implements MultivaluedParameterExtractor<Object> {
 
+    private final String parameterName;
+    private final String defaultValueString;
+    private final Function<String, Object> typeExtractor;
     private final Class<?> type;
 
-    /**
-     * Create new array parameter extractor.
-     *
-     * @param type               the type class to manage runtime T generic.
-     * @param converter          parameter converter to be used to convert parameter from a String.
-     * @param parameterName      parameter name.
-     * @param defaultStringValue default parameter String value.
-     */
-    protected ArrayExtractor(Class<?> type, ParamConverter<T> converter, String parameterName, String defaultStringValue) {
-        super(converter, parameterName, defaultStringValue);
+    private ArrayExtractor(Class<?> type, Function<String, Object> typeExtractor,
+            String parameterName, String defaultValueString) {
         this.type = type;
+        this.typeExtractor = typeExtractor;
+        this.parameterName = parameterName;
+        this.defaultValueString = defaultValueString;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T[] extract(MultivaluedMap<String, String> parameters) {
+    public String getName() {
+        return parameterName;
+    }
+
+    @Override
+    public String getDefaultValueString() {
+        return defaultValueString;
+    }
+
+    @Override
+    public Object extract(MultivaluedMap<String, String> parameters) {
         List<String> stringList = parameters.get(getName());
-        T[] args = null;
+        Object array = null;
         if (stringList != null) {
-            args = (T[]) Array.newInstance(type, stringList.size());
+            array = Array.newInstance(type, stringList.size());
             for (int i = 0; i < stringList.size(); i++) {
-                args[i] = fromString(stringList.get(i));
+                Array.set(array, i, typeExtractor.apply(stringList.get(i)));
             }
-        } else if (isDefaultValueRegistered()) {
-            args = (T[]) Array.newInstance(type, 1);
-            args[0] = defaultValue();
+        } else if (defaultValueString != null) {
+            array = Array.newInstance(type, 1);
+            Array.set(array, 0, typeExtractor.apply(defaultValueString));
         } else {
-            args = (T[]) new Object[0];
+            array = Array.newInstance(type, 0);
         }
-        return args;
+        return array;
     }
 
     /**
-     * Get string array extractor instance supporting.
+     * Get array extractor instance supporting.
      *
      * @param type           the type class to manage runtime generic.
+     * @param converter  the converter of the type.
      * @param parameterName  extracted parameter name.
      * @param defaultValueString   default parameter value.
      * @return string array extractor instance.
      */
-    public static <T> ArrayExtractor<T> getInstance(Class<?> type,
-            ParamConverter<T> converter,
-            String parameterName,
-            String defaultValueString) {
-        return new ArrayExtractor<>(type, converter, parameterName, defaultValueString);
+    public static MultivaluedParameterExtractor<Object> getInstance(Class<?> type,
+            ParamConverter<?> converter, String parameterName, String defaultValueString) {
+        Function<String, Object> typeExtractor = value -> converter.fromString(value);
+        return new ArrayExtractor(type, typeExtractor, parameterName, defaultValueString);
     }
 
+    /**
+     * Get array extractor instance supporting.
+     *
+     * @param type           the type class to manage runtime generic.
+     * @param extractor  the extractor.
+     * @param parameterName  extracted parameter name.
+     * @param defaultValueString   default parameter value.
+     * @return string array extractor instance.
+     */
+    public static MultivaluedParameterExtractor<Object> getInstance(Class<?> type,
+            MultivaluedParameterExtractor<?> extractor,
+            String parameterName,
+            String defaultValueString) {
+        Function<String, Object> typeExtractor = value -> {
+            MultivaluedMap<String, String> pair = new MultivaluedHashMap<>();
+            pair.putSingle(parameterName, value);
+            return extractor.extract(pair);
+        };
+        return new ArrayExtractor(type, typeExtractor, parameterName, defaultValueString);
+    }
 }
