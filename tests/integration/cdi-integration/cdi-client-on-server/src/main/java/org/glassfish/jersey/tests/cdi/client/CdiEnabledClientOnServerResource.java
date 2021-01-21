@@ -20,6 +20,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -37,8 +38,10 @@ public class CdiEnabledClientOnServerResource {
     @Path("main")
     @GET
     public Response getResponse() {
-        try (Response r = ClientBuilder.newBuilder().register(CdiClientFilter.class).build()
-                .target(uriInfo.getBaseUri()).path("/resource/nomain").request().get()) {
+        try (Response r = ClientBuilder.newBuilder()
+                .register(CdiClientFilter.class, Priorities.USER - 500)
+                .register(CdiLowerPriorityClientFilter.class, Priorities.USER)
+                .build().target(uriInfo.getBaseUri()).path("/resource/nomain").request().get()) {
             return Response.status(r.getStatus()).build();
         }
     }
