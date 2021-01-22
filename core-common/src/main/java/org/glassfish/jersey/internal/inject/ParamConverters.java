@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -21,21 +21,24 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
-import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
  * Container of several different {@link ParamConverterProvider param converter providers}
@@ -248,6 +251,59 @@ public class ParamConverters {
     }
 
     /**
+     * Provider of {@link ParamConverter param converter} that produce the Optional instance
+     * by invoking {@link AggregatedProvider}.
+     */
+    @Singleton
+    public static class OptionalProvider implements ParamConverterProvider {
+
+        // Delegates to this provider when the type of Optional is extracted.
+        private final AggregatedProvider aggregated;
+
+        @Inject
+        public OptionalProvider(AggregatedProvider aggregated) {
+            this.aggregated = aggregated;
+        }
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            return (rawType != Optional.class) ? null : new ParamConverter<T>() {
+
+                @Override
+                public T fromString(String value) {
+                    if (value == null) {
+                        return (T) Optional.empty();
+                    } else {
+                        ParameterizedType parametrized = (ParameterizedType) genericType;
+                        Type type = parametrized.getActualTypeArguments()[0];
+                        T val = aggregated.getConverter((Class<T>) type, type, annotations).fromString(value.toString());
+                        if (val != null) {
+                            return (T) Optional.of(val);
+                        } else {
+                            /*
+                             *  In this case we don't send Optional.empty() because 'value' is not null.
+                             *  But we return null because the provider didn't find how to parse it.
+                             */
+                            return null;
+                        }
+                    }
+                }
+
+                @Override
+                public String toString(T value) throws IllegalArgumentException {
+                    /*
+                     *  Unfortunately 'orElse' cannot be stored in an Optional. As only one value can
+                     *  be stored, it makes no sense that 'value' is Optional. It can just be the value.
+                     *  We don't fail here but we don't process it.
+                     */
+                    return null;
+                }
+            };
+        }
+
+    }
+
+    /**
      * Aggregated {@link ParamConverterProvider param converter provider}.
      */
     @Singleton
@@ -267,7 +323,8 @@ public class ParamConverters {
                     new TypeValueOf(),
                     new CharacterProvider(),
                     new TypeFromString(),
-                    new StringConstructor()
+                    new StringConstructor(),
+                    new OptionalProvider(this)
             };
         }
 

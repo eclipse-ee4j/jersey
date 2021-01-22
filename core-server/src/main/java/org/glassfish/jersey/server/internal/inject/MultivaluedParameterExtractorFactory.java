@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -32,12 +32,12 @@ import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;
+import org.glassfish.jersey.internal.inject.PrimitiveMapper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.model.Parameter;
-import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.server.internal.LocalizationMessages;
 
 /**
  * Implementation of {@link MultivaluedParameterExtractorProvider}. For each
@@ -120,8 +120,30 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
                     throw new ProcessingException(LocalizationMessages.ERROR_PARAMETER_TYPE_PROCESSING(rawType), e);
                 }
             }
+        } else if (rawType.isArray()) {
+            if (rawType.getComponentType().isPrimitive()) {
+                MultivaluedParameterExtractor<?> primitiveExtractor =
+                        createPrimitiveExtractor(rawType.getComponentType(), parameterName, defaultValue);
+                if (primitiveExtractor == null) {
+                    return null;
+                }
+                return ArrayExtractor.getInstance(rawType.getComponentType(), primitiveExtractor, parameterName, defaultValue);
+            } else {
+                converter = paramConverterFactory.getConverter(rawType.getComponentType(),
+                        rawType.getComponentType(),
+                        annotations);
+                if (converter == null) {
+                    return null;
+                }
+                return ArrayExtractor.getInstance(rawType.getComponentType(), converter, parameterName, defaultValue);
+            }
         }
+        // Check primitive types.
+        return createPrimitiveExtractor(rawType, parameterName, defaultValue);
+    }
 
+    private MultivaluedParameterExtractor<?> createPrimitiveExtractor(Class<?> rawType, String parameterName,
+            String defaultValue){
         // Check primitive types.
         if (rawType == String.class) {
             return new SingleStringValueExtractor(parameterName, defaultValue);
@@ -157,7 +179,6 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
             }
 
         }
-
         return null;
     }
 }
