@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.ComponentBag;
+import org.glassfish.jersey.spi.ComponentProvider;
 
 /**
  * Class used for registration of the custom providers into injection manager.
@@ -189,22 +190,41 @@ public class ProviderBinder {
      * @param injectionManager injection manager the binder will use to bind the providers into.
      */
     public static void bindProviders(final ComponentBag componentBag, final InjectionManager injectionManager) {
-        bindProviders(componentBag, null, Collections.emptySet(), injectionManager);
+        bindProviders(componentBag, null, null, injectionManager, null);
     }
 
     /**
      * Bind all providers contained in {@code providerBag} (classes and instances) using injection manager. Configuration is
      * also committed.
      *
-     * @param componentBag      bag of provider classes and instances.
-     * @param constrainedTo     current runtime (client or server).
-     * @param registeredClasses classes which are manually registered by the user (not found by the classpath scanning).
-     * @param injectionManager  injection manager the binder will use to bind the providers into.
+     * @param componentBag       bag of provider classes and instances.
+     * @param constrainedTo      current runtime (client or server).
+     * @param registeredClasses  classes which are manually registered by the user (not found by the classpath scanning).
+     * @param injectionManager   injection manager the binder will use to bind the providers into.
      */
+    @Deprecated // backward compatibility until JPMS
     public static void bindProviders(ComponentBag componentBag,
                                      RuntimeType constrainedTo,
                                      Set<Class<?>> registeredClasses,
                                      InjectionManager injectionManager) {
+        bindProviders(componentBag, constrainedTo, registeredClasses, injectionManager, null);
+    }
+
+    /**
+     * Bind all providers contained in {@code providerBag} (classes and instances) using injection manager. Configuration is
+     * also committed.
+     *
+     * @param componentBag       bag of provider classes and instances.
+     * @param constrainedTo      current runtime (client or server).
+     * @param registeredClasses  classes which are manually registered by the user (not found by the classpath scanning).
+     * @param injectionManager   injection manager the binder will use to bind the providers into.
+     * @param componentProviders available component providers capable of registering the classes
+     */
+    public static void bindProviders(ComponentBag componentBag,
+                                     RuntimeType constrainedTo,
+                                     Set<Class<?>> registeredClasses,
+                                     InjectionManager injectionManager,
+                                     Collection<ComponentProvider> componentProviders) {
         Predicate<ContractProvider> filter = ComponentBag.EXCLUDE_EMPTY
                 .and(ComponentBag.excludeMetaProviders(injectionManager));
 
@@ -234,7 +254,9 @@ public class ProviderBinder {
         }
         for (final Class<?> providerClass : classes) {
             final ContractProvider model = componentBag.getModel(providerClass);
-            binderToRegister.addAll(createProviderBinders(providerClass, model));
+            if (componentProviders == null || !bindWithComponentProvider(providerClass, model, componentProviders)) {
+                binderToRegister.addAll(createProviderBinders(providerClass, model));
+            }
         }
 
         // Bind provider instances except for pure meta-providers and providers with empty contract models (e.g. resources)
@@ -250,6 +272,16 @@ public class ProviderBinder {
         }
 
         injectionManager.register(CompositeBinder.wrap(binderToRegister));
+    }
+
+    private static boolean bindWithComponentProvider(
+            Class<?> component, ContractProvider providerModel, Iterable<ComponentProvider> componentProviders) {
+        for (ComponentProvider provider : componentProviders) {
+            if (provider.bind(component, providerModel)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -59,6 +59,7 @@ import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
+import org.glassfish.jersey.spi.ComponentProvider;
 
 /**
  * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable
@@ -412,7 +413,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             InjectionManager injectionManager = Injections.createInjectionManager();
             injectionManager.register(new ClientBinder(runtimeCfgState.getProperties()));
 
-            BootstrapBag bootstrapBag = new ClientBootstrapBag();
+            final ClientBootstrapBag bootstrapBag = new ClientBootstrapBag();
             bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
 
             final ClientMessageBodyFactory.MessageBodyWorkersConfigurator messageBodyWorkersConfigurator =
@@ -427,7 +428,8 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
                     messageBodyWorkersConfigurator,
                     new ExceptionMapperFactory.ExceptionMappersConfigurator(),
                     new JaxrsProviders.ProvidersConfigurator(),
-                    new AutoDiscoverableConfigurator(RuntimeType.CLIENT));
+                    new AutoDiscoverableConfigurator(RuntimeType.CLIENT),
+                    new ClientComponentConfigurator());
             bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
             // AutoDiscoverable.
@@ -442,7 +444,10 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             runtimeCfgState.configureMetaProviders(injectionManager, bootstrapBag.getManagedObjectsFinalizer());
 
             // Bind providers.
-            ProviderBinder.bindProviders(runtimeCfgState.getComponentBag(), RuntimeType.CLIENT, null, injectionManager);
+            final Collection<ComponentProvider> componentProviders = bootstrapBag.getComponentProviders().get();
+            ProviderBinder.bindProviders(
+                    runtimeCfgState.getComponentBag(), RuntimeType.CLIENT, null, injectionManager, componentProviders
+            );
 
             ClientExecutorProvidersConfigurator executorProvidersConfigurator =
                     new ClientExecutorProvidersConfigurator(runtimeCfgState.getComponentBag(),
