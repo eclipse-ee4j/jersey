@@ -27,8 +27,8 @@ PING_LOOP_PID=$!
 
 mvn -version
 
-if [ "$1" = "glassfish-copyright:copyright" ]; then
-    mvn glassfish-copyright:copyright
+if [ "$1" = "glassfish-copyright:check" ]; then
+    mvn -e $1 -Dcopyright.quiet=false
 else
     mvn -e -U -B clean install $1 >> $BUILD_OUTPUT 2>&1
 fi
