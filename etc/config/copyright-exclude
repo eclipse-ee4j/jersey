@@ -71,6 +71,8 @@ build.readme
 /tests/e2e-entity/src/test/resources/org/glassfish/jersey/tests/e2e/entity/xxe.txt
 /core-server/src/main/java/com/sun/research/ws/wadl
 /core-common/src/main/java/org/glassfish/jersey/internal/jsr166
+/core-common/src/main/jsr166/org/glassfish/jersey/internal/jsr166
+/core-common/src/main/java8/org/glassfish/jersey/internal/jsr166
 /tests/performance/etc/data/MEASUREMENT_DATA
 /core-common/src/main/java/org/glassfish/jersey/internal/guava/
 /core-server/src/main/java/org/glassfish/jersey/server/internal/monitoring/core/AbstractSlidingWindowTimeReservoir.java
@@ -87,6 +89,7 @@ build.readme
 NOTICE.md
 /ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessAllAnnotatedTypes.java 
 /ext/cdi/jersey-cdi1x/src/main/java/org/glassfish/jersey/ext/cdi1x/internal/ProcessJAXRSAnnotatedTypes.java
+/ext/bean-validation/src/main/java/org/glassfish/jersey/server/validation/internal/hibernate/
 /media/json-binding/src/test/java/org/glassfish/jersey/jsonb/internal/JsonBindingProviderTest.java
 /connectors/jdk-connector/src/test/resources
 /tools
