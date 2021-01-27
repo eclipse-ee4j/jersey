@@ -33,7 +33,7 @@ Goals of Jersey project can be summarized in the following points:
 ---
 
 *   The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
-*   The latest published release of Jakartified (3.x) Jersey is [{{ site.latest3xVersion }}][dwnld].
+*   The latest published release of Jakarta EE 9 Jersey is [{{ site.latest3xVersion }}][dwnld].
 
 ---
 
