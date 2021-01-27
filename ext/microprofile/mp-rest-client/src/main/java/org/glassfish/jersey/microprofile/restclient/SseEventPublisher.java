@@ -94,7 +94,7 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
         if (subscriber == null) {
             throw new NullPointerException("The subscriber is `null`");
         }
-        SseEventSubscription<InboundEvent> subscription = new SseEventSubscription<>(subscriber, bufferSize);
+        SseEventSubscription subscription = new SseEventSubscription<>(subscriber, bufferSize);
         subscriber.onSubscribe(subscription);
         Runnable readEventTask = () -> {
             Type typeArgument;
@@ -102,7 +102,7 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
                 typeArgument = ((ParameterizedType) genericType).getActualTypeArguments()[0];
                 ChunkedInput<InboundEvent> input = SseEventPublisher.this;
                 try {
-                    InboundEvent event;
+                    InboundSseEvent event;
                     //  org.reactivestreams.Publisher<javax.ws.rs.sse.InboundSseEvent>
                     if (typeArgument.equals(InboundSseEvent.class)) {
                         while ((event = input.read()) != null) {
@@ -111,7 +111,7 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
                     } else {
                         // Read event data as a given Java type e.g org.reactivestreams.Publisher<CustomEvent>
                         while ((event = input.read()) != null) {
-                            subscription.emit(event.readData((Class<InboundEvent>) typeArgument));
+                            subscription.emit(event.readData((Class) typeArgument));
                         }
                     }
                 } catch (Throwable t) {
