@@ -1,4 +1,4 @@
-<link href="jersey.css" rel="stylesheet"></link>
+<link href="jersey.css" rel="stylesheet"/>
 <h3>About</h3>
 
 Developing RESTful Web services that seamlessly support exposing your data in a
