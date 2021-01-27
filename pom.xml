@@ -456,7 +456,7 @@
                                 All Rights Reserved. Use is subject to license terms.]]>
                         </bottom>
                         <links>
-                            <link>https://jax-rs.github.io/apidocs/2.1/</link>
+                            <link>https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/</link>
                             <link>https://javaee.github.io/hk2/apidocs/</link>
                         </links>
                         <excludePackageNames>
