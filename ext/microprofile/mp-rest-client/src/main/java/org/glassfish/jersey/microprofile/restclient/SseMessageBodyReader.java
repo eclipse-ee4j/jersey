@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.RuntimeType;
@@ -45,13 +46,13 @@ public class SseMessageBodyReader implements MessageBodyReader<Publisher<Inbound
     protected Providers providers;
 
     @Inject
-    private javax.inject.Provider<MessageBodyWorkers> messageBodyWorkers;
+    private Provider<MessageBodyWorkers> messageBodyWorkers;
 
     @Inject
-    private javax.inject.Provider<PropertiesDelegate> propertiesDelegateProvider;
+    private Provider<PropertiesDelegate> propertiesDelegateProvider;
 
     @Inject
-    private javax.inject.Provider<ExecutorService> executorServiceProvider;
+    private Provider<ExecutorService> executorServiceProvider;
 
     private final int DEFAULT_BUFFER_SIZE = 512;
 
