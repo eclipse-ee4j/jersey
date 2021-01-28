@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.client;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -61,10 +62,14 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.internal.ClientResponseProcessingException;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
+import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.Providers;
+import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.process.internal.ExecutorProviders;
 import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 
@@ -474,7 +479,7 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
                 if (configured == null) {
                     final ExecutorService provided = executorService();
                     if (provided != null) {
-                        request().getClientConfig().executorService(provided);
+                        ((ClientConfig) request().getConfiguration()).executorService(provided);
                     }
                 }
                 return (T) new JerseyCompletionStageRxInvoker(this);
@@ -498,9 +503,36 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
                 return result;
             }
 
-            return this.requestContext.getInjectionManager()
-                    .getInstance(ExecutorServiceProvider.class)
-                    .getExecutorService();
+            final List<ServiceHolder<ExecutorServiceProvider>> serviceHolders =
+                    this.requestContext.getInjectionManager().getAllServiceHolders(ExecutorServiceProvider.class);
+
+            BestServiceHolder best = serviceHolders.stream()
+                    .map(BestServiceHolder::new).sorted((a, b) -> a.isBetterThen(b) ? -1 : 1).findFirst().get();
+
+            return best.provider.getExecutorService();
+        }
+
+        /*
+         * Priority goes to: 1) user async
+         *                   2) user nonasync
+         *                   3) default async
+         */
+        private static final class BestServiceHolder {
+            private final ExecutorServiceProvider provider;
+            private final int value;
+
+            private BestServiceHolder(ServiceHolder<ExecutorServiceProvider> holder) {
+                provider = holder.getInstance();
+                boolean isDefault = DefaultClientAsyncExecutorProvider.class.equals(holder.getImplementationClass())
+                        || ClientExecutorProvidersConfigurator.ClientExecutorServiceProvider.class
+                                .equals(holder.getImplementationClass());
+                boolean isAsync = holder.getImplementationClass().getAnnotation(ClientAsyncExecutor.class) != null;
+                value = 10 * (isDefault ? 0 : 1) + (isAsync ? 1 : 0);
+            }
+
+            public boolean isBetterThen(BestServiceHolder other) {
+                return this.value > other.value;
+            }
         }
 
         /**
