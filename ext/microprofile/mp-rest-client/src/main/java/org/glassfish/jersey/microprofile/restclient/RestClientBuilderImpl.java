@@ -68,6 +68,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 
 /**
  * Rest client builder implementation. Creates proxy instance of requested interface.
@@ -90,7 +91,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private final Config config;
     private final ConfigWrapper configWrapper;
     private URI uri;
-    private ClientBuilder clientBuilder;
+    private final ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
     private HostnameVerifier sslHostnameVerifier;
     private SSLContext sslContext;
@@ -98,13 +99,10 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private KeyStore sslKeyStore;
     private char[] sslKeyStorePassword;
     private ConnectorProvider connector;
-    private QueryParamStyle queryParamStyle;
-    private String proxyHost;
-    private int proxyPort;
     private boolean followRedirects;
 
     RestClientBuilderImpl() {
-        clientBuilder = new JerseyRestClientBuilder();
+        clientBuilder = ClientBuilder.newBuilder();
         responseExceptionMappers = new HashSet<>();
         paramConverterProviders = new HashSet<>();
         inboundHeaderProviders = new HashSet<>();
@@ -200,14 +198,6 @@ class RestClientBuilderImpl implements RestClientBuilder {
         }
         WebTarget webTarget = client.target(this.uri);
         webTarget.property(ClientProperties.FOLLOW_REDIRECTS, followRedirects);
-
-        if (proxyHost != null && proxyPort > 0) {
-            webTarget.property(ClientProperties.PROXY_URI, proxyHost + ":" + proxyPort);
-        }
-
-        if (queryParamStyle != null) {
-            webTarget.property(QueryParamStyle.class.getSimpleName(), queryParamStyle);
-        }
 
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
@@ -453,14 +443,16 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (proxyPort <= 0 || proxyPort > 65535) {
             throw new IllegalArgumentException("Invalid proxy port");
         }
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
+        property(ClientProperties.PROXY_URI, proxyHost + ":" + proxyPort);
         return this;
     }
 
     @Override
     public RestClientBuilder queryParamStyle(QueryParamStyle queryParamStyle) {
-        this.queryParamStyle = queryParamStyle;
+         if (queryParamStyle != null) {
+            property(ClientProperties.QUERY_PARAM_STYLE,
+                    JerseyQueryParamStyle.valueOf(queryParamStyle.toString()));
+        }
         return this;
     }
 
