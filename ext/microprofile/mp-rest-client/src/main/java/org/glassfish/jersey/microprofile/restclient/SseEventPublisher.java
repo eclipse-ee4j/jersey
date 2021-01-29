@@ -28,19 +28,20 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.sse.InboundSseEvent;
-import org.glassfish.jersey.client.ChunkParser;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.internal.PropertiesDelegate;
+import org.glassfish.jersey.internal.util.JerseyPublisher;
+import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
-public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Publisher<InboundEvent> {
+public class SseEventPublisher extends EventInput implements Publisher<InboundEvent> {
 
     private final Executor executor;
     private final Type genericType;
-    private final int bufferSize;
+    private final JerseyPublisher<Object> publisher;
 
     /**
      * Package-private constructor used by the
@@ -60,21 +61,13 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
             MultivaluedMap<String, String> headers,
             MessageBodyWorkers messageBodyWorkers,
             PropertiesDelegate propertiesDelegate,
-            ExecutorService executor,
-            int bufferSize) {
-        super(InboundEvent.class, inputStream, annotations, mediaType, headers, messageBodyWorkers, propertiesDelegate);
+            ExecutorService executor) {
+        super(inputStream, annotations, mediaType, headers, messageBodyWorkers, propertiesDelegate);
 
-        super.setParser(SSE_EVENT_PARSER);
         this.executor = executor;
         this.genericType = genericType;
-        this.bufferSize = bufferSize;
+        this.publisher = new JerseyPublisher<>(executor::submit, JerseyPublisher.PublisherStrategy.BEST_EFFORT);
     }
-
-    /**
-     * SSE event chunk parser - SSE chunks are delimited with a fixed "\n\n" and
-     * "\r\n\r\n" delimiter in the response stream.
-     */
-    private static final ChunkParser SSE_EVENT_PARSER = ChunkedInput.createMultiParser("\n\n", "\r\n\r\n");
 
     private static final Logger LOG = Logger.getLogger(SseEventPublisher.class.getName());
 
@@ -94,8 +87,8 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
         if (subscriber == null) {
             throw new NullPointerException("The subscriber is `null`");
         }
-        SseEventSubscription subscription = new SseEventSubscription<>(subscriber, bufferSize);
-        subscriber.onSubscribe(subscription);
+        this.publisher.subscribe(new SseEventSuscriber(subscriber));
+
         Runnable readEventTask = () -> {
             Type typeArgument;
             if (genericType instanceof ParameterizedType) {
@@ -106,19 +99,19 @@ public class SseEventPublisher extends ChunkedInput<InboundEvent> implements Pub
                     //  org.reactivestreams.Publisher<javax.ws.rs.sse.InboundSseEvent>
                     if (typeArgument.equals(InboundSseEvent.class)) {
                         while ((event = input.read()) != null) {
-                            subscription.emit(event);
+                         this.publisher.publish(event);
                         }
                     } else {
                         // Read event data as a given Java type e.g org.reactivestreams.Publisher<CustomEvent>
                         while ((event = input.read()) != null) {
-                            subscription.emit(event.readData((Class) typeArgument));
+                            this.publisher.publish(event.readData((Class) typeArgument));
                         }
                     }
                 } catch (Throwable t) {
-                    subscription.onError(t);
+                    subscriber.onError(t);
                     return;
                 }
-                subscription.onCompletion();
+                this.publisher.close();
             }
         };
         try {

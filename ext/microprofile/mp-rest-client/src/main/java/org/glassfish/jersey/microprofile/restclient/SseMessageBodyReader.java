@@ -54,8 +54,6 @@ public class SseMessageBodyReader implements MessageBodyReader<Publisher<Inbound
     @Inject
     private Provider<ExecutorService> executorServiceProvider;
 
-    private final int DEFAULT_BUFFER_SIZE = 512;
-
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return Publisher.class.isAssignableFrom(type)
@@ -78,8 +76,7 @@ public class SseMessageBodyReader implements MessageBodyReader<Publisher<Inbound
                 headers,
                 messageBodyWorkers.get(),
                 propertiesDelegateProvider.get(),
-                executorServiceProvider.get(),
-                DEFAULT_BUFFER_SIZE
+                executorServiceProvider.get()
         );
     }
 }

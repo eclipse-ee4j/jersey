@@ -50,7 +50,7 @@ public class EventInput extends ChunkedInput<InboundEvent> {
      * @param messageBodyWorkers message body workers.
      * @param propertiesDelegate properties delegate for this request/response.
      */
-    EventInput(InputStream inputStream,
+    protected EventInput(InputStream inputStream,
                Annotation[] annotations,
                MediaType mediaType,
                MultivaluedMap<String, String> headers,

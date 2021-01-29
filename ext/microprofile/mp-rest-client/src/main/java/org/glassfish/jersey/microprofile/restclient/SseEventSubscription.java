@@ -1,11 +1,22 @@
+/*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
 package org.glassfish.jersey.microprofile.restclient;
 
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
+import org.glassfish.jersey.internal.jsr166.Flow;
 import java.util.logging.Logger;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -18,61 +29,12 @@ import org.reactivestreams.Subscription;
  */
 public class SseEventSubscription<T> implements Subscription {
 
-    private static final Logger LOG = Logger.getLogger(SseEventSubscription.class.getName());
+    private final Subscriber subscriber;
+    private final Flow.Subscription subscription;
 
-    private static final Runnable EMPTY_ACTION = () -> {
-    };
-
-    private final AtomicLong requested = new AtomicLong();
-    private final Subscriber<T> subscriber;
-
-    private final Queue<T> events;
-    private final int bufferSize;
-    private volatile Throwable closedException;
-    private volatile boolean closed;
-    private final AtomicInteger wipCounter = new AtomicInteger();
-    private final AtomicReference<Runnable> onTerminationAction;
-
-    SseEventSubscription(Subscriber<T> subscriber, int bufferSize) {
+    SseEventSubscription(Subscriber<T> subscriber, Flow.Subscription subscription) {
         this.subscriber = subscriber;
-        this.bufferSize = bufferSize;
-        this.events = new ArrayBlockingQueue<>(bufferSize);
-        this.onTerminationAction = new AtomicReference<>();
-    }
-
-    /**
-     * Subscription receiving SSE elements from the source and dealing with
-     * subscriber requests.
-     *
-     * The events are buffers, and older events are dropped if the buffer is
-     * full.
-     *
-     * {@code null} element not allowed
-     * (<a href="https://github.com/reactive-streams/reactive-streams-jvm#2.13">Reactive
-     * Streams Rule 2.13</a>) as parameters to {@link #emit(Throwable)}.
-     *
-     * @param element The received element from the source
-     */
-    void emit(T element) {
-        if (closed || isCancelled()) {
-            return;
-        }
-
-        // As per Reactive Streams Rule 2.13, we need to throw a `java.lang.NullPointerException` if the `element` is `null`
-        if (element == null) {
-            throw new NullPointerException("Reactive Streams Rule 2.13 violated: The received element is `null`");
-        }
-
-        if (events.size() == bufferSize) {
-            LOG.log(
-                    Level.INFO,
-                    "Dropping SSE element '%s' due to lack of subscriber requests",
-                    events.poll()
-            );
-        }
-        events.offer(element);
-
-        drain();
+        this.subscription = subscription;
     }
 
     /**
@@ -85,8 +47,7 @@ public class SseEventSubscription<T> implements Subscription {
     @Override
     public void request(long n) {
         if (n > 0) {
-            addSubscriptionRequest(requested, n);
-            drain();
+            subscription.request(n);
         } else {
             cancel();
             subscriber.onError(
@@ -105,206 +66,8 @@ public class SseEventSubscription<T> implements Subscription {
      * cancel.
      */
     @Override
-    public final void cancel() {
-        cleanup();
-    }
-
-    private boolean isCancelled() {
-        return onTerminationAction.get() == EMPTY_ACTION;
-    }
-
-    /**
-     * Successful terminal state.
-     *
-     * Method invoked when it is known that no further events will be sent even
-     * if {@link SseEventSubscription#request(long)} is invoked again and no
-     * additional Subscriber method invocations will occur for a Subscription
-     * that is not already terminated by error.
-     *
-     */
-    void onCompletion() {
-        closed = true;
-        drain();
-    }
-
-    /**
-     * Failed terminal state.
-     *
-     * Method invoked upon an unrecoverable error encountered by a Publisher or
-     * Subscription, after which no other Subscriber methods are invoked by the
-     * Subscription.
-     *
-     * {@code null} error not allowed
-     * (<a href="https://github.com/reactive-streams/reactive-streams-jvm#2.13">Reactive
-     * Streams Rule 2.13</a>) as parameters to {@link #onError(Throwable)}.
-     *
-     * @param t the throwable signaled
-     */
-    void onError(Throwable t) {
-        if (closed || isCancelled()) {
-            return;
-        }
-
-        // As per Reactive Streams Rule 2.13, we need to throw a `java.lang.NullPointerException` if the `Throwable` is `null`
-        if (t == null) {
-            throw new NullPointerException("Reactive Streams Rule 2.13 violated: The received error is `null`");
-        }
-
-        this.closedException = t;
-        closed = true;
-
-        drain();
-    }
-
-    private void cleanup() {
-        Runnable action = onTerminationAction.getAndSet(EMPTY_ACTION);
-        if (action != null && action != EMPTY_ACTION) {
-            action.run();
-        }
-    }
-
-    private void sendCompletionToSubscriber() {
-        if (isCancelled()) {
-            return;
-        }
-        try {
-            subscriber.onComplete();
-        } finally {
-            cleanup();
-        }
-    }
-
-    private void sendErrorToSubscriber(Throwable t) {
-        // As per Reactive Streams Rule 2.13, we need to throw a `java.lang.NullPointerException` if the signaled error is `null`
-        if (t == null) {
-            throw new NullPointerException("Reactive Streams Rule 2.13 violated, The received error is `null`");
-        }
-        if (isCancelled()) {
-            return;
-        }
-        try {
-            subscriber.onError(t);
-        } finally {
-            cleanup();
-        }
-    }
-
-    /**
-     * Atomically adds the positive value n to the requested value in the
-     * AtomicLong and caps the result at Long.MAX_VALUE and returns the previous
-     * value.
-     *
-     * @param requested the AtomicLong holding the current requested value
-     * @param amount the value to add, must be positive (not verified)
-     * @return the original value before the add
-     */
-    private long addSubscriptionRequest(AtomicLong requested, long amount) {
-        long current;
-        long updated;
-        do {
-            current = requested.get();
-            if (current == Long.MAX_VALUE) {
-                return Long.MAX_VALUE;
-            }
-            updated = current + amount;
-            if (updated < 0) {
-                updated = Long.MAX_VALUE;
-            }
-        } while (!requested.compareAndSet(current, updated));
-        return current;
-    }
-
-    /**
-     * Concurrent subtraction bound to 0, used to decrement a request tracker by
-     * the amount produced by the publisher.
-     *
-     * @param requested the atomic long keeping track of requests
-     * @param emitted the emitted request to subtract
-     * @return value after subtraction or zero
-     */
-    private long producedSubscriptionRequest(AtomicLong requested, long emitted) {
-        long current;
-        long updated;
-        do {
-            current = requested.get();
-            if (current == 0 || current == Long.MAX_VALUE) {
-                return current;
-            }
-            updated = current - emitted;
-            if (updated < 0) {
-                updated = 0;
-            }
-        } while (!requested.compareAndSet(current, updated));
-
-        return updated;
-    }
-
-    private void drain() {
-        if (wipCounter.getAndIncrement() != 0) {
-            return;
-        }
-
-        int missed = 1;
-
-        do {
-            long requests = requested.get();
-            long emitted = 0L;
-
-            while (emitted != requests) {
-                // Clear the queue after cancellation or termination of subscription.
-                if (isCancelled()) {
-                    events.clear();
-                    return;
-                }
-
-                T element = events.poll();
-                boolean empty = element == null;
-
-                if (closed && empty) {
-                    if (closedException != null) {
-                        sendErrorToSubscriber(closedException);
-                    } else {
-                        sendCompletionToSubscriber();
-                    }
-                    return;
-                }
-
-                if (empty) {
-                    break;
-                }
-
-                // Pass the element to subscriber and increment the emitted element counter.
-                try {
-                    subscriber.onNext(element);
-                } catch (Throwable t) {
-                    cancel();
-                }
-                emitted++;
-            }
-
-            if (emitted == requests) {
-                // Clear the queue after cancellation or termination.
-                if (isCancelled()) {
-                    events.clear();
-                    return;
-                }
-
-                if (closed && events.isEmpty()) {
-                    if (closedException != null) {
-                        sendErrorToSubscriber(closedException);
-                    } else {
-                        sendCompletionToSubscriber();
-                    }
-                    return;
-                }
-            }
-
-            if (emitted > 0) {
-                producedSubscriptionRequest(requested, emitted);
-            }
-
-            missed = wipCounter.addAndGet(-missed);
-        } while (missed != 0);
+    public void cancel() {
+        subscription.cancel();
     }
 
 }
