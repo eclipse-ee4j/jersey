@@ -114,28 +114,6 @@
                     <unpackBundle>true</unpackBundle>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.sun.istack</groupId>
-                <artifactId>istack-commons-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>rs-gen</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <directory>${basedir}/src/main/resources</directory>
-                                <includes>
-                                    <include>**/localization.properties</include>
-                                </includes>
-                            </resources>
-                            <destDir>${project.build.directory}/generated-sources/rsrc-gen</destDir>
-                            <localizationUtilitiesPkgName>org.glassfish.jersey.internal.l10n</localizationUtilitiesPkgName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
