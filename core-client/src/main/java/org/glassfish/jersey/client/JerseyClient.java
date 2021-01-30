@@ -253,7 +253,7 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
      *
      * @throws IllegalStateException in case the client instance has been closed already.
      */
-    protected void checkNotClosed() {
+    void checkNotClosed() {
         checkState(!closedFlag.get(), LocalizationMessages.CLIENT_INSTANCE_CLOSED());
     }
 

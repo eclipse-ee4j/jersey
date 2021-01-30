@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,10 +47,10 @@ import org.glassfish.jersey.model.internal.RankedProvider;
  */
 public class JerseyClientBuilder extends ClientBuilder {
 
-    protected final ClientConfig config;
-    protected HostnameVerifier hostnameVerifier;
-    protected SslConfigurator sslConfigurator;
-    protected SSLContext sslContext;
+    private final ClientConfig config;
+    private HostnameVerifier hostnameVerifier;
+    private SslConfigurator sslConfigurator;
+    private SSLContext sslContext;
 
     private static final List<ClientBuilderListener> CLIENT_BUILDER_LISTENERS;
 

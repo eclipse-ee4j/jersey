@@ -114,7 +114,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         }
     }
 
-    protected void checkNotClosed() {
+    private void checkNotClosed() {
         config.getClient().checkNotClosed();
     }
 
@@ -157,7 +157,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         return new JerseyWebTarget(JerseyWebTarget.setQueryParam(uriBuilder, name, values), this);
     }
 
-    protected static UriBuilder setQueryParam(UriBuilder uriBuilder, String name, Object[] values) {
+    private static UriBuilder setQueryParam(UriBuilder uriBuilder, String name, Object[] values) {
         if (values == null || values.length == 0 || (values.length == 1 && values[0] == null)) {
             return uriBuilder.replaceQueryParam(name, (Object[]) null);
         }
@@ -166,7 +166,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         return uriBuilder.queryParam(name, values);
     }
 
-    protected static void checkForNullValues(String name, Object[] values) {
+    private static void checkForNullValues(String name, Object[] values) {
         Preconditions.checkNotNull(name, "name is 'null'.");
 
         List<Integer> indexes = new LinkedList<Integer>();
@@ -279,7 +279,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
      * @throws NullPointerException if the name-value map or any of the names or encoded values in the map
      * is {@code null}.
      */
-    protected void checkTemplateValues(final Map<String, Object> templateValues) throws NullPointerException {
+    private void checkTemplateValues(final Map<String, Object> templateValues) throws NullPointerException {
         Preconditions.checkNotNull(templateValues, "templateValues is 'null'.");
 
         for (final Map.Entry entry : templateValues.entrySet()) {
