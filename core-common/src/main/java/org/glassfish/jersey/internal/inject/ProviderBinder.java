@@ -220,7 +220,6 @@ public class ProviderBinder {
      * @param injectionManager   injection manager the binder will use to bind the providers into.
      * @param componentProviders available component providers capable of registering the classes
      */
-    @Deprecated // backward compatibility until JPMS
     public static void bindProviders(ComponentBag componentBag,
                                      RuntimeType constrainedTo,
                                      Set<Class<?>> registeredClasses,
