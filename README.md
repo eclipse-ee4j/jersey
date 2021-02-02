@@ -39,7 +39,7 @@ Goals of Jersey project can be summarized in the following points:
 
 <table style="border:none;">
 <tr>
-<td  style="width:30%;border:none;vertical-align: top;">
+<td  style="width:30%;border:none;vertical-align: top;padding-right:5px;">
 <h3><a class="headerlink" href="{{ site.links.newJerseyURL }}/documentation/latest/getting-started.html">
     <var class="icon-compass"></var> Get Started
 </a></h3>
@@ -105,9 +105,9 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 [dwnld]: download.html
 [jax-rs]: https://jakarta.ee/specifications/restful-ws/
 
-<table style="border:none">
+<table style="border:none;width:100%;">
 <tr>
-<td style="width: 30%;
+<td style="
                text-align: start;
                vertical-align: top;
                border:none;">
@@ -119,10 +119,14 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 - <a href="https://jcp.org/en/jsr/detail?id=370">JSR-370 page on JCP site</a><br/>
 - <a href="https://stackoverflow.com/questions/tagged/jersey">Stack Overflow</a><br/>
 </td>
- <td style="border:none;width:70%">
- <h3>Latest Articles</h3>
+ </tr>
+</table>
 
-<table>
+---
+
+<h3>Latest Articles</h3>
+
+<table style="width:100%;border:none;">
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=238" target="_blank">Very Merry Christmas with Jersey 2.33</a>              </td><td> Dec 24, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=235" target="_blank">Happy Jakarta EE 9 with Jersey 3.0.0</a>               </td><td> Dec 03, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=202" target="_blank">Understanding Jakarta EE 9</a>                         </td><td> Oct 12, 2020 </td><td> Jan Supol </td> </tr>
@@ -132,8 +136,6 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=164" target="_blank">Jersey Apache Connector Hangs …?</a>                      </td><td> Jan 7, 2020 </td><td> Jan Supol </td> </tr>
 </table>
 
-
+<br/>
 <a href="older-articles.html">Older Articles &hellip;</a>
 
- </td></tr>
-    </table>
