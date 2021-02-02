@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,7 +62,7 @@
         <para>
             Jersey is built, assembled and installed using <link xlink:href="http://maven.apache.org/">Apache Maven</link>.
             Non-snapshot Jersey releases are deployed to the
-            <link xlink:href="http://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
+            <link xlink:href="https://search.maven.org/">Central Maven Repository</link>. Jersey is also being deployed to
             <link xlink:href="https://oss.sonatype.org/">Sonatype Maven repositories</link>, which contain also Jersey SNAPSHOT
             versions. In case you would want to test the latest development builds check out the
             <link xlink:href="https://oss.sonatype.org/content/repositories/snapshots/org/glassfish/jersey">

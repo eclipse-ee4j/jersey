@@ -94,7 +94,7 @@
 <!ENTITY jsr166.javadoc.uri "http://gee.cs.oswego.edu/dl/jsr166/dist/jsr166edocs/">
 <!ENTITY jsr311.link "<link xlink:href='&jsr.uri.prefix;311'>JSR 311</link>">
 <!ENTITY jsr315.link "<link xlink:href='&jsr.uri.prefix;315'>JSR 315</link>">
-<!ENTITY maven.central.repo.link "<link xlink:href='http://search.maven.org/'>Central Maven Repository</link>">
+<!ENTITY maven.central.repo.link "<link xlink:href='https://search.maven.org/'>Central Maven Repository</link>">
 <!ENTITY maven.link "<link xlink:href='http://maven.apache.org/'>Apache Maven</link>">
 <!ENTITY maven.java.net.releases.link "https://maven.java.net/content/repositories/releases/">
 <!ENTITY rxjava.javadoc.uri "http://reactivex.io/RxJava/javadoc/">
