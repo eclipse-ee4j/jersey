@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -126,7 +126,7 @@ public static class MyResource {
                 <title>Security resources with <literal>web.xml</literal></title>
                 <para>
                     In cases where a Jersey application is deployed in a Servlet container you can rely only on
-                    the standard Java EE Web application security mechanisms offered by the Servlet container and
+                    the standard Java/Jakarta EE Web application security mechanisms offered by the Servlet container and
                     configurable via application's <literal>web.xml</literal> descriptor.
                     You need to define the <literal>&lt;security-constraint&gt;</literal> elements in the
                     <literal>web.xml</literal> and assign roles which are able to access these resources. You can also
@@ -166,7 +166,7 @@ public static class MyResource {
                     classes you may need to update also the <literal>web.xml</literal>
                     security configurations to reflect the changed JAX-RS resource paths. Therefore Jersey offers a
                     <link linkend="annotation-based-security">more flexible solution</link>
-                    based on placing standard Java EE security annotations directly on JAX-RS resource classes and methods.
+                    based on placing standard Java/Jakarta EE security annotations directly on JAX-RS resource classes and methods.
                 </para>
             </section>
 
@@ -235,7 +235,7 @@ public class Resource {
                     roles that are allowed to execute a particular method.
                 </para>
                 <para>
-                    These Java EE security annotations are processed internally in the request filter registered using
+                    These Java/Jakarta EE security annotations are processed internally in the request filter registered using
                     the Jersey &lit.jersey.server.RolesAllowedDynamicFeature;. The roles defined in the annotations are
                     tested against current roles set in the &lit.jaxrs.core.SecurityContext; using
                     the &lit.jaxrs.core.SecurityContext;<literal>.isUserInRole(String role)</literal> method. In case the caller

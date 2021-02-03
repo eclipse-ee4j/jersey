@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -507,7 +507,6 @@ Runnable
 onComplete);
                 </programlisting>
             </example>
-            <para>
                 Few notes to the <literal>subscribe()</literal> methods:
                 <itemizedlist>
                     <listitem>
@@ -539,7 +538,7 @@ onComplete);
                     <listitem>
                         <para>
                             The complete <literal>subscribe()</literal> method adds the <literal>onSubscribe()</literal> callback.
-                            This gives the subscriber a tool to manage the load and do a back-pressure by incrementaly
+                            This gives the subscriber a tool to manage the load and do a back-pressure by incrementally
                             requesting only certain amount of items. When <literal>SseEventSource</literal> registers a new
                             subscriber, it calls its <literal>onSubscribe</literal> handler and hands over the
                             <literal>javax.ws.rs.sse.SseSubscription</literal>
@@ -570,7 +569,6 @@ onComplete);
                     </listitem>
                 </itemizedlist>
 
-            </para>
 
         </para>
         <section xml:id="sse-event-source-reconnect">
@@ -990,7 +988,7 @@ eventSource.close();
                     method. The next method
                     arguments define the names of the events to receive and can be omitted. If names are defined, the listener
                     will be associated with the named events and will only invoked for events with a name from the set of defined
-                    event names. It will not be invoked for events with any other name or for events without a name.
+                    event names. It will not be invoked for events with any other names or for events without a name.
 
                     <important>
                         <para>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -404,7 +404,7 @@ public MyBean readFrom(Class<MyBean> type,
             <section>
                 <title><literal>MessageBodyReader.isReadable</literal></title>
                 <para>
-                    It defines the method <literal>isReadable()</literal> which has a very simliar meaning as method
+                    It defines the method <literal>isReadable()</literal> which has a very similar meaning as method
                     <literal>isWriteable()</literal> in &lit.jaxrs.ext.MessageBodyWriter;. The method returns &lit.true;
                     if it is able to de-serialize the given type. The <literal>annotations</literal> parameter contains annotations
                     that are attached to the entity parameter in the resource method. In our &lit.http.POST; resource
