@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,59 @@
          xml:id="migration">
     <title>Migration Guide</title>
 
+    <section xml:id="mig-2.30">
+        <title>Migrating from Jersey 2.29 to 2.29.1 and 2.30+</title>
+        <section xml:id="mig-2.30-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                Versions 2.30+ do not introduce nothing breaking, however version 2.29.1 has a major change which means
+                migration of Jersey to Jakarta EE (8) platform thus all inner dependencies to APIs are migrated to
+                jakarta EE maven coordinates. This also means that all dependencies which were taken from JDK as such
+                (like JAXB etc) are now external for JDK 1.8 (but for JDK 11+ they are external even in their Java EE form).
+                So, for those who will migrate to versions of Jersey 2.29.1 or 2.30+ , a massive extension of dependencies being
+                downloaded for the project build will occur.
+                Also there is extended support of JDKs - maximum compatibility with JDK 15 (including previous JDKs).
+                And other major improvements and fixes which are described in details in release notes below.
+            </para>
+        </section>
+        <section xml:id="mig-2.30-whats-new">
+            <title>Changes in versions 2.29.1, 2.30+</title>
+            <para>
+                For detailed information regarding particular changes please refer to release notes:
+                <simplelist>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.29.1.html">2.29.1</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.30.html">2.30</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.31.html">2.31</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.32.html">2.32</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.33.html">2.33</link></member>
+                </simplelist>
+            </para>
+        </section>
+    </section>
+    <section xml:id="mig-2.27">
+        <title>Migrating from Jersey 2.26 to 2.27 (2.28, 2.29)</title>
+        <section xml:id="mig-2.27-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                Between versions of 2.26 and 2.29 there are no breaking changes in Jersey which could prevent smooth migration
+                It is enough just to increase Maven (Gradle or any other) dependencies to a required version and all existing
+                code shall work without modifications.
+            </para>
+        </section>
+        <section xml:id="mig-2.27-whats-new">
+            <title>Changes in versions 2.27 - 2.29</title>
+            <para>
+                For detailed information regarding particular changes please refer to release notes:
+                <simplelist>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.27.html">2.27</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.28.html">2.28</link></member>
+                    <member><link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/release-notes/2.29.html">2.29</link></member>
+                </simplelist>
+            </para>
+        </section>
+    </section>
     <section xml:id="mig-2.26">
-        <title>Migrating from Jersey 2.25 to &version;.</title>
+        <title>Migrating from Jersey 2.25 to 2.26.</title>
         <section xml:id="mig-2.26-breaking-changes">
             <title>Breaking Changes</title>
             <para>
