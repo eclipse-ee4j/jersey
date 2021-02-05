@@ -59,6 +59,7 @@
 <!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/javax/ws/rs">
 <!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/javax/ws/rs">
 <!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
+<!ENTITY jersey.documentation.uri "https://eclipse-ee4j.github.io/jersey.github.io">
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >
 <!ENTITY jersey.ext.declarative-linking.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-declarative-linking/dependencies.html'>jersey-declarative-linking</link>" >
@@ -79,14 +80,14 @@
 <!ENTITY jersey.ext.mvc-jsp.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-mvc-jsp/dependencies.html'>jersey-mvc-jsp</link>" >
 <!ENTITY jersey.ext.mvc-mustache.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-mvc-mustache/dependencies.html'>jersey-mvc-mustache</link>" >
 <!ENTITY jersey.ext.spring4.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-spring4/dependencies.html'>jersey-spring4</link>" >
-<!ENTITY jersey.docs.root.uri "https://eclipse-ee4j.github.io/jersey.github.io/documentation/&docs.version;">
+<!ENTITY jersey.docs.root.uri "&jersey.documentation.uri;/documentation/&docs.version;">
 <!ENTITY jersey.docs.index.uri "&jersey.docs.root.uri;/index.html">
 <!ENTITY jersey.github.examples.uri "&jersey.github.release.uri;/examples">
 <!ENTITY jersey.github.base.uri "https://github.com/eclipse-ee4j/jersey/tree">
 <!ENTITY jersey.github.release.uri "&jersey.github.base.uri;/&src.branch;">
-<!ENTITY jersey.javadoc.root.uri "https://eclipse-ee4j.github.io/jersey.github.io/apidocs/&apidocs.version;/jersey">
+<!ENTITY jersey.javadoc.root.uri "&jersey.documentation.uri;/apidocs/&apidocs.version;/jersey">
 <!ENTITY jersey.javadoc.uri.prefix "&jersey.javadoc.root.uri;/org/glassfish/jersey">
-<!ENTITY jersey.project-info.uri.prefix "https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project">
+<!ENTITY jersey.project-info.uri.prefix "&jersey.documentation.uri;/project-info/&version;/jersey/project">
 <!ENTITY jee.javadoc.uri "http://docs.oracle.com/javaee/7/api">
 <!ENTITY jdk6.javadoc.uri "http://docs.oracle.com/javase/6/docs/api">
 <!ENTITY jdk7.javadoc.uri "http://docs.oracle.com/javase/7/docs/api">
