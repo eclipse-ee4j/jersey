@@ -100,6 +100,21 @@
             <activation>
                 <jdk>1.8</jdk>
             </activation>
+            <properties>
+                <jetty.version>9.4.28.v20200408</jetty.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                    <version>${jetty.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                    <version>${jetty.version}</version>
+                </dependency>
+            </dependencies>
             <build>
                 <directory>${java8.build.outputDirectory}</directory>
                 <plugins>
@@ -198,25 +213,6 @@
                                     <resources>
                                         <resource>
                                             <directory>${java11.build.outputDirectory}/classes</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy-similar-classes</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${java8.build.outputDirectory}/classes</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${java11.build.outputDirectory}/classes</directory>
-                                            <filtering>false</filtering>
-                                            <includes>
-                                                <include>org/glassfish/jersey/jetty/JettyHttpContainerFactory.class</include>
-                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>
