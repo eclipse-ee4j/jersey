@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,6 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         Map<String, Object> runtimeProperties = bootstrapBag.getConfiguration().getProperties();
-        ManagedObjectsFinalizer finalizer = bootstrapBag.getManagedObjectsFinalizer();
 
         ExecutorServiceProvider defaultAsyncExecutorProvider;
         ScheduledExecutorServiceProvider defaultScheduledExecutorProvider;
@@ -110,7 +109,6 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                 .to(ExecutorServiceProvider.class);
 
         injectionManager.register(executorBinding);
-        finalizer.registerForPreDestroyCall(defaultAsyncExecutorProvider);
 
         final ScheduledExecutorService clientScheduledExecutorService = client.getScheduledExecutorService() == null
                 // scheduled executor service set from {@link ClientConfig}.
@@ -134,9 +132,9 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                 .service(defaultScheduledExecutorProvider)
                 .to(ScheduledExecutorServiceProvider.class);
         injectionManager.register(schedulerBinding);
-        finalizer.registerForPreDestroyCall(defaultScheduledExecutorProvider);
 
-        registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider, defaultScheduledExecutorProvider);
+        registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider,
+                defaultScheduledExecutorProvider, bootstrapBag.getManagedObjectsFinalizer());
     }
 
     private static ExecutorService lookupManagedExecutorService() {
