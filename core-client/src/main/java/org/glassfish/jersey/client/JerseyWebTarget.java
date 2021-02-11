@@ -26,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
+import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 /**
  * Jersey implementation of {@link javax.ws.rs.client.WebTarget JAX-RS client target}
@@ -146,7 +148,13 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     @Override
     public JerseyWebTarget queryParam(String name, Object... values) throws NullPointerException {
         checkNotClosed();
-        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(getUriBuilder(), name, values), this);
+        UriBuilder uriBuilder = getUriBuilder();
+        if (uriBuilder instanceof JerseyUriBuilder) {
+            ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) this.getConfiguration()
+                            .getProperty(ClientProperties.QUERY_PARAM_STYLE)
+            );
+        }
+        return new JerseyWebTarget(JerseyWebTarget.setQueryParam(uriBuilder, name, values), this);
     }
 
     private static UriBuilder setQueryParam(UriBuilder uriBuilder, String name, Object[] values) {

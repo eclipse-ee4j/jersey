@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.InetAddresses;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 import org.glassfish.jersey.uri.UriComponent;
 import org.glassfish.jersey.uri.UriTemplate;
 
@@ -67,6 +68,8 @@ public class JerseyUriBuilder extends UriBuilder {
     private final StringBuilder query;
 
     private MultivaluedMap<String, String> queryParams;
+
+    private JerseyQueryParamStyle queryParamStyle;
 
     private String fragment;
 
@@ -536,6 +539,31 @@ public class JerseyUriBuilder extends UriBuilder {
         }
 
         name = encode(name, UriComponent.Type.QUERY_PARAM);
+        if (null == queryParamStyle) {
+            clientQueryParamMultiPairs(name, values);
+        } else switch (queryParamStyle) {
+            case ARRAY_PAIRS:
+                clientQueryParamArrayPairs(name, values);
+                break;
+            case COMMA_SEPARATED:
+                clientQueryParamCommaSeparated(name, values);
+                break;
+            default:
+                clientQueryParamMultiPairs(name, values);
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Multiple parameter instances, e.g foo=v1&amp;foot=v2&amp;foo=v3 This is
+     * the default if no style is configured.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamMultiPairs(String name, final Object... values) {
         if (queryParams == null) {
             for (final Object value : values) {
                 if (query.length() > 0) {
@@ -558,7 +586,91 @@ public class JerseyUriBuilder extends UriBuilder {
                 queryParams.add(name, encode(value.toString(), UriComponent.Type.QUERY_PARAM));
             }
         }
-        return this;
+    }
+
+    /**
+     * A single parameter instance with multiple, comma-separated values, e.g
+     * key=value1,value2,value3.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamCommaSeparated(String name, final Object... values) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (queryParams == null) {
+            if (query.length() > 0) {
+                query.append('&');
+            }
+            query.append(name);
+            int valuesCount = values.length - 1;
+            for (final Object value : values) {
+                if (value == null) {
+                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+                }
+                sb.append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+                if (valuesCount > 0) {
+                    sb.append(",");
+                    --valuesCount;
+                }
+            }
+            query.append('=').append(sb.toString());
+        } else {
+            int valuesCount = values.length - 1;
+            for (final Object value : values) {
+                if (value == null) {
+                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+                }
+                sb.append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+                if (valuesCount > 0) {
+                    sb.append(",");
+                    --valuesCount;
+                }
+            }
+            queryParams.add(name, sb.toString());
+        }
+
+    }
+
+    /**
+     * Multiple parameter instances with square brackets for each parameter, e.g
+     * key[]=value1&key[]=value2&key[]=value3.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamArrayPairs(String name, final Object... values) throws IllegalArgumentException {
+        if (queryParams == null) {
+            for (final Object value : values) {
+                if (query.length() > 0) {
+                    query.append('&');
+                }
+                query.append(name).append("[]");
+
+                if (value == null) {
+                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+                }
+
+                query.append('=').append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+            }
+        } else {
+            for (final Object value : values) {
+                if (value == null) {
+                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+                }
+
+                queryParams.add(name + "[]", encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+            }
+        }
+    }
+
+    public JerseyQueryParamStyle getQueryParamStyle() {
+        return queryParamStyle;
+    }
+
+    public void setQueryParamStyle(JerseyQueryParamStyle queryParamStyle) {
+        this.queryParamStyle = queryParamStyle;
     }
 
     @Override
