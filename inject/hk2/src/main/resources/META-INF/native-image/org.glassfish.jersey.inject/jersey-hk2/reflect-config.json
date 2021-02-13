@@ -1,0 +1,34 @@
+[
+  {
+    "name":"org.glassfish.jersey.inject.hk2.ContextInjectionResolverImpl",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.Hk2RequestScope",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge",
+    "methods":[{"name":"provide","parameterTypes":[] }]
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.JerseyErrorService",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.RequestContext",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  }
+]
