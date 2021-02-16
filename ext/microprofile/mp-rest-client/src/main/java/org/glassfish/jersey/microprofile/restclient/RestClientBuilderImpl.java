@@ -84,7 +84,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private static final String CONFIG_PROVIDER_PRIORITY = "/priority";
     private static final String PROVIDER_SEPARATOR = ",";
 
-    private final Set<ResponseExceptionMapper> responseExceptionMappers;
+    private final Set<ResponseExceptionMapper<?>> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
     private final Set<InboundHeadersProvider> inboundHeaderProviders;
     private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
@@ -198,13 +198,16 @@ class RestClientBuilderImpl implements RestClientBuilder {
         WebTarget webTarget = client.target(this.uri);
         webTarget.property(ClientProperties.FOLLOW_REDIRECTS, followRedirects);
 
-        RestClientModel restClientModel = RestClientModel.from(interfaceClass,
-                                                               responseExceptionMappers,
-                                                               paramConverterProviders,
-                                                               inboundHeaderProviders,
-                                                               new ArrayList<>(asyncInterceptorFactories),
-                                                               injectionManagerExposer.injectionManager,
-                                                               CdiUtil.getBeanManager());
+        RestClientContext context = RestClientContext.builder(interfaceClass)
+                .responseExceptionMappers(responseExceptionMappers)
+                .paramConverterProviders(paramConverterProviders)
+                .inboundHeadersProviders(inboundHeaderProviders)
+                .asyncInterceptorFactories(new ArrayList<>(asyncInterceptorFactories))
+                .injectionManager(injectionManagerExposer.injectionManager)
+                .beanManager(CdiUtil.getBeanManager())
+                .build();
+
+        RestClientModel restClientModel = RestClientModel.from(context);
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass, AutoCloseable.class, Closeable.class},
