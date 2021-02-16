@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -149,10 +149,9 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     public JerseyWebTarget queryParam(String name, Object... values) throws NullPointerException {
         checkNotClosed();
         UriBuilder uriBuilder = getUriBuilder();
-        if (uriBuilder instanceof JerseyUriBuilder) {
-            ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) this.getConfiguration()
-                            .getProperty(ClientProperties.QUERY_PARAM_STYLE)
-            );
+        Object queryParamProperty = this.getConfiguration().getProperty(ClientProperties.QUERY_PARAM_STYLE);
+        if (queryParamProperty != null && uriBuilder instanceof JerseyUriBuilder) {
+            ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) queryParamProperty);
         }
         return new JerseyWebTarget(JerseyWebTarget.setQueryParam(uriBuilder, name, values), this);
     }

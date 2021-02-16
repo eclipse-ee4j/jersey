@@ -91,7 +91,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private final Config config;
     private final ConfigWrapper configWrapper;
     private URI uri;
-    private final ClientBuilder clientBuilder;
+    private ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
     private HostnameVerifier sslHostnameVerifier;
     private SSLContext sslContext;
@@ -164,7 +164,14 @@ class RestClientBuilderImpl implements RestClientBuilder {
         registerExceptionMapper();
         //sort all AsyncInvocationInterceptorFactory by priority
         asyncInterceptorFactories.sort(Comparator.comparingInt(AsyncInvocationInterceptorFactoryPriorityWrapper::getPriority));
+        if (connector != null) {
+            ClientConfig config = new ClientConfig();
+            config.loadFrom(getConfiguration());
+            config.connectorProvider(connector);
+            clientBuilder = clientBuilder.withConfig(config); // apply config...
+        }
 
+        // override ClientConfig with values that have been set explicitly
         clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
 
         if (null != sslContext) {
@@ -183,15 +190,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
             clientBuilder.keyStore(sslKeyStore, sslKeyStorePassword);
         }
 
-        Client client;
-        if (connector == null) {
-            client = clientBuilder.build();
-        } else {
-            ClientConfig config = new ClientConfig();
-            config.loadFrom(getConfiguration());
-            config.connectorProvider(connector);
-            client = clientBuilder.withConfig(config).build();
-        }
+        Client client = clientBuilder.build();
 
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();

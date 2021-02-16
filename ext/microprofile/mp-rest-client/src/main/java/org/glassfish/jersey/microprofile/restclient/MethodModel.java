@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,7 +71,9 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
+import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
 
 /**
  * Method model contains all information about method defined in rest client interface.
@@ -384,10 +386,13 @@ class MethodModel {
             }
         }
 
-        AtomicReference<MultivaluedMap<String, String>> toReturn = new AtomicReference<>(customHeaders);
-        interfaceModel.getClientHeadersFactory()
-                .ifPresent(clientHeadersFactory -> toReturn.set(clientHeadersFactory.update(inbound, customHeaders)));
-        return toReturn.get();
+        ImmutableMultivaluedMap<String, String> unmodif = new ImmutableMultivaluedMap<>(customHeaders);
+        if (interfaceModel.getClientHeadersFactory().isPresent()) {
+            ClientHeadersFactory factory = interfaceModel.getClientHeadersFactory().get();
+            MultivaluedMap<String, String> fromFactory = factory.update(inbound, unmodif);
+            customHeaders.putAll(fromFactory);
+        }
+        return customHeaders;
     }
 
     private <T> MultivaluedMap<String, String> createMultivaluedHeadersMap(List<ClientHeaderParamModel> clientHeaders) {
