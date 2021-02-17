@@ -150,7 +150,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
         checkNotClosed();
         UriBuilder uriBuilder = getUriBuilder();
         Object queryParamProperty = this.getConfiguration().getProperty(ClientProperties.QUERY_PARAM_STYLE);
-        if (queryParamProperty != null && uriBuilder instanceof JerseyUriBuilder) {
+        if (queryParamProperty instanceof JerseyQueryParamStyle && uriBuilder instanceof JerseyUriBuilder) {
             ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) queryParamProperty);
         }
         return new JerseyWebTarget(JerseyWebTarget.setQueryParam(uriBuilder, name, values), this);
