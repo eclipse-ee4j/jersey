@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -100,6 +100,21 @@
             <activation>
                 <jdk>1.8</jdk>
             </activation>
+            <properties>
+                <jetty.version>9.4.28.v20200408</jetty.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                    <version>${jetty.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                    <version>${jetty.version}</version>
+                </dependency>
+            </dependencies>
             <build>
                 <directory>${java8.build.outputDirectory}</directory>
                 <plugins>
