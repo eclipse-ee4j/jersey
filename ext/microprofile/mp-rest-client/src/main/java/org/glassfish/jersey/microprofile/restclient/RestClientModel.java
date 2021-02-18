@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,28 +46,11 @@ class RestClientModel {
     /**
      * Creates new instance of the {@link RestClientModel} base on interface class.
      *
-     * @param restClientClass           rest client interface
-     * @param responseExceptionMappers  registered exception mappers
-     * @param paramConverterProviders   registered param converters
-     * @param inboundHeadersProviders   registered inbound header providers
-     * @param asyncInterceptorFactories registered async interceptor factories
-     * @param injectionManager
+     * @param context RestClient data context
      * @return new instance
      */
-    static RestClientModel from(Class<?> restClientClass,
-                                Set<ResponseExceptionMapper> responseExceptionMappers,
-                                Set<ParamConverterProvider> paramConverterProviders,
-                                Set<InboundHeadersProvider> inboundHeadersProviders,
-                                List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
-                                InjectionManager injectionManager,
-                                BeanManager beanManager) {
-        InterfaceModel interfaceModel = InterfaceModel.from(restClientClass,
-                                                            responseExceptionMappers,
-                                                            paramConverterProviders,
-                                                            inboundHeadersProviders,
-                                                            asyncInterceptorFactories,
-                                                            injectionManager,
-                                                            beanManager);
+    static RestClientModel from(RestClientContext context) {
+        InterfaceModel interfaceModel = InterfaceModel.from(context);
         return new Builder()
                 .interfaceModel(interfaceModel)
                 .methodModels(parseMethodModels(interfaceModel))

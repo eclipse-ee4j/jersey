@@ -452,14 +452,14 @@ public final class ClientProperties {
     public static final Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE = 65536L;
 
     /**
-     * The property defines the desired format of query param when multiple
-     * values are sent for the same parameter.
+     * The property defines the desired format of query parameters.
      *
      * <p>
-     * The value MUST be an instance of
-     * {@link org.glassfish.jersey.uri.QueryParamStyle}.</p>
+     * The value MUST be an instance of {@link org.glassfish.jersey.uri.JerseyQueryParamStyle}.
+     * </p>
      * <p>
-     * The default value is {@code null}.</p>
+     * If the property is not set, {@link org.glassfish.jersey.uri.JerseyQueryParamStyle#MULTI_PAIRS} is selected.
+     * </p>
      */
     public static final String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style";
 

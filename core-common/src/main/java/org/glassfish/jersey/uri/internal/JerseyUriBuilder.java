@@ -24,6 +24,9 @@ import java.security.AccessController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
@@ -79,6 +82,7 @@ public class JerseyUriBuilder extends UriBuilder {
     public JerseyUriBuilder() {
         path = new StringBuilder();
         query = new StringBuilder();
+        queryParamStyle = JerseyQueryParamStyle.MULTI_PAIRS;
     }
 
     private JerseyUriBuilder(final JerseyUriBuilder that) {
@@ -93,6 +97,7 @@ public class JerseyUriBuilder extends UriBuilder {
         this.query = new StringBuilder(that.query);
         this.queryParams = that.queryParams == null ? null : new MultivaluedStringMap(that.queryParams);
         this.fragment = that.fragment;
+        this.queryParamStyle = that.queryParamStyle;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
@@ -539,20 +544,30 @@ public class JerseyUriBuilder extends UriBuilder {
         }
 
         name = encode(name, UriComponent.Type.QUERY_PARAM);
-        if (null == queryParamStyle) {
-            clientQueryParamMultiPairs(name, values);
-        } else switch (queryParamStyle) {
-            case ARRAY_PAIRS:
-                clientQueryParamArrayPairs(name, values);
-                break;
-            case COMMA_SEPARATED:
-                clientQueryParamCommaSeparated(name, values);
-                break;
-            default:
-                clientQueryParamMultiPairs(name, values);
-                break;
+
+        List<String> stringsValues = Stream.of(values)
+                .map(this::convertToString)
+                .map(value -> encode(value, UriComponent.Type.QUERY_PARAM))
+                .collect(Collectors.toList());
+
+        switch (queryParamStyle) {
+        case ARRAY_PAIRS:
+            clientQueryParamArrayPairs(name, stringsValues);
+            break;
+        case COMMA_SEPARATED:
+            clientQueryParamCommaSeparated(name, stringsValues);
+            break;
+        default:
+            clientQueryParamMultiPairs(name, stringsValues);
         }
         return this;
+    }
+
+    private String convertToString(Object value) {
+        if (value == null) {
+            throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+        }
+        return value.toString();
     }
 
     /**
@@ -563,27 +578,17 @@ public class JerseyUriBuilder extends UriBuilder {
      * @param values
      * @throws IllegalArgumentException
      */
-    private void clientQueryParamMultiPairs(String name, final Object... values) {
+    private void clientQueryParamMultiPairs(String name, List<String> values) {
         if (queryParams == null) {
-            for (final Object value : values) {
+            for (final String value : values) {
                 if (query.length() > 0) {
                     query.append('&');
                 }
-                query.append(name);
-
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                query.append('=').append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+                query.append(name).append('=').append(value);
             }
         } else {
-            for (final Object value : values) {
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                queryParams.add(name, encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+            for (final String value : values) {
+                queryParams.add(name, value);
             }
         }
     }
@@ -596,40 +601,15 @@ public class JerseyUriBuilder extends UriBuilder {
      * @param values
      * @throws IllegalArgumentException
      */
-    private void clientQueryParamCommaSeparated(String name, final Object... values) throws IllegalArgumentException {
-        StringBuilder sb = new StringBuilder();
+    private void clientQueryParamCommaSeparated(String name, List<String> values) throws IllegalArgumentException {
         if (queryParams == null) {
             if (query.length() > 0) {
                 query.append('&');
             }
-            query.append(name);
-            int valuesCount = values.length - 1;
-            for (final Object value : values) {
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-                sb.append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
-                if (valuesCount > 0) {
-                    sb.append(",");
-                    --valuesCount;
-                }
-            }
-            query.append('=').append(sb.toString());
+            query.append(name).append('=').append(String.join(",", values));
         } else {
-            int valuesCount = values.length - 1;
-            for (final Object value : values) {
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-                sb.append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
-                if (valuesCount > 0) {
-                    sb.append(",");
-                    --valuesCount;
-                }
-            }
-            queryParams.add(name, sb.toString());
+            queryParams.add(name, String.join(",", values));
         }
-
     }
 
     /**
@@ -640,37 +620,24 @@ public class JerseyUriBuilder extends UriBuilder {
      * @param values
      * @throws IllegalArgumentException
      */
-    private void clientQueryParamArrayPairs(String name, final Object... values) throws IllegalArgumentException {
+    private void clientQueryParamArrayPairs(String name, List<String> values) throws IllegalArgumentException {
         if (queryParams == null) {
-            for (final Object value : values) {
+            for (final String value : values) {
                 if (query.length() > 0) {
                     query.append('&');
                 }
-                query.append(name).append("[]");
-
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                query.append('=').append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+                query.append(name).append("[]").append('=').append(value);
             }
         } else {
-            for (final Object value : values) {
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                queryParams.add(name + "[]", encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+            for (final String value : values) {
+                queryParams.add(name + "[]", value);
             }
         }
     }
 
-    public JerseyQueryParamStyle getQueryParamStyle() {
-        return queryParamStyle;
-    }
-
-    public void setQueryParamStyle(JerseyQueryParamStyle queryParamStyle) {
-        this.queryParamStyle = queryParamStyle;
+    public JerseyUriBuilder setQueryParamStyle(JerseyQueryParamStyle queryParamStyle) {
+        this.queryParamStyle = Objects.requireNonNull(queryParamStyle);
+        return this;
     }
 
     @Override
@@ -780,7 +747,7 @@ public class JerseyUriBuilder extends UriBuilder {
         path.append(newPath);
 
         final String newQuery = UriTemplate.resolveTemplateValues(UriComponent.Type.QUERY_PARAM, query.toString(), encode,
-                templateValues);
+                                                                  templateValues);
         query.setLength(0);
         query.append(newQuery);
 
@@ -827,7 +794,7 @@ public class JerseyUriBuilder extends UriBuilder {
         encodeMatrix();
 
         segments = encode(segments,
-                (isSegment) ? UriComponent.Type.PATH_SEGMENT : UriComponent.Type.PATH);
+                          (isSegment) ? UriComponent.Type.PATH_SEGMENT : UriComponent.Type.PATH);
 
         final boolean pathEndsInSlash = path.length() > 0 && path.charAt(path.length() - 1) == '/';
         final boolean segmentStartsWithSlash = segments.charAt(0) == '/';
@@ -998,12 +965,21 @@ public class JerseyUriBuilder extends UriBuilder {
 
         encodeMatrix();
         encodeQuery();
+        if (queryParamStyle == JerseyQueryParamStyle.COMMA_SEPARATED) {
+            groupQueryParams();
+        }
 
         final String uri = UriTemplate.createURI(
                 scheme, authority,
                 userInfo, host, port,
                 path.toString(), query.toString(), fragment, values, encode, encodeSlashInPath);
         return createURI(uri);
+    }
+
+    private void groupQueryParams() {
+        MultivaluedMap<String, String> queryParams = UriComponent.decodeQuery(query.toString(), false, false);
+        query.setLength(0);
+        queryParams.forEach(this::clientQueryParamCommaSeparated);
     }
 
     private String create() {

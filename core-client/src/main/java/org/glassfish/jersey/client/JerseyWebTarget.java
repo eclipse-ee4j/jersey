@@ -149,10 +149,9 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     public JerseyWebTarget queryParam(String name, Object... values) throws NullPointerException {
         checkNotClosed();
         UriBuilder uriBuilder = getUriBuilder();
-        if (uriBuilder instanceof JerseyUriBuilder) {
-            ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) this.getConfiguration()
-                            .getProperty(ClientProperties.QUERY_PARAM_STYLE)
-            );
+        Object queryParamProperty = this.getConfiguration().getProperty(ClientProperties.QUERY_PARAM_STYLE);
+        if (queryParamProperty instanceof JerseyQueryParamStyle && uriBuilder instanceof JerseyUriBuilder) {
+            ((JerseyUriBuilder) uriBuilder).setQueryParamStyle((JerseyQueryParamStyle) queryParamProperty);
         }
         return new JerseyWebTarget(JerseyWebTarget.setQueryParam(uriBuilder, name, values), this);
     }

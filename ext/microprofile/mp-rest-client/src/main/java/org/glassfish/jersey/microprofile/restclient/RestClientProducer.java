@@ -138,26 +138,27 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         // Connection read timeout (if configured)
         getConfigOption(Long.class, CONFIG_READ_TIMEOUT)
                 .ifPresent(aLong -> restClientBuilder.readTimeout(aLong, TimeUnit.MILLISECONDS));
-
         getConfigOption(Boolean.class, CONFIG_FOLLOW_REDIRECTS)
-                .ifPresent(value -> restClientBuilder.followRedirects(value));
+                .ifPresent(restClientBuilder::followRedirects);
         getConfigOption(String.class, CONFIG_QUERY_PARAM_STYLE)
                 .ifPresent(value -> restClientBuilder.queryParamStyle(QueryParamStyle.valueOf(value)));
-        Optional<String> proxyAddress = getConfigOption(String.class, CONFIG_PROXY_ADDRESS);
-        if (proxyAddress.isPresent()) {
-            String[] proxyAddressParts = proxyAddress.get().split(":");
-            if (proxyAddressParts.length < 2) {
-                throw new IllegalArgumentException("Invalid Proxy URI");
-            }
-            String proxyHost = proxyAddressParts[0];
-            int proxyPort;
-            try {
-                proxyPort = Integer.parseInt(proxyAddressParts[1]);
-            } catch (NumberFormatException nfe) {
-                throw new IllegalArgumentException("Invalid Proxy port", nfe);
-            }
-            restClientBuilder.proxyAddress(proxyHost, proxyPort);
-        }
+        getConfigOption(String.class, CONFIG_PROXY_ADDRESS)
+                .ifPresent(proxy -> {
+                    int index = proxy.lastIndexOf(':');
+                    //If : was not found at all or it is the last character of the proxy string
+                    if (index < 0 || proxy.length() - 1 == index) {
+                        throw new IllegalArgumentException("Invalid proxy URI: " + proxy);
+                    }
+                    String proxyHost = proxy.substring(0, index);
+                    int proxyPort;
+                    String proxyPortStr = proxy.substring(index + 1);
+                    try {
+                        proxyPort = Integer.parseInt(proxyPortStr);
+                    } catch (NumberFormatException nfe) {
+                        throw new IllegalArgumentException("Invalid proxy port: " + proxyPortStr, nfe);
+                    }
+                    restClientBuilder.proxyAddress(proxyHost, proxyPort);
+                });
 
         // Providers from configuration
         addConfiguredProviders(restClientBuilder);

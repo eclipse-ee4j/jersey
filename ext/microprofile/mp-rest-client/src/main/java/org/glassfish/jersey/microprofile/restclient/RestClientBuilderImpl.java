@@ -84,14 +84,14 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private static final String CONFIG_PROVIDER_PRIORITY = "/priority";
     private static final String PROVIDER_SEPARATOR = ",";
 
-    private final Set<ResponseExceptionMapper> responseExceptionMappers;
+    private final Set<ResponseExceptionMapper<?>> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
     private final Set<InboundHeadersProvider> inboundHeaderProviders;
     private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
     private final Config config;
     private final ConfigWrapper configWrapper;
     private URI uri;
-    private final ClientBuilder clientBuilder;
+    private ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
     private HostnameVerifier sslHostnameVerifier;
     private SSLContext sslContext;
@@ -164,7 +164,14 @@ class RestClientBuilderImpl implements RestClientBuilder {
         registerExceptionMapper();
         //sort all AsyncInvocationInterceptorFactory by priority
         asyncInterceptorFactories.sort(Comparator.comparingInt(AsyncInvocationInterceptorFactoryPriorityWrapper::getPriority));
+        if (connector != null) {
+            ClientConfig config = new ClientConfig();
+            config.loadFrom(getConfiguration());
+            config.connectorProvider(connector);
+            clientBuilder = clientBuilder.withConfig(config); // apply config...
+        }
 
+        // override ClientConfig with values that have been set explicitly
         clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
 
         if (null != sslContext) {
@@ -183,15 +190,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
             clientBuilder.keyStore(sslKeyStore, sslKeyStorePassword);
         }
 
-        Client client;
-        if (connector == null) {
-            client = clientBuilder.build();
-        } else {
-            ClientConfig config = new ClientConfig();
-            config.loadFrom(getConfiguration());
-            config.connectorProvider(connector);
-            client = clientBuilder.withConfig(config).build();
-        }
+        Client client = clientBuilder.build();
 
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();
@@ -199,13 +198,16 @@ class RestClientBuilderImpl implements RestClientBuilder {
         WebTarget webTarget = client.target(this.uri);
         webTarget.property(ClientProperties.FOLLOW_REDIRECTS, followRedirects);
 
-        RestClientModel restClientModel = RestClientModel.from(interfaceClass,
-                                                               responseExceptionMappers,
-                                                               paramConverterProviders,
-                                                               inboundHeaderProviders,
-                                                               new ArrayList<>(asyncInterceptorFactories),
-                                                               injectionManagerExposer.injectionManager,
-                                                               CdiUtil.getBeanManager());
+        RestClientContext context = RestClientContext.builder(interfaceClass)
+                .responseExceptionMappers(responseExceptionMappers)
+                .paramConverterProviders(paramConverterProviders)
+                .inboundHeadersProviders(inboundHeaderProviders)
+                .asyncInterceptorFactories(new ArrayList<>(asyncInterceptorFactories))
+                .injectionManager(injectionManagerExposer.injectionManager)
+                .beanManager(CdiUtil.getBeanManager())
+                .build();
+
+        RestClientModel restClientModel = RestClientModel.from(context);
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass, AutoCloseable.class, Closeable.class},

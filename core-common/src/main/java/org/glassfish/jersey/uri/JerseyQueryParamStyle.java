@@ -23,13 +23,14 @@ public enum JerseyQueryParamStyle {
 
     /**
      * Multiple parameter instances, e.g.:
-     * <code>foo=v1&amp;foot=v2&amp;foo=v3</code>
+     * <code>foo=v1&amp;foo=v2&amp;foo=v3</code>
      *
-     * This is the default if no style is configured.
+     * This is the default query format.
      */
     MULTI_PAIRS,
 
-    /** A single parameter instance with multiple, comma-separated values, e.g.:
+    /**
+     * A single parameter instance with multiple, comma-separated values, e.g.:
      * <code>foo=v1,v2,v3</code>
      */
     COMMA_SEPARATED,

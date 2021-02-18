@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 import org.glassfish.jersey.uri.UriComponent;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
@@ -1626,6 +1627,44 @@ public class JerseyUriBuilderTest {
         Assert.assertEquals(
                 "http://localhost:8080/path?query=%21+%23+%24+%26+%27+%28+%29+%2A+%2B+%2C+%2F+%3A+%3B+%3D+%3F+%40+%5B+%5D",
                 uriBuilder.build().toString());
+    }
+
+    @Test
+    public void testQueryParamStyleCommaSeparated() {
+        checkQueryFormat("http://localhost:8080/path",
+                         JerseyQueryParamStyle.COMMA_SEPARATED,
+                         "key1=val1,val2,val3&key2=val1");
+    }
+
+    @Test
+    public void testQueryParamStyleArrayPairs() {
+        checkQueryFormat("http://localhost:8080/path",
+                         JerseyQueryParamStyle.ARRAY_PAIRS,
+                         "key1[]=val1&key1[]=val2&key2[]=val1&key1[]=val3");
+    }
+
+    @Test
+    public void testQueryParamStyleArrayPairsWithPreviouslyCreatedQuery() {
+        checkQueryFormat("http://localhost:8080/path?notArray=value",
+                         JerseyQueryParamStyle.ARRAY_PAIRS,
+                         "notArray=value&key1[]=val1&key1[]=val2&key2[]=val1&key1[]=val3");
+    }
+
+    @Test
+    public void testQueryParamStyleMultiPairs() {
+        checkQueryFormat("http://localhost:8080/path",
+                         JerseyQueryParamStyle.MULTI_PAIRS,
+                         "key1=val1&key1=val2&key2=val1&key1=val3");
+    }
+
+    private void checkQueryFormat(String fromUri, JerseyQueryParamStyle queryParamStyle, String expected) {
+        final URI uri = ((JerseyUriBuilder) UriBuilder.fromUri(fromUri))
+                .setQueryParamStyle(queryParamStyle)
+                .queryParam("key1", "val1", "val2")
+                .queryParam("key2", "val1")
+                .queryParam("key1", "val3")
+                .build();
+        Assert.assertEquals(expected, uri.getQuery());
     }
 
 }
