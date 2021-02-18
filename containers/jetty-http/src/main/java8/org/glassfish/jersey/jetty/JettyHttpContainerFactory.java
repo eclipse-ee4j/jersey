@@ -17,25 +17,13 @@
 package org.glassfish.jersey.jetty;
 
 import jakarta.ws.rs.ProcessingException;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jetty.internal.LocalizationMessages;
-import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
-import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.spi.Container;
 
 import java.net.URI;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Jersey {@code Container} stub.
@@ -49,57 +37,43 @@ public final class JettyHttpContainerFactory {
     }
 
     public static Server createServer(final URI uri) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final boolean start) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final ResourceConfig config)
             throws ProcessingException {
 
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final ResourceConfig configuration, final boolean start)
             throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final ResourceConfig config, final boolean start,
                                       final Object parentContext) {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final ResourceConfig config, final Object parentContext) {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8
     }
 
     public static Server createServer(final URI uri, final SslContextFactory.Server sslContextFactory,
                                       final ResourceConfig config)
             throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
+        validateJdk();
         return null; // does not work at JDK 1.8    }
     }
 
@@ -107,9 +81,13 @@ public final class JettyHttpContainerFactory {
                                       final SslContextFactory.Server sslContextFactory,
                                       final JettyHttpContainer handler,
                                       final boolean start) {
+        validateJdk();
+        return null; // does not work at JDK 1.8
+    }
+
+    private static void validateJdk() {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        return null; // does not work at JDK 1.8
     }
 }
