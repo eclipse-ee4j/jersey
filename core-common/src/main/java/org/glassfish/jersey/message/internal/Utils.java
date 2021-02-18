@@ -19,6 +19,10 @@ package org.glassfish.jersey.message.internal;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility class.
@@ -47,9 +51,23 @@ public final class Utils {
      * @throws IOException if a file could not be created.
      */
     public static File createTempFile() throws IOException {
-        final File file = Files.createTempFile("rep", "tmp").toFile();
-        // Make sure the file is deleted when JVM is shutdown at last.
-        file.deleteOnExit();
+        final List<IOException> exs = new ArrayList<>();
+        final File file = AccessController.doPrivileged(new PrivilegedAction<File>() {
+            public File run() {
+                File tempFile = null;
+                try {
+                    tempFile = Files.createTempFile("rep", "tmp").toFile();
+                    // Make sure the file is deleted when JVM is shutdown at last.
+                    tempFile.deleteOnExit();
+                } catch (IOException e) {
+                    exs.add(e);
+                }
+                return tempFile;
+            }
+        });
+        if (!exs.isEmpty()) {
+            throw exs.get(0);
+        }
         return file;
     }
 
