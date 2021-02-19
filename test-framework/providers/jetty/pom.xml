@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,15 +52,6 @@
     </properties>
 
     <profiles>
-        <profile>
-            <id>testsSkipJdk6</id>
-            <activation>
-                <jdk>1.6</jdk>
-            </activation>
-            <properties>
-                <skip.tests>true</skip.tests>
-            </properties>
-        </profile>
         <profile>
             <id>JettyExclude</id>
             <activation>
@@ -131,7 +122,7 @@
             <activation>
                 <file>
                     <!-- ${java11.build.outputDirectory} does not work here -->
-                    <exists>target11/classes/org/glassfish/jersey/jetty/connector/JettyConnectorProvider.class</exists>
+                    <exists>target11/classes/org/glassfish/jersey/test/jetty/JettyTestContainerFactory.class</exists>
                 </file>
                 <jdk>1.8</jdk>
             </activation>
