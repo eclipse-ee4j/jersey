@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.server.internal.monitoring.core;
 
+import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,13 +56,7 @@ public final class ReservoirConstants {
                 return Integer.getInteger(ServerProperties.COLLISION_BUFFER_POWER_JVM_ARG, DEFAULT_COLLISION_BUFFER_POWER);
             }
         };
-        int collisionBuffePower = DEFAULT_COLLISION_BUFFER_POWER;
-        try {
-            collisionBuffePower = action.run();
-        } catch (SecurityException e) {
-            Logger.getLogger(ReservoirConstants.class.getName()).log(Level.WARNING, e.getLocalizedMessage(), e);
-        }
-        COLLISION_BUFFER_POWER = collisionBuffePower;
+        COLLISION_BUFFER_POWER = AccessController.doPrivileged(action);
         COLLISION_BUFFER = 1 << COLLISION_BUFFER_POWER; // 256
     }
 
