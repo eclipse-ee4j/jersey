@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,15 @@ public final class ExternalProperties {
      * without going through the proxy.
      */
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+
+    /**
+     * If IPv6 is available on the operating system the underlying native socket will be,
+     * by default, an IPv6 socket which lets applications connect to, and accept connections from,
+     * both IPv4 and IPv6 hosts.
+     * However, in the case an application would rather use IPv4 only sockets, then this property can be set to true.
+     * The implication is that it will not be possible for the application to communicate with IPv6 only hosts.
+     */
+    public static final String JAVA_NET_PREFERIPV4STACK = "java.net.preferIPv4Stack";
 
     /**
      * Prevent instantiation.
