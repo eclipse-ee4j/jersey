@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Utility class.
@@ -51,7 +50,7 @@ public final class Utils {
      * @throws IOException if a file could not be created.
      */
     public static File createTempFile() throws IOException {
-        final List<IOException> exs = new ArrayList<>();
+        final AtomicReference<IOException> exceptionReference = new AtomicReference<>();
         final File file = AccessController.doPrivileged(new PrivilegedAction<File>() {
             public File run() {
                 File tempFile = null;
@@ -60,13 +59,13 @@ public final class Utils {
                     // Make sure the file is deleted when JVM is shutdown at last.
                     tempFile.deleteOnExit();
                 } catch (IOException e) {
-                    exs.add(e);
+                    exceptionReference.set(e);
                 }
                 return tempFile;
             }
         });
-        if (!exs.isEmpty()) {
-            throw exs.get(0);
+        if (exceptionReference.get() != null) {
+            throw exceptionReference.get();
         }
         return file;
     }
