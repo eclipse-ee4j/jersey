@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,12 +25,15 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.inject.Provider;
+
+import javax.ws.rs.container.CompletionCallback;
 import javax.ws.rs.container.ConnectionCallback;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.ext.WriterInterceptor;
-
-import javax.inject.Provider;
 
 import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;
@@ -47,8 +50,10 @@ import org.glassfish.jersey.server.internal.process.MappableException;
  * @author Marek Potociar
  */
 // TODO:  something like prequel/sequel - usable for EventChannelWriter and XML related writers
-public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
+public class ChunkedOutput<T> extends GenericType<T> implements Closeable, CompletionCallback {
+
     private static final byte[] ZERO_LENGTH_DELIMITER = new byte[0];
+    private static final Logger LOGGER = Logger.getLogger(ChunkedOutput.class.getName());
 
     private final BlockingDeque<T> queue = new LinkedBlockingDeque<>();
     private final byte[] chunkDelimiter;
@@ -117,6 +122,11 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         this.asyncContext = asyncContextProvider == null ? null : asyncContextProvider.get();
+
+        // register as connection callback to async context
+        if (asyncContext != null) {
+            asyncContext.register(this);
+        }
     }
 
     /**
@@ -327,6 +337,16 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
             }
         }
     }
+
+    @Override
+    public void onComplete(Throwable throwable) {
+        try {
+            close();
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, LocalizationMessages.WARNING_CHUNKED_CLOSE_FAILURE_ON_COMPLETE(), e);
+        }
+    }
+
 
     /**
      * Close this response - it will be finalized and underlying connections will be closed
