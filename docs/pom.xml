@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -191,8 +191,8 @@
         <assembly.directory>${project.build.directory}/assembly</assembly.directory>
         <src.dir>${basedir}/target/gen-src</src.dir>
         <javanet.repository.id>snapshots</javanet.repository.id>
-        <jersey.docs.version>snapshot</jersey.docs.version>
-        <jersey.apidocs.version>snapshot</jersey.apidocs.version>
+        <jersey.docs.version>latest</jersey.docs.version>
+        <jersey.apidocs.version>latest</jersey.apidocs.version>
         <jersey.src.branch>master</jersey.src.branch>
         <jaxrs.version>${jaxrs.api.spec.version}</jaxrs.version>
         <jaxrs.impl.version>${jaxrs.api.impl.version}</jaxrs.impl.version>

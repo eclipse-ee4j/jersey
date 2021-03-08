@@ -805,6 +805,11 @@ System.out.println("Now the connection is closed.");</programlisting>
             (by <literal>response.readEntity(InputStream.class)</literal>), the connection stays open until
             you finish reading from the &lit.jdk6.InputStream;. In that case, the InputStream
             or the Response should be closed manually at the end of reading from InputStream.
+
+            If Apache connector is used, the ApacheConnectionClosingStrategy is the interface that can be provided by the user.
+            With Apache 4.5, indeed the Response can be closed and then the InputStream once is read. It is the
+            ImmediateCloseStrategy. On the other hand, with Apache 4.5.1+, the InputStream should be close first and then the Response.
+            It is the GracefulCloseStrategy.
         </para>
     </section>
 
@@ -817,38 +822,33 @@ System.out.println("Now the connection is closed.");</programlisting>
             Injections into client providers (filters, interceptor) are possible as long as the provider is
             registered as a class. If the provider is registered as an instance then runtime will not inject
             the provider. The reason is that this provider instance might be registered into multiple client
-            configurations. For example one instance of &jaxrs.client.ClientRequestFilter; can be registered
+            configurations. For example one instance of &lit.jaxrs.WriterInterceptor; can be registered
             to two &jaxrs.client.Client;s.
         </para>
         <para>
             To solve injection of a custom type into a client provider instance
-            use &jersey.client.ServiceLocatorClientProvider; to
-            extract &hk2.ServiceLocator; which can return the required injection. The following example shows how to utilize
-            &lit.jersey.client.ServiceLocatorClientProvider;:
+            use &jersey.client.InjectionManagerProvider; to
+            extract &jersey.common.internal.inject.InjectionManager; which can return the required injection.
+            The following example shows how to utilize &lit.jersey.client.InjectionManagerProvider;:
         </para>
         <example>
-            <title>ServiceLocatorClientProvider example</title>
-            <programlisting language="java" linenumbering="numbered">public static class MyRequestFilter implements ClientRequestFilter {
-    // this injection does not work as filter is registered as an instance:
-    // @Inject
-    // private MyInjectedService service;
+            <title>InjectionManagerProvider example</title>
+            <programlisting language="java" linenumbering="numbered">public static class MyWriterInterceptor implements WriterInterceptor {
+        // this injection does not work as writer is registered as an instance:
+        // @Inject
+        // MyInjectedService service;
 
-    @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        // use ServiceLocatorClientProvider to extract HK2 ServiceLocator from request
-        final ServiceLocator locator = ServiceLocatorClientProvider.getServiceLocator(requestContext);
-
-        // and ask for MyInjectedService:
-        final MyInjectedService service = locator.getService(MyInjectedService.class);
-
-        final String name = service.getName();
-        ...
+        @Override
+        public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
+            InjectionManager injectionManager = InjectionManagerProvider.getInjectionManager(context);
+            MyInjectedService service = injectionManager.getInstance(MyInjectedService.class);
+            Something something = service.getSomething();
+            ...
     }
 }</programlisting>
         </example>
         <para>
-            For more information see javadoc of &jersey.client.ServiceLocatorClientProvider;
-            (and javadoc of &jersey.common.ServiceLocatorProvider; which supports common JAX-RS components).
+            For more information see javadoc of &jersey.client.InjectionManagerProvider;.
         </para>
     </section>
 
