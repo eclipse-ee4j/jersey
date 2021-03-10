@@ -62,9 +62,11 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
      * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
+     * @param separator     new line delimiter. Default is Linux new line separator.
      */
-    public ServerLoggingFilter(final Logger logger, final Level level, final Verbosity verbosity, final int maxEntitySize) {
-        super(logger, level, verbosity, maxEntitySize);
+    public ServerLoggingFilter(final Logger logger, final Level level, final Verbosity verbosity, final int maxEntitySize,
+                               final String separator) {
+        super(logger, level, verbosity, maxEntitySize, separator);
     }
 
     @Override
