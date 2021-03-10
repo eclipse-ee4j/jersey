@@ -87,10 +87,13 @@ public class LoggingFeature implements Feature {
      */
     public static final Verbosity DEFAULT_VERBOSITY = Verbosity.PAYLOAD_TEXT;
 
+    public static final String DEFAULT_SEPARATOR = "\n";
+
     private static final String LOGGER_NAME_POSTFIX = ".logger.name";
     private static final String LOGGER_LEVEL_POSTFIX = ".logger.level";
     private static final String VERBOSITY_POSTFIX = ".verbosity";
     private static final String MAX_ENTITY_POSTFIX = ".entity.maxSize";
+    private static final String SEPARATOR_POSTFIX = ".separator.maxSize";
     private static final String LOGGING_FEATURE_COMMON_PREFIX = "jersey.config.logging";
     /**
      * Common logger name property.
@@ -145,16 +148,19 @@ public class LoggingFeature implements Feature {
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + MAX_ENTITY_POSTFIX;
 
+    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
+
     private final Logger filterLogger;
     private final Verbosity verbosity;
     private final Integer maxEntitySize;
     private final Level level;
+    private final String separator;
 
     /**
      * Creates the feature with default values.
      */
     public LoggingFeature() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
     /**
@@ -163,7 +169,7 @@ public class LoggingFeature implements Feature {
      * @param logger the logger to log requests and responses.
      */
     public LoggingFeature(Logger logger) {
-        this(logger, null, null, null);
+        this(logger, null, null, null, null);
     }
 
     /**
@@ -173,7 +179,7 @@ public class LoggingFeature implements Feature {
      * @param verbosity verbosity of logged messages. See {@link Verbosity}.
      */
     public LoggingFeature(Logger logger, Verbosity verbosity) {
-        this(logger, null, verbosity, null);
+        this(logger, null, verbosity, null, null);
     }
 
     /**
@@ -185,7 +191,7 @@ public class LoggingFeature implements Feature {
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      */
     public LoggingFeature(Logger logger, Integer maxEntitySize) {
-        this(logger, null, DEFAULT_VERBOSITY, maxEntitySize);
+        this(logger, null, DEFAULT_VERBOSITY, maxEntitySize, null);
     }
 
     /**
@@ -198,32 +204,31 @@ public class LoggingFeature implements Feature {
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      */
-    public LoggingFeature(Logger logger, Level level, Verbosity verbosity, Integer maxEntitySize) {
+    public LoggingFeature(Logger logger, Level level, Verbosity verbosity, Integer maxEntitySize, String separator) {
         this.filterLogger = logger;
         this.level = level;
         this.verbosity = verbosity;
         this.maxEntitySize = maxEntitySize;
+        this.separator = separator;
+    }
+
+    public LoggingFeature(Logger logger, Level info, Verbosity verbosity, int maxMaxEntitySize) {
+        this(logger, info, verbosity, maxMaxEntitySize, DEFAULT_SEPARATOR);
     }
 
     @Override
     public boolean configure(FeatureContext context) {
-        boolean enabled = false;
+        boolean enabled = context.getConfiguration().getRuntimeType() != null;
 
-        if (context.getConfiguration().getRuntimeType() == RuntimeType.CLIENT) {
-            ClientLoggingFilter clientLoggingFilter = (ClientLoggingFilter) createLoggingFilter(context, RuntimeType.CLIENT);
-            context.register(clientLoggingFilter);
-            enabled = true;
+        if (enabled) {
+            context.register(createLoggingFilter(context, context.getConfiguration().getRuntimeType()));
         }
-        if (context.getConfiguration().getRuntimeType() == RuntimeType.SERVER) {
-            ServerLoggingFilter serverClientFilter = (ServerLoggingFilter) createLoggingFilter(context, RuntimeType.SERVER);
-            context.register(serverClientFilter);
-            enabled = true;
-        }
+
         return enabled;
     }
 
     private LoggingInterceptor createLoggingFilter(FeatureContext context, RuntimeType runtimeType) {
-        Map properties = context.getConfiguration().getProperties();
+        final Map properties = context.getConfiguration().getProperties();
         String filterLoggerName = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_NAME_SERVER : LOGGING_FEATURE_LOGGER_NAME_CLIENT,
@@ -239,6 +244,13 @@ public class LoggingFeature implements Feature {
                         context.getConfiguration().getProperties(),
                         LOGGING_FEATURE_LOGGER_LEVEL,
                         DEFAULT_LOGGER_LEVEL));
+        String filterSeparator = CommonProperties.getValue(
+                properties,
+                runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_LEVEL_SERVER : LOGGING_FEATURE_LOGGER_LEVEL_CLIENT,
+                CommonProperties.getValue(
+                        context.getConfiguration().getProperties(),
+                        LOGGING_FEATURE_SEPARATOR,
+                        DEFAULT_SEPARATOR));
         Verbosity filterVerbosity = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_VERBOSITY_SERVER : LOGGING_FEATURE_VERBOSITY_CLIENT,
@@ -263,12 +275,14 @@ public class LoggingFeature implements Feature {
             return new ServerLoggingFilter(filterLogger != null ? filterLogger : Logger.getLogger(filterLoggerName),
                     level != null ? level : loggerLevel,
                     verbosity != null ? verbosity : filterVerbosity,
-                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize);
+                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize,
+                    separator != null ? separator : filterSeparator);
         } else {
             return new ClientLoggingFilter(filterLogger != null ? filterLogger : Logger.getLogger(filterLoggerName),
                     level != null ? level : loggerLevel,
                     verbosity != null ? verbosity : filterVerbosity,
-                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize);
+                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize,
+                    separator != null ? separator : filterSeparator);
         }
     }
 

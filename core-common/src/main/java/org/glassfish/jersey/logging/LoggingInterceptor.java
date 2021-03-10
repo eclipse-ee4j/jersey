@@ -103,6 +103,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     final AtomicLong _id = new AtomicLong(0);
     final Verbosity verbosity;
     final int maxEntitySize;
+    final String separator;
 
     /**
      * Creates a logging filter with custom logger and entity logging turned on, but potentially limiting the size
@@ -114,12 +115,15 @@ abstract class LoggingInterceptor implements WriterInterceptor {
      * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
+     * @param separator     delimiter for particular log lines. Default is Linux new line delimiter
      */
-    LoggingInterceptor(final Logger logger, final Level level, final Verbosity verbosity, final int maxEntitySize) {
+
+    LoggingInterceptor(Logger logger, Level level, Verbosity verbosity, int maxEntitySize, String separator) {
         this.logger = logger;
         this.level = level;
         this.verbosity = verbosity;
         this.maxEntitySize = Math.max(0, maxEntitySize);
+        this.separator = separator;
     }
 
     /**
@@ -142,18 +146,18 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         prefixId(b, id).append(NOTIFICATION_PREFIX)
                 .append(note)
                 .append(" on thread ").append(Thread.currentThread().getName())
-                .append("\n");
+                .append(separator);
         prefixId(b, id).append(REQUEST_PREFIX).append(method).append(" ")
-                .append(uri.toASCIIString()).append("\n");
+                .append(uri.toASCIIString()).append(separator);
     }
 
     void printResponseLine(final StringBuilder b, final String note, final long id, final int status) {
         prefixId(b, id).append(NOTIFICATION_PREFIX)
                 .append(note)
-                .append(" on thread ").append(Thread.currentThread().getName()).append("\n");
+                .append(" on thread ").append(Thread.currentThread().getName()).append(separator);
         prefixId(b, id).append(RESPONSE_PREFIX)
                 .append(Integer.toString(status))
-                .append("\n");
+                .append(separator);
     }
 
     void printPrefixedHeaders(final StringBuilder b,
@@ -165,7 +169,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
             final String header = headerEntry.getKey();
 
             if (val.size() == 1) {
-                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append("\n");
+                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append(separator);
             } else {
                 final StringBuilder sb = new StringBuilder();
                 boolean add = false;
@@ -176,7 +180,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
                     add = true;
                     sb.append(s);
                 }
-                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append("\n");
+                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append(separator);
             }
         }
     }
