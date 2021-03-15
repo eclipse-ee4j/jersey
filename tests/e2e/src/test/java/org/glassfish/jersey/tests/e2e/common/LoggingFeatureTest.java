@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -76,6 +76,7 @@ public class LoggingFeatureTest {
     private static final String BINARY_MEDIA_TYPE = "application/binary";
     private static final String TEXT_MEDIA_TYPE = MediaType.TEXT_PLAIN;
     private static final String ENTITY = "This entity must (not) be logged";
+    private static final String SEPARATOR = "!-------!";
 
     @Path("/")
     public static class MyResource {
@@ -243,6 +244,44 @@ public class LoggingFeatureTest {
             assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
             // Check logs for proper id.
             assertThat(getLoggingFilterLogRecord(getLoggedRecords()).get(0).getMessage(), containsString(ENTITY));
+        }
+
+        @Test
+        public void testLoggingFeatureBuilderSeparator() {
+            final Response response = target("/text")
+                    .register(LoggingFeature
+                            .feature()
+                            .withLogger(Logger.getLogger(LOGGER_NAME))
+                            .verbosity(LoggingFeature.Verbosity.PAYLOAD_ANY)
+                            .separator(SEPARATOR)
+                            .build()
+                    ).request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for proper separator.
+            final LogRecord record = getLoggingFilterResponseLogRecord(getLoggedRecords());
+            assertThat(record.getMessage(), containsString(SEPARATOR));
+
+        }
+
+        @Test
+        public void testLoggingFeatureBuilderProperty() {
+            final Response response = target("/text")
+                    .register(LoggingFeature
+                            .feature()
+                            .withLogger(Logger.getLogger(LOGGER_NAME))
+                            .build()
+                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for proper separator.
+            final LogRecord record = getLoggingFilterResponseLogRecord(getLoggedRecords());
+            assertThat(record.getMessage(), containsString(SEPARATOR));
         }
 
     }

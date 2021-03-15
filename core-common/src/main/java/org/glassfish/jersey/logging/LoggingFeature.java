@@ -203,6 +203,7 @@ public class LoggingFeature implements Feature {
      * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
+     * @param separator     line delimiter (if differs from new line)
      */
     public LoggingFeature(Logger logger, Level level, Verbosity verbosity, Integer maxEntitySize, String separator) {
         this.filterLogger = logger;
@@ -225,6 +226,10 @@ public class LoggingFeature implements Feature {
         }
 
         return enabled;
+    }
+
+    public static LoggingFeatureBuilder feature() {
+        return new LoggingFeatureBuilder();
     }
 
     private LoggingInterceptor createLoggingFilter(FeatureContext context, RuntimeType runtimeType) {
@@ -326,5 +331,42 @@ public class LoggingFeature implements Feature {
          * Full verbose logging. Content of HTTP headers as well as any message payload content will be logged.
          */
         PAYLOAD_ANY
+    }
+
+    public static class LoggingFeatureBuilder {
+
+        private  Logger filterLogger;
+        private  Verbosity verbosity;
+        private  Integer maxEntitySize;
+        private  Level level;
+        private  String separator;
+
+        public LoggingFeatureBuilder() {
+
+        }
+        public LoggingFeatureBuilder withLogger(Logger logger) {
+            this.filterLogger = logger;
+            return this;
+        }
+        public LoggingFeatureBuilder verbosity(Verbosity verbosity) {
+            this.verbosity = verbosity;
+            return this;
+        }
+        public LoggingFeatureBuilder maxEntitySize(int maxEntitySize) {
+            this.maxEntitySize = maxEntitySize;
+            return this;
+        }
+        public LoggingFeatureBuilder level(Level level) {
+            this.level = level;
+            return this;
+        }
+        public LoggingFeatureBuilder separator(String separator) {
+            this.separator = separator;
+            return this;
+        }
+
+        public LoggingFeature build() {
+            return new LoggingFeature(filterLogger, level, verbosity, maxEntitySize, separator);
+        }
     }
 }
