@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -360,6 +360,15 @@ final class MethodSelectingRouter extends ContentTypeDeterminer implements Route
                     effectiveTypes.addAll(workers.getMessageBodyWriterMediaTypesByType(Object.class));
                 }
                 mediaTypesFromWorkers = true;
+            }
+
+            // As a last resort add */* when no message providers are in effect
+            // i.e. if no entity arg in resource method for a reader not to throw 415
+            // and if void return type for a writer not to throw 406.
+            final boolean noEntityArgInResourceMethod = inputTypes && getEntityParam(invocableMethod) == null;
+            final boolean voidReturnType = !inputTypes && invocableMethod.getRawResponseType() == void.class;
+            if (noEntityArgInResourceMethod || voidReturnType) {
+                effectiveTypes.add(MediaType.WILDCARD_TYPE);
             }
         }
 

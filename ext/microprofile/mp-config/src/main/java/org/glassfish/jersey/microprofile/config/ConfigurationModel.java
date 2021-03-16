@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -82,8 +82,14 @@ public class ConfigurationModel<CONFIG extends Config>
 
     @Override
     public Map<String, Object> getProperties() {
-        if (properties.isEmpty()) {
-            config.getPropertyNames().forEach(c -> properties.put(c, config.getValue(c, String.class)));
+        if (properties.isEmpty()) { //load properties from  external config
+            final String emptyString = "";
+            config.getPropertyNames().forEach(c -> {
+                final String value = config.getOptionalValue(c, String.class).orElse(emptyString).trim();
+                if (!value.isEmpty()) { //eliminate NULL and "" values w/o Exception
+                    properties.put(c, value);
+                }
+            });
         }
 
         return properties;

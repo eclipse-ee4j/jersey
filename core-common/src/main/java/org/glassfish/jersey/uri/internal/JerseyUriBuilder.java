@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,9 @@ import java.security.AccessController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -34,6 +37,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.InetAddresses;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 import org.glassfish.jersey.uri.UriComponent;
 import org.glassfish.jersey.uri.UriTemplate;
 
@@ -68,6 +72,8 @@ public class JerseyUriBuilder extends UriBuilder {
 
     private MultivaluedMap<String, String> queryParams;
 
+    private JerseyQueryParamStyle queryParamStyle;
+
     private String fragment;
 
     /**
@@ -76,6 +82,7 @@ public class JerseyUriBuilder extends UriBuilder {
     public JerseyUriBuilder() {
         path = new StringBuilder();
         query = new StringBuilder();
+        queryParamStyle = JerseyQueryParamStyle.MULTI_PAIRS;
     }
 
     private JerseyUriBuilder(final JerseyUriBuilder that) {
@@ -90,6 +97,7 @@ public class JerseyUriBuilder extends UriBuilder {
         this.query = new StringBuilder(that.query);
         this.queryParams = that.queryParams == null ? null : new MultivaluedStringMap(that.queryParams);
         this.fragment = that.fragment;
+        this.queryParamStyle = that.queryParamStyle;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
@@ -536,28 +544,99 @@ public class JerseyUriBuilder extends UriBuilder {
         }
 
         name = encode(name, UriComponent.Type.QUERY_PARAM);
+
+        List<String> stringsValues = Stream.of(values)
+                .map(this::convertToString)
+                .map(value -> encode(value, UriComponent.Type.QUERY_PARAM))
+                .collect(Collectors.toList());
+
+        switch (queryParamStyle) {
+        case ARRAY_PAIRS:
+            clientQueryParamArrayPairs(name, stringsValues);
+            break;
+        case COMMA_SEPARATED:
+            clientQueryParamCommaSeparated(name, stringsValues);
+            break;
+        default:
+            clientQueryParamMultiPairs(name, stringsValues);
+        }
+        return this;
+    }
+
+    private String convertToString(Object value) {
+        if (value == null) {
+            throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
+        }
+        return value.toString();
+    }
+
+    /**
+     * Multiple parameter instances, e.g foo=v1&amp;foot=v2&amp;foo=v3 This is
+     * the default if no style is configured.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamMultiPairs(String name, List<String> values) {
         if (queryParams == null) {
-            for (final Object value : values) {
+            for (final String value : values) {
                 if (query.length() > 0) {
                     query.append('&');
                 }
-                query.append(name);
-
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                query.append('=').append(encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+                query.append(name).append('=').append(value);
             }
         } else {
-            for (final Object value : values) {
-                if (value == null) {
-                    throw new IllegalArgumentException(LocalizationMessages.QUERY_PARAM_NULL());
-                }
-
-                queryParams.add(name, encode(value.toString(), UriComponent.Type.QUERY_PARAM));
+            for (final String value : values) {
+                queryParams.add(name, value);
             }
         }
+    }
+
+    /**
+     * A single parameter instance with multiple, comma-separated values, e.g
+     * key=value1,value2,value3.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamCommaSeparated(String name, List<String> values) throws IllegalArgumentException {
+        if (queryParams == null) {
+            if (query.length() > 0) {
+                query.append('&');
+            }
+            query.append(name).append('=').append(String.join(",", values));
+        } else {
+            queryParams.add(name, String.join(",", values));
+        }
+    }
+
+    /**
+     * Multiple parameter instances with square brackets for each parameter, e.g
+     * key[]=value1&key[]=value2&key[]=value3.
+     *
+     * @param name
+     * @param values
+     * @throws IllegalArgumentException
+     */
+    private void clientQueryParamArrayPairs(String name, List<String> values) throws IllegalArgumentException {
+        if (queryParams == null) {
+            for (final String value : values) {
+                if (query.length() > 0) {
+                    query.append('&');
+                }
+                query.append(name).append("[]").append('=').append(value);
+            }
+        } else {
+            for (final String value : values) {
+                queryParams.add(name + "[]", value);
+            }
+        }
+    }
+
+    public JerseyUriBuilder setQueryParamStyle(JerseyQueryParamStyle queryParamStyle) {
+        this.queryParamStyle = Objects.requireNonNull(queryParamStyle);
         return this;
     }
 
@@ -668,7 +747,7 @@ public class JerseyUriBuilder extends UriBuilder {
         path.append(newPath);
 
         final String newQuery = UriTemplate.resolveTemplateValues(UriComponent.Type.QUERY_PARAM, query.toString(), encode,
-                templateValues);
+                                                                  templateValues);
         query.setLength(0);
         query.append(newQuery);
 
@@ -715,7 +794,7 @@ public class JerseyUriBuilder extends UriBuilder {
         encodeMatrix();
 
         segments = encode(segments,
-                (isSegment) ? UriComponent.Type.PATH_SEGMENT : UriComponent.Type.PATH);
+                          (isSegment) ? UriComponent.Type.PATH_SEGMENT : UriComponent.Type.PATH);
 
         final boolean pathEndsInSlash = path.length() > 0 && path.charAt(path.length() - 1) == '/';
         final boolean segmentStartsWithSlash = segments.charAt(0) == '/';
@@ -886,12 +965,21 @@ public class JerseyUriBuilder extends UriBuilder {
 
         encodeMatrix();
         encodeQuery();
+        if (queryParamStyle == JerseyQueryParamStyle.COMMA_SEPARATED) {
+            groupQueryParams();
+        }
 
         final String uri = UriTemplate.createURI(
                 scheme, authority,
                 userInfo, host, port,
                 path.toString(), query.toString(), fragment, values, encode, encodeSlashInPath);
         return createURI(uri);
+    }
+
+    private void groupQueryParams() {
+        MultivaluedMap<String, String> queryParams = UriComponent.decodeQuery(query.toString(), false, false);
+        query.setLength(0);
+        queryParams.forEach(this::clientQueryParamCommaSeparated);
     }
 
     private String create() {

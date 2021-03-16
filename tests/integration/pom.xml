@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
     Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -54,6 +54,7 @@
         <module>jersey-4321</module>
         <module>jersey-4507</module>
         <module>jersey-4542</module>
+        <module>jersey-4722</module>
         <module>microprofile</module>
 <!--        <module>spring4</module>-->
 <!--        <module>spring5</module>-->

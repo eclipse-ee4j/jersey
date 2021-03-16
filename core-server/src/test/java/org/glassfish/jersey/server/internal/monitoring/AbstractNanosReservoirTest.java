@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,11 @@
 
 package org.glassfish.jersey.server.internal.monitoring;
 
+import java.util.concurrent.TimeUnit;
+
+import org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants;
 import org.glassfish.jersey.server.internal.monitoring.core.TimeReservoir;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeSnapshot;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 public class AbstractNanosReservoirTest {
 
     protected static final double DELTA = 0.0001;
-    protected static final int COLLISION_BUFFER = 256;
+    protected static final int COLLISION_BUFFER = ReservoirConstants.COLLISION_BUFFER;
 
     protected void reservoirUpdateInNanos(TimeReservoir reservoir, long value, long time) {
         reservoir.update(value, time, TimeUnit.NANOSECONDS);
