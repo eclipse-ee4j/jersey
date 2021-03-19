@@ -110,8 +110,8 @@ public class ApacheUseSystemPropertiesTest extends JerseyTest {
 
     @Test
     public void testAllowedProtocol() {
-        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.3");
-        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.3");
+        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.2");
+        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.2");
 
         Client client = ClientBuilder.newBuilder()
                 .withConfig(createApacheConfig())
@@ -125,7 +125,7 @@ public class ApacheUseSystemPropertiesTest extends JerseyTest {
     @Test
     public void testNotAllowedProtocol() {
         System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "SSLv3");
-        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.3");
+        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.2");
 
         Client client = ClientBuilder.newBuilder()
                 .withConfig(createApacheConfig())
@@ -138,9 +138,9 @@ public class ApacheUseSystemPropertiesTest extends JerseyTest {
 
     @Test
     public void testAllowedCipherSuites() {
-        System.setProperty(ExternalProperties.HTTPS_CIPHERSUITES, "TLS_AES_128_GCM_SHA256");
-        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.3");
-        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.3");
+        System.setProperty(ExternalProperties.HTTPS_CIPHERSUITES, "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256");
+        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.2");
+        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.2");
 
         Client client = ClientBuilder.newBuilder()
                 .withConfig(createApacheConfig())
@@ -154,8 +154,8 @@ public class ApacheUseSystemPropertiesTest extends JerseyTest {
     @Test
     public void testNotAllowedCipherSuites() {
         System.setProperty(ExternalProperties.HTTPS_CIPHERSUITES, "TLS_AES");
-        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.3");
-        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.3");
+        System.setProperty(ExternalProperties.HTTPS_PROTOCOLS, "TLSv1.2");
+        SSLContext clientSslContext = SslUtils.createClientSslContext("TLSv1.2");
 
         Client client = ClientBuilder.newBuilder()
                 .withConfig(createApacheConfig())
