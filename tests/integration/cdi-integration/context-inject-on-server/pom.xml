@@ -55,7 +55,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -66,18 +65,21 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <version>3.0.3.Final</version>
+            <!-- latest 3.x -->
+            <version>3.1.7.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-inject</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-sse</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>

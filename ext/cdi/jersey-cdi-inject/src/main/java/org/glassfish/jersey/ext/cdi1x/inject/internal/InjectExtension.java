@@ -38,7 +38,8 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ParamConverterProvider;
-import java.lang.reflect.Type;
+import javax.ws.rs.ext.Providers;
+import javax.ws.rs.sse.Sse;
 import java.security.AccessController;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,10 +58,9 @@ import java.util.Set;
 @SuppressWarnings("unused")
 class InjectExtension implements Extension {
     private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType, BeanManager beanManager) {
-        final Type baseType = processAnnotatedType.getAnnotatedType().getBaseType();
-        if (Application.class.isAssignableFrom((Class<?>) baseType)
-                && Configuration.class.isAssignableFrom((Class<?>) baseType)) {
-            if (!((Class<?>) baseType).isAnnotationPresent(Alternative.class)) {
+        final Class<?> baseClass = (Class<?>) processAnnotatedType.getAnnotatedType().getBaseType();
+        if (Application.class.isAssignableFrom(baseClass) && Configuration.class.isAssignableFrom(baseClass)) {
+            if (!baseClass.isAnnotationPresent(Alternative.class)) {
                 processAnnotatedType.veto(); // Filter bean annotated ResourceConfig
             }
         }
@@ -87,11 +87,12 @@ class InjectExtension implements Extension {
         injectables.add(ContainerRequestContext.class);
         injectables.add(HttpHeaders.class);
         injectables.add(ParamConverterProvider.class);
-        injectables.add(javax.ws.rs.ext.Providers.class);
+        injectables.add(Providers.class);
         injectables.add(Request.class);
         injectables.add(ResourceContext.class);
         injectables.add(ResourceInfo.class);
         injectables.add(SecurityContext.class);
+        injectables.add(Sse.class);
         injectables.add(UriInfo.class);
 
         //Servlet if available

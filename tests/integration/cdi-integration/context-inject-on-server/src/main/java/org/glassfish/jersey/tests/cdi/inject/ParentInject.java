@@ -19,13 +19,11 @@ package org.glassfish.jersey.tests.cdi.inject;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.servlet.WebConfig;
 
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Application;
@@ -58,10 +56,10 @@ public class ParentInject implements ParentChecker {
     protected HttpHeaders injectHttpHeaders;
 
     @Context
-    ParamConverterProvider contextParamConverterProvider;
+    protected ParamConverterProvider contextParamConverterProvider;
 
     @Inject
-    ParamConverterProvider injectParamConverterProvider;
+    protected ParamConverterProvider injectParamConverterProvider;
 
     @Context
     protected PropertiesDelegate contextPropertiesDelegate;
