@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.externalproperties.jaxb;
+package org.glassfish.jersey.tests.externalproperties;
 
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -23,18 +23,70 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Properties;
 
-public class JaxbPropertiesTest extends JerseyTest {
+public class JaxbContextPropertiesTest extends JerseyTest {
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement(name = "Book")
+    static class Book {
+        @XmlElement
+        private String title;
+
+        public Book() {
+        }
+
+        public Book(String title) {
+            setTitle(title);
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    @Path("resource")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    public static class MyResource {
+
+        @POST
+        @Path("getBook")
+        @Produces(MediaType.APPLICATION_XML)
+        @Consumes(MediaType.APPLICATION_XML)
+        public Book getBook(Book book) {
+            return book;
+        }
+    }
 
     @Override
     protected Application configure() {
-        return new ResourceConfig()
-                .packages(JaxbResource.class.getPackage().getName());
+        return new ResourceConfig(MyResource.class);
+    }
+
+    @Before
+    public void removeSystemProperties() {
+        Properties properties =  System.getProperties();
+        properties.remove(ExternalProperties.JAXB_CONTEXT_FACTORY);
+        properties.remove(ExternalProperties.JAXB_CONTEXT);
+        properties.remove(ExternalProperties.CONTEXT_FACTORY);
     }
 
     @Test
@@ -48,10 +100,9 @@ public class JaxbPropertiesTest extends JerseyTest {
 
         try {
             _test();
-        } catch (Exception e) {
+        } catch (InternalServerErrorException e) {
             Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
         }
-
     }
 
     @Test
@@ -60,7 +111,7 @@ public class JaxbPropertiesTest extends JerseyTest {
 
         try {
             _test();
-        } catch (Exception e) {
+        } catch (InternalServerErrorException e) {
             Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
         }
     }
@@ -71,53 +122,20 @@ public class JaxbPropertiesTest extends JerseyTest {
 
         try {
             _test();
-        } catch (Exception e) {
+        } catch (InternalServerErrorException e) {
             Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
         }
     }
 
     private void _test() {
-        Book book = new Book(
-                "Harry Potter and the Chamber of Secrets",
-                "J. K. Rowling",
-                120,
-                500
-        );
+        final String title = "Harry Potter";
+        Book book = new Book(title);
 
-        Response response = target("library").request().get();
-
-        Assert.assertEquals("Welcome to the Library", response.readEntity(String.class));
-
-        response = target("library").request(MediaType.APPLICATION_XML)
+        Response response = target("resource/getBook")
+                .request(MediaType.APPLICATION_XML)
                 .post(Entity.entity(book, MediaType.APPLICATION_XML));
 
-        Assert.assertEquals("Book added to the Library", response.readEntity(String.class));
-
-        response = target("/library/Harry%20Potter%20and%20the%20Chamber%20of%20Secrets")
-                .request().get();
-
-        Assert.assertEquals(book, response.readEntity(Book.class));
-
-        response = target("/library/Harry%20Potter%20and%20the%20Chamber%20of%20Secrets")
-                .request().delete();
-
-        Assert.assertEquals("Harry Potter and the Chamber of Secrets successfully removed from library",
-                response.readEntity(String.class));
-
-        try {
-            target("/library/Wrong%20Book").request().get();
-        } catch (Exception e) {
-            Assert.assertEquals("Error: This book is not at the library", e.getMessage());
-        }
-
-    }
-
-    @Before
-    public void removeSystemProperties() {
-        Properties properties =  System.getProperties();
-        properties.remove(ExternalProperties.JAXB_CONTEXT_FACTORY);
-        properties.remove(ExternalProperties.JAXB_CONTEXT);
-        properties.remove(ExternalProperties.CONTEXT_FACTORY);
+        Assert.assertEquals(title, response.readEntity(Book.class).getTitle());
     }
 
 }
