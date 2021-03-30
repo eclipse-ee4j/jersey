@@ -25,8 +25,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jersey-cdi-inject</artifactId>
-    <name>jersey-ext-cdi-inject</name>
+    <artifactId>jersey-cdi-rs-inject</artifactId>
+    <name>jersey-ext-cdi-rs-inject</name>
     <description>Allow to annotate by Inject instead of Context</description>
 
     <dependencies>

@@ -245,7 +245,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext.cdi</groupId>
-                <artifactId>jersey-cdi-inject</artifactId>
+                <artifactId>jersey-cdi-rs-inject</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
