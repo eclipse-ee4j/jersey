@@ -61,7 +61,7 @@
 
     <developers>
         <developer>
-            <name>Roman Grigoriadi</name>
+            <name>Jorge Bescos Gascon</name>
             <organization>Oracle Corporation</organization>
             <organizationUrl>http://www.oracle.com/</organizationUrl>
         </developer>
@@ -72,6 +72,12 @@
         </developer>
         <developer>
             <name>Dmitry Kornilov</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+            <url>https://dmitrykornilov.net</url>
+        </developer>
+        <developer>
+            <name>David Kral</name>
             <organization>Oracle Corporation</organization>
             <organizationUrl>http://www.oracle.com/</organizationUrl>
         </developer>
@@ -2099,7 +2105,7 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <jackson.version>2.11.3</jackson.version>
+        <jackson.version>2.12.2</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
