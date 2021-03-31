@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,64 +61,37 @@ class InterfaceModel {
 
     private static final Logger LOGGER = Logger.getLogger(InterfaceModel.class.getName());
 
-    private final InjectionManager injectionManager;
     private final Class<?> restClientClass;
     private final String[] produces;
     private final String[] consumes;
     private final String path;
     private final ClientHeadersFactory clientHeadersFactory;
     private final CreationalContext<?> creationalContext;
+    private final RestClientContext context;
 
     private final List<ClientHeaderParamModel> clientHeaders;
-    private final List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
-    private final Set<ResponseExceptionMapper> responseExceptionMappers;
-    private final Set<ParamConverterProvider> paramConverterProviders;
-    private final Set<InboundHeadersProvider> inboundHeadersProviders;
     private final Set<Annotation> interceptorAnnotations;
-    private final BeanManager beanManager;
 
     /**
      * Creates new model based on interface class. Interface is parsed according to specific annotations.
      *
-     * @param restClientClass           interface class
-     * @param responseExceptionMappers  registered exception mappers
-     * @param paramConverterProviders   registered parameter providers
-     * @param inboundHeadersProviders   registered inbound header providers
-     * @param asyncInterceptorFactories async interceptor factories
-     * @param injectionManager
+     * @param context RestClient data context
      * @return new model instance
      */
-    static InterfaceModel from(Class<?> restClientClass,
-                               Set<ResponseExceptionMapper> responseExceptionMappers,
-                               Set<ParamConverterProvider> paramConverterProviders,
-                               Set<InboundHeadersProvider> inboundHeadersProviders,
-                               List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
-                               InjectionManager injectionManager,
-                               BeanManager beanManager) {
-        return new Builder(restClientClass,
-                           responseExceptionMappers,
-                           paramConverterProviders,
-                           asyncInterceptorFactories,
-                           inboundHeadersProviders,
-                           injectionManager,
-                           beanManager).build();
+    static InterfaceModel from(RestClientContext context) {
+        return new Builder(context).build();
     }
 
     private InterfaceModel(Builder builder) {
-        this.injectionManager = builder.injectionManager;
         this.restClientClass = builder.restClientClass;
+        this.context = builder.context;
         this.path = builder.pathValue;
         this.produces = builder.produces;
         this.consumes = builder.consumes;
         this.clientHeaders = builder.clientHeaders;
         this.clientHeadersFactory = builder.clientHeadersFactory;
-        this.responseExceptionMappers = builder.responseExceptionMappers;
-        this.paramConverterProviders = builder.paramConverterProviders;
         this.interceptorAnnotations = builder.interceptorAnnotations;
         this.creationalContext = builder.creationalContext;
-        this.asyncInterceptorFactories = builder.asyncInterceptorFactories;
-        this.inboundHeadersProviders = builder.inboundHeadersProviders;
-        this.beanManager = builder.beanManager;
     }
 
     /**
@@ -176,39 +149,12 @@ class InterfaceModel {
     }
 
     /**
-     * Returns {@link List} of registered {@link AsyncInvocationInterceptor}
+     * Return context of the RestClient.
      *
-     * @return registered async interceptors
+     * @return context
      */
-    List<AsyncInvocationInterceptorFactory> getAsyncInterceptorFactories() {
-        return asyncInterceptorFactories;
-    }
-
-    /**
-     * Returns {@link Set} of registered {@link ResponseExceptionMapper}
-     *
-     * @return registered exception mappers
-     */
-    Set<ResponseExceptionMapper> getResponseExceptionMappers() {
-        return responseExceptionMappers;
-    }
-
-    /**
-     * Returns {@link Set} of registered {@link InboundHeadersProvider}
-     *
-     * @return registered inbound header providers
-     */
-    Set<InboundHeadersProvider> getInboundHeadersProviders() {
-        return inboundHeadersProviders;
-    }
-
-    /**
-     * Returns {@link Set} of registered {@link ParamConverterProvider}
-     *
-     * @return registered param converter providers
-     */
-    Set<ParamConverterProvider> getParamConverterProviders() {
-        return paramConverterProviders;
+    RestClientContext context() {
+        return context;
     }
 
     /**
@@ -230,13 +176,6 @@ class InterfaceModel {
     }
 
     /**
-     * @return
-     */
-    public InjectionManager getInjectionManager() {
-        return injectionManager;
-    }
-
-    /**
      * Resolves value of the method argument.
      *
      * @param arg actual argument value
@@ -244,7 +183,7 @@ class InterfaceModel {
      */
     Object resolveParamValue(Object arg, Parameter parameter) {
         final Iterable<ParameterUpdaterProvider> parameterUpdaterProviders
-                = Providers.getAllProviders(injectionManager, ParameterUpdaterProvider.class);
+                = Providers.getAllProviders(context.injectionManager(), ParameterUpdaterProvider.class);
         for (final ParameterUpdaterProvider parameterUpdaterProvider : parameterUpdaterProviders) {
             if (parameterUpdaterProvider != null) {
                 ParameterUpdater<Object, Object> updater =
@@ -255,48 +194,28 @@ class InterfaceModel {
         return arg;
     }
 
-    BeanManager getBeanManager() {
-        return beanManager;
-    }
-
     private static class Builder {
 
         private final Class<?> restClientClass;
-
-        private final Set<InboundHeadersProvider> inboundHeadersProviders;
-        private final InjectionManager injectionManager;
-        private final BeanManager beanManager;
+        private final RestClientContext context;
         private String pathValue;
         private String[] produces;
         private String[] consumes;
         private ClientHeadersFactory clientHeadersFactory;
         private CreationalContext<?> creationalContext;
         private List<ClientHeaderParamModel> clientHeaders;
-        private List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories;
-        private Set<ResponseExceptionMapper> responseExceptionMappers;
-        private Set<ParamConverterProvider> paramConverterProviders;
         private Set<Annotation> interceptorAnnotations;
 
-        private Builder(Class<?> restClientClass,
-                        Set<ResponseExceptionMapper> responseExceptionMappers,
-                        Set<ParamConverterProvider> paramConverterProviders,
-                        List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
-                        Set<InboundHeadersProvider> inboundHeadersProviders,
-                        InjectionManager injectionManager,
-                        BeanManager beanManager) {
-            this.injectionManager = injectionManager;
-            this.restClientClass = restClientClass;
-            this.responseExceptionMappers = responseExceptionMappers;
-            this.paramConverterProviders = paramConverterProviders;
-            this.asyncInterceptorFactories = asyncInterceptorFactories;
-            this.inboundHeadersProviders = inboundHeadersProviders;
-            this.beanManager = beanManager;
+        private Builder(RestClientContext context) {
+            this.restClientClass = context.restClientClass();
+            this.context = context;
             filterAllInterceptorAnnotations();
         }
 
         private void filterAllInterceptorAnnotations() {
             creationalContext = null;
             interceptorAnnotations = new HashSet<>();
+            BeanManager beanManager = context.beanManager();
             if (beanManager != null) {
                 creationalContext = beanManager.createCreationalContext(null);
                 for (Annotation annotation : restClientClass.getAnnotations()) {

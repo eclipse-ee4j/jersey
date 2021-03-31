@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,12 @@ package org.glassfish.jersey.server.internal.monitoring;
 
 import java.util.concurrent.TimeUnit;
 
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeReservoir;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -30,7 +34,20 @@ import static org.junit.Assert.assertEquals;
  */
 public class TimeWindowStatisticsImplTest {
 
+    private static final int COLLISION_BUFFER_POWER = 3;
     private static final double DELTA = 0.0001;
+
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty(ServerProperties.COLLISION_BUFFER_POWER_JVM_ARG,
+                Integer.toString(COLLISION_BUFFER_POWER));
+    }
+
+    @Test
+    public void jvmLoaded() {
+        assertEquals(COLLISION_BUFFER_POWER, ReservoirConstants.COLLISION_BUFFER_POWER);
+        assertEquals(8, ReservoirConstants.COLLISION_BUFFER);
+    }
 
     @Test
     public void test() {
@@ -173,30 +190,30 @@ public class TimeWindowStatisticsImplTest {
         final TimeWindowStatisticsImpl.Builder<Long> builder = new TimeWindowStatisticsImpl.Builder<>(
                 new SlidingWindowTimeReservoir(1, TimeUnit.SECONDS, now, TimeUnit.MILLISECONDS));
         // put multiple requests at the beginning so that even the COLLISION_BUFFER bounds is tested
-        for (int i = 0; i < 256; ++i) {
+        for (int i = 0; i < ReservoirConstants.COLLISION_BUFFER; ++i) {
             builder.addRequest(now, 10L);
         }
         // add one more request which should be visible at 'now + 1001'
         builder.addRequest(now + 1, 10L);
 
         // put multiple requests in the middle of the window
-        for (int i = 0; i < 256; ++i) {
+        for (int i = 0; i < ReservoirConstants.COLLISION_BUFFER; ++i) {
             builder.addRequest(now + 500, 10L);
         }
-        check(builder, now + 500, 256 * 2 + 1, 10, 10, 10, 256 * 2 * 2 + 1 * 2);
+        check(builder, now + 500, ReservoirConstants.COLLISION_BUFFER * 2 + 1, 10, 10, 10, ReservoirConstants.COLLISION_BUFFER * 2 * 2 + 1 * 2);
 
         // put multiple requests at the end of the window
-        for (int i = 0; i < 256; ++i) {
+        for (int i = 0; i < ReservoirConstants.COLLISION_BUFFER; ++i) {
             builder.addRequest(now + 1000, 10L);
         }
 
-        check(builder, now + 1000, 256 * 3 + 1, 10, 10, 10, 256 * 3 + 1);
+        check(builder, now + 1000, ReservoirConstants.COLLISION_BUFFER * 3 + 1, 10, 10, 10, ReservoirConstants.COLLISION_BUFFER * 3 + 1);
 
         // at 'now + 1001' all the requests from 'now' should be gone
-        check(builder, now + 1001, 256 * 2 + 1, 10, 10, 10, 256 * 2 + 1);
+        check(builder, now + 1001, ReservoirConstants.COLLISION_BUFFER * 2 + 1, 10, 10, 10, ReservoirConstants.COLLISION_BUFFER * 2 + 1);
 
         // at 'now + 1002' the one additional request we added is gone
-        check(builder, now + 1002, 256 * 2, 10, 10, 10, 256 * 2);
+        check(builder, now + 1002, ReservoirConstants.COLLISION_BUFFER * 2, 10, 10, 10, ReservoirConstants.COLLISION_BUFFER * 2);
     }
 
     /**

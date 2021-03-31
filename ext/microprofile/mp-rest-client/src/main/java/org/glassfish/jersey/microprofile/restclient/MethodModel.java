@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,7 +71,9 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
+import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
 
 /**
  * Method model contains all information about method defined in rest client interface.
@@ -120,13 +122,9 @@ class MethodModel {
         this.clientHeaders = builder.clientHeaders;
         this.invocationInterceptors = builder.invocationInterceptors;
         if (httpMethod.isEmpty()) {
-            subResourceModel = RestClientModel.from(returnType.getRawType(),
-                                                    interfaceModel.getResponseExceptionMappers(),
-                                                    interfaceModel.getParamConverterProviders(),
-                                                    interfaceModel.getInboundHeadersProviders(),
-                                                    interfaceModel.getAsyncInterceptorFactories(),
-                                                    interfaceModel.getInjectionManager(),
-                                                    interfaceModel.getBeanManager());
+            subResourceModel = RestClientModel.from(RestClientContext.builder(returnType.getRawType())
+                                                            .copyFrom(interfaceModel.context())
+                                                            .build());
         } else {
             subResourceModel = null;
         }
@@ -248,7 +246,7 @@ class MethodModel {
                                                MultivaluedMap<String, Object> customHeaders) {
 
         //AsyncInterceptors initialization
-        List<AsyncInvocationInterceptor> asyncInterceptors = interfaceModel.getAsyncInterceptorFactories().stream()
+        List<AsyncInvocationInterceptor> asyncInterceptors = interfaceModel.context().asyncInterceptorFactories().stream()
                 .map(AsyncInvocationInterceptorFactory::newInterceptor)
                 .collect(Collectors.toList());
         asyncInterceptors.forEach(AsyncInvocationInterceptor::prepareContext);
@@ -379,15 +377,18 @@ class MethodModel {
         Optional<HeadersContext> headersContext = HeadersContext.get();
         headersContext.ifPresent(hc -> inbound.putAll(hc.inboundHeaders()));
         if (!headersContext.isPresent()) {
-            for (InboundHeadersProvider provider : interfaceModel.getInboundHeadersProviders()) {
+            for (InboundHeadersProvider provider : interfaceModel.context().inboundHeadersProviders()) {
                 inbound.putAll(provider.inboundHeaders());
             }
         }
 
-        AtomicReference<MultivaluedMap<String, String>> toReturn = new AtomicReference<>(customHeaders);
-        interfaceModel.getClientHeadersFactory()
-                .ifPresent(clientHeadersFactory -> toReturn.set(clientHeadersFactory.update(inbound, customHeaders)));
-        return toReturn.get();
+        ImmutableMultivaluedMap<String, String> unmodif = new ImmutableMultivaluedMap<>(customHeaders);
+        if (interfaceModel.getClientHeadersFactory().isPresent()) {
+            ClientHeadersFactory factory = interfaceModel.getClientHeadersFactory().get();
+            MultivaluedMap<String, String> fromFactory = factory.update(inbound, unmodif);
+            customHeaders.putAll(fromFactory);
+        }
+        return customHeaders;
     }
 
     private <T> MultivaluedMap<String, String> createMultivaluedHeadersMap(List<ClientHeaderParamModel> clientHeaders) {
@@ -453,7 +454,7 @@ class MethodModel {
     private void evaluateResponse(Response response, Method method) {
         ResponseExceptionMapper lowestMapper = null;
         Throwable throwable = null;
-        for (ResponseExceptionMapper responseExceptionMapper : interfaceModel.getResponseExceptionMappers()) {
+        for (ResponseExceptionMapper responseExceptionMapper : interfaceModel.context().responseExceptionMappers()) {
             if (responseExceptionMapper.handles(response.getStatus(), response.getHeaders())) {
                 if (lowestMapper == null
                         || throwable == null
@@ -528,7 +529,7 @@ class MethodModel {
 
         private void filterAllInterceptorAnnotations() {
             invocationInterceptors = new ArrayList<>();
-            BeanManager beanManager = interfaceModel.getBeanManager();
+            BeanManager beanManager = interfaceModel.context().beanManager();
             if (beanManager != null) {
                 Set<Annotation> interceptorAnnotations = new HashSet<>();
                 for (Annotation annotation : method.getAnnotations()) {

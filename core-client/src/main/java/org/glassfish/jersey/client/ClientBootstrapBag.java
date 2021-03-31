@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,11 @@ package org.glassfish.jersey.client;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.spi.ComponentProvider;
+
+import jakarta.ws.rs.core.GenericType;
+import java.util.Collection;
 
 /**
  * {@inheritDoc}
@@ -30,6 +35,7 @@ import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
 public class ClientBootstrapBag extends BootstrapBag {
 
     private ParameterUpdaterProvider parameterUpdaterProvider;
+    private LazyValue<Collection<ComponentProvider>> componentProviders;
 
     public ParameterUpdaterProvider getParameterUpdaterProvider() {
         requireNonNull(parameterUpdaterProvider, ParameterUpdaterProvider.class);
@@ -38,5 +44,24 @@ public class ClientBootstrapBag extends BootstrapBag {
 
     public void setParameterUpdaterProvider(ParameterUpdaterProvider provider) {
         this.parameterUpdaterProvider = provider;
+    }
+
+    /**
+     * Gets a lazy initialized collection of {@link ComponentProvider}s.
+     *
+     * @return A lazy initialized collection of {@code ComponentProvider}s.
+     */
+    LazyValue<Collection<ComponentProvider>> getComponentProviders() {
+        requireNonNull(componentProviders, new GenericType<LazyValue<Collection<ComponentProvider>>>() {}.getType());
+        return componentProviders;
+    }
+
+    /**
+     * Sets a lazy initialized collection of {@link ComponentProvider}s.
+     *
+     * @param componentProviders A lazy initialized collection of {@code ComponentProvider}s.
+     */
+    void setComponentProviders(LazyValue<Collection<ComponentProvider>> componentProviders) {
+        this.componentProviders = componentProviders;
     }
 }
