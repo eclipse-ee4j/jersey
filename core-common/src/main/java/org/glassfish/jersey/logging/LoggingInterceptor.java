@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -193,7 +193,16 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         }
         stream.mark(maxEntitySize + 1);
         final byte[] entity = new byte[maxEntitySize + 1];
-        final int entitySize = stream.read(entity);
+
+        int entitySize = 0;
+        while (entitySize < entity.length) {
+            int readBytes = stream.read(entity, entitySize, entity.length - entitySize);
+            if (readBytes < 0) {
+                break;
+            }
+            entitySize += readBytes;
+        }
+
         b.append(new String(entity, 0, Math.min(entitySize, maxEntitySize), charset));
         if (entitySize > maxEntitySize) {
             b.append("...more...");
