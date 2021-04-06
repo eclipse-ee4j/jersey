@@ -241,9 +241,9 @@ public class LoggingFeature implements Feature {
         final LoggingFeatureBuilder loggingBuilder =
                 configureBuilderParameters(builder, context, runtimeType);
 
-        return (runtimeType == RuntimeType.SERVER) ?
-                new ServerLoggingFilter(loggingBuilder) :
-                new ClientLoggingFilter(loggingBuilder);
+        return (runtimeType == RuntimeType.SERVER)
+                ? new ServerLoggingFilter(loggingBuilder)
+                : new ClientLoggingFilter(loggingBuilder);
     }
 
     private static LoggingFeatureBuilder configureBuilderParameters(LoggingFeatureBuilder builder,
