@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -63,6 +64,8 @@ import org.glassfish.jersey.message.internal.MatchingEntityTag;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.TracingAwarePropertiesDelegate;
 import org.glassfish.jersey.message.internal.VariantSelector;
+import org.glassfish.jersey.model.internal.CommonConfig;
+import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.RankedProvider;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
@@ -119,7 +122,7 @@ public class ContainerRequest extends InboundMessageContext
     // True if the request is used in the response processing phase (for example in ContainerResponseFilter)
     private boolean inResponseProcessingPhase;
     // lazy PropertiesResolver
-    private LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
+    private final LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
             (Value<PropertiesResolver>) () -> PropertiesResolver.create(getConfiguration(), getPropertiesDelegate())
     );
 
@@ -188,7 +191,12 @@ public class ContainerRequest extends InboundMessageContext
             final String httpMethod,
             final SecurityContext securityContext,
             final PropertiesDelegate propertiesDelegate) {
-        this(baseUri, requestUri, httpMethod, securityContext, propertiesDelegate, (Configuration) null);
+        this(baseUri, requestUri, httpMethod, securityContext, propertiesDelegate,
+                new CommonConfig(RuntimeType.SERVER, ComponentBag.EXCLUDE_EMPTY) {
+                    {
+                        this.property(ContainerRequest.class.getName(), Deprecated.class.getSimpleName());
+                    }
+                });
     }
 
     /**
