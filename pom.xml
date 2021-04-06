@@ -1116,11 +1116,12 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>2.7</version>
+                        <version>3.1.1</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
                                     <report>dependencies</report>
+                                    <report>index</report>
                                 </reports>
                             </reportSet>
                         </reportSets>
@@ -2121,8 +2122,8 @@
         <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>3.0.0</jakarta.jaxb.api.version>
-        <jaxb.ri.version>3.0.0</jaxb.ri.version>
+        <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
+        <jaxb.ri.version>3.0.1-b01</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.version>11.0.0</jetty.version>
