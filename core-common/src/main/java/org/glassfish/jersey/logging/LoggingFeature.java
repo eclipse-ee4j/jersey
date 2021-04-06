@@ -93,7 +93,7 @@ public class LoggingFeature implements Feature {
     private static final String LOGGER_LEVEL_POSTFIX = ".logger.level";
     private static final String VERBOSITY_POSTFIX = ".verbosity";
     private static final String MAX_ENTITY_POSTFIX = ".entity.maxSize";
-    private static final String SEPARATOR_POSTFIX = ".separator.maxSize";
+    private static final String SEPARATOR_POSTFIX = ".separator";
     private static final String LOGGING_FEATURE_COMMON_PREFIX = "jersey.config.logging";
     /**
      * Common logger name property.
@@ -148,7 +148,7 @@ public class LoggingFeature implements Feature {
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + MAX_ENTITY_POSTFIX;
 
-    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
+    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
 
     private final Logger filterLogger;
     private final Verbosity verbosity;
@@ -228,7 +228,12 @@ public class LoggingFeature implements Feature {
         return enabled;
     }
 
-    public static LoggingFeatureBuilder feature() {
+    /**
+     * builder method to create  LoggingFeature with required settings
+     *
+     * @return Builder for LoggingFeature
+     */
+    public static LoggingFeatureBuilder builder() {
         return new LoggingFeatureBuilder();
     }
 

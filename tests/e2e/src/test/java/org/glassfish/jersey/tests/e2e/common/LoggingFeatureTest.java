@@ -250,7 +250,7 @@ public class LoggingFeatureTest {
         public void testLoggingFeatureBuilderSeparator() {
             final Response response = target("/text")
                     .register(LoggingFeature
-                            .feature()
+                            .builder()
                             .withLogger(Logger.getLogger(LOGGER_NAME))
                             .verbosity(LoggingFeature.Verbosity.PAYLOAD_ANY)
                             .separator(SEPARATOR)
@@ -270,7 +270,7 @@ public class LoggingFeatureTest {
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
                     .register(LoggingFeature
-                            .feature()
+                            .builder()
                             .withLogger(Logger.getLogger(LOGGER_NAME))
                             .build()
                     ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
