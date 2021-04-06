@@ -109,21 +109,22 @@ abstract class LoggingInterceptor implements WriterInterceptor {
      * Creates a logging filter with custom logger and entity logging turned on, but potentially limiting the size
      * of entity to be buffered and logged.
      *
-     * @param logger        the logger to log messages to.
-     * @param level         level at which the messages will be logged.
-     * @param verbosity     verbosity of the logged messages. See {@link Verbosity}.
-     * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
+     * @param builder       loggingFeatureBuilder which contains values for:
+     *  logger         the logger to log messages to.
+     *  level          level at which the messages will be logged.
+     *  verbosity      verbosity of the logged messages. See {@link Verbosity}.
+     *  maxEntitySize  maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
-     * @param separator     delimiter for particular log lines. Default is Linux new line delimiter
+     *  separator      delimiter for particular log lines. Default is Linux new line delimiter
      */
 
-    LoggingInterceptor(Logger logger, Level level, Verbosity verbosity, int maxEntitySize, String separator) {
-        this.logger = logger;
-        this.level = level;
-        this.verbosity = verbosity;
-        this.maxEntitySize = Math.max(0, maxEntitySize);
-        this.separator = separator;
+    LoggingInterceptor(LoggingFeature.LoggingFeatureBuilder builder) {
+        this.logger = builder.filterLogger;
+        this.level = builder.level;
+        this.verbosity = builder.verbosity;
+        this.maxEntitySize = Math.max(0, builder.maxEntitySize);
+        this.separator = builder.separator;
     }
 
     /**

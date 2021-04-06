@@ -64,9 +64,8 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      * @param separator     new line delimiter. Default is Linux new line separator.
      */
-    public ServerLoggingFilter(final Logger logger, final Level level, final Verbosity verbosity, final int maxEntitySize,
-                               final String separator) {
-        super(logger, level, verbosity, maxEntitySize, separator);
+    public ServerLoggingFilter(final LoggingFeature.LoggingFeatureBuilder builder) {
+        super(builder);
     }
 
     @Override

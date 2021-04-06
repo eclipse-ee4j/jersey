@@ -64,8 +64,8 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      * @param separator     new line delimiter. Default is Linux new line separator.
      */
-    public ClientLoggingFilter(Logger logger, Level level, Verbosity verbosity, int maxEntitySize, String separator) {
-        super(logger, level, verbosity, maxEntitySize, separator);
+    public ClientLoggingFilter(LoggingFeature.LoggingFeatureBuilder builder) {
+        super(builder);
     }
 
     @Override
