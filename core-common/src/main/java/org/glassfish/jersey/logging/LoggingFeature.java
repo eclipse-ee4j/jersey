@@ -86,7 +86,9 @@ public class LoggingFeature implements Feature {
      * Default verbosity for entity logging. See {@link Verbosity}.
      */
     public static final Verbosity DEFAULT_VERBOSITY = Verbosity.PAYLOAD_TEXT;
-
+    /**
+     * Default separator for entity logging.
+     */
     public static final String DEFAULT_SEPARATOR = "\n";
 
     private static final String LOGGER_NAME_POSTFIX = ".logger.name";
@@ -212,6 +214,11 @@ public class LoggingFeature implements Feature {
 
     }
 
+    /**
+     * Constructor based on logging feature builder. All parameters are passed through a builder instance.
+     *
+     * @param builder instance of a builder with required logging feature parameters
+     */
     public LoggingFeature(LoggingFeatureBuilder builder) {
         this.builder = builder;
     }
@@ -268,7 +275,7 @@ public class LoggingFeature implements Feature {
                         DEFAULT_LOGGER_LEVEL));
         final String filterSeparator = CommonProperties.getValue(
                 properties,
-                runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_LEVEL_SERVER : LOGGING_FEATURE_LOGGER_LEVEL_CLIENT,
+                LOGGING_FEATURE_SEPARATOR,
                 CommonProperties.getValue(
                         context.getConfiguration().getProperties(),
                         LOGGING_FEATURE_SEPARATOR,
@@ -345,6 +352,10 @@ public class LoggingFeature implements Feature {
         PAYLOAD_ANY
     }
 
+    /**
+     * Builder class for logging feature configuration. Accepts parameters for the filter logger, verbosity, max
+     * entity size, level, and separator.
+     */
     public static class LoggingFeatureBuilder {
 
         Logger filterLogger;

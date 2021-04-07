@@ -106,8 +106,8 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     final String separator;
 
     /**
-     * Creates a logging filter with custom logger and entity logging turned on, but potentially limiting the size
-     * of entity to be buffered and logged.
+     * Creates a logging filter using builder instance with custom logger and entity logging turned on,
+     * but potentially limiting the size of entity to be buffered and logged.
      *
      * @param builder       loggingFeatureBuilder which contains values for:
      *  logger         the logger to log messages to.

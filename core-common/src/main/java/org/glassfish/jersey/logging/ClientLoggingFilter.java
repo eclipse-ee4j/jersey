@@ -53,16 +53,17 @@ import org.glassfish.jersey.message.MessageUtils;
 final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequestFilter, ClientResponseFilter {
 
     /**
-     * Create a logging filter with custom logger and custom settings of entity
+     * Create a logging filter using builder instance with custom logger and custom settings of entity
      * logging.
      *
-     * @param logger        the logger to log messages to.
-     * @param level         level at which the messages will be logged.
-     * @param verbosity     verbosity of the logged messages. See {@link Verbosity}.
-     * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
+     * @param builder       loggingFeatureBuilder which contains values for:
+     *  logger         the logger to log messages to.
+     *  level          level at which the messages will be logged.
+     *  verbosity      verbosity of the logged messages. See {@link Verbosity}.
+     *  maxEntitySize  maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
-     * @param separator     new line delimiter. Default is Linux new line separator.
+     *  separator      delimiter for particular log lines. Default is Linux new line delimiter
      */
     public ClientLoggingFilter(LoggingFeature.LoggingFeatureBuilder builder) {
         super(builder);
