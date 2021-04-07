@@ -364,7 +364,7 @@ public class LoggingFeature implements Feature {
             this.verbosity = verbosity;
             return this;
         }
-        public LoggingFeatureBuilder maxEntitySize(int maxEntitySize) {
+        public LoggingFeatureBuilder maxEntitySize(Integer maxEntitySize) {
             this.maxEntitySize = maxEntitySize;
             return this;
         }
