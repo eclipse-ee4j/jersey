@@ -40,6 +40,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR}</li>
  * </ul>
  * <p>
  * If any of the configuration value is not set, following default values are applied:
@@ -56,6 +57,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR_SERVER}</li>
  * </ul>
  * Client configurable properties:
  * <ul>
@@ -63,6 +65,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR_CLIENT}</li>
  * </ul>
  *
  * @author Ondrej Kosatka
@@ -113,6 +116,10 @@ public class LoggingFeature implements Feature {
      * Common property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE = LOGGING_FEATURE_COMMON_PREFIX + MAX_ENTITY_POSTFIX;
+    /**
+     * Common property for configuring logging separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
 
     private static final String LOGGING_FEATURE_SERVER_PREFIX = "jersey.config.server.logging";
     /**
@@ -131,6 +138,10 @@ public class LoggingFeature implements Feature {
      * Server property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER = LOGGING_FEATURE_SERVER_PREFIX + MAX_ENTITY_POSTFIX;
+    /**
+     * Server property for configuring separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR_SERVER = LOGGING_FEATURE_SERVER_PREFIX + SEPARATOR_POSTFIX;
 
     private static final String LOGGING_FEATURE_CLIENT_PREFIX = "jersey.config.client.logging";
     /**
@@ -149,8 +160,10 @@ public class LoggingFeature implements Feature {
      * Client property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + MAX_ENTITY_POSTFIX;
-
-    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
+    /**
+     * Client property for logging separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
 
     private final LoggingFeatureBuilder builder;
 
@@ -275,7 +288,7 @@ public class LoggingFeature implements Feature {
                         DEFAULT_LOGGER_LEVEL));
         final String filterSeparator = CommonProperties.getValue(
                 properties,
-                LOGGING_FEATURE_SEPARATOR,
+                runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_SEPARATOR_SERVER : LOGGING_FEATURE_SEPARATOR_CLIENT,
                 CommonProperties.getValue(
                         context.getConfiguration().getProperties(),
                         LOGGING_FEATURE_SEPARATOR,

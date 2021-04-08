@@ -35,6 +35,8 @@ import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_EN
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR;
+import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT;
+import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER;
@@ -80,13 +82,15 @@ public final class LoggingFeatureAutoDiscoverable implements AutoDiscoverable {
         return properties.containsKey(LOGGING_FEATURE_LOGGER_NAME_CLIENT)
                 || properties.containsKey(LOGGING_FEATURE_LOGGER_LEVEL_CLIENT)
                 || properties.containsKey(LOGGING_FEATURE_VERBOSITY_CLIENT)
-                || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT);
+                || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT)
+                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_CLIENT);
     }
 
     private boolean serverConfigured(Map properties) {
         return properties.containsKey(LOGGING_FEATURE_LOGGER_NAME_SERVER)
                 || properties.containsKey(LOGGING_FEATURE_LOGGER_LEVEL_SERVER)
                 || properties.containsKey(LOGGING_FEATURE_VERBOSITY_SERVER)
-                || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER);
+                || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER)
+                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_SERVER);
     }
 }
