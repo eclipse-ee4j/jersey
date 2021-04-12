@@ -17,11 +17,21 @@
 package org.glassfish.jersey.tests.externalproperties;
 
 import org.glassfish.jersey.ExternalProperties;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
+import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
@@ -36,9 +46,32 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
+@RunWith(Parameterized.class)
 public class JaxbContextPropertiesTest extends JerseyTest {
+
+    private final ConnectorProvider connectorProvider;
+
+    @Parameterized.Parameters(name = "{index}: {0}")
+    public static List<Object[]> connectors() {
+        return Arrays.asList(new Object[][]{
+                {HttpUrlConnectorProvider.class},
+                {GrizzlyConnectorProvider.class},
+                {JettyConnectorProvider.class},
+                {ApacheConnectorProvider.class},
+                {GrizzlyConnectorProvider.class},
+                {NettyConnectorProvider.class},
+                {JdkConnectorProvider.class},
+        });
+    }
+
+    public JaxbContextPropertiesTest(Class<? extends ConnectorProvider> connectorProviderClass)
+            throws IllegalAccessException, InstantiationException {
+        this.connectorProvider = connectorProviderClass.newInstance();
+    }
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlRootElement(name = "Book")
@@ -79,6 +112,11 @@ public class JaxbContextPropertiesTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(MyResource.class);
+    }
+
+    @Override
+    protected void configureClient(ClientConfig config) {
+        config.connectorProvider(connectorProvider);
     }
 
     @Before
