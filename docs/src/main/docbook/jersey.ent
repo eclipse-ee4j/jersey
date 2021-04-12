@@ -37,7 +37,7 @@
 <!ENTITY src.branch "$src.branch">
 <!ENTITY version "$version">
 <!ENTITY smallrye.version "1.5.0">
-<!ENTITY helidon.version "2.1.0">
+<!ENTITY helidon.version "1.0.3">
 
 <!-- External Path and Link Base Entities -->
 
