@@ -126,7 +126,7 @@ public class LoggingInterceptorTest {
     @Test
     public void testLogInboundEntityMockedStream() throws Exception {
         int maxEntitySize = 20;
-        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(null, null, null, maxEntitySize) {};
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder().maxEntitySize(maxEntitySize)) {};
 
         StringBuilder buffer = new StringBuilder();
         InputStream stream = mock(InputStream.class);
@@ -162,7 +162,7 @@ public class LoggingInterceptorTest {
         int maxEntitySize = 2000;
         String inputString = getRandomString(maxEntitySize * 2);
 
-        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(null, null, null, maxEntitySize) {};
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder().maxEntitySize(maxEntitySize)) {};
         StringBuilder buffer = new StringBuilder();
         InputStream stream = new ByteArrayInputStream(inputString.getBytes());
 
