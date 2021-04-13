@@ -34,7 +34,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -63,8 +62,8 @@ public class JaxbContextPropertiesTest extends JerseyTest {
                 {JettyConnectorProvider.class},
                 {ApacheConnectorProvider.class},
                 {GrizzlyConnectorProvider.class},
-                {NettyConnectorProvider.class},
-                {JdkConnectorProvider.class},
+                //{NettyConnectorProvider.class},
+                //{JdkConnectorProvider.class},
         });
     }
 
@@ -135,45 +134,35 @@ public class JaxbContextPropertiesTest extends JerseyTest {
     @Test
     public void testJAXBContextFactory() {
         System.setProperty(ExternalProperties.JAXB_CONTEXT_FACTORY, "wrong.factory");
-
-        try {
-            _test();
-        } catch (InternalServerErrorException e) {
-            Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
-        }
+        _test();
     }
 
     @Test
     public void testJAXBContext() {
         System.setProperty(ExternalProperties.JAXB_CONTEXT,  "wrong.factory");
-
-        try {
-            _test();
-        } catch (InternalServerErrorException e) {
-            Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
-        }
+        _test();
     }
 
     @Test
     public void testContextFactory() {
         System.setProperty(ExternalProperties.CONTEXT_FACTORY, "wrong.factory");
-
-        try {
-            _test();
-        } catch (InternalServerErrorException e) {
-            Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
-        }
+        _test();
     }
 
     private void _test() {
         final String title = "Harry Potter";
         Book book = new Book(title);
 
-        Response response = target("resource/getBook")
-                .request(MediaType.APPLICATION_XML)
-                .post(Entity.entity(book, MediaType.APPLICATION_XML));
+        try {
+            Response response = target("resource/getBook")
+                    .request(MediaType.APPLICATION_XML)
+                    .post(Entity.entity(book, MediaType.APPLICATION_XML));
 
-        Assert.assertEquals(title, response.readEntity(Book.class).getTitle());
+            Assert.assertEquals(title, response.readEntity(Book.class).getTitle());
+            response.close();
+        } catch (Exception e) {
+            Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
+        }
     }
 
 }
