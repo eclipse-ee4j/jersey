@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -139,7 +139,6 @@ public class EventOutputTest extends JerseyTest {
     }
 
     @Test
-    @Ignore //2.0.0-M3
     public void testReadSseEventAsPlainString() throws Exception {
         final Response r = target().path("test/single").request().get(Response.class);
         assertThat(r.readEntity(String.class), containsString("single"));
@@ -189,7 +188,6 @@ public class EventOutputTest extends JerseyTest {
     }
 
     @Test
-    @Ignore // 2.0.0-M3
     public void testReadFromClosedOutput() throws Exception {
         /**
          * Need to disable HTTP Keep-Alive to prevent this test from hanging in HttpURLConnection

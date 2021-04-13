@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,11 @@
 package org.glassfish.jersey.jackson.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.Module;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-import java.util.Objects;
+import java.util.List;
 import jakarta.inject.Singleton;
 
 /**
@@ -29,7 +30,11 @@ import jakarta.inject.Singleton;
 @Singleton
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
+    //do not register JaxbAnnotationModule because it brakes default annotations processing
+    private static final String EXCLUDE_MODULE_NAME = "JaxbAnnotationModule";
+
     public DefaultJacksonJaxbJsonProvider() {
+        super();
         findAndRegisterModules();
     }
 
@@ -39,14 +44,16 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     }
 
     private void findAndRegisterModules() {
-        final ObjectMapper defaultMapper = _mapperConfig.getDefaultMapper();
-        if (Objects.nonNull(defaultMapper)) {
-            defaultMapper.findAndRegisterModules();
-        }
 
+        final ObjectMapper defaultMapper = _mapperConfig.getDefaultMapper();
         final ObjectMapper mapper = _mapperConfig.getConfiguredMapper();
-        if (Objects.nonNull(mapper)) {
-            mapper.findAndRegisterModules();
+
+        final List<Module> modules = ObjectMapper.findModules();
+        modules.removeIf(mod -> mod.getModuleName().contains(EXCLUDE_MODULE_NAME));
+
+        defaultMapper.registerModules(modules);
+        if (mapper != null) {
+            mapper.registerModules(modules);
         }
     }
 }

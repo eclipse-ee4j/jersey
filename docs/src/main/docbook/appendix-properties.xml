@@ -195,6 +195,17 @@
                             See <link linkend="logging.xml">logging</link> chapter for more information.
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.logging.entity.separator</literal>
+                        </entry>
+                        <entry>
+                            Custom logging delimiter for new lines separation.
+                            See <link linkend="logging.xml">logging</link> chapter for more information.
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -647,6 +658,17 @@
                             See <link linkend="logging.xml">logging</link> chapter for more information.
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.server.logging.entity.separator</literal>
+                        </entry>
+                        <entry>
+                            Custom delimiter for new lines separation.
+                            See <link linkend="logging.xml">logging</link> chapter for more information.
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -1013,6 +1035,17 @@
                         </entry>
                         <entry>
                             The maximum number of bytes of the entity which will be logged.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.client.logging.entity.separator</literal>
+                        </entry>
+                        <entry>
+                            New line delimiter property (client side).
                             See <link linkend="logging_chapter">logging</link> chapter for more information.
                         </entry>
                     </row>
