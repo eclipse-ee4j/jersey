@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -103,23 +103,28 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     final AtomicLong _id = new AtomicLong(0);
     final Verbosity verbosity;
     final int maxEntitySize;
+    final String separator;
 
     /**
-     * Creates a logging filter with custom logger and entity logging turned on, but potentially limiting the size
-     * of entity to be buffered and logged.
+     * Creates a logging filter using builder instance with custom logger and entity logging turned on,
+     * but potentially limiting the size of entity to be buffered and logged.
      *
-     * @param logger        the logger to log messages to.
-     * @param level         level at which the messages will be logged.
-     * @param verbosity     verbosity of the logged messages. See {@link Verbosity}.
-     * @param maxEntitySize maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
+     * @param builder       loggingFeatureBuilder which contains values for:
+     *  logger         the logger to log messages to.
+     *  level          level at which the messages will be logged.
+     *  verbosity      verbosity of the logged messages. See {@link Verbosity}.
+     *  maxEntitySize  maximum number of entity bytes to be logged (and buffered) - if the entity is larger,
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
+     *  separator      delimiter for particular log lines. Default is Linux new line delimiter
      */
-    LoggingInterceptor(final Logger logger, final Level level, final Verbosity verbosity, final int maxEntitySize) {
-        this.logger = logger;
-        this.level = level;
-        this.verbosity = verbosity;
-        this.maxEntitySize = Math.max(0, maxEntitySize);
+
+    LoggingInterceptor(LoggingFeature.LoggingFeatureBuilder builder) {
+        this.logger = builder.filterLogger;
+        this.level = builder.level;
+        this.verbosity = builder.verbosity;
+        this.maxEntitySize = Math.max(0, builder.maxEntitySize);
+        this.separator = builder.separator;
     }
 
     /**
@@ -142,18 +147,18 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         prefixId(b, id).append(NOTIFICATION_PREFIX)
                 .append(note)
                 .append(" on thread ").append(Thread.currentThread().getName())
-                .append("\n");
+                .append(separator);
         prefixId(b, id).append(REQUEST_PREFIX).append(method).append(" ")
-                .append(uri.toASCIIString()).append("\n");
+                .append(uri.toASCIIString()).append(separator);
     }
 
     void printResponseLine(final StringBuilder b, final String note, final long id, final int status) {
         prefixId(b, id).append(NOTIFICATION_PREFIX)
                 .append(note)
-                .append(" on thread ").append(Thread.currentThread().getName()).append("\n");
+                .append(" on thread ").append(Thread.currentThread().getName()).append(separator);
         prefixId(b, id).append(RESPONSE_PREFIX)
                 .append(Integer.toString(status))
-                .append("\n");
+                .append(separator);
     }
 
     void printPrefixedHeaders(final StringBuilder b,
@@ -165,7 +170,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
             final String header = headerEntry.getKey();
 
             if (val.size() == 1) {
-                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append("\n");
+                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append(separator);
             } else {
                 final StringBuilder sb = new StringBuilder();
                 boolean add = false;
@@ -176,7 +181,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
                     add = true;
                     sb.append(s);
                 }
-                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append("\n");
+                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append(separator);
             }
         }
     }
@@ -193,7 +198,16 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         }
         stream.mark(maxEntitySize + 1);
         final byte[] entity = new byte[maxEntitySize + 1];
-        final int entitySize = stream.read(entity);
+
+        int entitySize = 0;
+        while (entitySize < entity.length) {
+            int readBytes = stream.read(entity, entitySize, entity.length - entitySize);
+            if (readBytes < 0) {
+                break;
+            }
+            entitySize += readBytes;
+        }
+
         b.append(new String(entity, 0, Math.min(entitySize, maxEntitySize), charset));
         if (entitySize > maxEntitySize) {
             b.append("...more...");

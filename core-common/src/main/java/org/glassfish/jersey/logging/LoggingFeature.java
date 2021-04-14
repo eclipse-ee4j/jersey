@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,6 +40,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR}</li>
  * </ul>
  * <p>
  * If any of the configuration value is not set, following default values are applied:
@@ -56,6 +57,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR_SERVER}</li>
  * </ul>
  * Client configurable properties:
  * <ul>
@@ -63,6 +65,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_LOGGER_LEVEL_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT}</li>
+ * <li>{@link #LOGGING_FEATURE_SEPARATOR_CLIENT}</li>
  * </ul>
  *
  * @author Ondrej Kosatka
@@ -86,11 +89,16 @@ public class LoggingFeature implements Feature {
      * Default verbosity for entity logging. See {@link Verbosity}.
      */
     public static final Verbosity DEFAULT_VERBOSITY = Verbosity.PAYLOAD_TEXT;
+    /**
+     * Default separator for entity logging.
+     */
+    public static final String DEFAULT_SEPARATOR = "\n";
 
     private static final String LOGGER_NAME_POSTFIX = ".logger.name";
     private static final String LOGGER_LEVEL_POSTFIX = ".logger.level";
     private static final String VERBOSITY_POSTFIX = ".verbosity";
     private static final String MAX_ENTITY_POSTFIX = ".entity.maxSize";
+    private static final String SEPARATOR_POSTFIX = ".separator";
     private static final String LOGGING_FEATURE_COMMON_PREFIX = "jersey.config.logging";
     /**
      * Common logger name property.
@@ -108,6 +116,10 @@ public class LoggingFeature implements Feature {
      * Common property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE = LOGGING_FEATURE_COMMON_PREFIX + MAX_ENTITY_POSTFIX;
+    /**
+     * Common property for configuring logging separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
 
     private static final String LOGGING_FEATURE_SERVER_PREFIX = "jersey.config.server.logging";
     /**
@@ -126,6 +138,10 @@ public class LoggingFeature implements Feature {
      * Server property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER = LOGGING_FEATURE_SERVER_PREFIX + MAX_ENTITY_POSTFIX;
+    /**
+     * Server property for configuring separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR_SERVER = LOGGING_FEATURE_SERVER_PREFIX + SEPARATOR_POSTFIX;
 
     private static final String LOGGING_FEATURE_CLIENT_PREFIX = "jersey.config.client.logging";
     /**
@@ -144,11 +160,12 @@ public class LoggingFeature implements Feature {
      * Client property for configuring a maximum number of bytes of entity to be logged.
      */
     public static final String LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + MAX_ENTITY_POSTFIX;
+    /**
+     * Client property for logging separator.
+     */
+    public static final String LOGGING_FEATURE_SEPARATOR_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
 
-    private final Logger filterLogger;
-    private final Verbosity verbosity;
-    private final Integer maxEntitySize;
-    private final Level level;
+    private final LoggingFeatureBuilder builder;
 
     /**
      * Creates the feature with default values.
@@ -199,32 +216,62 @@ public class LoggingFeature implements Feature {
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      */
     public LoggingFeature(Logger logger, Level level, Verbosity verbosity, Integer maxEntitySize) {
-        this.filterLogger = logger;
-        this.level = level;
-        this.verbosity = verbosity;
-        this.maxEntitySize = maxEntitySize;
+
+        this(LoggingFeature.builder()
+                .withLogger(logger)
+                .level(level)
+                .verbosity(verbosity)
+                .maxEntitySize(maxEntitySize)
+                .separator(DEFAULT_SEPARATOR)
+        );
+
+    }
+
+    /**
+     * Constructor based on logging feature builder. All parameters are passed through a builder instance.
+     *
+     * @param builder instance of a builder with required logging feature parameters
+     */
+    public LoggingFeature(LoggingFeatureBuilder builder) {
+        this.builder = builder;
     }
 
     @Override
     public boolean configure(FeatureContext context) {
-        boolean enabled = false;
+        boolean enabled = context.getConfiguration().getRuntimeType() != null;
 
-        if (context.getConfiguration().getRuntimeType() == RuntimeType.CLIENT) {
-            ClientLoggingFilter clientLoggingFilter = (ClientLoggingFilter) createLoggingFilter(context, RuntimeType.CLIENT);
-            context.register(clientLoggingFilter);
-            enabled = true;
+        if (enabled) {
+            context.register(createLoggingFilter(context, context.getConfiguration().getRuntimeType()));
         }
-        if (context.getConfiguration().getRuntimeType() == RuntimeType.SERVER) {
-            ServerLoggingFilter serverClientFilter = (ServerLoggingFilter) createLoggingFilter(context, RuntimeType.SERVER);
-            context.register(serverClientFilter);
-            enabled = true;
-        }
+
         return enabled;
     }
 
+    /**
+     * builder method to create  LoggingFeature with required settings
+     *
+     * @return Builder for LoggingFeature
+     */
+    public static LoggingFeatureBuilder builder() {
+        return new LoggingFeatureBuilder();
+    }
+
     private LoggingInterceptor createLoggingFilter(FeatureContext context, RuntimeType runtimeType) {
-        Map properties = context.getConfiguration().getProperties();
-        String filterLoggerName = CommonProperties.getValue(
+
+        final LoggingFeatureBuilder loggingBuilder =
+                configureBuilderParameters(builder, context, runtimeType);
+
+        return (runtimeType == RuntimeType.SERVER)
+                ? new ServerLoggingFilter(loggingBuilder)
+                : new ClientLoggingFilter(loggingBuilder);
+    }
+
+    private static LoggingFeatureBuilder configureBuilderParameters(LoggingFeatureBuilder builder,
+                                                   FeatureContext context, RuntimeType runtimeType) {
+
+        final Map properties = context.getConfiguration().getProperties();
+        //get values from properties (if any)
+        final String filterLoggerName = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_NAME_SERVER : LOGGING_FEATURE_LOGGER_NAME_CLIENT,
                 CommonProperties.getValue(
@@ -232,14 +279,21 @@ public class LoggingFeature implements Feature {
                         LOGGING_FEATURE_LOGGER_NAME,
                         DEFAULT_LOGGER_NAME
                 ));
-        String filterLevel = CommonProperties.getValue(
+        final String filterLevel = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_LEVEL_SERVER : LOGGING_FEATURE_LOGGER_LEVEL_CLIENT,
                 CommonProperties.getValue(
                         context.getConfiguration().getProperties(),
                         LOGGING_FEATURE_LOGGER_LEVEL,
                         DEFAULT_LOGGER_LEVEL));
-        Verbosity filterVerbosity = CommonProperties.getValue(
+        final String filterSeparator = CommonProperties.getValue(
+                properties,
+                runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_SEPARATOR_SERVER : LOGGING_FEATURE_SEPARATOR_CLIENT,
+                CommonProperties.getValue(
+                        context.getConfiguration().getProperties(),
+                        LOGGING_FEATURE_SEPARATOR,
+                        DEFAULT_SEPARATOR));
+        final Verbosity filterVerbosity = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_VERBOSITY_SERVER : LOGGING_FEATURE_VERBOSITY_CLIENT,
                 CommonProperties.getValue(
@@ -257,19 +311,16 @@ public class LoggingFeature implements Feature {
                         DEFAULT_MAX_ENTITY_SIZE
                 ));
 
-        Level loggerLevel = Level.parse(filterLevel);
+        final Level loggerLevel = Level.parse(filterLevel);
 
-        if (runtimeType == RuntimeType.SERVER) {
-            return new ServerLoggingFilter(filterLogger != null ? filterLogger : Logger.getLogger(filterLoggerName),
-                    level != null ? level : loggerLevel,
-                    verbosity != null ? verbosity : filterVerbosity,
-                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize);
-        } else {
-            return new ClientLoggingFilter(filterLogger != null ? filterLogger : Logger.getLogger(filterLoggerName),
-                    level != null ? level : loggerLevel,
-                    verbosity != null ? verbosity : filterVerbosity,
-                    maxEntitySize != null ? maxEntitySize : filterMaxEntitySize);
-        }
+        //configure builder vs properties values
+        builder.filterLogger = builder.filterLogger == null ? Logger.getLogger(filterLoggerName) : builder.filterLogger;
+        builder.verbosity = builder.verbosity == null ? filterVerbosity : builder.verbosity;
+        builder.maxEntitySize = builder.maxEntitySize == null ? filterMaxEntitySize : builder.maxEntitySize;
+        builder.level = builder.level == null ? loggerLevel : builder.level;
+        builder.separator = builder.separator == null ? filterSeparator : builder.separator;
+
+        return builder;
     }
 
     /**
@@ -312,5 +363,46 @@ public class LoggingFeature implements Feature {
          * Full verbose logging. Content of HTTP headers as well as any message payload content will be logged.
          */
         PAYLOAD_ANY
+    }
+
+    /**
+     * Builder class for logging feature configuration. Accepts parameters for the filter logger, verbosity, max
+     * entity size, level, and separator.
+     */
+    public static class LoggingFeatureBuilder {
+
+        Logger filterLogger;
+        Verbosity verbosity;
+        Integer maxEntitySize;
+        Level level;
+        String separator;
+
+        public LoggingFeatureBuilder() {
+
+        }
+        public LoggingFeatureBuilder withLogger(Logger logger) {
+            this.filterLogger = logger;
+            return this;
+        }
+        public LoggingFeatureBuilder verbosity(Verbosity verbosity) {
+            this.verbosity = verbosity;
+            return this;
+        }
+        public LoggingFeatureBuilder maxEntitySize(Integer maxEntitySize) {
+            this.maxEntitySize = maxEntitySize;
+            return this;
+        }
+        public LoggingFeatureBuilder level(Level level) {
+            this.level = level;
+            return this;
+        }
+        public LoggingFeatureBuilder separator(String separator) {
+            this.separator = separator;
+            return this;
+        }
+
+        public LoggingFeature build() {
+            return new LoggingFeature(this);
+        }
     }
 }

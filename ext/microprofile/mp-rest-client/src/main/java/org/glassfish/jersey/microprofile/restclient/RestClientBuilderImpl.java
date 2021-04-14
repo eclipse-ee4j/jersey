@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,9 +56,11 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
@@ -66,6 +68,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 
 /**
  * Rest client builder implementation. Creates proxy instance of requested interface.
@@ -81,7 +84,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private static final String CONFIG_PROVIDER_PRIORITY = "/priority";
     private static final String PROVIDER_SEPARATOR = ",";
 
-    private final Set<ResponseExceptionMapper> responseExceptionMappers;
+    private final Set<ResponseExceptionMapper<?>> responseExceptionMappers;
     private final Set<ParamConverterProvider> paramConverterProviders;
     private final Set<InboundHeadersProvider> inboundHeaderProviders;
     private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
@@ -96,6 +99,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private KeyStore sslKeyStore;
     private char[] sslKeyStorePassword;
     private ConnectorProvider connector;
+    private boolean followRedirects;
 
     RestClientBuilderImpl() {
         clientBuilder = ClientBuilder.newBuilder();
@@ -154,12 +158,20 @@ class RestClientBuilderImpl implements RestClientBuilder {
         processProviders(interfaceClass);
         InjectionManagerExposer injectionManagerExposer = new InjectionManagerExposer();
         register(injectionManagerExposer);
+        register(SseMessageBodyReader.class);
 
         //We need to check first if default exception mapper was not disabled by property on builder.
         registerExceptionMapper();
         //sort all AsyncInvocationInterceptorFactory by priority
         asyncInterceptorFactories.sort(Comparator.comparingInt(AsyncInvocationInterceptorFactoryPriorityWrapper::getPriority));
+        if (connector != null) {
+            ClientConfig config = new ClientConfig();
+            config.loadFrom(getConfiguration());
+            config.connectorProvider(connector);
+            clientBuilder = clientBuilder.withConfig(config); // apply config...
+        }
 
+        // override ClientConfig with values that have been set explicitly
         clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
 
         if (null != sslContext) {
@@ -178,28 +190,24 @@ class RestClientBuilderImpl implements RestClientBuilder {
             clientBuilder.keyStore(sslKeyStore, sslKeyStorePassword);
         }
 
-        Client client;
-        if (connector == null) {
-            client = clientBuilder.build();
-        } else {
-            ClientConfig config = new ClientConfig();
-            config.loadFrom(getConfiguration());
-            config.connectorProvider(connector);
-            client = ClientBuilder.newClient(config);
-        }
+        Client client = clientBuilder.build();
 
         if (client instanceof Initializable) {
             ((Initializable) client).preInitialize();
         }
         WebTarget webTarget = client.target(this.uri);
+        webTarget.property(ClientProperties.FOLLOW_REDIRECTS, followRedirects);
 
-        RestClientModel restClientModel = RestClientModel.from(interfaceClass,
-                                                               responseExceptionMappers,
-                                                               paramConverterProviders,
-                                                               inboundHeaderProviders,
-                                                               new ArrayList<>(asyncInterceptorFactories),
-                                                               injectionManagerExposer.injectionManager,
-                                                               CdiUtil.getBeanManager());
+        RestClientContext context = RestClientContext.builder(interfaceClass)
+                .responseExceptionMappers(responseExceptionMappers)
+                .paramConverterProviders(paramConverterProviders)
+                .inboundHeadersProviders(inboundHeaderProviders)
+                .asyncInterceptorFactories(new ArrayList<>(asyncInterceptorFactories))
+                .injectionManager(injectionManagerExposer.injectionManager)
+                .beanManager(CdiUtil.getBeanManager())
+                .build();
+
+        RestClientModel restClientModel = RestClientModel.from(context);
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass, AutoCloseable.class, Closeable.class},
@@ -421,6 +429,33 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (instance instanceof InboundHeadersProvider) {
             inboundHeaderProviders.add((InboundHeadersProvider) instance);
         }
+    }
+
+    @Override
+    public RestClientBuilder followRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+        return this;
+    }
+
+    @Override
+    public RestClientBuilder proxyAddress(String proxyHost, int proxyPort) {
+        if (proxyHost == null) {
+            throw new IllegalArgumentException("Proxy host must not be null");
+        }
+        if (proxyPort <= 0 || proxyPort > 65535) {
+            throw new IllegalArgumentException("Invalid proxy port");
+        }
+        property(ClientProperties.PROXY_URI, proxyHost + ":" + proxyPort);
+        return this;
+    }
+
+    @Override
+    public RestClientBuilder queryParamStyle(QueryParamStyle queryParamStyle) {
+         if (queryParamStyle != null) {
+            property(ClientProperties.QUERY_PARAM_STYLE,
+                    JerseyQueryParamStyle.valueOf(queryParamStyle.toString()));
+        }
+        return this;
     }
 
     private static class InjectionManagerExposer implements Feature {

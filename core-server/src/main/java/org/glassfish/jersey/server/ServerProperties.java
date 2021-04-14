@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -740,6 +740,14 @@ public final class ServerProperties {
      */
     public static final String UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE =
             "jersey.config.server.unwrap.completion.stage.writer.enable";
+
+    /**
+     * JVM argument to define the value of
+     * {@link org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants#COLLISION_BUFFER_POWER}.
+     * Lower values reduce the memory footprint.
+     */
+    public static final String COLLISION_BUFFER_POWER_JVM_ARG =
+            "jersey.config.server.monitoring.collision.buffer.power";
 
     private ServerProperties() {
         // prevents instantiation

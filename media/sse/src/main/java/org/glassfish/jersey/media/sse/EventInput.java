@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@ public class EventInput extends ChunkedInput<InboundEvent> {
      * @param messageBodyWorkers message body workers.
      * @param propertiesDelegate properties delegate for this request/response.
      */
-    EventInput(InputStream inputStream,
+    protected EventInput(InputStream inputStream,
                Annotation[] annotations,
                MediaType mediaType,
                MultivaluedMap<String, String> headers,

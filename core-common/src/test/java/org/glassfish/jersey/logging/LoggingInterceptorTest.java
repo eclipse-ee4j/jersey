@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,27 @@
 
 package org.glassfish.jersey.logging;
 
+import org.mockito.stubbing.Answer;
+
 import javax.ws.rs.core.MediaType;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.Test;
 import static org.glassfish.jersey.logging.LoggingFeature.Verbosity.HEADERS_ONLY;
 import static org.glassfish.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_ANY;
 import static org.glassfish.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_TEXT;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static javax.ws.rs.core.MediaType.TEXT_HTML_TYPE;
@@ -106,4 +119,67 @@ public class LoggingInterceptorTest {
         assertFalse(LoggingInterceptor.printEntity(HEADERS_ONLY, APPLICATION_OCTET_STREAM_TYPE));
     }
 
+    //
+    // logInboundEntity
+    //
+
+    @Test
+    public void testLogInboundEntityMockedStream() throws Exception {
+        int maxEntitySize = 20;
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder().maxEntitySize(maxEntitySize)) {};
+
+        StringBuilder buffer = new StringBuilder();
+        InputStream stream = mock(InputStream.class);
+        when(stream.markSupported()).thenReturn(true);
+
+        when(stream.read(any(), eq(0), eq(maxEntitySize + 1)))
+                .thenAnswer(chunk(4, 'a'));
+        when(stream.read(any(), eq(4), eq(maxEntitySize + 1 - 4)))
+                .thenAnswer(chunk(3, 'b'));
+        when(stream.read(any(), eq(7), eq(maxEntitySize + 1 - 7)))
+                .thenAnswer(chunk(5, 'c'));
+        when(stream.read(any(), eq(12), eq(maxEntitySize + 1 - 12)))
+                .thenReturn(-1);
+
+        loggingInterceptor.logInboundEntity(buffer, stream, StandardCharsets.UTF_8);
+
+        assertEquals("aaaabbbccccc\n", buffer.toString());
+        verify(stream).mark(maxEntitySize + 1);
+        verify(stream).reset();
+    }
+
+    private Answer<?> chunk(int size, char filler) {
+        return invocation -> {
+            byte[] buf = invocation.getArgumentAt(0, byte[].class);
+            int offset = invocation.getArgumentAt(1, Integer.class);
+            Arrays.fill(buf, offset, offset + size, (byte) filler);
+            return size;
+        };
+    }
+
+    @Test
+    public void testLogInboundEntityRealStream() throws Exception {
+        int maxEntitySize = 2000;
+        String inputString = getRandomString(maxEntitySize * 2);
+
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder().maxEntitySize(maxEntitySize)) {};
+        StringBuilder buffer = new StringBuilder();
+        InputStream stream = new ByteArrayInputStream(inputString.getBytes());
+
+        loggingInterceptor.logInboundEntity(buffer, stream, StandardCharsets.UTF_8);
+
+        assertEquals(inputString.substring(0, maxEntitySize) + "...more...\n", buffer.toString());
+    }
+
+    private static String getRandomString(int length) {
+        final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 _";
+        StringBuilder result = new StringBuilder();
+
+        while (length > 0) {
+            Random rand = new Random();
+            result.append(characters.charAt(rand.nextInt(characters.length())));
+            length--;
+        }
+        return result.toString();
+    }
 }

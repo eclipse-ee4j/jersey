@@ -61,7 +61,7 @@
 
     <developers>
         <developer>
-            <name>Roman Grigoriadi</name>
+            <name>Jorge Bescos Gascon</name>
             <organization>Oracle Corporation</organization>
             <organizationUrl>http://www.oracle.com/</organizationUrl>
         </developer>
@@ -72,6 +72,12 @@
         </developer>
         <developer>
             <name>Dmitry Kornilov</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+            <url>https://dmitrykornilov.net</url>
+        </developer>
+        <developer>
+            <name>David Kral</name>
             <organization>Oracle Corporation</organization>
             <organizationUrl>http://www.oracle.com/</organizationUrl>
         </developer>
@@ -456,7 +462,7 @@
                                 All Rights Reserved. Use is subject to license terms.]]>
                         </bottom>
                         <links>
-                            <link>https://jax-rs.github.io/apidocs/2.1/</link>
+                            <link>https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/</link>
                             <link>https://javaee.github.io/hk2/apidocs/</link>
                         </links>
                         <excludePackageNames>
@@ -642,7 +648,6 @@
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>2.0</version>
                     <configuration>
                         <excludeFile>etc/config/copyright-exclude</excludeFile>
                         <!--svn|mercurial|git - defaults to svn-->
@@ -652,7 +657,7 @@
                         <!-- skip files not under SCM-->
                         <scmOnly>true</scmOnly>
                         <!-- turn off warnings -->
-                        <warn>true</warn>
+                        <warn>false</warn>
                         <!-- for use with repair -->
                         <update>false</update>
                         <!-- check that year is correct -->
@@ -769,12 +774,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
+                    <version>3.0.0</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
-                            <version>1.10.8</version>
+                            <version>1.10.9</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -2075,11 +2080,11 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.0</asm.version>
+        <asm.version>9.1</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
         <cdi.api.version>1.1</cdi.api.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
-        <config.version>1.2.1</config.version>
+        <microprofile.config.version>2.0</microprofile.config.version>
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
         <checkstyle.version>8.28</checkstyle.version>
         <easymock.version>3.3</easymock.version>
@@ -2100,7 +2105,7 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <jackson.version>2.11.3</jackson.version>
+        <jackson.version>2.12.2</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
