@@ -88,6 +88,7 @@
         <module>jersey-4321</module>
         <module>jersey-4507</module>
         <module>jersey-4542</module>
+        <module>jersey-4697</module>
         <module>jersey-4722</module>
         <module>jetty-response-close</module>
         <module>microprofile</module>
