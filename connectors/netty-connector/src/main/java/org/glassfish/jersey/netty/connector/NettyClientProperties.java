@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,10 +29,18 @@ public class NettyClientProperties {
     /**
      * <p>
      *    This property determines the maximum number of idle connections that will be simultaneously kept alive
-     *    in total, rather than per destination. The default is 60.
+     *    in total, rather than per destination. The default is 60. Specify 0 to disable.
      * </p>
      */
     public static final String MAX_CONNECTIONS_TOTAL = "jersey.config.client.maxTotalConnections";
+
+    /**
+     * <p>
+     *    This property determines the number of seconds the idle connections are kept in the pool before pruned.
+     *    The default is 60. Specify 0 to disable.
+     *  </p>
+     */
+    public static final String IDLE_CONNECTION_PRUNE_TIMEOUT = "jersey.config.client.idleConnectionPruneTimeout";
 
     /**
      *  <p>
