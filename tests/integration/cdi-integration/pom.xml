@@ -45,6 +45,7 @@
         <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
         <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>
         <module>cdi-with-jersey-injection-webapp</module>
+        <module>context-inject-on-server</module>
     </modules>
 
     <build>
