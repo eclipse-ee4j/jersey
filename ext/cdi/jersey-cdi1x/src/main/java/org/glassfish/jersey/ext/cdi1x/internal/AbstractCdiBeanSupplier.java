@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,14 @@ package org.glassfish.jersey.ext.cdi1x.internal;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
+import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 
@@ -83,11 +86,17 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
             public T getInstance(final Class<T> clazz) {
                 final CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
                 final T instance = injectionTarget.produce(creationalContext);
-                injectionTarget.inject(instance, creationalContext);
-                if (injectionManager != null) {
-                    injectionManager.inject(instance, CdiComponentProvider.CDI_CLASS_ANALYZER);
-                }
-                injectionTarget.postConstruct(instance);
+                final CdiComponentProvider cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
+                final CdiComponentProvider.InjectionManagerInjectedCdiTarget hk2managedTarget =
+                     cdiComponentProvider.new InjectionManagerInjectedCdiTarget(injectionTarget) {
+                        @Override
+                        public Set<InjectionPoint> getInjectionPoints() {
+                            return injectionTarget.getInjectionPoints();
+                        }
+                    };
+                hk2managedTarget.setInjectionManager(injectionManager);
+                hk2managedTarget.inject(instance, creationalContext);
+                hk2managedTarget.postConstruct(instance);
                 return instance;
             }
 

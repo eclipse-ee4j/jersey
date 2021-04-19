@@ -239,6 +239,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                <artifactId>jersey-cdi-rs-inject</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.jersey.ext.rx</groupId>
                 <artifactId>jersey-rx-client-guava</artifactId>
                 <version>${project.version}</version>

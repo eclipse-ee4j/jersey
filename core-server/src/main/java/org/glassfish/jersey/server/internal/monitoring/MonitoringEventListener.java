@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,14 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.ProcessingException;
-
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
@@ -68,6 +68,8 @@ public final class MonitoringEventListener implements ApplicationEventListener {
     private final Queue<Integer> responseStatuses = new ArrayBlockingQueue<>(EVENT_QUEUE_SIZE);
     private final Queue<RequestEvent> exceptionMapperEvents = new ArrayBlockingQueue<>(EVENT_QUEUE_SIZE);
     private volatile MonitoringStatisticsProcessor monitoringStatisticsProcessor;
+    // By default new events can arrive before MonitoringStatisticsProcessor is running.
+    private final AtomicBoolean processorFailed = new AtomicBoolean(false);
 
     /**
      * Time statistics.
@@ -185,6 +187,7 @@ public final class MonitoringEventListener implements ApplicationEventListener {
             case RELOAD_FINISHED:
             case INITIALIZATION_FINISHED:
                 this.monitoringStatisticsProcessor = new MonitoringStatisticsProcessor(injectionManager, this);
+                processorFailed.set(false);
                 this.monitoringStatisticsProcessor.startMonitoringWorker();
                 break;
             case DESTROY_FINISHED:
@@ -238,13 +241,13 @@ public final class MonitoringEventListener implements ApplicationEventListener {
                     methodStats = new MethodStats(method, methodTimeStart, now - methodTimeStart);
                     break;
                 case EXCEPTION_MAPPING_FINISHED:
-                    if (!exceptionMapperEvents.offer(event)) {
+                    if (!offer(exceptionMapperEvents, event)) {
                         LOGGER.warning(LocalizationMessages.ERROR_MONITORING_QUEUE_MAPPER());
                     }
                     break;
                 case FINISHED:
                     if (event.isResponseWritten()) {
-                        if (!responseStatuses.offer(event.getContainerResponse().getStatus())) {
+                        if (!offer(responseStatuses, event.getContainerResponse().getStatus())) {
                             LOGGER.warning(LocalizationMessages.ERROR_MONITORING_QUEUE_RESPONSE());
                         }
                     }
@@ -264,14 +267,28 @@ public final class MonitoringEventListener implements ApplicationEventListener {
                         }
                         sb.setLength(sb.length() - 1);
                     }
-
-                    if (!requestQueuedItems.offer(new RequestStats(new TimeStats(requestTimeStart, now - requestTimeStart),
+                    if (!offer(requestQueuedItems, new RequestStats(new TimeStats(requestTimeStart, now - requestTimeStart),
                             methodStats, sb.toString()))) {
                         LOGGER.warning(LocalizationMessages.ERROR_MONITORING_QUEUE_REQUEST());
                     }
 
             }
         }
+    }
+
+    private <T> boolean offer(Queue<T> queue, T event) {
+        if (!processorFailed.get()) {
+            return queue.offer(event);
+        }
+        // Don't need to warn that the event was not queued because an Exception was thrown by MonitoringStatisticsProcessor
+        return true;
+    }
+
+    /**
+     * Invoked by {@link MonitoringStatisticsProcessor} when there is one exception consuming from queues.
+     */
+    void processorFailed() {
+        processorFailed.set(true);
     }
 
     /**

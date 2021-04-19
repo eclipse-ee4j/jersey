@@ -89,6 +89,7 @@ public final class MessagingBinders {
             bindSingletonWorker(ReaderProvider.class);
             // bindSingletonWorker(RenderedImageProvider.class); - enabledProvidersBinder
             bindSingletonWorker(StringMessageProvider.class);
+            bindSingletonWorker(EnumMessageProvider.class);
 
             // Message body readers -- enabledProvidersBinder
             // bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
