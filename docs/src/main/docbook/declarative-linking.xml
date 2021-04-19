@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,14 +57,14 @@
             into a container that is already including them:
 
             <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
-    &lt;groupId&gt;javax.el&lt;/groupId&gt;
-    &lt;artifactId&gt;javax.el-api&lt;/artifactId&gt;
+    &lt;groupId&gt;jakarta.el&lt;/groupId&gt;
+    &lt;artifactId&gt;jakarta.el-api&lt;/artifactId&gt;
     &lt;version&gt;&javax-el.version;&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
             <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
-    &lt;groupId&gt;org.glassfish.web&lt;/groupId&gt;
-    &lt;artifactId&gt;javax.el&lt;/artifactId&gt;
+    &lt;groupId&gt;org.glassfish&lt;/groupId&gt;
+    &lt;artifactId&gt;jakarta.el&lt;/artifactId&gt;
     &lt;version&gt;&javax-el-impl.version;&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 

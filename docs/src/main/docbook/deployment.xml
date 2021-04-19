@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,7 @@
             <para>
                 This chapter is focused on server-side Jersey deployment models. The
                 <link linkend="client">Jersey client runtime</link> does
-                not have any specific container requirements and runs in plain Java SE 6 or higher runtime.
+                not have any specific container requirements and runs in plain Java SE 1.8 or higher runtime.
             </para>
         </note>
     </section>
@@ -1136,6 +1136,19 @@ public class StatelessEjbResource implements LocalEjb {
                     the <link xlink:href="http://docs.oracle.com/middleware/1213/wls/RESTF/use-jersey20-ri.htm#RESTF290">WebLogic
                     12.1.3 RESTful Web Services Development Guide</link> for details how to enable JAX-RS 2.0 support on
                     WebLogic 12.1.3.
+                </para>
+                <para>
+                    In 10.3.x, a set of pre-built shared libraries were delivered with WebLogic Server to support
+                    Jersey 1.9 and 1.1.5.1 Java API for RESTful Web Services (JAX-RS) Reference Implementations (RIs).
+                    In 12.2.x, WebLogic Server supports Jersey 2.21.x (JAX-RS 2.0 RI) by default. To use the pre-built
+                    shared libraries of 10.3.x, you needed to register them with the WebLogic Server instance, and
+                    modify the web.xml and weblogic.xml deployment descriptors to use the Jersey servlet and reference
+                    the shared libraries, respectively.
+                    In 12.2.x, as WebLogic Server supports Jersey 2.21.x (JAX-RS 2.0 RI) by default, registration as a
+                    shared library with WebLogic Server is no longer required.
+                    Please read through
+                    the <link xlink:href="https://docs.oracle.com/middleware/12213/wls/WLUPG/upgrade_ws.htm#WLUPG331">
+                    Upgrading a 10.3.x RESTful Web Service (JAX-RS) to 12.2.x</link>
                 </para>
             </section>
 

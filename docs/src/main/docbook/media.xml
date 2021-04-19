@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!--
 
-    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -188,9 +188,10 @@ public class MyJaxbBean {
 
                 <para>
                     JSON Processing API is a new standard API for parsing and processing JSON structures in similar way to what
-                    SAX and StAX parsers provide for XML. The API is part of Java EE 7 and later. Another such JSON
-                    parsing/processing API is provided by Jettison framework. Both APIs provide a low-level access to producing
-                    and consuming JSON data structures. By adopting this low-level approach you would be working with
+                    SAX and StAX parsers provide for XML. The API is part of Java EE 7 and later (including Jakarta EE 8).
+                    Another such JSON parsing/processing API is provided by Jettison framework. Both APIs provide a low-level
+                    access to producing and consuming JSON data structures. By adopting this low-level approach you would
+                    be working with
                     <literal>JsonObject</literal> (or <literal>JSONObject</literal> respectively) and/or
                     <literal>JsonArray</literal> (or <literal>JSONArray</literal> respectively) classes when processing your
                     JSON data representations.
@@ -219,7 +220,7 @@ public class MyJaxbBean {
                 <para>
                     Now to build an equivalent <literal>JsonObject</literal>/<literal>JSONObject</literal> (in terms of
                     resulting JSON expression), you would need several more lines of code. The following example illustrates
-                    how to construct the same JSON data using the standard Java EE 7 JSON-Processing API.
+                    how to construct the same JSON data using the standard Jakarta EE 8 JSON-Processing API.
                     <example>
                         <title>Constructing a <literal>JsonObject</literal> (JSON-Processing)</title>
                         <programlisting language="java" linenumbering="numbered">JsonObject myObject = Json.createObjectBuilder()
@@ -1418,7 +1419,7 @@ public class PlanetJAXBContextProvider implements ContextResolver&lt;JAXBContext
                 Sample above shows simple &lit.jaxb.JAXBContext; creation, all you need to do is put
                 this &lit.jaxrs.ext.Provider; annotated class somewhere where Jersey can find it. Users sometimes
                 have problems with using provider classes on client side, so just to reminder - you have to
-                declare them in the client config (client does not do anything like package scanning done by server).
+                register them in the client config (client does not do anything like package scanning done by server).
             </para>
 
             <example>
@@ -1752,7 +1753,7 @@ public MultiPart post(final FormDataMultiPart multiPart) {
                 <title>Injecting with &lit.jersey.media.multipart.FormDataParam;</title>
 
                 <para>
-                    If you just need to bin the named body part(s) of a <literal>multipart/form-data</literal> request
+                    If you just need to bind the named body part(s) of a <literal>multipart/form-data</literal> request
                     entity body to a resource method parameter you can use &jersey.media.multipart.FormDataParam; annotation.
                 </para>
                 <para>
