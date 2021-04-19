@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,7 +62,11 @@ final class SingleValueExtractor<T> extends AbstractParamValueExtractor<T> imple
         } catch (final WebApplicationException | ProcessingException ex) {
             throw ex;
         } catch (final IllegalArgumentException ex) {
-            return defaultValue();
+            if (value == null) {
+                return defaultValue();
+            } else {
+                throw new ExtractorException(ex);
+            }
         } catch (final Exception ex) {
             throw new ExtractorException(ex);
         }

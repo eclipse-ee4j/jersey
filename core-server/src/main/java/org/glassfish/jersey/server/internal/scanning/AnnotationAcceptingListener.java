@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -303,7 +303,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V16;
+        private static final int WARN_VERSION = Opcodes.V17;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;

@@ -73,7 +73,8 @@ public class HttpUrlConnector implements Connector {
     private static final String ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY = "sun.net.http.allowRestrictedHeaders";
     // Avoid multi-thread uses of HttpsURLConnection.getDefaultSSLSocketFactory() because it does not implement a
     // proper lazy-initialization. See https://github.com/jersey/jersey/issues/3293
-    private static final SSLSocketFactory DEFAULT_SSL_SOCKET_FACTORY = HttpsURLConnection.getDefaultSSLSocketFactory();
+    private static final LazyValue<SSLSocketFactory> DEFAULT_SSL_SOCKET_FACTORY =
+            Values.lazy((Value<SSLSocketFactory>) () -> HttpsURLConnection.getDefaultSSLSocketFactory());
     // The list of restricted headers is extracted from sun.net.www.protocol.http.HttpURLConnection
     private static final String[] restrictedHeaders = {
             "Access-Control-Request-Headers",
@@ -305,7 +306,7 @@ public class HttpUrlConnector implements Connector {
                 suc.setHostnameVerifier(verifier);
             }
 
-            if (DEFAULT_SSL_SOCKET_FACTORY == suc.getSSLSocketFactory()) {
+            if (DEFAULT_SSL_SOCKET_FACTORY.get() == suc.getSSLSocketFactory()) {
                 // indicates that the custom socket factory was not set
                 suc.setSSLSocketFactory(sslSocketFactory.get());
             }
