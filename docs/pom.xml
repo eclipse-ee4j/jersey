@@ -45,7 +45,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <echo message="Preparing char entities" />
                                 <mkdir dir="${src.dir}" />
                                 <copy todir="${src.dir}">
@@ -63,7 +63,7 @@
                                 <replace file="${src.dir}/jersey.ent" token="$repository" value="${javanet.repository.id}" />
                                 <replace file="${src.dir}/jersey.ent" token="$src.branch" value="${jersey.src.branch}" />
                                 <replace file="${src.dir}/jersey.ent" token="$version" value="${jersey.version}" />
-                            </tasks>
+                            </target>
                         </configuration>
                         <id>process-entities</id>
                         <phase>package</phase>

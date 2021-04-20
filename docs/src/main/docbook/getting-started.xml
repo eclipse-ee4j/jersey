@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,7 @@
                     <programlisting language="xml" linenumbering="unnumbered">&lt;snapshotRepository&gt;
                         &lt;id&gt;ossrh&lt;/id&gt;
                     &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
-                &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
+                &lt;url&gt;https://jakarta.oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
             &lt;/snapshotRepository&gt;</programlisting>
                 </para>
             </note>
@@ -267,24 +267,22 @@ Got it!</screen>
             a lot of additional information about the whole communication:
 
             <screen language="bash" linenumbering="unnumbered"><![CDATA[$ curl -v http://localhost:8080/myapp/myresource
-* About to connect() to localhost port 8080 (#0)
-*   Trying ::1...
-* Connection refused
-*   Trying 127.0.0.1...
-* connected
+*   Trying 127.0.0.1:8080...
+* TCP_NODELAY set
 * Connected to localhost (127.0.0.1) port 8080 (#0)
 > GET /myapp/myresource HTTP/1.1
-> User-Agent: curl/7.25.0 (x86_64-apple-darwin11.3.0) libcurl/7.25.0 OpenSSL/1.0.1e zlib/1.2.7 libidn/1.22
 > Host: localhost:8080
+> User-Agent: curl/7.68.0
 > Accept: */*
 >
+* Mark bundle as not supporting multiuse
 < HTTP/1.1 200 OK
 < Content-Type: text/plain
 < Date: Sun, 26 May 2020 18:29:18 GMT
 < Content-Length: 7
 <
 * Connection #0 to host localhost left intact
-Got it!* Closing connection #0]]></screen>
+Got it!]]></screen>
         </para>
     </section>
 
@@ -541,8 +539,8 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     Total 21 (delta 0), reused 0 (delta 0)
 
     -----> Java app detected
-    -----> Installing OpenJDK 1.7... done
-    -----> Installing Maven 3.0.3... done
+    -----> Installing OpenJDK 1.8... done
+    -----> Installing Maven 3.6.3... done
     -----> Installing settings.xml... done
     -----> executing /app/tmp/cache/.maven/bin/mvn -B -Duser.home=/tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd -Dmaven.repo.local=/app/tmp/cache/.m2/repository -s /app/tmp/cache/.m2/settings.xml -DskipTests=true clean install
            [INFO] Scanning for projects...
