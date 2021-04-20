@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,6 +35,7 @@ import org.glassfish.jersey.server.BackgroundSchedulerLiteral;
 import org.glassfish.jersey.server.ExtendedResourceContext;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.server.internal.monitoring.MonitoringEventListener.RequestStats;
 import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.model.ResourceModel;
 import org.glassfish.jersey.server.monitoring.MonitoringStatisticsListener;
@@ -94,6 +95,7 @@ final class MonitoringStatisticsProcessor {
                     processResponseCodeEvents();
                     processExceptionMapperEvents();
                 } catch (final Throwable t) {
+                    monitoringEventListener.processorFailed();
                     LOGGER.log(Level.SEVERE, LocalizationMessages.ERROR_MONITORING_STATISTICS_GENERATION(), t);
                     // rethrowing exception stops further task execution
                     throw new ProcessingException(LocalizationMessages.ERROR_MONITORING_STATISTICS_GENERATION(), t);
@@ -120,11 +122,9 @@ final class MonitoringStatisticsProcessor {
     private void processExceptionMapperEvents() {
         final Queue<RequestEvent> eventQueue = monitoringEventListener.getExceptionMapperEvents();
         final FloodingLogger floodingLogger = new FloodingLogger(eventQueue);
-
-        while (!eventQueue.isEmpty()) {
+        RequestEvent event = null;
+        while ((event = eventQueue.poll()) != null) {
             floodingLogger.conditionallyLogFlooding();
-
-            final RequestEvent event = eventQueue.remove();
             final ExceptionMapperStatisticsImpl.Builder mapperStats = statisticsBuilder.getExceptionMapperStatisticsBuilder();
 
             if (event.getExceptionMapper() != null) {
@@ -138,12 +138,9 @@ final class MonitoringStatisticsProcessor {
     private void processRequestItems() {
         final Queue<MonitoringEventListener.RequestStats> requestQueuedItems = monitoringEventListener.getRequestQueuedItems();
         final FloodingLogger floodingLogger = new FloodingLogger(requestQueuedItems);
-
-        while (!requestQueuedItems.isEmpty()) {
+        RequestStats event = null;
+        while ((event = requestQueuedItems.poll()) != null) {
             floodingLogger.conditionallyLogFlooding();
-
-            final MonitoringEventListener.RequestStats event = requestQueuedItems.remove();
-
             final MonitoringEventListener.TimeStats requestStats = event.getRequestStats();
             statisticsBuilder.addRequestExecution(requestStats.getStartTime(), requestStats.getDuration());
 
@@ -160,11 +157,9 @@ final class MonitoringStatisticsProcessor {
     private void processResponseCodeEvents() {
         final Queue<Integer> responseEvents = monitoringEventListener.getResponseStatuses();
         final FloodingLogger floodingLogger = new FloodingLogger(responseEvents);
-
-        while (!responseEvents.isEmpty()) {
+        Integer code = null;
+        while ((code = responseEvents.poll()) != null) {
             floodingLogger.conditionallyLogFlooding();
-
-            final Integer code = responseEvents.remove();
             statisticsBuilder.addResponseCode(code);
         }
 

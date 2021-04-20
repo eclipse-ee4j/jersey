@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -94,9 +94,12 @@ class NettyConnector implements Connector {
     // http.maxConnections (default: 5)
     private static final int DEFAULT_MAX_POOL_SIZE = 5;
     private static final int MAX_POOL_SIZE = Integer.getInteger("http.maxConnections", DEFAULT_MAX_POOL_SIZE);
-    private static final int MAX_POOL_IDLE = 60;
+    private static final int DEFAULT_MAX_POOL_IDLE = 60; // seconds
+    private static final int DEFAULT_MAX_POOL_SIZE_TOTAL = 60; // connections
+
 
     private final Integer maxPoolSize; // either from system property, or from Jersey config, or default
+    private final Integer maxPoolSizeTotal; //either from Jersey config, or default
     private final Integer maxPoolIdle; // either from Jersey config, or default
 
     private static final String INACTIVE_POOLED_CONNECTION_HANDLER = "inactive_pooled_connection_handler";
@@ -119,20 +122,22 @@ class NettyConnector implements Connector {
 
         this.client = client;
 
-        final Object maxPoolIdleProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS_TOTAL);
+        final Object maxPoolSizeTotalProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS_TOTAL);
+        final Object maxPoolIdleProperty = properties.get(NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT);
         final Object maxPoolSizeProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS);
 
-        maxPoolIdle = maxPoolIdleProperty != null ? (Integer) maxPoolIdleProperty : MAX_POOL_IDLE;
+        maxPoolSizeTotal = maxPoolSizeTotalProperty != null ? (Integer) maxPoolSizeTotalProperty : DEFAULT_MAX_POOL_SIZE_TOTAL;
+        maxPoolIdle = maxPoolIdleProperty != null ? (Integer) maxPoolIdleProperty : DEFAULT_MAX_POOL_IDLE;
         maxPoolSize = maxPoolSizeProperty != null
                 ? (Integer) maxPoolSizeProperty
                 : (HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
 
-        if (maxPoolIdle == null || maxPoolIdle < 0) {
-            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_IDLE(maxPoolIdle));
+        if (maxPoolSizeTotal < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_TOTAL(maxPoolSizeTotal));
         }
 
-        if (maxPoolSize == null || maxPoolSize < 0) {
-            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolIdle));
+        if (maxPoolSize < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolSize));
         }
     }
 
@@ -270,7 +275,7 @@ class NettyConnector implements Connector {
                         connections.put(key, conns1);
                      } else {
                         synchronized (conns1) {
-                           if (conns1.size() < maxPoolSize) {
+                           if ((maxPoolSizeTotal == 0 || connections.size() < maxPoolSizeTotal) && conns1.size() < maxPoolSize) {
                               conns1.add(ch);
                            } else { // else do not add the Channel to the idle pool
                               added = false;
