@@ -1118,6 +1118,19 @@ public class StatelessEjbResource implements LocalEjb {
                     For now Oracle WebLogic Server does not support Jakartified Jersey 3.x deployment (for deployment of prior
                     versions of Jersey please refer to corresponding manual/user guide)
                 </para>
+                <para>
+                    In 10.3.x, a set of pre-built shared libraries were delivered with WebLogic Server to support
+                    Jersey 1.9 and 1.1.5.1 Java API for RESTful Web Services (JAX-RS) Reference Implementations (RIs).
+                    In 12.2.x, WebLogic Server supports Jersey 2.21.x (JAX-RS 2.0 RI) by default. To use the pre-built
+                    shared libraries of 10.3.x, you needed to register them with the WebLogic Server instance, and
+                    modify the web.xml and weblogic.xml deployment descriptors to use the Jersey servlet and reference
+                    the shared libraries, respectively.
+                    In 12.2.x, as WebLogic Server supports Jersey 2.21.x (JAX-RS 2.0 RI) by default, registration as a
+                    shared library with WebLogic Server is no longer required.
+                    Please read through
+                    the <link xlink:href="https://docs.oracle.com/middleware/12213/wls/WLUPG/upgrade_ws.htm#WLUPG331">
+                    Upgrading a 10.3.x RESTful Web Service (JAX-RS) to 12.2.x</link>
+                </para>
             </section>
 
             <section xml:id="deployment.appservers.other">
