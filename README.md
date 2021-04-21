@@ -115,7 +115,6 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 
 - <a href="https://projects.eclipse.org/projects/ee4j.jersey">Jersey project page</a><br/>
 - <a href="TCK-Results.html">TCK Results</a><br/>
-- <a href="{{ site.links.newJerseyURL }}">jersey.github.io (obsolete)</a><br/>
 - <a href="https://jcp.org/en/jsr/detail?id=370">JSR-370 page on JCP site</a><br/>
 - <a href="https://stackoverflow.com/questions/tagged/jersey">Stack Overflow</a><br/>
 </td>
