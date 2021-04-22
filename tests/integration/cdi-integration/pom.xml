@@ -41,6 +41,7 @@
         <module>cdi-log-check</module>
         <module>cdi-multimodule</module>
         <module>cdi-multipart-webapp</module>
+        <module>cdi-resource-with-at-context</module>
         <module>cdi-test-webapp</module>
         <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
         <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>
