@@ -210,6 +210,27 @@
     </dependencies>
     <profiles>
         <profile>
+        <id>JettyExclude</id>
+        <activation>
+            <jdk>1.8</jdk>
+        </activation>
+        <properties>
+            <jetty.version>9.4.28.v20200408</jetty.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+        </dependencies>
+        </profile>
+        <profile>
             <id>jetty2x</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
