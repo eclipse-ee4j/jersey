@@ -630,7 +630,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
@@ -1517,6 +1517,12 @@
             </dependency>
 
             <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>${cdi2.api.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jta.api.version}</version>
@@ -1885,12 +1891,12 @@
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
-                <version>${weld.version}</version>
+                <version>${weld3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.servlet</groupId>
                 <artifactId>weld-servlet</artifactId>
-                <version>${weld.version}</version>
+                <version>${weld3.version}</version>
             </dependency>
 
             <dependency>
@@ -1990,7 +1996,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
+                <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -2004,7 +2010,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>6.0.3</version>
+                <version>7.0.0</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2083,6 +2089,7 @@
         <asm.version>9.1</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
         <cdi.api.version>1.1</cdi.api.version>
+        <cdi2.api.version>2.0.2</cdi2.api.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <microprofile.config.version>2.0</microprofile.config.version>
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
@@ -2119,7 +2126,7 @@
         <jta.api.version>1.3.3</jta.api.version>
         <junit5.version>5.6.0</junit5.version>
         <kryo.version>4.0.1</kryo.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.43.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -2140,9 +2147,9 @@
         <spring4.version>4.3.20.RELEASE</spring4.version>
         <spring5.version>5.1.5.RELEASE</spring5.version>
         <surefire.version>3.0.0-M3</surefire.version>
-        <validation.impl.version>6.1.2.Final</validation.impl.version>
+        <validation.impl.version>6.2.0.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
-        <weld3.version>3.0.0.Final</weld3.version>
+        <weld3.version>3.1.7.SP1</weld3.version>
         <xerces.version>2.11.0</xerces.version>
 
         <!-- do not need CQs -->

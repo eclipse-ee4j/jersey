@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,7 +66,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
 
         final Object resource = ctx.getResource();
         if (resource instanceof TargetInstanceProxy) {
-            ctx.setResource(((TargetInstanceProxy) resource).getTargetInstance());
+            ctx.setResource(((TargetInstanceProxy) resource).weld_getTargetInstance());
         }
 
         try {
@@ -79,6 +79,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
                 ValidationResultUtil.updateValidationResultProperty(resource, validationResultGetter,
                         constraintViolationException.getConstraintViolations());
                 pir.setValidationResult(validationResult);
+                ctx.getArgs()[0] = ""; // Let it not be null
             } else {
                 // Then check for a field
                 final Field vr = ValidationResultUtil.getValidationResultField(resource);
@@ -88,6 +89,7 @@ public class CdiValidationInterceptor implements ValidationInterceptor {
                 } else {
                     if (isValidationResultInArgs(ctx.getArgs())) {
                         this.validationResult.setViolations(constraintViolationException.getConstraintViolations());
+                        ctx.getArgs()[0] = ""; // Let it not be null
                     } else {
                         throw constraintViolationException;
                     }
