@@ -16,8 +16,13 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,8 +33,6 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class OptionalParamConverterTest extends JerseyTest {
 
@@ -59,6 +62,24 @@ public class OptionalParamConverterTest extends JerseyTest {
             }
             return Response.ok(builder.toString()).build();
         }
+
+        @GET
+        @Path("/fromInteger2")
+        public Response fromInteger2(@QueryParam(PARAM_NAME) OptionalInt data) {
+            return Response.ok(data.orElse(0)).build();
+        }
+
+        @GET
+        @Path("/fromLong")
+        public Response fromLong(@QueryParam(PARAM_NAME) OptionalLong data) {
+            return Response.ok(data.orElse(0)).build();
+        }
+
+        @GET
+        @Path("/fromDouble")
+        public Response fromDouble(@QueryParam(PARAM_NAME) OptionalDouble data) {
+            return Response.ok(data.orElse(0.1)).build();
+        }
     }
 
     @Override
@@ -87,6 +108,16 @@ public class OptionalParamConverterTest extends JerseyTest {
     }
 
     @Test
+    public void fromOptionalInt2() {
+        Response empty = target("/OptionalResource/fromInteger2").request().get();
+        Response notEmpty = target("/OptionalResource/fromInteger2").queryParam(PARAM_NAME, 1).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals(Integer.valueOf(0), empty.readEntity(Integer.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals(Integer.valueOf(1), notEmpty.readEntity(Integer.class));
+    }
+
+    @Test
     public void fromOptionalList() {
         Response empty = target("/OptionalResource/fromList").request().get();
         Response notEmpty = target("/OptionalResource/fromList").queryParam(PARAM_NAME, 1)
@@ -95,5 +126,25 @@ public class OptionalParamConverterTest extends JerseyTest {
         assertEquals("", empty.readEntity(String.class));
         assertEquals(200, notEmpty.getStatus());
         assertEquals("12", notEmpty.readEntity(String.class));
+    }
+
+    @Test
+    public void fromOptionalLong() {
+        Response empty = target("/OptionalResource/fromLong").request().get();
+        Response notEmpty = target("/OptionalResource/fromLong").queryParam(PARAM_NAME, 1L).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals(Long.valueOf(0L), empty.readEntity(Long.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals(Long.valueOf(1L), notEmpty.readEntity(Long.class));
+    }
+
+    @Test
+    public void fromOptionalDouble() {
+        Response empty = target("/OptionalResource/fromDouble").request().get();
+        Response notEmpty = target("/OptionalResource/fromDouble").queryParam(PARAM_NAME, 1.1).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals(Double.valueOf(0.1), empty.readEntity(Double.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals(Double.valueOf(1.1), notEmpty.readEntity(Double.class));
     }
 }

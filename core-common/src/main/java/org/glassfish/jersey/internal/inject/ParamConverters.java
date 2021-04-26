@@ -27,6 +27,9 @@ import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -266,24 +269,31 @@ public class ParamConverters {
 
         @Override
         public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
-            return (rawType != Optional.class) ? null : new ParamConverter<T>() {
+            final Optionals optionals = Optionals.getOptional(rawType);
+            return (optionals == null) ? null : new ParamConverter<T>() {
 
                 @Override
                 public T fromString(String value) {
                     if (value == null) {
-                        return (T) Optional.empty();
+                        return (T) optionals.empty();
                     } else {
-                        ParameterizedType parametrized = (ParameterizedType) genericType;
-                        Type type = parametrized.getActualTypeArguments()[0];
-                        T val = aggregated.getConverter((Class<T>) type, type, annotations).fromString(value.toString());
-                        if (val != null) {
-                            return (T) Optional.of(val);
+                        if (genericType instanceof ParameterizedType) {
+                            // Optional is parameterized
+                            ParameterizedType parametrized = (ParameterizedType) genericType;
+                            Type type = parametrized.getActualTypeArguments()[0];
+                            T val = aggregated.getConverter((Class<T>) type, type, annotations).fromString(value.toString());
+                            if (val != null) {
+                                return (T) optionals.of(val);
+                            } else {
+                                /*
+                                 *  In this case we don't send Optional.empty() because 'value' is not null.
+                                 *  But we return null because the provider didn't find how to parse it.
+                                 */
+                                return null;
+                            }
                         } else {
-                            /*
-                             *  In this case we don't send Optional.empty() because 'value' is not null.
-                             *  But we return null because the provider didn't find how to parse it.
-                             */
-                            return null;
+                            // Others are not parameterized
+                            return (T) optionals.of(value);
                         }
                     }
                 }
@@ -300,6 +310,65 @@ public class ParamConverters {
             };
         }
 
+        private static enum Optionals {
+
+            OPTIONAL(Optional.class) {
+                @Override
+                Object empty() {
+                    return Optional.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return Optional.of(value);
+                }
+            }, OPTIONAL_INT(OptionalInt.class) {
+                @Override
+                Object empty() {
+                    return OptionalInt.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalInt.of(Integer.parseInt((String) value));
+                }
+            }, OPTIONAL_DOUBLE(OptionalDouble.class) {
+                @Override
+                Object empty() {
+                    return OptionalDouble.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalDouble.of(Double.parseDouble((String) value));
+                }
+            }, OPTIONAL_LONG(OptionalLong.class) {
+                @Override
+                Object empty() {
+                    return OptionalLong.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalLong.of(Long.parseLong((String) value));
+                }
+            };
+
+            private final Class<?> clazz;
+
+            private Optionals(Class<?> clazz) {
+                this.clazz = clazz;
+            }
+
+            private static Optionals getOptional(Class<?> clazz) {
+                for (Optionals optionals : Optionals.values()) {
+                    if (optionals.clazz == clazz) {
+                        return optionals;
+                    }
+                }
+                return null;
+            }
+
+            abstract Object empty();
+
+            abstract Object of(Object value);
+        }
     }
 
     /**
