@@ -178,10 +178,6 @@ public class CdiInterceptorWrapperExtension implements Extension {
     }
 
     /* package */ Cache<Class<?>, Boolean> getJaxRsResourceCache() {
-        /* CDI injection hack */
-        if (jaxRsResourceCache == null) {
-            jaxRsResourceCache = new Cache<>(clazz -> Resource.from(clazz) != null);
-        }
         return jaxRsResourceCache;
     }
 }
