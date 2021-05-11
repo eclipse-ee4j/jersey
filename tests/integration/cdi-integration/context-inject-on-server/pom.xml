@@ -44,7 +44,6 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>${cdi.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -65,8 +64,6 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <!-- latest 3.x -->
-            <version>${weld.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

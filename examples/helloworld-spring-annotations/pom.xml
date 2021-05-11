@@ -32,13 +32,13 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-spring4</artifactId>
+            <artifactId>jersey-spring5</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring4.version}</version>
+            <version>${spring5.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

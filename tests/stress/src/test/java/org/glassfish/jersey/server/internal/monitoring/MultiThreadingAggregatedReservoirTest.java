@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ public class MultiThreadingAggregatedReservoirTest {
     /*
      * Note that more than 5 seconds may require more than 1G heap memory.
      */
-    private static final int TEST_DURATION_MILLIS = 5_000;
+    private static final int TEST_DURATION_MILLIS = 1_000;
     private static final int SHUTDOWN_TIMEOUT_SECONDS = 120;
     private static final double DELTA = 0.0001;
 

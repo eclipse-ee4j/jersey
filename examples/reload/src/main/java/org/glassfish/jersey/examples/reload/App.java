@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -39,8 +40,6 @@ import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-
-import com.sun.nio.file.SensitivityWatchEventModifier;
 
 /**
  * Reload example application.
@@ -116,13 +115,28 @@ public class App {
                     new WatchEvent.Kind[]{
                             StandardWatchEventKinds.ENTRY_MODIFY
                     },
-                    SensitivityWatchEventModifier.HIGH);
+                    /* SensitivityWatchEventModifier.HIGH */ getWatchEventModifiers());
         }
 
         private void reloadApp(final File configFile) {
             LOGGER.info("Reloading resource classes:");
             final ResourceConfig rc = createResourceConfig(configFile);
             App.container.reload(rc);
+        }
+
+        /**
+         * @return sensitivity watch event modifier
+         */
+        private static WatchEvent.Modifier[] getWatchEventModifiers() {
+            String className = "com.sun.nio.file.SensitivityWatchEventModifier";
+            try {
+                Class<?> c = Class.forName(className);
+                Field f = c.getField("HIGH");
+                WatchEvent.Modifier modifier = WatchEvent.Modifier.class.cast(f.get(c));
+                return new WatchEvent.Modifier[] {modifier};
+            } catch (Exception e) {
+                return new WatchEvent.Modifier[] {};
+            }
         }
 
     }

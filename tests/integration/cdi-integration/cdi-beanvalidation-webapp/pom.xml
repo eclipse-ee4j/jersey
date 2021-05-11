@@ -50,7 +50,7 @@
                 <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
                 <exclusion>
                     <groupId>jakarta.el</groupId>
-                    <artifactId>el-api</artifactId>
+                    <artifactId>jakarta.el-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

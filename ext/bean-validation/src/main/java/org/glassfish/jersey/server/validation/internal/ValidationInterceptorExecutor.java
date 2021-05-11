@@ -82,8 +82,8 @@ final class ValidationInterceptorExecutor implements ValidationInterceptorContex
     @Override
     public void setArgs(final Object[] args) {
         if (args.length == this.args.length) {
-          // Replace the original arguments with the new ones
-          System.arraycopy(args, 0, this.args, 0, args.length);
+            // Replace the original arguments with the new ones
+            System.arraycopy(args, 0, this.args, 0, args.length);
         } else {
             this.args = args;
         }

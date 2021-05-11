@@ -38,6 +38,7 @@ grant codebase "file:${project.build.directory}/test-classes/-" {
   permission java.lang.RuntimePermission "accessDeclaredMembers";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
   permission java.lang.RuntimePermission "reflectionFactoryAccess";
+  permission java.lang.RuntimePermission "getProtectionDomain"; // mockito for JDK<16
 };
 
 grant codebase "file:${project.build.directory}/classes/-" {

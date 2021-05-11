@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -58,8 +58,8 @@ public class SupplierProxyTest {
         });
 
         Conversation conversation = injectionManager.getInstance(Conversation.class);
-        assertTrue(conversation.greeting.getClass().getName().startsWith("com.sun.proxy"));
-        assertFalse(conversation.greetingSupplier.getClass().getName().startsWith("com.sun.proxy"));
+        assertTrue(conversation.greeting.getClass().getName().contains(".proxy"));
+        assertFalse(conversation.greetingSupplier.getClass().getName().contains(".proxy"));
         injectionManager.shutdown();
     }
 
@@ -78,8 +78,9 @@ public class SupplierProxyTest {
         });
 
         Conversation conversation = injectionManager.getInstance(Conversation.class);
-        assertTrue(conversation.greeting.getClass().getName().startsWith("com.sun.proxy"));
-        assertFalse(conversation.greetingSupplier.getClass().getName().startsWith("com.sun.proxy"));
+
+        assertTrue(conversation.greeting.getClass().getName().contains(".proxy"));
+        assertFalse(conversation.greetingSupplier.getClass().getName().contains(".proxy"));
         injectionManager.shutdown();
     }
 }

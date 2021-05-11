@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -100,7 +100,7 @@ public abstract class AbstractHttpServiceTest {
                 // jakarta.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
 
-                mavenBundle("org.ops4j.pax.url", "pax-url-mvn"),
+                mavenBundle("org.ops4j.pax.url", "pax-url-mvn").versionAsInProject(),
                 junitBundles(),
 
                 // HK2
