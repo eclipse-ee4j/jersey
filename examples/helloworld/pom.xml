@@ -26,6 +26,11 @@
 
     <description>Jersey annotated resource class "Hello world" example.</description>
 
+    <properties>
+<!--        <graalvm.version>21.1.0</graalvm.version>-->
+        <graalvm.version>20.3.1</graalvm.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -113,7 +118,7 @@
             <id>native-image</id>
             <build>
                 <plugins>
-                    <plugin>
+                    <!--<plugin>
                         <groupId>io.helidon.build-tools</groupId>
                         <artifactId>helidon-maven-plugin</artifactId>
                         <version>2.1.2</version>
@@ -124,6 +129,29 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>-->
+                    <plugin>
+                        <groupId>org.graalvm.nativeimage</groupId>
+                        <artifactId>native-image-maven-plugin</artifactId>
+                        <version>${graalvm.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <imageName>${project.artifactId}-native</imageName>
+                            <mainClass>org.glassfish.jersey.examples.helloworld.App</mainClass>
+                            <buildArgs>
+                                <buildArg>--report-unsupported-elements-at-runtime</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                            </buildArgs>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -162,9 +190,15 @@
             </build>
             <dependencies>
                 <dependency>
-                    <groupId>io.helidon.integrations.graal</groupId>
-                    <artifactId>helidon-graal-native-image-extension</artifactId>
-                    <version>2.2.1</version>
+                    <groupId>org.graalvm.sdk</groupId>
+                    <artifactId>graal-sdk</artifactId>
+                    <version>${graalvm.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                    <version>1.2.2</version>
                 </dependency>
             </dependencies>
         </profile>
