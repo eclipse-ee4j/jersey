@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -185,7 +185,7 @@ public class HeaderUtilsTest {
     }
 
     @Test
-    public void testgetPreferredCookie(){
+    public void testGetPreferredCookie(){
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2000, Calendar.JANUARY, 1);
@@ -225,6 +225,15 @@ public class HeaderUtilsTest {
 
         assertEquals(identicalNewCookie, HeaderUtils.getPreferredCookie(identicalNewCookie, identicalNewCookie1));
 
+    }
+
+    @Test
+    public void testGetPreferredCookieWithNullPath() {
+        NewCookie first = new NewCookie("NAME", "VALUE");
+        NewCookie second = new NewCookie("NAME", "VALUE");
+        NewCookie returnedCookie = HeaderUtils.getPreferredCookie(first, second);
+
+        assertEquals(first, returnedCookie);
     }
 
 }
