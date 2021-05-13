@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,14 +32,14 @@ import org.glassfish.jersey.internal.util.ExceptionUtils;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import org.hamcrest.core.Is;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -53,7 +53,7 @@ import static org.mockito.Matchers.same;
  *
  * @author Marek Potociar
  */
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class ClientRequestTest {
 
     @Mock
@@ -61,9 +61,16 @@ public class ClientRequestTest {
     @Mock
     private GenericType<?> entityType;
 
+    private AutoCloseable mockito;
+
     @Before
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        mockito = MockitoAnnotations.openMocks(this);
+    }
+
+    @After
+    public void closeMocks() throws Exception {
+        mockito.close();
     }
 
     /**

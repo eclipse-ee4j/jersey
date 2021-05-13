@@ -629,7 +629,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
@@ -1517,6 +1517,12 @@
             </dependency>
 
             <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>${cdi2.api.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jta.api.version}</version>
@@ -1877,6 +1883,11 @@
                 <artifactId>weld-se-core</artifactId>
                 <version>${weld.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.weld.servlet</groupId>
+                <artifactId>weld-servlet</artifactId>
+                <version>${weld.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>jakarta.validation</groupId>
@@ -1953,7 +1964,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
+                <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1967,7 +1978,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>6.0.3</version>
+                <version>7.0.0</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2077,7 +2088,7 @@
         <jmockit.version>1.44</jmockit.version>
         <junit5.version>5.6.0</junit5.version>
         <kryo.version>4.0.1</kryo.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.43.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -2100,7 +2111,7 @@
         <surefire.version>3.0.0-M3</surefire.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>4.0.0.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
+        <weld.version>4.0.1.SP1</weld.version>
         <validation.impl.version>7.0.0.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>

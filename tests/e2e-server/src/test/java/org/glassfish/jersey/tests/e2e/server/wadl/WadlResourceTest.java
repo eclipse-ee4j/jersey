@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -1237,8 +1237,13 @@ public class WadlResourceTest {
             final Resource resource =
                     (Resource) application.getResources().get(0).getResource().get(0).getMethodOrResource().get(0);
 
-            assertThatMethodContainsRR(resource, "myMethod1", 0);
-            assertThatMethodContainsRR(resource, "myMethod2", 1);
+            try {
+                assertThatMethodContainsRR(resource, "myMethod1", 0);
+                assertThatMethodContainsRR(resource, "myMethod2", 1);
+            } catch (AssertionError e) {
+                assertThatMethodContainsRR(resource, "myMethod1", 1);
+                assertThatMethodContainsRR(resource, "myMethod2", 0);
+            }
 
         }
 

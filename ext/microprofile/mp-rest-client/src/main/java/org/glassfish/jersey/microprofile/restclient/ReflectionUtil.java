@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,15 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
+import org.glassfish.jersey.internal.util.collection.LazyUnsafeValue;
+import org.glassfish.jersey.internal.util.collection.UnsafeValue;
+import org.glassfish.jersey.internal.util.collection.Values;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -47,15 +54,31 @@ final class ReflectionUtil {
                 Thread.currentThread().getContextClassLoader(),
                 new Class[] {restClientClass},
                 (proxy, m, args) -> {
-                    Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
-                            .getDeclaredConstructor(Class.class);
-                    constructor.setAccessible(true);
-                    return constructor.newInstance(restClientClass)
+                    final MethodHandles.Lookup lookup = JdkVersion.getJdkVersion().getMajor() > 1
+                            ? privateLookupJDK11(restClientClass) : privateLookupJDK8(restClientClass);
+                    return lookup
                             .in(restClientClass)
                             .unreflectSpecial(m, restClientClass)
                             .bindTo(proxy)
                             .invokeWithArguments(args);
                 }));
+    }
+
+    private static LazyUnsafeValue<Method, Exception> privateLookup = Values.lazy((UnsafeValue<Method, Exception>)
+        () -> MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class)
+    );
+
+    private static MethodHandles.Lookup privateLookupJDK11(Class<?> restClientClass)
+            throws Exception {
+        return (MethodHandles.Lookup) privateLookup.get().invoke(null, restClientClass, MethodHandles.lookup());
+    }
+
+    private static MethodHandles.Lookup privateLookupJDK8(Class<?> restClientClass)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        final Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
+                .getDeclaredConstructor(Class.class);
+        constructor.setAccessible(true); //JEP 396 issue
+        return constructor.newInstance(restClientClass);
     }
 
 }

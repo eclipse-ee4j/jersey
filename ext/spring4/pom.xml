@@ -203,5 +203,23 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>ignore.on.jdk16</id>
+            <!-- Spring 4 does not support JDK 16 at the moment, and it is superseded by Spring 5.2-5.3 -->
+            <activation>
+                <jdk>[16,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

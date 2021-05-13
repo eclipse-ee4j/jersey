@@ -150,8 +150,8 @@ public class LoggingInterceptorTest {
 
     private Answer<?> chunk(int size, char filler) {
         return invocation -> {
-            byte[] buf = invocation.getArgumentAt(0, byte[].class);
-            int offset = invocation.getArgumentAt(1, Integer.class);
+            byte[] buf = invocation.getArgument(0, byte[].class);
+            int offset = invocation.getArgument(1, Integer.class);
             Arrays.fill(buf, offset, offset + size, (byte) filler);
             return size;
         };
