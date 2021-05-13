@@ -1,0 +1,10 @@
+{
+  "resources": [
+    {
+      "pattern": "version.properties"
+    },
+    {
+      "pattern": "org/glassfish/grizzly/version.properties"
+    }
+  ]
+}

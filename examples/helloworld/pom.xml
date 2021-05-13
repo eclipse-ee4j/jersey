@@ -145,12 +145,6 @@
                         <configuration>
                             <imageName>${project.artifactId}-native</imageName>
                             <mainClass>org.glassfish.jersey.examples.helloworld.App</mainClass>
-                            <buildArgs>
-                                <buildArg>--report-unsupported-elements-at-runtime</buildArg>
-                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
-                                <buildArg>--verbose</buildArg>
-                                <buildArg>--no-fallback</buildArg>
-                            </buildArgs>
                         </configuration>
                     </plugin>
                     <plugin>

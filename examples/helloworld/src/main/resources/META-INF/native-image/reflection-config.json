@@ -1,0 +1,12 @@
+[
+    {
+        "name": "org.glassfish.grizzly.Grizzly",
+        "allDeclaredConstructors": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.glassfish.hk2.api.ServiceLocator",
+        "allDeclaredConstructors": true,
+        "allPublicMethods": true
+    }
+]
