@@ -2,11 +2,50 @@
     {
         "name": "org.glassfish.grizzly.Grizzly",
         "allDeclaredConstructors": true,
-        "allPublicMethods": true
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
+    },
+    {
+        "name": "org.glassfish.jersey.internal.util.ReflectionHelper",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
+    },
+    {
+        "name": "org.glassfish.jersey.internal.inject.InjectionManagerFactory",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
+    },
+    {
+        "name": "org.glassfish.jersey.internal.inject.Injections",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
+    },
+    {
+        "name": "org.glassfish.jersey.internal.ServiceFinder",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
     },
     {
         "name": "org.glassfish.hk2.api.ServiceLocator",
         "allDeclaredConstructors": true,
-        "allPublicMethods": true
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
+    },
+    {
+        "name": "org.glassfish.hk2.utilities.ServiceLocatorUtilities",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allPublicMethods": true,
+        "allDeclaredMethods": true
     }
 ]

@@ -1,10 +1,19 @@
 {
-  "resources": [
-    {
-      "pattern": "version.properties"
-    },
-    {
-      "pattern": "org/glassfish/grizzly/version.properties"
-    }
+  "resources":{
+    "includes":[
+      {"pattern":"\\QMETA-INF/services/javax.ws.rs.ext.RuntimeDelegate\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.hk2.extension.ServiceLocatorGenerator\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.jersey.internal.inject.InjectionManagerFactory\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.jersey.internal.spi.AutoDiscoverable\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.jersey.model.internal.spi.ParameterServiceProvider\\E"},
+      {"pattern":"\\QMETA-INF/services/org.glassfish.jersey.server.spi.ContainerProvider\\E"},
+      {"pattern":"\\Qorg/glassfish/grizzly/version.properties\\E"},
+      {"pattern":"\\Qorg/glassfish/jersey/internal/build.properties\\E"}
+    ]},
+  "bundles":[
+    {"name":"javax.xml.bind.Messages"},
+    {"name":"org.glassfish.jersey.internal.localization"},
+    {"name":"org.glassfish.jersey.server.internal.localization"}
   ]
 }
