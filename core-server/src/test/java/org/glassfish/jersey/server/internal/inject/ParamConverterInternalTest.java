@@ -285,7 +285,7 @@ public class ParamConverterInternalTest extends AbstractTest {
     public void testDateParamConverterIsChosenForDateString() {
         initiateWebApplication();
         final ParamConverter<Date> converter =
-                new ParamConverters.AggregatedProvider().getConverter(Date.class, Date.class, null);
+                new ParamConverters.AggregatedProvider(null).getConverter(Date.class, Date.class, null);
 
         assertEquals("Unexpected date converter provider class",
                 ParamConverters.DateProvider.class, converter.getClass().getEnclosingClass());
