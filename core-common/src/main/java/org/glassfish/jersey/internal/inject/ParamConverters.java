@@ -21,11 +21,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -37,6 +37,7 @@ import javax.ws.rs.ext.ParamConverterProvider;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 
 /**
@@ -257,11 +258,11 @@ public class ParamConverters {
     public static class OptionalProvider implements ParamConverterProvider {
 
         // Delegates to this provider when the type of Optional is extracted.
-        private final AggregatedProvider aggregated;
+        private final InjectionManager manager;
 
         @Inject
-        public OptionalProvider(AggregatedProvider aggregated) {
-            this.aggregated = aggregated;
+        public OptionalProvider(InjectionManager manager) {
+            this.manager = manager;
         }
 
         @Override
@@ -273,18 +274,20 @@ public class ParamConverters {
                     if (value == null) {
                         return (T) Optional.empty();
                     } else {
-                        ParameterizedType parametrized = (ParameterizedType) genericType;
-                        Type type = parametrized.getActualTypeArguments()[0];
-                        T val = aggregated.getConverter((Class<T>) type, type, annotations).fromString(value.toString());
-                        if (val != null) {
-                            return (T) Optional.of(val);
-                        } else {
-                            /*
-                             *  In this case we don't send Optional.empty() because 'value' is not null.
-                             *  But we return null because the provider didn't find how to parse it.
-                             */
-                            return null;
+                        final List<ClassTypePair> ctps = ReflectionHelper.getTypeArgumentAndClass(genericType);
+                        final ClassTypePair ctp = (ctps.size() == 1) ? ctps.get(0) : null;
+
+                        for (ParamConverterProvider provider : Providers.getProviders(manager, ParamConverterProvider.class)) {
+                            final ParamConverter<?> converter = provider.getConverter(ctp.rawClass(), ctp.type(), annotations);
+                            if (converter != null) {
+                                return (T) Optional.of(value).map(s -> converter.fromString(value));
+                            }
                         }
+                        /*
+                         *  In this case we don't send Optional.empty() because 'value' is not null.
+                         *  But we return null because the provider didn't find how to parse it.
+                         */
+                        return null;
                     }
                 }
 
@@ -313,8 +316,8 @@ public class ParamConverters {
         /**
          * Create new aggregated {@link ParamConverterProvider param converter provider}.
          */
-        public AggregatedProvider() {
-            providers = new ParamConverterProvider[] {
+        public AggregatedProvider(InjectionManager manager) {
+            this.providers = new ParamConverterProvider[] {
                     // ordering is important (e.g. Date provider must be executed before String Constructor
                     // as Date has a deprecated String constructor
                     new DateProvider(),
@@ -323,7 +326,7 @@ public class ParamConverters {
                     new CharacterProvider(),
                     new TypeFromString(),
                     new StringConstructor(),
-                    new OptionalProvider(this)
+                    new OptionalProvider(manager)
             };
         }
 
