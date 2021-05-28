@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent" > %ents; ]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="graalvm-native-image">
+    <title>GraalVM native-image generation</title>
+    <para>
+        This chapter describes Jersey's compatibility with GraalVM native image. This functionality is available since
+        Jersey 2.35 and is under development and configuration. For now Jersey provides native image configuration
+        basics for some modules and example on how to really generate native image for an existing application.
+    </para>
+    <section xml:id="supported_modules">
+        <title>Modules with GraalVM native image support</title>
+        <para>
+            Actually Jersey provides basic support for native image generation within following modules:
+            <literal>jersey-common</literal>,<literal>jersey-server</literal>,<literal>jersey-hk2</literal>.
+
+            This support means that most of reflection and resource related settings are extracted into reflect-config
+            and resource-config JSON files to be used while generating a native image. Those files are included in
+            the native image generation process automatically (unless some tricky configuration is applied), so there is
+            no need to include those files manually and/or duplicate their contents in some custom configuration.
+        </para>
+    </section>
+    <section xml:id="native-image">
+        <title>HelloWorld native image generation</title>
+        <para>
+            The example for the GraalVM native image generation is hidden under examples/helloworld example.
+            To generate native image there it's required to perform some preliminary steps:
+            <simplelist>
+                <member>Download GraalVM at least 20.3.2 version</member>
+                <member>Set JAVA_HOME to point to that [GraalVM_HOME]</member>
+                <member>Perform <markup>$JAVA_HOME/bin/gu install native-image</markup> because native-image tool is not bundled within GraalVM itself</member>
+                <member>Download Jersey examples source codes (preferable some released version like 2.34),
+                    and go to [path_to_jersey_examples]/examples/helloworld</member>
+                <member>Run <markup>mvn -Pnative-image clean package -DskipTests</markup></member>
+            </simplelist>
+        </para>
+        <para>
+            If all was correctly performed from previous steps the native image shall be already generated inside the targed folder
+            of the helloworld example with the name helloworld-native and it's possible to run it by
+            <programlisting language="bash">target/./helloworld-native</programlisting>
+            After it's run, console should print our following output:
+            <screen linenumbering="unnumbered">
+                "Hello World" Jersey Example App
+                May 27, 2021 1:37:49 PM org.glassfish.jersey.server.wadl.WadlFeature configure
+                WARNING: JAX-B API not found . WADL feature is disabled.
+                May 27, 2021 1:37:49 PM org.glassfish.grizzly.http.server.NetworkListener start
+                INFO: Started listener bound to [localhost:8080]
+                May 27, 2021 1:37:49 PM org.glassfish.grizzly.http.server.HttpServer start
+                INFO: [HttpServer] Started.
+                Application started.
+                Try out http://localhost:8080/base/helloworld
+                Stop the application using CTRL+C
+            </screen>
+            If you see this, you can open given link in browser and check how application actually works.
+            In general we are done here and you can use that example to generate native images for your own projects.
+        </para>
+    </section>
+    <section xml:id="undercover">
+        <title>What's under the cover</title>
+        <para>
+            For the example above the following command line was used:
+            <programlisting language="bash">
+                -H:EnableURLProtocols=http,https
+                --initialize-at-build-time=org.glassfish.jersey.client.internal.HttpUrlConnector
+                -H:+ReportExceptionStackTraces
+                --verbose
+                --no-fallback
+                --report-unsupported-elements-at-runtime
+            </programlisting>
+            This might be useful to generate another native image. It's possible to add another bunch of parameters to the command line
+            (and put those into the <literal>native-image.properties</literal> file inside of your project). Important parameter here is
+            --initialize-at-build-time (opposite to --initialize-at-run-time) and --no-fallback which says to the native
+            image to generate pure native image with everything bundled inside the image and not just fall back wrapper for JDK.
+        </para>
+        <para>
+            Another important aspect for generating of native image is proper listing of reflection classes (classes which uses reflection
+            in an application). For those needs there is a native image agent which helps to generate those lists automatically.
+            In order to generate list of reflection classes (and JNI classes and resources) it is required to run:
+            <programlisting language="bash">$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=[output_location] -jar [app_name].jar</programlisting>
+            and afterwords the [output_location] directory will be created with generated lists (in JSON format). Those files can be
+            included as is into native image generation, but it's very preferable to edit them manually to reduce possible ambiguous classes listings.
+        </para>
+    </section>
+</chapter>
