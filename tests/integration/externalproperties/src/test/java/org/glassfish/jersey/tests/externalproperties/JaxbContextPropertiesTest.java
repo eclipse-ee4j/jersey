@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.externalproperties;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
@@ -116,6 +117,7 @@ public class JaxbContextPropertiesTest extends JerseyTest {
     @Override
     protected void configureClient(ClientConfig config) {
         config.connectorProvider(connectorProvider);
+        config.property(ClientProperties.READ_TIMEOUT, 1000);
     }
 
     @Before
@@ -161,7 +163,11 @@ public class JaxbContextPropertiesTest extends JerseyTest {
             Assert.assertEquals(title, response.readEntity(Book.class).getTitle());
             response.close();
         } catch (Exception e) {
-            Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
+            if (e.getCause().getCause() != null) {
+                Assert.assertEquals("wrong.factory", e.getCause().getCause().getMessage());
+            } else if (e.getCause() != null) {
+                Assert.assertEquals("Timeout exceeded", e.getCause().getMessage());
+            }
         }
     }
 
