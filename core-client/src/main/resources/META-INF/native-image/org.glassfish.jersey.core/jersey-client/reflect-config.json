@@ -1,0 +1,16 @@
+[
+  {
+    "name":"org.glassfish.jersey.client.ChunkedInputReader",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.client.ClientAsyncExecutor",
+    "allDeclaredMethods":true
+  },
+  {
+    "name":"org.glassfish.jersey.client.ClientBackgroundScheduler",
+    "allDeclaredMethods":true
+  }
+]
