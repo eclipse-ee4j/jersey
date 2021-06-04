@@ -238,11 +238,7 @@ public class HeaderUtilsTest {
 
     @Test
     public void testGetPreferredCookieWithNullInput() {
-        NewCookie first = null;
-        NewCookie second = null;
-        NewCookie returnedCookie = HeaderUtils.getPreferredCookie(first, second);
-
-        assertNull(returnedCookie);
+        assertNull(HeaderUtils.getPreferredCookie(null, null));
     }
 
 }
