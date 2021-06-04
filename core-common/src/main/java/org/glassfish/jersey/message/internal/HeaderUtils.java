@@ -311,21 +311,11 @@ public final class HeaderUtils {
      *              - if equal, compare path length.
      */
     public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
-
-        if (first == null) {
-            return second;
-        } else if (second == null) {
-            return first;
-        }
-
-        if (first.getMaxAge() != second.getMaxAge()) {
-            return Comparator.comparing(NewCookie::getMaxAge).compare(first, second) > 0 ? first : second;
-        } else if (first.getExpiry() != null && second.getExpiry() != null && !first.getExpiry().equals(second.getExpiry())) {
-            return Comparator.comparing(NewCookie::getExpiry).compare(first, second) > 0 ? first : second;
-        } else if (first.getPath() != null && second.getPath() != null) {
-            return first.getPath().length() > second.getPath().length() ? first : second;
-        }
-        return first;
+        return Comparator.nullsFirst(
+                Comparator.comparingInt(NewCookie::getMaxAge)
+                        .thenComparing(NewCookie::getExpiry, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(NewCookie::getPath, Comparator.nullsLast(Comparator.comparing(String::length))))
+                .compare(first, second) > 0 ? first : second;
     }
 
     /**

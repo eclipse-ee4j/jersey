@@ -236,4 +236,13 @@ public class HeaderUtilsTest {
         assertEquals(first, returnedCookie);
     }
 
+    @Test
+    public void testGetPreferredCookieWithNullInput() {
+        NewCookie first = null;
+        NewCookie second = null;
+        NewCookie returnedCookie = HeaderUtils.getPreferredCookie(first, second);
+
+        assertNull(returnedCookie);
+    }
+
 }
