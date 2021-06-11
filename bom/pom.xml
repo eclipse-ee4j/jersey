@@ -63,11 +63,11 @@
                 <artifactId>jersey-apache-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.connectors</groupId>
-                <artifactId>jersey-helidon-connector</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+<!--        <dependency-->
+<!--            <groupId>org.glassfish.jersey.connectors</groupId-->
+<!--            <artifactId>jersey-helidon-connector</artifactId-->
+<!--            <version>${project.version}</version-->
+<!--        </dependency-->
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-grizzly-connector</artifactId>
