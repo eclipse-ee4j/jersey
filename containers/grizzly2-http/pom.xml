@@ -17,7 +17,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -32,6 +33,14 @@
 
     <description>Grizzly 2 Http Container.</description>
 
+    <properties>
+        <!-- alternatives: JerseyHttpClientThread, JettyClientThread in the same package -->
+        <client>JdkHttpClientThread</client>
+        <clientImplPackage>org.glassfish.jersey.grizzly2.httpserver.test.tools</clientImplPackage>
+        <clientImpl>${clientImplPackage}.${client}</clientImpl>
+        <testMemory>-Xms160m -Xmx160m -Xss512k</testMemory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.inject</groupId>
@@ -40,6 +49,40 @@
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-http2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-npn-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.http2</groupId>
+            <artifactId>http2-http-client-transport</artifactId>
+            <version>${jetty.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -60,7 +103,87 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                    memory settings:
+                      - to avoid unstable JVM process; fail fast, don't produce dump
+                      - memory sizes must reflect count of clients!
+                    test time:
+                      - must not affect stability of the server; if it does, the test detected a bug
+                      - 10 seconds should be enough to process thousands of requests, if there would
+                        be some leak, it should be visible
+                    client count:
+                      - each client is reusable to produce parallel requests, but each also consumes
+                        significiant amount of memory, in this case shared with the server.
+                    -->
+                    <argLine>
+                        ${testMemory} -XX:+CrashOnOutOfMemoryError -XX:-HeapDumpOnOutOfMemoryError
+                        -DtestTime=10 -DclientCount=30
+                        -DclientImpl=${clientImpl}
+                    </argLine>
+                    <trimStackTrace>false</trimStackTrace>
+                    <parallel>methods</parallel>
+                    <threadCountMethods>3</threadCountMethods>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>jdk11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-testCompile</id>
+                                    <configuration>
+                                        <source>11</source>
+                                        <target>11</target>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-testCompile</id>
+                                    <configuration>
+                                        <!--
+                                        Jetty client is not compatible with JDK8, older versions need different setup
+                                        JDK HTTP client is not in JDK8 at all
+                                        Jersey Client doesn't support HTTP/2 (at least not directly)
+                                        -->
+                                        <skip>true</skip>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>
