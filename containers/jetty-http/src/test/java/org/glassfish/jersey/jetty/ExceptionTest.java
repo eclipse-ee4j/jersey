@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,11 @@
 
 package org.glassfish.jersey.jetty;
 
+import org.apache.http.HttpHost;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHttpRequest;
 import org.junit.Test;
 
 import javax.ws.rs.GET;
@@ -28,6 +33,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
+import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,6 +48,19 @@ public class ExceptionTest extends AbstractJettyServerTester {
             throw new WebApplicationException(status);
         }
 
+    }
+
+    @Test
+    public void test400StatusCodeForIllegalSymbolsInURI() throws IOException {
+        startServer(ExceptionResource.class);
+        URI testUri = getUri().build();
+        String incorrectFragment = "&params[0]=test_status";
+        BasicHttpRequest request = new BasicHttpRequest("GET", testUri + incorrectFragment);
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+
+        CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);
+
+        assertEquals(400, response.getStatusLine().getStatusCode());
     }
 
     @Test
