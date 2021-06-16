@@ -28,7 +28,6 @@
 
     <properties>
 <!--        <graalvm.version>21.1.0</graalvm.version>-->
-        <graalvm.version>20.3.2</graalvm.version>
     </properties>
 
     <dependencies>
@@ -106,12 +105,6 @@
             </build>
             <dependencies>
                 <dependency>
-                    <groupId>org.graalvm.sdk</groupId>
-                    <artifactId>graal-sdk</artifactId>
-                    <version>${graalvm.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
                     <groupId>jakarta.activation</groupId>
                     <artifactId>jakarta.activation-api</artifactId>
                     <version>${jakarta.activation.version}</version>
@@ -123,7 +116,7 @@
                 <dependency>
                     <groupId>org.osgi</groupId>
                     <artifactId>org.osgi.framework</artifactId>
-                    <version>1.10.0</version>
+                    <version>${osgi.framework.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.hk2</groupId>

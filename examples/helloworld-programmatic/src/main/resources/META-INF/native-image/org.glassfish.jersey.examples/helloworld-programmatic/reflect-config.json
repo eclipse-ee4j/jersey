@@ -37,11 +37,15 @@
     "name":"javax.xml.transform.stream.StreamSource"
   },
   {
-    "name":"org.glassfish.jersey.examples.helloworld.HelloWorldResource",
+    "name":"org.glassfish.jersey.examples.helloworld.App$2",
     "allDeclaredFields":true,
     "allDeclaredMethods":true,
-    "allPublicMethods":true,
-    "allDeclaredConstructors":true,
-    "allPublicConstructors":true
+    "allPublicMethods":true
+  },
+  {
+    "name":"org.glassfish.jersey.examples.helloworld.App$3",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true
   }
 ]
