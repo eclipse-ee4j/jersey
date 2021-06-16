@@ -82,6 +82,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private static final Type RESPONSE_TYPE = (new GenericType<Ref<Response>>() {}).getType();
 
     private static final int INTERNAL_SERVER_ERROR = javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    private static final javax.ws.rs.core.Response.Status BAD_REQUEST_STATUS = javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
     /**
      * Cached value of configuration property
@@ -193,13 +194,12 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private void setResponseForInvalidUri(final HttpServletResponse response, final Throwable throwable) throws IOException {
         LOGGER.log(Level.FINER, "Error while processing request.", throwable);
 
-        final javax.ws.rs.core.Response.Status badRequest = javax.ws.rs.core.Response.Status.BAD_REQUEST;
         if (configSetStatusOverSendError) {
             response.reset();
             //noinspection deprecation
-            response.setStatus(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+            response.setStatus(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
         } else {
-            response.sendError(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+            response.sendError(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
         }
     }
 

