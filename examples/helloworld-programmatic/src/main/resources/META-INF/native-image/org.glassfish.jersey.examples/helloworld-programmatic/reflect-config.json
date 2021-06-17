@@ -6,13 +6,6 @@
     "name":"javax.activation.DataSource"
   },
   {
-    "name":"javax.inject.Named",
-    "allDeclaredMethods":true
-  },
-  {
-    "name":"javax.activation.DataSource"
-  },
-  {
     "name":"javax.inject.Singleton",
     "allDeclaredMethods":true
   },
