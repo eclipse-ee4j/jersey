@@ -1,0 +1,46 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('Jersey build') {
+            parallel {
+                stage('JDK 8 ') {
+                    agent any
+                    tools {
+                        jdk 'oracle-jdk8-latest'
+                        maven 'apache-maven-latest'
+                    }
+                    steps {
+                        sh '''
+                                bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
+                            '''
+                    }
+                }
+                stage('JDK 11 ') {
+                    agent any
+                    tools {
+                        jdk 'openjdk-jdk11-latest'
+                        maven 'apache-maven-latest'
+                    }
+                    steps {
+                        sh '''
+                                bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
+                            '''
+                    }
+                }
+                stage('JDK 16 ') {
+                    agent any
+                    tools {
+                        jdk 'openjdk-jdk16-latest'
+                        maven 'apache-maven-latest'
+                    }
+                    steps {
+                        sh '''
+                                bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
+                            '''
+                    }
+                }
+            }
+        }
+    }
+}
