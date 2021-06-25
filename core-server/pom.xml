@@ -156,6 +156,9 @@
                     <threadCount>1</threadCount>
                     <forkCount>1C</forkCount>
                     <reuseForks>true</reuseForks>
+                    <systemPropertyVariables>
+                        <jersey.config.server.monitoring.collision.buffer.power>3</jersey.config.server.monitoring.collision.buffer.power>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

@@ -16,13 +16,15 @@
 
 package org.glassfish.jersey.server.internal.monitoring;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.TimeUnit;
 
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeReservoir;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests of {@link TimeWindowStatisticsImpl}.
@@ -32,11 +34,14 @@ import org.junit.Test;
  */
 public class TimeWindowStatisticsImplTest {
 
+    // Value is set as system property in maven-surefire-plugin
+    private static final int COLLISION_BUFFER_POWER = 3;
     private static final double DELTA = 0.0001;
 
     @Test
-    public void defaultValueLoaded() {
-        assertEquals(256, ReservoirConstants.COLLISION_BUFFER);
+    public void jvmLoaded() {
+        assertEquals(COLLISION_BUFFER_POWER, ReservoirConstants.COLLISION_BUFFER_POWER);
+        assertEquals(8, ReservoirConstants.COLLISION_BUFFER);
     }
 
     @Test
