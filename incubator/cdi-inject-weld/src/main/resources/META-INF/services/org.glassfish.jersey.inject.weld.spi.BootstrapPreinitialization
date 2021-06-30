@@ -1,0 +1,2 @@
+org.glassfish.jersey.inject.weld.internal.managed.ClientBootstrapPreinitialization
+org.glassfish.jersey.inject.weld.internal.managed.ServerBootstrapPreinitialization

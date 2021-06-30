@@ -55,11 +55,11 @@ public class ParentInject implements ParentChecker {
     @Inject
     protected HttpHeaders injectHttpHeaders;
 
-    @Context
-    protected ParamConverterProvider contextParamConverterProvider;
-
-    @Inject
-    protected ParamConverterProvider injectParamConverterProvider;
+//    @Context
+//    protected ParamConverterProvider contextParamConverterProvider;
+//
+//    @Inject
+//    protected ParamConverterProvider injectParamConverterProvider;
 
     @Context
     protected PropertiesDelegate contextPropertiesDelegate;
@@ -140,7 +140,7 @@ public class ParentInject implements ParentChecker {
         injected &= checkConfiguration(injectConfiguration, stringBuilder);
         injected &= InjectionChecker.checkHttpHeaders(injectHttpHeaders, stringBuilder);
         injected &= checkPropertiesDelegate(injectPropertiesDelegate, stringBuilder);
-        injected &= InjectionChecker.checkParamConverterProvider(injectParamConverterProvider, stringBuilder);
+//        injected &= InjectionChecker.checkParamConverterProvider(injectParamConverterProvider, stringBuilder);
         injected &= InjectionChecker.checkProviders(injectProviders, stringBuilder);
         injected &= InjectionChecker.checkRequest(injectRequest, stringBuilder);
         injected &= InjectionChecker.checkResourceContext(injectResourceContext, stringBuilder);
@@ -163,7 +163,7 @@ public class ParentInject implements ParentChecker {
         injected &= checkApplication(contextApplication, stringBuilder);
         injected &= checkConfiguration(contextConfiguration, stringBuilder);
         injected &= InjectionChecker.checkHttpHeaders(contextHttpHeaders, stringBuilder);
-        injected &= InjectionChecker.checkParamConverterProvider(contextParamConverterProvider, stringBuilder);
+//        injected &= InjectionChecker.checkParamConverterProvider(contextParamConverterProvider, stringBuilder);
         injected &= checkPropertiesDelegate(contextPropertiesDelegate, stringBuilder);
         injected &= InjectionChecker.checkProviders(contextProviders, stringBuilder);
         injected &= InjectionChecker.checkRequest(contextRequest, stringBuilder);
