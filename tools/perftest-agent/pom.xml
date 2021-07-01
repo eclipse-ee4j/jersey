@@ -55,6 +55,7 @@
                         <manifestEntries>
                             <Premain-Class>org.glassfish.jersey.perftest.agent.PerfTestAgent</Premain-Class>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                            <Automatic-Module-Name>${groupId}.${name}</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
