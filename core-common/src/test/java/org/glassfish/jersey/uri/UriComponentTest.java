@@ -386,4 +386,40 @@ public class UriComponentTest {
         assertEquals(true, UriComponent.valid("/x%20y", UriComponent.Type.PATH));
     }
 
+    @Test
+    public void testValidateFragment() {
+        assertEquals(false, UriComponent.valid(" ", UriComponent.Type.FRAGMENT));
+        assertEquals(false, UriComponent.valid("#", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("/", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("?", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid(":", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("@", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("x", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("A", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("2", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("0", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("-", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid(".", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("_", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("~", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("%20", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("!", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("$", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("&", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("'", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("(", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid(")", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("*", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("+", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid(",", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid(";", UriComponent.Type.FRAGMENT));
+        assertEquals(true, UriComponent.valid("=", UriComponent.Type.FRAGMENT));
+    }
+
+    @Test
+    public void testEncodeFragment() {
+        assertEquals("/?:@-._~!$&'()*+,;=Text42%20%23%25",
+                UriComponent.encode("/?:@-._~!$&'()*+,;=Text42 #%", UriComponent.Type.FRAGMENT));
+    }
+
 }
