@@ -16,6 +16,13 @@
 
 package org.glassfish.jersey.test.inmemory;
 
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spi.AbstractContainerLifecycleListener;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.AfterClass;
+import org.junit.Test;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,11 +35,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -55,7 +59,8 @@ public class InMemoryContainerTest extends JerseyTest {
 
     @Override
     protected ResourceConfig configure() {
-        return new ResourceConfig(TestResource.class, Resource1956.class, Resource2091.class, Resource2030.class);
+        return new ResourceConfig(TestResource.class, Resource1956.class, Resource2091.class, Resource2030.class,
+                ContainerLifecycleSpy.class);
     }
 
     /**
@@ -158,6 +163,23 @@ public class InMemoryContainerTest extends JerseyTest {
         }
     }
 
+
+    private static class ContainerLifecycleSpy extends AbstractContainerLifecycleListener {
+
+        private static final AtomicBoolean startupFlag = new AtomicBoolean();
+        private static final AtomicBoolean shutdownFlag = new AtomicBoolean();
+
+        @Override
+        public void onStartup(Container container) {
+            startupFlag.set(true);
+        }
+
+        @Override
+        public void onShutdown(Container container) {
+            shutdownFlag.set(true);
+        }
+    }
+
     /**
      * Reproducer for JERSEY-1956.
      */
@@ -195,5 +217,14 @@ public class InMemoryContainerTest extends JerseyTest {
             assertThat(ex.getStackTrace()[0].getClassName(),
                     equalTo(InMemoryConnector.InMemoryResponseWriter.class.getName()));
         }
+    }
+
+
+    @AfterClass
+    public static void afterClass() {
+        assertTrue("Startup wasn't invoked on ApplicationHandler",
+                ContainerLifecycleSpy.startupFlag.get());
+        assertTrue("Shutdown wasn't invoked on ApplicationHandler",
+                ContainerLifecycleSpy.shutdownFlag.get());
     }
 }
