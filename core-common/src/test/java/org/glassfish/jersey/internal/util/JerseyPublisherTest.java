@@ -165,6 +165,28 @@ public class JerseyPublisherTest {
         assertFalse(deadSubscriber.isCompleted());
     }
 
+    @Test
+    public void testCascadingClose() throws InterruptedException {
+        final CountDownLatch openLatch = new CountDownLatch(1);
+        final CountDownLatch writeLatch = new CountDownLatch(1);
+        final CountDownLatch closeLatch = new CountDownLatch(1);
+
+        final JerseyPublisher<String> publisher =
+            new JerseyPublisher<>(JerseyPublisher.PublisherStrategy.BLOCKING);
+        final PublisherTestSubscriber subscriber =
+            new PublisherTestSubscriber("SUBSCRIBER", openLatch, writeLatch, closeLatch);
+        publisher.subscribe(subscriber);
+        assertTrue(openLatch.await(200, TimeUnit.MILLISECONDS));
+
+        subscriber.receive(1);
+        publisher.publish("Zero");
+        assertTrue(writeLatch.await(1000, TimeUnit.MILLISECONDS));
+
+        publisher.close(false);     // must not call onComplete()
+        Thread.sleep(10000);
+        assertFalse(subscriber.isCompleted());
+    }
+
     class PublisherTestSubscriber implements Flow.Subscriber<String> {
 
         private final String name;

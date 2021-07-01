@@ -27,20 +27,22 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import static org.junit.Assert.assertEquals;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 public class WebAppFelixTest extends AbstractWebAppTest {
 
     private static final Logger LOGGER = Logger.getLogger(WebAppFelixTest.class.getName());
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
 
     @Override
     public List<Option> osgiRuntimeOptions() {
         return Arrays.asList(CoreOptions.options(
                 mavenBundle()
                         .groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin")
-                        .versionAsInProject()
-        )
+                        .versionAsInProject(),
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"))
         );
     }
 

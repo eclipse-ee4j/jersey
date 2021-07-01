@@ -46,6 +46,11 @@ public class Helper {
     private static final int port = getEnvVariable(TestProperties.CONTAINER_PORT, 8080);
 
     /**
+     * JAX-RS delegate property.
+     */
+    private static final String JAXRS_RUNTIME_DELEGATE_PROPERTY = "javax.ws.rs.ext.RuntimeDelegate";
+
+    /**
      * Returns an integer value of given system property, or a default value
      * as defined by the other method parameter, if the system property can
      * not be used.
@@ -128,6 +133,7 @@ public class Helper {
                 systemProperty("org.osgi.service.http.port").value(String.valueOf(port)),
                 systemProperty(TestProperties.CONTAINER_PORT).value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("javax.annotation"),
+                systemProperty(JAXRS_RUNTIME_DELEGATE_PROPERTY).value("org.glassfish.jersey.internal.RuntimeDelegateImpl"),
 
                 // javax.annotation has to go first!
                 mavenBundle().groupId("jakarta.annotation").artifactId("jakarta.annotation-api").versionAsInProject(),
