@@ -29,6 +29,7 @@ public class MyApplication extends ResourceConfig {
                 // register Jackson ObjectMapper resolver
                 MyObjectMapperProvider.class,
                 ExceptionMappingTestResource.class,
+                CompletableFutureResource.class,
                 JacksonFeature.class
         );
     }
