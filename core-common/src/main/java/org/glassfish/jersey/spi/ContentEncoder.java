@@ -33,6 +33,7 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import javax.annotation.Priority;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Standard contract for plugging in content encoding support. Provides a standard way of implementing encoding
@@ -93,6 +94,23 @@ public abstract class ContentEncoder implements ReaderInterceptor, WriterInterce
      */
     public abstract OutputStream encode(String contentEncoding, OutputStream entityStream) throws IOException;
 
+    /**
+     * Implementations of this method should take the entity stream, wrap it
+     * and return a stream that is encoded using the specified encoding.
+     * In contrast to {@link #encode(java.lang.String, java.io.OutputStream)},
+     * this method should ensure that partial responses are delivered in a
+     * timely fashion; in particular, the stream must not wait to receive all
+     * entity data before sending the first encoded byte.
+     * @param contentEncoding Encoding to be used to encode this entity -
+     * guaranteed to be one of the supported encoding values.
+     * @param entityStream Entity stream to be encoded.
+     * @return Encoded stream.
+     * @throws IOException if an IO error arises.
+     */
+    public OutputStream timeCriticalEncode(String contentEncoding, OutputStream entityStream) throws IOException {
+        return encode(contentEncoding, entityStream);
+    }
+
     @Override
     public final Object aroundReadFrom(ReaderInterceptorContext context) throws IOException, WebApplicationException {
         String contentEncoding = context.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
@@ -102,13 +120,31 @@ public abstract class ContentEncoder implements ReaderInterceptor, WriterInterce
         return context.proceed();
     }
 
+    /**
+     * A method that describes whether a response should send data quickly to
+     * the client.  If {@literal true} is returned then the client receives data
+     * in a timely fashion after {@link OutputStream#flush()} is called.  If
+     * {@literal false} is returned then the client may only receive data once
+     * the complete entity data has been processed.  There may be some penalty
+     * for returning {@literal true}.
+     * @param context The WriterInterceptor context of the response to a request.
+     * @return whether the response should send data quickly.
+     */
+    protected boolean isTimeCritical(WriterInterceptorContext context) {
+        MediaType type = context.getMediaType();
+        return type != null && type.isCompatible(MediaType.SERVER_SENT_EVENTS_TYPE);
+    }
+
     @Override
     public final void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
         // must remove Content-Length header since the encoded message will have a different length
 
         String contentEncoding = (String) context.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
         if (contentEncoding != null && getSupportedEncodings().contains(contentEncoding)) {
-            context.setOutputStream(encode(contentEncoding, context.getOutputStream()));
+            OutputStream encoded = isTimeCritical(context)
+                    ? timeCriticalEncode(contentEncoding, context.getOutputStream())
+                    : encode(contentEncoding, context.getOutputStream());
+            context.setOutputStream(encoded);
         }
         context.proceed();
     }

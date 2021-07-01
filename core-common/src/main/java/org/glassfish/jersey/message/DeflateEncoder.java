@@ -84,6 +84,18 @@ public class DeflateEncoder extends ContentEncoder {
     @Override
     public OutputStream encode(String contentEncoding, OutputStream entityStream)
             throws IOException {
+        return encode(entityStream, false);
+    }
+
+    @Override
+    public OutputStream timeCriticalEncode(String contentEncoding, OutputStream entityStream)
+            throws IOException {
+        return encode(entityStream, true);
+    }
+
+
+    private OutputStream encode(OutputStream entityStream, boolean isTimeCritical)
+            throws IOException {
         // some implementations don't support the correct deflate
         // so we have a property to configure the incorrect deflate (no zlib wrapper) should be used
         // let's check that
@@ -98,7 +110,7 @@ public class DeflateEncoder extends ContentEncoder {
         }
 
         return deflateWithoutZLib
-                ? new DeflaterOutputStream(entityStream, new Deflater(Deflater.DEFAULT_COMPRESSION, true))
-                : new DeflaterOutputStream(entityStream);
+                ? new DeflaterOutputStream(entityStream, new Deflater(Deflater.DEFAULT_COMPRESSION, true), isTimeCritical)
+                : new DeflaterOutputStream(entityStream, isTimeCritical);
     }
 }
