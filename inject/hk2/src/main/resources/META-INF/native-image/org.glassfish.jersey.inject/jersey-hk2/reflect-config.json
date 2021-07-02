@@ -1,0 +1,68 @@
+[
+  {
+    "name": "org.glassfish.hk2.internal.PerThreadContext",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.glassfish.hk2.osgiresourcelocator.ServiceLoader",
+    "methods": [{ "name":"lookupProviderClasses", "parameterTypes":["java.lang.Class"] }]
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.ContextInjectionResolverImpl",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.Hk2RequestScope",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge",
+    "methods":[{"name":"provide","parameterTypes":[] }]
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.JerseyErrorService",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.glassfish.jersey.inject.hk2.RequestContext",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.jvnet.hk2.internal.ProxyUtilities$4",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.jvnet.hk2.internal.ProxyUtilities",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.jvnet.hk2.internal.DynamicConfigurationServiceImpl",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
+    "name":"org.jvnet.hk2.internal.ServiceLocatorRuntimeImpl",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  }
+]

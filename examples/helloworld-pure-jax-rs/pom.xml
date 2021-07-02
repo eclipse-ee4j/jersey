@@ -70,6 +70,51 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>native-image</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.nativeimage</groupId>
+                        <artifactId>native-image-maven-plugin</artifactId>
+                        <version>${graalvm.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <imageName>${project.artifactId}-native</imageName>
+                            <mainClass>org.glassfish.jersey.examples.helloworld.jaxrs.App</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+
+                <dependency>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                    <version>${jakarta.activation.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>hk2-locator</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>org.osgi.framework</artifactId>
+                    <version>${osgi.framework.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
 </project>

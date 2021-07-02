@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.inject.Singleton;
 import javax.ws.rs.core.Application;
 
 import javax.annotation.ManagedBean;
@@ -222,6 +223,9 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
         if (priority > ContractProvider.NO_PRIORITY) {
             builder.ranked(priority);
+        }
+        if (clazz.isAnnotationPresent(Singleton.class) && beanScopeAnnotation == null) {
+            builder.in(Singleton.class);
         }
 
         injectionManager.register(builder);
