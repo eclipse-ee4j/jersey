@@ -1,3 +1,5 @@
 #!/bin/bash -xe
 
-mvn -V -U -B clean install glassfish-copyright:check -Dcopyright.quiet=false -Dsurefire.systemPropertiesFile=${WORKSPACE}/etc/jenkins/systemPropertiesFile
+export DEBUG=true
+
+mvn -V -U -B -e clean install glassfish-copyright:check -Dcopyright.quiet=false -Dsurefire.systemPropertiesFile=${WORKSPACE}/etc/jenkins/systemPropertiesFile
