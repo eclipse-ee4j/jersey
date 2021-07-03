@@ -36,8 +36,9 @@
     <section xml:id="supported_modules">
         <title>Modules with GraalVM native image support</title>
         <para>
-            Actually Jersey provides basic support for native image generation within following modules:
-            <literal>jersey-common</literal>,<literal>jersey-server</literal>,<literal>jersey-hk2</literal>.
+            Currently Jersey provides basic support for native image generation within following modules:
+            <literal>jersey-common</literal>,<literal>jersey-server</literal>,<literal>jersey-client</literal>,
+            <literal>jersey-hk2</literal>.
 
             This support means that most of reflection and resource related settings are extracted into reflect-config
             and resource-config JSON files to be used while generating a native image. Those files are included in
@@ -54,7 +55,7 @@
                 <member>Download GraalVM at least 20.3.2 version</member>
                 <member>Set JAVA_HOME to point to that [GraalVM_HOME]</member>
                 <member>Perform <markup>$JAVA_HOME/bin/gu install native-image</markup> because native-image tool is not bundled within GraalVM itself</member>
-                <member>Download Jersey examples source codes (preferable some released version like 2.34),
+                <member>Download Jersey examples source codes (preferable some released version like 2.35),
                     and go to [path_to_jersey_examples]/examples/helloworld</member>
                 <member>Run <markup>mvn -Pnative-image clean package -DskipTests</markup></member>
             </simplelist>
@@ -98,11 +99,11 @@
             image to generate pure native image with everything bundled inside the image and not just fall back wrapper for JDK.
         </para>
         <para>
-            Another important aspect for generating of native image is proper listing of reflection classes (classes which uses reflection
-            in an application). For those needs there is a native image agent which helps to generate those lists automatically.
-            In order to generate list of reflection classes (and JNI classes and resources) it is required to run:
+            Another important aspect for generating the native image is the proper listing of reflection classes (classes that use reflection
+            in an application). For those needs, there is a native image agent which helps to generate those lists automatically.
+            In order to generate a list of reflection classes (and JNI classes and resources), it is required to run:
             <programlisting language="bash">$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=[output_location] -jar [app_name].jar</programlisting>
-            and afterwords the [output_location] directory will be created with generated lists (in JSON format). Those files can be
+            And afterwords, the [output_location] directory will be created with generated lists (in JSON format). Those files can be
             included as is into native image generation, but it's very preferable to edit them manually to reduce possible ambiguous classes listings.
         </para>
     </section>
