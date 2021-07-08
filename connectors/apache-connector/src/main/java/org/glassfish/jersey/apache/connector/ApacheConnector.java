@@ -47,6 +47,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.http.client.RedirectStrategy;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -249,6 +250,20 @@ class ApacheConnector implements Connector {
             }
         }
 
+        Object redirectStrategy = config.getProperties().get(ApacheClientProperties.REDIRECT_STRATEGY);
+        if (redirectStrategy != null) {
+            if (!(redirectStrategy instanceof RedirectStrategy)) {
+                LOGGER.log(
+                    Level.WARNING,
+                    LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                        ApacheClientProperties.REDIRECT_STRATEGY,
+                        redirectStrategy.getClass().getName(),
+                        RedirectStrategy.class.getName())
+                );
+                redirectStrategy = null;
+            }
+        }
+
         final SSLContext sslContext = client.getSslContext();
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
@@ -315,6 +330,10 @@ class ApacheConnector implements Connector {
                 requestConfigBuilder.setCookieSpec(CookieSpecs.IGNORE_COOKIES);
             }
             requestConfig = requestConfigBuilder.build();
+        }
+
+        if (redirectStrategy != null) {
+            clientBuilder.setRedirectStrategy((RedirectStrategy) redirectStrategy);
         }
 
         if (requestConfig.getCookieSpec() == null || !requestConfig.getCookieSpec().equals(CookieSpecs.IGNORE_COOKIES)) {
