@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.URI;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -37,7 +36,7 @@ class DestinationConnectionPool {
     private final Queue<HttpConnection> idleConnections = new ConcurrentLinkedDeque<>();
     private final Set<HttpConnection> connections = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Queue<RequestRecord> pendingRequests = new ConcurrentLinkedDeque<>();
-    private final Map<HttpConnection, RequestRecord> requestsInProgress = new HashMap<>();
+    private final Map<HttpConnection, RequestRecord> requestsInProgress = new ConcurrentHashMap<>();
     private final CookieManager cookieManager;
     private final ScheduledExecutorService scheduler;
     private final ConnectionStateListener connectionStateListener;
