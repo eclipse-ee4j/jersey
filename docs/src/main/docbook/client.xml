@@ -848,7 +848,7 @@ System.out.println("Now the connection is closed.");</programlisting>
         </example>
         <para>
             For more information see javadoc of &jersey.client.InjectionManagerClientProvider;
-            (and javadoc of &jersey.common.InjectionManagerProvider; which supports common JAX-RS components).
+            (and javadoc of &lit.jersey.common.InjectionManagerProvider; which supports common JAX-RS components).
         </para>
     </section>
 

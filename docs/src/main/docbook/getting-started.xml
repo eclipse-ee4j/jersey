@@ -568,7 +568,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
     T E S T S
     -------------------------------------------------------
     Running com.example.MyResourceTest
-    Jan 29, 2021 9:13:20 AM org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory$GrizzlyTestContainer <init>
+    Jan 29, 2021 9:13:20 AM org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory$GrizzlyTestContainer
     INFO: Creating GrizzlyTestContainer configured at the base URI http://localhost:9998/
     Jan 29, 2021 9:13:20 AM org.glassfish.jersey.server.wadl.WadlFeature configure
     WARNING: JAXBContext implementation could not be found. WADL feature is disabled.
