@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.inject.cdi.weld.subresources;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -32,6 +33,7 @@ import org.glassfish.jersey.server.model.ModelProcessor;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceModel;
 
+@ApplicationScoped
 public class ModelProcessorFeature implements Feature {
 
     @Override

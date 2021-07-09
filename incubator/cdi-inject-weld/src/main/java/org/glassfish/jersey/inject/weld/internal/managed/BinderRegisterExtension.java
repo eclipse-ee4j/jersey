@@ -54,6 +54,8 @@ import javax.enterprise.inject.spi.ProcessInjectionTarget;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.RuntimeType;
+import javax.ws.rs.container.DynamicFeature;
+import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -484,7 +486,11 @@ class BinderRegisterExtension implements Extension {
 //    }
 
     private boolean isJaxrs(Class<?> clazz) {
-        return Providers.isJaxRsProvider(clazz) || BeanHelper.isResourceClass(clazz);
+        return Providers.isJaxRsProvider(clazz) || BeanHelper.isResourceClass(clazz) || isJerseyRegistrable(clazz);
+    }
+
+    private boolean isJerseyRegistrable(Class<?> clazz) {
+        return Feature.class.isAssignableFrom(clazz) || DynamicFeature.class.isAssignableFrom(clazz);
     }
 
     private boolean isNotJerseyInternal(Class<?> clazz) {

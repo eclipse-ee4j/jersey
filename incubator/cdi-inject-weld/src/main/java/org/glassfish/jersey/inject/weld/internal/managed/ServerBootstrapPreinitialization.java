@@ -34,6 +34,8 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.RuntimeType;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.core.GenericType;
 
 import org.glassfish.grizzly.http.server.Request;
@@ -41,10 +43,17 @@ import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.jersey.inject.weld.spi.BootstrapPreinitialization;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
+import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.util.collection.Ref;
+import org.glassfish.jersey.model.internal.CommonConfig;
+import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.process.internal.RequestScoped;
+import org.glassfish.jersey.server.wadl.WadlFeature;
 import org.glassfish.jersey.server.wadl.processor.OptionsMethodProcessor;
+import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
 import org.glassfish.jersey.servlet.WebConfig;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
 import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
@@ -459,6 +468,105 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
         }
     }
 
+    private static class PreinitializationFeatureContext implements FeatureContext {
+
+        private final AbstractBinder binder;
+
+        private PreinitializationFeatureContext(AbstractBinder binder) {
+            this.binder = binder;
+        }
+
+        @Override
+        public Configuration getConfiguration() {
+            return new CommonConfig(RuntimeType.SERVER, ComponentBag.INCLUDE_ALL);
+        }
+
+        @Override
+        public FeatureContext property(String name, Object value) {
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Class<?> componentClass) {
+            binder.bindAsContract(componentClass);
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Class<?> componentClass, int priority) {
+            binder.bindAsContract(componentClass).ranked(priority);
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Class<?> componentClass, Class<?>... contracts) {
+            final ClassBinding binding = binder.bind(componentClass);
+            if (contracts != null) {
+                for (Class<?> contract : contracts) {
+                    binding.to(contract);
+                }
+            }
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Class<?> componentClass, Map<Class<?>, Integer> contracts) {
+            for (Map.Entry<Class<?>, Integer> contract : contracts.entrySet()) {
+                final AbstractBinder abstractBinder = new AbstractBinder() {
+                    @Override
+                    protected void configure() {
+                    }
+                };
+                final ClassBinding binding = abstractBinder.bind(componentClass);
+                binding.to(contract.getKey()).ranked(contract.getValue());
+                binder.install(abstractBinder);
+            }
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Object component) {
+            if (AbstractBinder.class.isInstance(component)) {
+                binder.install((AbstractBinder) component);
+            } else {
+                binder.bind(component).to(component.getClass());
+            }
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Object component, int priority) {
+            binder.bind(component).to(component.getClass()).ranked(priority);
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Object component, Class<?>... contracts) {
+            Binding binding = binder.bind(component);
+            if (contracts != null) {
+                for (Class<?> contract : contracts) {
+                    binding.to(contract);
+                }
+            }
+            return this;
+        }
+
+        @Override
+        public FeatureContext register(Object component, Map<Class<?>, Integer> contracts) {
+            for (Map.Entry<Class<?>, Integer> contract : contracts.entrySet()) {
+                final AbstractBinder abstractBinder = new AbstractBinder() {
+                    @Override
+                    protected void configure() {
+                    }
+                };
+                final Binding binding = abstractBinder.bind(component);
+                binding.to(contract.getKey()).ranked(contract.getValue());
+                binder.install(abstractBinder);
+            }
+            return this;
+        }
+    }
+
     @Override
     public void register(RuntimeType runtimeType, AbstractBinder binder) {
 //        binder.install(new MessagingBinders.MessageBodyProviders(null, RuntimeType.SERVER),
@@ -511,6 +619,20 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
 
             // WADL TODO put to a proper module
             try {
+                new WadlFeature().configure(new PreinitializationFeatureContext(binder) {
+                    @Override
+                    public FeatureContext register(Class<?> componentClass) {
+                        if (WadlModelProcessor.class.isAssignableFrom(componentClass)) {
+                            super.register(WadlModelProcessor.OptionsHandler.class);
+                        }
+                        super.register(componentClass);
+                        return this;
+                    }
+                });
+            } catch (Exception e) {
+
+            }
+            try {
                 Class[] classes = OptionsMethodProcessor.class.getDeclaredClasses();
                 for (Class clz : classes) {
                     binder.bindAsContract(clz);
@@ -519,6 +641,7 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
 
             }
         }
+
 //
 //        //ApplicationConfigurator
 //        binder.bind(new InitializableInstanceBinding((Application) null).to(Application.class));
