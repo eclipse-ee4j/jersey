@@ -36,6 +36,7 @@
     </description>
 
     <modules>
+        <module>cdi-inject-weld</module>
         <module>declarative-linking</module>
         <module>gae-integration</module>
         <module>html-json</module>

@@ -51,11 +51,11 @@ public class ApplicationInjectParent extends Application {
     @Inject
     protected HttpHeaders injectHttpHeaders;
 
-    @Context
-    ParamConverterProvider contextParamConverterProvider;
-
-    @Inject
-    ParamConverterProvider injectParamConverterProvider;
+//    @Context
+//    ParamConverterProvider contextParamConverterProvider;
+//
+//    @Inject
+//    ParamConverterProvider injectParamConverterProvider;
 
     @Context
     protected Providers contextProviders;
