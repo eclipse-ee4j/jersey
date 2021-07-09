@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.AccessController;
@@ -541,7 +542,11 @@ public class HttpUrlConnector implements Connector {
         if (connectorExtension.handleException(request, uc, ex)) {
             return null;
         }
-        if (uc.getResponseCode() == -1) {
+        /*
+         *  uc.getResponseCode triggers another request. If we already know it is a SocketTimeoutException
+         *  we can throw the exception directly. Otherwise the request will be 2 * timeout.
+         */
+        if (ex instanceof SocketTimeoutException || uc.getResponseCode() == -1) {
             throw ex;
         } else {
             return ex;

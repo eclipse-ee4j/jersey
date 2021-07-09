@@ -32,7 +32,7 @@ public class ParamConverterConfigurator implements BootstrapConfigurator {
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         InstanceBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
-                Bindings.service(new ParamConverters.AggregatedProvider())
+                Bindings.service(new ParamConverters.AggregatedProvider(injectionManager))
                     .to(ParamConverterProvider.class);
         injectionManager.register(aggregatedConverters);
     }
