@@ -38,6 +38,12 @@ public final class ExternalProperties {
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 
     /**
+     * Property used to define the string sent in the User-Agent
+     * request header in http requests.
+     */
+    public static final String HTTP_AGENT = "http.agent";
+
+    /**
      * Prevent instantiation.
      */
     private ExternalProperties() {
