@@ -496,7 +496,10 @@ public class ContainerRequest extends InboundMessageContext
             return encodedRelativePath = requestUriRawPath;
         }
 
-        final int baseUriRawPathLength = baseUri.getRawPath().length();
+        final String baseUriRawPath =
+            baseUri.getRawPath().endsWith("/") ? baseUri.getRawPath() : baseUri.getRawPath() + "/";
+
+        final int baseUriRawPathLength = baseUriRawPath.length();
         return encodedRelativePath = baseUriRawPathLength < requestUriRawPath.length()
                 ? requestUriRawPath.substring(baseUriRawPathLength) : "";
     }
