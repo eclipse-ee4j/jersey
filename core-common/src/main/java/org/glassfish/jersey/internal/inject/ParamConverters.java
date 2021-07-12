@@ -310,19 +310,11 @@ public class ParamConverters {
     }
 
     /**
-     * Provider of {@link ParamConverter param converter} that produce the Optional instance
-     * by invoking {@link AggregatedProvider}.
+     * Provider of {@link ParamConverter param converter} that produce the OptionalInt, OptionalDouble
+     * or OptionalLong instance.
      */
     @Singleton
     public static class OptionalProvider implements ParamConverterProvider {
-
-        // Delegates to this provider when the type of Optional is extracted.
-        private final AggregatedProvider aggregated;
-
-        @Inject
-        public OptionalProvider(AggregatedProvider aggregated) {
-            this.aggregated = aggregated;
-        }
 
         @Override
         public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
@@ -334,24 +326,7 @@ public class ParamConverters {
                     if (value == null) {
                         return (T) optionals.empty();
                     } else {
-                        if (genericType instanceof ParameterizedType) {
-                            // Optional is parameterized
-                            ParameterizedType parametrized = (ParameterizedType) genericType;
-                            Type type = parametrized.getActualTypeArguments()[0];
-                            T val = aggregated.getConverter((Class<T>) type, type, annotations).fromString(value.toString());
-                            if (val != null) {
-                                return (T) optionals.of(val);
-                            } else {
-                                /*
-                                 *  In this case we don't send Optional.empty() because 'value' is not null.
-                                 *  But we return null because the provider didn't find how to parse it.
-                                 */
-                                return null;
-                            }
-                        } else {
-                            // Others are not parameterized
-                            return (T) optionals.of(value);
-                        }
+                        return (T) optionals.of(value);
                     }
                 }
 
@@ -369,16 +344,7 @@ public class ParamConverters {
 
         private static enum Optionals {
 
-            OPTIONAL(Optional.class) {
-                @Override
-                Object empty() {
-                    return Optional.empty();
-                }
-                @Override
-                Object of(Object value) {
-                    return Optional.of(value);
-                }
-            }, OPTIONAL_INT(OptionalInt.class) {
+            OPTIONAL_INT(OptionalInt.class) {
                 @Override
                 Object empty() {
                     return OptionalInt.empty();
@@ -450,7 +416,7 @@ public class ParamConverters {
                     new TypeFromString(),
                     new StringConstructor(),
                     new OptionalCustomProvider(manager),
-                    new OptionalProvider(this)
+                    new OptionalProvider()
             };
         }
 

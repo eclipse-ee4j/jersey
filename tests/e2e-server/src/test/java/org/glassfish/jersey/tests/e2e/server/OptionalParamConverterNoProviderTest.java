@@ -64,6 +64,36 @@ public class OptionalParamConverterNoProviderTest extends JerseyTest {
         }
 
         @GET
+        @Path("/fromListOptionalInt")
+        public Response fromListOptionalInt(@QueryParam(PARAM_NAME) List<OptionalInt> data) {
+            StringBuilder builder = new StringBuilder("");
+            for (OptionalInt val : data) {
+                builder.append(val.orElse(0));
+            }
+            return Response.ok(builder.toString()).build();
+        }
+
+        @GET
+        @Path("/fromListOptionalDouble")
+        public Response fromListOptionalDouble(@QueryParam(PARAM_NAME) List<OptionalDouble> data) {
+            StringBuilder builder = new StringBuilder("");
+            for (OptionalDouble val : data) {
+                builder.append(val.orElse(0));
+            }
+            return Response.ok(builder.toString()).build();
+        }
+
+        @GET
+        @Path("/fromListOptionalLong")
+        public Response fromListOptionalLong(@QueryParam(PARAM_NAME) List<OptionalLong> data) {
+            StringBuilder builder = new StringBuilder("");
+            for (OptionalLong val : data) {
+                builder.append(val.orElse(0));
+            }
+            return Response.ok(builder.toString()).build();
+        }
+
+        @GET
         @Path("/fromInteger2")
         public Response fromInteger2(@QueryParam(PARAM_NAME) OptionalInt data) {
             return Response.ok(data.orElse(0)).build();
@@ -121,6 +151,39 @@ public class OptionalParamConverterNoProviderTest extends JerseyTest {
     public void fromOptionalList() {
         Response empty = target("/OptionalResource/fromList").request().get();
         Response notEmpty = target("/OptionalResource/fromList").queryParam(PARAM_NAME, 1)
+                .queryParam(PARAM_NAME, 2).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals("", empty.readEntity(String.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals("12", notEmpty.readEntity(String.class));
+    }
+
+    @Test
+    public void fromOptionalListOptionalInt() {
+        Response empty = target("/OptionalResource/fromListOptionalInt").request().get();
+        Response notEmpty = target("/OptionalResource/fromListOptionalInt").queryParam(PARAM_NAME, 1)
+                .queryParam(PARAM_NAME, 2).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals("", empty.readEntity(String.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals("12", notEmpty.readEntity(String.class));
+    }
+
+    @Test
+    public void fromOptionalListOptionalDouble() {
+        Response empty = target("/OptionalResource/fromListOptionalDouble").request().get();
+        Response notEmpty = target("/OptionalResource/fromListOptionalDouble").queryParam(PARAM_NAME, 1)
+                .queryParam(PARAM_NAME, 2).request().get();
+        assertEquals(200, empty.getStatus());
+        assertEquals("", empty.readEntity(String.class));
+        assertEquals(200, notEmpty.getStatus());
+        assertEquals("1.02.0", notEmpty.readEntity(String.class));
+    }
+
+    @Test
+    public void fromOptionalListOptionalLong() {
+        Response empty = target("/OptionalResource/fromListOptionalLong").request().get();
+        Response notEmpty = target("/OptionalResource/fromListOptionalLong").queryParam(PARAM_NAME, 1)
                 .queryParam(PARAM_NAME, 2).request().get();
         assertEquals(200, empty.getStatus());
         assertEquals("", empty.readEntity(String.class));
