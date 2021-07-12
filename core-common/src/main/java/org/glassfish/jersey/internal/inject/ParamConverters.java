@@ -21,12 +21,16 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -252,16 +256,16 @@ public class ParamConverters {
 
     /**
      * Provider of {@link ParamConverter param converter} that produce the Optional instance
-     * by invoking {@link AggregatedProvider}.
+     * by invoking {@link ParamConverterProvider}.
      */
     @Singleton
-    public static class OptionalProvider implements ParamConverterProvider {
+    public static class OptionalCustomProvider implements ParamConverterProvider {
 
         // Delegates to this provider when the type of Optional is extracted.
         private final InjectionManager manager;
 
         @Inject
-        public OptionalProvider(InjectionManager manager) {
+        public OptionalCustomProvider(InjectionManager manager) {
             this.manager = manager;
         }
 
@@ -306,6 +310,91 @@ public class ParamConverters {
     }
 
     /**
+     * Provider of {@link ParamConverter param converter} that produce the OptionalInt, OptionalDouble
+     * or OptionalLong instance.
+     */
+    @Singleton
+    public static class OptionalProvider implements ParamConverterProvider {
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            final Optionals optionals = Optionals.getOptional(rawType);
+            return (optionals == null) ? null : new ParamConverter<T>() {
+
+                @Override
+                public T fromString(String value) {
+                    if (value == null) {
+                        return (T) optionals.empty();
+                    } else {
+                        return (T) optionals.of(value);
+                    }
+                }
+
+                @Override
+                public String toString(T value) throws IllegalArgumentException {
+                    /*
+                     *  Unfortunately 'orElse' cannot be stored in an Optional. As only one value can
+                     *  be stored, it makes no sense that 'value' is Optional. It can just be the value.
+                     *  We don't fail here but we don't process it.
+                     */
+                    return null;
+                }
+            };
+        }
+
+        private static enum Optionals {
+
+            OPTIONAL_INT(OptionalInt.class) {
+                @Override
+                Object empty() {
+                    return OptionalInt.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalInt.of(Integer.parseInt((String) value));
+                }
+            }, OPTIONAL_DOUBLE(OptionalDouble.class) {
+                @Override
+                Object empty() {
+                    return OptionalDouble.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalDouble.of(Double.parseDouble((String) value));
+                }
+            }, OPTIONAL_LONG(OptionalLong.class) {
+                @Override
+                Object empty() {
+                    return OptionalLong.empty();
+                }
+                @Override
+                Object of(Object value) {
+                    return OptionalLong.of(Long.parseLong((String) value));
+                }
+            };
+
+            private final Class<?> clazz;
+
+            private Optionals(Class<?> clazz) {
+                this.clazz = clazz;
+            }
+
+            private static Optionals getOptional(Class<?> clazz) {
+                for (Optionals optionals : Optionals.values()) {
+                    if (optionals.clazz == clazz) {
+                        return optionals;
+                    }
+                }
+                return null;
+            }
+
+            abstract Object empty();
+
+            abstract Object of(Object value);
+        }
+    }
+
+    /**
      * Aggregated {@link ParamConverterProvider param converter provider}.
      */
     @Singleton
@@ -326,7 +415,8 @@ public class ParamConverters {
                     new CharacterProvider(),
                     new TypeFromString(),
                     new StringConstructor(),
-                    new OptionalProvider(manager)
+                    new OptionalCustomProvider(manager),
+                    new OptionalProvider()
             };
         }
 
