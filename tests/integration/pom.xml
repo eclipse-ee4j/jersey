@@ -79,7 +79,8 @@
         <module>jersey-2846</module>
         <module>jersey-2878</module>
         <module>jersey-2892</module>
-	    <module>jersey-3796</module>
+	<module>jersey-3662</module>
+	<module>jersey-3796</module>
         <module>jersey-780</module>
         <module>jersey-3670</module>
         <module>jersey-3992</module>
