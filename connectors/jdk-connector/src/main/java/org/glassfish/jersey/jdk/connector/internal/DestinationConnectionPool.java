@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -195,12 +195,11 @@ class DestinationConnectionPool {
         throw new IllegalStateException("Illegal state transition, old state: " + oldState + " new state: " + newState);
     }
 
-    private synchronized void removeAllPendingWithError(Throwable t) {
-        for (RequestRecord requestRecord : pendingRequests) {
+    private void removeAllPendingWithError(Throwable t) {
+        RequestRecord requestRecord = null;
+        while ((requestRecord = pendingRequests.poll()) != null) {
             requestRecord.completionHandler.failed(t);
         }
-
-        pendingRequests.clear();
     }
 
     private class ConnectionStateListener implements HttpConnection.StateChangeListener {
