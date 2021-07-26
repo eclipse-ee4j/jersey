@@ -264,7 +264,6 @@ public class ParamConverters {
         // Delegates to this provider when the type of Optional is extracted.
         private final InjectionManager manager;
 
-        @Inject
         public OptionalCustomProvider(InjectionManager manager) {
             this.manager = manager;
         }
@@ -405,6 +404,7 @@ public class ParamConverters {
         /**
          * Create new aggregated {@link ParamConverterProvider param converter provider}.
          */
+        @Inject
         public AggregatedProvider(InjectionManager manager) {
             this.providers = new ParamConverterProvider[] {
                     // ordering is important (e.g. Date provider must be executed before String Constructor
