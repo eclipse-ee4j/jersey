@@ -36,8 +36,8 @@ class HttpRequestEncoder {
 
     private static void appendUpgradeHeaders(StringBuilder request, Map<String, List<String>> headers) {
         for (Map.Entry<String, List<String>> header : headers.entrySet()) {
-            String delimiter = "Cookie".equalsIgnoreCase(header.getKey()) ||
-                               "Cookie2".equalsIgnoreCase(header.getKey())
+            String delimiter = "Cookie".equalsIgnoreCase(header.getKey())
+                               || "Cookie2".equalsIgnoreCase(header.getKey())
                                ? "; " : ",";
             StringBuilder value = new StringBuilder();
             for (String valuePart : header.getValue()) {
