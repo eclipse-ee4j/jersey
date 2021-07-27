@@ -41,8 +41,11 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.Context;
+
 
 import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Priority;
@@ -323,6 +326,9 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
         if (priority > ContractProvider.NO_PRIORITY) {
             builder.ranked(priority);
+        }
+        if (clazz.isAnnotationPresent(Singleton.class) && beanScopeAnnotation == null) {
+            builder.in(Singleton.class);
         }
 
         injectionManager.register(builder);
