@@ -425,6 +425,9 @@ public class HttpUrlConnector implements Connector {
         boolean restrictedSent = false;
         for (Map.Entry<String, List<String>> header : headers.entrySet()) {
             String headerName = header.getKey();
+            String delimiter = "Cookie".equalsIgnoreCase(headerName) ||
+                               "Cookie2".equalsIgnoreCase(headerName)
+                               ? "; " : ",";
             String headerValue;
 
             List<String> headerValues = header.getValue();
@@ -436,7 +439,7 @@ public class HttpUrlConnector implements Connector {
                 boolean add = false;
                 for (Object value : headerValues) {
                     if (add) {
-                        b.append(',');
+                        b.append(delimiter);
                     }
                     add = true;
                     b.append(value);
