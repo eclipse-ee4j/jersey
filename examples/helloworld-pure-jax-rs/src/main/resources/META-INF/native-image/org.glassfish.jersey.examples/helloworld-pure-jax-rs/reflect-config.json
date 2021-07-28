@@ -1,0 +1,40 @@
+[
+  {
+  "name":"java.awt.image.RenderedImage"
+  },
+  {
+    "name":"jakarta.activation.DataSource"
+  },
+  {
+    "name":"jakarta.inject.Singleton",
+    "allDeclaredMethods":true
+  },
+  {
+    "name":"jakarta.ws.rs.core.Application",
+    "allDeclaredMethods":true
+  },
+  {
+    "name":"jakarta.ws.rs.core.Feature",
+    "methods":[{"name":"configure","parameterTypes":["jakarta.ws.rs.core.FeatureContext"] }]
+  },
+  {
+    "name":"javax.xml.transform.Source"
+  },
+  {
+    "name":"javax.xml.transform.dom.DOMSource"
+  },
+  {
+    "name":"javax.xml.transform.sax.SAXSource"
+  },
+  {
+    "name":"javax.xml.transform.stream.StreamSource"
+  },
+  {
+    "name":"org.glassfish.jersey.examples.helloworld.jaxrs.HelloWorldResource",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  }
+]

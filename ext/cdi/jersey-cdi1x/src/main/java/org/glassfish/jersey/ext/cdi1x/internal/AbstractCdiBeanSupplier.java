@@ -85,7 +85,7 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
             @Override
             public T getInstance(final Class<T> clazz) {
                 final CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
-                final T instance = injectionTarget.produce(creationalContext);
+                final T instance = produce(injectionTarget, creationalContext, injectionManager, clazz);
                 final CdiComponentProvider cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
                 final CdiComponentProvider.InjectionManagerInjectedCdiTarget hk2managedTarget =
                      cdiComponentProvider.new InjectionManagerInjectedCdiTarget(injectionTarget) {
@@ -105,6 +105,18 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
                 injectionTarget.preDestroy(instance);
             }
         };
+    }
+
+    /*
+     * Let CDI produce the InjectionTarget. If the constructor contains @Context Args CDI won't be able to produce it.
+     * Let the HK2 try to produce the target then.
+     */
+    private static <T> T produce(InjectionTarget<T> target, CreationalContext<T> ctx, InjectionManager im, Class<T> clazz) {
+        try {
+            return target.produce(ctx);
+        } catch (Exception e) {
+            return im.create(clazz);
+        }
     }
 
     @SuppressWarnings(value = "unchecked")
