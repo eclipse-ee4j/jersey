@@ -27,7 +27,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jersey-rest-client-tck</artifactId>
+    <artifactId>jersey-rest-client14-compatibility</artifactId>
 
     <dependencies>
         <dependency>
