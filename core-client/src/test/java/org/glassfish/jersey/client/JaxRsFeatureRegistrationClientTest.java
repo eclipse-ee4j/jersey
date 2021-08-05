@@ -42,20 +42,23 @@ public class JaxRsFeatureRegistrationClientTest {
 
         @Override
         public boolean configure(FeatureContext context) {
-            context.register(component);
+            if ("true".equals(context.getConfiguration().getProperty("runWithJaxRsClient"))) {
+                context.register(component);
+            }
             return true;
         }
     }
 
     @Test
     public void featureRegistrationTest() {
-        final ClientConfig config = new ClientConfig();
+        final ClientConfig config = new ClientConfig().property("runWithJaxRsClient", "true");
         final Client client = ClientBuilder.newClient(config);
         final Invocation.Builder request = client.target("").request();
 
+        client.close();
+
         assertEquals(REGISTERED_FEATURE_RESPONSE, request.get().readEntity(String.class));
     }
-
 
     @Test
     public void featureNotRegistrationTest() {
@@ -63,6 +66,8 @@ public class JaxRsFeatureRegistrationClientTest {
                 .property(CommonProperties.JAXRS_SERVICE_LOADING_ENABLE, false);
         final Client client = ClientBuilder.newClient(config);
         final Invocation.Builder request = client.target("").request();
+
+        client.close();
 
         assertFalse(client.getConfiguration().isRegistered(FeatureClientImpl.class));
     }
