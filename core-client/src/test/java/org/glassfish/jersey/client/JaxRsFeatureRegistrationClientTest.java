@@ -55,9 +55,9 @@ public class JaxRsFeatureRegistrationClientTest {
         final Client client = ClientBuilder.newClient(config);
         final Invocation.Builder request = client.target("").request();
 
-        client.close();
-
         assertEquals(REGISTERED_FEATURE_RESPONSE, request.get().readEntity(String.class));
+
+        client.close();
     }
 
     @Test
@@ -67,9 +67,9 @@ public class JaxRsFeatureRegistrationClientTest {
         final Client client = ClientBuilder.newClient(config);
         final Invocation.Builder request = client.target("").request();
 
-        client.close();
-
         assertFalse(client.getConfiguration().isRegistered(FeatureClientImpl.class));
+
+        client.close();
     }
 
 }
