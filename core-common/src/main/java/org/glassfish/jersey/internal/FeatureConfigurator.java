@@ -25,7 +25,6 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
 import java.lang.reflect.Array;
 import java.security.AccessController;
 import java.util.ArrayList;

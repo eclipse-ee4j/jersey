@@ -43,6 +43,7 @@ import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ContextResolverFactory;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
+import org.glassfish.jersey.internal.FeatureConfigurator;
 import org.glassfish.jersey.internal.JaxrsProviders;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -429,7 +430,8 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
                     new ExceptionMapperFactory.ExceptionMappersConfigurator(),
                     new JaxrsProviders.ProvidersConfigurator(),
                     new AutoDiscoverableConfigurator(RuntimeType.CLIENT),
-                    new ClientComponentConfigurator());
+                    new ClientComponentConfigurator(),
+                    new FeatureConfigurator());
             bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
             // AutoDiscoverable.
