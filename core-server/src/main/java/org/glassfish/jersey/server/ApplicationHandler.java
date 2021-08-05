@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +52,7 @@ import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ContextResolverFactory;
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
+import org.glassfish.jersey.internal.FeatureConfigurator;
 import org.glassfish.jersey.internal.JaxrsProviders;
 import org.glassfish.jersey.internal.Version;
 import org.glassfish.jersey.internal.inject.Binder;
@@ -285,7 +286,8 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
                 new ResourceMethodInvokerConfigurator(),
                 new ProcessingProvidersConfigurator(),
                 new ContainerProviderConfigurator(RuntimeType.SERVER),
-                new AutoDiscoverableConfigurator(RuntimeType.SERVER));
+                new AutoDiscoverableConfigurator(RuntimeType.SERVER),
+                new FeatureConfigurator());
 
         bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
