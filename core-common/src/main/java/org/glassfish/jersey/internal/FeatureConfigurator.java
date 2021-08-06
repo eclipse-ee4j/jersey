@@ -23,6 +23,7 @@ import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.core.Feature;
 import java.lang.reflect.Array;
@@ -44,11 +45,18 @@ import java.util.stream.Stream;
  */
 public class FeatureConfigurator implements BootstrapConfigurator {
 
+    private final RuntimeType runtimeType;
+
+    public FeatureConfigurator(RuntimeType runtimeType) {
+        this.runtimeType = runtimeType;
+    }
+
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         if (PropertiesHelper.isJaxRsServiceLoadingEnabled(bootstrapBag.getConfiguration().getProperties())) {
             final List<Class<Feature>> features = discoverFeatures(injectionManager, Feature.class);
-            final List<Class<DynamicFeature>> dynamicFeatures = discoverFeatures(injectionManager, DynamicFeature.class);
+            final List<Class<DynamicFeature>> dynamicFeatures = (RuntimeType.SERVER == runtimeType)
+                   ? discoverFeatures(injectionManager, DynamicFeature.class) : null;
             registerFeatures(features, dynamicFeatures, bootstrapBag);
         }
     }
@@ -83,7 +91,9 @@ public class FeatureConfigurator implements BootstrapConfigurator {
         final List<ForcedAutoDiscoverable> forcedAutoDiscoverables = new ArrayList<>();
 
         features.forEach(feature -> forcedAutoDiscoverables.add(registerClass(feature)));
-        dynamicFeatures.forEach(dynamicFeature -> forcedAutoDiscoverables.add(registerClass(dynamicFeature)));
+        if (dynamicFeatures != null) {
+            dynamicFeatures.forEach(dynamicFeature -> forcedAutoDiscoverables.add(registerClass(dynamicFeature)));
+        }
 
         bootstrapBag.getAutoDiscoverables().addAll(forcedAutoDiscoverables);
     }

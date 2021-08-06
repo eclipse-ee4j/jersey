@@ -115,7 +115,7 @@ public final class TestInjectionManagerFactory {
                 new ModelProcessorConfigurator(),
                 new ResourceModelConfigurator(),
                 new ServerExecutorProvidersConfigurator(),
-                new FeatureConfigurator());
+                new FeatureConfigurator(RuntimeType.SERVER));
 
         bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
