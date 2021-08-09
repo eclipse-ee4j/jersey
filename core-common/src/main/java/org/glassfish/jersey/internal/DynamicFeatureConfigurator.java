@@ -21,33 +21,40 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import javax.ws.rs.container.DynamicFeature;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Registers JAX-RS {@link Feature} which are listed as SPIs for registration.
+ * Registers JAX-RS {@link DynamicFeature} which are listed as SPIs for registration.
  * Also checks if JAX-RS service loading is enabled by the javax.ws.rs.loadServices property. In order for
  * registration to proceed the property shall be true (or null).
  *
- * This configurator's instance shall be the last (or at least after {@link AutoDiscoverableConfigurator})
+ * Configurator is used only at Server side.
+ *
+ * This configurator's instance shall be after {@link AutoDiscoverableConfigurator}
  * in the list of configurators due to same list of {@link org.glassfish.jersey.internal.spi.AutoDiscoverable}
  * used in the {@link BootstrapBag} to register discovered features.
  */
-public class FeatureConfigurator extends AbstractFeatureConfigurator<Feature> {
+public class DynamicFeatureConfigurator extends AbstractFeatureConfigurator<DynamicFeature> {
 
-    public FeatureConfigurator(RuntimeType runtimeType) {
-        super(Feature.class, runtimeType);
+    /**
+     * Create a new configurator.
+     *
+     * @param runtimeType runtime (client or server) where the service finder binder is used.
+     */
+    public DynamicFeatureConfigurator(RuntimeType runtimeType) {
+        super(DynamicFeature.class, runtimeType);
     }
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         final Map<String, Object> properties = bootstrapBag.getConfiguration().getProperties();
         if (PropertiesHelper.isJaxRsServiceLoadingEnabled(properties)) {
-            final List<Class<Feature>> features = loadImplementations(properties);
-            features.addAll(loadImplementations(properties, Feature.class.getClassLoader()));
+            final List<Class<DynamicFeature>> dynamicFeatures = loadImplementations(properties);
+            dynamicFeatures.addAll(loadImplementations(properties, DynamicFeature.class.getClassLoader()));
 
-            registerFeatures(features, bootstrapBag);
+            registerFeatures(dynamicFeatures, bootstrapBag);
         }
     }
 }

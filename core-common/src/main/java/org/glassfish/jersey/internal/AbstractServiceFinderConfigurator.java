@@ -65,4 +65,22 @@ public abstract class AbstractServiceFinderConfigurator<T> implements BootstrapC
         }
         return Collections.emptyList();
     }
+
+    /**
+     * Mainly aimed to provide runtime type to abstract classes which extends this finder
+     *
+     * @return runtime type
+     */
+    protected RuntimeType getRuntimeType() {
+        return runtimeType;
+    }
+
+    /**
+     * Mainly aimed to provide contract class to abstract classes which extends this finder
+     *
+     * @return contract class
+     */
+    protected Class<T> getContract() {
+        return contract;
+    }
 }

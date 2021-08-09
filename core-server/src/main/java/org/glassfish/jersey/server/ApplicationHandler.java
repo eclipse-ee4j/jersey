@@ -50,6 +50,7 @@ import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ContextResolverFactory;
+import org.glassfish.jersey.internal.DynamicFeatureConfigurator;
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
 import org.glassfish.jersey.internal.FeatureConfigurator;
@@ -287,6 +288,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
                 new ProcessingProvidersConfigurator(),
                 new ContainerProviderConfigurator(RuntimeType.SERVER),
                 new AutoDiscoverableConfigurator(RuntimeType.SERVER),
+                new DynamicFeatureConfigurator(RuntimeType.SERVER),
                 new FeatureConfigurator(RuntimeType.SERVER));
 
         bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));

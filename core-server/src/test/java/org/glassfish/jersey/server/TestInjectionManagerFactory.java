@@ -25,6 +25,7 @@ import javax.ws.rs.RuntimeType;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ContextResolverFactory;
+import org.glassfish.jersey.internal.DynamicFeatureConfigurator;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
 import org.glassfish.jersey.internal.FeatureConfigurator;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -115,6 +116,7 @@ public final class TestInjectionManagerFactory {
                 new ModelProcessorConfigurator(),
                 new ResourceModelConfigurator(),
                 new ServerExecutorProvidersConfigurator(),
+                new DynamicFeatureConfigurator(RuntimeType.SERVER),
                 new FeatureConfigurator(RuntimeType.SERVER));
 
         bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));

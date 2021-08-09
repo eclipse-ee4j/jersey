@@ -253,7 +253,7 @@ public final class CommonProperties {
      *
      * @since 2.35
      */
-    public static final String JAXRS_SERVICE_LOADING_ENABLE = "javax.ws.rs.loadServices";
+    public static final String JAXRS_SERVICE_LOADING_ENABLE = "jakarta.ws.rs.loadServices";
 
     /**
      * Prevent instantiation.
