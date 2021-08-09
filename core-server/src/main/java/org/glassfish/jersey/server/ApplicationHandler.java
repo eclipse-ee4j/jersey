@@ -288,7 +288,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
                 new ProcessingProvidersConfigurator(),
                 new ContainerProviderConfigurator(RuntimeType.SERVER),
                 new AutoDiscoverableConfigurator(RuntimeType.SERVER),
-                new DynamicFeatureConfigurator(RuntimeType.SERVER),
+                new DynamicFeatureConfigurator(),
                 new FeatureConfigurator(RuntimeType.SERVER));
 
         bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));

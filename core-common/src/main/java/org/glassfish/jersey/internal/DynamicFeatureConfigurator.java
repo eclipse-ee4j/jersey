@@ -41,10 +41,10 @@ public class DynamicFeatureConfigurator extends AbstractFeatureConfigurator<Dyna
     /**
      * Create a new configurator.
      *
-     * @param runtimeType runtime (client or server) where the service finder binder is used.
+     * Must be used at server side only (takes no effect as a client).
      */
-    public DynamicFeatureConfigurator(RuntimeType runtimeType) {
-        super(DynamicFeature.class, runtimeType);
+    public DynamicFeatureConfigurator() {
+        super(DynamicFeature.class, RuntimeType.SERVER);
     }
 
     @Override
