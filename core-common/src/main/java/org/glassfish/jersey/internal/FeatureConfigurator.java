@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Registers JAX-RS {@link Feature} which are listed as SPIs for registration.
- * Also checks if JAX-RS service loading is enabled by the javax.ws.rs.loadServices property. In order for
+ * Also checks if JAX-RS service loading is enabled by the jakarta.ws.rs.loadServices property. In order for
  * registration to proceed the property shall be true (or null).
  *
  * This configurator's instance shall be the last (or at least after {@link AutoDiscoverableConfigurator})

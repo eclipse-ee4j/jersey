@@ -340,6 +340,8 @@ public final class PropertiesHelper {
      *
      * @param properties list of properties to be checked
      * @return false if loading of JAX-RS services is not enabled
+     *
+     * @since 2.35
      */
     public static boolean isJaxRsServiceLoadingEnabled(Map<String, Object> properties) {
         boolean enableServicesLoading = JAXRS_SERVICE_LOADING_ENABLE_DEFAULT;
