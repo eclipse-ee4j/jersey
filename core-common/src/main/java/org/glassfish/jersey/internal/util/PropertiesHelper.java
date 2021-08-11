@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,6 +41,7 @@ public final class PropertiesHelper {
 
     private static final Logger LOGGER = Logger.getLogger(PropertiesHelper.class.getName());
     private static final boolean METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT = false;
+    private static final boolean JAXRS_SERVICE_LOADING_ENABLE_DEFAULT = true;
 
     /**
      * Get system properties.
@@ -331,6 +332,24 @@ public final class PropertiesHelper {
                     CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE, METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT, Boolean.class);
         }
         return !disableMetaInfServicesLookup;
+    }
+
+    /**
+     * Check whether loading of JAX-RS services is allowed or not. Services shall implement Feature or DynamicFeature
+     * interface and be listed as SPI in an application
+     *
+     * @param properties list of properties to be checked
+     * @return false if loading of JAX-RS services is not enabled
+     *
+     * @since 2.35
+     */
+    public static boolean isJaxRsServiceLoadingEnabled(Map<String, Object> properties) {
+        boolean enableServicesLoading = JAXRS_SERVICE_LOADING_ENABLE_DEFAULT;
+        if (properties != null) {
+            enableServicesLoading = CommonProperties.getValue(properties,
+                    CommonProperties.JAXRS_SERVICE_LOADING_ENABLE, JAXRS_SERVICE_LOADING_ENABLE_DEFAULT);
+        }
+        return enableServicesLoading;
     }
 
     /**

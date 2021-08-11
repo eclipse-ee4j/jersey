@@ -43,6 +43,7 @@ import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ContextResolverFactory;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
+import org.glassfish.jersey.internal.FeatureConfigurator;
 import org.glassfish.jersey.internal.JaxrsProviders;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -53,7 +54,6 @@ import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
-import org.glassfish.jersey.message.internal.MessageBodyFactory;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
@@ -429,7 +429,8 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
                     new ExceptionMapperFactory.ExceptionMappersConfigurator(),
                     new JaxrsProviders.ProvidersConfigurator(),
                     new AutoDiscoverableConfigurator(RuntimeType.CLIENT),
-                    new ClientComponentConfigurator());
+                    new ClientComponentConfigurator(),
+                    new FeatureConfigurator(RuntimeType.CLIENT));
             bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
             // AutoDiscoverable.
