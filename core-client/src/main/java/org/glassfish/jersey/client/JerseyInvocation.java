@@ -120,13 +120,13 @@ public class JerseyInvocation implements javax.ws.rs.client.Invocation {
     private static Map<String, EntityPresence> initializeMap() {
         final Map<String, EntityPresence> map = new HashMap<>();
 
-        map.put("DELETE", EntityPresence.MUST_BE_NULL);
-        map.put("GET", EntityPresence.MUST_BE_NULL);
-        map.put("HEAD", EntityPresence.MUST_BE_NULL);
-        map.put("OPTIONS", EntityPresence.MUST_BE_NULL);
+        map.put("DELETE", EntityPresence.OPTIONAL); // changed
+        map.put("GET", EntityPresence.OPTIONAL); // changed
+        map.put("HEAD", EntityPresence.OPTIONAL); // changed
+        map.put("OPTIONS", EntityPresence.OPTIONAL); // changed
         map.put("PATCH", EntityPresence.MUST_BE_PRESENT);
         map.put("POST", EntityPresence.OPTIONAL); // we allow to post null instead of entity
-        map.put("PUT", EntityPresence.MUST_BE_PRESENT);
+        map.put("PUT", EntityPresence.OPTIONAL); // changed
         map.put("TRACE", EntityPresence.MUST_BE_NULL);
         return map;
     }

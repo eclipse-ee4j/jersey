@@ -143,4 +143,11 @@ public class MethodTest extends JerseyTest {
         Response response = target(PATH).request().method("PATCH", Entity.entity("PATCH", MediaType.TEXT_PLAIN));
         assertEquals("PATCH", response.readEntity(String.class));
     }
+
+    @Test
+    public void testOptionsWithEntity() {
+        Response response = target(PATH).request().build("OPTIONS").invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
+    }
 }

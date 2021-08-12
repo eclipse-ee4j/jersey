@@ -55,6 +55,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(Parameterized.class)
 public class BasicHelidonConnectorTest extends JerseyTest {
 
@@ -304,5 +306,12 @@ public class BasicHelidonConnectorTest extends JerseyTest {
             Assert.assertEquals(200, longResponse.getStatus());
             Assert.assertEquals("long", longResponse.readEntity(String.class));
         }
+    }
+
+    @Test
+    public void testOptionsWithEntity() {
+        Response response = target("basic").path("get").request().build("OPTIONS").invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
     }
 }

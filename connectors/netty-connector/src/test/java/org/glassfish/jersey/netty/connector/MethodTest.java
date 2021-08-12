@@ -98,4 +98,11 @@ public class MethodTest extends JerseyTest {
         Response response = target(PATH).request().delete();
         assertEquals("DELETE", response.readEntity(String.class));
     }
+
+    @Test
+    public void testOptionsWithEntity() {
+        Response response = target(PATH).request().build("OPTIONS").invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
+    }
 }

@@ -42,6 +42,7 @@ import org.glassfish.jersey.test.JerseyTest;
 
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -144,6 +145,14 @@ public class HttpMethodTest extends JerseyTest {
         Response cr = r.request().options();
         assertTrue(cr.hasEntity());
         cr.close();
+    }
+
+    @Test
+    public void testOptionsWithEntity() {
+        WebTarget r = getWebTarget();
+        Response response = r.request().build("OPTIONS").invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
     }
 
     @Test
