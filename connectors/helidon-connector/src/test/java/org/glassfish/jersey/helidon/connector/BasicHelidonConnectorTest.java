@@ -310,7 +310,7 @@ public class BasicHelidonConnectorTest extends JerseyTest {
 
     @Test
     public void testOptionsWithEntity() {
-        Response response = target("basic").path("get").request().build("OPTIONS").invoke();
+        Response response = target("basic").path("get").request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
         assertEquals(200, response.getStatus());
         response.close();
     }

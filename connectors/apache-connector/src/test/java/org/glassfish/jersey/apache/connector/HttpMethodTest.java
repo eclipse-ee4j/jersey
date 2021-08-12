@@ -150,7 +150,7 @@ public class HttpMethodTest extends JerseyTest {
     @Test
     public void testOptionsWithEntity() {
         WebTarget r = getWebTarget();
-        Response response = r.request().build("OPTIONS").invoke();
+        Response response = r.request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
         assertEquals(200, response.getStatus());
         response.close();
     }

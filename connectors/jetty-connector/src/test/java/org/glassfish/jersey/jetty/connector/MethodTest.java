@@ -146,7 +146,7 @@ public class MethodTest extends JerseyTest {
 
     @Test
     public void testOptionsWithEntity() {
-        Response response = target(PATH).request().build("OPTIONS").invoke();
+        Response response = target(PATH).request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
         assertEquals(200, response.getStatus());
         response.close();
     }

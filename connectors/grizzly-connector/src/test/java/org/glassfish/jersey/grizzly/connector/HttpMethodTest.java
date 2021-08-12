@@ -25,6 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -67,7 +68,7 @@ public class HttpMethodTest extends JerseyTest {
     @Test
     public void testOptionsWithEntity() {
         WebTarget r = getWebTarget();
-        Response response = r.request().build("OPTIONS").invoke();
+        Response response = r.request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
         assertEquals(200, response.getStatus());
         response.close();
     }
