@@ -20,17 +20,9 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.enterprise.inject.spi.BeanManager;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.ext.ParamConverterProvider;
-
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
-import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
  * Model of the rest client interface.

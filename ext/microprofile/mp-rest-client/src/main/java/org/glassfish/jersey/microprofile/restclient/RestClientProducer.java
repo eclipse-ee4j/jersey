@@ -55,7 +55,6 @@ import javax.net.ssl.HostnameVerifier;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -139,26 +138,11 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         getConfigOption(Long.class, CONFIG_READ_TIMEOUT)
                 .ifPresent(aLong -> restClientBuilder.readTimeout(aLong, TimeUnit.MILLISECONDS));
         getConfigOption(Boolean.class, CONFIG_FOLLOW_REDIRECTS)
-                .ifPresent(restClientBuilder::followRedirects);
+                .ifPresent(follow -> VersionSupport.followRedirects(restClientBuilder, follow));
         getConfigOption(String.class, CONFIG_QUERY_PARAM_STYLE)
-                .ifPresent(value -> restClientBuilder.queryParamStyle(QueryParamStyle.valueOf(value)));
+                .ifPresent(value -> VersionSupport.queryParamStyle(restClientBuilder, value));
         getConfigOption(String.class, CONFIG_PROXY_ADDRESS)
-                .ifPresent(proxy -> {
-                    int index = proxy.lastIndexOf(':');
-                    //If : was not found at all or it is the last character of the proxy string
-                    if (index < 0 || proxy.length() - 1 == index) {
-                        throw new IllegalArgumentException("Invalid proxy URI: " + proxy);
-                    }
-                    String proxyHost = proxy.substring(0, index);
-                    int proxyPort;
-                    String proxyPortStr = proxy.substring(index + 1);
-                    try {
-                        proxyPort = Integer.parseInt(proxyPortStr);
-                    } catch (NumberFormatException nfe) {
-                        throw new IllegalArgumentException("Invalid proxy port: " + proxyPortStr, nfe);
-                    }
-                    restClientBuilder.proxyAddress(proxyHost, proxyPort);
-                });
+                .ifPresent(proxy -> VersionSupport.proxyAddress(restClientBuilder, proxy));
 
         // Providers from configuration
         addConfiguredProviders(restClientBuilder);
