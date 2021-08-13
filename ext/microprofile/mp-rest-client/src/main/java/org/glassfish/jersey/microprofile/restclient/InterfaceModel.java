@@ -40,13 +40,9 @@ import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
-import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.glassfish.jersey.client.inject.ParameterUpdater;
 import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.Parameter;
 
