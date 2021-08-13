@@ -22,7 +22,7 @@ import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
-import javax.ws.rs.RuntimeType;
+import jakarta.ws.rs.RuntimeType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

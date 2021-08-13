@@ -20,8 +20,8 @@ import org.glassfish.jersey.AbstractFeatureConfigurator;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Feature;
 import java.util.List;
 import java.util.Map;
 
