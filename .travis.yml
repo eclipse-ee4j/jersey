@@ -27,4 +27,4 @@ script:
   - bash etc/travis/travis.sh $TEST_SET
 
 git:
-  depth: false
+  depth: 3
