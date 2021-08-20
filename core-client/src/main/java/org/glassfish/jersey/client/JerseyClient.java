@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -146,9 +146,9 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
                            final HostnameVerifier verifier,
                            final DefaultSslContextProvider defaultSslContextProvider) {
         this.config = config == null ? new ClientConfig(this) : new ClientConfig(this, config);
-
+        boolean useDefaultSslContext;
         if (sslContextProvider == null) {
-            this.isDefaultSslContext = true;
+            useDefaultSslContext = true;
 
             if (defaultSslContextProvider != null) {
                 this.sslContext = createLazySslContext(defaultSslContextProvider);
@@ -160,6 +160,7 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
 
                 if (iterator.hasNext()) {
                     lookedUpSslContextProvider = iterator.next();
+                    useDefaultSslContext = false;
                 } else {
                     lookedUpSslContextProvider = DEFAULT_SSL_CONTEXT_PROVIDER;
                 }
@@ -167,10 +168,10 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
                 this.sslContext = createLazySslContext(lookedUpSslContextProvider);
             }
         } else {
-            this.isDefaultSslContext = false;
+            useDefaultSslContext = false;
             this.sslContext = Values.lazy(sslContextProvider);
         }
-
+        this.isDefaultSslContext = useDefaultSslContext;
         this.hostnameVerifier = verifier;
     }
 
