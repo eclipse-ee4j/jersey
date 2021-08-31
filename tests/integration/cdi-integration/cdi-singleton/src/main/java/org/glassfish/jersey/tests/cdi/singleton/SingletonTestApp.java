@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.cdi.singleton;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 

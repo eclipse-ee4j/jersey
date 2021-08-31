@@ -245,6 +245,16 @@ public final class CommonProperties {
      */
     public static final String PROVIDER_DEFAULT_DISABLE = "jersey.config.disableDefaultProvider";
 
+
+    /**
+     * Allows API services loading. If absent or true JAXRS services loading is allowed.
+     * Services shall implement Feature or DynamicFeature interface and be listed as SPI
+     * in user's application.
+     *
+     * @since 2.35
+     */
+    public static final String JAXRS_SERVICE_LOADING_ENABLE = "jakarta.ws.rs.loadServices";
+
     /**
      * Prevent instantiation.
      */
