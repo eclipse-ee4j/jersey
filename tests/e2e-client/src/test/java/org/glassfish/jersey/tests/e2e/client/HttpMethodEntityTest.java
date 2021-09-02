@@ -85,7 +85,7 @@ public class HttpMethodEntityTest extends JerseyTest {
 
     @Test
     public void testOptions() {
-        _test("OPTIONS", true, true);
+        _test("OPTIONS", true, false);
         _test("OPTIONS", false, false);
     }
 
