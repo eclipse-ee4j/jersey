@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -103,9 +103,14 @@ public class RuntimeResourceModelValidator extends AbstractResourceModelVisitor 
         }
 
         if (consumesFails && producesFails) {
-            // fatal
-            Errors.fatal(runtimeResource, LocalizationMessages.AMBIGUOUS_FATAL_RMS(httpMethod, m1.getInvocable()
-                    .getHandlingMethod(), m2.getInvocable().getHandlingMethod(), runtimeResource.getRegex()));
+            boolean interfaceM1 = isInterface(m1);
+            boolean interfaceM2 = isInterface(m2);
+            // Fails when both are interfaces or both are not interfaces
+            if (interfaceM1 == interfaceM2) {
+                // fatal
+                Errors.fatal(runtimeResource, LocalizationMessages.AMBIGUOUS_FATAL_RMS(httpMethod, m1.getInvocable()
+                        .getHandlingMethod(), m2.getInvocable().getHandlingMethod(), runtimeResource.getRegex()));
+            }
         } else if ((producesFails && consumesOnlyIntersects)
                 || (consumesFails && producesOnlyIntersects)
                 || (consumesOnlyIntersects && producesOnlyIntersects)) {
@@ -120,6 +125,10 @@ public class RuntimeResourceModelValidator extends AbstractResourceModelVisitor 
                         runtimeResource.getRegex()));
             }
         }
+    }
+
+    private boolean isInterface(ResourceMethod m1) {
+        return m1.getData().getInvocable().getHandler().getHandlerClass().isInterface();
     }
 
     private static final List<MediaType> StarTypeList = Arrays.asList(new MediaType("*", "*"));
