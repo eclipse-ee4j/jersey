@@ -37,12 +37,6 @@ public class TimeWindowStatisticsImplTest {
     private static final int COLLISION_BUFFER_POWER = 3;
     private static final double DELTA = 0.0001;
 
-    @BeforeClass
-    public static void beforeClass() {
-        System.setProperty(ServerProperties.COLLISION_BUFFER_POWER_JVM_ARG,
-                Integer.toString(COLLISION_BUFFER_POWER));
-    }
-
     @Test
     public void jvmLoaded() {
         assertEquals(COLLISION_BUFFER_POWER, ReservoirConstants.COLLISION_BUFFER_POWER);
