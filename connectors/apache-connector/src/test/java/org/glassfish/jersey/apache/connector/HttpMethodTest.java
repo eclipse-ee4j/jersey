@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,6 +42,7 @@ import org.glassfish.jersey.test.JerseyTest;
 
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -144,6 +145,14 @@ public class HttpMethodTest extends JerseyTest {
         Response cr = r.request().options();
         assertTrue(cr.hasEntity());
         cr.close();
+    }
+
+    @Test
+    public void testOptionsWithEntity() {
+        WebTarget r = getWebTarget();
+        Response response = r.request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
     }
 
     @Test
