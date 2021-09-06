@@ -122,10 +122,38 @@ public final class AnnotationBundleKey
         if (otherAnn.length != len) {
             return false;
         }
-        for (int i = 0; i < len; ++i) {
-            if (_annotations[i] != otherAnn[i]) {
+
+        // 05-May-2019, tatu: If we wanted to true equality of contents we should
+        //   do order-insensitive check; however, our use case is not unifying all
+        //   possible permutations but rather trying to ensure that caching of same
+        //   method signature is likely to match. So false negatives are acceptable
+        //   over having to do order-insensitive comparison.
+        
+        switch (len) {
+        default:
+            for (int i = 0; i < len; ++i) {
+                if (!_annotations[i].equals(otherAnn[i])) {
+                    return false;
+                }
+            }
+            return true;
+            
+        case 3:
+            if (!_annotations[2].equals(otherAnn[2])) {
                 return false;
             }
+            // fall through
+        case 2:
+            if (!_annotations[1].equals(otherAnn[1])) {
+                return false;
+            }
+            // fall through
+        case 1:
+            if (!_annotations[0].equals(otherAnn[0])) {
+                return false;
+            }
+            // fall through
+        case 0:
         }
         return true;
     }

@@ -25,6 +25,8 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -33,9 +35,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class HK2AbstractBinderTest extends JerseyTest {
 
+    private static final AtomicInteger counter = new AtomicInteger();
+
     public static class InjectableHK2Binder extends org.glassfish.hk2.utilities.binding.AbstractBinder {
         @Override
         protected void configure() {
+            counter.incrementAndGet();
             bindAsContract(InjectableImpl.class).to(Injectable.class).in(Singleton.class);
         }
     }
@@ -57,6 +62,7 @@ public class HK2AbstractBinderTest extends JerseyTest {
     public void testInjectableInjection() {
         String response = target().request().get(String.class);
         assertThat(response, is(InjectableImpl.class.getName()));
+        assertThat(1, is(counter.get()));
     }
 
 }

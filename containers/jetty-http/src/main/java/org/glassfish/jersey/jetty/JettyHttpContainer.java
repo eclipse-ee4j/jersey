@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.jersey.jetty;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import javax.inject.Inject;
@@ -79,7 +82,8 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private static final Type REQUEST_TYPE = (new GenericType<Ref<Request>>() {}).getType();
     private static final Type RESPONSE_TYPE = (new GenericType<Ref<Response>>() {}).getType();
 
-    private static final int INTERNAL_SERVER_ERROR = javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    private static final int INTERNAL_SERVER_ERROR = Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    private static final Status BAD_REQUEST_STATUS = Status.BAD_REQUEST;
 
     /**
      * Cached value of configuration property
@@ -143,9 +147,9 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
 
         final Response response = request.getResponse();
         final ResponseWriter responseWriter = new ResponseWriter(request, response, configSetStatusOverSendError);
-        final URI baseUri = getBaseUri(request);
-        final URI requestUri = getRequestUri(request, baseUri);
         try {
+            final URI baseUri = getBaseUri(request);
+            final URI requestUri = getRequestUri(request, baseUri);
             final ContainerRequest requestContext = new ContainerRequest(
                     baseUri,
                     requestUri,
@@ -169,25 +173,34 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
             // Mark the request as handled before generating the body of the response
             request.setHandled(true);
             appHandler.handle(requestContext);
+        } catch (URISyntaxException e) {
+            setResponseForInvalidUri(response, e);
         } catch (final Exception ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
-    private URI getRequestUri(final Request request, final URI baseUri) {
-        try {
-            final String serverAddress = getServerAddress(baseUri);
-            String uri = request.getRequestURI();
+    private URI getRequestUri(final Request request, final URI baseUri) throws URISyntaxException {
+        final String serverAddress = getServerAddress(baseUri);
+        String uri = request.getRequestURI();
 
-            final String queryString = request.getQueryString();
-            if (queryString != null) {
-                uri = uri + "?" + ContainerUtils.encodeUnsafeCharacters(queryString);
-            }
+        final String queryString = request.getQueryString();
+        if (queryString != null) {
+            uri = uri + "?" + ContainerUtils.encodeUnsafeCharacters(queryString);
+        }
 
-            return new URI(serverAddress + uri);
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(ex);
+        return new URI(serverAddress + uri);
+    }
+
+    private void setResponseForInvalidUri(final HttpServletResponse response, final Throwable throwable) throws IOException {
+        LOGGER.log(Level.FINER, "Error while processing request.", throwable);
+
+        if (configSetStatusOverSendError) {
+            response.reset();
+            //noinspection deprecation
+            response.setStatus(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
+        } else {
+            response.sendError(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
         }
     }
 
@@ -323,7 +336,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         @Override
         public void commit() {
             try {
-                response.closeOutput();
+                closeOutput(response);
             } catch (final IOException e) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.UNABLE_TO_CLOSE_RESPONSE(), e);
             } finally {
@@ -331,6 +344,22 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     continuation.complete();
                 }
                 LOGGER.log(Level.FINEST, "commit() called");
+            }
+        }
+
+        private void closeOutput(Response response) throws IOException {
+            try {
+                response.completeOutput();
+            } catch (final IOException e) {
+                throw e;
+            } catch (NoSuchMethodError e) {
+                // try older Jetty Response#closeOutput
+                try {
+                    Method method = response.getClass().getMethod("closeOutput");
+                    method.invoke(response);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+                    throw new IOException(ex);
+                }
             }
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -58,7 +58,7 @@
             </note>
 
             This module depends directly on
-            <link xlink:href="http://www.hibernate.org/subprojects/validator.html">Hibernate Validator</link>
+            <link xlink:href="http://www.hibernate.org/validator/">Hibernate Validator</link>
             which provides a most commonly used implementation of the Bean Validation API spec.
         </para>
         <para>
@@ -84,8 +84,8 @@
 
         <para>
             As stated in <xref linkend="deployment.autodiscoverable"/>, Jersey Bean Validation is one of the modules where you
-            don't need to explicitly register it's &lit.jaxrs.core.Feature;s (&jersey.ext.ValidationFeature;) on the
-            server as it's features are automatically discovered and registered when you add the
+            don't need to explicitly register its &lit.jaxrs.core.Feature;s (&jersey.ext.ValidationFeature;) on the
+            server as its features are automatically discovered and registered when you add the
             &lit.jersey-bean-validation; module to your classpath.
             There are three Jersey specific properties that could disable automatic discovery and registration of Jersey Bean
             Validation integration module:
@@ -242,9 +242,7 @@ public class ValidationConfigurationContextResolver implements ContextResolver&l
         .register( ... );</programlisting>
 
                 <note>
-                    <para>This code snippet has been taken from
-                        <link xlink:href='&jersey.github.examples.uri;/bean-validation-webapp'>Bean Validation example</link>.
-                    </para>
+                    <para>This code snippet is based on CustomConfigValidationTest (from Jersey's source codes)</para>
                 </note>
             </example>
         </para>
@@ -277,7 +275,7 @@ public class ValidationConfigurationContextResolver implements ContextResolver&l
             </para>
             <para>
                 The Bean Validation specification supports the use of <emphasis>constraint annotations</emphasis>
-                as a way of declaratively validating beans, method parameters and method returned values. For example, consider
+                as a way of declarative validating beans, method parameters and method returned values. For example, consider
                 resource class from <xref linkend="bv.example.constraints"/> augmented with constraint annotations.
 
                 <example xml:id="bv.example.constraints">
@@ -723,7 +721,7 @@ public final class ValidationError {
 Content-Length: 114
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(9.4.28)
 
 Contact with given ID does not exist. (path = ContactCardResource.getContact.&lt;return value&gt;, invalidValue = null)</screen>
                 </example>
@@ -734,7 +732,7 @@ Contact with given ID does not exist. (path = ContactCardResource.getContact.&lt
 Content-Length: ...
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(9.4.28)
 
 <![CDATA[<div class="validation-errors">
     <div class="validation-error">
@@ -760,7 +758,7 @@ Server: Jetty(6.1.24)
 Content-Length: ...
 Content-Type: text/plain
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(9.4.28)
 
 <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <validationErrors>
@@ -778,7 +776,7 @@ Server: Jetty(6.1.24)
 Content-Length: 174
 Content-Type: application/json
 Vary: Accept
-Server: Jetty(6.1.24)
+Server: Jetty(9.4.28)
 
 [ {
    "message" : "Contact with given ID does not exist.",

@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -12,7 +12,7 @@ Server-Sent Events (SSE) Example
 This example demonstrates JAX-RS 2.0 server-sent events support sometimes also called one-way publish-subscribe model.
 
 The full description how to create a support for server-sent events can be found in Jersey User Guide, chapter
-[Server-Sent Events (SSE) Support](https://jersey.java.net/documentation/latest/sse.html).
+[Server-Sent Events (SSE) Support](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/sse.html).
 
 It is highly recommended to look at details of SSE API Specification on
 <http://www.w3.org/TR/2009/WD-eventsource-20091029/>
@@ -63,7 +63,7 @@ Running the Example
 -------------------
 
 Look at Jersey Documentation to learn how to consume Server-Sent Events using Jersey Client 
-<https://jersey.java.net/documentation/latest/sse.html#d0e11786>
+<https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/sse.html#sse-client-jaxrs>
 
 Run the example as follows:
 

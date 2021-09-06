@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.model.internal.ComponentBag;
+import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 
@@ -49,12 +50,14 @@ public abstract class AbstractExecutorProvidersConfigurator implements Bootstrap
      * @param componentBag                     provides executor service providers registered by an application.
      * @param defaultAsyncExecutorProvider     default implementation of {@link ExecutorServiceProvider}.
      * @param defaultScheduledExecutorProvider default implementation of {@link ScheduledExecutorServiceProvider}.
+     * @param finalizer                        register finalizers.
      */
     protected void registerExecutors(
             InjectionManager injectionManager,
             ComponentBag componentBag,
             ExecutorServiceProvider defaultAsyncExecutorProvider,
-            ScheduledExecutorServiceProvider defaultScheduledExecutorProvider) {
+            ScheduledExecutorServiceProvider defaultScheduledExecutorProvider,
+            ManagedObjectsFinalizer finalizer) {
 
         List<ExecutorServiceProvider> customExecutors =
                 Stream.concat(
@@ -64,6 +67,7 @@ public abstract class AbstractExecutorProvidersConfigurator implements Bootstrap
                         .map(CAST_TO_EXECUTOR_PROVIDER)
                         .collect(Collectors.toList());
         customExecutors.add(defaultAsyncExecutorProvider);
+        customExecutors.stream().forEach(e -> finalizer.registerForPreDestroyCall(e));
 
         List<ScheduledExecutorServiceProvider> customScheduledExecutors =
                 Stream.concat(
@@ -73,6 +77,7 @@ public abstract class AbstractExecutorProvidersConfigurator implements Bootstrap
                         .map(CAST_TO_SCHEDULED_EXECUTOR_PROVIDER)
                         .collect(Collectors.toList());
         customScheduledExecutors.add(defaultScheduledExecutorProvider);
+        customScheduledExecutors.stream().forEach(e -> finalizer.registerForPreDestroyCall(e));
 
         ExecutorProviders.registerExecutorBindings(injectionManager, customExecutors, customScheduledExecutors);
     }

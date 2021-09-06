@@ -16,11 +16,13 @@ import com.fasterxml.jackson.databind.introspect.AnnotationMap;
  * limitations, we are only given annotations associated, and that
  * has to do.
  *<p>
- * NOTE: not yet used by JAX-RS provider, directly, as of Jackson 2.6.
+ * NOTE: not yet used by JAX-RS provider, directly, as of Jackson 2.9
  */
 public class EndpointAsBeanProperty
     extends BeanProperty.Std
 {
+    private static final long serialVersionUID = 1L;
+
     public final static PropertyName ENDPOINT_NAME = new PropertyName("JAX-RS/endpoint");
 
     private final static AnnotationMap NO_ANNOTATIONS = new AnnotationMap();
@@ -33,7 +35,7 @@ public class EndpointAsBeanProperty
     {
         // TODO: find and pass wrapper; isRequired marker?
         super(name, type, /*PropertyName wrapperName*/ null,
-                null, null, PropertyMetadata.STD_OPTIONAL);
+                null, PropertyMetadata.STD_OPTIONAL);
         _rawAnnotations = annotations;
         _annotations = null;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import javax.ws.rs.core.Application;
  */
 public class JaxRsApplication extends Application {
 
-    static final Set<Class<?>> APP_CLASSES = new HashSet<Class<?>>(){
+    static final Set<Class<?>> APP_CLASSES = new HashSet<Class<?>>() {
         {
             add(FieldInjectedResource.class);
             add(MethodInjectedResource.class);

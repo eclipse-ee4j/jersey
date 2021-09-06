@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,10 @@ import org.glassfish.jersey.internal.guava.Preconditions;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ExceptionUtils;
-import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.internal.PropertiesResolver;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -58,7 +61,8 @@ import org.glassfish.jersey.message.internal.OutboundMessageContext;
  *
  * @author Marek Potociar
  */
-public class ClientRequest extends OutboundMessageContext implements ClientRequestContext, HttpHeaders, InjectionManagerSupplier {
+public class ClientRequest extends OutboundMessageContext
+        implements ClientRequestContext, HttpHeaders, InjectionManagerSupplier, PropertiesResolver {
 
     // Request-scoped configuration instance
     private final ClientConfig clientConfig;
@@ -82,6 +86,10 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
     private Iterable<ReaderInterceptor> readerInterceptors;
     // do not add user-agent header (if not directly set) to the request.
     private boolean ignoreUserAgent;
+    // lazy PropertiesResolver
+    private  LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
+            (Value<PropertiesResolver>) () -> PropertiesResolver.create(getConfiguration(), getPropertiesDelegate())
+    );
 
     private static final Logger LOGGER = Logger.getLogger(ClientRequest.class.getName());
 
@@ -120,65 +128,14 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
         this.ignoreUserAgent = original.ignoreUserAgent;
     }
 
-    /**
-     * Resolve a property value for the specified property {@code name}.
-     *
-     * <p>
-     * The method returns the value of the property registered in the request-specific
-     * property bag, if available. If no property for the given property name is found
-     * in the request-specific property bag, the method looks at the properties stored
-     * in the {@link #getConfiguration() global client-runtime configuration} this request
-     * belongs to. If there is a value defined in the client-runtime configuration,
-     * it is returned, otherwise the method returns {@code null} if no such property is
-     * registered neither in the client runtime nor in the request-specific property bag.
-     * </p>
-     *
-     * @param name property name.
-     * @param type expected property class type.
-     * @param <T> property Java type.
-     * @return resolved property value or {@code null} if no such property is registered.
-     */
+    @Override
     public <T> T resolveProperty(final String name, final Class<T> type) {
-        return resolveProperty(name, null, type);
+        return propertiesResolver.get().resolveProperty(name, type);
     }
 
-    /**
-     * Resolve a property value for the specified property {@code name}.
-     *
-     * <p>
-     * The method returns the value of the property registered in the request-specific
-     * property bag, if available. If no property for the given property name is found
-     * in the request-specific property bag, the method looks at the properties stored
-     * in the {@link #getConfiguration() global client-runtime configuration} this request
-     * belongs to. If there is a value defined in the client-runtime configuration,
-     * it is returned, otherwise the method returns {@code defaultValue} if no such property is
-     * registered neither in the client runtime nor in the request-specific property bag.
-     * </p>
-     *
-     * @param name property name.
-     * @param defaultValue default value to return if the property is not registered.
-     * @param <T> property Java type.
-     * @return resolved property value or {@code defaultValue} if no such property is registered.
-     */
-    @SuppressWarnings("unchecked")
+    @Override
     public <T> T resolveProperty(final String name, final T defaultValue) {
-        return resolveProperty(name, defaultValue, (Class<T>) defaultValue.getClass());
-    }
-
-    private <T> T resolveProperty(final String name, Object defaultValue, final Class<T> type) {
-        // Check runtime configuration first
-        Object result = clientConfig.getProperty(name);
-        if (result != null) {
-            defaultValue = result;
-        }
-
-        // Check request properties next
-        result = propertiesDelegate.getProperty(name);
-        if (result == null) {
-            result = defaultValue;
-        }
-
-        return (result == null) ? null : PropertiesHelper.convertValue(result, type);
+        return propertiesResolver.get().resolveProperty(name, defaultValue);
     }
 
     @Override

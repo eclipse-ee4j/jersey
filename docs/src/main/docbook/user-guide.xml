@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,7 @@
         </para>
         <para>
             If you would like to contribute to the guide or have questions on things not covered in our docs, please
-            contact us at<link xlink:href="mailto:jersey-dev@eclipse.org">users@jersey.java.net</link>. Similarly,
+            contact us at <link xlink:href="mailto:jersey-dev@eclipse.org">users@jersey.java.net</link>. Similarly,
             in case you spot any errors in the Jersey documentation, please report them by filing a new issue in our
             <link xlink:href="https://github.com/eclipse-ee4j/jersey/issues">Jersey JIRA Issue Tracker</link>
             under
@@ -59,7 +59,7 @@
             </para>
             <para>
                 <emphasis>Emphasised font</emphasis>
-                is used to a call attention to a newly introduce concept, when it first
+                is used to call attention to a newly introduce concept, when it first
                 occurs in the text.
             </para>
             <para>
@@ -104,6 +104,7 @@ This line fits the page width.
     <xi:include href="uris-and-links.xml" />
     <xi:include href="declarative-linking.xml" />
     <xi:include href="resource-builder.xml" />
+    <xi:include href="mp-config.xml" />
     <xi:include href="sse.xml" />
     <xi:include href="security.xml" />
     <xi:include href="wadl.xml" />
@@ -115,6 +116,7 @@ This line fits the page width.
     <xi:include href="custom-di.xml" />
     <xi:include href="cdi.xml" />
     <xi:include href="spring.xml" />
+    <xi:include href="graalvm-native-image.xml" />
     <xi:include href="test-framework.xml" />
     <xi:include href="how-to-build.xml" />
     <xi:include href="migration.xml" />

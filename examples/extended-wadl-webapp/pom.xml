@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,7 +19,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>2.30-SNAPSHOT</version>
+        <version>2.35-SNAPSHOT</version>
     </parent>
 
     <artifactId>extended-wadl-webapp</artifactId>
@@ -207,7 +207,18 @@
                          version 2.5 of the javadoc plugin which will be used
                          by a maven version > 2.0.9 -->
                     <useStandardDocletOptions>false</useStandardDocletOptions>
-                    <additionalparam>-output ${project.build.outputDirectory}/resourcedoc.xml</additionalparam>
+                    <additionalOptions>
+                        <additionalOption>-output</additionalOption>
+                        <additionalOption>${project.build.outputDirectory}/resourcedoc.xml</additionalOption>
+                    </additionalOptions>
+                    <additionalDependencies>
+                        <additionalDependency>
+                            <groupId>com.sun.xml.bind</groupId>
+                            <artifactId>jaxb-osgi</artifactId>
+                            <version>${jaxb.ri.version}</version>
+                        </additionalDependency>
+                    </additionalDependencies>
+<!--                    <additionalparam>-output ${project.build.outputDirectory}/resourcedoc.xml</additionalparam>-->
                 </configuration>
             </plugin>
             <plugin>
@@ -235,23 +246,39 @@
 
     <profiles>
         <profile>
-            <id>testsSkipJdk11</id>
+            <id>testsJdk11</id>
             <activation>
                 <jdk>[11,)</jdk>
             </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>javadocAndTestsSkipJDK13</id>
+            <activation>
+                <jdk>[13,)</jdk>
+            </activation>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <!-- Exclude unit tests on jdk 11 for now -->
-                            <excludes>
-                                <exclude>**/ExtendedWadlWebappOsgiTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
             </build>
         </profile>
         <profile>

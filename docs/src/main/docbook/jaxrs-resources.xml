@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -113,11 +113,14 @@ public class UserResource {
                 particular regular expression, which overrides the default regular
                 expression, "[^/]+", for example:
                 <programlisting language="java">@Path("users/{username: [a-zA-Z][a-zA-Z_0-9]*}")</programlisting>
-                In this type of example the username variable will only match user names that begin with one upper or lower case letter and zero or more alpha numeric characters and the underscore character. If a user name does not match that a 404 (Not Found) response will occur.
+                In this type of example the username variable will only match user names that begin with one upper or
+                lower case letter and zero or more alpha numeric characters and the underscore character. If a user name
+                does not match that a 404 (Not Found) response will occur.
             </para>
 
-            <para>A &jaxrs.Path; value may or may not begin with a '/', it makes no difference. Likewise, by default, a &jaxrs.Path; value may or may not end in a '/', it makes no difference, and thus request URLs that end or do not end in a '/' will both
-                be matched.
+            <para>A &jaxrs.Path; value may or may not begin with a '/', it makes no difference. Likewise, by default,
+                a &jaxrs.Path; value may or may not end in a '/', it makes no difference, and thus request URLs that
+                end or do not end in a '/' will both be matched.
             </para>
         </section>
 
@@ -612,7 +615,7 @@ public class PrintersResource {
         <para>If the path of the request URL is "printers" then the resource methods not annotated with &jaxrs.Path;
             will be selected. If the request path of the request URL is "printers/list" then first the root resource class
             will be matched and then the sub-resource methods that match "list" will be selected, which in this case
-            is the sub-resource method<literal>getListOfPrinters</literal>. So, in this example hierarchical matching
+            is the sub-resource method <literal>getListOfPrinters</literal>. So, in this example hierarchical matching
             on the path of the request URL is performed.
         </para>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,6 +35,8 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -52,6 +55,8 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Parent class for testing JAX-RS and Jersey-based applications using Jersey test framework.
@@ -417,7 +422,11 @@ public abstract class JerseyTest {
      * @since 2.8
      */
     protected DeploymentContext configureDeployment() {
-        return DeploymentContext.builder(configure()).build();
+        DeploymentContext.Builder contextBuilder = DeploymentContext.builder(configure());
+        if (getSslContext().isPresent() && getSslParameters().isPresent()) {
+            contextBuilder.ssl(getSslContext().get(), getSslParameters().get());
+        }
+        return contextBuilder.build();
     }
 
     /**
@@ -451,6 +460,34 @@ public abstract class JerseyTest {
             testContainerFactory = getDefaultTestContainerFactory();
         }
         return testContainerFactory;
+    }
+
+    /**
+     * Return an optional instance of {@link SSLContext} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslParameters()}
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLContext} class.
+     */
+    protected Optional<SSLContext> getSslContext() {
+        return Optional.empty();
+    }
+
+    /**
+     * Return an optional instance of {@link SSLParameters} class.
+     * <p>
+     * <p>
+     * This method is used only once during {@code JerseyTest} instance construction to retrieve the ssl configuration.
+     * By default the ssl configuration is absent, to enable it please override this method and {@link JerseyTest#getSslContext()} ()}
+     * </p>
+     * </p>
+     * @return an optional instance of {@link SSLContext} class.
+     */
+    protected Optional<SSLParameters> getSslParameters() {
+        return Optional.empty();
     }
 
     private static synchronized TestContainerFactory getDefaultTestContainerFactory() {
@@ -579,6 +616,7 @@ public abstract class JerseyTest {
      * @throws Exception              if an exception is thrown during setting up the test environment.
      */
     @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final TestContainer testContainer = createTestContainer(context);
 
@@ -599,6 +637,7 @@ public abstract class JerseyTest {
      * @throws Exception if an exception is thrown during tearing down the test environment.
      */
     @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (isLogRecordingEnabled()) {
             unregisterLogHandler();

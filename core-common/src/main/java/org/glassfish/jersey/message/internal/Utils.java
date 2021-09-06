@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,10 @@ package org.glassfish.jersey.message.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Utility class.
@@ -46,9 +50,23 @@ public final class Utils {
      * @throws IOException if a file could not be created.
      */
     public static File createTempFile() throws IOException {
-        final File file = File.createTempFile("rep", "tmp");
-        // Make sure the file is deleted when JVM is shutdown at last.
-        file.deleteOnExit();
+        final AtomicReference<IOException> exceptionReference = new AtomicReference<>();
+        final File file = AccessController.doPrivileged(new PrivilegedAction<File>() {
+            public File run() {
+                File tempFile = null;
+                try {
+                    tempFile = Files.createTempFile("rep", "tmp").toFile();
+                    // Make sure the file is deleted when JVM is shutdown at last.
+                    tempFile.deleteOnExit();
+                } catch (IOException e) {
+                    exceptionReference.set(e);
+                }
+                return tempFile;
+            }
+        });
+        if (exceptionReference.get() != null) {
+            throw exceptionReference.get();
+        }
         return file;
     }
 

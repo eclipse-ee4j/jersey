@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,28 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Test;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.MessageBodyWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
@@ -26,18 +48,10 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Pavel Bucek
@@ -50,7 +64,7 @@ public class CompletionStageTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(CompletionStageResource.class);
+        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class);
     }
 
     @Test
@@ -127,10 +141,36 @@ public class CompletionStageTest extends JerseyTest {
         assertThat(response.readEntity(String.class), is(ENTITY));
     }
 
+    @Test
+    public void test4463() {
+        Response response = target("cs/exceptionally").request().get();
+
+        assertThat(response.getStatus(), is(406));
+    }
+
+    @Test
+    public void testCompletionStageUnwrappedInGenericType() {
+        try (Response r = target("cs/databeanlist").request().get()){
+            assertEquals(200, r.getStatus());
+            assertTrue(r.readEntity(String.class).startsWith(ENTITY));
+        }
+    }
+
     @Path("/cs")
     public static class CompletionStageResource {
 
         private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+
+        @GET
+        @Path("exceptionally")
+        public CompletionStage<String> failAsyncLater() {
+            CompletableFuture<String> fail = new CompletableFuture<>();
+            fail.completeExceptionally(new IllegalStateException("Uh-oh"));
+
+            return fail.exceptionally(ex -> {
+                throw new WebApplicationException("OOPS", Response.Status.NOT_ACCEPTABLE.getStatusCode());
+            });
+        }
 
         @GET
         @Path("/completed")
@@ -209,6 +249,13 @@ public class CompletionStageTest extends JerseyTest {
         @Path("/custom")
         public CompletionStage<String> getCustomCompletionStage() {
             return new CustomCompletionStage<>(CompletableFuture.completedFuture(ENTITY));
+        }
+
+        @GET
+        @Path("/databeanlist")
+        public CompletionStage<List<DataBean>> getDataBeanList(@Context ContainerRequestContext requestContext) {
+            requestContext.setProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
+            return CompletableFuture.completedFuture(Collections.singletonList(new DataBean(ENTITY)));
         }
 
         /**
@@ -446,6 +493,35 @@ public class CompletionStageTest extends JerseyTest {
         @Override
         public CompletableFuture<T> toCompletableFuture() {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    private static class DataBean {
+        private final String data;
+
+        private DataBean(String data) {
+            this.data = data;
+        }
+    }
+
+    private static class DataBeanWriter implements MessageBodyWriter<List<DataBean>> {
+
+        @Override
+        public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+            return List.class.isAssignableFrom(type)
+                    && ParameterizedType.class.isInstance(genericType)
+                    && ((ParameterizedType) genericType).getRawType() != CompletionStage.class;
+        }
+
+        @Override
+        public void writeTo(List<DataBean> dataBeans, Class<?> type, Type genericType, Annotation[] annotations,
+                            MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
+                            OutputStream entityStream) throws IOException, WebApplicationException {
+            for (DataBean bean: dataBeans) {
+                entityStream.write(bean.data.getBytes());
+                entityStream.write(',');
+            }
+            entityStream.flush();
         }
     }
 }

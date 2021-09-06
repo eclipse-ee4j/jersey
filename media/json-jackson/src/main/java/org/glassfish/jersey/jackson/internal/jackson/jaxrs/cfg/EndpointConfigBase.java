@@ -54,11 +54,6 @@ public abstract class EndpointConfigBase<THIS extends EndpointConfigBase<THIS>>
         _config = config;
     }
     
-    @Deprecated // since 2.6
-    protected EndpointConfigBase() {
-        _config = null;
-    }
-
     @SuppressWarnings("unchecked")
     protected THIS add(Annotation[] annotations, boolean forWriting)
     {

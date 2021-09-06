@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -122,6 +122,16 @@ public class OutboundMessageContext {
         this.entityType = original.entityType;
         this.entityAnnotations = original.entityAnnotations;
         this.configuration = original.configuration;
+    }
+
+    /**
+     * Create new outbound message context.
+     *
+     * @see #OutboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public OutboundMessageContext() {
+        this ((Configuration) null);
     }
 
     /**
@@ -257,7 +267,8 @@ public class OutboundMessageContext {
      * message entity).
      */
     public MediaType getMediaType() {
-        return singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, MediaType::valueOf, false);
+        return singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, RuntimeDelegateDecorator.configured(configuration)
+                .createHeaderDelegate(MediaType.class)::fromString, false);
     }
 
     /**
@@ -446,7 +457,12 @@ public class OutboundMessageContext {
         for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
             if (cookie != null) {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
-                result.put(newCookie.getName(), newCookie);
+                String cookieName = newCookie.getName();
+                if (result.containsKey(cookieName)) {
+                    result.put(cookieName, HeaderUtils.getPreferredCookie(result.get(cookieName), newCookie));
+                } else {
+                    result.put(cookieName, newCookie);
+                }
             }
         }
         return result;

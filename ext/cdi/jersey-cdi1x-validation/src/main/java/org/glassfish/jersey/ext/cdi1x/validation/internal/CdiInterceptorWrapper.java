@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,13 +60,13 @@ public class CdiInterceptorWrapper {
 
     @AroundInvoke
     public Object validateMethodInvocation(InvocationContext ctx) throws Exception {
-        final boolean isJaxRsMethod = extension.jaxRsResourceCache.apply(ctx.getMethod().getDeclaringClass());
+        final boolean isJaxRsMethod = extension.getJaxRsResourceCache().apply(ctx.getMethod().getDeclaringClass());
         return isJaxRsMethod ? ctx.proceed() : interceptor.validateMethodInvocation(ctx);
     }
 
     @AroundConstruct
     public void validateConstructorInvocation(InvocationContext ctx) throws Exception {
-        final boolean isJaxRsConstructor = extension.jaxRsResourceCache.apply(ctx.getConstructor().getDeclaringClass());
+        final boolean isJaxRsConstructor = extension.getJaxRsResourceCache().apply(ctx.getConstructor().getDeclaringClass());
         if (!isJaxRsConstructor) {
             interceptor.validateConstructorInvocation(ctx);
         }

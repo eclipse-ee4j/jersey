@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.AccessController;
@@ -71,6 +72,10 @@ public class HttpUrlConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(HttpUrlConnector.class.getName());
     private static final String ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY = "sun.net.http.allowRestrictedHeaders";
+    // Avoid multi-thread uses of HttpsURLConnection.getDefaultSSLSocketFactory() because it does not implement a
+    // proper lazy-initialization. See https://github.com/jersey/jersey/issues/3293
+    private static final LazyValue<SSLSocketFactory> DEFAULT_SSL_SOCKET_FACTORY =
+            Values.lazy((Value<SSLSocketFactory>) () -> HttpsURLConnection.getDefaultSSLSocketFactory());
     // The list of restricted headers is extracted from sun.net.www.protocol.http.HttpURLConnection
     private static final String[] restrictedHeaders = {
             "Access-Control-Request-Headers",
@@ -101,6 +106,9 @@ public class HttpUrlConnector implements Connector {
     private final boolean setMethodWorkaround;
     private final boolean isRestrictedHeaderPropertySet;
     private final LazyValue<SSLSocketFactory> sslSocketFactory;
+
+    private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
+            = new HttpUrlExpect100ContinueConnectorExtension();
 
     /**
      * Create new {@code HttpUrlConnector} instance.
@@ -367,51 +375,60 @@ public class HttpUrlConnector implements Connector {
         secureConnection(request.getClient(), uc);
 
         final Object entity = request.getEntity();
-        if (entity != null) {
-            RequestEntityProcessing entityProcessing = request.resolveProperty(
-                    ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
+        Exception storedException = null;
+        try {
+            if (entity != null) {
+                RequestEntityProcessing entityProcessing = request.resolveProperty(
+                        ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
 
-            if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
                 final long length = request.getLengthLong();
-                if (fixLengthStreaming && length > 0) {
-                    // uc.setFixedLengthStreamingMode(long) was introduced in JDK 1.7 and Jersey client supports 1.6+
-                    if ("1.6".equals(Runtime.class.getPackage().getSpecificationVersion())) {
-                        uc.setFixedLengthStreamingMode(request.getLength());
-                    } else {
+
+                if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
+                    if (fixLengthStreaming && length > 0) {
                         uc.setFixedLengthStreamingMode(length);
+                    } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
+                        uc.setChunkedStreamingMode(chunkSize);
                     }
-                } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
-                    uc.setChunkedStreamingMode(chunkSize);
                 }
-            }
-            uc.setDoOutput(true);
+                uc.setDoOutput(true);
 
-            if ("GET".equalsIgnoreCase(httpMethod)) {
-                final Logger logger = Logger.getLogger(HttpUrlConnector.class.getName());
-                if (logger.isLoggable(Level.INFO)) {
-                    logger.log(Level.INFO, LocalizationMessages.HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY());
+                if ("GET".equalsIgnoreCase(httpMethod)) {
+                    final Logger logger = Logger.getLogger(HttpUrlConnector.class.getName());
+                    if (logger.isLoggable(Level.INFO)) {
+                        logger.log(Level.INFO, LocalizationMessages.HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY());
+                    }
                 }
-            }
 
-            request.setStreamProvider(contentLength -> {
+                processExtentions(request, uc);
+
+                request.setStreamProvider(contentLength -> {
+                    setOutboundHeaders(request.getStringHeaders(), uc);
+                    return uc.getOutputStream();
+                });
+                request.writeEntity();
+
+            } else {
                 setOutboundHeaders(request.getStringHeaders(), uc);
-                return uc.getOutputStream();
-            });
-            request.writeEntity();
-
-        } else {
-            setOutboundHeaders(request.getStringHeaders(), uc);
+            }
+        } catch (IOException ioe) {
+            storedException = handleException(request, ioe, uc);
         }
 
         final int code = uc.getResponseCode();
         final String reasonPhrase = uc.getResponseMessage();
         final Response.StatusType status =
                 reasonPhrase == null ? Statuses.from(code) : Statuses.from(code, reasonPhrase);
-        final URI resolvedRequestUri;
+
+        URI resolvedRequestUri = null;
         try {
             resolvedRequestUri = uc.getURL().toURI();
         } catch (URISyntaxException e) {
-            throw new ProcessingException(e);
+            // if there is already an exception stored, the stored exception is what matters most
+            if (storedException == null) {
+                storedException = e;
+            } else {
+                storedException.addSuppressed(e);
+            }
         }
 
         ClientResponse responseContext = new ClientResponse(status, request, resolvedRequestUri);
@@ -423,7 +440,22 @@ public class HttpUrlConnector implements Connector {
                   .collect(Collectors.toMap(Map.Entry::getKey,
                                             Map.Entry::getValue))
         );
-        responseContext.setEntityStream(getInputStream(uc));
+
+        try {
+            InputStream inputStream = getInputStream(uc);
+            responseContext.setEntityStream(inputStream);
+        } catch (IOException ioe) {
+            // allow at least a partial response in a ResponseProcessingException
+            if (storedException == null) {
+                storedException = ioe;
+            } else {
+                storedException.addSuppressed(ioe);
+            }
+        }
+
+        if (storedException != null) {
+            throw new ClientResponseProcessingException(responseContext, storedException);
+        }
 
         return responseContext;
     }
@@ -538,6 +570,25 @@ public class HttpUrlConnector implements Connector {
                     throw new RuntimeException(cause);
                 }
             }
+        }
+    }
+
+    private void processExtentions(ClientRequest request, HttpURLConnection uc) {
+        connectorExtension.invoke(request, uc);
+    }
+
+    private IOException handleException(ClientRequest request, IOException ex, HttpURLConnection uc) throws IOException {
+        if (connectorExtension.handleException(request, uc, ex)) {
+            return null;
+        }
+        /*
+         *  uc.getResponseCode triggers another request. If we already know it is a SocketTimeoutException
+         *  we can throw the exception directly. Otherwise the request will be 2 * timeout.
+         */
+        if (ex instanceof SocketTimeoutException || uc.getResponseCode() == -1) {
+            throw ex;
+        } else {
+            return ex;
         }
     }
 

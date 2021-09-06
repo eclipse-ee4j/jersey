@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.Priorities;
@@ -42,11 +45,11 @@ import javax.ws.rs.core.FeatureContext;
 import javax.annotation.Priority;
 
 import org.glassfish.jersey.ExtendedConfig;
-import org.glassfish.jersey.inject.spi.BinderConfigurationFactory;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
+import org.glassfish.jersey.internal.inject.Binder;
+import org.glassfish.jersey.internal.inject.CompositeBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.JerseyBinderConfigurationFactory;
 import org.glassfish.jersey.internal.inject.ProviderBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
@@ -64,6 +67,7 @@ import org.glassfish.jersey.process.Inflector;
 public class CommonConfig implements FeatureContext, ExtendedConfig {
 
     private static final Logger LOGGER = Logger.getLogger(CommonConfig.class.getName());
+    private static final Function<Object, Binder> CAST_TO_BINDER = Binder.class::cast;
 
     /**
      * Configuration runtime type.
@@ -98,42 +102,6 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     private boolean disableMetaProviderConfiguration;
 
     /**
-     * A utility class that binds binders on all {@link BinderConfigurationFactory.BinderConfiguration BinderConfiguration}
-     * created upon creation of this BinderConfigurations from all {@link BinderConfigurationFactory BinderConfigurationFactories}
-     */
-    private static final class BinderConfigurations {
-        private static final List<BinderConfigurationFactory> BINDER_CONFIGURATION_FACTORIES;
-        static {
-            final ServiceFinder<BinderConfigurationFactory> factoriesFinder =
-                    ServiceFinder.find(BinderConfigurationFactory.class);
-            final List<BinderConfigurationFactory> configurationFactories = new LinkedList<>();
-            configurationFactories.add(new JerseyBinderConfigurationFactory());
-            for (BinderConfigurationFactory configurationFactory : factoriesFinder) {
-                configurationFactories.add(configurationFactory);
-            }
-            BINDER_CONFIGURATION_FACTORIES = Collections.unmodifiableList(configurationFactories);
-        }
-
-        private final List<BinderConfigurationFactory.BinderConfiguration> binderConfigurations;
-
-        private BinderConfigurations(ComponentBag componentBag) {
-            binderConfigurations = new LinkedList<>();
-            for (BinderConfigurationFactory factory : BINDER_CONFIGURATION_FACTORIES) {
-                BinderConfigurationFactory.BinderConfiguration configuration =
-                        factory.createBinderConfiguration(componentBag::getInstances);
-                binderConfigurations.add(configuration);
-            }
-        }
-
-        private void configureBinders(InjectionManager injectionManager) {
-            for (BinderConfigurationFactory.BinderConfiguration configuration : binderConfigurations) {
-                configuration.configureBinders(injectionManager);
-            }
-        }
-
-    }
-
-    /**
      * A single feature registration record.
      */
     private static final class FeatureRegistration {
@@ -141,19 +109,34 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         private final Class<? extends Feature> featureClass;
         private final Feature feature;
         private final RuntimeType runtimeType;
+        private final int priority;
 
-        private FeatureRegistration(final Class<? extends Feature> featureClass) {
+        private FeatureRegistration(final Class<? extends Feature> featureClass, int priority) {
             this.featureClass = featureClass;
             this.feature = null;
             final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
             this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
+            this.priority = priority(featureClass, priority);
         }
 
-        private FeatureRegistration(final Feature feature) {
+        private FeatureRegistration(final Feature feature, int priority) {
             this.featureClass = feature.getClass();
             this.feature = feature;
             final ConstrainedTo runtimeTypeConstraint = featureClass.getAnnotation(ConstrainedTo.class);
             this.runtimeType = runtimeTypeConstraint == null ? null : runtimeTypeConstraint.value();
+            this.priority = priority(featureClass, priority);
+        }
+
+        private static int priority(Class<? extends Feature> featureClass, int priority) {
+            if (priority != ContractProvider.NO_PRIORITY) {
+                return priority;
+            }
+            final Priority priorityAnnotation = featureClass.getAnnotation(Priority.class);
+            if (priorityAnnotation != null) {
+                return priorityAnnotation.value();
+            } else {
+                return Priorities.USER;
+            }
         }
 
         /**
@@ -432,7 +415,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -442,7 +425,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass, final int bindingPriority) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, bindingPriority, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, bindingPriority);
         }
 
         return this;
@@ -456,7 +439,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             return this;
         }
         if (componentBag.register(componentClass, asNewIdentitySet(contracts), getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -466,7 +449,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
     public CommonConfig register(final Class<?> componentClass, final Map<Class<?>, Integer> contracts) {
         checkComponentClassNotNull(componentClass);
         if (componentBag.register(componentClass, contracts, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(null, componentClass);
+            processFeatureRegistration(null, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -478,7 +461,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
 
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -489,7 +472,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         checkProviderNotNull(component);
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, bindingPriority, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, bindingPriority);
         }
 
         return this;
@@ -504,7 +487,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             return this;
         }
         if (componentBag.register(component, asNewIdentitySet(contracts), getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
@@ -515,19 +498,19 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         checkProviderNotNull(component);
         final Class<?> componentClass = component.getClass();
         if (componentBag.register(component, contracts, getModelEnhancer(componentClass))) {
-            processFeatureRegistration(component, componentClass);
+            processFeatureRegistration(component, componentClass, ContractProvider.NO_PRIORITY);
         }
 
         return this;
     }
 
-    private void processFeatureRegistration(final Object component, final Class<?> componentClass) {
+    private void processFeatureRegistration(final Object component, final Class<?> componentClass, int priority) {
         final ContractProvider model = componentBag.getModel(componentClass);
         if (model.getContracts().contains(Feature.class)) {
             @SuppressWarnings("unchecked")
             final FeatureRegistration registration = (component != null)
-                    ? new FeatureRegistration((Feature) component)
-                    : new FeatureRegistration((Class<? extends Feature>) componentClass);
+                    ? new FeatureRegistration((Feature) component, priority)
+                    : new FeatureRegistration((Class<? extends Feature>) componentClass, priority);
             newFeatureRegistrations.add(registration);
         }
     }
@@ -556,7 +539,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             this.enabledFeatureClasses.clear();
 
             componentBag.clear();
-            resetRegistrations();
+            resetFeatureRegistrations();
 
             for (final Class<?> clazz : config.getClasses()) {
                 if (Feature.class.isAssignableFrom(clazz) && config.isEnabled((Class<? extends Feature>) clazz)) {
@@ -651,26 +634,56 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
      * @param injectionManager injection manager in which the binders and features should be configured.
      */
     public void configureMetaProviders(InjectionManager injectionManager, ManagedObjectsFinalizer finalizer) {
+        final Set<Object> configuredExternals = Collections.newSetFromMap(new IdentityHashMap<>());
+
         // First, configure existing binders
-        BinderConfigurations binderConfigurations = new BinderConfigurations(componentBag);
-        binderConfigurations.configureBinders(injectionManager);
+        final Set<Binder> configuredBinders = configureBinders(injectionManager, Collections.emptySet());
 
         // Check whether meta providers have been initialized for a config this config has been loaded from.
         if (!disableMetaProviderConfiguration) {
-            // Register external meta objects
-            configureExternalObjects(injectionManager);
-            // Next, configure all features
-            configureFeatures(injectionManager, new HashSet<>(), resetRegistrations(), finalizer);
+            // Next, register external meta objects
+            configureExternalObjects(injectionManager, configuredExternals);
+            // Configure all features
+            configureFeatures(injectionManager, new HashSet<>(), resetFeatureRegistrations(), finalizer);
+            // Next, register external meta objects registered by features
+            configureExternalObjects(injectionManager, configuredExternals);
             // At last, configure any new binders added by features
-            binderConfigurations.configureBinders(injectionManager);
+            configureBinders(injectionManager, configuredBinders);
         }
     }
 
-    private void configureExternalObjects(InjectionManager injectionManager) {
+    private Set<Binder> configureBinders(InjectionManager injectionManager, Set<Binder> configured) {
+        Set<Binder> allConfigured = Collections.newSetFromMap(new IdentityHashMap<>());
+        allConfigured.addAll(configured);
+
+        Collection<Binder> binders = getBinder(configured);
+        if (!binders.isEmpty()) {
+            injectionManager.register(CompositeBinder.wrap(binders));
+            allConfigured.addAll(binders);
+        }
+
+        return allConfigured;
+    }
+
+    private Collection<Binder> getBinder(Set<Binder> configured) {
+        return componentBag.getInstances(ComponentBag.BINDERS_ONLY)
+                .stream()
+                .map(CAST_TO_BINDER)
+                .filter(binder -> !configured.contains(binder))
+                .collect(Collectors.toList());
+    }
+
+    private void configureExternalObjects(InjectionManager injectionManager, Set<Object> externalObjects) {
+        Consumer<Object> registerOnce = o -> {
+            if (!externalObjects.contains(o)) {
+                injectionManager.register(o);
+                externalObjects.add(o);
+            }
+        };
         componentBag.getInstances(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                .forEach(injectionManager::register);
+                .forEach(registerOnce);
         componentBag.getClasses(model -> ComponentBag.EXTERNAL_ONLY.test(model, injectionManager))
-                .forEach(injectionManager::register);
+                .forEach(registerOnce);
     }
 
     private void configureFeatures(InjectionManager injectionManager,
@@ -720,16 +733,17 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
                 if (providerModel != null) {
                     ProviderBinder.bindProvider(feature, providerModel, injectionManager);
                 }
-                configureFeatures(injectionManager, processed, resetRegistrations(), managedObjectsFinalizer);
+                configureFeatures(injectionManager, processed, resetFeatureRegistrations(), managedObjectsFinalizer);
                 enabledFeatureClasses.add(registration.getFeatureClass());
                 enabledFeatures.add(feature);
             }
         }
     }
 
-    private List<FeatureRegistration> resetRegistrations() {
+    private List<FeatureRegistration> resetFeatureRegistrations() {
         final List<FeatureRegistration> result = new ArrayList<>(newFeatureRegistrations);
         newFeatureRegistrations.clear();
+        Collections.sort(result, (o1, o2) -> o1.priority < o2.priority ? -1 : 1);
         return result;
     }
 

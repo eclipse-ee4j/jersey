@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -196,7 +196,7 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        Extend &jersey.test.JerseyTestNg;, or one of it's inner classes &jersey.test.JerseyTestNg.ContainerPerClassTest;
+                        Extend &jersey.test.JerseyTestNg;, or one of its inner classes &jersey.test.JerseyTestNg.ContainerPerClassTest;
                         / &jersey.test.JerseyTestNg.ContainerPerMethodTest;, instead of &jersey.test.JerseyTest;.
                     </para>
                 </listitem>
@@ -389,7 +389,7 @@
 &lt;/dependency&gt;</programlisting>
 
                 As indicated, the "container" exposed by this module is just a wrapper or stub, that redirects all request to
-                a configured host and port. Writing tests for this container is same as for any other but you have to provide
+                a configured host and port. Writing tests for this container is similar to any other but you have to provide
                 the information about host and port during the test execution:
 
                 <screen>mvn test -Djersey.test.host=myhost.org -Djersey.config.test.container.port=8080</screen>

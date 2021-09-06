@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -285,7 +285,7 @@ public class ParamConverterInternalTest extends AbstractTest {
     public void testDateParamConverterIsChosenForDateString() {
         initiateWebApplication();
         final ParamConverter<Date> converter =
-                new ParamConverters.AggregatedProvider().getConverter(Date.class, Date.class, null);
+                new ParamConverters.AggregatedProvider(null).getConverter(Date.class, Date.class, null);
 
         assertEquals("Unexpected date converter provider class",
                 ParamConverters.DateProvider.class, converter.getClass().getEnclosingClass());

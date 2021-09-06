@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,11 +29,16 @@ grant codebase "file:${settings.localRepository}/-" {
 grant codebase "file:${project.build.directory}/test-classes/-" {
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
   permission java.lang.RuntimePermission "modifyThread";
-  permission java.util.PropertyPermission "*", "write";
+  permission java.util.PropertyPermission "*", "read,write";
+  permission java.io.FilePermission "${java.io.tmpdir}/-", "read,write,delete";
   permission java.lang.RuntimePermission "getClassLoader";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc.*";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+  permission java.lang.RuntimePermission "accessDeclaredMembers";
+  permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+  permission java.lang.RuntimePermission "reflectionFactoryAccess";
+  permission java.lang.RuntimePermission "getProtectionDomain"; // mockito for JDK<16
 };
 
 grant codebase "file:${project.build.directory}/classes/-" {
@@ -43,6 +48,7 @@ grant codebase "file:${project.build.directory}/classes/-" {
   permission java.lang.RuntimePermission "modifyThread";
   permission java.util.PropertyPermission "*", "read";
   permission java.io.FilePermission "<<ALL FILES>>", "read";
+  permission java.io.FilePermission "${java.io.tmpdir}/-", "read,write,delete";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.misc.*";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";

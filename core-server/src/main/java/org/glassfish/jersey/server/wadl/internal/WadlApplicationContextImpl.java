@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,6 +47,7 @@ import com.sun.research.ws.wadl.Grammars;
 import com.sun.research.ws.wadl.Include;
 import com.sun.research.ws.wadl.Resource;
 import com.sun.research.ws.wadl.Resources;
+import org.glassfish.jersey.server.wadl.internal.generators.WadlGeneratorJAXBGrammarGenerator;
 
 /**
  * WADL application context implementation.
@@ -94,7 +95,15 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
         // create a temporary generator just to do this one task
         final WadlGenerator wadlGenerator = wadlGeneratorConfig.createWadlGenerator(injectionManager);
 
-        JAXBContext jaxbContextCandidate;
+        try {
+            jaxbContext = getJAXBContextFromWadlGenerator(wadlGenerator);
+        } catch (JAXBException ex) {
+            throw new ProcessingException(LocalizationMessages.ERROR_WADL_JAXB_CONTEXT(), ex);
+        }
+    }
+
+    public static JAXBContext getJAXBContextFromWadlGenerator(WadlGenerator wadlGenerator) throws JAXBException {
+        JAXBContext jaxbContextCandidate = null;
 
         final ClassLoader contextClassLoader = AccessController.doPrivileged(ReflectionHelper.getContextClassLoaderPA());
         try {
@@ -117,13 +126,13 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
                 LOGGER.log(Level.FINE, LocalizationMessages.WADL_JAXB_CONTEXT_FALLBACK(), ex);
                 jaxbContextCandidate = JAXBContext.newInstance(wadlGenerator.getRequiredJaxbContextPath());
             } catch (final JAXBException innerEx) {
-                throw new ProcessingException(LocalizationMessages.ERROR_WADL_JAXB_CONTEXT(), ex);
+               throw ex;
             }
         } finally {
             AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(contextClassLoader));
         }
 
-        jaxbContext = jaxbContextCandidate;
+        return jaxbContextCandidate;
     }
 
     @Override
@@ -253,6 +262,14 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
             }
         } catch (final Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_WADL_EXTERNAL_GRAMMAR(), e);
+        }
+    }
+
+    public static boolean isJaxbImplAvailable() {
+        try {
+            return null != WadlApplicationContextImpl.getJAXBContextFromWadlGenerator(new WadlGeneratorJAXBGrammarGenerator());
+        } catch (JAXBException je) {
+            return false;
         }
     }
 }

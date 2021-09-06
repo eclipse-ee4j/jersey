@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,14 +26,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -173,7 +174,6 @@ import org.apache.http.util.VersionInfo;
 class ApacheConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(ApacheConnector.class.getName());
-
     private static final VersionInfo vi;
     private static final String release;
 
@@ -325,14 +325,16 @@ class ApacheConnector implements Connector {
         }
         clientBuilder.setDefaultRequestConfig(requestConfig);
 
-        Optional<Object> contract = config.getInstances().stream()
-                .filter(a -> ApacheHttpClientBuilderConfigurator.class.isInstance(a)).findFirst();
+        LinkedList<Object> contracts = config.getInstances().stream()
+                .filter(ApacheHttpClientBuilderConfigurator.class::isInstance)
+                .collect(Collectors.toCollection(LinkedList::new));
 
-        final HttpClientBuilder configuredBuilder = contract.isPresent()
-                ? ((ApacheHttpClientBuilderConfigurator) contract.get()).configure(clientBuilder)
-                : null;
+        HttpClientBuilder configuredBuilder = clientBuilder;
+        for (Object configurator : contracts) {
+            configuredBuilder = ((ApacheHttpClientBuilderConfigurator) configurator).configure(configuredBuilder);
+        }
 
-        this.client = configuredBuilder != null ? configuredBuilder.build() : clientBuilder.build();
+        this.client = configuredBuilder.build();
     }
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
@@ -355,12 +357,15 @@ class ApacheConnector implements Connector {
             }
         }
 
+        final boolean useSystemProperties =
+            PropertiesHelper.isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
+
         // Create custom connection manager.
         return createConnectionManager(
                 client,
                 config,
                 sslContext,
-                false);
+            useSystemProperties);
     }
 
     private HttpClientConnectionManager createConnectionManager(
@@ -515,7 +520,8 @@ class ApacheConnector implements Connector {
             }
 
             try {
-                responseContext.setEntityStream(getInputStream(response));
+                final ConnectionClosingMechanism closingMechanism = new ConnectionClosingMechanism(clientRequest, request);
+                responseContext.setEntityStream(getInputStream(response, closingMechanism));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -594,6 +600,10 @@ class ApacheConnector implements Connector {
             return null;
         }
 
+        if (HttpEntity.class.isInstance(entity)) {
+            return wrapHttpEntity(clientRequest, (HttpEntity) entity);
+        }
+
         final AbstractHttpEntity httpEntity = new AbstractHttpEntity() {
             @Override
             public boolean isRepeatable() {
@@ -633,6 +643,70 @@ class ApacheConnector implements Connector {
             }
         };
 
+        return bufferEntity(httpEntity, bufferingEnabled);
+    }
+
+    private HttpEntity wrapHttpEntity(final ClientRequest clientRequest, final HttpEntity originalEntity) {
+        final boolean bufferingEnabled = BufferedHttpEntity.class.isInstance(originalEntity);
+
+        try {
+            clientRequest.setEntity(originalEntity.getContent());
+        } catch (IOException e) {
+            throw new ProcessingException(LocalizationMessages.ERROR_READING_HTTPENTITY_STREAM(e.getMessage()), e);
+        }
+
+        final AbstractHttpEntity httpEntity = new AbstractHttpEntity() {
+            @Override
+            public boolean isRepeatable() {
+                return originalEntity.isRepeatable();
+            }
+
+            @Override
+            public long getContentLength() {
+                return originalEntity.getContentLength();
+            }
+
+            @Override
+            public Header getContentType() {
+                return originalEntity.getContentType();
+            }
+
+            @Override
+            public Header getContentEncoding() {
+                return originalEntity.getContentEncoding();
+            }
+
+            @Override
+            public InputStream getContent() throws IOException, IllegalStateException {
+               return originalEntity.getContent();
+            }
+
+            @Override
+            public void writeTo(final OutputStream outputStream) throws IOException {
+                clientRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
+                    @Override
+                    public OutputStream getOutputStream(final int contentLength) throws IOException {
+                        return outputStream;
+                    }
+                });
+                clientRequest.writeEntity();
+            }
+
+            @Override
+            public boolean isStreaming() {
+                return originalEntity.isStreaming();
+            }
+
+            @Override
+            public boolean isChunked() {
+                return originalEntity.isChunked();
+            }
+        };
+
+        return bufferEntity(httpEntity, bufferingEnabled);
+    }
+
+    private static HttpEntity bufferEntity(HttpEntity httpEntity, boolean bufferingEnabled) {
         if (bufferingEnabled) {
             try {
                 return new BufferedHttpEntity(httpEntity);
@@ -655,8 +729,8 @@ class ApacheConnector implements Connector {
         return stringHeaders;
     }
 
-    private static InputStream getInputStream(final CloseableHttpResponse response) throws IOException {
-
+    private static InputStream getInputStream(final CloseableHttpResponse response,
+                                              final ConnectionClosingMechanism closingMechanism) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
@@ -670,18 +744,57 @@ class ApacheConnector implements Connector {
             }
         }
 
-        return new FilterInputStream(inputStream) {
-            @Override
-            public void close() throws IOException {
-                try {
-                    super.close();
-                } catch (IOException ex) {
-                    // Ignore
-                } finally {
-                    response.close();
+        return closingMechanism.getEntityStream(inputStream, response);
+    }
+
+    /**
+     * The way the Apache CloseableHttpResponse is to be closed.
+     * See https://github.com/eclipse-ee4j/jersey/issues/4321
+     * {@link ApacheClientProperties#CONNECTION_CLOSING_STRATEGY}
+     */
+    private final class ConnectionClosingMechanism {
+        private ApacheConnectionClosingStrategy connectionClosingStrategy = null;
+        private final ClientRequest clientRequest;
+        private final HttpUriRequest apacheRequest;
+
+        private ConnectionClosingMechanism(ClientRequest clientRequest, HttpUriRequest apacheRequest) {
+            this.clientRequest = clientRequest;
+            this.apacheRequest = apacheRequest;
+            Object closingStrategyProperty = clientRequest
+                    .resolveProperty(ApacheClientProperties.CONNECTION_CLOSING_STRATEGY, Object.class);
+            if (closingStrategyProperty != null) {
+                if (ApacheConnectionClosingStrategy.class.isInstance(closingStrategyProperty)) {
+                    connectionClosingStrategy = (ApacheConnectionClosingStrategy) closingStrategyProperty;
+                } else {
+                    LOGGER.log(
+                            Level.WARNING,
+                            LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                                    ApacheClientProperties.CONNECTION_CLOSING_STRATEGY,
+                                    closingStrategyProperty,
+                                    ApacheConnectionClosingStrategy.class.getName())
+                    );
                 }
             }
-        };
+
+            if (connectionClosingStrategy == null) {
+                if (vi.getRelease().compareTo("4.5") > 0) {
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.GracefulClosingStrategy.INSTANCE;
+                } else {
+                    connectionClosingStrategy = ApacheConnectionClosingStrategy.ImmediateClosingStrategy.INSTANCE;
+                }
+            }
+        }
+
+        private InputStream getEntityStream(final InputStream inputStream,
+                                            final CloseableHttpResponse response) {
+            InputStream filterStream = new FilterInputStream(inputStream) {
+                @Override
+                public void close() throws IOException {
+                    connectionClosingStrategy.close(clientRequest, apacheRequest, response, in);
+                }
+            };
+            return filterStream;
+        }
     }
 
     private static class ConnectionFactory extends ManagedHttpClientConnectionFactory {

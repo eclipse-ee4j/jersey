@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,6 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
         ServerBootstrapBag serverBag = (ServerBootstrapBag) bootstrapBag;
         ResourceConfig runtimeConfig = serverBag.getRuntimeConfig();
         ComponentBag componentBag = runtimeConfig.getComponentBag();
-        ManagedObjectsFinalizer finalizer = serverBag.getManagedObjectsFinalizer();
 
         // TODO: Do we need to register DEFAULT Executor and ScheduledExecutor to InjectionManager?
         ScheduledExecutorServiceProvider defaultScheduledExecutorProvider = new DefaultBackgroundSchedulerProvider();
@@ -50,16 +49,15 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                 .to(ScheduledExecutorServiceProvider.class)
                 .qualifiedBy(BackgroundSchedulerLiteral.INSTANCE);
         injectionManager.register(schedulerBinding);
-        finalizer.registerForPreDestroyCall(defaultScheduledExecutorProvider);
 
         ExecutorServiceProvider defaultAsyncExecutorProvider = new DefaultManagedAsyncExecutorProvider();
         InstanceBinding<ExecutorServiceProvider> executorBinding = Bindings
                 .service(defaultAsyncExecutorProvider)
                 .to(ExecutorServiceProvider.class);
         injectionManager.register(executorBinding);
-        finalizer.registerForPreDestroyCall(defaultAsyncExecutorProvider);
 
-        registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider, defaultScheduledExecutorProvider);
+        registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider,
+                defaultScheduledExecutorProvider, serverBag.getManagedObjectsFinalizer());
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -67,7 +67,11 @@ public class PostInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(new CounterPreInvocationInterceptor(a -> { throw new IllegalStateException(); }))
                 .register(new CounterPostInvocationInterceptor(
-                        (a, b) -> false, (a, b) -> { b.resolve(Response.accepted().build()); return true; }))
+                        (a, b) -> false,
+                        (a, b) -> {
+                            b.resolve(Response.accepted().build());
+                            return true;
+                        }))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
             Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
@@ -80,7 +84,11 @@ public class PostInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(new CounterPreInvocationInterceptor(a -> { throw new IllegalStateException(); }))
                 .register(new CounterPostInvocationInterceptor(
-                        (a, b) -> false, (a, b) -> { b.resolve(Response.accepted().build()); return true; }))
+                        (a, b) -> false,
+                        (a, b) -> {
+                            b.resolve(Response.accepted().build());
+                            return true;
+                        }))
                 .build().target(URL).request();
         try (Response response = builder.async().get().get()) {
             Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
@@ -94,7 +102,11 @@ public class PostInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(filter)
                 .register(new CounterPostInvocationInterceptor(
-                        (a, b) -> false, (a, b) -> { b.resolve(Response.accepted().build()); return true; }))
+                        (a, b) -> false,
+                        (a, b) -> {
+                            b.resolve(Response.accepted().build());
+                            return true;
+                        }))
                 .build().target(URL).request();
         try (Response response = builder.async()
                 .get(new TestInvocationCallback(a -> a.getStatus() == Response.Status.ACCEPTED.getStatusCode(), a -> false))
@@ -150,7 +162,11 @@ public class PostInvocationInterceptorTest {
                         100)
                 .register(new CounterPostInvocationInterceptor(
                         (a, b) -> false,
-                        (a, b) -> { b.resolve(Response.ok().build()); b.resolve(Response.ok().build()); return true; }) {},
+                        (a, b) -> {
+                          b.resolve(Response.ok().build());
+                          b.resolve(Response.ok().build());
+                          return true;
+                        }) {},
                         200)
                 .build().target(URL).request();
         try (Response response = builder.get()) {
@@ -165,8 +181,11 @@ public class PostInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(AbortRequestFilter.class)
                 .register(new CounterPostInvocationInterceptor(
-                        (a, b) -> { b.setStatus(Response.Status.CONFLICT.getStatusCode());
-                            b.setEntityStream(new ByteArrayInputStream("HELLO".getBytes())); return true; },
+                        (a, b) -> {
+                            b.setStatus(Response.Status.CONFLICT.getStatusCode());
+                            b.setEntityStream(new ByteArrayInputStream("HELLO".getBytes()));
+                            return true;
+                        },
                         (a, b) -> false))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
@@ -181,11 +200,19 @@ public class PostInvocationInterceptorTest {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(new CounterPostInvocationInterceptor(
                                   (a, b) -> false,
-                                  (a, b) -> { b.getThrowables().clear(); return true; }) {},
+                                  (a, b) -> {
+                                      b.getThrowables().clear();
+                                      return true;
+                                  }) {
+                          },
                         200)
                 .register(new CounterPostInvocationInterceptor(
                                   (a, b) -> false,
-                                  (a, b) -> { b.resolve(Response.accepted().build()); return true; }) {},
+                                  (a, b) -> {
+                                      b.resolve(Response.accepted().build());
+                                      return true;
+                                  }) {
+                          },
                         300)
                 .build().target(URL).request();
         try (Response response = builder.get()) {
@@ -212,13 +239,29 @@ public class PostInvocationInterceptorTest {
     public void testPreThrowsPostResolves() {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
                 .register(new CounterPreInvocationInterceptor(a -> { throw new IllegalArgumentException(); }) {})
-                .register(new CounterPreInvocationInterceptor(a -> {throw new IllegalStateException(); }) {})
-                .register(new CounterPostInvocationInterceptor((a, b) -> false, (a, b) -> {
-                    b.resolve(Response.accepted().build()); return b.getThrowables().size() == 2;
-                }))
+                .register(new CounterPreInvocationInterceptor(a -> { throw new IllegalStateException(); }) {})
+                .register(new CounterPostInvocationInterceptor(
+                        (a, b) -> false,
+                        (a, b) -> {
+                            b.resolve(Response.accepted().build());
+                            return b.getThrowables().size() == 2;
+                        }))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
             Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        }
+    }
+
+    @Test
+    public void testPostInvocationInterceptorIsHitforEachRequest() {
+        final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new CounterPostInvocationInterceptor((a, b) -> true, (a, b) -> false))
+                .register(new AbortRequestFilter()).build().target(URL).request();
+        for (int i = 1; i != 10; i++) {
+            try (Response response = builder.get()) {
+                Assert.assertEquals(200, response.getStatus());
+                Assert.assertEquals(i, counter.get());
+            }
         }
     }
 

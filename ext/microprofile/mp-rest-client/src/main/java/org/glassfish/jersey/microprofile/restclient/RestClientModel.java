@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,17 +20,9 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.enterprise.inject.spi.BeanManager;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.ext.ParamConverterProvider;
-
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
-import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
  * Model of the rest client interface.
@@ -46,25 +38,11 @@ class RestClientModel {
     /**
      * Creates new instance of the {@link RestClientModel} base on interface class.
      *
-     * @param restClientClass          rest client interface
-     * @param responseExceptionMappers registered exception mappers
-     * @param paramConverterProviders  registered param converters
-     * @param asyncInterceptors        registered async interceptor factories
-     * @param injectionManager
+     * @param context RestClient data context
      * @return new instance
      */
-    static RestClientModel from(Class<?> restClientClass,
-                                Set<ResponseExceptionMapper> responseExceptionMappers,
-                                Set<ParamConverterProvider> paramConverterProviders,
-                                List<AsyncInvocationInterceptorFactory> asyncInterceptorFactories,
-                                InjectionManager injectionManager,
-                                BeanManager beanManager) {
-        InterfaceModel interfaceModel = InterfaceModel.from(restClientClass,
-                                                            responseExceptionMappers,
-                                                            paramConverterProviders,
-                                                            asyncInterceptorFactories,
-                                                            injectionManager,
-                                                            beanManager);
+    static RestClientModel from(RestClientContext context) {
+        InterfaceModel interfaceModel = InterfaceModel.from(context);
         return new Builder()
                 .interfaceModel(interfaceModel)
                 .methodModels(parseMethodModels(interfaceModel))

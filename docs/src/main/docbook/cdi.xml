@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@
     <section xml:id="cdi.support.existing.containers">
         <title>Containers Known to Work With Jersey CDI Support</title>
         <para>
-          To stick with JAX-RS specification, Jersey has to support JAX-RS/CDI integration in Java EE environment.
+          To stick with JAX-RS specification, Jersey has to support JAX-RS/CDI integration in Java/Jakarta EE environment.
           The two containers supporting JAX-RS/CDI integration out of the box are Oracle GlassFish and Oracle WebLogic application server.
         </para>
         <para>

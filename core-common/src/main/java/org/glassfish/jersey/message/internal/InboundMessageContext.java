@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +54,7 @@ import javax.xml.transform.Source;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
+import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 /**
@@ -161,6 +162,28 @@ public abstract class InboundMessageContext {
         this.entityContent = new EntityContent();
         this.translateNce = translateNce;
         this.configuration = configuration;
+    }
+
+    /**
+     * Create new inbound message context.
+     * @see #InboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public InboundMessageContext() {
+        this((Configuration) null);
+    }
+
+    /**
+     * Create new inbound message context.
+     *
+     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     *                      as required by JAX-RS specification on the server side.     *
+     * @see #InboundMessageContext(Configuration)
+     */
+    @Deprecated
+    public InboundMessageContext(boolean translateNce) {
+        this((Configuration) null, translateNce);
     }
 
     // Message headers
@@ -309,7 +332,7 @@ public abstract class InboundMessageContext {
         }
 
         try {
-            return converter.apply(HeaderUtils.asString(value, null));
+            return converter.apply(HeaderUtils.asString(value, configuration));
         } catch (ProcessingException ex) {
             throw exception(name, value, ex);
         }
@@ -428,7 +451,9 @@ public abstract class InboundMessageContext {
             @Override
             public MediaType apply(String input) {
                 try {
-                    return MediaType.valueOf(input);
+                    return RuntimeDelegateDecorator.configured(configuration)
+                            .createHeaderDelegate(MediaType.class)
+                            .fromString(input);
                 } catch (IllegalArgumentException iae) {
                     throw new ProcessingException(iae);
                 }
@@ -565,7 +590,12 @@ public abstract class InboundMessageContext {
         for (String cookie : cookies) {
             if (cookie != null) {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
-                result.put(newCookie.getName(), newCookie);
+                String cookieName = newCookie.getName();
+                if (result.containsKey(cookieName)) {
+                    result.put(cookieName, HeaderUtils.getPreferredCookie(result.get(cookieName), newCookie));
+                } else {
+                    result.put(cookieName, newCookie);
+                }
             }
         }
         return result;
@@ -750,7 +780,7 @@ public abstract class InboundMessageContext {
         entityContent.ensureNotClosed();
 
         try {
-            return !entityContent.isEmpty();
+            return entityContent.isBuffered() || !entityContent.isEmpty();
         } catch (IllegalStateException ex) {
             // input stream has been closed.
             return false;

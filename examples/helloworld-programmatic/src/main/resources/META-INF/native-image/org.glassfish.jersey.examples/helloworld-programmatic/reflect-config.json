@@ -1,0 +1,44 @@
+[
+  {
+  "name":"java.awt.image.RenderedImage"
+  },
+  {
+    "name":"javax.activation.DataSource"
+  },
+  {
+    "name":"javax.inject.Singleton",
+    "allDeclaredMethods":true
+  },
+  {
+    "name":"javax.ws.rs.core.Application",
+    "allDeclaredMethods":true
+  },
+  {
+    "name":"javax.ws.rs.core.Feature",
+    "methods":[{"name":"configure","parameterTypes":["javax.ws.rs.core.FeatureContext"] }]
+  },
+  {
+    "name":"javax.xml.transform.Source"
+  },
+  {
+    "name":"javax.xml.transform.dom.DOMSource"
+  },
+  {
+    "name":"javax.xml.transform.sax.SAXSource"
+  },
+  {
+    "name":"javax.xml.transform.stream.StreamSource"
+  },
+  {
+    "name":"org.glassfish.jersey.examples.helloworld.App$2",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true
+  },
+  {
+    "name":"org.glassfish.jersey.examples.helloworld.App$3",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true
+  }
+]

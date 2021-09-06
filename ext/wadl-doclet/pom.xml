@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.ext</groupId>
-        <version>2.30-SNAPSHOT</version>
+        <version>2.35-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jersey-wadl-doclet</artifactId>
@@ -32,24 +32,17 @@
         of resource classes, so that this can be used for extending generated wadl with useful
         documentation.
     </description>
+    
+    <properties>
+        <java.sourceDirectory>${project.basedir}/src/main/java</java.sourceDirectory>
+        <java8_11.build.outputDirectory>${project.basedir}/target</java8_11.build.outputDirectory>
+        <java8_11.sourceDirectory>${project.basedir}/src/main/java8_11</java8_11.sourceDirectory>
+        <java12.build.outputDirectory>${project.basedir}/target-java12</java12.build.outputDirectory>
+        <java12.sourceDirectory>${project.basedir}/src/main/java12</java12.sourceDirectory>
+    </properties>
 
 
     <profiles>
-        <profile>
-            <id>jdk1.7</id>
-            <activation>
-                <jdk>1.7</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.7.0</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>jdk1.8</id>
             <activation>
@@ -66,27 +59,145 @@
             </dependencies>
         </profile>
         <profile>
-            <id>tools.jar</id>
+            <id>jdk1.8_11</id>
             <activation>
-                <!-- Activation should be done with <file>${java.home}/../lib/tools.jar</file But this is not working with maven as the property is not expansed. -->
-                <property>
-                    <name>java.vendor</name>
-                    <value>Sun Microsystems Inc.</value>
-                </property>
+                <jdk>[1.8,12)</jdk>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.6</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
+            <build>
+            	<directory>${java8_11.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java.sourceDirectory}</source>
+                                        <source>${java8_11.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk12+</id>
+            <activation>
+                <jdk>[12,)</jdk>
+            </activation>
+            <build>
+            	<directory>${java12.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                        	<execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java.sourceDirectory}</source>
+                                        <source>${java12.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Only multi-release is supported when compiling from higher version to lower -->
+        <profile>
+            <id>copyJDK12FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java12.build.outputDirectory} does not work here -->
+                    <exists>target-java12/classes/org/glassfish/jersey/wadl/doclet/ResourceDoclet.class</exists>
+                </file>
+                <jdk>[1.8,12)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk12-classes</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${java8_11.build.outputDirectory}/classes/META-INF/versions/12</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java12.build.outputDirectory}/classes</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk12-sources</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                    	<property name="sources-jar" value="${java8_11.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
+                                    	<echo>sources-jar: ${sources-jar}</echo>
+                                    	<zip destfile="${sources-jar}" update="true">
+                                    		<zipfileset dir="${java12.sourceDirectory}" prefix="META-INF/versions/12"/>
+										</zip>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                    	</executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
     <dependencies>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-jaxb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -105,4 +216,5 @@
             </resource>
         </resources>
     </build>
+    
 </project>

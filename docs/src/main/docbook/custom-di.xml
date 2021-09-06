@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@
     </para>
 
     <para>
-        Jersey user guide can by no means supply an exhaustive documentation of HK2 API in it's entire scope.
+        Jersey user guide can by no means supply an exhaustive documentation of HK2 API in its entire scope.
         This chapter only points out the most common scenarios related
         to dependency injection in Jersey and suggests possible options to implement these scenarios.
         It is highly recommended to check out the &hk2.link; website and read HK2 documentation in order to get
@@ -65,8 +65,8 @@
         as a good example that will help me demonstrate implementation of the use cases described above.
         The following examples should work on top of Jersey Servlet integration module. The approach that will be
         demonstrated could be further generalized.
-        Bellow i will show how to make actual Servlet &jee6.servlet.HttpSession; injectable into JAX-RS components
-        and how to make this injection work with a custom inject annotation type. Finally, i will demonstrate
+        Below we will show how to make actual Servlet &jee6.servlet.HttpSession; injectable into JAX-RS components
+        and how to make this injection work with a custom inject annotation type. Finally, we will demonstrate
         how you can write &lit.jee6.servlet.HttpSession;-scoped JAX-RS resources.
     </para>
 
@@ -487,7 +487,7 @@ public class PerSessionComponentProvider implements ComponentProvider {
             The first and very important aspect of writing your own &lit.jersey.server.spi.ComponentProvider;
             in Jersey is to store the actual HK2 &hk2.ServiceLocator; instance that will be passed to you as
             the only argument of the provider <literal>initialize</literal> method.
-            Your component provider instance will not get injected at all so this is more less your only chance
+            Your component provider instance will not get injected at all so this is more or less your only chance
             to get access to the HK2 runtime of your application. Please bear in mind, that at the time when
             your component provider methods get invoked, the &lit.hk2.ServiceLocator; is not fully configured yet.
             This limitation applies to all component provider methods, as the main goal of any component provider
@@ -513,7 +513,7 @@ public class PerSessionComponentProvider implements ComponentProvider {
         </para>
 
         <para>
-            The implementation of the <literal>PerSessionFactory</literal> is is also included above.
+            The implementation of the <literal>PerSessionFactory</literal> is also included above.
             Please note that as opposed to a component provider implementation that should never itself rely
             on an injection support, the factory bound by our component provider would get injected just fine,
             since it is only instantiated later, once the Jersey runtime for the application is fully

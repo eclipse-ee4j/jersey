@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -165,7 +165,7 @@ for (final Destination dest : recommended) {
 }</programlisting>
                 </example>
 
-                The downside of this approach is it's slowness. You need to sequentially process all the independent requests which
+                The downside of this approach is its slowness. You need to sequentially process all the independent requests which
                 means that you're wasting resources. You are needlessly blocking threads, that could be otherwise used for some real work.
             </para>
             <para>
@@ -534,7 +534,7 @@ String responseString = responseFlowable.blockingFirst();</programlisting>
                 &rxjava.link;, contributed by Netflix, is probably the most advanced reactive library for Java at the moment. It's
                 used for composing asynchronous and event-based programs by using observable sequences. It uses the
                 <link xlink:href="&wikipedia.uri;Observer_pattern">observer pattern</link> to support these sequences of data/events
-                via it's &rxjava.Observable; entry point class which implements the Reactive Pattern. &lit.rxjava.Observable; is
+                via its &rxjava.Observable; entry point class which implements the Reactive Pattern. &lit.rxjava.Observable; is
                 actually the parameter type in the RxJava's extension of &jaxrs.client.RxInvoker;, called
                 &jersey.ext.rx.client.rxjava.RxObservableInvoker;. This means that the return type of HTTP method calls is
                 &lit.rxjava.Observable; in this case (accordingly parametrized).
@@ -611,7 +611,7 @@ client.register(RxObservableInvokerProvider.class);</programlisting>
                 &rxjava.link;, contributed by Netflix, is probably the most advanced reactive library for Java at the moment. It's
                 used for composing asynchronous and event-based programs by using observable sequences. It uses the
                 <link xlink:href="&wikipedia.uri;Observer_pattern">observer pattern</link> to support these sequences of data/events
-                via it's &rxjava2.Flowable; entry point class which implements the Reactive Pattern. &lit.rxjava2.Flowable; is
+                via its &rxjava2.Flowable; entry point class which implements the Reactive Pattern. &lit.rxjava2.Flowable; is
                 actually the parameter type in the RxJava's extension of &jaxrs.client.RxInvoker;, called
                 &jersey.ext.rx.client.rxjava2.RxFlowableInvoker;. This means that the return type of HTTP method calls is
                 &lit.rxjava2.Flowable; in this case (accordingly parametrized).

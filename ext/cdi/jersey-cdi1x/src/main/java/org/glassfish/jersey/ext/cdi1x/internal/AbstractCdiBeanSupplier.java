@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,14 @@ package org.glassfish.jersey.ext.cdi1x.internal;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
+import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.InjectionTargetFactory;
 
@@ -82,12 +85,18 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
             @Override
             public T getInstance(final Class<T> clazz) {
                 final CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
-                final T instance = injectionTarget.produce(creationalContext);
-                injectionTarget.inject(instance, creationalContext);
-                if (injectionManager != null) {
-                    injectionManager.inject(instance, CdiComponentProvider.CDI_CLASS_ANALYZER);
-                }
-                injectionTarget.postConstruct(instance);
+                final T instance = produce(injectionTarget, creationalContext, injectionManager, clazz);
+                final CdiComponentProvider cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
+                final CdiComponentProvider.InjectionManagerInjectedCdiTarget hk2managedTarget =
+                     cdiComponentProvider.new InjectionManagerInjectedCdiTarget(injectionTarget) {
+                        @Override
+                        public Set<InjectionPoint> getInjectionPoints() {
+                            return injectionTarget.getInjectionPoints();
+                        }
+                    };
+                hk2managedTarget.setInjectionManager(injectionManager);
+                hk2managedTarget.inject(instance, creationalContext);
+                hk2managedTarget.postConstruct(instance);
                 return instance;
             }
 
@@ -96,6 +105,18 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
                 injectionTarget.preDestroy(instance);
             }
         };
+    }
+
+    /*
+     * Let CDI produce the InjectionTarget. If the constructor contains @Context Args CDI won't be able to produce it.
+     * Let the HK2 try to produce the target then.
+     */
+    private static <T> T produce(InjectionTarget<T> target, CreationalContext<T> ctx, InjectionManager im, Class<T> clazz) {
+        try {
+            return target.produce(ctx);
+        } catch (Exception e) {
+            return im.create(clazz);
+        }
     }
 
     @SuppressWarnings(value = "unchecked")

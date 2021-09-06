@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
@@ -40,13 +40,17 @@ That means you can choose which one of the two suits your needs better and use i
 We use [contribution policy](CONTRIBUTING.md), which means we can only accept contributions under
  the terms of [ECA][eca].
 
-### More Info on Jersey
+### More Information on Jersey
 See the [Jersey website][jersey-web] to access Jersey documentation. If you run into any issues or have questions,
-ask at [jersey-dev@eclipse.org][jersey-users], [StackOverflow][jersey-so] or file an issue on [Jersey GitHub Project][jersey-issues].
+ask at [jersey-dev@eclipse.org][jersey-users] (need to [subscribe][jersey-users-subscribe] first),
+[StackOverflow][jersey-so] or file an issue on [Jersey GitHub Project][jersey-issues].
+You can follow us on [Twitter][jersey-twitter], too.
 
 [eca]: http://www.eclipse.org/legal/ECA.php
 [jersey-api]: https://jersey.github.io/apidocs/latest/jersey/index.html
 [jersey-issues]: https://github.com/eclipse-ee4j/jersey/issues
 [jersey-so]: http://stackoverflow.com/questions/tagged/jersey
 [jersey-users]: mailto:jersey-dev@eclipse.org
+[jersey-users-subscribe]: https://accounts.eclipse.org/mailing-list/jersey-dev
 [jersey-web]: https://projects.eclipse.org/projects/ee4j.jersey
+[jersey-twitter]: https://twitter.com/gf_jersey

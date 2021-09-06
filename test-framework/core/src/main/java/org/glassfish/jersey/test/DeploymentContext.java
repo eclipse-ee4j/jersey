@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,13 @@
 
 package org.glassfish.jersey.test;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
+
+import java.util.Optional;
 
 /**
  * Basic application deployment context.
@@ -122,6 +126,8 @@ public class DeploymentContext {
 
         private final ResourceConfig resourceConfig;
         private String contextPath = DEFAULT_CONTEXT_PATH;
+        private SSLContext sslContext;
+        private SSLParameters sslParameters;
 
         /**
          * Create new deployment context builder instance not explicitly bound to the JAX-RS / Jersey application class.
@@ -176,6 +182,24 @@ public class DeploymentContext {
         }
 
         /**
+         * Set the application ssl properties.
+         *
+         * @param sslContext application ssl context.
+         * @param sslParameters application ssl parameters
+         * @return this application deployment context builder.
+         *
+         * @throws NullPointerException if {@code sslContext} is {@code null}.
+         */
+        public Builder ssl(final SSLContext sslContext, SSLParameters sslParameters) {
+            if (sslContext == null && sslParameters == null) {
+                throw new NullPointerException("The sslContext and sslParameters must not be null");
+            }
+            this.sslContext = sslContext;
+            this.sslParameters = sslParameters;
+            return this;
+        }
+
+        /**
          * Build a new application deployment context configured by the current state of this
          * application deployment context builder.
          *
@@ -201,6 +225,8 @@ public class DeploymentContext {
 
     private final ResourceConfig resourceConfig;
     private final String contextPath;
+    private final SSLContext sslContext;
+    private final SSLParameters sslParameters;
 
     /**
      * Create new application deployment context.
@@ -210,6 +236,8 @@ public class DeploymentContext {
     protected DeploymentContext(final Builder b) {
         this.contextPath = b.contextPath;
         this.resourceConfig = b.resourceConfig;
+        this.sslContext = b.sslContext;
+        this.sslParameters = b.sslParameters;
     }
 
     /**
@@ -233,5 +261,24 @@ public class DeploymentContext {
     public final String getContextPath() {
         return contextPath;
     }
+
+    /**
+     * Get the deployed application ssl context.
+     *
+     * @return the deployed application ssl context.
+     */
+    public Optional<SSLContext> getSslContext() {
+        return Optional.ofNullable(sslContext);
+    }
+
+    /**
+     * Get the deployed application ssl parameters.
+     *
+     * @return the deployed application ssl parameters.
+     */
+    public Optional<SSLParameters> getSslParameters() {
+        return Optional.ofNullable(sslParameters);
+    }
+
 }
 

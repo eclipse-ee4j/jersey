@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -83,6 +83,9 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
     private static final String CONFIG_SSL_KEY_STORE_PASSWORD = "/mp-rest/keyStorePassword";
     private static final String CONFIG_SSL_HOSTNAME_VERIFIER = "/mp-rest/hostnameVerifier";
     private static final String CONFIG_PROVIDERS = "/mp-rest/providers";
+    private static final String CONFIG_FOLLOW_REDIRECTS = "/mp-rest/followRedirects";
+    private static final String CONFIG_QUERY_PARAM_STYLE = "/mp-rest/queryParamStyle";
+    private static final String CONFIG_PROXY_ADDRESS = "/mp-rest/proxyAddress";
     private static final String DEFAULT_KEYSTORE_TYPE = "JKS";
     private static final String CLASSPATH_LOCATION = "classpath:";
     private static final String FILE_LOCATION = "file:";
@@ -134,6 +137,12 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         // Connection read timeout (if configured)
         getConfigOption(Long.class, CONFIG_READ_TIMEOUT)
                 .ifPresent(aLong -> restClientBuilder.readTimeout(aLong, TimeUnit.MILLISECONDS));
+        getConfigOption(Boolean.class, CONFIG_FOLLOW_REDIRECTS)
+                .ifPresent(follow -> VersionSupport.followRedirects(restClientBuilder, follow));
+        getConfigOption(String.class, CONFIG_QUERY_PARAM_STYLE)
+                .ifPresent(value -> VersionSupport.queryParamStyle(restClientBuilder, value));
+        getConfigOption(String.class, CONFIG_PROXY_ADDRESS)
+                .ifPresent(proxy -> VersionSupport.proxyAddress(restClientBuilder, proxy));
 
         // Providers from configuration
         addConfiguredProviders(restClientBuilder);

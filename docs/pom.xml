@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>2.30-SNAPSHOT</version>
+        <version>2.35-SNAPSHOT</version>
     </parent>
     <artifactId>jersey-documentation</artifactId>
     <packaging>pom</packaging>
@@ -45,7 +45,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <echo message="Preparing char entities" />
                                 <mkdir dir="${src.dir}" />
                                 <copy todir="${src.dir}">
@@ -63,7 +63,7 @@
                                 <replace file="${src.dir}/jersey.ent" token="$repository" value="${javanet.repository.id}" />
                                 <replace file="${src.dir}/jersey.ent" token="$src.branch" value="${jersey.src.branch}" />
                                 <replace file="${src.dir}/jersey.ent" token="$version" value="${jersey.version}" />
-                            </tasks>
+                            </target>
                         </configuration>
                         <id>process-entities</id>
                         <phase>package</phase>

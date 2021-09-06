@@ -41,21 +41,21 @@ aopalliance Version 1
 * Project: http://aopalliance.sourceforge.net
 * Copyright: Material in the public domain is not protected by copyright
 
-Bean Validation API 1.1.0.Final
+Bean Validation API 2.0.2
 * License: Apache License, 2.0
 * Project: http://beanvalidation.org/1.1/
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
+Hibernate Validator CDI, 6.1.2.Final 
+* License: Apache License, 2.0
+* Project: https://beanvalidation.org/
+* Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
+
 Bootstrap v3.3.7
 * License: MIT license (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 * Project: http://getbootstrap.com
 * Copyright: 2011-2016 Twitter, Inc
-
-CDI API Version 1.1
-* License: Apache License, 2.0
-* Project: http://www.seamframework.org/Weld
-* Copyright 2010, Red Hat, Inc., and individual contributors by the @authors tag.
 
 Google Guava Version 18.0
 * License: Apache License, 2.0
@@ -65,12 +65,12 @@ javax.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
-Javassist Version 3.22.0-CR2
+Javassist Version 3.25.0-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.8.10
+Jackson JAX-RS Providers Version 2.10.1
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2011 FasterXML, LLC. All rights reserved unless otherwise indicated.
@@ -95,11 +95,11 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 5.0.4
+org.objectweb.asm Version 8.0
 * License: Modified BSD (http://asm.objectweb.org/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 
-org.osgi.core version 4.2.0
+org.osgi.core version 6.0.0
 * License: Apache License, 2.0
 * Copyright (c) OSGi Alliance (2005, 2008). All Rights Reserved.
 

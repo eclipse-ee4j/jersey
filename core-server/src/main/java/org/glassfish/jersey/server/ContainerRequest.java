@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -49,8 +50,12 @@ import javax.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.internal.PropertiesResolver;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.message.internal.InboundMessageContext;
@@ -59,6 +64,8 @@ import org.glassfish.jersey.message.internal.MatchingEntityTag;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.TracingAwarePropertiesDelegate;
 import org.glassfish.jersey.message.internal.VariantSelector;
+import org.glassfish.jersey.model.internal.CommonConfig;
+import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.RankedProvider;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
@@ -80,7 +87,7 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
  * @author Marek Potociar
  */
 public class ContainerRequest extends InboundMessageContext
-        implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate {
+        implements ContainerRequestContext, Request, HttpHeaders, PropertiesDelegate, PropertiesResolver {
 
     private static final URI DEFAULT_BASE_URI = URI.create("/");
 
@@ -114,6 +121,10 @@ public class ContainerRequest extends InboundMessageContext
     private ContainerResponseWriter responseWriter;
     // True if the request is used in the response processing phase (for example in ContainerResponseFilter)
     private boolean inResponseProcessingPhase;
+    // lazy PropertiesResolver
+    private final LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
+            (Value<PropertiesResolver>) () -> PropertiesResolver.create(getConfiguration(), getPropertiesDelegate())
+    );
 
     private static final String ERROR_REQUEST_SET_ENTITY_STREAM_IN_RESPONSE_PHASE =
             LocalizationMessages.ERROR_REQUEST_SET_ENTITY_STREAM_IN_RESPONSE_PHASE();
@@ -157,6 +168,35 @@ public class ContainerRequest extends InboundMessageContext
         this.securityContext = securityContext;
         this.propertiesDelegate = new TracingAwarePropertiesDelegate(propertiesDelegate);
         this.uriRoutingContext = new UriRoutingContext(this);
+    }
+
+    /**
+     * Create new Jersey container request context.
+     *
+     * @param baseUri            base application URI.
+     * @param requestUri         request URI.
+     * @param httpMethod         request HTTP method name.
+     * @param securityContext    security context of the current request. Must not be {@code null}.
+     *                           The {@link SecurityContext#getUserPrincipal()} must return
+     *                           {@code null} if the current request has not been authenticated
+     *                           by the container.
+     * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate}
+     *                           to be used by the context.
+     * @see #ContainerRequest(URI, URI, String, SecurityContext, PropertiesDelegate, Configuration)
+     */
+    @Deprecated
+    public ContainerRequest(
+            final URI baseUri,
+            final URI requestUri,
+            final String httpMethod,
+            final SecurityContext securityContext,
+            final PropertiesDelegate propertiesDelegate) {
+        this(baseUri, requestUri, httpMethod, securityContext, propertiesDelegate,
+                new CommonConfig(RuntimeType.SERVER, ComponentBag.EXCLUDE_EMPTY) {
+                    {
+                        this.property(ContainerRequest.class.getName(), Deprecated.class.getSimpleName());
+                    }
+                });
     }
 
     /**
@@ -248,6 +288,16 @@ public class ContainerRequest extends InboundMessageContext
      */
     public <T> T readEntity(final Class<T> rawType, final Type type, final Annotation[] annotations) {
         return super.readEntity(rawType, type, annotations, propertiesDelegate);
+    }
+
+    @Override
+    public <T> T resolveProperty(final String name, final Class<T> type) {
+        return propertiesResolver.get().resolveProperty(name, type);
+    }
+
+    @Override
+    public <T> T resolveProperty(final String name, final T defaultValue) {
+        return propertiesResolver.get().resolveProperty(name, defaultValue);
     }
 
     @Override

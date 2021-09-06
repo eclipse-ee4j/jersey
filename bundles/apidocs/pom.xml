@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.bundles</groupId>
         <artifactId>project</artifactId>
-        <version>2.30-SNAPSHOT</version>
+        <version>2.35-SNAPSHOT</version>
     </parent>
 
     <artifactId>apidocs</artifactId>
@@ -51,6 +51,32 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <!-- CONNECTORS -->
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-apache-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-grizzly-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jdk-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jetty-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-netty-connector</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!-- CONTAINERS -->
         <dependency>
@@ -93,6 +119,31 @@
         <!-- MEDIA -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-jaxb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-binding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -106,7 +157,84 @@
             <artifactId>jersey-media-sse</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- kryo -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-kryo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- INJECT -->
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-cdi2-se</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- EXT -->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-declarative-linking</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+            <artifactId>jersey-mp-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-wadl-doclet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- incubator -->
+        <dependency>
+            <groupId>org.glassfish.jersey.incubator</groupId>
+            <artifactId>jersey-open-tracing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- security -->
+        <dependency>
+            <groupId>org.glassfish.jersey.security</groupId>
+            <artifactId>oauth1-signature</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>jetty2x</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+                    <artifactId>jersey-mp-rest-client</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <!-- media -->
+                <dependency>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-json-jackson1</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <!-- connectors -->
+                <dependency>
+                    <groupId>org.glassfish.jersey.connectors</groupId>
+                    <artifactId>jersey-helidon-connector</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -120,6 +248,10 @@
                         </goals>
                         <configuration>
                             <includeDependencySources>true</includeDependencySources>
+                            <sourceFileExcludes>
+                                <fileExclude>META-INF/versions/12/org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
+                                <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
+                            </sourceFileExcludes>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>

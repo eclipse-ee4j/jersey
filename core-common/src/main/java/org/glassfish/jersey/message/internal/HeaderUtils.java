@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.message.internal;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.AbstractMultivaluedMap;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
@@ -199,7 +201,7 @@ public final class HeaderUtils {
     /**
      * Transforms multi value map of headers to single {@code String} value map.
      *
-     * Returned map is immutable. Map values are formatted using method {@link #asHeaderString}.
+     * Returned map is immutable. Map values are formatted using method {@link #asHeaderString(List, RuntimeDelegate)}.
      *
      * @param headers headers to be formatted
      * @param configuration the {@link Configuration} that may contain
@@ -296,6 +298,99 @@ public final class HeaderUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Compare two NewCookies having the same name. See documentation RFC.
+     *
+     * @param first     NewCookie to be compared.
+     * @param second    NewCookie to be compared.
+     * @return the preferred NewCookie according to rules :
+     *              - the latest maxAge.
+     *              - if equal, compare the expiry date.
+     *              - if equal, compare path length.
+     */
+    public static NewCookie getPreferredCookie(NewCookie first, NewCookie second) {
+        return Comparator.nullsFirst(
+                Comparator.comparingInt(NewCookie::getMaxAge)
+                        .thenComparing(NewCookie::getExpiry, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(NewCookie::getPath, Comparator.nullsLast(Comparator.comparing(String::length))))
+                .compare(first, second) > 0 ? first : second;
+    }
+
+    /**
+     * Convert a message header value, represented as a general object, to it's
+     * string representation. If the supplied header value is {@code null},
+     * this method returns {@code null}.
+     *
+     * @param headerValue   the header value represented as an object.
+     * @return the string representation of the supplied header value or {@code null}
+     *         if the supplied header value is {@code null}.
+     * @see #asString(Object, Configuration)
+     */
+    @Deprecated
+    public static String asString(final Object headerValue) {
+        return asString(headerValue, (Configuration) null);
+    }
+
+    /**
+     * Returns string view of list of header values. Any modifications to the underlying list are visible to the view,
+     * the view also supports removal of elements. Does not support other modifications.
+     *
+     * @param headerValues header values.
+     * @return String view of header values.
+     * @see #asStringList(List, Configuration)
+     */
+    @Deprecated
+    public static List<String> asStringList(final List<Object> headerValues) {
+        return asStringList(headerValues, (Configuration) null);
+    }
+
+    /**
+     * Returns string view of passed headers. Any modifications to the headers are visible to the view, the view also
+     * supports removal of elements. Does not support other modifications.
+     *
+     * @param headers headers.
+     * @return String view of headers or {@code null} if {code headers} input parameter is {@code null}.
+     * @see #asStringHeaders(MultivaluedMap, Configuration)
+     */
+    @Deprecated
+    public static MultivaluedMap<String, String> asStringHeaders(final MultivaluedMap<String, Object> headers) {
+        return asStringHeaders(headers, (Configuration) null);
+    }
+
+    /**
+     * Transforms multi value map of headers to single {@code String} value map.
+     *
+     * Returned map is immutable. Map values are formatted using method {@link #asHeaderString(List, RuntimeDelegate)}.
+     *
+     * @param headers headers to be formatted
+     * @return immutable single {@code String} value map or
+     *      {@code null} if {@code headers} input parameter is {@code null}.
+     * @see #asStringHeadersSingleValue(MultivaluedMap, Configuration)
+     */
+    @Deprecated
+    public static Map<String, String> asStringHeadersSingleValue(final MultivaluedMap<String, Object> headers) {
+        return asStringHeadersSingleValue(headers, (Configuration) null);
+    }
+
+    /**
+     * Compares two snapshots of headers from jersey {@code ClientRequest} and logs {@code WARNING} in case of difference.
+     *
+     * Current container implementations does not support header modification in {@link javax.ws.rs.ext.WriterInterceptor}
+     * and {@link javax.ws.rs.ext.MessageBodyWriter}. The method checks there are some newly added headers
+     * (probably by WI or MBW) and logs {@code WARNING} message about it.
+     *
+     * @param headersSnapshot first immutable snapshot of headers
+     * @param currentHeaders  current instance of headers tobe compared to
+     * @param connectorName   name of connector the method is invoked from, used just in logged message
+     * @see #checkHeaderChanges(Map, MultivaluedMap, String, Configuration)
+     */
+    @Deprecated
+    public static void checkHeaderChanges(final Map<String, String> headersSnapshot,
+                                          final MultivaluedMap<String, Object> currentHeaders,
+                                          final String connectorName) {
+        checkHeaderChanges(headersSnapshot, currentHeaders, connectorName, (Configuration) null);
     }
 
     /**

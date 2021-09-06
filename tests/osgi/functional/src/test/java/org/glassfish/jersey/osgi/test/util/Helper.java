@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -149,7 +150,7 @@ public class Helper {
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-server").versionAsInProject(),
 
                 // javax.validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // Jersey Grizzly
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-http")
@@ -170,11 +171,17 @@ public class Helper {
                     // Jersey Injection provider
                     mavenBundle().groupId("org.glassfish.jersey.inject").artifactId("jersey-hk2").versionAsInProject(),
 //                     Jaxb - api
-                    mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                    getActivationBundle()
             ));
         }
 
         return addPaxExamMavenLocalRepositoryProperty(options);
+    }
+
+    private static Option getActivationBundle() {
+        return JdkVersion.getJdkVersion().getMajor() > 8
+                ? mavenBundle().groupId("com.sun.activation").artifactId("jakarta.activation").versionAsInProject()
+                : null;
     }
 
     /**

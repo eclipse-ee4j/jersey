@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -16,13 +16,13 @@ on JAX-RS resource classes or JAX-RS resource methods.
 
 The full description how Entity Data Filtering can be found in Jersey
 User Guide, chapter [Entity Data
-Filtering](https://jersey.java.net/documentation/latest/entity-filtering.html).
+Filtering](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html).
 Sections relevant to this example (describing this exact example) are:
 
 -   [Enabling and configuring Entity Filtering in your
-    application](https://jersey.java.net/documentation/latest/entity-filtering.html#d0e13911)
+    application](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#d0e14229)
 -   [Entity Filtering based on dynamic and configurable query
-    parameters](https://jersey.java.net/documentation/latest/entity-filtering.html#ef.selectable.annotations)
+    parameters](https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/entity-filtering.html#ef.selectable.annotations)
 
 Contents
 --------

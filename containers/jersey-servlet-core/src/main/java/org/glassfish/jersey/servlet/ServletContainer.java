@@ -294,8 +294,9 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
                 UriComponent.Type.PATH);
 
         if (!decodedBasePath.equals(encodedBasePath)) {
-            throw new ProcessingException("The servlet context path and/or the "
-                    + "servlet path contain characters that are percent encoded");
+            setResponseForInvalidUri(response, new ProcessingException("The servlet context path and/or the "
+                    + "servlet path contain characters that are percent encoded"));
+            return;
         }
 
         final URI baseUri;

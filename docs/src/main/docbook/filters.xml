@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -257,7 +257,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
                 To summarize the workflow, for any client request invoked from the client API
                 the client request filters (&jaxrs.client.ClientRequestFilter;)
                 are executed that could manipulate the request.
-                If not aborted, the outcoming request is then physically sent over to the server side
+                If not aborted, the outgoing request is then physically sent over to the server side
                 and once a response is received back from the server the client response
                 filters (&jaxrs.client.ClientResponseFilter;)
                 are executed that might again manipulate the returned response.
@@ -308,7 +308,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
             </example>
         </para>
         <para>
-            The interceptor gets a output stream from the &jaxrs.WriterInterceptorContext; and sets
+            The interceptor gets an output stream from the &jaxrs.WriterInterceptorContext; and sets
             a new one which is a GZIP wrapper of the original output stream. After all interceptors are executed the
             output stream lastly set to the &lit.jaxrs.WriterInterceptorContext; will be used for serialization of the entity. In the
             example above the entity bytes will be written to the GZIPOutputStream which will compress the stream data
@@ -393,7 +393,7 @@ public class PreMatchingFilter implements ContainerRequestFilter {
                     a MessageBodyWriter is executed. It wraps the entity output stream with the GZipOutputStream.</listitem>
                 <listitem>Client MessageBodyWriter: message body writer is executed on the client which serializes the entity
                     into the new GZipOutput stream. This stream zips the data and sends it to the "wire".</listitem>
-                <listitem>Server: server receives a request. Data of entity is compressed which means that pure read from
+                <listitem>Server: server receives a request. Data of the entity is compressed which means that pure read from
                     the entity input stream would return compressed data.</listitem>
                 <listitem>Server pre-matching ContainerRequestFilters: ContainerRequestFilters are executed that can manipulate
                     resource method matching process.</listitem>
@@ -513,7 +513,7 @@ public class GZIPWriterInterceptor implements WriterInterceptor {
             it is annotated with &lit.jaxrs.NameBinding;. The <literal>@Compress</literal> is applied on the
             resource method <literal>getVeryLongString()</literal> and on the interceptor
             <literal>GZIPWriterInterceptor</literal>. The interceptor will be executed only if any resource method
-            with such a annotation will be executed. In our example case the interceptor will be executed only for
+            with such an annotation will be executed. In our example case the interceptor will be executed only for
             the <literal>getVeryLongString()</literal> method. The interceptor will not be executed for method
             <literal>getHello()</literal>. In this example the reason is probably clear. We would like to compress
             only long data and we do not need to compress the short response of "Hello World!".
@@ -536,7 +536,7 @@ public class GZIPWriterInterceptor implements WriterInterceptor {
             just an edge case which will not be used so often.
         </para>
         <para>
-            Note that <emphasis>global filters are executed always</emphasis>, so even for resource methods
+            Note that <emphasis>global filters are always executed</emphasis>, even for resource methods
             which have any name binding annotations.
         </para>
     </section>
@@ -638,7 +638,7 @@ public class CompressionDynamicBinding implements DynamicFeature {
         <para>
             It's a good practice to assign a priority to filters and interceptors. Use &jaxrs.Priorities; class which
             defines standardized priorities in JAX-RS for different usages, rather than inventing your
-            own priorities. So, when you for example write an authentication filter you would assign a priority 1000 which
+            own priorities. For example, when you write an authentication filter you would assign a priority 1000 which
             is the value of &lit.jaxrs.Priorities;<literal>.AUTHENTICATION</literal>. The following example
             shows the filter from the beginning
             of this chapter with a priority assigned.

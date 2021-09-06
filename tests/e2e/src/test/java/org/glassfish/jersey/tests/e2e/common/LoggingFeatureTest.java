@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,6 +44,7 @@ import javax.annotation.Priority;
 
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
@@ -75,6 +76,7 @@ public class LoggingFeatureTest {
     private static final String BINARY_MEDIA_TYPE = "application/binary";
     private static final String TEXT_MEDIA_TYPE = MediaType.TEXT_PLAIN;
     private static final String ENTITY = "This entity must (not) be logged";
+    private static final String SEPARATOR = "!-------!";
 
     @Path("/")
     public static class MyResource {
@@ -244,6 +246,44 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterLogRecord(getLoggedRecords()).get(0).getMessage(), containsString(ENTITY));
         }
 
+        @Test
+        public void testLoggingFeatureBuilderSeparator() {
+            final Response response = target("/text")
+                    .register(LoggingFeature
+                            .builder()
+                            .withLogger(Logger.getLogger(LOGGER_NAME))
+                            .verbosity(LoggingFeature.Verbosity.PAYLOAD_ANY)
+                            .separator(SEPARATOR)
+                            .build()
+                    ).request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for proper separator.
+            final LogRecord record = getLoggingFilterResponseLogRecord(getLoggedRecords());
+            assertThat(record.getMessage(), containsString(SEPARATOR));
+
+        }
+
+        @Test
+        public void testLoggingFeatureBuilderProperty() {
+            final Response response = target("/text")
+                    .register(LoggingFeature
+                            .builder()
+                            .withLogger(Logger.getLogger(LOGGER_NAME))
+                            .build()
+                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for proper separator.
+            final LogRecord record = getLoggingFilterResponseLogRecord(getLoggedRecords());
+            assertThat(record.getMessage(), containsString(SEPARATOR));
+        }
+
     }
 
     /**
@@ -399,6 +439,7 @@ public class LoggingFeatureTest {
             return new ResourceConfig(MyResource.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, "INFO")
+                    .property(ServerProperties.WADL_FEATURE_DISABLE, true)
                     .register(CustomFilter.class);
         }
 

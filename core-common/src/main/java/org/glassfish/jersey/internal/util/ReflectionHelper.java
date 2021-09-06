@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -1556,5 +1556,21 @@ public final class ReflectionHelper {
         }
 
         return null;
+    }
+
+    /**
+     * Returns true iff JAX-B API is available on classpath.
+     */
+    public static boolean isJaxbAvailable() {
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.bind.JAXBException"));
+        return aClass != null;
+    }
+
+    /**
+     * Returns true iff javax.xml.transform package is available on classpath.
+     */
+    public static boolean isXmlTransformAvailable() {
+        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.transform.Source"));
+        return aClass != null;
     }
 }

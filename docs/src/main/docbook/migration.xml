@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,60 @@
          xml:id="migration">
     <title>Migration Guide</title>
 
+    <section xml:id="mig-2.30">
+        <title>Migrating from Jersey 2.29 to 2.29.1 and 2.30+</title>
+        <section xml:id="mig-2.30-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                Versions 2.30+ do not introduce nothing breaking, however version 2.29.1 has a major change which means
+                migration of Jersey to Jakarta EE (8) platform thus all inner dependencies to APIs are migrated to
+                jakarta EE maven coordinates. This also means that all dependencies which were taken from JDK as such
+                (like JAXB etc) are now external for JDK 1.8 (but for JDK 11+ they are external even in their Java EE form).
+                So, for those who will migrate to versions of Jersey 2.29.1 or 2.30+ , a massive extension of dependencies being
+                downloaded for the project build will occur.
+                Also there is extended support of JDKs - maximum compatibility with JDK 15 (including previous JDKs).
+                And other major improvements and fixes which are described in details in release notes below.
+            </para>
+        </section>
+        <section xml:id="mig-2.30-whats-new">
+            <title>Changes in versions 2.29.1, 2.30+</title>
+            <para>
+                For detailed information regarding particular changes please refer to release notes:
+                <simplelist>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.29.1.html">2.29.1</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.30.html">2.30</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.31.html">2.31</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.32.html">2.32</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.33.html">2.33</link></member>
+                </simplelist>
+            </para>
+        </section>
+    </section>
     <section xml:id="mig-2.27">
-        <title>Migrating from Jersey 2.23 to 2.27</title>
+        <title>Migrating from Jersey 2.26 to 2.27 (2.28, 2.29)</title>
         <section xml:id="mig-2.27-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                Between versions of 2.26 and 2.29 there are no breaking changes in Jersey which could prevent smooth migration
+                It is enough just to increase Maven (Gradle or any other) dependencies to a required version and all existing
+                code shall work without modifications.
+            </para>
+        </section>
+        <section xml:id="mig-2.27-whats-new">
+            <title>Changes in versions 2.27 - 2.29</title>
+            <para>
+                For detailed information regarding particular changes please refer to release notes:
+                <simplelist>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.27.html">2.27</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.28.html">2.28</link></member>
+                    <member><link xlink:href="&jersey.documentation.uri;/release-notes/2.29.html">2.29</link></member>
+                </simplelist>
+            </para>
+        </section>
+    </section>
+    <section xml:id="mig-2.26">
+        <title>Migrating from Jersey 2.25 to 2.26.</title>
+        <section xml:id="mig-2.26-breaking-changes">
             <title>Breaking Changes</title>
             <para>
                 <itemizedlist>
@@ -40,7 +91,7 @@
                             module) are now being built with Java SE 8 and with 1.8 language level.
                         </para>
                         <para>
-                            As a consequential change, one of the modules was dropped, the<literal>rx-client-jsr166e</literal>.
+                            As a consequential change, one of the modules was dropped, the <literal>rx-client-jsr166e</literal>.
                             This implementation relied on the
                             <literal>ConcurrentHashMapV8</literal>
                             and was made redundant by the JDK upgrade. Please use
@@ -49,10 +100,10 @@
                         </para>
                         <para>
                             Spring version used in the extension module was upgraded to 4.2.1.RELEASE. The reason for that is lack
-                            of Java 8 support with Spring 3.x versions.
+                            of Java 8 support with Spring 3.x versions. Optionally, an extension module for Spring 5 can be used.
                         </para>
                         <para>
-                            Jersey proprietary reactive client API has beed dropped and replaced by JAX-RS 2.1 Reactive Client API.
+                            Jersey proprietary reactive client API has been dropped and replaced by JAX-RS 2.1 Reactive Client API.
                             The backwards compatibility rule couldn't be respected in this case, since the JAX-RS API are based on
                             what was done in Jersey and there were unresolvable code incompatibilities.
                         </para>
@@ -60,7 +111,7 @@
                 </itemizedlist>
             </para>
         </section>
-        <section xml:id="mig-2.27-injection-manager">
+        <section xml:id="mig-2.26-injection-manager">
             <title>Breaking Changes - Injection Manager</title>
             <para>Following breaking changes are caused by removing and replacing HK2 (<literal>ServiceLocator</literal>) by
             &jersey.common.internal.inject.InjectionManager;. Jersey injection API is considered as an internal API (except
@@ -118,6 +169,21 @@
                             to Jersey with an adjusted package.
                         </para>
                     </listitem>
+                    <listitem>
+                        If the internal Jersey injection API is to be backed by HK2, since 2.26, the following additional HK2
+                        support module is required:
+                        <programlisting language="xml" linenumbering="unnumbered">&lt;dependency&gt;
+  &lt;groupId&gt;org.glassfish.jersey.inject&lt;/groupId&gt;
+  &lt;artifactId&gt;jersey-hk2&lt;/artifactId&gt;
+  &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+                    </listitem>
+                    <listitem>
+                        The direct support for <literal>HK2 Binder</literal> being able to be registered as in pre 2.26 Jersey has
+                        been returned back in Jersey 2.29. Note, however, this is for backward compatibility purposes and
+                        not a preferred way of registering injectables; the <literal>HK2 Binder</literal> support may be removed
+                        in the future versions of Jersey.
+                    </listitem>
                 </itemizedlist>
             </para>
         </section>
@@ -138,7 +204,7 @@
     </section>
 
     <section>
-        <title>Migrating from Jersey 2.22.1 to 2.23</title>
+        <title>Migrating from Jersey 2.22.1 to 2.25</title>
         <section xml:id="mig-2.23-highlights">
             <title>Release 2.23 Highlights</title>
 
@@ -217,11 +283,11 @@
                             http header, the URI was resolved against
                             <emphasis>base uri</emphasis>
                             of the application. This behaviour was not correct, as pointed out by &jersey.jira.2883;. With this
-                            change, the URI is, by default, resolved against<emphasis>request base uri</emphasis>.
+                            change, the URI is, by default, resolved against <emphasis>request base uri</emphasis>.
                         </para>
                         <para>
-                            For example, having a resource at<literal>http://server.com/api/management/user</literal>, that
-                            returns response with<literal>Location: foo</literal>, while the root of the app is
+                            For example, having a resource at <literal>http://server.com/api/management/user</literal>, that
+                            returns response with <literal>Location: foo</literal>, while the root of the app is
                             <literal>http://server.com/api</literal>, the resulting URI will be:
                             <simplelist>
                                 <member>with Jersey 2.21 and earlier:
@@ -247,7 +313,7 @@
                         <para>
                             Alternatively, the entire URI resolving logic can be switched off by newly
                             introduced &jersey.server.ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED; property.
-                            If the value is<literal>true</literal>, Jersey will not change the URI contained in the
+                            If the value is <literal>true</literal>, Jersey will not change the URI contained in the
                             <literal>Location</literal>
                             header at all (even if this behaviour may not match with behaviour described in JavaDoc).
                         </para>
@@ -266,9 +332,9 @@
                 <itemizedlist>
                     <listitem>
                         <para>
-                            New parameter,<literal>org.glassfish.hk2.api.ServiceLocator</literal>, has been added
+                            New parameter, <literal>org.glassfish.hk2.api.ServiceLocator</literal>, has been added
                             to &jersey.server.spi.ExternalRequestScope; methods. This is to allow 3rd party component providers to
-                            hook up with the actual HK2 locator in case of multiple Jersey applications are running in paralell
+                            hook up with the actual HK2 locator in case of multiple Jersey applications are running in parallel
                             within a single 3rd party component container. The change was driven by CDI/Servlet requirements.
                         </para>
                     </listitem>
@@ -286,7 +352,7 @@
                 <itemizedlist>
                     <listitem>
                         <para>
-                            New method,<literal>close</literal>, has been added to &jersey.server.ResourceFinder;. It's intention
+                            New method, <literal>close</literal>, has been added to &jersey.server.ResourceFinder;. Its intention
                             is to release allocated/opened resources (such as streams) without a need to iterate through the
                             whole &lit.jersey.server.ResourceFinder;.
                         </para>
@@ -490,7 +556,7 @@
             <section>
                 <title>Performance gain when using Sub-Resource Locators</title>
                 <para>
-                    We improved the performance for using sub-resource locators in an Jersey application. The performance gains
+                    We improved the performance for using sub-resource locators in a Jersey application. The performance gains
                     are available for cases when the sub-resource locator method returns either a resource class (return value is
                     e.g.
                     <literal>Class&lt;?&gt;</literal>
@@ -588,7 +654,7 @@
                     example,<link xlink:href='https://github.com/jersey/jersey/tree/master/examples/helloworld-weld'>
                     helloworld-weld</link>, has been introduced to demonstrate the new feature using Grizzly HTTP server. Another
                     example application,<link xlink:href='https://github.com/jersey/jersey/tree/master/examples/cdi-webapp'>
-                    cdi-webapp</link>, has been updated so that it enables Apache Tomcat Server deployment.
+                    cdi-webapp</link>, has been updated so it enables Apache Tomcat Server deployment.
                 </para>
             </section>
 
@@ -666,13 +732,12 @@
                             For performance purposes a new server property &jersey.server.ServerProperties.MONITORING_ENABLED; has
                             been introduced. It is possible to enable just basic almost static monitoring information using the
                             property. It allows to inject &jersey.server.monitoring.ApplicationInfo; object, renamed original
-                            class<literal>org.glassfish.jersey.server.monitoring.ApplicationStatistics</literal>.
+                            class <literal>org.glassfish.jersey.server.monitoring.ApplicationStatistics</literal>.
                             And &jersey.server.monitoring.MonitoringStatistics; no more have a reference to<literal>
                             ApplicationStatistics</literal>, method
                             <literal>getApplicationStatistics()</literal>
                             has been removed.
                         </para>
-                        gitc
                     </listitem>
                 </itemizedlist>
             </para>
@@ -723,7 +788,7 @@
                     We have reintroduced support for JSON processing via Jackson 1.x JSON provider (1.9.11). In order to use
                     Jackson 1 in your application you need to add
                     <literal>jersey-media-json-jackson1</literal>
-                    module (+ it's dependencies) to your class-path and register
+                    module (+ its dependencies) to your class-path and register
                     <literal>Jackson1Feature</literal>
                     in your application (server or client).
                 </para>
@@ -812,7 +877,7 @@
                 <para>
                     Our media module that supports working with JSON via Jackson library has been updated to use Jackson 2.x
                     (2.3.2). All samples and tests have been rewritten to use Jackson 2 as well. In order to use Jackson 2 in your
-                    application you need to add jersey-media-json-jackson (+ it's Jackson dependencies) to your class-path and
+                    application you need to add jersey-media-json-jackson (+ its Jackson dependencies) to your class-path and
                     register
                     <literal>JacksonFeature</literal>
                     in your application.
@@ -842,7 +907,7 @@
                     default). You can now run the tests in parallel using either JUnit or TestNG. See chapters dedicated to TestNG
                     and parallel testing for more information:
                     <xref linkend="testng"/>
-                    and<xref linkend="parallel"/>.
+                    and <xref linkend="parallel"/>.
                 </para>
             </section>
         </section>
@@ -865,7 +930,7 @@
                     </listitem>
                     <listitem>
                         <para>
-                            Automatic registration of<literal>MessageBodyWriter</literal>,
+                            Automatic registration of <literal>MessageBodyWriter</literal>,
                             <literal>MessageBodyReaders</literal>
                             and
                             <literal>ExceptionMappers</literal>
@@ -873,7 +938,7 @@
                             <literal>META-INF/services</literal>
                             mechanism has been removed. Disabling the automatic registration of providers via
                             <literal>META-INF/services</literal>
-                            may affect 3rd party libraries (i.e. Jackson 2.x) that are using this mechanism to register it's
+                            may affect 3rd party libraries (i.e. Jackson 2.x) that are using this mechanism to register its
                             providers. In order to restore this functionality the
                             <literal>org.glassfish.jersey.ext:jersey-metainf-services</literal>
                             has to be added on the classpath. Otherwise such providers has to be registered manually.
@@ -921,7 +986,7 @@
                         <para>
                             &jersey.sse.SseFeature; now gets automatically discovered and enabled if the SSE module is present on
                             the class path. This behavior can be suppressed by setting &jersey.sse.SseFeature.DISABLE_SSE;
-                            property to<literal>true</literal>. The behavior can also be selectively suppressed in either client
+                            property to <literal>true</literal>. The behavior can also be selectively suppressed in either client
                             or server runtime by setting the &jersey.sse.SseFeature.DISABLE_SSE_CLIENT;
                             or &jersey.sse.SseFeature.DISABLE_SSE_SERVER; property respectively.
                         </para>
@@ -1193,7 +1258,7 @@
                         <para>
                             MVC support: method
                             <literal>writeTo</literal>
-                            of &jersey.server.mvc.TemplateProcessor; was modified by adding an argument<literal>MultivaluedMap&lt;String,
+                            of &jersey.server.mvc.TemplateProcessor; was modified by adding an argument <literal>MultivaluedMap&lt;String,
                             Object&gt; httpHeaders</literal>. This is an incompatible change (the method was modified directly in
                             the interface). All Jersey provided MVC implementation were adjusted but if you have your own MVC
                             implementation then you need to modify the method signature of the implementation.
@@ -1201,7 +1266,7 @@
                     </listitem>
                     <listitem>
                         <para>
-                            A minor JAX-RS incompatibility issue has been recently discovered and reported (see<link
+                            A minor JAX-RS incompatibility issue has been recently discovered and reported (see <link
                                 xlink:href="https://java.net/jira/browse/JERSEY-2387">JERSEY-2387</link>). As part of the fix,
                             minor breaking changes related to URI resolving and creation have been introduced in the behavior
                             of &jaxrs.core.UriBuilder;, &jaxrs.core.Link.Builder; and &jaxrs.client.WebTarget; classes. It is no
@@ -1370,8 +1435,8 @@
                         WADL is by default displayed in the simplified form. It does not contain supporting resources like OPTIONS
                         methods or
                         <literal>/application.wadl</literal>
-                        itself. In order to get the full WADL use query param<literal>detail=true</literal>. For example make a
-                        GET request to<literal>http://localhost:8080/application.wadl?detail=true</literal>.
+                        itself. In order to get the full WADL use query param <literal>detail=true</literal>. For example make a
+                        GET request to <literal>http://localhost:8080/application.wadl?detail=true</literal>.
                     </para>
                 </listitem>
             </itemizedlist>
@@ -1390,7 +1455,7 @@
                         methods or
                         <literal>/application.wadl</literal>
                         itself. In order to get the full WADL use query param<literal>detail=true</literal>. For example make a
-                        GET request to<literal>http://localhost:8080/application.wadl?detail=true</literal>.
+                        GET request to <literal>http://localhost:8080/application.wadl?detail=true</literal>.
                     </para>
                 </listitem>
             </itemizedlist>
@@ -1527,7 +1592,7 @@
                             <literal>org.glassfish.jersey.spi.RequestsExecutorsProvider</literal>. It has been also extended with
                             an additional
                             <literal>releaseRequestingExecutor</literal>
-                            method to address executor shutdown handling issues reported in<link
+                            method to address executor shutdown handling issues reported in <link
                                 xlink:href='https://java.net/jira/browse/JERSEY-2205'>JERSEY-2205</link>. As such, any custom
                             implementation of the SPI is now required to implement the new method. (Note that the SPI has been
                             removed in Jersey 2.18 - see the Jersey 2.18 release migration guide section for more details.)
@@ -1548,7 +1613,7 @@
                     <para>
                         The unsupported
                         <literal>ClientProperties.BUFFER_RESPONSE_ENTITY_ON_EXCEPTION</literal>
-                        property, with value of<literal>jersey.config.client.bufferResponseEntityOnException</literal>, has been
+                        property, with value of <literal>jersey.config.client.bufferResponseEntityOnException</literal>, has been
                         removed from the API. Since Jersey 2.4 where
                         <link xlink:href='https://java.net/jira/browse/jersey-2157'>JERSEY-2157</link>
                         issue has been fixed, Jersey client runtime automatically buffers error response entities. This behavior
@@ -1573,7 +1638,7 @@
                         methods have been introduced instead in Jersey 2.3 for consistency with other parts of client-side JAX-RS
                         API. Access to the raw SSE event data content is provided via a &lit.jersey.sse.InboundEvent;'s
                         <literal>byte[] getRawData()</literal>
-                        method that has been too introduced in Jersey 2.3.
+                        method that has been introduced in Jersey 2.3 as well.
                     </para>
                 </listitem>
                 <listitem>
@@ -1610,7 +1675,7 @@
                         Generic &jersey.server.Broadcaster; methods for adding/removing &jersey.server.BroadcasterListener;
                         registrations have been renamed from
                         <literal>addBroadcasterListener/removeBroadcasterListener</literal>
-                        to simply<literal>add/remove</literal>.
+                        to simply <literal>add/remove</literal>.
                     </para>
                 </listitem>
                 <listitem>
@@ -1744,7 +1809,7 @@
 
                     Containers, which support the reload functionality implement the
                     <literal>ContainerListener</literal>
-                    interface, so that once you get access to the actual container instance, you could call it's
+                    interface, so that once you get access to the actual container instance, you could call its
                     <literal>onReload</literal>
                     method and get the container re-load the config. The second interface helps you to obtain the actual container
                     instance reference. An example on how things are wired together follows.
@@ -2115,7 +2180,7 @@
                             Jackson</literal>,<literal>Jettison</literal>) can be used as well. The relevant feature has to be
                             registered (and dependency added) and custom implementation of
                             <literal>ContextResolver</literal>
-                            has to be provided. See the code snippets in the<link linkend="json.jackson">related chapter</link>.
+                            has to be provided. See the code snippets in the <link linkend="json.jackson">related chapter</link>.
                         </para>
                         <para>
                             For more on particular
@@ -2190,7 +2255,7 @@
                 <para>
                     As mentioned, the centralized configuration of Jersey&nbsp;1's
                     <literal>JSONConfiguration</literal>
-                    does not have a direct equivalent in Jersey&nbsp;2. Each provider has it's own way to be configured. Detailed
+                    does not have a direct equivalent in Jersey&nbsp;2. Each provider has its own way to be configured. Detailed
                     description of each method and property is out of scope of this migration guide and can be found in the
                     documentation and APIs of the relevant providers and/or the relevant Jersey module API. Bellow are several
                     basic examples how to configure certain options when using MOXy with Jersey's
@@ -2237,7 +2302,7 @@
                     <literal>Marshaller</literal>
                     and/or
                     <literal>Unmarshaller</literal>
-                    using:<literal>MoxyJsonConfig</literal>'s<literal>property()</literal>,
+                    using: <literal>MoxyJsonConfig</literal>'s <literal>property()</literal>,
                     <literal>marshallerProperty()</literal>
                     and
                     <literal>unmarshallerProperty()</literal>
@@ -2245,7 +2310,7 @@
                 </para>
             </section>
             <para>
-                More on the JSON Support topic can be found in<xref linkend="json"/>.
+                More on the JSON Support topic can be found in <xref linkend="json"/>.
             </para>
         </section>
     </section>

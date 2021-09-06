@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -31,8 +31,8 @@ public class ParamConverterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        InstanceBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
-                Bindings.service(new ParamConverters.AggregatedProvider())
+        final ClassBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
+                Bindings.service(ParamConverters.AggregatedProvider.class)
                     .to(ParamConverterProvider.class);
         injectionManager.register(aggregatedConverters);
     }

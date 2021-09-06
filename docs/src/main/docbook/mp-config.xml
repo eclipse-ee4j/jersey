@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent" > %ents; ]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="jersey-configuration">
+    <title>Jersey configuration</title>
+    <para>
+        This chapter provides Jersey configuration basics which includes configuration using default configuration
+        provider (included in Jersey by default) using system properties, and micro-profile configuration extension
+        which allows plugging-in of configuration modules based on micro profile configuration specification.
+    </para>
+    <section xml:id="default-config">
+        <title>Jersey default configuration provider</title>
+        <para>
+            Since Jersey 2.29 it is possible to turn on the ability to convert the System properties into
+            Configuration properties. That can be done by using the System property, too:
+            <programlisting language="bash" linenumbering="unnumbered">java -Djersey.config.allowSystemPropertiesProvider=true -DNAME=VALUE
+            </programlisting>
+            Note that with the security manager turned on, write access permission is required to execute
+            System.getProperties(). With insufficient permissions, the warning message is logged (with Level.FINER) and
+            only &jersey.common.CommonProperties;, &jersey.client.ClientProperties;,
+            and &jersey.server.ServerProperties;
+            properties are used, as the property names are known and System.getProperty(name) method can be used,
+            which does not require the write access permission.
+        </para>
+    </section>
+    <section xml:id="mp-config">
+        <title>Micro profile configuration provider</title>
+        <para>
+            Microprofile platform became very popular lately and &microprofile.spec.link;
+            is a recommended way in the Jakarta EE world to configure the specifications under the Jakarta EE umbrella.
+        </para>
+        <para>
+            Jersey 2.29 comes with support for Microprofile Config implementation such as &helidon.link; or &smallrye.link;.
+            To configure the Jersey application, the microprofile-config.properties file needs to be created in the
+            META-INF folder. The required properties are then simply set in the microprofile-config.properties:
+            <programlisting language="java" linenumbering="unnumbered">
+                NAME=VALUE
+            </programlisting>
+        </para>
+        <para>
+            Then Jersey Microprofile Config extension is needed to be added:
+            <programlisting language="xml" linenumbering="unnumbered">
+                &lt;dependency>
+                    &lt;groupId>org.glassfish.jersey.ext.microprofile&lt;/groupId>
+                    &lt;artifactId>jersey-mp-config&lt;/artifactId>
+                    &lt;version>&version;&lt;/scope>
+                &lt;/dependency>
+            </programlisting>
+            And the Microprofile Config implementation, such as Helidon:
+            <programlisting language="xml" linenumbering="unnumbered">
+                &lt;dependency>
+                    &lt;groupId>io.helidon.microprofile.config&lt;/groupId>
+                    &lt;artifactId>helidon-microprofile-config&lt;/artifactId>
+                    &lt;version>&helidon.version;&lt;/version>
+                &lt;/dependency>
+            </programlisting>
+            Or SmallRye:
+            <programlisting language="xml" linenumbering="unnumbered">
+                &lt;dependency>
+                    &lt;groupId>io.smallrye&lt;/groupId>
+                    &lt;artifactId>smallrye-config&lt;/artifactId>
+                    &lt;version>&smallrye.version;&lt;/version>
+                &lt;/dependency>
+            </programlisting>
+            or any other suitable Microprofile Config implementation.
+        </para>
+    </section>
+</chapter>

@@ -86,12 +86,13 @@ public class ServerSentEventsTest extends JerseyTest {
         });
 
         eventSource.open();
-        target().path(App.ROOT_PATH).request().post(Entity.text("message"));
+        target().path(App.ROOT_PATH).request().post(Entity.text("message")).close();
 
         try {
             assertTrue("Waiting for message to be delivered has timed out.",
                     latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS));
         } finally {
+            target().path(App.ROOT_PATH).request().delete().close();
             eventSource.close();
         }
         assertThat("Unexpected SSE event data value.", message.get(), equalTo("message"));

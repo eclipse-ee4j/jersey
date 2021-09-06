@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,6 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterInjector;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier;
-import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig;
 import org.glassfish.jersey.message.filtering.spi.ObjectProvider;
 
@@ -56,7 +55,7 @@ import com.fasterxml.jackson.databind.ser.PropertyFilter;
  * @author Michal Gajdos
  */
 @Singleton
-public final class FilteringJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
+public final class FilteringJacksonJaxbJsonProvider extends DefaultJacksonJaxbJsonProvider {
 
     @Inject
     private Provider<ObjectProvider<FilterProvider>> provider;
