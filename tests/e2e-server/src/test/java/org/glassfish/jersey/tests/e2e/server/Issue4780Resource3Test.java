@@ -17,43 +17,15 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
-import static org.junit.Assert.assertEquals;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.ModelValidationException;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
-public class Issue4780Test {
-
-    // 1 interface and 1 implementation having same @Path
-    @Test
-    public void resource1() throws Exception {
-        JerseyTest test = new JerseyTest(new ResourceConfig(Resource1_1.class, IResource1_2.class)) {};
-        try {
-            test.setUp();
-            Response response = test.target().path("/resource1").request().get();
-            response.bufferEntity();
-            assertEquals(response.readEntity(String.class), 200, response.getStatus());
-        } finally {
-            test.tearDown();
-        }
-    }
-
-    // 2 interfaces having same @Path
-    @Test(expected = ModelValidationException.class)
-    public void resource2() throws Exception {
-        JerseyTest test = new JerseyTest(new ResourceConfig(IResource2_1.class, IResource2_2.class)) {};
-        try {
-            test.setUp();
-        } finally {
-            test.tearDown();
-        }
-    }
+public class Issue4780Resource3Test {
 
     // 2 classes having same @Path
     @Test(expected = ModelValidationException.class)
@@ -64,37 +36,6 @@ public class Issue4780Test {
         } finally {
             test.tearDown();
         }
-    }
-
-    @Path("")
-    public static class Resource1_1 implements IResource1_2 {
-        @GET
-        @Path("/resource1")
-        @Override
-        public String get() {
-            return "";
-        }
-    }
-
-    @Path("")
-    public static interface IResource1_2 {
-        @GET
-        @Path("/resource1")
-        String get();
-    }
-
-    @Path("")
-    public static interface IResource2_1 {
-        @GET
-        @Path("/resource2")
-        String get();
-    }
-
-    @Path("")
-    public static interface IResource2_2 {
-        @GET
-        @Path("/resource2")
-        String get();
     }
 
     @Path("")
