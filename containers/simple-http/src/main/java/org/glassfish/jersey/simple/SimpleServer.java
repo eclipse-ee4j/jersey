@@ -17,6 +17,7 @@
 package org.glassfish.jersey.simple;
 
 import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * Simple server facade providing convenient methods to obtain info about the server (i.e. port).
@@ -25,6 +26,8 @@ import java.io.Closeable;
  * @since 2.9
  */
 public interface SimpleServer extends Closeable {
+
+    public void start() throws IOException;
 
     /**
      * The port the server is listening to for incomming HTTP connections. If the port is not

@@ -23,9 +23,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.ProcessingException;
+import javax.ws.rs.ProcessingException;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.jdkhttp.internal.LocalizationMessages;
@@ -37,13 +38,14 @@ import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
 /**
  * Factory for creating {@link HttpServer JDK HttpServer} instances to run Jersey applications.
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar
+ * @author Marek Potociar (marek.potociar at oracle.com)
  */
 public final class JdkHttpServerFactory {
 
@@ -177,8 +179,17 @@ public final class JdkHttpServerFactory {
     }
 
     private static HttpServer createHttpServer(final URI uri,
+            final JdkHttpHandlerContainer handler,
+            final SSLContext sslContext,
+            final boolean start) {
+        return createHttpServer(uri, handler, sslContext, false, false, start);
+    }
+
+    static HttpServer createHttpServer(final URI uri,
                                                final JdkHttpHandlerContainer handler,
                                                final SSLContext sslContext,
+                                               final boolean sslClientAuthWanted,
+                                               final boolean sslClientAuthNeeded,
                                                final boolean start) {
         if (uri == null) {
             throw new IllegalArgumentException(LocalizationMessages.ERROR_CONTAINER_URI_NULL());
@@ -187,7 +198,14 @@ public final class JdkHttpServerFactory {
         final String scheme = uri.getScheme();
         final boolean isHttp = "http".equalsIgnoreCase(scheme);
         final boolean isHttps = "https".equalsIgnoreCase(scheme);
-        final HttpsConfigurator httpsConfigurator = sslContext != null ? new HttpsConfigurator(sslContext) : null;
+        final HttpsConfigurator httpsConfigurator = sslContext != null ? new HttpsConfigurator(sslContext) {
+            public final void configure(final HttpsParameters httpsParameters) {
+                final SSLParameters sslParameters = sslContext.getDefaultSSLParameters();
+                sslParameters.setWantClientAuth(sslClientAuthWanted);
+                sslParameters.setNeedClientAuth(sslClientAuthNeeded);
+                httpsParameters.setSSLParameters(sslParameters);
+            }
+        } : null;
 
         if (isHttp) {
             if (httpsConfigurator != null) {
