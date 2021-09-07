@@ -18,19 +18,20 @@ package org.glassfish.jersey.server;
 
 import java.util.Map;
 
-import jakarta.ws.rs.RuntimeType;
+import javax.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
+import org.glassfish.jersey.server.spi.Server;
 
 
 /**
  * Jersey server-side configuration properties.
  *
- * @author Marek Potociar
- * @author Libor Kramolis
+ * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Libor Kramolis (libor.kramolis at oracle.com)
  * @author Michal Gajdos
  * @author Martin Matula
  */
@@ -38,12 +39,29 @@ import org.glassfish.jersey.internal.util.PropertyAlias;
 public final class ServerProperties {
 
     /**
+     * Defines the implementation of {@link Server} to bootstrap.
+     * <p>
+     * By default auto-selects the first server provider found.
+     * </p>
+     */
+    public static final String HTTP_SERVER_CLASS = "jersey.config.server.httpServerClass";
+
+    /**
+     * Whether to automatically startup {@link Server} at bootstrap.
+     * <p>
+     * By default, servers are immediately listening to connections after bootstrap,
+     * so no explicit invocation of {@link Server#start()} is needed.
+     * </p>
+     */
+    public static final String AUTO_START = "jersey.config.server.autoStart";
+
+    /**
      * Defines one or more packages that contain application-specific resources and
      * providers.
      *
      * If the property is set, the specified packages will be scanned for
-     * JAX-RS root resources (annotated with {@link jakarta.ws.rs.Path @Path}) and
-     * providers (annotated with {@link jakarta.ws.rs.ext.Provider @Provider}).
+     * JAX-RS root resources (annotated with {@link javax.ws.rs.Path @Path}) and
+     * providers (annotated with {@link javax.ws.rs.ext.Provider @Provider}).
      * <p>
      * The property value MUST be an instance of {@link String} or {@code String[]}
      * array. Each {@code String} instance represents one or more package names
@@ -88,8 +106,8 @@ public final class ServerProperties {
      * providers.
      *
      * If the property is set, the specified class-path will be scanned
-     * for JAX-RS root resources (annotated with {@link jakarta.ws.rs.Path @Path})
-     * and providers (annotated with {@link jakarta.ws.rs.ext.Provider @Provider}).
+     * for JAX-RS root resources (annotated with {@link javax.ws.rs.Path @Path})
+     * and providers (annotated with {@link javax.ws.rs.ext.Provider @Provider}).
      * Each path element MUST be an absolute or relative directory, or a Jar file.
      * The contents of a directory, including Java class files, jars files
      * and sub-directories are scanned (recursively).
