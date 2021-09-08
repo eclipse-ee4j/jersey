@@ -139,8 +139,8 @@ public class OptionalParamConverterTest extends JerseyTest {
         Response invalid = target("/OptionalResource/fromInteger").queryParam(PARAM_NAME, "invalid").request().get();
         assertEquals(200, missing.getStatus());
         assertEquals(Integer.valueOf(0), missing.readEntity(Integer.class));
-        assertEquals(200, empty.getStatus());
-        assertEquals(Integer.valueOf(0), empty.readEntity(Integer.class));
+        assertEquals(404, empty.getStatus());
+        assertFalse(empty.hasEntity());
         assertEquals(200, notEmpty.getStatus());
         assertEquals(Integer.valueOf(1), notEmpty.readEntity(Integer.class));
         assertEquals(404, invalid.getStatus());
@@ -199,10 +199,10 @@ public class OptionalParamConverterTest extends JerseyTest {
                 .queryParam(PARAM_NAME, 2).request().get();
         assertEquals(200, missing.getStatus());
         assertEquals("", missing.readEntity(String.class));
-        assertEquals(200, empty.getStatus());
-        assertEquals("0", empty.readEntity(String.class));
-        assertEquals(200, partiallyEmpty.getStatus());
-        assertEquals("10", partiallyEmpty.readEntity(String.class));
+        assertEquals(404, empty.getStatus());
+        assertFalse(empty.hasEntity());
+        assertEquals(404, partiallyEmpty.getStatus());
+        assertFalse(partiallyEmpty.hasEntity());
         assertEquals(404, invalid.getStatus());
         assertFalse(invalid.hasEntity());
         assertEquals(404, partiallyInvalid.getStatus());
