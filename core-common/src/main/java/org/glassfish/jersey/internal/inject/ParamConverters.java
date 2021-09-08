@@ -65,10 +65,6 @@ public class ParamConverters {
             try {
                 return _fromString(value);
             } catch (final InvocationTargetException ex) {
-                // if the value is an empty string, return null
-                if (value.isEmpty()) {
-                    return null;
-                }
                 final Throwable cause = ex.getCause();
                 if (cause instanceof WebApplicationException) {
                     throw (WebApplicationException) cause;
