@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -84,7 +84,12 @@ public class NettyHttpContainerProvider implements ContainerProvider {
      * @throws ProcessingException when there is an issue with creating new container.
      */
     static ServerBootstrap createServerBootstrap(final URI baseUri, final NettyHttpContainer container, SslContext sslContext) {
+        final JerseyServerInitializer jerseyServerInitializer =
+                new JerseyServerInitializer(baseUri, sslContext, container, container.getConfiguration());
+        return createServerBootstrap(jerseyServerInitializer);
+    }
 
+    private static ServerBootstrap createServerBootstrap(final JerseyServerInitializer jerseyServerInitializer) {
         // Configure the server.
         final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         final EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -92,8 +97,8 @@ public class NettyHttpContainerProvider implements ContainerProvider {
         ServerBootstrap b = new ServerBootstrap();
         b.option(ChannelOption.SO_BACKLOG, 1024);
         b.group(bossGroup, workerGroup)
-         .channel(NioServerSocketChannel.class)
-         .childHandler(new JerseyServerInitializer(baseUri, sslContext, container));
+                .channel(NioServerSocketChannel.class)
+                .childHandler(jerseyServerInitializer);
 
         return b;
     }
@@ -192,36 +197,15 @@ public class NettyHttpContainerProvider implements ContainerProvider {
     public static Channel createHttp2Server(final URI baseUri, final ResourceConfig configuration, SslContext sslContext) throws
             ProcessingException {
 
-        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        final EventLoopGroup workerGroup = new NioEventLoopGroup();
         final NettyHttpContainer container = new NettyHttpContainer(configuration);
 
-        try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.option(ChannelOption.SO_BACKLOG, 1024);
-            b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, true));
+        final JerseyServerInitializer jerseyServerInitializer =
+                new JerseyServerInitializer(baseUri, sslContext, container, configuration, true);
+        ServerBootstrap serverBootstrap = createServerBootstrap(jerseyServerInitializer);
 
-            int port = getPort(baseUri);
+        int port = getPort(baseUri);
 
-            Channel ch = b.bind(port).sync().channel();
-
-            ch.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
-                @Override
-                public void operationComplete(Future<? super Void> future) throws Exception {
-                    container.getApplicationHandler().onShutdown(container);
-
-                    bossGroup.shutdownGracefully();
-                    workerGroup.shutdownGracefully();
-                }
-            });
-
-            return ch;
-
-        } catch (InterruptedException e) {
-            throw new ProcessingException(e);
-        }
+        return startServer(port, container, serverBootstrap, false);
     }
 
     static int getPort(URI uri) {

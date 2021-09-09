@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,14 +19,12 @@ package org.glassfish.jersey.simple;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.URI;
-import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
-import javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication;
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -163,7 +161,7 @@ public final class SimpleContainerFactory {
      *                  port {@value org.glassfish.jersey.server.spi.Container#DEFAULT_HTTPS_PORT} will be used.
      *                  The URI path, query and fragment components are ignored.
      * @param context   this is the SSL context used for SSL connections.
-     * @param config    the resource configuration.
+     * @param container the Simple container with ResourceConfig.
      * @param sslClientAuthentication Secure socket client authentication policy.
      * @param start whether the server shall listen to connections immediately
      * @return the closeable connection, with the endpoint started.

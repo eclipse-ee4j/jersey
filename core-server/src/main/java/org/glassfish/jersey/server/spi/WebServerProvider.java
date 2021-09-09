@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package org.glassfish.jersey.server.spi;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ApplicationHandler;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.spi.Contract;
 
 /**
@@ -45,34 +47,34 @@ import org.glassfish.jersey.spi.Contract;
  * of a type (provided the type is not {@code Object}). It is expected that each
  * provider supports mapping for distinct set of types and subtypes so that
  * different providers do not conflict with each other. In addition, a provider
- * SHOULD support the super type {@link Server} to participate in auto-selection
+ * SHOULD support the super type {@link WebServer} to participate in auto-selection
  * of providers (in this case the <em>first</em> supporting provider found is
  * used).
  * </p>
  * <p>
  * An implementation can identify itself by placing a Java service provider
  * configuration file (if not already present) -
- * {@code org.glassfish.jersey.server.spi.ServerProvider} - in the resource
+ * {@code org.glassfish.jersey.server.spi.WebServerProvider} - in the resource
  * directory {@code META-INF/services}, and adding the fully qualified
  * service-provider-class of the implementation in the file.
  * </p>
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
 @Contract
 @ConstrainedTo(RuntimeType.SERVER)
-public interface ServerProvider {
+public interface WebServerProvider {
 
     /**
      * Creates a server of a given type which runs the given application using the
      * given bootstrap configuration.
      *
      * @param <T>
-     *            the type of the server.
+     *            the type of the web server.
      * @param type
-     *            the type of the server. Providers SHOULD support at least
-     *            {@link Server}.
+     *            the type of the web server. Providers SHOULD support at least
+     *            {@link WebServer}.
      * @param application
      *            The application to host.
      * @param configuration
@@ -82,6 +84,7 @@ public interface ServerProvider {
      * @throws ProcessingException
      *             if there is an error creating the server.
      */
-    public <T extends Server> T createServer(Class<T> type, Application application, JAXRS.Configuration configuration)
-            throws ProcessingException;
+    <T extends WebServer> T createServer(Class<T> type,
+                                         Application application,
+                                         JerseySeBootstrapConfiguration configuration) throws ProcessingException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -45,7 +45,7 @@ import com.sun.net.httpserver.HttpsServer;
  * Factory for creating {@link HttpServer JDK HttpServer} instances to run Jersey applications.
  *
  * @author Miroslav Fuksa
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public final class JdkHttpServerFactory {
 

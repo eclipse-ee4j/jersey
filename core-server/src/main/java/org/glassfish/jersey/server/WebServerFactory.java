@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,32 @@
 
 package org.glassfish.jersey.server;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.server.spi.Server;
-import org.glassfish.jersey.server.spi.ServerProvider;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
 
 /**
  * Factory for creating specific HTTP servers.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-public final class ServerFactory {
+public final class WebServerFactory {
 
     /**
      * Prevents instantiation.
      */
-    private ServerFactory() {
+    private WebServerFactory() {
     }
 
     /**
      * Creates a server of a given type which runs the given application using the
      * given bootstrap configuration.
      * <p>
-     * The list of service-providers supporting the {@link ServerProvider}
+     * The list of service-providers supporting the {@link WebServerProvider}
      * service-provider will be iterated over until one returns a non-null server
      * instance.
      * <p>
@@ -51,7 +51,7 @@ public final class ServerFactory {
      *            the type of the server.
      * @param type
      *            the type of the server. Providers SHOULD support at least
-     *            {@link Server}.
+     *            {@link WebServer}.
      * @param application
      *            The application to host.
      * @param configuration
@@ -62,10 +62,10 @@ public final class ServerFactory {
      * @throws IllegalArgumentException
      *             if no server provider supports the type.
      */
-    public static <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
-        for (final ServerProvider serverProvider : ServiceFinder.find(ServerProvider.class)) {
-            final T server = serverProvider.createServer(type, application, configuration);
+    public static <T extends WebServer> T createServer(final Class<T> type, final Application application,
+                                                       final JerseySeBootstrapConfiguration configuration) {
+        for (final WebServerProvider webServerProvider : ServiceFinder.find(WebServerProvider.class)) {
+            final T server = webServerProvider.createServer(type, application, configuration);
             if (server != null) {
                 return server;
             }

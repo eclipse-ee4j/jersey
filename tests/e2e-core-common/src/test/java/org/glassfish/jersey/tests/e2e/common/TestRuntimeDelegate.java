@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,10 @@
 
 package org.glassfish.jersey.tests.e2e.common;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -29,6 +31,8 @@ import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 
 import org.junit.Assert;
+
+import java.util.concurrent.CompletionStage;
 
 /**
  * Test runtime delegate.
@@ -44,6 +48,21 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
     @Override
     public <T> T createEndpoint(Application application, Class<T> endpointType)
             throws IllegalArgumentException, UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public SeBootstrap.Configuration.Builder createConfigurationBuilder() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public CompletionStage<SeBootstrap.Instance> bootstrap(Application application, SeBootstrap.Configuration configuration) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

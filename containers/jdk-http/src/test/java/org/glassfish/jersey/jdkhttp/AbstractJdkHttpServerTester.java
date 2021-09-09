@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 
 import com.sun.net.httpserver.HttpServer;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -33,7 +33,7 @@ import org.junit.After;
 /**
  * Abstract JDK HTTP Server unit tester.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public abstract class AbstractJdkHttpServerTester {
 
@@ -52,8 +52,8 @@ public abstract class AbstractJdkHttpServerTester {
             return server.getAddress().getPort();
         }
 
-        final String value =
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
+        final String value = AccessController.doPrivileged(
+                PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
         if (value != null) {
 
             try {
@@ -81,10 +81,7 @@ public abstract class AbstractJdkHttpServerTester {
 
     public void startServer(Class... resources) {
         ResourceConfig config = new ResourceConfig(resources);
-        config.register(LoggingFeature.class);
-        final URI baseUri = getBaseUri();
-        server = JdkHttpServerFactory.createHttpServer(baseUri, config);
-        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + getBaseUri());
+        startServer(config);
     }
 
     public void startServer(ResourceConfig config) {
@@ -98,7 +95,8 @@ public abstract class AbstractJdkHttpServerTester {
             final SSLContext sslContext, final boolean start) {
         config.register(LoggingFeature.class);
         server = JdkHttpServerFactory.createHttpServer(uri, config, sslContext, start);
-        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + UriBuilder.fromUri(uri).port(getPort()).build());
+        LOGGER.log(Level.INFO,
+                "jdk-http server started on base uri: " + UriBuilder.fromUri(uri).port(getPort()).build());
         return server;
     }
 

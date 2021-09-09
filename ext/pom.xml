@@ -55,7 +55,7 @@
         <module>spring4</module>
         <module>spring5</module>
         -->
-        <module>wadl-doclet</module>
+<!--        <module>wadl-doclet</module> temporarily exclude until 4812 gets merged into this branch -->
         <module>microprofile</module>
     </modules>
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,50 +17,35 @@
 
 package org.glassfish.jersey.simple;
 
-import static java.lang.Boolean.TRUE;
-
-import java.net.URI;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Application;
 
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.spi.Server;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.spi.WebServer;
 
 /**
  * Jersey {@code Server} implementation based on Simple framework
  * {@link SimpleServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-public final class SimpleHttpServer implements Server {
+final class SimpleHttpServer implements WebServer {
 
     private final SimpleContainer container;
 
     private final SimpleServer simpleServer;
 
-    SimpleHttpServer(final Application application, final JAXRS.Configuration configuration) {
-        final String protocol = configuration.protocol();
-        final String host = configuration.host();
-        final int port = configuration.port();
-        final String rootPath = configuration.rootPath();
-        final SSLContext sslContext = configuration.sslContext();
-        final JAXRS.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
-                .sslClientAuthentication();
-        final boolean autoStart = Optional.ofNullable((Boolean) configuration.property(ServerProperties.AUTO_START))
-                .orElse(TRUE);
-        final URI uri = UriBuilder.newInstance().scheme(protocol.toLowerCase()).host(host).port(port).path(rootPath)
-                .build();
-
+    SimpleHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
         this.container = new SimpleContainer(application);
-        this.simpleServer = SimpleContainerFactory.create(uri, "HTTPS".equals(protocol) ? sslContext : null,
-                sslClientAuthentication, this.container, autoStart);
+        this.simpleServer = SimpleContainerFactory.create(
+                configuration.uri(false),
+                configuration.sslContext(),
+                configuration.sslClientAuthentication(),
+                this.container,
+                configuration.autoStart());
     }
 
     @Override

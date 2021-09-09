@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.jersey.netty.httpserver;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
-import org.glassfish.jersey.server.spi.Server;
-import org.glassfish.jersey.server.spi.ServerProvider;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
 
 import io.netty.channel.Channel;
 
@@ -28,14 +29,14 @@ import io.netty.channel.Channel;
  * Server provider for servers based on Netty {@link Channel}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-public final class NettyHttpServerProvider implements ServerProvider {
+public final class NettyHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
-        return NettyHttpServer.class == type || Server.class == type
+    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
+                                                      final JerseySeBootstrapConfiguration configuration) {
+        return NettyHttpServer.class == type || WebServer.class == type
                 ? type.cast(new NettyHttpServer(application, configuration))
                 : null;
     }

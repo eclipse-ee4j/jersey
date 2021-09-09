@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,25 +19,25 @@ package org.glassfish.jersey.server.spi;
 
 import java.util.concurrent.CompletionStage;
 
-import javax.ws.rs.ConstrainedTo;
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ConstrainedTo;
+import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.spi.Contract;
 
 /**
  * Jersey service contract for self-contained servers.
  * <p>
- * Runs a self-contained {@link Application} in a {@link Container} using an
- * HTTP server implicitly started and stopped together with the application.
+ * Runs a self-contained {@link Application} in a {@link Container} using a
+ * Web Server implicitly started and stopped together with the application.
  * </p>
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
 @Contract
 @ConstrainedTo(RuntimeType.SERVER)
-public interface Server {
+public interface WebServer {
 
     /**
      * @return container in which the application lives.

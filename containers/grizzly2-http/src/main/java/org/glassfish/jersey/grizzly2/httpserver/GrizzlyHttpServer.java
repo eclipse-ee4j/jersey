@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,56 +17,48 @@
 
 package org.glassfish.jersey.grizzly2.httpserver;
 
-import static java.lang.Boolean.TRUE;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.MANDATORY;
-import static javax.ws.rs.JAXRS.Configuration.SSLClientAuthentication.OPTIONAL;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.MANDATORY;
+import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.spi.Server;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.spi.WebServer;
 
 /**
  * Jersey {@code Server} implementation based on Grizzly {@link HttpServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-public final class GrizzlyHttpServer implements Server {
+final class GrizzlyHttpServer implements WebServer {
 
     private final GrizzlyHttpContainer container;
 
     private final HttpServer httpServer;
 
-    GrizzlyHttpServer(final Application application, final JAXRS.Configuration configuration) {
-        final String protocol = configuration.protocol();
-        final String host = configuration.host();
-        final int port = configuration.port();
-        final String rootPath = configuration.rootPath();
+    GrizzlyHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
         final SSLContext sslContext = configuration.sslContext();
-        final JAXRS.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
+        final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
-        final boolean autoStart = Optional.ofNullable((Boolean) configuration.property(ServerProperties.AUTO_START))
-                .orElse(TRUE);
-        final URI uri = UriBuilder.newInstance().scheme(protocol.toLowerCase()).host(host).port(port).path(rootPath)
-                .build();
 
         this.container = new GrizzlyHttpContainer(application);
-        this.httpServer = GrizzlyHttpServerFactory.createHttpServer(uri, this.container, "HTTPS".equals(protocol),
-                new SSLEngineConfigurator(sslContext, false, sslClientAuthentication == OPTIONAL,
-                        sslClientAuthentication == MANDATORY),
-                autoStart);
+        this.httpServer = GrizzlyHttpServerFactory.createHttpServer(
+                configuration.uri(false),
+                this.container,
+                configuration.isHttps(),
+                configuration.isHttps() ? new SSLEngineConfigurator(sslContext, false,
+                        sslClientAuthentication == MANDATORY,
+                        sslClientAuthentication == OPTIONAL) : null,
+                configuration.autoStart());
     }
 
     @Override
