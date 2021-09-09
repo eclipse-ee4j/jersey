@@ -1800,6 +1800,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.cm</artifactId>
+                <version>${osgi.service.cm.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.glassfish.main.ejb</groupId>
                 <artifactId>ejb-container</artifactId>
                 <version>${gf.impl.version}</version>
@@ -2140,7 +2147,8 @@
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <pax.exam.version>4.13.1</pax.exam.version>
+        <osgi.service.cm.version>1.6.0</osgi.service.cm.version>
+        <pax.exam.version>4.13.4</pax.exam.version>
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
