@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,16 +19,20 @@ package org.glassfish.jersey.internal;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.Variant;
 import jakarta.ws.rs.ext.RuntimeDelegate;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletionStage;
 
 /**
  * RuntimeDelegate Decorator that changes behaviour due to provided runtime information.
@@ -100,6 +104,21 @@ public class RuntimeDelegateDecorator {
         @Override
         public Link.Builder createLinkBuilder() {
             return runtimeDelegate.createLinkBuilder();
+        }
+
+        @Override
+        public SeBootstrap.Configuration.Builder createConfigurationBuilder() {
+            return runtimeDelegate.createConfigurationBuilder();
+        }
+
+        @Override
+        public CompletionStage<SeBootstrap.Instance> bootstrap(Application application, SeBootstrap.Configuration configuration) {
+            return runtimeDelegate.bootstrap(application, configuration);
+        }
+
+        @Override
+        public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
+            return runtimeDelegate.createEntityPartBuilder(partName);
         }
 
         private <T> HeaderDelegate<T> _createHeaderDelegate(final Class<T> type) {

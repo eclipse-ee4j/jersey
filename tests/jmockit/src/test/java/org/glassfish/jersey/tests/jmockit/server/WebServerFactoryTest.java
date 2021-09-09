@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.server;
+package org.glassfish.jersey.tests.jmockit.server;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.theInstance;
@@ -22,58 +23,59 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Iterator;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.JAXRS.Configuration;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.guava.Iterators;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
-import org.glassfish.jersey.server.spi.Server;
-import org.glassfish.jersey.server.spi.ServerProvider;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.WebServerFactory;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import mockit.Mocked;
-import mockit.integration.junit4.JMockit;
 
 /**
- * Unit tests for {@link ServerFactory}.
+ * Unit tests for {@link WebServerFactory}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-@RunWith(JMockit.class)
-public final class ServerFactoryTest {
+public final class WebServerFactoryTest {
 
     @Test
-    public final void shouldBuildServer(@Mocked final Application mockApplication, @Mocked final Server mockServer,
-            @Mocked final JAXRS.Configuration mockConfiguration, @Mocked final InjectionManager mockInjectionManager) {
+    public final void shouldBuildServer(@Mocked final Application mockApplication,
+                                        @Mocked final WebServer mockServer,
+                                        @Mocked final JerseySeBootstrapConfiguration mockConfiguration,
+                                        @Mocked final InjectionManager mockInjectionManager) {
         // given
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
             @Override
             public final <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
                     final ClassLoader loader, final boolean ignoreOnClassNotFound) {
                 return Iterators.singletonIterator(service.cast(
-                        service == ServerProvider.class ? new ServerProvider() {
+                        service == WebServerProvider.class ? new WebServerProvider() {
                             @Override
-                            public final <U extends Server> U createServer(final Class<U> type, final Application application,
-                                    final Configuration configuration) {
+                            public final <U extends WebServer> U createServer(
+                                    final Class<U> type,
+                                    final Application application,
+                                    final JerseySeBootstrapConfiguration configuration) {
                                 return application == mockApplication && configuration == mockConfiguration
                                         ? type.cast(mockServer)
                                         : null;
                             }
                         }
                                 : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
-                                    @Override
-                                    public final InjectionManager create(final Object parent) {
-                                        return mockInjectionManager;
-                                    }
-                                }
-                                        : null));
+                            @Override
+                            public final InjectionManager create(final Object parent) {
+                                return mockInjectionManager;
+                            }
+                        }
+                                : null));
             }
 
             @Override
@@ -84,7 +86,7 @@ public final class ServerFactoryTest {
         });
 
         // when
-        final Server server = ServerFactory.createServer(Server.class, mockApplication, mockConfiguration);
+        final WebServer server = WebServerFactory.createServer(WebServer.class, mockApplication, mockConfiguration);
 
         // then
         assertThat(server, is(theInstance(mockServer)));

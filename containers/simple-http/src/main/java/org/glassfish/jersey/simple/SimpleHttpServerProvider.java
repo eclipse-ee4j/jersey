@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,24 @@
 
 package org.glassfish.jersey.simple;
 
-import javax.ws.rs.JAXRS;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
-import org.glassfish.jersey.server.spi.Server;
-import org.glassfish.jersey.server.spi.ServerProvider;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
 
 /**
  * Server provider for servers based on Simple framework {@link SimpleServer}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
- * @since 2.30
+ * @since 3.1.0
  */
-public final class SimpleHttpServerProvider implements ServerProvider {
+public final class SimpleHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends Server> T createServer(final Class<T> type, final Application application,
-            final JAXRS.Configuration configuration) {
-        return SimpleHttpServer.class == type || Server.class == type
+    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
+                                                      final JerseySeBootstrapConfiguration configuration) {
+        return SimpleHttpServer.class == type || WebServer.class == type
                 ? type.cast(new SimpleHttpServer(application, configuration))
                 : null;
     }

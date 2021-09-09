@@ -254,7 +254,7 @@
                             <includeGroupIds>jakarta.ws.rs,org.glassfish.jersey.core,org.glassfish.jersey.containers,org.glassfish.jersey.jaxb,org.glassfish.jersey.inject</includeGroupIds>
                             <includeClassifiers>sources</includeClassifiers>
                             <outputDirectory>${generated.src.dir}</outputDirectory>
-                            <excludes>**/NOTICE.md,**/NOTICE.markdown</excludes>
+                            <excludes>module-info.*,META-INF/MANIFEST.MF,**/NOTICE.md,**/NOTICE.markdown</excludes>
                         </configuration>
                     </execution>
                 </executions>
