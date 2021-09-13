@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.Context;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * CDI backed JAX-RS resource.

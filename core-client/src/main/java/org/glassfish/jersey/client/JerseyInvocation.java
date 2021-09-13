@@ -123,7 +123,7 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
         map.put("DELETE", EntityPresence.MUST_BE_NULL);
         map.put("GET", EntityPresence.MUST_BE_NULL);
         map.put("HEAD", EntityPresence.MUST_BE_NULL);
-        map.put("OPTIONS", EntityPresence.MUST_BE_NULL);
+        map.put("OPTIONS", EntityPresence.OPTIONAL);
         map.put("PATCH", EntityPresence.MUST_BE_PRESENT);
         map.put("POST", EntityPresence.OPTIONAL); // we allow to post null instead of entity
         map.put("PUT", EntityPresence.MUST_BE_PRESENT);

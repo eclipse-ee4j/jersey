@@ -55,6 +55,8 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Parent class for testing JAX-RS and Jersey-based applications using Jersey test framework.
@@ -614,6 +616,7 @@ public abstract class JerseyTest {
      * @throws Exception              if an exception is thrown during setting up the test environment.
      */
     @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final TestContainer testContainer = createTestContainer(context);
 
@@ -634,6 +637,7 @@ public abstract class JerseyTest {
      * @throws Exception if an exception is thrown during tearing down the test environment.
      */
     @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (isLogRecordingEnabled()) {
             unregisterLogHandler();

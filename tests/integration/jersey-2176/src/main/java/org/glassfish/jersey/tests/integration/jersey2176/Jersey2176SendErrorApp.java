@@ -20,7 +20,7 @@ import jakarta.ws.rs.ApplicationPath;
 
 /**
  * Configure {@link org.glassfish.jersey.server.ServerProperties#RESPONSE_SET_STATUS_OVER_SEND_ERROR} by {@code true} -
- * method {@link javax.servlet.http.HttpServletResponse#sendError} will be called in case of errors
+ * method {@link jakarta.servlet.http.HttpServletResponse#sendError} will be called in case of errors
  * (status {@code 4xx} or {@code 5xx}).
  *
  * @author Libor Kramolis

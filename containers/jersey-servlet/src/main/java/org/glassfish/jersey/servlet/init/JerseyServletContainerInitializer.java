@@ -250,7 +250,7 @@ public final class JerseyServletContainerInitializer implements ServletContainer
         }
 
         // make <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> without init params
-        // work the same as <servlet-name>javax.ws.rs.Application</servlet-name>
+        // work the same as <servlet-name>jakarta.ws.rs.Application</servlet-name>
         for (ServletRegistration servletRegistration : context.getServletRegistrations().values()) {
             if (isJerseyServlet(servletRegistration.getClassName())
                     && servletRegistration != registration
