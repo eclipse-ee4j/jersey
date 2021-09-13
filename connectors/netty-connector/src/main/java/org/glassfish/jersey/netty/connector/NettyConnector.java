@@ -191,20 +191,18 @@ class NettyConnector implements Connector {
             synchronized (conns) {
                while (chan == null && !conns.isEmpty()) {
                   chan = conns.remove(conns.size() - 1);
+                  try {
+                      chan.pipeline().remove(INACTIVE_POOLED_CONNECTION_HANDLER);
+                      chan.pipeline().remove(PRUNE_INACTIVE_POOL);
+                  } catch (NoSuchElementException e) {
+                      /*
+                       *  Eat it.
+                       *  It could happen that the channel was closed, pipeline cleared and
+                       *  then it will fail to remove the names with this exception.
+                       */
+                  }
                   if (!chan.isOpen()) {
                       chan = null;
-                  } else {
-                      try {
-                          // Remove it only if the channel is open. Otherwise there are no such names and it fails.
-                          chan.pipeline().remove(INACTIVE_POOLED_CONNECTION_HANDLER);
-                          chan.pipeline().remove(PRUNE_INACTIVE_POOL);
-                      } catch (NoSuchElementException e) {
-                          /*
-                           *  Eat it.
-                           *  It is unlikely, but it could happen that the channel was closed right after
-                           *  entering in this else block, then it will fail to remove the names with this exception.
-                           */
-                      }
                   }
                }
             }
