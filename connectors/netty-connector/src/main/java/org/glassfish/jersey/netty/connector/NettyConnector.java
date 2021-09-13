@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -102,7 +103,7 @@ class NettyConnector implements Connector {
     private final Integer maxPoolSizeTotal; //either from Jersey config, or default
     private final Integer maxPoolIdle; // either from Jersey config, or default
 
-    private static final String INACTIVE_POOLED_CONNECTION_HANDLER = "inactive_pooled_connection_handler";
+    static final String INACTIVE_POOLED_CONNECTION_HANDLER = "inactive_pooled_connection_handler";
     private static final String PRUNE_INACTIVE_POOL = "prune_inactive_pool";
     private static final String READ_TIMEOUT_HANDLER = "read_timeout_handler";
     private static final String REQUEST_HANDLER = "request_handler";
@@ -190,10 +191,20 @@ class NettyConnector implements Connector {
             synchronized (conns) {
                while (chan == null && !conns.isEmpty()) {
                   chan = conns.remove(conns.size() - 1);
-                  chan.pipeline().remove(INACTIVE_POOLED_CONNECTION_HANDLER);
-                  chan.pipeline().remove(PRUNE_INACTIVE_POOL);
                   if (!chan.isOpen()) {
-                     chan = null;
+                      chan = null;
+                  } else {
+                      try {
+                          // Remove it only if the channel is open. Otherwise there are no such names and it fails.
+                          chan.pipeline().remove(INACTIVE_POOLED_CONNECTION_HANDLER);
+                          chan.pipeline().remove(PRUNE_INACTIVE_POOL);
+                      } catch (NoSuchElementException e) {
+                          /*
+                           *  Eat it.
+                           *  It is unlikely, but it could happen that the channel was closed right after
+                           *  entering in this else block, then it will fail to remove the names with this exception.
+                           */
+                      }
                   }
                }
             }
