@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -187,6 +187,12 @@ public class CookieImplTest {
         cookie = new NewCookie("fred", "flintstone", null, null, "a modern stonage family", 60, false);
         expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60";
         assertEquals(expResult, cookie.toString());
+
+        cookie = new NewCookie("fred", "flintstone", null, null, 1,
+                "a modern stonage family", 60, null, false, false,
+                NewCookie.SameSite.STRICT);
+        expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;SameSite=STRICT";
+        assertEquals(expResult, cookie.toString());
     }
 
     @Test
@@ -209,6 +215,16 @@ public class CookieImplTest {
         assertEquals(1, cookie.getVersion());
         assertEquals(60, cookie.getMaxAge());
         assertTrue(cookie.isSecure());
+
+        cookie = NewCookie.valueOf(
+                "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;Secure;SameSite=NONE");
+        assertEquals("fred", cookie.getName());
+        assertEquals("flintstone", cookie.getValue());
+        assertEquals("a modern stonage family", cookie.getComment());
+        assertEquals(1, cookie.getVersion());
+        assertEquals(60, cookie.getMaxAge());
+        assertTrue(cookie.isSecure());
+        assertEquals(NewCookie.SameSite.NONE, cookie.getSameSite());
     }
 
 }
