@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.spring;
 
 import java.util.logging.Logger;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 
 import org.springframework.web.WebApplicationInitializer;
 

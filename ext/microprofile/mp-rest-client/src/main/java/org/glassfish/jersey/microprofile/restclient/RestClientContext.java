@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.ws.rs.ext.ParamConverterProvider;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;

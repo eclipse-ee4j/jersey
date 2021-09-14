@@ -29,12 +29,12 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 

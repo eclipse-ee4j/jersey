@@ -28,11 +28,11 @@ public interface ParentContainerRequestFilter extends ParentChecker, ContainerRe
         StringBuilder stringBuilder = new StringBuilder();
         boolean injected = false;
 
-        if (requestContext.getUriInfo().getRequestUri().toASCIIString().contains("injected")) {
+        if (requestContext.getUriInfo().getRequestUri().toASCIIString().contains("inject")) {
             injected = checkInjected(stringBuilder);
         }
 
-        if (requestContext.getUriInfo().getRequestUri().toASCIIString().contains("contexted")) {
+        if (requestContext.getUriInfo().getRequestUri().toASCIIString().contains("context")) {
             injected = checkContexted(stringBuilder);
         }
 

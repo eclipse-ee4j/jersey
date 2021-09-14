@@ -107,6 +107,19 @@
         </dependency>
 
         <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.http</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.cm</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -200,6 +213,16 @@
                         <goals>
                             <goal>test</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <!--
+                                excluded due to javax.servlet-api collision -
+                                more than one version is required, so it is not possible to execute that test.
+                                (since pax-exam version 4.13.4)
+                                  -->
+                                <exclude>org.glassfish.jersey.examples.osgihttpservice.test.GrizzlyHttpServiceFelixTest</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
