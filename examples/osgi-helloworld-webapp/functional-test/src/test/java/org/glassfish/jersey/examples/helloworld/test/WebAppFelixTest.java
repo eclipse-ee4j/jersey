@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -40,6 +40,7 @@ public class WebAppFelixTest extends AbstractWebAppTest {
     @Override
     public List<Option> osgiRuntimeOptions() {
         return Arrays.asList(CoreOptions.options(
+                mavenBundle().groupId("org.osgi").artifactId("org.osgi.service.cm").versionAsInProject(),
                 mavenBundle()
                         .groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin")
                         .versionAsInProject(),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -250,7 +250,7 @@ public final class JerseyServletContainerInitializer implements ServletContainer
         }
 
         // make <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> without init params
-        // work the same as <servlet-name>javax.ws.rs.Application</servlet-name>
+        // work the same as <servlet-name>jakarta.ws.rs.Application</servlet-name>
         for (ServletRegistration servletRegistration : context.getServletRegistrations().values()) {
             if (isJerseyServlet(servletRegistration.getClassName())
                     && servletRegistration != registration

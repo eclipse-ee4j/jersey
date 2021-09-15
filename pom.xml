@@ -773,7 +773,7 @@
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
-                            <version>1.10.9</version>
+                            <version>1.10.11</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -1517,12 +1517,6 @@
             </dependency>
 
             <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                <version>${cdi2.api.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jta.api.version}</version>
@@ -1939,6 +1933,12 @@
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit5.version}</version>
                 <scope>test</scope>
@@ -2054,7 +2054,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.1</asm.version>
+        <asm.version>9.2</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <commons-lang3.version>3.3.2</commons-lang3.version>
@@ -2096,8 +2096,8 @@
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <osgi.service.cm.version>1.5.0</osgi.service.cm.version>
-        <pax.exam.version>4.13.2</pax.exam.version>
+        <osgi.service.cm.version>1.6.0</osgi.service.cm.version>
+        <pax.exam.version>4.13.4</pax.exam.version>
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
@@ -2112,7 +2112,7 @@
         <surefire.version>3.0.0-M3</surefire.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>4.0.1.SP1</weld.version>
+        <weld.version>4.0.2.Final</weld.version>
         <weld3.version>3.1.7.SP1</weld3.version>
         <validation.impl.version>7.0.0.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
