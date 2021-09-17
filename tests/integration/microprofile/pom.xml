@@ -33,6 +33,7 @@
     <modules>
         <module>config</module>
 <!--        <module>rest-client</module>-->
+<!--        <module>rest-client14-compatibility</module>-->
     </modules>
 
     <build>

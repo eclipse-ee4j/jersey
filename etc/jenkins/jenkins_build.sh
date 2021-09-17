@@ -2,4 +2,4 @@
 
 export DEBUG=true
 
-mvn -V -U -B -e -Psnapshots clean install glassfish-copyright:check -Dcopyright.quiet=false -Dsurefire.systemPropertiesFile=${WORKSPACE}/etc/jenkins/systemPropertiesFile
+mvn -V -U -B -e -Psnapshots clean install glassfish-copyright:check -Dcopyright.quiet=false

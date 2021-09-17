@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,29 +16,37 @@
 
 package org.glassfish.jersey.wadl.doclet;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ResourceDocType;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 class DocletUtils {
 
     private static final Logger LOG = Logger.getLogger(DocletUtils.class.getName());
 
     private static String[] getCDataElements(DocProcessor docProcessor) {
-        String[] original = new String[]{"ns1^commentText", "ns2^commentText", "^commentText" };
+        String[] original = new String[]{"commentText"};
         if (docProcessor == null) {
             return original;
         } else {
@@ -64,30 +72,6 @@ class DocletUtils {
         return copy;
     }
 
-    private static XMLSerializer getXMLSerializer(OutputStream os, String[] cdataElements)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        // configure an OutputFormat to handle CDATA
-        OutputFormat of = new OutputFormat();
-
-        // specify which of your elements you want to be handled as CDATA.
-        // The use of the '^' between the namespaceURI and the localname
-        // seems to be an implementation detail of the xerces code.
-        // When processing xml that doesn't use namespaces, simply omit the
-        // namespace prefix as shown in the third CDataElement below.
-        of.setCDataElements(cdataElements);
-
-        // set any other options you'd like
-        of.setPreserveSpace(true);
-        of.setIndenting(true);
-
-        // create the serializer
-        XMLSerializer serializer = new XMLSerializer(of);
-
-        serializer.setOutputByteStream(os);
-
-        return serializer;
-    }
-
     private static Class<?>[] getJAXBContextClasses(ResourceDocType result, DocProcessor docProcessor) {
         Class<?>[] clazzes;
         if (docProcessor == null) {
@@ -108,15 +92,39 @@ class DocletUtils {
     }
 
     static boolean createOutputFile(String filePath, DocProcessor docProcessor, ResourceDocType result) {
+        String[] cdataElements = getCDataElements(docProcessor);
+        Class<?>[] classes = getJAXBContextClasses(result, docProcessor);
+        LOG.info("cdataElements " + Arrays.asList(cdataElements));
+        LOG.info("classes " + Arrays.asList(classes));
         try (OutputStream out = new BufferedOutputStream(new FileOutputStream(filePath))) {
-            Class<?>[] clazzes = getJAXBContextClasses(result, docProcessor);
-            JAXBContext c = JAXBContext.newInstance(clazzes);
+            JAXBContext c = JAXBContext.newInstance(classes);
             Marshaller m = c.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            String[] cdataElements = getCDataElements(docProcessor);
-            XMLSerializer serializer = getXMLSerializer(out, cdataElements);
-            m.marshal(result, serializer);
-            LOG.info("Wrote " + result);
+            StringWriter sw = new StringWriter();
+            // Produces XML in memory
+            m.marshal(result, sw);
+            // Loads the XML from memory for processing
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+                    .parse(new ByteArrayInputStream(sw.toString().getBytes()));
+            for (String cdata : cdataElements) {
+                NodeList nodes = document.getElementsByTagName(cdata);
+                LOG.info(nodes.getLength() + " nodes found by " + cdata);
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node node = nodes.item(i);
+                    CDATASection cdataSection = document.createCDATASection(node.getTextContent());
+                    // Remove current content
+                    node.setTextContent(null);
+                    // Add it again, but wrapped with CDATA
+                    node.appendChild(cdataSection);
+                }
+                document.createCDATASection(cdata);
+            }
+            DOMSource source = new DOMSource(document);
+            StreamResult streamResult = new StreamResult(out);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(source, streamResult);
+            LOG.info("Wrote " + result + " in " + filePath);
             return true;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Could not serialize ResourceDoc.", e);

@@ -25,8 +25,8 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
 public class SingletonTest extends JerseyTest {
     private Weld weld;

@@ -10,7 +10,7 @@
 
 package org.glassfish.jersey.examples.helloworld.spring;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

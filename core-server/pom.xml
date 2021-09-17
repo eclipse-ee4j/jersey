@@ -156,6 +156,7 @@
                     <threadCount>1</threadCount>
                     <forkCount>1C</forkCount>
                     <reuseForks>true</reuseForks>
+                    <systemPropertiesFile>${project.basedir}/etc/systemPropertiesFile</systemPropertiesFile>
                 </configuration>
             </plugin>
         </plugins>

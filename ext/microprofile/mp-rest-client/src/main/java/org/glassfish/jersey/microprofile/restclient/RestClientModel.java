@@ -20,9 +20,7 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.ws.rs.client.WebTarget;

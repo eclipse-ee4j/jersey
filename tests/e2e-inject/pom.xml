@@ -34,6 +34,7 @@
 
     <modules>
         <module>cdi2-se</module>
+        <module>cdi-inject-weld</module>
         <module>hk2</module>
     </modules>
 </project>

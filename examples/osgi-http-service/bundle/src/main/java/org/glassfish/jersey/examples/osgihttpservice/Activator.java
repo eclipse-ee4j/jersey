@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.glassfish.jersey.servlet.ServletContainer;
 

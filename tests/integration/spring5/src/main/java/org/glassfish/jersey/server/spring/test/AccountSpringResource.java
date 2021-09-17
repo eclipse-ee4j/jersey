@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

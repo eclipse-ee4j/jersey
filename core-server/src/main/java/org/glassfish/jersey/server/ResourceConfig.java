@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,6 +42,7 @@ import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFacto
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
+import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.Tokenizer;
@@ -1194,16 +1195,18 @@ public class ResourceConfig extends Application implements Configurable<Resource
             this.application = original;
 
             final Application customRootApp = ResourceConfig.unwrapCustomRootApplication(original);
-            if (customRootApp != null) {
-                registerComponentsOf(customRootApp);
-            }
+
+            final Set<Object> rootSingletons = customRootApp != null ? registerComponentsOf(customRootApp) : null;
 
             originalRegistrations = Collections.newSetFromMap(new IdentityHashMap<>());
             originalRegistrations.addAll(super.getRegisteredClasses());
 
+            // Do not call the same Application#getSingletons twice
+            final Set<Object> origSingletons = customRootApp != null ? rootSingletons : original.getSingletons();
+
             // Register externally provided instances.
             final Set<Object> externalInstances =
-                    original.getSingletons().stream()
+                    origSingletons.stream()
                             .filter(external -> !originalRegistrations.contains(external.getClass()))
                             .collect(Collectors.toSet());
 
@@ -1216,10 +1219,10 @@ public class ResourceConfig extends Application implements Configurable<Resource
             registerClasses(externalClasses);
         }
 
-        private void registerComponentsOf(final Application application) {
-            Errors.processWithException(new Runnable() {
+        private Set<Object> registerComponentsOf(final Application application) {
+            return Errors.process(new Producer<Set<Object>>() {
                 @Override
-                public void run() {
+                public Set<Object> call() {
                     // First register instances that should take precedence over classes
                     // in case of duplicate registrations
                     final Set<Object> singletons = application.getSingletons();
@@ -1248,8 +1251,10 @@ public class ResourceConfig extends Application implements Configurable<Resource
                                                })
                                                .collect(Collectors.toSet()));
                     }
+                    return singletons;
                 }
             });
+
         }
 
         private RuntimeConfig(final Application application) {

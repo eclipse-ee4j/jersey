@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,5 +64,23 @@ public abstract class AbstractServiceFinderConfigurator<T> implements BootstrapC
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * Mainly aimed to provide runtime type to abstract classes which extends this finder
+     *
+     * @return runtime type
+     */
+    protected RuntimeType getRuntimeType() {
+        return runtimeType;
+    }
+
+    /**
+     * Mainly aimed to provide contract class to abstract classes which extends this finder
+     *
+     * @return contract class
+     */
+    protected Class<T> getContract() {
+        return contract;
     }
 }
