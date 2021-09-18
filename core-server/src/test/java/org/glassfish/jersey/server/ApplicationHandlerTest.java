@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -558,12 +558,14 @@ public class ApplicationHandlerTest {
     /**
      * Test that un-mapped response errors are tried to be processed only once (MBW).
      */
-    @Test(expected = ExecutionException.class)
+    @Test
     public void testMapCyclicResponseErrorForMbw() throws Exception {
         final ApplicationHandler handler = new ApplicationHandler(MapResponseErrorApplication.class);
 
         final ContainerRequest context = RequestContextBuilder.from("/foobar", "GET").build();
 
-        handler.apply(context).get();
+        final ContainerResponse containerResponse = handler.apply(context).get();
+        assertEquals(500, containerResponse.getStatus());
+        assertEquals("Cannot do that!", containerResponse.getEntity());
     }
 }

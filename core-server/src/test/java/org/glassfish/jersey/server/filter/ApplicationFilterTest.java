@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -318,11 +318,7 @@ public class ApplicationFilterTest {
         });
         resourceConfig.registerResources(rb.build());
         final ApplicationHandler application = new ApplicationHandler(resourceConfig);
-        try {
-            application.apply(RequestContextBuilder.from("/test", "GET").build()).get().getStatus();
-            Assert.fail("should throw an exception");
-        } catch (final Exception e) {
-            // ok
-        }
+        int status = application.apply(RequestContextBuilder.from("/test", "GET").build()).get().getStatus();
+        Assert.assertEquals(500, status);
     }
 }
