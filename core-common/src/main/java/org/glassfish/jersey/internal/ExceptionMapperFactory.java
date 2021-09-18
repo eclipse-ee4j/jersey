@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,8 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
 public class ExceptionMapperFactory implements ExceptionMappers {
 
     private static final Logger LOGGER = Logger.getLogger(ExceptionMapperFactory.class.getName());
+
+    private static final ExceptionMapper<Throwable> DEFAULT_EXCEPTION_MAPPER = new DefaultExceptionMapper();
 
     /**
      * Configurator which initializes and register {@link ExceptionMappers} instance into {@link InjectionManager} and
@@ -127,7 +129,7 @@ public class ExceptionMapperFactory implements ExceptionMappers {
                 }
             }
         }
-        return mapper;
+        return mapper == null ? (ExceptionMapper<T>) DEFAULT_EXCEPTION_MAPPER : mapper;
     }
 
     /**

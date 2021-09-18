@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -76,14 +76,12 @@ public class ExceptionLoggingTest extends JerseyTest {
     public void testRuntime() throws Exception {
         final Response response = target().path("runtime").request().get();
         assertEquals(500, response.getStatus());
-        assertEquals(getLastLoggedRecord().getThrown().getClass(), MyRuntimeException.class);
     }
 
     @Test
     public void testChecked() throws Exception {
         final Response response = target().path("checked").request().get();
         assertEquals(500, response.getStatus());
-        assertEquals(getLastLoggedRecord().getThrown().getClass(), MyCheckedException.class);
     }
 
     @Provider
@@ -123,8 +121,6 @@ public class ExceptionLoggingTest extends JerseyTest {
     public void testReaderFails() throws Exception {
         final Response response = target().path("resource/entity").request().get();
         assertEquals(500, response.getStatus());
-
-        assertEquals(getLastLoggedRecord().getThrown().getMessage(), "test");
     }
 
     static class ExceptionLoggingTestPOJO {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -105,6 +106,7 @@ public class AsyncResponseTest extends JerseyTest {
     }
 
     @Test
+    @Ignore("since 3.1 nothing is being thrown")
     public void testResumeRuntimeException() throws Exception {
         testResumeException("resumeRuntimeException", null);
 
@@ -112,6 +114,7 @@ public class AsyncResponseTest extends JerseyTest {
     }
 
     @Test
+    @Ignore("since 3.1 nothing is being thrown")
     public void testResumeCheckedException() throws Exception {
         testResumeException("resumeCheckedException", null);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ abstract class Jersey2176App extends ResourceConfig {
         property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, setStatusOverSendError);
         register(MyWriterInterceptor.class);
         register(Issue2176ReproducerResource.class);
+        register(Jersey2176ExceptionMapper.class);
     }
 
     public boolean isSetStatusOverSendError() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +54,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 
 import jakarta.inject.Provider;
 
+import org.glassfish.jersey.internal.DefaultExceptionMapper;
 import org.glassfish.jersey.internal.guava.Preconditions;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
@@ -496,6 +497,12 @@ public class ServerRuntime {
 
             do {
                 final Throwable throwable = wrap.getCurrent();
+                // internal mapping
+                if (throwable instanceof HeaderValueException) {
+                    if (((HeaderValueException) throwable).getContext() == HeaderValueException.Context.INBOUND) {
+                        return Response.status(Response.Status.BAD_REQUEST).build();
+                    }
+                }
                 if (wrap.isInMappable() || throwable instanceof WebApplicationException) {
                     // in case ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED is true, allow
                     // wrapped MessageBodyProviderNotFoundException to propagate
@@ -503,7 +510,7 @@ public class ServerRuntime {
                             && throwable.getCause() instanceof MessageBodyProviderNotFoundException) {
                         throw throwable;
                     }
-                    Response waeResponse = null;
+                    Response waeResponse;
 
                     if (throwable instanceof WebApplicationException) {
                         final WebApplicationException webApplicationException = (WebApplicationException) throwable;
@@ -512,10 +519,11 @@ public class ServerRuntime {
                         processingContext.routingContext().setMappedThrowable(throwable);
 
                         waeResponse = webApplicationException.getResponse();
-                        if (waeResponse.hasEntity()) {
-                            LOGGER.log(Level.FINE, LocalizationMessages
-                                    .EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus()), throwable);
-                            return waeResponse;
+                        if (waeResponse != null) {
+                            LOGGER.log(Level.FINE, waeResponse.hasEntity()
+                                    ? LocalizationMessages.EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus())
+                                    : LocalizationMessages.EXCEPTION_MAPPING_WAE_NO_ENTITY(waeResponse.getStatus()),
+                                    throwable);
                         }
                     }
 
@@ -527,7 +535,7 @@ public class ServerRuntime {
                         try {
                             final Response mappedResponse = mapper.toResponse(throwable);
 
-                            if (tracingLogger.isLogEnabled(ServerTraceEvent.EXCEPTION_MAPPING)) {
+                            if (isTracingLoggingEnabled(mapper, throwable, tracingLogger)) {
                                 tracingLogger.logDuration(ServerTraceEvent.EXCEPTION_MAPPING,
                                         timestamp, mapper, throwable, throwable.getLocalizedMessage(),
                                         mappedResponse != null ? mappedResponse.getStatusInfo() : "-no-response-");
@@ -560,19 +568,6 @@ public class ServerRuntime {
                             LOGGER.log(Level.SEVERE, LocalizationMessages.EXCEPTION_MAPPER_FAILED_FOR_EXCEPTION(), throwable);
                             return Response.serverError().build();
                         }
-                    }
-
-                    if (waeResponse != null) {
-                        LOGGER.log(Level.FINE, LocalizationMessages
-                                .EXCEPTION_MAPPING_WAE_NO_ENTITY(waeResponse.getStatus()), throwable);
-
-                        return waeResponse;
-                    }
-                }
-                // internal mapping
-                if (throwable instanceof HeaderValueException) {
-                    if (((HeaderValueException) throwable).getContext() == HeaderValueException.Context.INBOUND) {
-                        return Response.status(Response.Status.BAD_REQUEST).build();
                     }
                 }
 
@@ -739,6 +734,14 @@ public class ServerRuntime {
                 runtime.externalRequestScope.close();
                 processingContext.triggerEvent(RequestEvent.Type.FINISHED);
             }
+        }
+
+        private static boolean isTracingLoggingEnabled(ExceptionMapper mapper, Throwable throwable, TracingLogger tracingLogger) {
+            boolean defaultLoggingState = mapper instanceof DefaultExceptionMapper
+                    && throwable instanceof WebApplicationException;
+            return !defaultLoggingState
+                    && tracingLogger.isLogEnabled(ServerTraceEvent.EXCEPTION_MAPPING);
+
         }
     }
 
