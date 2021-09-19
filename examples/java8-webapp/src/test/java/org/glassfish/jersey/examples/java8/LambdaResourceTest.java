@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -36,7 +36,7 @@ public class LambdaResourceTest extends JerseyTest {
      */
     @Test
     public void testLambdas() {
-        final WebTarget target = target("lambdas/{p}");
+        final WebTarget target = target("j8").path("lambdas/{p}");
 
         // test default method with no @Path annotation
         String response = target.resolveTemplate("p", "test").request().get(String.class);

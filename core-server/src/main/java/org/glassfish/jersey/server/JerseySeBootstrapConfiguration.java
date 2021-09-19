@@ -136,7 +136,7 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
         private final Map<String, Object> properties = new HashMap<>();
 
         private Builder() {
-            this.properties.put(SeBootstrap.Configuration.PROTOCOL, "http");
+            this.properties.put(SeBootstrap.Configuration.PROTOCOL, "HTTP"); // upper case mandated by javadoc
             this.properties.put(SeBootstrap.Configuration.HOST, "localhost");
             this.properties.put(SeBootstrap.Configuration.PORT, -1); // Auto-select port 80 for HTTP or 443 for HTTPS
             this.properties.put(SeBootstrap.Configuration.ROOT_PATH, "/");

@@ -252,7 +252,9 @@ public final class GrizzlyHttpServerFactory {
         // Map the path to the processor.
         final ServerConfiguration config = server.getServerConfiguration();
         if (handler != null) {
-            final String path = uri.getPath().replaceAll("/{2,}", "/");
+            final String appPath = handler.getApplicationHandler().getConfiguration().getApplicationPath();
+            final String uriPath = appPath == null ? uri.getPath() : uri.getPath() + "/" + appPath;
+            final String path = uriPath.replaceAll("/{2,}", "/");
 
             final String contextPath = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
             config.addHttpHandler(handler, HttpHandlerRegistration.bulder().contextPath(contextPath).build());

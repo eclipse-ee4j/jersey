@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -35,7 +35,7 @@ public class DefaultMethodResourceTest extends JerseyTest {
      */
     @Test
     public void testDefaultMethods() {
-        final WebTarget defaultMethodTarget = target("default-method");
+        final WebTarget defaultMethodTarget = target("j8").path("default-method");
 
         // test default method with no @Path annotation
         String response = defaultMethodTarget.request().get(String.class);
@@ -51,7 +51,7 @@ public class DefaultMethodResourceTest extends JerseyTest {
      */
     @Test
     public void testImplementingClass() throws Exception {
-        final String response = target("default-method").path("class").request().get(String.class);
+        final String response = target("j8").path("default-method").path("class").request().get(String.class);
         assertEquals("class", response);
     }
 }

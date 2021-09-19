@@ -228,14 +228,18 @@ public final class JdkHttpServerFactory {
             throw new IllegalArgumentException(LocalizationMessages.ERROR_CONTAINER_URI_SCHEME_UNKNOWN(uri));
         }
 
-        final String path = uri.getPath();
-        if (path == null) {
+        final String _path = uri.getPath();
+        if (_path == null) {
             throw new IllegalArgumentException(LocalizationMessages.ERROR_CONTAINER_URI_PATH_NULL(uri));
-        } else if (path.isEmpty()) {
+        } else if (_path.isEmpty()) {
             throw new IllegalArgumentException(LocalizationMessages.ERROR_CONTAINER_URI_PATH_EMPTY(uri));
-        } else if (path.charAt(0) != '/') {
+        } else if (_path.charAt(0) != '/') {
             throw new IllegalArgumentException(LocalizationMessages.ERROR_CONTAINER_URI_PATH_START(uri));
         }
+
+        final String appPath = handler.getApplicationHandler().getConfiguration().getApplicationPath();
+        final String uriPath = appPath == null ? _path : _path + "/" + appPath;
+        final String path = uriPath.replaceAll("/{2,}", "/");
 
         final int port = (uri.getPort() == -1)
                 ? (isHttp ? Container.DEFAULT_HTTP_PORT : Container.DEFAULT_HTTPS_PORT)

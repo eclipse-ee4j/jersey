@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -101,7 +101,7 @@ public class JerseyItemStoreResourceTest extends JerseyTest {
                 "foo",
                 "bar",
                 "baz"));
-        final WebTarget itemsTarget = target("items");
+        final WebTarget itemsTarget = target("resources").path("items");
         final CountDownLatch latch = new CountDownLatch(items.size() * MAX_LISTENERS * 2); // countdown on all events
         final List<Queue<Integer>> indexQueues = new ArrayList<>(MAX_LISTENERS);
         final EventSource[] sources = new EventSource[MAX_LISTENERS];
@@ -174,9 +174,8 @@ public class JerseyItemStoreResourceTest extends JerseyTest {
      * @throws Exception in case of a test failure.
      */
     @Test
-    @Ignore //TODO - remove after jacartification
     public void testEventSourceReconnect() throws Exception {
-        final WebTarget itemsTarget = target("items");
+        final WebTarget itemsTarget = target("resources").path("items");
         final CountDownLatch latch = new CountDownLatch(MAX_ITEMS * MAX_LISTENERS * 2); // countdown only on new item events
         final List<Queue<String>> receivedQueues = new ArrayList<>(MAX_LISTENERS);
         final EventSource[] sources = new EventSource[MAX_LISTENERS];

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -45,7 +45,7 @@ public class ManagedClientSimpleTest extends JerseyTest {
 
     @Test
     public void testManagedClientSimple() throws Exception {
-        final WebTarget resource = target().path("client");
+        final WebTarget resource = target("app").path("client");
         Response response;
 
         response = resource.path("animals").request(MediaType.TEXT_PLAIN).get();
