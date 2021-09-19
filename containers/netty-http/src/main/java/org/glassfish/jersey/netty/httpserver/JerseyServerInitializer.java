@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,6 +44,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private final URI baseUri;
+    private final String applicationPath;
     private final SslContext sslCtx;
     private final NettyHttpContainer container;
     private final boolean http2;
@@ -72,7 +73,14 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
      */
     public JerseyServerInitializer(URI baseUri, SslContext sslCtx, NettyHttpContainer container, ResourceConfig resourceConfig,
                                    boolean http2) {
-        this.baseUri = baseUri;
+        applicationPath = container.getApplicationHandler().getConfiguration().getApplicationPath();
+        final String uriPath = applicationPath == null
+                ? baseUri.toString()
+                : baseUri.toString() + "/" + applicationPath + "/";
+        final int doubleSlash = uriPath.indexOf("/") + 2;
+        final String path = uriPath.substring(0, doubleSlash) + uriPath.substring(doubleSlash).replaceAll("/{2,}", "/");
+
+        this.baseUri = URI.create(path);
         this.sslCtx = sslCtx;
         this.container = container;
         this.resourceConfig = resourceConfig;
@@ -96,7 +104,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
             }
             p.addLast(new HttpServerCodec());
             p.addLast(new ChunkedWriteHandler());
-            p.addLast(new JerseyServerHandler(baseUri, container, resourceConfig));
+            p.addLast(new JerseyServerHandler(baseUri, applicationPath, container, resourceConfig));
         }
     }
 

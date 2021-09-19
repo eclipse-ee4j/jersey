@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,7 +13,6 @@ package org.glassfish.jersey.examples.cdi.resources;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 /**
@@ -21,7 +20,6 @@ import jakarta.ws.rs.core.Application;
  *
  * @author Jonathan Benoit
  */
-@ApplicationPath("/*")
 public class MyApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
