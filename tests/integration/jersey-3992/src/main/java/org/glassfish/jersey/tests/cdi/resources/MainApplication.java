@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,6 @@ import jakarta.enterprise.inject.spi.BeanManager;
 
 import jakarta.inject.Inject;
 
-import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 /**
@@ -38,7 +37,6 @@ import jakarta.ws.rs.core.Application;
  *
  * @author Jonathan Benoit
  */
-@ApplicationPath("main")
 @ApplicationScoped
 public class MainApplication extends Application {
 
