@@ -165,7 +165,7 @@ public class CookiesParser {
                 } else if (param.startsWith("httponly")) {
                     cookie.httpOnly = true;
                 } else if (param.startsWith("samesite")) {
-                    cookie.sameSite = NewCookie.SameSite.valueOf(value);
+                    cookie.sameSite = NewCookie.SameSite.valueOf(value.toUpperCase());
                 }  else if (param.startsWith("expires")) {
                     try {
                         cookie.expiry = HttpDateFormat.readDate(value + ", " + bites[++i]);
