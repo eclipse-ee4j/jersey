@@ -111,10 +111,4 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
             };
         });
     }
-
-    @Override
-    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

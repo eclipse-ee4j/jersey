@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,11 @@ package org.glassfish.jersey.media.multipart;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -263,21 +265,42 @@ public class BodyPart {
      * entity instance is not the unconverted content of the body part entity.
      */
     public <T> T getEntityAs(final Class<T> clazz) {
+        return getEntityAs(clazz, clazz);
+    }
+
+    /**
+     * Returns the entity after appropriate conversion to the requested type. This is useful only when the containing
+     * {@link MultiPart} instance has been received, which causes the {@code providers} property to have been set.
+     *
+     * @param genericEntity desired entity type into which the entity should be converted.
+     * @return entity after appropriate conversion to the requested type.
+     *
+     * @throws ProcessingException if an IO error arises during reading an entity.
+     * @throws IllegalArgumentException if no {@link MessageBodyReader} can be found to perform the requested conversion.
+     * @throws IllegalStateException if this method is called when the {@code providers} property has not been set or when the
+     * entity instance is not the unconverted content of the body part entity.
+     */
+    <T> T getEntityAs(final GenericType<T> genericEntity) {
+        return (T) getEntityAs(genericEntity.getRawType(), genericEntity.getType());
+    }
+
+    <T> T getEntityAs(final Class<T> type, Type genericType) {
         if (entity == null || !(entity instanceof BodyPartEntity)) {
             throw new IllegalStateException(LocalizationMessages.ENTITY_HAS_WRONG_TYPE());
         }
-        if (clazz == BodyPartEntity.class) {
-            return clazz.cast(entity);
+        if (type == BodyPartEntity.class) {
+            return type.cast(entity);
         }
 
         final Annotation[] annotations = new Annotation[0];
-        final MessageBodyReader<T> reader = messageBodyWorkers.getMessageBodyReader(clazz, clazz, annotations, mediaType);
+        final MessageBodyReader<T> reader = messageBodyWorkers.getMessageBodyReader(type, genericType, annotations, mediaType);
         if (reader == null) {
-            throw new IllegalArgumentException(LocalizationMessages.NO_AVAILABLE_MBR(clazz, mediaType));
+            throw new IllegalArgumentException(LocalizationMessages.NO_AVAILABLE_MBR(type, mediaType));
         }
 
         try {
-            return reader.readFrom(clazz, clazz, annotations, mediaType, headers, ((BodyPartEntity) entity).getInputStream());
+            return reader.readFrom(type, genericType, annotations, mediaType, headers,
+                    ((BodyPartEntity) entity).getInputStream());
         } catch (final IOException ioe) {
             throw new ProcessingException(LocalizationMessages.ERROR_READING_ENTITY(String.class), ioe);
         }

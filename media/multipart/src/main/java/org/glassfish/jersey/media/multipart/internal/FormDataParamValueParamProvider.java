@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -59,7 +61,7 @@ import org.jvnet.mimepull.MIMEParsingException;
 
 /**
  * Value supplier provider supporting the {@link FormDataParam} injection annotation and entity ({@link FormDataMultiPart})
- * injection.
+ * injection. Also supports {@link FormParam} {@code EntityPart} annotation injection.
  *
  * @author Craig McClanahan
  * @author Paul Sandoz
@@ -311,6 +313,43 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
         }
     }
 
+    /**
+     * Provider supplier for list of {@link EntityPart} types injected via
+     * {@link jakarta.ws.rs.FormParam} annotation.
+     */
+    private final class ListEntityPartValueProvider extends ValueProvider<List<EntityPart>> {
+
+        private final String name;
+
+        public ListEntityPartValueProvider(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public List<EntityPart> apply(ContainerRequest request) {
+            return (List<EntityPart>) (List<?>) getEntity(request).getFields(name);
+        }
+    }
+
+    /**
+     * Provider supplier for list of {@link EntityPart} types injected via
+     * {@link jakarta.ws.rs.FormParam} annotation.
+     */
+    private final class EntityPartValueProvider extends ValueProvider<EntityPart> {
+
+        private final String name;
+
+        public EntityPartValueProvider(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public EntityPart apply(ContainerRequest request) {
+            List<FormDataBodyPart> bodyParts = getEntity(request).getFields(name);
+            return bodyParts.size() != 0 ? bodyParts.get(0) : null;
+        }
+    }
+
     private static final Set<Class<?>> TYPES = initializeTypes();
 
     private static Set<Class<?>> initializeTypes() {
@@ -344,7 +383,7 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
      * @param extractorProvider multi-valued map parameter extractor provider.
      */
     public FormDataParamValueParamProvider(Provider<MultivaluedParameterExtractorProvider> extractorProvider) {
-        super(extractorProvider, Parameter.Source.ENTITY, Parameter.Source.UNKNOWN);
+        super(extractorProvider, Parameter.Source.ENTITY, Parameter.Source.FORM, Parameter.Source.UNKNOWN);
     }
 
     @Override
@@ -385,6 +424,16 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
                 return new FileProvider(paramName);
             } else {
                 return new FormDataParamValueProvider(parameter, get(parameter));
+            }
+        } else if (FormParam.class.equals(parameter.getSourceAnnotation().annotationType())) {
+            final String paramName = parameter.getSourceName();
+            if (Collection.class == rawType || List.class == rawType) {
+                final Class clazz = ReflectionHelper.getGenericTypeArgumentClasses(parameter.getType()).get(0);
+                if (EntityPart.class.equals(clazz)) {
+                    return new ListEntityPartValueProvider(paramName);
+                }
+            } else if (EntityPart.class.equals(rawType)) {
+                return new EntityPartValueProvider(paramName);
             }
         }
 

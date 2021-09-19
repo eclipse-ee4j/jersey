@@ -17,6 +17,8 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -48,6 +50,7 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -298,6 +301,24 @@ public class ParamConverterInternalTest extends AbstractTest {
         public String wrongDefaultValue(@HeaderParam("header") @DefaultValue("fail") final MyBean header) {
             return "a";
         }
+    }
+
+    @Path("/")
+    public static class InpuStreamConverterTestResource {
+        @GET
+        public String inputStream(@QueryParam("param") InputStream inputStream) throws IOException {
+            return new String(inputStream.readAllBytes());
+        }
+    }
+
+    @Test
+    public void inputStreamTest() throws ExecutionException, InterruptedException {
+        initiateWebApplication(InpuStreamConverterTestResource.class);
+
+        final ContainerResponse responseContext = getResponseContext(UriBuilder.fromPath("/")
+                .queryParam("param", "Hello").build().toString());
+
+        Assert.assertEquals("Hello", responseContext.getEntity());
     }
 
     public static class MyEagerParamProvider implements ParamConverterProvider {

@@ -25,6 +25,7 @@ import java.util.WeakHashMap;
 import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
@@ -33,6 +34,7 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
+import org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
 import org.glassfish.jersey.message.internal.JerseyLink;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -50,6 +52,8 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
 
     private final Set<HeaderDelegateProvider> hps;
     private final Map<Class<?>, HeaderDelegate<?>> map;
+    private static final Object EPB_LOCK = new Object();
+    private static volatile EntityPartBuilderProvider cachedEntityPartBuilderProvider;
 
     /**
      * Initialization constructor. The injection manager will be shut down.
@@ -116,5 +120,42 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
         }
 
         return null;
+    }
+
+    @Override
+    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
+        return getEntityPartBuilderProvider().withName(partName);
+    }
+
+    private static EntityPartBuilderProvider getEntityPartBuilderProvider() {
+        // Double-check idiom for lazy initialization of fields.
+        // Local variable is used to limit the number of more expensive accesses to a volatile field.
+        EntityPartBuilderProvider result = cachedEntityPartBuilderProvider;
+        if (result == null) { // First check (no locking)
+            synchronized (EPB_LOCK) {
+                result = cachedEntityPartBuilderProvider;
+                if (result == null) { // Second check (with locking)
+                    result = findEntityPartBuilderProvider();
+                    cachedEntityPartBuilderProvider = result;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * Obtain a {@code RuntimeDelegate} instance using the method described in {@link #getInstance}.
+     *
+     * @return an instance of {@code RuntimeDelegate}.
+     */
+    private static EntityPartBuilderProvider findEntityPartBuilderProvider() {
+        for (final EntityPartBuilderProvider entityPartBuilder : ServiceFinder.find(EntityPartBuilderProvider.class)) {
+            if (entityPartBuilder != null) {
+                return entityPartBuilder;
+            }
+        }
+
+        throw new IllegalArgumentException(LocalizationMessages.NO_ENTITYPART_BUILDER_FOUND());
     }
 }

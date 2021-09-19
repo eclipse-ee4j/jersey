@@ -72,15 +72,6 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
         throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
     }
 
-    @Override
-    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
-        final RuntimeDelegate runtimeDelegate = findServerDelegate();
-        if (runtimeDelegate != null) {
-            return runtimeDelegate.createEntityPartBuilder(partName);
-        }
-        throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
-    }
-
     // TODO : Do we need multiple RuntimeDelegates?
     private RuntimeDelegate findServerDelegate() {
         for (RuntimeDelegate delegate : ServiceFinder.find(RuntimeDelegate.class)) {

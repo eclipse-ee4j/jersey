@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
 
+import org.glassfish.jersey.media.multipart.internal.EntityPartReader;
+import org.glassfish.jersey.media.multipart.internal.EntityPartWriter;
 import org.glassfish.jersey.media.multipart.internal.FormDataParamInjectionFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartReaderClientSide;
 import org.glassfish.jersey.media.multipart.internal.MultiPartReaderServerSide;
@@ -44,6 +46,9 @@ public class MultiPartFeature implements Feature {
         }
 
         context.register(MultiPartWriter.class);
+
+        context.register(EntityPartReader.class);
+        context.register(EntityPartWriter.class);
 
         return true;
     }
