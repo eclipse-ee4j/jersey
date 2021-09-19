@@ -25,11 +25,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Application;
@@ -57,6 +59,7 @@ import org.glassfish.jersey.server.internal.scanning.AnnotationAcceptingListener
 import org.glassfish.jersey.server.internal.scanning.FilesScanner;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.model.Resource;
+import org.glassfish.jersey.uri.UriComponent;
 
 
 /**
@@ -995,6 +998,32 @@ public class ResourceConfig extends Application implements Configurable<Resource
      */
     public final Application getApplication() {
         return _getApplication();
+    }
+
+    /**
+     * Returns encoded value of {@link ApplicationPath} annotation of the Application corresponding
+     * with this ResourceConfig or {@code null} when the annotation is not present.
+     *
+     * @return Returns encoded value of {@link ApplicationPath} annotation of the Application
+     * corresponding with this ResourceConfig.
+     */
+    public final String getApplicationPath() {
+        final Application application;
+        if (ResourceConfig.class.isInstance(_getApplication())) {
+              final Application unwrap = unwrapCustomRootApplication((ResourceConfig) _getApplication());
+              application = unwrap != null ? unwrap : _getApplication();
+        } else {
+            application = _getApplication();
+        }
+        final ApplicationPath appPath = application.getClass().getAnnotation(ApplicationPath.class);
+        final String value;
+        if (appPath != null && !appPath.value().isEmpty() && !appPath.value().trim().equals("/")) {
+            final String val = appPath.value().trim();
+            value = UriComponent.encode(val.startsWith("/") ? val.substring(1) : val, UriComponent.Type.PATH);
+        } else {
+            value = null;
+        }
+        return value;
     }
 
     /**

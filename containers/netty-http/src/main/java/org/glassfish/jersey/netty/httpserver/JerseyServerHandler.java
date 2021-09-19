@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,6 +51,7 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
     private final URI baseUri;
+    private final String applicationPath;
     private final NettyInputStream nettyInputStream = new NettyInputStream();
     private final NettyHttpContainer container;
     private final ResourceConfig resourceConfig;
@@ -65,9 +66,20 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
      * @param container Netty container implementation.
      */
     public JerseyServerHandler(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
+        this(baseUri, null, container, resourceConfig);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param baseUri   base {@link URI} of the container (includes context path, if any).
+     * @param container Netty container implementation.
+     */
+    public JerseyServerHandler(URI baseUri, String applicationPath, NettyHttpContainer container, ResourceConfig resourceConfig) {
         this.baseUri = baseUri;
         this.container = container;
         this.resourceConfig = resourceConfig;
+        this.applicationPath = applicationPath;
     }
 
     @Override
@@ -145,7 +157,11 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
     private ContainerRequest createContainerRequest(ChannelHandlerContext ctx, HttpRequest req) {
 
         String s = req.uri().startsWith("/") ? req.uri().substring(1) : req.uri();
-        URI requestUri = URI.create(baseUri + ContainerUtils.encodeUnsafeCharacters(s));
+        final String baseUriStr = baseUri.toString();
+        final String base = applicationPath == null || applicationPath.isEmpty()
+                ? baseUriStr
+                : baseUriStr.substring(0, baseUriStr.length() - applicationPath.length() - 1);
+        final URI requestUri = URI.create(base + ContainerUtils.encodeUnsafeCharacters(s));
 
         ContainerRequest requestContext = new ContainerRequest(
                 baseUri, requestUri, req.method().name(), getSecurityContext(ctx),
