@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -120,6 +120,7 @@ public class CookiesParser {
         boolean secure = false;
         boolean httpOnly = false;
         Date expiry = null;
+        NewCookie.SameSite sameSite = null;
 
         public MutableNewCookie(String name, String value) {
             this.name = name;
@@ -127,7 +128,7 @@ public class CookiesParser {
         }
 
         public NewCookie getImmutableNewCookie() {
-            return new NewCookie(name, value, path, domain, version, comment, maxAge, expiry, secure, httpOnly);
+            return new NewCookie(name, value, path, domain, version, comment, maxAge, expiry, secure, httpOnly, sameSite);
         }
     }
 
@@ -163,6 +164,8 @@ public class CookiesParser {
                     cookie.version = Integer.parseInt(value);
                 } else if (param.startsWith("httponly")) {
                     cookie.httpOnly = true;
+                } else if (param.startsWith("samesite")) {
+                    cookie.sameSite = NewCookie.SameSite.valueOf(value.toUpperCase());
                 }  else if (param.startsWith("expires")) {
                     try {
                         cookie.expiry = HttpDateFormat.readDate(value + ", " + bites[++i]);
