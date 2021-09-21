@@ -155,11 +155,10 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
                     Form otherForm = getCachedForm(request, !decode);
                     if (otherForm != null) {
                         form = switchUrlEncoding(request, otherForm);
-                        cacheForm(request, form);
                     } else {
                         form = getForm(request);
-                        cacheForm(request, form);
                     }
+                    cacheForm(request, form);
                 }
 
                 try {
