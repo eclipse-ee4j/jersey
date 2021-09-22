@@ -65,6 +65,11 @@
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,22 +100,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-              <dependency>
-                  <groupId>jakarta.jws</groupId>
-                  <artifactId>jakarta.jws-api</artifactId>
-                  <version>1.1.1</version>
-              </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>
