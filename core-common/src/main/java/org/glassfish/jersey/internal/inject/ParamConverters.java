@@ -17,12 +17,16 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
@@ -256,6 +260,39 @@ public class ParamConverters {
     }
 
     /**
+     * Provider of {@link ParamConverter param converter} that convert the supplied string into a Java
+     * {@link InputStream} instance.
+     */
+    public static class InputStreamProvider implements ParamConverterProvider {
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            return rawType != InputStream.class ? null : new ParamConverter<T>() {
+
+                @Override
+                public T fromString(String value) {
+                    if (value == null) {
+                        throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                    }
+                    return rawType.cast(new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8)));
+                }
+
+                @Override
+                public String toString(T value) {
+                    if (value == null) {
+                        throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                    }
+                    try {
+                        return new String(((InputStream) value).readAllBytes());
+                    } catch (IOException ioe) {
+                        throw new ExtractorException(ioe);
+                    }
+                }
+            };
+        }
+    }
+
+    /**
      * Provider of {@link ParamConverter param converter} that produce the Optional instance
      * by invoking {@link ParamConverterProvider}.
      */
@@ -414,6 +451,7 @@ public class ParamConverters {
                     new TypeFromStringEnum(),
                     new TypeValueOf(),
                     new CharacterProvider(),
+                    new InputStreamProvider(),
                     new TypeFromString(),
                     new StringConstructor(),
                     new OptionalCustomProvider(manager),

@@ -61,11 +61,6 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public void testMediaType() {
         MediaType m = new MediaType("text", "plain");
         Assert.assertNotNull(m);

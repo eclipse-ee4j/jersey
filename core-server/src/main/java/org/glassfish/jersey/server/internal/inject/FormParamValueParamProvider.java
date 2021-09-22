@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +16,25 @@
 
 package org.glassfish.jersey.server.internal.inject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.AccessController;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import jakarta.ws.rs.Encoded;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -36,8 +42,16 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import jakarta.ws.rs.ext.RuntimeDelegate;
+import org.glassfish.jersey.innate.multipart.JerseyEntityPart;
 import org.glassfish.jersey.internal.inject.ExtractorException;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.Providers;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -45,6 +59,7 @@ import org.glassfish.jersey.server.ParamException;
 import org.glassfish.jersey.server.internal.InternalServerProperties;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**
  * Value factory provider supporting the {@link FormParam} injection annotation.
@@ -55,13 +70,17 @@ import org.glassfish.jersey.server.model.Parameter;
 @Singleton
 final class FormParamValueParamProvider extends AbstractValueParamProvider {
 
+    private final MultipartFormParamValueProvider multipartProvider;
     /**
      * Injection constructor.
      *
      * @param mpep extractor provider.
+     * @param injectionManager
      */
-    public FormParamValueParamProvider(Provider<MultivaluedParameterExtractorProvider> mpep) {
+    public FormParamValueParamProvider(Provider<MultivaluedParameterExtractorProvider> mpep,
+                                       InjectionManager injectionManager) {
         super(mpep, Parameter.Source.FORM);
+        this.multipartProvider = new MultipartFormParamValueProvider(injectionManager);
     }
 
     @Override
@@ -77,18 +96,24 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
         if (e == null) {
             return null;
         }
-        return new FormParamValueProvider(e, !parameter.isEncoded());
+        return new FormParamValueProvider(e, multipartProvider, !parameter.isEncoded(), parameter);
     }
 
     private static final class FormParamValueProvider implements Function<ContainerRequest, Object> {
 
         private static final Annotation encodedAnnotation = getEncodedAnnotation();
         private final MultivaluedParameterExtractor<?> extractor;
+        private final MultipartFormParamValueProvider multipartProvider;
         private final boolean decode;
+        private final Parameter parameter;
 
-        FormParamValueProvider(MultivaluedParameterExtractor<?> extractor, boolean decode) {
+        FormParamValueProvider(MultivaluedParameterExtractor<?> extractor,
+                               MultipartFormParamValueProvider multipartProvider,
+                               boolean decode, Parameter parameter) {
             this.extractor = extractor;
+            this.multipartProvider = multipartProvider;
             this.decode = decode;
+            this.parameter = parameter;
         }
 
         private static Form getCachedForm(final ContainerRequest request, boolean decode) {
@@ -121,24 +146,27 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
 
         @Override
         public Object apply(ContainerRequest request) {
-            Form form = getCachedForm(request, decode);
+            if (MediaTypes.typeEqual(MediaType.MULTIPART_FORM_DATA_TYPE, request.getMediaType())) {
+                return multipartProvider.apply(request, parameter);
+            } else {
+                Form form = getCachedForm(request, decode);
 
-            if (form == null) {
-                Form otherForm = getCachedForm(request, !decode);
-                if (otherForm != null) {
-                    form = switchUrlEncoding(request, otherForm);
-                    cacheForm(request, form);
-                } else {
-                    form = getForm(request);
+                if (form == null) {
+                    Form otherForm = getCachedForm(request, !decode);
+                    if (otherForm != null) {
+                        form = switchUrlEncoding(request, otherForm);
+                    } else {
+                        form = getForm(request);
+                    }
                     cacheForm(request, form);
                 }
-            }
 
-            try {
-                return extractor.extract(form.asMap());
-            } catch (ExtractorException e) {
-                throw new ParamException.FormParamException(e.getCause(),
-                        extractor.getName(), extractor.getDefaultValueString());
+                try {
+                    return extractor.extract(form.asMap());
+                } catch (ExtractorException e) {
+                    throw new ParamException.FormParamException(e.getCause(),
+                            extractor.getName(), extractor.getDefaultValueString());
+                }
             }
         }
 
@@ -196,6 +224,72 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
                 return (form == null ? new Form() : form);
             } else {
                 return new Form();
+            }
+        }
+    }
+
+    @Singleton
+    private static class MultipartFormParamValueProvider implements BiFunction<ContainerRequest, Parameter, Object> {
+        private static final class FormParamHolder {
+            @FormParam("name")
+            public static final Void dummy = null; // field to get an instance of FormParam annotation
+        }
+        private static Parameter entityPartParameter =
+                Parameter.create(
+                        EntityPart.class, EntityPart.class, false, EntityPart.class, EntityPart.class,
+                        AccessController.doPrivileged(ReflectionHelper.getDeclaredFieldsPA(FormParamHolder.class))[0]
+                            .getAnnotations()
+                );
+
+        private final InjectionManager injectionManager;
+        private final LazyValue<ValueParamProvider> entityPartProvider;
+
+        private MultipartFormParamValueProvider(InjectionManager injectionManager) {
+            this.injectionManager = injectionManager;
+
+            //Get the provider from jersey-media-multipart
+            entityPartProvider = Values.lazy((Value<ValueParamProvider>) () -> {
+                Set<ValueParamProvider> providers = Providers.getProviders(injectionManager, ValueParamProvider.class);
+                for (ValueParamProvider vfp : providers) {
+                    Function<ContainerRequest, ?> paramValueSupplier = vfp.getValueProvider(entityPartParameter);
+                    if (paramValueSupplier != null && !FormParamValueParamProvider.class.isInstance(vfp)) {
+                        return vfp;
+                    }
+                }
+                return null;
+            });
+        }
+
+
+        @Override
+        public Object apply(ContainerRequest containerRequest, Parameter parameter) {
+            Object entity = null;
+            if (entityPartProvider.get() != null) { // else jersey-multipart module is missing
+                final Function<ContainerRequest, ?> valueSupplier = entityPartProvider.get().getValueProvider(
+                        new WrappingFormParamParameter(entityPartParameter, parameter));
+                final JerseyEntityPart entityPart = (JerseyEntityPart) valueSupplier.apply(containerRequest);
+                try {
+                    entity = parameter.getType() != parameter.getRawType()
+                            ? entityPart.getContent(parameter.getRawType(), parameter.getType())
+                            : entityPart.getContent(parameter.getRawType());
+                } catch (IOException e) {
+                    throw new ProcessingException(e);
+                }
+            }
+
+            return entity;
+        }
+
+        private static class WrappingFormParamParameter extends Parameter {
+            protected WrappingFormParamParameter(Parameter entityPartDataParam, Parameter realDataParam) {
+                super(realDataParam.getAnnotations(),
+                        realDataParam.getSourceAnnotation(),
+                        realDataParam.getSource(),
+                        realDataParam.getSourceName(),
+                        entityPartDataParam.getRawType(),
+                        entityPartDataParam.getType(),
+                        realDataParam.isEncoded(),
+                        realDataParam.getDefaultValue());
             }
         }
     }

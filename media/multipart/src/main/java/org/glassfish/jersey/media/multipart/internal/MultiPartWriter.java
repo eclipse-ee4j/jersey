@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import java.util.Map;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -195,14 +196,21 @@ public class MultiPartWriter implements MessageBodyWriter<MultiPart> {
                 bodyEntity = ((BodyPartEntity) bodyEntity).getInputStream();
             }
 
+            Type bodyType = bodyClass;
+            if (GenericEntity.class.isInstance(bodyEntity)) {
+                bodyClass = ((GenericEntity<?>) bodyEntity).getRawType();
+                bodyType = ((GenericEntity) bodyEntity).getType();
+                bodyEntity = ((GenericEntity<?>) bodyEntity).getEntity();
+            }
+
             final MessageBodyWriter bodyWriter = providers.getMessageBodyWriter(
                     bodyClass,
-                    bodyClass,
+                    bodyType,
                     EMPTY_ANNOTATIONS,
                     bodyMediaType);
 
             if (bodyWriter == null) {
-                throw new IllegalArgumentException(LocalizationMessages.NO_AVAILABLE_MBW(bodyClass, mediaType));
+                throw new IllegalArgumentException(LocalizationMessages.NO_AVAILABLE_MBW(bodyClass, bodyMediaType));
             }
 
             bodyWriter.writeTo(

@@ -25,14 +25,20 @@ import java.util.WeakHashMap;
 import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
+import org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.JerseyLink;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -50,6 +56,8 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
 
     private final Set<HeaderDelegateProvider> hps;
     private final Map<Class<?>, HeaderDelegate<?>> map;
+    private LazyValue<EntityPartBuilderProvider> entityPartBuilderProvider = Values.lazy(
+            (Value<EntityPartBuilderProvider>) () -> findEntityPartBuilderProvider());
 
     /**
      * Initialization constructor. The injection manager will be shut down.
@@ -116,5 +124,25 @@ public abstract class AbstractRuntimeDelegate extends RuntimeDelegate {
         }
 
         return null;
+    }
+
+    @Override
+    public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
+        return entityPartBuilderProvider.get().withName(partName);
+    }
+
+    /**
+     * Obtain a {@code RuntimeDelegate} instance using the method described in {@link #getInstance}.
+     *
+     * @return an instance of {@code RuntimeDelegate}.
+     */
+    private static EntityPartBuilderProvider findEntityPartBuilderProvider() {
+        for (final EntityPartBuilderProvider entityPartBuilder : ServiceFinder.find(EntityPartBuilderProvider.class)) {
+            if (entityPartBuilder != null) {
+                return entityPartBuilder;
+            }
+        }
+
+        throw new IllegalArgumentException(LocalizationMessages.NO_ENTITYPART_BUILDER_FOUND());
     }
 }
