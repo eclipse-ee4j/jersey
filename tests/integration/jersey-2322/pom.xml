@@ -58,14 +58,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*</exclude>
-                    </excludes>
-                    <testExcludes>
-                        <testExclude>**/*</testExclude>
-                    </testExcludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

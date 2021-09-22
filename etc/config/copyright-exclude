@@ -71,8 +71,6 @@ build.readme
 /tests/e2e-entity/src/test/resources/org/glassfish/jersey/tests/e2e/entity/xxe.txt
 /core-server/src/main/java/com/sun/research/ws/wadl
 /core-common/src/main/java/org/glassfish/jersey/internal/jsr166
-/core-common/src/main/jsr166/org/glassfish/jersey/internal/jsr166
-/core-common/src/main/java8/org/glassfish/jersey/internal/jsr166
 /tests/performance/etc/data/MEASUREMENT_DATA
 /core-common/src/main/java/org/glassfish/jersey/internal/guava/
 /core-server/src/main/java/org/glassfish/jersey/server/internal/monitoring/core/AbstractSlidingWindowTimeReservoir.java

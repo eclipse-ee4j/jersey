@@ -79,45 +79,8 @@
         </resources>
     </build>
 
-    <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <properties>
-                <!-- https://bugs.openjdk.java.net/browse/JDK-8211426 -->
-                <surefire.security.argline>-Djdk.tls.client.protocols=TLSv1.2</surefire.security.argline>
-            </properties>
-        </profile>
-        <profile>
-            <id>windows</id>
-            <activation>
-                <jdk>1.8</jdk>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <!-- Exclude unit tests regarding JDK HTTP Server because of failing a server shutdown in a class
-                            with several tests. "java.net.BindException: Address already in use: bind"
-                            bug reported on https://bugs.openjdk.java.net/browse/JDK-8015692 -->
-                            <excludes>
-                                <exclude>org/glassfish/jersey/jdkhttp/BasicJdkHttpServerTest.java</exclude>
-                                <exclude>org/glassfish/jersey/jdkhttp/JdkHttpPackageTest.java</exclude>
-                                <exclude>org/glassfish/jersey/jdkhttp/JdkHttpsServerTest.java</exclude>
-                                <exclude>org/glassfish/jersey/jdkhttp/LifecycleListenerTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
+    <properties>
+        <!-- https://bugs.openjdk.java.net/browse/JDK-8211426 -->
+        <surefire.security.argline>-Djdk.tls.client.protocols=TLSv1.2</surefire.security.argline>
+    </properties>
 </project>
