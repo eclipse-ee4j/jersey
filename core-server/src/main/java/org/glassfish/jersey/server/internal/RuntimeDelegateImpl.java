@@ -22,7 +22,6 @@ import java.util.concurrent.CompletionStage;
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
-import jakarta.ws.rs.core.EntityPart;
 import org.glassfish.jersey.internal.AbstractRuntimeDelegate;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.server.ContainerFactory;
@@ -67,48 +66,71 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
     @Override
     public CompletableFuture<SeBootstrap.Instance> bootstrap(final Application application,
             final SeBootstrap.Configuration configuration) {
-        final JerseySeBootstrapConfiguration jerseySeConfiguration = JerseySeBootstrapConfiguration.from(configuration);
+
         return CompletableFuture.supplyAsync(() -> {
             final Class<WebServer> httpServerClass = configuration.hasProperty(ServerProperties.WEBSERVER_CLASS)
                     ? (Class<WebServer>) configuration.property(ServerProperties.WEBSERVER_CLASS)
                     : WebServer.class;
 
+            final JerseySeBootstrapConfiguration jerseySeConfiguration
+                    = JerseySeBootstrapConfiguration.from(configuration);
+            final WebServer webServer
+                    = WebServerFactory.createServer(httpServerClass, application, jerseySeConfiguration);
+            return instance(configuration, webServer);
+        });
+    }
 
-            return new SeBootstrap.Instance() {
-                private final WebServer webServer =
-                        WebServerFactory.createServer(httpServerClass, application, jerseySeConfiguration);
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<SeBootstrap.Instance> bootstrap(final Class<? extends Application> applicationClass,
+                                                             final SeBootstrap.Configuration configuration) {
 
-                @Override
-                public final JerseySeBootstrapConfiguration configuration() {
-                    return JerseySeBootstrapConfiguration.from(name -> {
-                        switch (name) {
+        return CompletableFuture.supplyAsync(() -> {
+            final Class<WebServer> httpServerClass = configuration.hasProperty(ServerProperties.WEBSERVER_CLASS)
+                    ? (Class<WebServer>) configuration.property(ServerProperties.WEBSERVER_CLASS)
+                    : WebServer.class;
+
+            final JerseySeBootstrapConfiguration jerseySeConfiguration
+                    = JerseySeBootstrapConfiguration.from(configuration);
+            final WebServer webServer
+                    = WebServerFactory.createServer(httpServerClass, applicationClass, jerseySeConfiguration);
+            return instance(configuration, webServer);
+        });
+    }
+
+    private SeBootstrap.Instance instance(final SeBootstrap.Configuration configuration,
+                                          final WebServer _webServer) {
+        return new SeBootstrap.Instance() {
+            final WebServer webServer = _webServer;
+            @Override
+            public final JerseySeBootstrapConfiguration configuration() {
+                return JerseySeBootstrapConfiguration.from(name -> {
+                    switch (name) {
                         case SeBootstrap.Configuration.PORT:
                             return webServer.port();
                         case ServerProperties.WEBSERVER_CLASS:
                             return webServer.getClass();
                         default:
                             return configuration.property(name);
-                        }
-                    });
-                }
+                    }
+                });
+            }
 
-                @Override
-                public final CompletionStage<StopResult> stop() {
-                    return this.webServer.stop().thenApply(nativeResult -> new StopResult() {
+            @Override
+            public final CompletionStage<StopResult> stop() {
+                return this.webServer.stop().thenApply(nativeResult -> new StopResult() {
 
-                        @Override
-                        public final <T> T unwrap(final Class<T> nativeClass) {
-                            return nativeClass.cast(nativeResult);
-                        }
-                    });
-                }
+                    @Override
+                    public final <T> T unwrap(final Class<T> nativeClass) {
+                        return nativeClass.cast(nativeResult);
+                    }
+                });
+            }
 
-                @Override
-                public final <T> T unwrap(final Class<T> nativeClass) {
-                    return nativeClass.isInstance(this.webServer) ? nativeClass.cast(this.webServer)
-                            : this.webServer.unwrap(nativeClass);
-                }
-            };
-        });
+            @Override
+            public final <T> T unwrap(final Class<T> nativeClass) {
+                return nativeClass.isInstance(this.webServer) ? nativeClass.cast(this.webServer)
+                        : this.webServer.unwrap(nativeClass);
+            }
+        };
     }
 }

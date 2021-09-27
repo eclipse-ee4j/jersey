@@ -46,6 +46,15 @@ final class JettyHttpServer implements WebServer {
     private final org.eclipse.jetty.server.Server httpServer;
 
     JettyHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
+        this(ContainerFactory.createContainer(JettyHttpContainer.class, application), configuration);
+    }
+
+    JettyHttpServer(final Class<? extends Application> applicationClass,
+                    final JerseySeBootstrapConfiguration configuration) {
+        this(new JettyHttpContainer(applicationClass), configuration);
+    }
+
+    JettyHttpServer(final JettyHttpContainer container, final JerseySeBootstrapConfiguration configuration) {
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
         final SslContextFactory.Server sslContextFactory;
@@ -57,7 +66,7 @@ final class JettyHttpServer implements WebServer {
         } else {
             sslContextFactory = null;
         }
-        this.container = ContainerFactory.createContainer(JettyHttpContainer.class, application);
+        this.container = container;
         this.httpServer = JettyHttpContainerFactory.createServer(
                 configuration.uri(false),
                 sslContextFactory,

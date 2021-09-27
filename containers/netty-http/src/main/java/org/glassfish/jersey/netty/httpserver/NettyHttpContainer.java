@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,11 @@ class NettyHttpContainer implements Container {
 
     public NettyHttpContainer(Application application) {
         this.appHandler = new ApplicationHandler(application);
+        this.appHandler.onStartup(this);
+    }
+
+    NettyHttpContainer(Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass);
         this.appHandler.onStartup(this);
     }
 

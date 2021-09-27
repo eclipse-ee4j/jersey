@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -307,9 +307,16 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
      * @param application JAX-RS / Jersey application to be deployed on Grizzly HTTP container.
      */
     /* package */ GrizzlyHttpContainer(final Application application) {
-        this.appHandler = new ApplicationHandler(application, new GrizzlyBinder());
-        cacheConfigSetStatusOverSendError();
-        cacheConfigEnableLeadingContextPathSlashes();
+        this(new ApplicationHandler(application, new GrizzlyBinder()));
+    }
+
+    /**
+     * Create a new Grizzly HTTP container.
+     *
+     * @param applicationClass JAX-RS / Jersey application to be deployed on Grizzly HTTP container.
+     */
+    /* package */ GrizzlyHttpContainer(final Class<? extends Application> applicationClass) {
+        this(new ApplicationHandler(applicationClass, new GrizzlyBinder()));
     }
 
     /**
@@ -319,7 +326,11 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
      * @param parentContext DI provider specific context with application's registered bindings.
      */
     /* package */ GrizzlyHttpContainer(final Application application, final Object parentContext) {
-        this.appHandler = new ApplicationHandler(application, new GrizzlyBinder(), parentContext);
+        this(new ApplicationHandler(application, new GrizzlyBinder(), parentContext));
+    }
+
+    private GrizzlyHttpContainer(ApplicationHandler applicationHandler) {
+        this.appHandler = applicationHandler;
         cacheConfigSetStatusOverSendError();
         cacheConfigEnableLeadingContextPathSlashes();
     }

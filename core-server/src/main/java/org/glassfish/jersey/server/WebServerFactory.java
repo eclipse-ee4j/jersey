@@ -74,4 +74,40 @@ public final class WebServerFactory {
         throw new IllegalArgumentException("No server provider supports the type " + type);
     }
 
+    /**
+     * Creates a server of a given type which runs the given application using the
+     * given bootstrap configuration.
+     * <p>
+     * The list of service-providers supporting the {@link WebServerProvider}
+     * service-provider will be iterated over until one returns a non-null server
+     * instance.
+     * <p>
+     *
+     * @param <T>
+     *            the type of the server.
+     * @param type
+     *            the type of the server. Providers SHOULD support at least
+     *            {@link WebServer}.
+     * @param application
+     *            The application to host.
+     * @param configuration
+     *            The configuration (host, port, etc.) to be used for bootstrapping.
+     * @return the created server.
+     * @throws ProcessingException
+     *             if there is an error creating the server.
+     * @throws IllegalArgumentException
+     *             if no server provider supports the type.
+     */
+    public static <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> application,
+                                                       final JerseySeBootstrapConfiguration configuration) {
+        for (final WebServerProvider webServerProvider : ServiceFinder.find(WebServerProvider.class)) {
+            final T server = webServerProvider.createServer(type, application, configuration);
+            if (server != null) {
+                return server;
+            }
+        }
+
+        throw new IllegalArgumentException("No server provider supports the type " + type);
+    }
+
 }

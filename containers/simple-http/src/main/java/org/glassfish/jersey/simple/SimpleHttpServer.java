@@ -39,7 +39,16 @@ final class SimpleHttpServer implements WebServer {
     private final SimpleServer simpleServer;
 
     SimpleHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
-        this.container = new SimpleContainer(application);
+        this(new SimpleContainer(application), configuration);
+    }
+
+    SimpleHttpServer(final Class<?extends Application> applicationClass,
+                     final JerseySeBootstrapConfiguration configuration) {
+        this(new SimpleContainer(applicationClass), configuration);
+    }
+
+    SimpleHttpServer(final SimpleContainer container, final JerseySeBootstrapConfiguration configuration) {
+        this.container = container;
         this.simpleServer = SimpleContainerFactory.create(
                 configuration.uri(false),
                 configuration.sslContext(),

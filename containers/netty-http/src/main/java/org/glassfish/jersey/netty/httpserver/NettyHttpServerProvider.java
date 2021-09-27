@@ -34,10 +34,18 @@ import io.netty.channel.Channel;
 public final class NettyHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
-                                                      final JerseySeBootstrapConfiguration configuration) {
+    public <T extends WebServer> T createServer(final Class<T> type, final Application application,
+                                                final JerseySeBootstrapConfiguration configuration) {
         return NettyHttpServer.class == type || WebServer.class == type
                 ? type.cast(new NettyHttpServer(application, configuration))
+                : null;
+    }
+
+    @Override
+    public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
+                                                final JerseySeBootstrapConfiguration configuration) {
+        return NettyHttpServer.class == type || WebServer.class == type
+                ? type.cast(new NettyHttpServer(applicationClass, configuration))
                 : null;
     }
 }

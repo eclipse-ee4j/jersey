@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -463,6 +463,17 @@ public final class SimpleContainer implements org.simpleframework.http.core.Cont
      */
     SimpleContainer(final Application application) {
         this.appHandler = new ApplicationHandler(application, new SimpleBinder());
+        this.scheduler = new ScheduledThreadPoolExecutor(2, new DaemonFactory(TimeoutDispatcher.class));
+    }
+
+    /**
+     * Create a new Simple framework HTTP container.
+     *
+     * @param applicationClass JAX-RS / Jersey application class to be deployed on Simple framework HTTP
+     *                    container.
+     */
+    SimpleContainer(final Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass, new SimpleBinder());
         this.scheduler = new ScheduledThreadPoolExecutor(2, new DaemonFactory(TimeoutDispatcher.class));
     }
 }

@@ -34,10 +34,18 @@ import com.sun.net.httpserver.HttpServer;
 public final class JdkHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
+    public <T extends WebServer> T createServer(final Class<T> type, final Application application,
                                                       final JerseySeBootstrapConfiguration configuration) {
         return JdkHttpServer.class == type || WebServer.class == type
                 ? type.cast(new JdkHttpServer(application, configuration))
+                : null;
+    }
+
+    @Override
+    public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
+                                                final JerseySeBootstrapConfiguration configuration) {
+        return JdkHttpServer.class == type || WebServer.class == type
+                ? type.cast(new JdkHttpServer(applicationClass, configuration))
                 : null;
     }
 }

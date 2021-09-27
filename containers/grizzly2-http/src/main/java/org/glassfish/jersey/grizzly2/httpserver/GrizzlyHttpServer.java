@@ -46,11 +46,20 @@ final class GrizzlyHttpServer implements WebServer {
     private final HttpServer httpServer;
 
     GrizzlyHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
+        this(new GrizzlyHttpContainer(application), configuration);
+    }
+
+    GrizzlyHttpServer(final Class<? extends Application> applicationClass,
+                      final JerseySeBootstrapConfiguration configuration) {
+        this(new GrizzlyHttpContainer(applicationClass), configuration);
+    }
+
+    private GrizzlyHttpServer(final GrizzlyHttpContainer container, final JerseySeBootstrapConfiguration configuration) {
         final SSLContext sslContext = configuration.sslContext();
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
 
-        this.container = new GrizzlyHttpContainer(application);
+        this.container = container;
         this.httpServer = GrizzlyHttpServerFactory.createHttpServer(
                 configuration.uri(false),
                 this.container,

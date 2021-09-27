@@ -61,6 +61,12 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public CompletionStage<SeBootstrap.Instance> bootstrap(Class<? extends Application> aClass,
+                                                           SeBootstrap.Configuration configuration) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public void testMediaType() {
         MediaType m = new MediaType("text", "plain");
         Assert.assertNotNull(m);

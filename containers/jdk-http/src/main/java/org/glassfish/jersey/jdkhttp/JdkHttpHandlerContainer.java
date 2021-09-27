@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,7 +64,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
     private volatile ApplicationHandler appHandler;
 
     /**
-     * Create new lightweight Java SE HTTP server container.
+     * Create new lightweight Java SE HTTP server container.
      *
      * @param application JAX-RS / Jersey application to be deployed on the container.
      */
@@ -73,7 +73,16 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
     }
 
     /**
-     * Create new lightweight Java SE HTTP server container.
+     * Create new lightweight Java SE HTTP server container.
+     *
+     * @param applicationClass class of JAX-RS / Jersey application to be deployed on the container.
+     */
+    JdkHttpHandlerContainer(final Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass);
+    }
+
+    /**
+     * Create new lightweight Java SE HTTP server container.
      *
      * @param application   JAX-RS / Jersey application to be deployed on the container.
      * @param parentContext DI provider specific context with application's registered bindings.

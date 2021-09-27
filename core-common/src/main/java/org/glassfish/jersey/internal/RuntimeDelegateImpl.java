@@ -72,6 +72,16 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
         throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
     }
 
+    @Override
+    public CompletionStage<SeBootstrap.Instance> bootstrap(Class<? extends Application> applicationClass,
+                                                           SeBootstrap.Configuration configuration) {
+        final RuntimeDelegate runtimeDelegate = findServerDelegate();
+        if (runtimeDelegate != null) {
+            return runtimeDelegate.bootstrap(applicationClass, configuration);
+        }
+        throw new UnsupportedOperationException(LocalizationMessages.NO_CONTAINER_AVAILABLE());
+    }
+
     // TODO : Do we need multiple RuntimeDelegates?
     private RuntimeDelegate findServerDelegate() {
         for (RuntimeDelegate delegate : ServiceFinder.find(RuntimeDelegate.class)) {

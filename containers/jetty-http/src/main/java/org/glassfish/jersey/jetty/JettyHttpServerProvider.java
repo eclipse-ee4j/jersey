@@ -39,4 +39,12 @@ public final class JettyHttpServerProvider implements WebServerProvider {
                 ? type.cast(new JettyHttpServer(application, configuration))
                 : null;
     }
+
+    @Override
+    public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
+                                                final JerseySeBootstrapConfiguration configuration) {
+        return JettyHttpServer.class == type || WebServer.class == type
+                ? type.cast(new JettyHttpServer(applicationClass, configuration))
+                : null;
+    }
 }

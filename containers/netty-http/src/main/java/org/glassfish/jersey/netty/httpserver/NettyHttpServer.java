@@ -51,6 +51,15 @@ final class NettyHttpServer implements WebServer {
     private final int port;
 
     NettyHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
+        this(new NettyHttpContainer(application), configuration);
+    }
+
+    NettyHttpServer(final Class<? extends Application> applicationClass,
+                    final JerseySeBootstrapConfiguration configuration) {
+        this(new NettyHttpContainer(applicationClass), configuration);
+    }
+
+    NettyHttpServer(final NettyHttpContainer container, final JerseySeBootstrapConfiguration configuration) {
         final SSLContext sslContext = configuration.sslContext();
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
@@ -58,7 +67,7 @@ final class NettyHttpServer implements WebServer {
         final URI uri = configuration.uri(false);
         this.port = NettyHttpContainerProvider.getPort(uri);
 
-        this.container = new NettyHttpContainer(application);
+        this.container = container;
         this.serverBootstrap = NettyHttpContainerProvider.createServerBootstrap(
                 uri,
                 this.container,
