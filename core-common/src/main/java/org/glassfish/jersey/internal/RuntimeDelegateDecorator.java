@@ -117,6 +117,12 @@ public class RuntimeDelegateDecorator {
         }
 
         @Override
+        public CompletionStage<SeBootstrap.Instance> bootstrap(Class<? extends Application> applicationClass,
+                                                               SeBootstrap.Configuration configuration) {
+            return runtimeDelegate.bootstrap(applicationClass, configuration);
+        }
+
+        @Override
         public EntityPart.Builder createEntityPartBuilder(String partName) throws IllegalArgumentException {
             return runtimeDelegate.createEntityPartBuilder(partName);
         }

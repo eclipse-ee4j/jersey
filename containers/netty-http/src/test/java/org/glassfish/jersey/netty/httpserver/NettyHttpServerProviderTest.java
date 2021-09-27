@@ -63,44 +63,31 @@ import io.netty.channel.Channel;
 public final class NettyHttpServerProviderTest {
 
     @Test(timeout = 15000)
-    public final void shouldProvideServer() throws InterruptedException, ExecutionException {
+    public void shouldProvideServer2() throws InterruptedException, ExecutionException {
+        // given
+        final Resource resource = new Resource();
+        shouldProvideServer(ShouldProvideServerApplication.class, resource);
+    }
+
+    @Test(timeout = 15000)
+    public void shouldProvideServerWithClass() throws InterruptedException, ExecutionException {
+        // given
+        final Resource resource = new Resource();
+        final Application application = new ShouldProvideServerApplication();
+        shouldProvideServer(application.getClass(), resource);
+    }
+
+    private void shouldProvideServer(final Object application, final Resource resource)
+            throws InterruptedException, ExecutionException {
         // given
         final WebServerProvider webServerProvider = new NettyHttpServerProvider();
-        final Resource resource = new Resource();
-        final Application application = new Application() {
-            @Override
-            public final Set<Object> getSingletons() {
-                return Collections.singleton(resource);
-            }
-        };
-        final SeBootstrap.Configuration configuration = name -> {
-            switch (name) {
-            case SeBootstrap.Configuration.PROTOCOL:
-                return "HTTP";
-            case SeBootstrap.Configuration.HOST:
-                return "localhost";
-            case SeBootstrap.Configuration.PORT:
-                return getPort();
-            case SeBootstrap.Configuration.ROOT_PATH:
-                return "/";
-            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
-                return SSLClientAuthentication.NONE;
-            case SeBootstrap.Configuration.SSL_CONTEXT:
-                try {
-                    return SSLContext.getDefault();
-                } catch (final NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
-            case ServerProperties.WEBSERVER_AUTO_START:
-                return FALSE;
-            default:
-                return null;
-            }
-        };
+        final SeBootstrap.Configuration configuration = configuration(getPort(), FALSE);
 
         // when
         final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
-        final WebServer webServer = webServerProvider.createServer(WebServer.class, application, jerseySeConfig);
+        final WebServer webServer = Application.class.isInstance(application)
+                ? webServerProvider.createServer(WebServer.class, (Application) application, jerseySeConfig)
+                : webServerProvider.createServer(WebServer.class, (Class<Application>) application, jerseySeConfig);
         final Object nativeHandle = webServer.unwrap(Object.class);
         final CompletionStage<?> start = webServer.start();
         final Object startResult = start.toCompletableFuture().get();
@@ -122,14 +109,23 @@ public final class NettyHttpServerProviderTest {
         assertThat(stopResult, is(nullValue()));
     }
 
+
     @Path("/")
     protected static final class Resource {
         @GET
         @Override
-        public final String toString() {
-            return super.toString();
+        public String toString() {
+            return Resource.class.getName();
         }
     }
+
+    protected static class ShouldProvideServerApplication extends Application {
+        @Override
+        public Set<Object> getSingletons() {
+            return Collections.singleton(new Resource());
+        }
+    }
+
     private static final Logger LOGGER = Logger.getLogger(NettyHttpServerProviderTest.class.getName());
 
     private static final int DEFAULT_PORT = 0;
@@ -161,30 +157,7 @@ public final class NettyHttpServerProviderTest {
         // given
         final WebServerProvider webServerProvider = new NettyHttpServerProvider();
         final Application application = new Application();
-        final SeBootstrap.Configuration configuration = name -> {
-            switch (name) {
-            case SeBootstrap.Configuration.PROTOCOL:
-                return "HTTP";
-            case SeBootstrap.Configuration.HOST:
-                return "localhost";
-            case SeBootstrap.Configuration.PORT:
-                return SeBootstrap.Configuration.FREE_PORT;
-            case SeBootstrap.Configuration.ROOT_PATH:
-                return "/";
-            case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
-                return SSLClientAuthentication.NONE;
-            case SeBootstrap.Configuration.SSL_CONTEXT:
-                try {
-                    return SSLContext.getDefault();
-                } catch (final NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
-            case ServerProperties.WEBSERVER_AUTO_START:
-                return TRUE;
-            default:
-                return null;
-            }
-        };
+        final SeBootstrap.Configuration configuration = configuration(SeBootstrap.Configuration.FREE_PORT, TRUE);
 
         // when
         final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
@@ -192,6 +165,33 @@ public final class NettyHttpServerProviderTest {
 
         // then
         assertThat(webServer.port(), is(greaterThan(0)));
+    }
+
+    private SeBootstrap.Configuration configuration(int port, boolean autoStart) {
+        return (SeBootstrap.Configuration) name -> {
+            switch (name) {
+                case SeBootstrap.Configuration.PROTOCOL:
+                    return "HTTP";
+                case SeBootstrap.Configuration.HOST:
+                    return "localhost";
+                case SeBootstrap.Configuration.PORT:
+                    return port;
+                case SeBootstrap.Configuration.ROOT_PATH:
+                    return "/";
+                case SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION:
+                    return SSLClientAuthentication.NONE;
+                case SeBootstrap.Configuration.SSL_CONTEXT:
+                    try {
+                        return SSLContext.getDefault();
+                    } catch (final NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    }
+                case ServerProperties.WEBSERVER_AUTO_START:
+                    return autoStart;
+                default:
+                    return null;
+            }
+        };
     }
 
 }

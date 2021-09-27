@@ -222,7 +222,20 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
      *                              application handler.
      */
     public ApplicationHandler(final Class<? extends Application> jaxrsApplicationClass) {
-        initialize(new ApplicationConfigurator(jaxrsApplicationClass), Injections.createInjectionManager(), null);
+        this(jaxrsApplicationClass, null);
+    }
+
+    /**
+     * Create a new Jersey server-side application handler configured by a
+     * {@link Application JAX-RS Application (sub-)class}.
+     *
+     * @param applicationClass JAX-RS {@code Application} (sub-)class that will be
+     *                              instantiated and used to configure the new Jersey
+     *                              application handler.
+     * @param customBinder additional custom bindings used to configure the application's.
+     */
+    public ApplicationHandler(final Class<? extends Application> applicationClass, final Binder customBinder) {
+        initialize(new ApplicationConfigurator(applicationClass), Injections.createInjectionManager(), customBinder);
     }
 
     /**

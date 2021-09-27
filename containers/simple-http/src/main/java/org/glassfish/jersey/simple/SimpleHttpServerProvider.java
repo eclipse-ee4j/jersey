@@ -32,10 +32,18 @@ import org.glassfish.jersey.server.spi.WebServerProvider;
 public final class SimpleHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
+    public <T extends WebServer> T createServer(final Class<T> type, final Application application,
                                                       final JerseySeBootstrapConfiguration configuration) {
         return SimpleHttpServer.class == type || WebServer.class == type
                 ? type.cast(new SimpleHttpServer(application, configuration))
+                : null;
+    }
+
+    @Override
+    public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
+                                                final JerseySeBootstrapConfiguration configuration) {
+        return SimpleHttpServer.class == type || WebServer.class == type
+                ? type.cast(new SimpleHttpServer(applicationClass, configuration))
                 : null;
     }
 }

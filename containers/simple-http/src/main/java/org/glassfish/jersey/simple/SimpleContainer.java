@@ -465,4 +465,15 @@ public final class SimpleContainer implements org.simpleframework.http.core.Cont
         this.appHandler = new ApplicationHandler(application, new SimpleBinder());
         this.scheduler = new ScheduledThreadPoolExecutor(2, new DaemonFactory(TimeoutDispatcher.class));
     }
+
+    /**
+     * Create a new Simple framework HTTP container.
+     *
+     * @param applicationClass JAX-RS / Jersey application class to be deployed on Simple framework HTTP
+     *                    container.
+     */
+    SimpleContainer(final Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass, new SimpleBinder());
+        this.scheduler = new ScheduledThreadPoolExecutor(2, new DaemonFactory(TimeoutDispatcher.class));
+    }
 }

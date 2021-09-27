@@ -87,4 +87,26 @@ public interface WebServerProvider {
     <T extends WebServer> T createServer(Class<T> type,
                                          Application application,
                                          JerseySeBootstrapConfiguration configuration) throws ProcessingException;
+
+    /**
+     * Creates a server of a given type which runs the given application using the
+     * given bootstrap configuration.
+     *
+     * @param <T>
+     *            the type of the web server.
+     * @param type
+     *            the type of the web server. Providers SHOULD support at least
+     *            {@link WebServer}.
+     * @param applicationClass
+     *            The class of application to host.
+     * @param configuration
+     *            The configuration (host, port, etc.) to be used for bootstrapping.
+     * @return the server, otherwise {@code null} if the provider does not support
+     *         the requested {@code type}.
+     * @throws ProcessingException
+     *             if there is an error creating the server.
+     */
+    <T extends WebServer> T createServer(Class<T> type,
+                                         Class<? extends Application> applicationClass,
+                                         JerseySeBootstrapConfiguration configuration) throws ProcessingException;
 }

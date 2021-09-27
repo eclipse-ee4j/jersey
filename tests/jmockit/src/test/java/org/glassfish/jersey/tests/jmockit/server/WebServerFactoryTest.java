@@ -68,6 +68,14 @@ public final class WebServerFactoryTest {
                                         ? type.cast(mockServer)
                                         : null;
                             }
+
+                            @Override
+                            public <T extends WebServer> T createServer(
+                                    final Class<T> type,
+                                    final Class<? extends Application> applicationClass,
+                                    final JerseySeBootstrapConfiguration configuration) {
+                                return null;
+                            }
                         }
                                 : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
                             @Override

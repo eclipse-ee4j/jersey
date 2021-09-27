@@ -43,10 +43,19 @@ final class JdkHttpServer implements WebServer {
     private final HttpServer httpServer;
 
     JdkHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
+        this(new JdkHttpHandlerContainer(application), configuration);
+    }
+
+    JdkHttpServer(final Class<? extends Application> applicationClass,
+                  final JerseySeBootstrapConfiguration configuration) {
+        this(new JdkHttpHandlerContainer(applicationClass), configuration);
+    }
+
+    JdkHttpServer(final JdkHttpHandlerContainer container, final JerseySeBootstrapConfiguration configuration) {
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
 
-        this.container = new JdkHttpHandlerContainer(application);
+        this.container = container;
         this.httpServer = JdkHttpServerFactory.createHttpServer(
                 configuration.uri(false),
                 this.container,

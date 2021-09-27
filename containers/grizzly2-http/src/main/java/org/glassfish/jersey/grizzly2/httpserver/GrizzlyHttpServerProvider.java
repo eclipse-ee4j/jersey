@@ -39,4 +39,12 @@ public final class GrizzlyHttpServerProvider implements WebServerProvider {
                 ? type.cast(new GrizzlyHttpServer(application, configuration))
                 : null;
     }
+
+    @Override
+    public <T extends WebServer> T createServer(Class<T> type, Class<? extends Application> applicationClass,
+                                                JerseySeBootstrapConfiguration configuration) {
+        return GrizzlyHttpServer.class == type || WebServer.class == type
+                ? type.cast(new GrizzlyHttpServer(applicationClass, configuration))
+                : null;
+    }
 }

@@ -41,6 +41,11 @@ class NettyHttpContainer implements Container {
         this.appHandler.onStartup(this);
     }
 
+    NettyHttpContainer(Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass);
+        this.appHandler.onStartup(this);
+    }
+
     @Override
     public ResourceConfig getConfiguration() {
         return appHandler.getConfiguration();

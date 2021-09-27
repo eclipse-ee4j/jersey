@@ -492,6 +492,17 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     }
 
     /**
+     * Create a new Jetty HTTP container.
+     *
+     * @param applicationClass JAX-RS / Jersey class of application to be deployed on Jetty HTTP container.
+     */
+    JettyHttpContainer(final Class<? extends Application> applicationClass) {
+        this.appHandler = new ApplicationHandler(applicationClass, new JettyBinder());
+
+        cacheConfigSetStatusOverSendError();
+    }
+
+    /**
      * The method reads and caches value of configuration property
      * {@link ServerProperties#RESPONSE_SET_STATUS_OVER_SEND_ERROR} for future purposes.
      */
