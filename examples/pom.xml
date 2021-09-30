@@ -101,7 +101,7 @@
         <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
         <module>open-tracing</module>
-<!--        <module>osgi-helloworld-webapp</module> Jakartification-->
+        <module>osgi-helloworld-webapp</module>
 <!--        <module>osgi-http-service</module> Jakartification -->
 <!--        <module>oauth-client-twitter</module> Jakartification -->
         <!--<module>oauth2-client-google-webapp</module>-->
