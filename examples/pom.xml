@@ -54,8 +54,8 @@
     <modules>
         <module>assemblies</module>
         <!--<module>bean-validation-webapp</module>-->
-<!--        <module>bookmark</module> Jakartification -->
-<!--        <module>bookmark-em</module> Jakartification-->
+        <module>bookmark</module>
+        <module>bookmark-em</module>
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
