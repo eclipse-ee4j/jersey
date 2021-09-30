@@ -102,7 +102,7 @@
         <module>multipart-webapp</module>
         <module>open-tracing</module>
         <module>osgi-helloworld-webapp</module>
-<!--        <module>osgi-http-service</module> Jakartification -->
+<!--        <module>osgi-http-service</module> Jakartification - felix osgi is not jakartificated-->
 <!--        <module>oauth-client-twitter</module> Jakartification -->
         <!--<module>oauth2-client-google-webapp</module>-->
 <!--        <module>reload</module> Jakartification-->
