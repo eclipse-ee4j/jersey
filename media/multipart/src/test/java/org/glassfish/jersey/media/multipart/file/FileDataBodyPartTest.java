@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -84,6 +84,12 @@ public class FileDataBodyPartTest extends BodyPartTest {
         fdbp = new FileDataBodyPart(name, file, expectedType);
         checkEntityAttributes(name, fdbp, file, expectedType);
         fdbp.setFileEntity(file, expectedType);
+        checkEntityAttributes(name, fdbp, file, expectedType);
+
+        file = new File("pom.json");
+        name = "json";
+        fdbp = new FileDataBodyPart(name, file);
+        expectedType = DefaultMediaTypePredictor.CommonMediaTypes.JSON.getMediaType();
         checkEntityAttributes(name, fdbp, file, expectedType);
 
         file = new File("pom.png");

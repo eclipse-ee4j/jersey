@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ public class DefaultMediaTypePredictor implements MediaTypePredictor {
      * Currently supported file extension and MIME Types are -
      * <ul>
      *   <li>".xml" - application/xml</li>
+     *   <li>".json - application/json</li>
      *   <li>".txt" - text/plain</li>
      *   <li>".pdf" - application/pdf</li>
      *   <li>".htm" - text/html</li>
@@ -59,6 +60,7 @@ public class DefaultMediaTypePredictor implements MediaTypePredictor {
     public enum CommonMediaTypes {
 
         XML(".xml", MediaType.APPLICATION_XML_TYPE),
+        JSON(".json", MediaType.APPLICATION_JSON_TYPE),
         TXT(".txt", MediaType.TEXT_PLAIN_TYPE),
         HTM(".htm", MediaType.TEXT_HTML_TYPE),
         HTML(".html", MediaType.TEXT_HTML_TYPE),
