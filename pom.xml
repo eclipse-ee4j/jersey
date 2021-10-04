@@ -2134,7 +2134,7 @@
         <servlet5.version>5.0.0</servlet5.version>
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.0</jakarta.activation-api.version>
-        <jakarta.activation.version>2.0.0</jakarta.activation.version>
+        <jakarta.activation.version>2.0.1</jakarta.activation.version>
         <jakarta.el.version>4.0.0</jakarta.el.version>
         <jakarta.el.impl.version>4.0.0</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
@@ -2143,8 +2143,8 @@
         <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>3.0.0</jakarta.jaxb.api.version>
-        <jaxb.ri.version>3.0.0</jaxb.ri.version>
+        <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
+        <jaxb.ri.version>3.0.2</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1-SNAPSHOT</jaxrs.api.impl.version>
         <jetty.version>11.0.0</jetty.version>

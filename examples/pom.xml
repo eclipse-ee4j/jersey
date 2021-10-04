@@ -64,7 +64,7 @@
         <module>entity-filtering</module>
         <module>entity-filtering-selectable</module>
         <module>entity-filtering-security</module>
-<!--        <module>extended-wadl-webapp</module> Jakartification -->
+        <module>extended-wadl-webapp</module>
         <module>exception-mapping</module>
         <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
