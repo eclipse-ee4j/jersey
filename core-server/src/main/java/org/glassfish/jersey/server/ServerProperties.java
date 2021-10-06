@@ -750,7 +750,7 @@ public final class ServerProperties {
      * The {@code CompletionStage} value will be unwrapped and the message body writer will be invoked with the unwrapped type.
      *
      * <p>
-     * The default value is {@code false}.
+     * The default value is {@code true}.
      * </p>
      * <p>
      * The name of the configuration property is <tt>{@value}</tt>.

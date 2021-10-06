@@ -29,7 +29,7 @@
     <title>Migration Guide</title>
 
     <section xml:id="mig-3.0.0">
-        <title>Migrating from Jersey 2.32 to &version;.</title>
+        <title>Migrating from Jersey 2.32+ to 3.0.x.</title>
         <section xml:id="mig-3.0.0-breaking-changes">
             <title>Breaking Changes</title>
             <para>
@@ -46,6 +46,9 @@
                         </para>
                         <para>
                             Spring for now is not supported.
+                        </para>
+                        <para>
+                            Helidon connector for now is not supported.
                         </para>
                         <para>
                             Examples and tests are reduced in quantity (so you probably will not find all those examples which were available
@@ -70,9 +73,34 @@
         <section xml:id="mig-3.0.0-application-servers">
             <title>Application servers for Jersey</title>
             <para>
-                At the end of the year 2020 only few application servers where supporting Jakarta EE 9.
-                Those are <literal>GlassFish 6.0.0 (RCx)</literal>, <literal>Tomcat 10 (Mx)</literal> and
-                <literal>Jetty 11.x (JDK 11+ required)</literal>
+                Note that only a few servers support Jakarta EE 9 compatible Servlet API and they are tested with Jersey.
+                Those are:
+                <literal>GlassFish 6</literal>,
+                <literal>Grizzly 3</literal>,
+                <literal>Jetty 11 (JDK 11+ required)</literal>,
+                <literal>Payara 6</literal>, and
+                <literal>Tomcat 10</literal>.
+            </para>
+        </section>
+    </section>
+    <section xml:id="mig-3.1.0">
+        <title>Migrating from Jersey 3.0.x to &version;.</title>
+        <section xml:id="mig-3.1.0-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            Jersey 3.1.0+ is the implementation of Jakarta RESTful WebServices 3.1, which is part of
+                            Jakarta EE 10. Jakarta EE 10 defines the minimum JDK 11 requirement and hence Jersey no longer
+                            supports JDK 8.
+                        </para>
+                        <para>
+                            &jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE; is by default
+                            <literal>true</literal>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
             </para>
         </section>
     </section>
