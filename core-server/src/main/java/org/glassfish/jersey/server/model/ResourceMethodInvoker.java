@@ -486,7 +486,7 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
 
     private Type unwrapInvocableResponseType(ContainerRequest request) {
         if (isCompletionStageResponseType
-                && request.resolveProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.FALSE)) {
+                && request.resolveProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE)) {
             return completionStageResponseType;
         }
         return invocableResponseType;
