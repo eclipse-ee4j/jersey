@@ -110,6 +110,9 @@
             classpath, unless explicitly stated otherwise in the documentation of each particular extension.
             Users are expected to explicitly register the extension &jaxrs.core.Feature;s using their
             &lit.jaxrs.core.Application; subclass.
+            Since Jersey 3.1.0 all features which extends &jaxrs.core.Feature; and are listed as SPI of the &lit.jaxrs.core.Feature;
+            interface are automatically registered (not required to be registered within &lit.jaxrs.core.Application; subclass).
+            For server site Jersey 3.1.0 also registers SPIs for &lit.jaxrs.container.DynamicFeature; interface.
             For a few Jersey provided modules however there is no need to explicitly register their extension
             &lit.jaxrs.core.Feature;s as these are discovered and registered in the &jaxrs.core.Configuration; (on client/server)
             automatically by Jersey runtime whenever the modules implementing these features are present on the classpath
@@ -193,6 +196,17 @@
         </section>
 
     </section>
+    <section  xml:id="deployment.feature.dynamicFeature">
+        <title>Feature and Dynamic Feature SPI automatic registration</title>
+        <para>
+            Since Jersey 3.1.0 there is a new specification requirement to automatically discover and register classes that
+            implement &jaxrs.core.Feature; and &jaxrs.container.DynamicFeature; interfaces. This is being done via SPI search
+            thus all those classes in order to be discovered automatically shall be listed as SPIs for given interfaces.
+            This automatic registration can also be disabled by <literal>jakarta.ws.rs.loadServices</literal>
+            (which is new specification property) to be set to false. This is also valid for
+            &jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE; lookup.
+        </para>
+    </section>
 
     <section xml:id="deployment.classpath-scanning">
         <title>Configuring the Classpath Scanning</title>
@@ -207,6 +221,12 @@
             <itemizedlist>
                 <title>List of SPIs recognized by Jersey</title>
                 <listitem>
+                    <para>&lit.jaxrs.core.Feature; (server, client) -
+                        Features are being registered similarly to AutoDiscoverable feature. In addition
+                        property jakarta.ws.rs.loadServices is checked before registration.
+                    </para>
+                </listitem>
+                <listitem>
                     <para><literal>AutoDiscoverable</literal> (server, client) -
                         it means if you disable service loading the AutoDiscoverable feature is automatically disabled too</para>
                 </listitem>
@@ -216,6 +236,10 @@
                 </listitem>
                 <listitem>
                     <para><literal>HeaderDelegateProvider</literal> (server, client)</para>
+                </listitem>
+                <listitem>
+                    <para>&lit.jaxrs.container.DynamicFeature; (server) -
+                    Similar to &lit.jaxrs.core.Feature; registration but only for server.</para>
                 </listitem>
                 <listitem>
                     <para><literal>ComponentProvider</literal> (server)</para>
