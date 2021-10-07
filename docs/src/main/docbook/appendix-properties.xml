@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -607,6 +607,17 @@
                             <para>
                                 If <literal>true</literal>, Jersey will not resolve relative URIs in the <literal>Location</literal>
                                 http header.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE;</entry>
+                        <entry><literal>jersey.config.server.unwrap.completion.stage.writer.enable</literal></entry>
+                        <entry>
+                            <para>
+                                If <literal>true</literal> or not set, message body writer will not use
+                                <literal>CompletionStage</literal> as a generic type. The <literal>CompletionStage</literal>
+                                value will be unwrapped and the message body writer will be invoked with the unwrapped type.
                             </para>
                         </entry>
                     </row>
