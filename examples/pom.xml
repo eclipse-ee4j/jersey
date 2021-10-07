@@ -54,8 +54,8 @@
     <modules>
         <module>assemblies</module>
         <!--<module>bean-validation-webapp</module>-->
-<!--        <module>bookmark</module> Jakartification -->
-<!--        <module>bookmark-em</module> Jakartification-->
+        <module>bookmark</module>
+        <module>bookmark-em</module>
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
@@ -64,7 +64,7 @@
         <module>entity-filtering</module>
         <module>entity-filtering-selectable</module>
         <module>entity-filtering-security</module>
-<!--        <module>extended-wadl-webapp</module> Jakartification -->
+        <module>extended-wadl-webapp</module>
         <module>exception-mapping</module>
         <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
@@ -101,11 +101,11 @@
         <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
         <module>open-tracing</module>
-<!--        <module>osgi-helloworld-webapp</module> Jakartification-->
-<!--        <module>osgi-http-service</module> Jakartification -->
-<!--        <module>oauth-client-twitter</module> Jakartification -->
+        <module>osgi-helloworld-webapp</module>
+<!--        <module>osgi-http-service</module> Jakartification - felix osgi is not jakartificated-->
+        <module>oauth-client-twitter</module>
         <!--<module>oauth2-client-google-webapp</module>-->
-<!--        <module>reload</module> Jakartification-->
+        <module>reload</module>
         <module>rx-client-webapp</module>
         <module>server-async</module>
         <module>server-async-managed</module>
