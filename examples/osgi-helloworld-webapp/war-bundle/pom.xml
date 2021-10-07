@@ -55,9 +55,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version><!-- the current project's ${servlet2.version} is 2.4 and that's not enough -->
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet5.version}</version><!-- the current project's ${servlet2.version} is 2.4 and that's not enough -->
             <scope>provided</scope>
         </dependency>
 
