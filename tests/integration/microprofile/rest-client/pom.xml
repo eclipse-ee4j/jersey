@@ -23,7 +23,7 @@
     <parent>
         <artifactId>microprofile-integration-project</artifactId>
         <groupId>org.glassfish.jersey.tests.integration.microprofile</groupId>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -40,6 +40,10 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
@@ -61,7 +65,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>2.0</version>
+            <version>3.0-RC3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -77,25 +81,25 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.21.0</version>
+            <version>2.27.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
-            <version>1.4.1.Final</version>
+            <version>1.7.0.Alpha10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-spi</artifactId>
-            <version>1.4.1.Final</version>
+            <version>1.7.0.Alpha10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-embedded</artifactId>
-            <version>2.1.0.Final</version>
+            <version>3.0.0.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -32,8 +32,7 @@
     <name>microprofile-integration-project</name>
     <modules>
         <module>config</module>
-<!--        <module>rest-client</module>-->
-<!--        <module>rest-client14-compatibility</module>-->
+        <module>rest-client</module>
     </modules>
 
     <build>
