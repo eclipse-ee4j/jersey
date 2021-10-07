@@ -199,12 +199,12 @@
     <section  xml:id="deployment.feature.dynamicFeature">
         <title>Feature and Dynamic Feature SPI automatic registration</title>
         <para>
-            Since Jersey 3.1.0 there is new specification requirement to automatically discover and register classes which
+            Since Jersey 3.1.0 there is a new specification requirement to automatically discover and register classes that
             implement &jaxrs.core.Feature; and &jaxrs.container.DynamicFeature; interfaces. This is being done via SPI search
             thus all those classes in order to be discovered automatically shall be listed as SPIs for given interfaces.
             This automatic registration can also be disabled by <literal>jakarta.ws.rs.loadServices</literal>
             (which is new specification property) to be set to false. This is also valid for
-            &jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE; lookup .
+            &jersey.common.CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE; lookup.
         </para>
     </section>
 
@@ -222,7 +222,7 @@
                 <title>List of SPIs recognized by Jersey</title>
                 <listitem>
                     <para>&lit.jaxrs.core.Feature; (server, client) -
-                        Features are being registered similarly as AutoDiscoverable feature. In addition
+                        Features are being registered similarly to AutoDiscoverable feature. In addition
                         property jakarta.ws.rs.loadServices is checked before registration.
                     </para>
                 </listitem>
