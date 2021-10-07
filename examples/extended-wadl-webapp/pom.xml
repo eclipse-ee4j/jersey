@@ -19,7 +19,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>extended-wadl-webapp</artifactId>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -142,27 +142,49 @@
         <plugins>
             <!-- Extended Wadl Config: this plugin generates the jaxb beans from xsd schemas -->
             <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>0.14.0</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <id>xjc</id>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>xjc</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <generatePackage>org.glassfish.jersey.examples.extendedwadl</generatePackage>
-                    <schemaDirectory>src/main/xsd</schemaDirectory>
-                    <!--<includeSchemas>-->
-                    <!--<includeSchema>**/*.xsd</includeSchema>-->
-                    <!--</includeSchemas>-->
+                    <sources>
+                        <source>src/main/xsd</source>
+                    </sources>
+                    <packageName>org.glassfish.jersey.examples.extendedwadl</packageName>
                     <extension>true</extension>
                     <strict>false</strict>
                     <verbose>true</verbose>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>jaxb-xjc</artifactId>
+                        <version>${jaxb.ri.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>jakarta.activation</groupId>
+                        <artifactId>jakarta.activation-api</artifactId>
+                        <version>${jakarta.activation.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>jakarta.xml.bind</groupId>
+                        <artifactId>jakarta.xml.bind-api</artifactId>
+                        <version>${jakarta.jaxb.api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                        <version>${jaxb.ri.version}</version>
+                    </dependency>
+
+                </dependencies>
             </plugin>
 
             <!-- Extended Wadl Config: javadoc plugin generates resourcedoc.xml during the compilation using doclet.
@@ -211,7 +233,10 @@
                          version 2.5 of the javadoc plugin which will be used
                          by a maven version > 2.0.9 -->
                     <useStandardDocletOptions>false</useStandardDocletOptions>
-                    <additionalparam>-output ${project.build.outputDirectory}/resourcedoc.xml</additionalparam>
+                    <additionalOptions>
+                        <additionalOption>-output ${project.build.outputDirectory}/resourcedoc.xml</additionalOption>
+                    </additionalOptions>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <plugin>
