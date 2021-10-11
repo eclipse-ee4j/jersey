@@ -28,6 +28,7 @@
 <!ENTITY jaxb-api-jar.version "$jaxb-api-jar-version">
 <!ENTITY jax-rs.version "$jax-rs-api-jar-version">
 <!ENTITY jax-rs21.version "2.1.6">
+<!ENTITY jax-rs31.spec.version "3.1">
 <!ENTITY jakarta.el.version "$jakarta.el-version">
 <!ENTITY jakarta.el-impl.version "$jakarta.el-impl-version">
 <!ENTITY jax-rs-api-jar.version "$jax-rs-api-jar-version">
@@ -60,6 +61,7 @@
 <!ENTITY jaxrs.release.uri "https://github.com/eclipse-ee4j/jaxrs-api">
 <!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs.version;/jakarta/ws/rs">
 <!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs21.version;/javax/ws/rs">
+<!ENTITY jaxrs31.spec.uri "https://jakarta.ee/specifications/restful-ws/&jax-rs31.spec.version;/jakarta-restful-ws-spec-&jax-rs31.spec.version;.html">
 <!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
 <!ENTITY jersey.documentation.uri "https://eclipse-ee4j.github.io/jersey.github.io">
 
@@ -248,6 +250,7 @@
 <!ENTITY jaxrs.ext.RuntimeDelegate.HeaderDelegate "<link xlink:href='&jaxrs.javadoc.uri;/ext/RuntimeDelegate.HeaderDelegate.html'>RuntimeDelegate.HeaderDelegate&lt;T&gt;</link>">
 <!ENTITY jaxrs21.sse.SseEventSink "<link xlink:href='&jaxrs21.javadoc.uri;/sse/SseEventSink.html'>SseEventSink</link>">
 <!ENTITY jaxrs21.sse.Sse "<link xlink:href='&jaxrs21.javadoc.uri;/sse/Sse.html'>Sse</link>">
+<!ENTITY jaxrs31.exceptionMapperProvider "<link xlink:href='&jaxrs31.spec.uri;#exceptionmapper'>Exception Mapping Providers</link>">
 
 <!ENTITY jdk6.Boolean "<link xlink:href='&jdk6.javadoc.uri;/java/lang/Boolean.html'>Boolean</link>">
 <!ENTITY jdk6.CountDownLatch "<link xlink:href='&jdk6.javadoc.uri;/java/util/concurrent/CountDownLatch.html'>CountDownLatch</link>">
@@ -367,6 +370,7 @@
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PROVIDER_DEFAULT_DISABLE'>CommonProperties.PROVIDER_DEFAULT_DISABLE</link>" >
+<!ENTITY jersey.common.internal.DefaultExceptionMapper "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/DefaultExceptionMapper.html'>DefaultExceptionMapper</link>">
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
