@@ -208,6 +208,57 @@ public class AsyncResource {
     }
 }</programlisting>
                 </example>
+                Since Jersey 3.1.0 and JAX-RS 3.1 there are significant changes in the &lit.jaxrs.container.CompletionCallback;
+                <literal>onComplete(...)</literal> method. The <literal>(Throwable throwable)</literal> parameter is deprecated
+                and the <literal>onComplete()</literal> method should be called without parameters.
+                So, the proper code for the example above since Jersey 3.1.0 would be:
+                <example>
+                    <title>CompletionCallback updated (JAX-RS 3.1) example</title>
+                    <programlisting language="java" linenumbering="numbered">@Path("/resource")
+public class AsyncResource {
+    private static int numberOfSuccessResponses = 0;
+    private static int numberOfFailures = 0;
+    private static Throwable lastException = null;
+
+    @GET
+    public void asyncGetWithTimeout(@Suspended final AsyncResponse asyncResponse) {
+        asyncResponse.register(new CompletionCallback() {
+            @Override
+            public void onComplete() (Throwable throwable) {
+            }
+            @Override
+            public void onComplete() {
+                if (throwable == null) {
+                    // no throwable - the processing ended successfully
+                    // (response already written to the client)
+                    numberOfSuccessResponses++;
+                } else {
+                    numberOfFailures++;
+                    lastException = throwable;
+                }
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String result = veryExpensiveOperation();
+                asyncResponse.resume(result);
+            }
+
+            private String veryExpensiveOperation() {
+                // ... very expensive operation
+            }
+        }).start();
+    }
+}</programlisting>
+                </example>
+
+                but for backwards compatibility the method <literal>void onComplete()</literal> is declared as
+                <literal>default</literal> and for any current code no re-work is required. However it's required to keep
+                in mind that in feature releases the method <literal>void onComplete(Throwable throwable)</literal> will
+                be replaced by the <literal>void onComplete()</literal> method without parameters.
+
                 A completion callback is registered using <literal>register(...)</literal> method
                 on the &lit.jaxrs.container.AsyncResponse; instance. A registered completion callback is bound only
                 to the response(s) to which it has been registered. In the example the &lit.jaxrs.container.CompletionCallback;
