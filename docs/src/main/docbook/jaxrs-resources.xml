@@ -480,6 +480,11 @@ public String get(@Context HttpHeaders hh) {
             </example>
         </para>
 
+        <para>
+            For quicker getting of values for a known header name there is a shortcut for <literal>hh.getRequestHeaders().get(name)</literal>
+            which is <literal>hh.getRequestHeader(name)</literal>.
+        </para>
+
         <para>In general &jaxrs.core.Context; can be used to obtain contextual Java types related to the request or response.
         </para>
 

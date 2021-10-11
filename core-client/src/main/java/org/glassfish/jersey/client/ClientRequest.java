@@ -229,9 +229,19 @@ public class ClientRequest extends OutboundMessageContext
         return clientConfig;
     }
 
+    /**
+     * Get the values of an HTTP request header if the header exists on the current request. The returned value will be
+     * a read-only List if the specified header exists or {@code null} if it does not. This is a shortcut for
+     * {@code getRequestHeaders().get(name)}.
+     *
+     * @param name the header name, case insensitive.
+     * @return a read-only list of header values if the specified header exists, otherwise {@code null}.
+     * @throws java.lang.IllegalStateException if called outside the scope of a request.
+     */
     @Override
     public List<String> getRequestHeader(String name) {
-        return HeaderUtils.asStringList(getHeaders().get(name), clientConfig.getConfiguration());
+        final List<Object> values = getHeaders().get(name);
+        return values == null ? null : HeaderUtils.asStringList(values, clientConfig.getConfiguration());
     }
 
     @Override
