@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.restclient;
+package org.glassfish.jersey.test.microprofile.restclient;
 
 import java.net.URI;
 import java.util.Collections;
