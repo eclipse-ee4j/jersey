@@ -20,20 +20,24 @@
 <suite name="microprofile-rest-client-TCK" verbose="2" configfailurepolicy="continue">
 
     <test name="microprofile-rest-client TCK">
-<!-- Exclude the TCK tests till the TCK bundle contains references to javax.servlet -->
-
-<!--        <packages>-->
-<!--            <package name="org.eclipse.microprofile.rest.client.tck.*">-->
-<!--            </package>-->
-<!--        </packages>-->
-<!--        <classes>-->
-<!--            <class name="org.eclipse.microprofile.rest.client.tck.ProxyServerTest">-->
-<!--                <methods>-->
-<!--                    &lt;!&ndash;https://github.com/eclipse/microprofile-rest-client/pull/298&ndash;&gt;-->
-<!--                    <exclude name="testProxy"></exclude>-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
+        <packages>
+            <package name="org.eclipse.microprofile.rest.client.tck.*">
+            </package>
+        </packages>
+        <classes>
+            <class name="org.eclipse.microprofile.rest.client.tck.ProxyServerTest">
+                <methods>
+                    <!--https://github.com/eclipse/microprofile-rest-client/pull/298-->
+                    <exclude name="testProxy"></exclude>
+                </methods>
+            </class>
+            <class name="org.eclipse.microprofile.rest.client.tck.cditests.CDIInterceptorTest">
+                <methods>
+                    <!--https://github.com/eclipse/microprofile-rest-client/pull/336-->
+                    <exclude name="testInterceptorNotInvokedWhenNoAnnotationApplied"></exclude>
+                </methods>
+            </class>
+        </classes>
     </test>
 
 </suite>
