@@ -103,8 +103,8 @@
                     <listitem>
                         <para>
                             Since Jersey 3.1.0+ the <literal>getRequestHeader(String name)</literal> method of the
-                            <literal>ClientRequest</literal> class returns NULL (instead of an empty List) in case if the
-                            <literal>String name</literal> parameter is NULL.
+                            <literal>ClientRequest</literal> class returns NULL (instead of an empty List) in case if
+                            the specified header does not exist.
                         </para>
                     </listitem>
                 </itemizedlist>
