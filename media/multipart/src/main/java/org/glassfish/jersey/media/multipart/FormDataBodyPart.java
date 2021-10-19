@@ -17,7 +17,6 @@
 package org.glassfish.jersey.media.multipart;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +26,6 @@ import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.innate.multipart.JerseyEntityPart;
 import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.MediaTypes;
 
@@ -66,7 +64,7 @@ import org.glassfish.jersey.message.internal.MediaTypes;
  * @author Paul Sandoz
  * @author Michal Gajdos
  */
-public class FormDataBodyPart extends BodyPart implements JerseyEntityPart, EntityPart {
+public class FormDataBodyPart extends BodyPart implements EntityPart {
 
     private final boolean fileNameFix;
     protected final AtomicBoolean contentRead = new AtomicBoolean(false);
@@ -265,15 +263,6 @@ public class FormDataBodyPart extends BodyPart implements JerseyEntityPart, Enti
         }
         final Object entity = getEntity();
         return type.getRawType().isInstance(entity) ? (T) entity : getEntityAs(type);
-    }
-
-    @Override
-    public <T> T getContent(Class<T> type, Type genericType) {
-        if (contentRead.compareAndExchange(false, true)) {
-            throw new IllegalStateException(LocalizationMessages.CONTENT_HAS_BEEN_ALREADY_READ());
-        }
-        final Object entity = getEntity();
-        return type.isInstance(entity) ? (T) entity : getEntityAs(type, genericType);
     }
 
     /**
