@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.jersey.tests.performance.interceptor.name;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
@@ -39,7 +41,7 @@ public class InterceptorTest extends JerseyTest {
 
     @Test
     public void testGet() {
-        final String getResponse = target().request().get(String.class);
+        final String getResponse = target().request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
         assertEquals("WRITE text", getResponse);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -87,7 +87,7 @@ public class AsyncContentAndEntityTypeTest {
         ContainerResponse response;
         // making sure the JVM optimization does not swap the order of the calls.
         synchronized (this) {
-            app.apply(RequestContextBuilder.from("/", "POST").entity("Foo").build());
+            app.apply(RequestContextBuilder.from("/", "POST").type(foo).entity("Foo").build());
             response = responseFuture.get();
         }
 

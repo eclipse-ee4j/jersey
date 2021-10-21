@@ -538,6 +538,7 @@
 <!ENTITY jersey.server.ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED'>ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED</link>" >
 <!ENTITY jersey.server.ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231 "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231'>ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231</link>" >
 <!ENTITY jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE'>ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE</link>" >
+<!ENTITY jersey.server.ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES'>ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES</link>" >
 <!ENTITY jersey.server.Uri "<link xlink:href='&jersey.javadoc.uri.prefix;/server/Uri.html'>Uri</link>">
 <!ENTITY jersey.server.UriConnegFilter "<link xlink:href='&jersey.javadoc.uri.prefix;/server/filter/UriConnegFilter.html'>UriConnegFilter</link>">
 <!ENTITY jersey.server.WadlFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/server/wadl/WadlFeature.html'>WadlFeature</link>">

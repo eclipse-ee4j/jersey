@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,8 +65,9 @@ final class PathMatchingRouterBuilder implements PathToRouterBuilder {
 
     @Override
     public PathMatchingRouterBuilder to(final Router router) {
-        if (MethodSelectingRouter.class.isInstance(router)) {
-            acceptedRoutes.get(acceptedRoutes.size() - 1).setHttpMethods(((MethodSelectingRouter) router).getHttpMethods());
+        if (AbstractMethodSelectingRouter.class.isInstance(router)) {
+            acceptedRoutes.get(acceptedRoutes.size() - 1)
+                    .setHttpMethods(((AbstractMethodSelectingRouter) router).getHttpMethods());
         }
         currentRouters.add(router);
         return this;
