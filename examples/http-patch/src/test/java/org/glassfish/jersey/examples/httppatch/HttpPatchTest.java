@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,6 +12,7 @@ package org.glassfish.jersey.examples.httppatch;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
 import jakarta.json.Json;
@@ -62,7 +63,8 @@ public class HttpPatchTest extends JerseyTest {
 
         // initial precondition check
         final State expected = new State();
-        assertEquals(expected, target.request("application/json").get(State.class));
+        assertEquals(expected, target.request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
 
         // apply first patch
         expected.setMessage("patchedMessage");
@@ -94,7 +96,8 @@ public class HttpPatchTest extends JerseyTest {
         assertEquals(expected, target.request()
                                      .method("PATCH",
                                              Entity.entity(patch_1, MediaType.APPLICATION_JSON_PATCH_JSON), State.class));
-        assertEquals(expected, target.request("application/json").get(State.class));
+        assertEquals(expected, target.request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
 
         // apply second patch
         expected.getList().add("three");
@@ -109,6 +112,7 @@ public class HttpPatchTest extends JerseyTest {
         assertEquals(expected, target.request()
                                      .method("PATCH",
                                              Entity.entity(patch_2, MediaType.APPLICATION_JSON_PATCH_JSON), State.class));
-        assertEquals(expected, target.request("application/json").get(State.class));
+        assertEquals(expected, target.request("application/json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
     }
 }

@@ -273,6 +273,24 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.server.ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES;</entry>
+                        <entry><literal>jersey.config.server.empty.request.media.matches.any.consumes</literal></entry>
+                        <entry>
+                            <para>
+                                When an HTTP request does not contain a media type, the media type should default to
+                                <literal>application/octet-stream</literal>. In the past, Jersey used to match any
+                                <literal>@Consumes</literal> when the HTTP <literal>Content-Type</literal> header was not set.
+                                This property is to preserve the behaviour. Such behaviour is potentially dangerous, though.
+                                The default behaviour is to set the request media type to
+                                <literal>application/octet-stream</literal> when none set. This is a Jakarta REST requirement.
+                            </para>
+                            <para>
+                                Set this property to <literal>true</literal>, if the empty request media type is to match any
+                                <literal>@Consumes</literal>. The default value is <literal>false</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.server.ServerProperties.FEATURE_AUTO_DISCOVERY_DISABLE;</entry>
                         <entry><literal>jersey.config.server.disableAutoDiscovery</literal></entry>
                         <entry>

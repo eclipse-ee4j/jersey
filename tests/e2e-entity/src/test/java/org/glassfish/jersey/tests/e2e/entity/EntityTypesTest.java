@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -886,7 +886,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBArrayRepresentation() {
         final WebTarget target = target("JAXBArrayResource");
 
-        final JaxbBean[] a = target.request().get(JaxbBean[].class);
+        final JaxbBean[] a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbBean[].class);
         JaxbBean[] b = target.request().post(Entity.entity(a, "application/xml"), JaxbBean[].class);
         assertEquals(a.length, b.length);
         for (int i = 0; i < a.length; i++) {
@@ -910,7 +910,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationMediaType() {
         final WebTarget target = target("JAXBListResourceMediaType");
 
-        Collection<JaxbBean> a = target.request().get(
+        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, "application/foo+xml").get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request()
@@ -1049,7 +1049,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSON() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        Collection<JaxbBean> a = target.request().get(
+        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {
@@ -1121,7 +1121,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONMediaType() throws Exception {
         final WebTarget target = target("JAXBListResourceJSONMediaType");
 
-        final Collection<JaxbBean> a = target.request().get(
+        final Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, "application/foo+json").get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {

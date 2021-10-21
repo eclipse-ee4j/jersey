@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import org.glassfish.jersey.server.ServerProperties;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -44,6 +45,12 @@ public class ConsumeProduceSimpleTest {
 
     private ApplicationHandler createApplication(Class<?>... classes) {
         return new ApplicationHandler(new ResourceConfig(classes));
+    }
+
+    private ApplicationHandler create2xApplication(Class<?>... classes) {
+        return new ApplicationHandler(
+                new ResourceConfig(classes).property(ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES, true)
+        );
     }
 
     @Path("/{arg1}/{arg2}")
@@ -103,6 +110,7 @@ public class ConsumeProduceSimpleTest {
         }
 
         @GET
+        @Consumes("text/xhtml")
         @Produces("text/xhtml")
         public String doGetXhtml() {
             assertEquals("text/xhtml", httpHeaders.getRequestHeader("Accept").get(0));
@@ -145,6 +153,12 @@ public class ConsumeProduceSimpleTest {
         assertEquals("HTML", app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity());
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity());
+
+        app = create2xApplication(ProduceSimpleBean.class);
+
+        assertEquals("HTML", app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity());
+        assertEquals("XHTML",
+                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity());
     }
 
     @Test
@@ -157,6 +171,26 @@ public class ConsumeProduceSimpleTest {
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").type("text/xhtml").accept("text/xhtml").build())
                         .get().getEntity());
+
+        assertEquals(415,
+                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build())
+                        .get().getStatus()
+        );
+        assertEquals("HTML",
+                app.apply(RequestContextBuilder.from("/a/b", "GET").type("text/html").accept("text/html").build())
+                        .get().getEntity()
+        );
+
+        assertEquals(415,
+                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build())
+                        .get().getStatus()
+        );
+        assertEquals("XHTML",
+                app.apply(RequestContextBuilder.from("/a/b", "GET").type("text/xhtml").accept("text/xhtml").build())
+                        .get().getEntity()
+        );
+
+        app = create2xApplication(ConsumeProduceSimpleBean.class);
         assertEquals("HTML", app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity());
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity());
