@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -90,10 +90,11 @@ public class ClientTest extends JerseyTest {
     @Test
     public void testAccesingHelloworldResource() {
         final WebTarget resource = target().path("helloworld");
-        final Response r = resource.request().get();
+        final Response r = resource.request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get();
         assertEquals(200, r.getStatus());
 
-        final String responseMessage = resource.request().get(String.class);
+        final String responseMessage = resource.request()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
         assertEquals(HelloWorldResource.MESSAGE, responseMessage);
     }
 

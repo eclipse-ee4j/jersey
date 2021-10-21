@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,6 +12,8 @@ package org.glassfish.jersey.examples.exception;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -66,7 +68,7 @@ public class ExceptionMappingFilterTest extends JerseyTest {
     @Test
     public void testWebApplicationExceptionInResponseFilter() {
         WebTarget t = client().target(UriBuilder.fromUri(getBaseUri()).path(App.ROOT_PATH).path("response_exception").build());
-        Response r = t.request("text/plain").get();
+        Response r = t.request("text/plain").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get();
         assertEquals(200, r.getStatus());
         final String entity = r.readEntity(String.class);
         System.out.println("entity = " + entity);

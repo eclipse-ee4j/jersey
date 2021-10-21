@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -146,7 +148,7 @@ public class AsyncResourceTest extends JerseyTest {
                                 attemptCounter++;
                                 try {
                                     final String response = resourceTarget.queryParam("id", requestId).request()
-                                            .get(String.class);
+                                            .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
                                     getResponses.put(requestId, response);
                                     break;
                                 } catch (Throwable t) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.kryo;
 
+import jakarta.ws.rs.core.HttpHeaders;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ public abstract class PersonResourceBaseTest extends JerseyTest {
 
     @Test
     public void testGet() {
-        final Person getResponse = target().request().get(Person.class);
+        final Person getResponse = target().request().header(HttpHeaders.CONTENT_TYPE, "application/x-kryo").get(Person.class);
         assertEquals("Wolfgang", getResponse.name);
         assertEquals(21, getResponse.age);
         assertEquals("Salzburg", getResponse.address);
