@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -133,7 +135,8 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
 
     @Test
     public void testOneEntityFilteringOnClass() throws Exception {
-        final OneFilteringOnClassEntity entity = target("OneFilteringEntity").request().get(OneFilteringOnClassEntity.class);
+        final OneFilteringOnClassEntity entity = target("OneFilteringEntity").request()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(10));
@@ -166,7 +169,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnClassDefaultViewResponse() throws Exception {
         final OneFilteringOnClassEntity entity = target("OneFilteringEntityDefaultViewResponse").request()
-                .get(OneFilteringOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(0));
@@ -187,7 +190,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnClassDefaultView() throws Exception {
         final OneFilteringOnClassEntity entity = target("OneFilteringEntityDefaultView").request()
-                .get(OneFilteringOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(0));
@@ -214,7 +217,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityPrimaryView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityPrimaryView").request()
-                .get(ManyFilteringsOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));
@@ -256,7 +259,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntitySecondaryView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntitySecondaryView").request()
-                .get(ManyFilteringsOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));
@@ -298,7 +301,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityDefaultView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityDefaultView").request()
-                .get(ManyFilteringsOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(0));
@@ -322,7 +325,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityManyViews() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityManyViews").request()
-                .get(ManyFilteringsOnClassEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));

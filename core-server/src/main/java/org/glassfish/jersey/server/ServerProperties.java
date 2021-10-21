@@ -742,6 +742,43 @@ public final class ServerProperties {
             "jersey.config.server.unwrap.completion.stage.writer.enable";
 
     /**
+     * <p>
+     * When an HTTP request does not contain a media type, the media type should default to {@code application/octet-stream}.
+     * In the past, Jersey used to match any {@code @Consumes} when the HTTP {@code Content-Type} header was not set.
+     * This property is to preserve the behaviour. Such behaviour is potentially dangerous, though.
+     * The default behaviour is to set the request media type to {@code application/octet-stream} when none set.
+     * This is a Jakarta REST requirement.
+     * </p>
+     * <p>
+     * This change can be can be eminent especially for HTTP resource methods which do not expect an entity, such as HTTP GET:
+     * <pre>
+     * {@code
+     * @Consumes(MediaType.TEXT_PLAIN)
+     * @Produces(MediaType.TEXT_PLAIN)
+     * @Path("/")
+     * public class Resource {
+     *     @GET
+     *     public String get() {
+     *         return ...
+     *     }
+     * }
+     * }
+     * </pre>
+     * The client request needs to contain the {@code Content-Type} HTTP header, for instance:
+     * {@code
+     * webTarget.request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get()
+     * }
+     * </p>
+     * <p>
+     * Set this property to true, if the empty request media type is to match any {@code @Consumes}. The default is {@code false}.
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.0
+     */
+    public static final String EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES =
+            "jersey.config.server.empty.request.media.matches.any.consumes";
+
+    /**
      * JVM argument to define the value of
      * {@link org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants#COLLISION_BUFFER_POWER}.
      * Lower values reduce the memory footprint.

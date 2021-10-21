@@ -95,6 +95,24 @@
                             Jakarta EE 10. Jakarta EE 10 defines the minimum JDK 11 requirement and hence Jersey no longer
                             supports JDK 8.
                         </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Since Jersey 3.1.0 when incoming the HTTP request does not contain content type, the
+                            <literal>application/octet-stream</literal> is considered, as required by the Jakarta REST
+                            Specification and HTTP/1.1 RFC 2616. As a consequence, a resource method with non-wildcard
+                            <literal>@Consumes</literal> annotation is not matched with the request without the
+                            Content-Type HTTP header. This is typically the case of HTTP requests without an entity,
+                            such as HTTP GET requests, where the Content-Type header is not set.
+                        </para>
+                        <para>
+                            When using the <literal>@Consumes</literal> annotation, the Content-Type HTTP header must be set.
+                            The previous behaviour when the missing Content-Type HTTP header matched any resource method
+                            with <literal>@Consumes</literal> annotation, the
+                            &jersey.server.ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES; property can be set.
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>
                             &jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE; is by default
                             <literal>true</literal>.

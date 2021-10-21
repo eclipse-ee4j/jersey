@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -134,7 +136,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnProperties() throws Exception {
         final OneFilteringOnPropertiesEntity entity = target("OneFilteringEntity").request()
-                .get(OneFilteringOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnPropertiesEntity.class);
 
         // OneFilteringOnPropertiesEntity
         assertThat(entity.field, is(80));
@@ -167,7 +169,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnPropertiesDefaultViewResponse() throws Exception {
         final OneFilteringOnPropertiesEntity entity = target("OneFilteringEntityDefaultViewResponse").request()
-                .get(OneFilteringOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnPropertiesEntity.class);
 
         // OneFilteringOnPropertiesEntity
         assertThat(entity.field, is(80));
@@ -188,7 +190,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnPropertiesDefaultView() throws Exception {
         final OneFilteringOnPropertiesEntity entity = target("OneFilteringEntityDefaultView").request()
-                .get(OneFilteringOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnPropertiesEntity.class);
 
         // OneFilteringOnPropertiesEntity
         assertThat(entity.field, is(80));
@@ -215,7 +217,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityPrimaryView() throws Exception {
         final ManyFilteringsOnPropertiesEntity entity = target("ManyFilteringsEntityPrimaryView").request()
-                .get(ManyFilteringsOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnPropertiesEntity.class);
 
         // ManyFilteringsOnPropertiesEntity
         assertThat(entity.field, is(90));
@@ -251,7 +253,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntitySecondaryView() throws Exception {
         final ManyFilteringsOnPropertiesEntity entity = target("ManyFilteringsEntitySecondaryView").request()
-                .get(ManyFilteringsOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnPropertiesEntity.class);
 
         // ManyFilteringsOnPropertiesEntity
         assertThat(entity.field, is(90));
@@ -289,7 +291,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityDefaultView() throws Exception {
         final ManyFilteringsOnPropertiesEntity entity = target("ManyFilteringsEntityDefaultView").request()
-                .get(ManyFilteringsOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnPropertiesEntity.class);
 
         // ManyFilteringsOnPropertiesEntity
         assertThat(entity.field, is(90));
@@ -313,7 +315,7 @@ public class JsonEntityFilteringOnPropertiesTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityManyViews() throws Exception {
         final ManyFilteringsOnPropertiesEntity entity = target("ManyFilteringsEntityManyViews").request()
-                .get(ManyFilteringsOnPropertiesEntity.class);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnPropertiesEntity.class);
 
         // ManyFilteringsOnPropertiesEntity
         assertThat(entity.field, is(90));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ContextResolver;
@@ -339,7 +340,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONCollection() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        final Collection<JaxbBean> a = target.request().get(
+        final Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {
@@ -358,7 +359,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONLinkedList() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        Collection<JaxbBean> a = target.request().get(
+        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         final Collection<JaxbBean> b;
@@ -374,7 +375,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONSet() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        Collection<JaxbBean> a = target.request().get(
+        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         final Collection<JaxbBean> b;
@@ -400,7 +401,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONStack() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        final Collection<JaxbBean> a = target.request().get(
+        final Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         final Collection<JaxbBean> b;
@@ -438,7 +439,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONMediaType() throws Exception {
         final WebTarget target = target("JAXBListResourceJSONMediaType");
 
-        final Collection<JaxbBean> a = target.request().get(
+        final Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, "application/foo+json").get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {

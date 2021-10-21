@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,15 +22,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 
+import jakarta.ws.rs.core.HttpHeaders;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexEntity;
 
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
@@ -67,7 +65,8 @@ public class EntityFilteringScopesTest extends EntityFilteringTest {
      */
     @Test
     public void testEntityFilteringScopes() throws Exception {
-        final String fields = target().request().get(String.class);
+        final String fields = target().request()
+                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
 
         assertSameFields(fields, "accessor,property,field.field,field.accessor,field.property.accessor,field.property.property");
     }

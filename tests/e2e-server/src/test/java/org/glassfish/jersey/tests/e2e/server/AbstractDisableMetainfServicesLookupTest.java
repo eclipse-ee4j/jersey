@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
@@ -62,7 +63,8 @@ public abstract class AbstractDisableMetainfServicesLookupTest extends JerseyTes
     protected void testGet(int expectedGetResponseCode, int expectedPostResponseCode) throws Exception {
         final String name = "Jersey";
         {
-            Response response = target("/").path(name).request().get();
+            Response response = target("/").path(name).request()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get();
             Assert.assertEquals(expectedGetResponseCode, response.getStatus());
 
             if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
