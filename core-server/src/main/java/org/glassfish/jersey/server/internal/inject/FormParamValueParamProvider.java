@@ -43,8 +43,6 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.ws.rs.ext.RuntimeDelegate;
-import org.glassfish.jersey.innate.multipart.JerseyEntityPart;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -285,7 +283,7 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
             return new GenericType(new ParameterizedType() {
                 @Override
                 public Type[] getActualTypeArguments() {
-                    return new Type[]{ genericType };
+                    return new Type[]{genericType};
                 }
 
                 @Override
