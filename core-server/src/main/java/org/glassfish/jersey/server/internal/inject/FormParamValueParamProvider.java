@@ -19,6 +19,7 @@ package org.glassfish.jersey.server.internal.inject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -42,8 +43,6 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.ws.rs.ext.RuntimeDelegate;
-import org.glassfish.jersey.innate.multipart.JerseyEntityPart;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -267,10 +266,10 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
             if (entityPartProvider.get() != null) { // else jersey-multipart module is missing
                 final Function<ContainerRequest, ?> valueSupplier = entityPartProvider.get().getValueProvider(
                         new WrappingFormParamParameter(entityPartParameter, parameter));
-                final JerseyEntityPart entityPart = (JerseyEntityPart) valueSupplier.apply(containerRequest);
+                final EntityPart entityPart = (EntityPart) valueSupplier.apply(containerRequest);
                 try {
                     entity = parameter.getType() != parameter.getRawType()
-                            ? entityPart.getContent(parameter.getRawType(), parameter.getType())
+                            ? entityPart.getContent(genericType(parameter.getRawType(), parameter.getType()))
                             : entityPart.getContent(parameter.getRawType());
                 } catch (IOException e) {
                     throw new ProcessingException(e);
@@ -278,6 +277,25 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
             }
 
             return entity;
+        }
+
+        private GenericType genericType(Type rawType, Type genericType) {
+            return new GenericType(new ParameterizedType() {
+                @Override
+                public Type[] getActualTypeArguments() {
+                    return new Type[]{genericType};
+                }
+
+                @Override
+                public Type getRawType() {
+                    return rawType;
+                }
+
+                @Override
+                public Type getOwnerType() {
+                    return null;
+                }
+            });
         }
 
         private static class WrappingFormParamParameter extends Parameter {
