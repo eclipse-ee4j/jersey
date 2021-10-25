@@ -322,9 +322,6 @@
                         </compilerArguments>
                         <showWarnings>false</showWarnings>
                         <fork>false</fork>
-                        <excludes>
-                            <exclude>module-info.java</exclude>
-                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -911,10 +908,9 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
+                            <version>${mvn.compiler.plugin.version}</version>
                             <inherited>true</inherited>
                             <configuration>
-                                <source>${java.version}</source>
-                                <target>${java.version}</target>
                                 <excludes>
                                     <exclude>module-info.java</exclude>
                                 </excludes>
@@ -940,9 +936,9 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
+                            <version>${mvn.compiler.plugin.version}</version>
                             <inherited>true</inherited>
                             <executions>
-<!-- when module.info
                                 <execution>
                                     <id>default-compile</id>
                                     <configuration>
@@ -950,7 +946,6 @@
                                         <release>11</release>
                                     </configuration>
                                 </execution>
--->
                                 <execution>
                                     <id>base-compile</id>
                                     <goals>
