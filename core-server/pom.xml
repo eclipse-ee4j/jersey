@@ -154,10 +154,29 @@
                     <parallel>classes</parallel>
                     <perCoreThreadCount>true</perCoreThreadCount>
                     <threadCount>1</threadCount>
-                    <forkCount>1C</forkCount>
+                    <forkCount>0</forkCount>
                     <reuseForks>true</reuseForks>
                     <systemPropertiesFile>${project.basedir}/etc/systemPropertiesFile</systemPropertiesFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+<!--                        <id>default-compile</id>-->
+                        <configuration>
+                            <!-- compile everything to ensure module-info contains right entries -->
+                            <release>11</release>
+                            <compilerArgs>
+                                <arg>--add-reads</arg>
+                                <arg>org.glassfish.jersey.core.server=ALL-UNNAMED</arg>
+                                <arg>--add-opens</arg>
+                                <arg>jakarta.xml.bind/jakarta.xml.bind=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
