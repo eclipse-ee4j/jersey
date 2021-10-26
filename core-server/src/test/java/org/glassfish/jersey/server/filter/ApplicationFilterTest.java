@@ -318,7 +318,11 @@ public class ApplicationFilterTest {
         });
         resourceConfig.registerResources(rb.build());
         final ApplicationHandler application = new ApplicationHandler(resourceConfig);
-        int status = application.apply(RequestContextBuilder.from("/test", "GET").build()).get().getStatus();
-        Assert.assertEquals(500, status);
+        try {
+            application.apply(RequestContextBuilder.from("/test", "GET").build()).get().getStatus();
+            Assert.fail("should throw an exception");
+        } catch (final Exception e) {
+            // ok
+        }
     }
 }
