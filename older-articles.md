@@ -13,6 +13,9 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=243" target="_blank">Jersey 2.35, and Jersey 3.0.3</a></h4>
+Oct 21, 2021 | Jan Supol
+
 <h4> <a class="article" href="{{ site.links.honzablog }}/?p=238" target="_blank">Very Merry Christmas with Jersey 2.33</a></h4>
 Dec 24, 2020 | Jan Supol
 
