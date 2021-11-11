@@ -16,11 +16,12 @@
 
 package org.glassfish.jersey.server.internal.routing;
 
+import java.util.List;
 import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.internal.routing.CombinedMediaType;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.server.ContainerRequest;
-import java.util.List;
+import org.glassfish.jersey.server.model.ResourceMethod;
 
 /**
  * A single router responsible for selecting a single method from all the methods
@@ -29,11 +30,8 @@ import java.util.List;
  * The method selection algorithm selects the handling method based on the HTTP request
  * method name, requested media type as well as defined resource method media type
  * capabilities.
- *
- * @author Jakub Podlesak
- * @author Marek Potociar
  */
-final class MethodSelectingRouter2x extends AbstractMethodSelectingRouter implements Router {
+final class OctetStreamMethodSelectingRouter extends AbstractMethodSelectingRouter implements Router {
 
     /**
      * Create a new {@code MethodSelectingRouter} for all the methods on the same path.
@@ -44,7 +42,7 @@ final class MethodSelectingRouter2x extends AbstractMethodSelectingRouter implem
      * @param workers        message body workers.
      * @param methodRoutings [method model, method methodAcceptorPair] pairs.
      */
-    MethodSelectingRouter2x(MessageBodyWorkers workers, List<MethodRouting> methodRoutings) {
+    OctetStreamMethodSelectingRouter(MessageBodyWorkers workers, List<MethodRouting> methodRoutings) {
         super(workers, methodRoutings);
     }
 
@@ -56,8 +54,7 @@ final class MethodSelectingRouter2x extends AbstractMethodSelectingRouter implem
         return new ConsumesProducesAcceptor(consumes, produces, methodRouting);
     }
 
-     private static class ConsumesProducesAcceptor extends AbstractMethodSelectingRouter.ConsumesProducesAcceptor {
-
+    private static class ConsumesProducesAcceptor extends AbstractMethodSelectingRouter.ConsumesProducesAcceptor {
         private ConsumesProducesAcceptor(
                 CombinedMediaType.EffectiveMediaType consumes,
                 CombinedMediaType.EffectiveMediaType produces,
@@ -73,6 +70,10 @@ final class MethodSelectingRouter2x extends AbstractMethodSelectingRouter implem
          */
         boolean isConsumable(ContainerRequest requestContext) {
             MediaType contentType = requestContext.getMediaType();
+            if (contentType == null && methodRouting.method.getType() != ResourceMethod.JaxrsType.SUB_RESOURCE_LOCATOR
+                    && methodRouting.method.getInvocable().requiresEntity()) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
+            }
             return contentType == null || consumes.getMediaType().isCompatible(contentType);
         }
     }

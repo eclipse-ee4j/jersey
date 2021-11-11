@@ -23,7 +23,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -55,7 +54,6 @@ public class ClientPathTest extends JerseyTest {
         Response response = client().target("http://localhost:" + getPort() + "/test/{beginBy}")
                 .resolveTemplate("beginBy", "abc")
                 .request(MediaType.TEXT_PLAIN_TYPE)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE)
                 .get();
         assertEquals(200, response.getStatus());
         assertEquals("test-get,abc", response.readEntity(String.class));
@@ -68,7 +66,6 @@ public class ClientPathTest extends JerseyTest {
     public void pathConcatenationTest1() {
         Response response = client().target("http://localhost:" + getPort()).path("path")
                 .request(MediaType.TEXT_PLAIN_TYPE)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE)
                 .get();
         assertEquals(200, response.getStatus());
         assertEquals("test-path", response.readEntity(String.class));
@@ -80,7 +77,7 @@ public class ClientPathTest extends JerseyTest {
     @Test
     public void pathConcatenationTest2() {
         Response response = client().target("http://localhost:" + getPort()).path("/path").request(MediaType.TEXT_PLAIN_TYPE)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE).get();
+                .get();
         assertEquals(200, response.getStatus());
         assertEquals("test-path", response.readEntity(String.class));
     }
@@ -91,7 +88,7 @@ public class ClientPathTest extends JerseyTest {
     @Test
     public void pathConcatenationTest3() {
         Response response = client().target("http://localhost:" + getPort()).path("/path/").path("/another/")
-                .request(MediaType.TEXT_PLAIN_TYPE).header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE).get();
+                .request(MediaType.TEXT_PLAIN_TYPE).get();
         assertEquals(200, response.getStatus());
         assertEquals("test-another-path", response.readEntity(String.class));
     }
@@ -102,7 +99,7 @@ public class ClientPathTest extends JerseyTest {
     @Test
     public void pathConcatenationTest4() {
         Response response = client().target("http://localhost:" + getPort()).path("/path").path("another/")
-                .request(MediaType.TEXT_PLAIN_TYPE).header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE).get();
+                .request(MediaType.TEXT_PLAIN_TYPE).get();
         assertEquals(200, response.getStatus());
         assertEquals("test-another-path", response.readEntity(String.class));
     }
@@ -113,7 +110,7 @@ public class ClientPathTest extends JerseyTest {
     @Test
     public void pathConcatenationTest6() {
         Response response = client().target("http://localhost:" + getPort() + "/").path("/path/another")
-                .request(MediaType.TEXT_PLAIN_TYPE).header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_TYPE).get();
+                .request(MediaType.TEXT_PLAIN_TYPE).get();
         assertEquals(200, response.getStatus());
         assertEquals("test-another-path", response.readEntity(String.class));
     }
