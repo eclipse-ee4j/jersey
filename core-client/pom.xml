@@ -48,17 +48,25 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <inherited>false</inherited>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArguments>
-                        <!-- Do not warn about using sun.misc.Unsafe -->
-                        <XDignore.symbol.file />
-                    </compilerArguments>
-                    <showWarnings>false</showWarnings>
-                    <fork>false</fork>
-                </configuration>
+<!--                <inherited>false</inherited>-->
+                <executions>
+                    <execution>
+                        <id>base-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
+                            <compilerArguments>
+                                <!-- Do not warn about using sun.misc.Unsafe -->
+                                <XDignore.symbol.file/>
+                            </compilerArguments>
+                            <showWarnings>false</showWarnings>
+                            <fork>false</fork>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -123,7 +131,6 @@
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
             <version>${jakarta.activation.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -173,8 +180,8 @@
                     <artifactId>jakarta.annotation-api</artifactId>
                 </dependency>
                 <dependency>
-                    <groupId>jakarta.activation</groupId>
-                    <artifactId>jakarta.activation-api</artifactId>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
                 </dependency>
             </dependencies>
             <build>
@@ -191,6 +198,8 @@
                                     <compilerArgs>
                                         <arg>--add-reads</arg>
                                         <arg>org.glassfish.jersey.client=ALL-UNNAMED</arg>
+                                        <arg>--add-opens</arg>
+                                        <arg>jakarta.inject/jakarta.inject=org.glassfish.jersey.client</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>

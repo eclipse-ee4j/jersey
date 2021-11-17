@@ -171,6 +171,14 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <forkMode>never</forkMode>
+                            <argLine>--add-reads org.glassfish.jersey.inject.hk2=ALL-UNNAMED --add-opens org.glassfish.jersey.inject.hk2=ALL-UNNAMED --illegal-access=permit</argLine>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
