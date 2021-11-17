@@ -35,7 +35,6 @@ import jakarta.ws.rs.container.Suspended;
 
 import jakarta.inject.Singleton;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -72,7 +71,6 @@ public class AsyncCallbackServerTest {
     }
 
     @Test
-    @Ignore("since JAXRS 3.1 failure is not processed by callbacks")
     public void testCompletionFail() throws ExecutionException, InterruptedException {
         final Flags flags = new Flags();
 

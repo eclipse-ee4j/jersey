@@ -54,7 +54,6 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 
 import jakarta.inject.Provider;
 
-import org.glassfish.jersey.internal.DefaultExceptionMapper;
 import org.glassfish.jersey.internal.guava.Preconditions;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
@@ -451,8 +450,10 @@ public class ServerRuntime {
                     } finally {
                         completionCallbackRunner.onComplete(responseError);
                     }
+
+                    defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
                 }
-                defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
+
             } finally {
                 release(response, defaultMapperResponse);
             }
@@ -473,6 +474,8 @@ public class ServerRuntime {
                 final Iterable<ResponseErrorMapper> mappers = Providers.getAllProviders(runtime.injectionManager,
                         ResponseErrorMapper.class);
 
+                ContainerResponse processedResponse = null;
+
                 try {
                     Response processedError = null;
                     for (final ResponseErrorMapper mapper : mappers) {
@@ -483,11 +486,16 @@ public class ServerRuntime {
                     }
 
                     if (processedError != null) {
-                        processResponse(new ContainerResponse(processingContext.request(), processedError));
+                        processedResponse =
+                                processResponse(new ContainerResponse(processingContext.request(), processedError));
                         processed = true;
                     }
                 } catch (final Throwable throwable) {
                     LOGGER.log(Level.FINE, LocalizationMessages.ERROR_EXCEPTION_MAPPING_PROCESSED_RESPONSE_ERROR(), throwable);
+                } finally {
+                    if (processedResponse != null) {
+                        release(processedResponse);
+                    }
                 }
             }
 
@@ -509,12 +517,7 @@ public class ServerRuntime {
 
             do {
                 final Throwable throwable = wrap.getCurrent();
-                // internal mapping
-                if (throwable instanceof HeaderValueException) {
-                    if (((HeaderValueException) throwable).getContext() == HeaderValueException.Context.INBOUND) {
-                        return Response.status(Response.Status.BAD_REQUEST).build();
-                    }
-                }
+
                 if (wrap.isInMappable() || throwable instanceof WebApplicationException) {
                     // in case ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED is true, allow
                     // wrapped MessageBodyProviderNotFoundException to propagate
@@ -531,14 +534,11 @@ public class ServerRuntime {
                         processingContext.routingContext().setMappedThrowable(throwable);
 
                         waeResponse = webApplicationException.getResponse();
-                        if (waeResponse != null) {
-                            LOGGER.log(Level.FINE, waeResponse.hasEntity()
-                                    ? LocalizationMessages.EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus())
-                                    : LocalizationMessages.EXCEPTION_MAPPING_WAE_NO_ENTITY(waeResponse.getStatus()),
+                        if (waeResponse != null && waeResponse.hasEntity()) {
+                            LOGGER.log(Level.FINE,
+                                    LocalizationMessages.EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus()),
                                     throwable);
-                            if (waeResponse.hasEntity()) {
-                                return waeResponse;
-                            }
+                            return waeResponse;
                         }
                     }
 
@@ -548,10 +548,18 @@ public class ServerRuntime {
                         return processExceptionWithMapper(mapper, throwable, timestamp);
                     }
                     if (waeResponse != null) {
+                        LOGGER.log(Level.FINE, LocalizationMessages
+                                .EXCEPTION_MAPPING_WAE_NO_ENTITY(waeResponse.getStatus()), throwable);
+
                         return waeResponse;
                     }
                 }
-
+                // internal mapping
+                if (throwable instanceof HeaderValueException) {
+                    if (((HeaderValueException) throwable).getContext() == HeaderValueException.Context.INBOUND) {
+                        return Response.status(Response.Status.BAD_REQUEST).build();
+                    }
+                }
                 if (!wrap.isInMappable() || !wrap.isWrapped()) {
                     // user failures (thrown from Resource methods or provider methods)
 
@@ -753,8 +761,8 @@ public class ServerRuntime {
 
                 // Commit the container response writer if not in chunked mode
                 // responseContext may be null in case the request processing was cancelled.
-                Arrays.stream(responseContexts).filter(n -> n != null
-                        && !n.isChunked()).forEach(ContainerResponse::close);
+                Arrays.stream(responseContexts).filter(responseContext -> responseContext != null
+                        && !responseContext.isChunked()).forEach(ContainerResponse::close);
 
             } catch (final Throwable throwable) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.RELEASING_REQUEST_PROCESSING_RESOURCES_FAILED(), throwable);
