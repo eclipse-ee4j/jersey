@@ -443,7 +443,7 @@ public class ServerRuntime {
 
                 if (!processResponseError(responseError)) {
                     // Pass the exception to the container.
-                    LOGGER.log(Level.FINE, LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(), responseError);
+                    LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(), responseError);
 
                     try {
                         request.getResponseWriter().failure(responseError);
