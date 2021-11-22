@@ -16,7 +16,6 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
 import static jakarta.ws.rs.client.Entity.xml;
 
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -57,8 +56,7 @@ public class JaxbTest extends JerseyTest {
 
     @Test
     public void testRootElement() {
-        JaxbXmlRootElement e1 = target().path("jaxb/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbXmlRootElement.class);
+        JaxbXmlRootElement e1 = target().path("jaxb/XmlRootElement").request().get(JaxbXmlRootElement.class);
 
         JaxbXmlRootElement e2 = target().path("jaxb/XmlRootElement").request("application/xml")
                 .post(xml(e1), JaxbXmlRootElement.class);
@@ -68,11 +66,9 @@ public class JaxbTest extends JerseyTest {
 
     @Test
     public void testRootElementWithHeader() {
-        String e1 = target().path("jaxb/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(String.class);
+        String e1 = target().path("jaxb/XmlRootElement").request().get(String.class);
 
-        String e2 = target().path("jaxb/XmlRootElementWithHeader").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(String.class);
+        String e2 = target().path("jaxb/XmlRootElementWithHeader").request().get(String.class);
         assertTrue(e2.contains("<?xml-stylesheet type='text/xsl' href='foobar.xsl' ?>") && e2.contains(e1.substring(e1.indexOf("?>") + 2).trim()));
     }
 
@@ -80,8 +76,7 @@ public class JaxbTest extends JerseyTest {
     public void testJAXBElement() {
         GenericType<JAXBElement<JaxbXmlType>> genericType = new GenericType<JAXBElement<JaxbXmlType>>() {};
 
-        JAXBElement<JaxbXmlType> e1 = target().path("jaxb/JAXBElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(genericType);
+        JAXBElement<JaxbXmlType> e1 = target().path("jaxb/JAXBElement").request().get(genericType);
 
         JAXBElement<JaxbXmlType> e2 = target().path("jaxb/JAXBElement").request(MediaType.APPLICATION_XML)
                 .post(xml(e1), genericType);
@@ -91,8 +86,7 @@ public class JaxbTest extends JerseyTest {
 
     @Test
     public void testXmlType() {
-        JaxbXmlType t1 = target().path("jaxb/JAXBElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbXmlType.class);
+        JaxbXmlType t1 = target().path("jaxb/JAXBElement").request().get(JaxbXmlType.class);
 
         JAXBElement<JaxbXmlType> e = new JAXBElement<JaxbXmlType>(
                 new QName("jaxbXmlRootElement"),
@@ -110,8 +104,7 @@ public class JaxbTest extends JerseyTest {
         GenericType<Collection<JaxbXmlRootElement>> genericType =
                 new GenericType<Collection<JaxbXmlRootElement>>() {};
 
-        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(genericType);
+        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request().get(genericType);
         Collection<JaxbXmlRootElement> ce2 = target().path("jaxb/collection/XmlRootElement").request(MediaType.APPLICATION_XML)
                 .post(xml(new GenericEntity<Collection<JaxbXmlRootElement>>(ce1) {}), genericType);
 
@@ -126,22 +119,19 @@ public class JaxbTest extends JerseyTest {
                 new GenericType<Collection<JaxbXmlType>>() {
                 };
 
-        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(genericRootElement);
+        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request().get(genericRootElement);
 
         Collection<JaxbXmlType> ct1 = target().path("jaxb/collection/XmlType").request(MediaType.APPLICATION_XML)
                 .post(xml(new GenericEntity<Collection<JaxbXmlRootElement>>(ce1) {}), genericXmlType);
 
-        Collection<JaxbXmlType> ct2 = target().path("jaxb/collection/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(genericXmlType);
+        Collection<JaxbXmlType> ct2 = target().path("jaxb/collection/XmlRootElement").request().get(genericXmlType);
 
         assertEquals(ct1, ct2);
     }
 
     @Test
     public void testRootElementArray() {
-        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbXmlRootElement[].class);
+        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlRootElement[].class);
         JaxbXmlRootElement[] ae2 = target().path("jaxb/array/XmlRootElement").request(MediaType.APPLICATION_XML)
                 .post(xml(ae1), JaxbXmlRootElement[].class);
 
@@ -153,14 +143,12 @@ public class JaxbTest extends JerseyTest {
 
     @Test
     public void testXmlTypeArray() {
-        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbXmlRootElement[].class);
+        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlRootElement[].class);
 
         JaxbXmlType[] at1 = target().path("jaxb/array/XmlType").request(MediaType.APPLICATION_XML)
                 .post(xml(ae1), JaxbXmlType[].class);
 
-        JaxbXmlType[] at2 = target().path("jaxb/array/XmlRootElement").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbXmlType[].class);
+        JaxbXmlType[] at2 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlType[].class);
 
         assertEquals(at1.length, at2.length);
         for (int i = 0; i < at1.length; i++) {

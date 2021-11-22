@@ -12,8 +12,6 @@ package org.glassfish.jersey.examples.exception;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -68,7 +66,7 @@ public class ExceptionMappingFilterTest extends JerseyTest {
     @Test
     public void testWebApplicationExceptionInResponseFilter() {
         WebTarget t = client().target(UriBuilder.fromUri(getBaseUri()).path(App.ROOT_PATH).path("response_exception").build());
-        Response r = t.request("text/plain").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get();
+        Response r = t.request("text/plain").get();
         assertEquals(200, r.getStatus());
         final String entity = r.readEntity(String.class);
         System.out.println("entity = " + entity);

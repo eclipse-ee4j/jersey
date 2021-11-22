@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
@@ -87,18 +86,15 @@ public class JsonProcessingResourceTest extends JerseyTest {
         // Get.
         final String id = ids.get(0).toString();
         final WebTarget documentTarget = target("document").path(id);
-        final JsonObject storedDocument = documentTarget.request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(JsonObject.class);
+        final JsonObject storedDocument = documentTarget.request(MediaType.APPLICATION_JSON).get(JsonObject.class);
         assertEquals(document, storedDocument);
 
         // Remove.
-        final JsonObject removedDocument = documentTarget.request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).delete(JsonObject.class);
+        final JsonObject removedDocument = documentTarget.request(MediaType.APPLICATION_JSON).delete(JsonObject.class);
         assertEquals(document, removedDocument);
 
         // Get.
-        final Response errorResponse = documentTarget.request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get();
+        final Response errorResponse = documentTarget.request(MediaType.APPLICATION_JSON).get();
         assertEquals(204, errorResponse.getStatus());
     }
 

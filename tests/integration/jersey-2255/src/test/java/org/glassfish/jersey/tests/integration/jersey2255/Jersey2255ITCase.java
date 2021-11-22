@@ -17,8 +17,6 @@
 package org.glassfish.jersey.tests.integration.jersey2255;
 
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
@@ -59,8 +57,7 @@ public class Jersey2255ITCase extends JerseyTest {
      */
     @Test
     public void testClassAGet() {
-        final Response response = target("A").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get();
+        final Response response = target("A").request().get();
         final A entity = response.readEntity(A.class);
 
         assertThat(response.getStatus(), equalTo(200));
@@ -69,8 +66,7 @@ public class Jersey2255ITCase extends JerseyTest {
 
     @Test
     public void testDetailedClassAGet() {
-        final Response response = target("A").queryParam("detailed", true).request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get();
+        final Response response = target("A").queryParam("detailed", true).request().get();
         final A entity = response.readEntity(A.class);
 
         assertThat(response.getStatus(), equalTo(200));
@@ -82,8 +78,7 @@ public class Jersey2255ITCase extends JerseyTest {
      */
     @Test
     public void testDetailedClassBGet() {
-        final Response response = target("B").queryParam("detailed", true).request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get();
+        final Response response = target("B").queryParam("detailed", true).request().get();
         final B entity = response.readEntity(B.class);
 
         assertThat(response.getStatus(), equalTo(200));
@@ -93,7 +88,7 @@ public class Jersey2255ITCase extends JerseyTest {
 
     @Test
     public void testClassBGet() {
-        final Response response = target("B").request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get();
+        final Response response = target("B").request().get();
         final B entity = response.readEntity(B.class);
 
         assertThat(response.getStatus(), equalTo(200));
