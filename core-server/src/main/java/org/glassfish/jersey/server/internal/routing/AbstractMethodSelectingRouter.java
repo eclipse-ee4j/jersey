@@ -59,7 +59,7 @@ import java.util.logging.Logger;
 
 abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer implements Router {
 
-    private static final Logger LOGGER = Logger.getLogger(MethodSelectingRouter.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractMethodSelectingRouter.class.getName());
 
     private static final Comparator<ConsumesProducesAcceptor> CONSUMES_PRODUCES_ACCEPTOR_COMPARATOR =
             new Comparator<ConsumesProducesAcceptor>() {

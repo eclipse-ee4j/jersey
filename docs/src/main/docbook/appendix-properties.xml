@@ -277,16 +277,22 @@
                         <entry><literal>jersey.config.server.empty.request.media.matches.any.consumes</literal></entry>
                         <entry>
                             <para>
-                                When an HTTP request does not contain a media type, the media type should default to
-                                <literal>application/octet-stream</literal>. In the past, Jersey used to match any
-                                <literal>@Consumes</literal> when the HTTP <literal>Content-Type</literal> header was not set.
-                                This property is to preserve the behaviour. Such behaviour is potentially dangerous, though.
-                                The default behaviour is to set the request media type to
-                                <literal>application/octet-stream</literal> when none set. This is a Jakarta REST requirement.
+                                Jakarta RESTful WebServices provides <literal>@Consumes</literal> annotation to accept only HTTP
+                                requests with compatible HTTP <literal>Content-Type</literal> header. However, when the header
+                                is missing a wildcard media type is used to match the <literal>@Consumes</literal> annotation.
                             </para>
                             <para>
-                                Set this property to <literal>true</literal>, if the empty request media type is to match any
-                                <literal>@Consumes</literal>. The default value is <literal>false</literal>.
+                                HTTP/1.1 RFC recommends that missing HTTP <literal>Content-Type</literal> header MAY default to
+                                <literal>application/octet-stream</literal>. This property makes Jersey consider the missing HTTP
+                                <literal>Content-Type</literal> header to be <literal>application/octet-stream</literal> rather
+                                than a wildcard media type. However, for a resource method without an entity argument, such as
+                                for HTTP GET, a wildcard media type is still considered to accept the HTTP request for
+                                the missing HTTP <literal>Content-Type</literal> header.
+                            </para>
+                            <para>
+                                Set this property to <literal>false</literal>, if the empty request media type should not to match
+                                applied <literal>@Consumes</literal> annotation on a resource method with an entity argument. The
+                                default is <literal>true</literal>.
                             </para>
                         </entry>
                     </row>

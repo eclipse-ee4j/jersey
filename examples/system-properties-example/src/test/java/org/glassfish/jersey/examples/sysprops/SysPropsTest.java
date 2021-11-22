@@ -10,14 +10,8 @@
 
 package org.glassfish.jersey.examples.sysprops;
 
-import java.util.Collections;
 import java.util.Set;
 
-import jakarta.ws.rs.core.Form;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -46,11 +40,8 @@ public class SysPropsTest extends JerseyTest {
 
     @Test
     public void testGetPropertyNames() {
-        MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN);
+        PropertyNamesResource propertyNamesResource = WebResourceFactory.newResource(PropertyNamesResource.class, target());
 
-        PropertyNamesResource propertyNamesResource = WebResourceFactory
-                .newResource(PropertyNamesResource.class, target(), false, headers, Collections.emptyList(), new Form());
         Set<String> propertyNames = propertyNamesResource.getPropertyNames();
         assertEquals(System.getProperties().stringPropertyNames(), propertyNames);
     }

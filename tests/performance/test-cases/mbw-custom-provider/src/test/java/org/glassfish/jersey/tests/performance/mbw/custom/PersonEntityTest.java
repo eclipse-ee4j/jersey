@@ -18,7 +18,6 @@ package org.glassfish.jersey.tests.performance.mbw.custom;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
@@ -46,7 +45,7 @@ public class PersonEntityTest extends JerseyTest {
 
     @Test
     public void testGet() {
-        final Person getResponse = target().request().header(HttpHeaders.CONTENT_TYPE, "application/person").get(Person.class);
+        final Person getResponse = target().request().get(Person.class);
         assertEquals("Mozart", getResponse.name);
         assertEquals(21, getResponse.age);
         assertEquals("Salzburg", getResponse.address);

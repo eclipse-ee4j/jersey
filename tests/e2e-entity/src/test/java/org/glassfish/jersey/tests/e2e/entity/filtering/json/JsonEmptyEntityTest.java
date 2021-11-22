@@ -23,8 +23,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Feature;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -97,8 +95,7 @@ public class JsonEmptyEntityTest extends JerseyTest {
 
     @Test
     public void testNonEmptyEntity() throws Exception {
-        final NonEmptyEntity entity = target("nonEmptyEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(NonEmptyEntity.class);
+        final NonEmptyEntity entity = target("nonEmptyEntity").request().get(NonEmptyEntity.class);
 
         assertThat(entity.getValue(), is("foo"));
         assertThat(entity.getEmptyEntity(), nullValue());
@@ -106,7 +103,6 @@ public class JsonEmptyEntityTest extends JerseyTest {
 
     @Test
     public void testEmptyEntity() throws Exception {
-        assertThat(target("emptyEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(String.class), is("{}"));
+        assertThat(target("emptyEntity").request().get(String.class), is("{}"));
     }
 }

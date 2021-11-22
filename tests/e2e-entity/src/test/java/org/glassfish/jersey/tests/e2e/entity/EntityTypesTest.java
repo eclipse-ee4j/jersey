@@ -886,7 +886,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBArrayRepresentation() {
         final WebTarget target = target("JAXBArrayResource");
 
-        final JaxbBean[] a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML).get(JaxbBean[].class);
+        final JaxbBean[] a = target.request().get(JaxbBean[].class);
         JaxbBean[] b = target.request().post(Entity.entity(a, "application/xml"), JaxbBean[].class);
         assertEquals(a.length, b.length);
         for (int i = 0; i < a.length; i++) {
@@ -910,7 +910,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationMediaType() {
         final WebTarget target = target("JAXBListResourceMediaType");
 
-        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, "application/foo+xml").get(
+        Collection<JaxbBean> a = target.request().get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request()
@@ -1049,7 +1049,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSON() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
-        Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(
+        Collection<JaxbBean> a = target.request().get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {
@@ -1121,7 +1121,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     public void testJAXBListRepresentationJSONMediaType() throws Exception {
         final WebTarget target = target("JAXBListResourceJSONMediaType");
 
-        final Collection<JaxbBean> a = target.request().header(HttpHeaders.CONTENT_TYPE, "application/foo+json").get(
+        final Collection<JaxbBean> a = target.request().get(
                 new GenericType<Collection<JaxbBean>>() {
                 });
         Collection<JaxbBean> b = target.request().post(Entity.entity(new GenericEntity<Collection<JaxbBean>>(a) {

@@ -90,11 +90,10 @@ public class ClientTest extends JerseyTest {
     @Test
     public void testAccesingHelloworldResource() {
         final WebTarget resource = target().path("helloworld");
-        final Response r = resource.request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get();
+        final Response r = resource.request().get();
         assertEquals(200, r.getStatus());
 
-        final String responseMessage = resource.request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
+        final String responseMessage = resource.request().get(String.class);
         assertEquals(HelloWorldResource.MESSAGE, responseMessage);
     }
 

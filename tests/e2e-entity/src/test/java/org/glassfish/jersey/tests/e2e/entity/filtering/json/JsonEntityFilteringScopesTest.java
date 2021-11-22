@@ -24,8 +24,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Feature;
 
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
@@ -80,8 +78,7 @@ public class JsonEntityFilteringScopesTest extends JerseyTest {
      */
     @Test
     public void testEntityFilteringScopes() throws Exception {
-        final ComplexEntity entity = target().request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ComplexEntity.class);
+        final ComplexEntity entity = target().request().get(ComplexEntity.class);
 
         // ComplexEntity
         assertThat(entity.accessorTransient, is("propertyproperty"));

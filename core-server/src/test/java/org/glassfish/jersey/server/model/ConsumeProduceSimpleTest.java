@@ -47,9 +47,9 @@ public class ConsumeProduceSimpleTest {
         return new ApplicationHandler(new ResourceConfig(classes));
     }
 
-    private ApplicationHandler create2xApplication(Class<?>... classes) {
+    private ApplicationHandler createAppOctetStreamApplication(Class<?>... classes) {
         return new ApplicationHandler(
-                new ResourceConfig(classes).property(ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES, true)
+                new ResourceConfig(classes).property(ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES, false)
         );
     }
 
@@ -154,7 +154,7 @@ public class ConsumeProduceSimpleTest {
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity());
 
-        app = create2xApplication(ProduceSimpleBean.class);
+        app = createAppOctetStreamApplication(ProduceSimpleBean.class);
 
         assertEquals("HTML", app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity());
         assertEquals("XHTML",
@@ -172,28 +172,38 @@ public class ConsumeProduceSimpleTest {
                 app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").type("text/xhtml").accept("text/xhtml").build())
                         .get().getEntity());
 
-        assertEquals(415,
-                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build())
-                        .get().getStatus()
+        assertEquals("HTML",
+                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity()
         );
         assertEquals("HTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").type("text/html").accept("text/html").build())
                         .get().getEntity()
         );
 
-        assertEquals(415,
-                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build())
-                        .get().getStatus()
+        assertEquals("XHTML",
+                app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity()
         );
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").type("text/xhtml").accept("text/xhtml").build())
                         .get().getEntity()
         );
 
-        app = create2xApplication(ConsumeProduceSimpleBean.class);
+        app = createAppOctetStreamApplication(ConsumeProduceSimpleBean.class);
         assertEquals("HTML", app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/html").build()).get().getEntity());
         assertEquals("XHTML",
                 app.apply(RequestContextBuilder.from("/a/b", "GET").accept("text/xhtml").build()).get().getEntity());
+
+        assertEquals(415,
+                app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").accept("text/html").build()).get().getStatus());
+        assertEquals(415,
+                app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").accept("text/xhtml").build()).get().getStatus());
+
+        assertEquals("HTML",
+                app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").type("text/html").accept("text/html").build())
+                        .get().getEntity());
+        assertEquals("XHTML",
+                app.apply(RequestContextBuilder.from("/a/b", "POST").entity("").type("text/xhtml").accept("text/xhtml").build())
+                        .get().getEntity());
     }
 
     @Path("/")

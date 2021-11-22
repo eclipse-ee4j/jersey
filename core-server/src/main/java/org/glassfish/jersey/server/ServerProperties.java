@@ -743,35 +743,20 @@ public final class ServerProperties {
 
     /**
      * <p>
-     * When an HTTP request does not contain a media type, the media type should default to {@code application/octet-stream}.
-     * In the past, Jersey used to match any {@code @Consumes} when the HTTP {@code Content-Type} header was not set.
-     * This property is to preserve the behaviour. Such behaviour is potentially dangerous, though.
-     * The default behaviour is to set the request media type to {@code application/octet-stream} when none set.
-     * This is a Jakarta REST requirement.
+     * Jakarta RESTful WebServices provides {@code @Consumes} annotation to accept only HTTP requests with compatible
+     * {@code Content-Type} header. However, when the header is missing a wildcard media type is used to
+     * match the {@code @Consumes} annotation.
+     * </p>
+     * <p><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5">HTTP/1.1 RFC</a>recommends that missing
+     * {@code Content-Type} header MAY default to {@code application/octet-stream}. This property makes Jersey consider the
+     * missing HTTP {@code Content-Type} header to be {@code application/octet-stream} rather than a wildcard
+     * media type. However, for a resource method without an entity argument, such as for HTTP GET, a wildcard media type
+     * is still considered to accept the HTTP request for the missing HTTP {@code Content-Type} header.
      * </p>
      * <p>
-     * This change can be can be eminent especially for HTTP resource methods which do not expect an entity, such as HTTP GET:
-     * <pre>
-     * {@code
-     * @Consumes(MediaType.TEXT_PLAIN)
-     * @Produces(MediaType.TEXT_PLAIN)
-     * @Path("/")
-     * public class Resource {
-     *     @GET
-     *     public String get() {
-     *         return ...
-     *     }
-     * }
-     * }
-     * </pre>
-     * The client request needs to contain the {@code Content-Type} HTTP header, for instance:
-     * {@code
-     * webTarget.request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get()
-     * }
-     * </p>
-     * <p>
-     * Set this property to true, if the empty request media type is to match any {@code @Consumes}. The default is {@code false}.
-     * The name of the configuration property is <tt>{@value}</tt>.
+     * Set this property to false, if the empty request media type should not to match applied {@code @Consumes} annotation
+     * on a resource method with an entity argument. The default is {@code true}. The name of the configuration property is
+     * <tt>{@value}</tt>.
      * </p>
      * @since 3.1.0
      */
