@@ -12,7 +12,6 @@ package org.glassfish.jersey.examples.httppatch;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
 import jakarta.json.Json;
@@ -63,8 +62,7 @@ public class HttpPatchTest extends JerseyTest {
 
         // initial precondition check
         final State expected = new State();
-        assertEquals(expected, target.request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
+        assertEquals(expected, target.request(MediaType.APPLICATION_JSON).get(State.class));
 
         // apply first patch
         expected.setMessage("patchedMessage");
@@ -96,8 +94,7 @@ public class HttpPatchTest extends JerseyTest {
         assertEquals(expected, target.request()
                                      .method("PATCH",
                                              Entity.entity(patch_1, MediaType.APPLICATION_JSON_PATCH_JSON), State.class));
-        assertEquals(expected, target.request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
+        assertEquals(expected, target.request(MediaType.APPLICATION_JSON).get(State.class));
 
         // apply second patch
         expected.getList().add("three");
@@ -112,7 +109,6 @@ public class HttpPatchTest extends JerseyTest {
         assertEquals(expected, target.request()
                                      .method("PATCH",
                                              Entity.entity(patch_2, MediaType.APPLICATION_JSON_PATCH_JSON), State.class));
-        assertEquals(expected, target.request("application/json")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(State.class));
+        assertEquals(expected, target.request("application/json").get(State.class));
     }
 }

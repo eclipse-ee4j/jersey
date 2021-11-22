@@ -18,8 +18,6 @@ package org.glassfish.jersey.tests.performance.interceptor.name;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
@@ -41,7 +39,7 @@ public class InterceptorTest extends JerseyTest {
 
     @Test
     public void testGet() {
-        final String getResponse = target().request().header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
+        final String getResponse = target().request().get(String.class);
         assertEquals("WRITE text", getResponse);
     }
 

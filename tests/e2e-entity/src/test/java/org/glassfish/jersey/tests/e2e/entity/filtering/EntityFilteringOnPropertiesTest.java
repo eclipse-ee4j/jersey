@@ -24,7 +24,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
@@ -117,8 +116,7 @@ public class EntityFilteringOnPropertiesTest extends EntityFilteringTest {
 
     @Test
     public void testOneEntityFilteringOnProperties() throws Exception {
-        final String fields = target("OneFilteringEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("OneFilteringEntity").request().get(String.class);
 
         assertSameFields(fields, "field,accessor,property,subEntities.field2,subEntities.property2,subEntities.property1,"
                 + "subEntities.field1,defaultEntities.field,defaultEntities.property");
@@ -126,24 +124,21 @@ public class EntityFilteringOnPropertiesTest extends EntityFilteringTest {
 
     @Test
     public void testOneEntityFilteringOnPropertiesDefaultViewResponse() throws Exception {
-        final String fields = target("OneFilteringEntityDefaultViewResponse").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("OneFilteringEntityDefaultViewResponse").request().get(String.class);
 
         assertSameFields(fields, "field");
     }
 
     @Test
     public void testOneEntityFilteringOnPropertiesDefaultView() throws Exception {
-        final String fields = target("OneFilteringEntityDefaultView").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("OneFilteringEntityDefaultView").request().get(String.class);
 
         assertSameFields(fields, "field");
     }
 
     @Test
     public void testManyFilteringsEntityPrimaryView() throws Exception {
-        final String fields = target("ManyFilteringsEntityPrimaryView").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("ManyFilteringsEntityPrimaryView").request().get(String.class);
 
         assertSameFields(fields, "field,accessor,property,oneEntities.field2,oneEntities.property2,oneEntities.property1,"
                 + "oneEntities.field1,defaultEntities.field,defaultEntities.property");
@@ -151,8 +146,7 @@ public class EntityFilteringOnPropertiesTest extends EntityFilteringTest {
 
     @Test
     public void testManyFilteringsEntitySecondaryView() throws Exception {
-        final String fields = target("ManyFilteringsEntitySecondaryView").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("ManyFilteringsEntitySecondaryView").request().get(String.class);
 
         assertSameFields(fields, "field,accessor,property,manyEntities.field2,manyEntities.property2,manyEntities.field1,"
                 + "oneEntities.property2,oneEntities.field1");
@@ -160,16 +154,14 @@ public class EntityFilteringOnPropertiesTest extends EntityFilteringTest {
 
     @Test
     public void testManyFilteringsEntityDefaultView() throws Exception {
-        final String fields = target("ManyFilteringsEntityDefaultView").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("ManyFilteringsEntityDefaultView").request().get(String.class);
 
         assertSameFields(fields, "field,accessor");
     }
 
     @Test
     public void testManyFilteringsEntityManyViews() throws Exception {
-        final String fields = target("ManyFilteringsEntityManyViews").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("ManyFilteringsEntityManyViews").request().get(String.class);
 
         assertSameFields(fields, "field,accessor,property,manyEntities.field2,manyEntities.property2,manyEntities.property1,"
                 + "manyEntities.field1,oneEntities.field2,oneEntities.property2,oneEntities.property1,oneEntities.field1,"

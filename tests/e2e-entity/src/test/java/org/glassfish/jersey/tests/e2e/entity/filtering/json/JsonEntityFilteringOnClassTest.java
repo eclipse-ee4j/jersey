@@ -25,8 +25,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Feature;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -135,8 +133,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
 
     @Test
     public void testOneEntityFilteringOnClass() throws Exception {
-        final OneFilteringOnClassEntity entity = target("OneFilteringEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
+        final OneFilteringOnClassEntity entity = target("OneFilteringEntity").request().get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(10));
@@ -169,7 +166,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnClassDefaultViewResponse() throws Exception {
         final OneFilteringOnClassEntity entity = target("OneFilteringEntityDefaultViewResponse").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
+                .get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(0));
@@ -190,7 +187,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testOneEntityFilteringOnClassDefaultView() throws Exception {
         final OneFilteringOnClassEntity entity = target("OneFilteringEntityDefaultView").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(OneFilteringOnClassEntity.class);
+                .get(OneFilteringOnClassEntity.class);
 
         // OneFilteringOnClassEntity
         assertThat(entity.field, is(0));
@@ -217,7 +214,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityPrimaryView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityPrimaryView").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
+                .get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));
@@ -259,7 +256,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntitySecondaryView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntitySecondaryView").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
+                .get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));
@@ -301,7 +298,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityDefaultView() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityDefaultView").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
+                .get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(0));
@@ -325,7 +322,7 @@ public class JsonEntityFilteringOnClassTest extends JerseyTest {
     @Test
     public void testManyFilteringsEntityManyViews() throws Exception {
         final ManyFilteringsOnClassEntity entity = target("ManyFilteringsEntityManyViews").request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ManyFilteringsOnClassEntity.class);
+                .get(ManyFilteringsOnClassEntity.class);
 
         // ManyFilteringsOnClassEntity
         assertThat(entity.field, is(50));

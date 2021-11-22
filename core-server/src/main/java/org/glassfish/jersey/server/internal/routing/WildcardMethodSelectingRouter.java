@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.server.internal.routing;
 
-import java.util.List;
 import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.internal.routing.CombinedMediaType;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.server.ContainerRequest;
+import java.util.List;
 
 /**
  * A single router responsible for selecting a single method from all the methods
@@ -33,7 +33,7 @@ import org.glassfish.jersey.server.ContainerRequest;
  * @author Jakub Podlesak
  * @author Marek Potociar
  */
-final class MethodSelectingRouter extends AbstractMethodSelectingRouter implements Router {
+final class WildcardMethodSelectingRouter extends AbstractMethodSelectingRouter implements Router {
 
     /**
      * Create a new {@code MethodSelectingRouter} for all the methods on the same path.
@@ -44,7 +44,7 @@ final class MethodSelectingRouter extends AbstractMethodSelectingRouter implemen
      * @param workers        message body workers.
      * @param methodRoutings [method model, method methodAcceptorPair] pairs.
      */
-    MethodSelectingRouter(MessageBodyWorkers workers, List<MethodRouting> methodRoutings) {
+    WildcardMethodSelectingRouter(MessageBodyWorkers workers, List<MethodRouting> methodRoutings) {
         super(workers, methodRoutings);
     }
 
@@ -56,7 +56,8 @@ final class MethodSelectingRouter extends AbstractMethodSelectingRouter implemen
         return new ConsumesProducesAcceptor(consumes, produces, methodRouting);
     }
 
-    private static class ConsumesProducesAcceptor extends AbstractMethodSelectingRouter.ConsumesProducesAcceptor {
+     private static class ConsumesProducesAcceptor extends AbstractMethodSelectingRouter.ConsumesProducesAcceptor {
+
         private ConsumesProducesAcceptor(
                 CombinedMediaType.EffectiveMediaType consumes,
                 CombinedMediaType.EffectiveMediaType produces,
@@ -72,8 +73,7 @@ final class MethodSelectingRouter extends AbstractMethodSelectingRouter implemen
          */
         boolean isConsumable(ContainerRequest requestContext) {
             MediaType contentType = requestContext.getMediaType();
-            contentType = contentType == null ? MediaType.APPLICATION_OCTET_STREAM_TYPE : contentType;
-            return consumes.getMediaType().isCompatible(contentType);
+            return contentType == null || consumes.getMediaType().isCompatible(contentType);
         }
     }
 }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Function;
 
 import jakarta.ws.rs.core.Configuration;
@@ -57,7 +56,7 @@ final class RuntimeModelBuilder {
 
     // SubResourceLocator Model Builder.
     private final Value<RuntimeLocatorModelBuilder> locatorBuilder;
-    private final boolean is2xMethodSelectingRouter;
+    private final boolean isWildcardMethodSelectingRouter;
 
     /**
      * Create a new instance of the runtime model builder.
@@ -86,8 +85,8 @@ final class RuntimeModelBuilder {
         this.locatorBuilder = Values.lazy((Value<RuntimeLocatorModelBuilder>)
                 () -> new RuntimeLocatorModelBuilder(config, messageBodyWorkers, valueSuppliers, resourceContext,
                         RuntimeModelBuilder.this, modelProcessors, createServiceFunction));
-        this.is2xMethodSelectingRouter = ServerProperties.getValue(config.getProperties(),
-                ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES, false);
+        this.isWildcardMethodSelectingRouter = ServerProperties.getValue(config.getProperties(),
+                ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES, true);
     }
 
     private Router createMethodRouter(final ResourceMethod resourceMethod) {
@@ -154,9 +153,9 @@ final class RuntimeModelBuilder {
             // resource methods
             if (!resource.getResourceMethods().isEmpty()) {
                 final List<MethodRouting> methodRoutings = createResourceMethodRouters(resource, subResourceMode);
-                final Router methodSelectingRouter = is2xMethodSelectingRouter
-                        ? new MethodSelectingRouter2x(messageBodyWorkers, methodRoutings)
-                        : new MethodSelectingRouter(messageBodyWorkers, methodRoutings);
+                final Router methodSelectingRouter = isWildcardMethodSelectingRouter
+                        ? new WildcardMethodSelectingRouter(messageBodyWorkers, methodRoutings)
+                        : new OctetStreamMethodSelectingRouter(messageBodyWorkers, methodRoutings);
                 if (subResourceMode) {
                     currentRouterBuilder = startNextRoute(currentRouterBuilder, PathPattern.END_OF_PATH_PATTERN)
                             .to(resourcePushingRouter)
@@ -185,9 +184,9 @@ final class RuntimeModelBuilder {
                         srRoutedBuilder = startNextRoute(srRoutedBuilder, childClosedPattern)
                                 .to(uriPushingRouter)
                                 .to(childResourcePushingRouter)
-                                .to(is2xMethodSelectingRouter
-                                        ? new MethodSelectingRouter2x(messageBodyWorkers, childMethodRoutings)
-                                        : new MethodSelectingRouter(messageBodyWorkers, childMethodRoutings));
+                                .to(isWildcardMethodSelectingRouter
+                                        ? new WildcardMethodSelectingRouter(messageBodyWorkers, childMethodRoutings)
+                                        : new OctetStreamMethodSelectingRouter(messageBodyWorkers, childMethodRoutings));
                     }
 
                     // sub resource locator

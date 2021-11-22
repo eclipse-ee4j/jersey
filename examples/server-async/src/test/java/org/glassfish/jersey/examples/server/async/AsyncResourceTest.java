@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -148,7 +146,7 @@ public class AsyncResourceTest extends JerseyTest {
                                 attemptCounter++;
                                 try {
                                     final String response = resourceTarget.queryParam("id", requestId).request()
-                                            .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).get(String.class);
+                                            .get(String.class);
                                     getResponses.put(requestId, response);
                                     break;
                                 } catch (Throwable t) {

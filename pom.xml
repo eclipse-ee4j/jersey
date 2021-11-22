@@ -2146,7 +2146,7 @@
         <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
         <jaxb.ri.version>3.0.2</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
-        <jaxrs.api.impl.version>3.1-SNAPSHOT</jaxrs.api.impl.version>
+        <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.version>11.0.0</jetty.version>
         <jetty.plugin.version>11.0.0</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>

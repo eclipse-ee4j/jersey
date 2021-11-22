@@ -22,7 +22,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 
-import jakarta.ws.rs.core.HttpHeaders;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
@@ -71,16 +70,14 @@ public class EmptyEntityTest extends EntityFilteringTest {
 
     @Test
     public void testNonEmptyEntity() throws Exception {
-        final String fields = target("nonEmptyEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("nonEmptyEntity").request().get(String.class);
 
         assertSameFields(fields, "value");
     }
 
     @Test
     public void testEmptyEntity() throws Exception {
-        final String fields = target("emptyEntity").request()
-                .header(HttpHeaders.CONTENT_TYPE, "entity/filtering").get(String.class);
+        final String fields = target("emptyEntity").request().get(String.class);
 
         assertSameFields(fields, "");
     }
