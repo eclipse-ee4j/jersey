@@ -278,8 +278,8 @@ public class ExtendedExceptionMapperTest extends JerseyTest {
                     LocalizationMessages.ERROR_EXCEPTION_MAPPING_ORIGINAL_EXCEPTION(),
                     LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER()}) {
 
-                if (logRecord.getMessage().contains(message) && logRecord.getLevel().intValue() > Level.FINE.intValue()) {
-                    fail("Log message should be logged at lower (FINE) level: " + message);
+                if (logRecord.getMessage().contains(message) && logRecord.getLevel().intValue() > Level.WARNING.intValue()) {
+                    fail("Log message should be logged at lower (WARNING) level: " + message);
                 }
             }
         }
