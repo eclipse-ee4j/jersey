@@ -449,8 +449,16 @@ class RestClientBuilderImpl implements RestClientBuilder {
         }
 
         // If proxyString is something like "localhost:8765" we need to add a scheme since the connectors expect one
+        String proxyString = createProxyString(proxyHost, proxyPort);
+
+        property(ClientProperties.PROXY_URI, proxyString);
+        return this;
+    }
+
+    static String createProxyString(String proxyHost, int proxyPort) {
         boolean prependScheme = false;
         String proxyString = proxyHost + ":" + proxyPort;
+
         if (proxyString.split(":").length == 2) {
             // Check if first character is a number to account for if proxyHost is given as an IP rather than a name
             // URI.create("127.0.0.1:8765") will lead to an IllegalArgumentException
@@ -472,8 +480,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
                             + proxyString);
         }
 
-        property(ClientProperties.PROXY_URI, proxyString);
-        return this;
+        return proxyString;
     }
 
     @Override
