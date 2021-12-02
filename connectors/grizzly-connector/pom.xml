@@ -40,6 +40,16 @@
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-websockets</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>connection-pool</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
