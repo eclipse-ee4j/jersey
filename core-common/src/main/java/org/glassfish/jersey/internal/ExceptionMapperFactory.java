@@ -58,8 +58,6 @@ public class ExceptionMapperFactory implements ExceptionMappers {
 
     private static final Logger LOGGER = Logger.getLogger(ExceptionMapperFactory.class.getName());
 
-    private static final ExceptionMapper<Throwable> DEFAULT_EXCEPTION_MAPPER = new DefaultExceptionMapper();
-
     /**
      * Configurator which initializes and register {@link ExceptionMappers} instance into {@link InjectionManager} and
      * {@link BootstrapBag}.
@@ -129,7 +127,7 @@ public class ExceptionMapperFactory implements ExceptionMappers {
                 }
             }
         }
-        return mapper == null ? (ExceptionMapper<T>) DEFAULT_EXCEPTION_MAPPER : mapper;
+        return mapper;
     }
 
     /**

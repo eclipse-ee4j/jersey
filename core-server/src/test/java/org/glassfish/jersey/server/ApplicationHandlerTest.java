@@ -558,14 +558,12 @@ public class ApplicationHandlerTest {
     /**
      * Test that un-mapped response errors are tried to be processed only once (MBW).
      */
-    @Test
+    @Test(expected = ExecutionException.class)
     public void testMapCyclicResponseErrorForMbw() throws Exception {
         final ApplicationHandler handler = new ApplicationHandler(MapResponseErrorApplication.class);
 
         final ContainerRequest context = RequestContextBuilder.from("/foobar", "GET").build();
 
-        final ContainerResponse containerResponse = handler.apply(context).get();
-        assertEquals(500, containerResponse.getStatus());
-        assertEquals("Cannot do that!", containerResponse.getEntity());
+        handler.apply(context).get();
     }
 }
