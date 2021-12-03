@@ -21,6 +21,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.7</version>
+    </parent>
+
     <groupId>org.glassfish.jersey.tools.plugins</groupId>
     <artifactId>jersey-doc-modulelist-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
@@ -53,6 +59,12 @@
             <artifactId>maven-dependency-tree</artifactId>
             <version>${maven.shared.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.6.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -73,6 +85,23 @@
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
