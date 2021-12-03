@@ -370,7 +370,6 @@
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PROVIDER_DEFAULT_DISABLE'>CommonProperties.PROVIDER_DEFAULT_DISABLE</link>" >
-<!ENTITY jersey.common.internal.DefaultExceptionMapper "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/DefaultExceptionMapper.html'>DefaultExceptionMapper</link>">
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
@@ -494,6 +493,7 @@
 <!ENTITY jersey.server.ContainerLifecycleListener "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/ContainerLifecycleListener.html'>ContainerLifecycleListener</link>">
 <!ENTITY jersey.server.ContainerRequest "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ContainerRequest.html'>ContainerRequest</link>">
 <!ENTITY jersey.server.ContainerResponse "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ContainerResponse.html'>ContainerResponse</link>">
+<!ENTITY jersey.server.DefaultExceptionMapper "<link xlink:href='&jersey.javadoc.uri.prefix;/server/DefaultExceptionMapper.html'>DefaultExceptionMapper</link>">
 <!ENTITY jersey.server.ExtendedResource "<link xlink:href='&jersey.javadoc.uri.prefix;/server/model/ExtendedResource.html'>@ExtendedResource</link>">
 <!ENTITY jersey.server.HttpMethodOverrideFilter "<link xlink:href='&jersey.javadoc.uri.prefix;/server/filter/HttpMethodOverrideFilter.html'>HttpMethodOverrideFilter</link>">
 <!ENTITY jersey.server.JSONP "<link xlink:href='&jersey.javadoc.uri.prefix;/server/JSONP.html'>@JSONP</link>">
