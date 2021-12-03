@@ -307,7 +307,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         final boolean isJaxRsResource = runtimeSpecifics.isJaxRsResource(clazz);
 
         if (isJaxRsResource && !runtimeSpecifics.isAcceptableResource(clazz)) {
-            LOGGER.warning(LocalizationMessages.CDI_NON_INSTANTIABLE_COMPONENT(clazz));
+            LOGGER.log(clazz.isInterface() ? Level.FINE : Level.WARNING,
+                    LocalizationMessages.CDI_NON_INSTANTIABLE_COMPONENT(clazz));
             return false;
         }
 
