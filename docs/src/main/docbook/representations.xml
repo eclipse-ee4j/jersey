@@ -299,7 +299,7 @@ public class EntityNotFoundMapper implements ExceptionMapper&lt;jakarta.persiste
         </para>
 
         <para>
-            Since Jersey 3.1.0 the &jersey.server.DefaultExceptionMapper; is implemented.
+            Since Jersey 3.1.0 the <literal>DefaultExceptionMapper</literal> is implemented.
             It is required by JAX-RS 3.1 specification (&jaxrs31.exceptionMapperProvider;).
             The default behaviour of the mapper is to return a message from an exception caught and set the response status
             to 500 (internal server error). In case of a &jaxrs.WebApplicationException; with a response that response is returned.
