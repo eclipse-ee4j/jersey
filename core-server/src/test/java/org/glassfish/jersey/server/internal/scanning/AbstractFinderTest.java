@@ -14,19 +14,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.inject.hk2 {
+package org.glassfish.jersey.server.internal.scanning;
 
-    requires jakarta.annotation;
-    requires jakarta.inject;
-    requires java.logging;
+public abstract class AbstractFinderTest {
 
-    requires org.glassfish.hk2.api;
-    requires org.glassfish.hk2.locator;
-    requires org.glassfish.hk2.utilities;
+    String setUpJaxRsApiPath() {
+        final String classPath = System.getProperty("surefire.test.class.path");
 
-    requires org.glassfish.jersey.core.common;
+        return parseEntries(classPath);
+    }
 
-    exports org.glassfish.jersey.inject.hk2;
-    opens org.glassfish.jersey.inject.hk2;
+    private static String parseEntries(String fullPath) {
+        final String[] entries = fullPath.split(System.getProperty("path.separator"));
+        for (final String entry : entries) {
+            if (entry.contains("jakarta.ws.rs-api")) {
+                return entry;
+            }
+        }
+        return null;
+    }
 
 }

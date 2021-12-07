@@ -40,21 +40,14 @@ import static org.junit.Assert.fail;
  * @author Martin Snyder
  * @author Jason T. Greene
  */
-public class VFSSchemeResourceFinderTest {
+public class VFSSchemeResourceFinderTest extends AbstractFinderTest {
 
     private String jaxRsApiPath;
 
     @Before
     public void setUp() throws Exception {
-        final String classPath = System.getProperty("java.class.path");
-        final String[] entries = classPath.split(System.getProperty("path.separator"));
 
-        for (final String entry : entries) {
-            if (entry.contains("jakarta.ws.rs-api")) {
-                jaxRsApiPath = entry;
-                break;
-            }
-        }
+        jaxRsApiPath = setUpJaxRsApiPath();
 
         if (jaxRsApiPath == null) {
             fail("Could not find jakarta.ws.rs-api.");

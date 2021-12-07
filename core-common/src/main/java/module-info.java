@@ -25,7 +25,7 @@ module org.glassfish.jersey.core.common {
     // Filename-based auto-modules
     requires transitive jakarta.inject;
     requires org.osgi.core;
-    // requires osgi.resource.locator;
+    requires osgi.resource.locator;
 
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey.internal.config;
@@ -59,5 +59,7 @@ module org.glassfish.jersey.core.common {
     provides org.glassfish.jersey.internal.spi.AutoDiscoverable with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable;
     //provides org.osgi.framework.SynchronousBundleListener with org.glassfish.jersey.internal.OsgiRegistry;
 
-    opens org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
+    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
+    opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.internal;
 }

@@ -25,6 +25,8 @@ module org.glassfish.jersey.core.server {
     requires jakarta.inject;
     requires jakarta.validation;
 
+    requires jdk.httpserver;
+
     // jersey common modules
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.client;
@@ -33,8 +35,13 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.spi;
     exports org.glassfish.jersey.server.model;
     exports org.glassfish.jersey.server.wadl;
+    exports org.glassfish.jersey.server.wadl.config;
+    exports org.glassfish.jersey.server.wadl.processor;
     exports org.glassfish.jersey.server.filter;
     exports org.glassfish.jersey.server.monitoring;
+    exports org.glassfish.jersey.server.wadl.internal;
+    exports org.glassfish.jersey.server.internal;
+    exports org.glassfish.jersey.server.internal.inject;
 
     provides jakarta.ws.rs.core.Configuration with org.glassfish.jersey.server.ResourceConfig;
 //    provides jakarta.ws.rs.core.Configuration with org.glassfish.jersey.server.ServerConfig;
