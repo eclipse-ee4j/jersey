@@ -41,17 +41,12 @@
                 <inherited>true</inherited>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <inherited>true</inherited>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
 <!--                <inherited>false</inherited>-->
                 <executions>
                     <execution>
-                        <id>base-compile</id>
+                        <id>default-compile</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -127,10 +122,22 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+
+        <dependency>
             <!-- not to warn about missing activation -->
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
             <version>${jakarta.activation.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -160,54 +167,6 @@
     </dependencies>
 
     <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <!--
-                JDK 9 & 10 is unsupported (as well as <release>9</release>)
-                module-info for java.xml.bind is taken from JDK (lib/ct.sym/9-modules)
-                and it depends on java.activation which clashes with javax.activation
-            -->
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.annotation</groupId>
-                    <artifactId>jakarta.annotation-api</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject-api</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-compile</id>
-                                <configuration>
-                                    <!-- compile everything to ensure module-info contains right entries -->
-                                    <release>11</release>
-                                    <compilerArgs>
-                                        <arg>--add-reads</arg>
-                                        <arg>org.glassfish.jersey.client=ALL-UNNAMED</arg>
-                                        <arg>--add-opens</arg>
-                                        <arg>jakarta.inject/jakarta.inject=org.glassfish.jersey.client</arg>
-                                    </compilerArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>sonar</id>
             <build>

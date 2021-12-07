@@ -16,13 +16,15 @@
 
 module org.glassfish.jersey.client {
     //requires jakarta.ws.rs;
-    requires static jakarta.inject;
-    //requires jakarta.annotation;
+    requires org.glassfish.jersey.core.common;
+
+    requires jakarta.annotation;
 
     requires java.logging;
     //requires java.base;
 
-    requires org.glassfish.jersey.core.common;
+
+    requires jakarta.inject;
 
     exports org.glassfish.jersey.client;
     exports org.glassfish.jersey.client.authentication;

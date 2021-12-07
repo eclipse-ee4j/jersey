@@ -21,6 +21,8 @@ module org.glassfish.jersey.inject.hk2 {
     requires java.logging;
 
     requires org.glassfish.hk2.api;
+    requires org.glassfish.hk2.locator;
+    requires org.glassfish.hk2.utilities;
 
     requires org.glassfish.jersey.core.common;
 

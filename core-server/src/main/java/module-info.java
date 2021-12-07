@@ -27,6 +27,7 @@ module org.glassfish.jersey.core.server {
 
     // jersey common modules
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.client;
 
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey.server.spi;
