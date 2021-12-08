@@ -78,7 +78,6 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
-            <version>${jsonp.ri.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -86,8 +85,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jsonp-jaxrs</artifactId>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson-media</artifactId>
         </dependency>
         <dependency>
             <groupId>org.reactivestreams</groupId>
