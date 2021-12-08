@@ -278,9 +278,9 @@
                             jersey.repackaged.org.objectweb.asm.*;version=${project.version}
                         </Export-Package>
                         <Import-Package><![CDATA[
-                            jakarta.servlet.annotation.*;resolution:=optional;version="[5.0,6.0)",
-                            jakarta.servlet.descriptor.*;resolution:=optional;version="[5.0,6.0)",
-                            jakarta.servlet.*;version="[5.0,6.0)",
+                            jakarta.servlet.annotation.*;resolution:=optional;version="[5.0,7.0)",
+                            jakarta.servlet.descriptor.*;resolution:=optional;version="[5.0,7.0)",
+                            jakarta.servlet.*;version="[5.0,7.0)",
                             ${jakarta.annotation.osgi.version},
                             jakarta.persistence.*;resolution:=optional,
                             jakarta.validation.*;resolution:=optional;version="[3,4)",

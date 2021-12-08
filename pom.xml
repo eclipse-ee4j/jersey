@@ -1816,14 +1816,13 @@
                 <version>${jakarta.jsonp.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.json</artifactId>
-                <classifier>module</classifier>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
                 <version>${jsonp.ri.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jsonp-jaxrs</artifactId>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson-media</artifactId>
                 <version>${jsonp.jaxrs.version}</version>
             </dependency>
 
@@ -2141,7 +2140,7 @@
         <jakarta.annotation.version>2.0.0</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
-        <jakarta.jsonp.version>2.0.1</jakarta.jsonp.version>
+        <jakarta.jsonp.version>2.1.0</jakarta.jsonp.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.1</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
@@ -2152,8 +2151,8 @@
         <jetty.plugin.version>11.0.7</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
-        <jsonp.ri.version>2.0.1</jsonp.ri.version>
-        <jsonp.jaxrs.version>2.0.1</jsonp.jaxrs.version>
+        <jsonp.ri.version>1.0.0</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.0.0</jsonp.jaxrs.version>
         <moxy.version>3.0.2</moxy.version>
         <yasson.version>2.0.3</yasson.version>
         <!-- END of Jakartified -->
