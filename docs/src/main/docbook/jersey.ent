@@ -370,7 +370,6 @@
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PROVIDER_DEFAULT_DISABLE'>CommonProperties.PROVIDER_DEFAULT_DISABLE</link>" >
-<!ENTITY jersey.common.internal.DefaultExceptionMapper "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/DefaultExceptionMapper.html'>DefaultExceptionMapper</link>">
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
