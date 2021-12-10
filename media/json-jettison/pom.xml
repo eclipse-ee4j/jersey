@@ -53,7 +53,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-						<!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 7.x-->
+                        <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 7.x-->
                         <Import-Package>
                             jakarta.xml.bind.*;version="[3.0,5)",
                             *
