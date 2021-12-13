@@ -53,7 +53,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 7.x-->
+                        <Import-Package>
+                            jakarta.xml.bind.*;version="[3.0,5)",
+                            *
+                        </Import-Package>
+                    
                         <Export-Package>org.glassfish.jersey.jettison.*</Export-Package>
+                        
                         <!--<Import-Package>
                             com.sun.xml.bind.annotation;resolution:=optional,com.sun.xml.bind.v2.*;resolution:=optional, *
                         </Import-Package>-->
