@@ -23,6 +23,10 @@
         <!ENTITY link.jackson "<link linkend='json.jackson'>Jackson</link>" >
         <!ENTITY link.jettison "<link linkend='json.jettison'>Jettison</link>" >
         <!ENTITY link.json-b "<link linkend='json.json-b'>Java API for JSON Binding (JSON-B)</link>" >
+        <!ENTITY link.multipart.client.jersey "<link linkend='multipart.client.jersey'>Client using Jersey API</link>" >
+        <!ENTITY link.multipart.client.rest "<link linkend='multipart.client.rest'>Client using Jakarta REST API</link>" >
+        <!ENTITY link.multipart.server.jersey "<link linkend='multipart.server.jersey'>Server using Jersey API</link>" >
+        <!ENTITY link.multipart.server.rest "<link linkend='multipart.server.rest'>Server using Jakarta REST API</link>" >
 
         <!ENTITY % ents SYSTEM "jersey.ent" > %ents;
 ]>
@@ -1540,25 +1544,11 @@ final ResourceConfig config = new ResourceConfig()
                 <title>Registration</title>
 
                 <para>
-                    Before you can use capabilities of the &lit.jersey-media-multipart; module in your client/server code, you
-                    need to register &jersey.media.multipart.MultiPartFeature;.
+                    Prior to Jersey 3.1.0, before you can use the capabilities of the &lit.jersey-media-multipart;
+                    module in your client/server code, you need to register &jersey.media.multipart.MultiPartFeature;.
 
-                    <example>
-                        <title>Building client with MultiPart feature enabled.</title>
-
-                        <programlisting language="java">final Client client = ClientBuilder.newBuilder()
-    .register(MultiPartFeature.class)
-    .build();</programlisting>
-                    </example>
-
-                    <example>
-                        <title>Creating JAX-RS application with MultiPart feature enabled.</title>
-
-                        <programlisting language="java">// Create JAX-RS application.
-final Application application = new ResourceConfig()
-    .packages("org.glassfish.jersey.examples.multipart")
-    .register(MultiPartFeature.class)</programlisting>
-                    </example>
+                    The multipart feature is supported by Jakarta RESTful Web Services 3.1 multipart API. From Jersey 3.1.0 on,
+                    the &jersey.media.multipart.MultiPartFeature; is no longer required to be registered and it is registered automatically.
                 </para>
             </section>
 
@@ -1573,20 +1563,30 @@ final Application application = new ResourceConfig()
 
         <section>
             <title>Client</title>
+            <itemizedlist>
+                <listitem>
+                    <para>&link.multipart.client.jersey;</para>
+                </listitem>
+                <listitem>
+                    <para>&link.multipart.client.rest;</para>
+                </listitem>
+            </itemizedlist>
+            <section xml:id="multipart.client.jersey">
+                <title>Client using Jersey API</title>
 
-            <para>
-                &jersey.media.multipart.MultiPart; class (or it's subclasses) can be used as an entry point to use
-                &lit.jersey-media-multipart; module on the client side. This class represents a
-                <link xlink:href='&wikipedia.uri;MIME#Multipart_messages'>MIME multipart message</link> and is able
-                to hold an arbitrary number of &jersey.media.multipart.BodyPart;s. Default media type is
-                <link xlink:href='&wikipedia.uri;MIME#Mixed'>multipart/mixed</link>
-                for &lit.jersey.media.multipart.MultiPart; entity and <literal>text/plain</literal> for
-                &lit.jersey.media.multipart.BodyPart;.
+                <para>
+                    &jersey.media.multipart.MultiPart; class (or it's subclasses) can be used as an entry point to use
+                    &lit.jersey-media-multipart; module on the client side. This class represents a
+                    <link xlink:href='&wikipedia.uri;MIME#Multipart_messages'>MIME multipart message</link> and is able
+                    to hold an arbitrary number of &jersey.media.multipart.BodyPart;s. Default media type is
+                    <link xlink:href='&wikipedia.uri;MIME#Mixed'>multipart/mixed</link>
+                    for &lit.jersey.media.multipart.MultiPart; entity and <literal>text/plain</literal> for
+                    &lit.jersey.media.multipart.BodyPart;.
 
-                <example>
-                    <title>&lit.jersey.media.multipart.MultiPart; entity</title>
+                    <example>
+                        <title>&lit.jersey.media.multipart.MultiPart; entity</title>
 
-                    <programlisting language="java">final MultiPart multiPartEntity = new MultiPart()
+                        <programlisting language="java">final MultiPart multiPartEntity = new MultiPart()
         .bodyPart(new BodyPart().entity("hello"))
         .bodyPart(new BodyPart(new JaxbBean("xml"), MediaType.APPLICATION_XML_TYPE))
         .bodyPart(new BodyPart(new JaxbBean("json"), MediaType.APPLICATION_JSON_TYPE));
@@ -1595,15 +1595,15 @@ final WebTarget target = // Create WebTarget.
 final Response response = target
         .request()
         .post(Entity.entity(multiPartEntity, multiPartEntity.getMediaType()));</programlisting>
-                </example>
+                    </example>
 
-                If you send a <literal>multiPartEntity</literal> to the server the entity with <literal>Content-Type</literal>
-                header in HTTP message would look like (don't forget to register a JSON provider):
+                    If you send a <literal>multiPartEntity</literal> to the server the entity with <literal>Content-Type</literal>
+                    header in HTTP message would look like:
 
-                <example>
-                    <title>&lit.jersey.media.multipart.MultiPart; entity in HTTP message.</title>
+                    <example>
+                        <title>&lit.jersey.media.multipart.MultiPart; entity in HTTP message.</title>
 
-                    <screen language="text" linenumbering="unnumbered"><emphasis>Content-Type: multipart/mixed; boundary=Boundary_1_829077776_1369128119878</emphasis>
+                        <screen language="text" linenumbering="unnumbered"><emphasis>Content-Type: multipart/mixed; boundary=Boundary_1_829077776_1369128119878</emphasis>
 
 --Boundary_1_829077776_1369128119878
 Content-Type: text/plain
@@ -1618,34 +1618,34 @@ Content-Type: application/json
 
 {"value":"json"}
 --Boundary_1_829077776_1369128119878--</screen>
-                </example>
-            </para>
-            <para>
-                When working with forms (e.g. media type <literal>multipart/form-data</literal>) and various fields in them,
-                there is a more convenient class to be used - &jersey.media.multipart.FormDataMultiPart;. It automatically sets
-                the media type for the &lit.jersey.media.multipart.FormDataMultiPart; entity to
-                <literal>multipart/form-data</literal> and <literal>Content-Disposition</literal> header to
-                &lit.jersey.media.multipart.FormDataBodyPart; body parts.
+                    </example>
+                </para>
+                <para>
+                    When working with forms (e.g. media type <literal>multipart/form-data</literal>) and various fields in them,
+                    there is a more convenient class to be used - &jersey.media.multipart.FormDataMultiPart;. It automatically sets
+                    the media type for the &lit.jersey.media.multipart.FormDataMultiPart; entity to
+                    <literal>multipart/form-data</literal> and <literal>Content-Disposition</literal> header to
+                    &lit.jersey.media.multipart.FormDataBodyPart; body parts.
 
-                <example>
-                    <title>&lit.jersey.media.multipart.FormDataMultiPart; entity</title>
-                    <programlisting language="java">final FormDataMultiPart multipart = new FormDataMultiPart()
+                    <example>
+                        <title>&lit.jersey.media.multipart.FormDataMultiPart; entity</title>
+                        <programlisting language="java">final FormDataMultiPart multipart = new FormDataMultiPart()
     .field("hello", "hello")
     .field("xml", new JaxbBean("xml"))
     .field("json", new JaxbBean("json"), MediaType.APPLICATION_JSON_TYPE);
 
 final WebTarget target = // Create WebTarget.
 final Response response = target.request().post(Entity.entity(multipart, multipart.getMediaType()));</programlisting>
-                </example>
+                    </example>
 
-                To illustrate the difference when using &lit.jersey.media.multipart.FormDataMultiPart; instead of
-                &lit.jersey.media.multipart.FormDataBodyPart; you can take a look at the
-                &lit.jersey.media.multipart.FormDataMultiPart; entity from HTML message:
+                    To illustrate the difference when using &lit.jersey.media.multipart.FormDataMultiPart; instead of
+                    &lit.jersey.media.multipart.FormDataBodyPart; you can take a look at the
+                    &lit.jersey.media.multipart.FormDataMultiPart; entity from HTML message:
 
-                <example>
-                    <title>&lit.jersey.media.multipart.FormDataMultiPart; entity in HTTP message.</title>
+                    <example>
+                        <title>&lit.jersey.media.multipart.FormDataMultiPart; entity in HTTP message.</title>
 
-                    <screen language="text" linenumbering="unnumbered"><emphasis>Content-Type: multipart/form-data; boundary=Boundary_1_511262261_1369143433608</emphasis>
+                        <screen language="text" linenumbering="unnumbered"><emphasis>Content-Type: multipart/form-data; boundary=Boundary_1_511262261_1369143433608</emphasis>
 
 --Boundary_1_511262261_1369143433608
 Content-Type: text/plain
@@ -1663,17 +1663,17 @@ Content-Disposition: form-data; name="json"
 
 {"value":"json"}
 --Boundary_1_511262261_1369143433608--</screen>
-                </example>
-            </para>
-            <para>
-                A common use-case for many users is sending files from client to server. For this purpose you can use classes from
-                <literal>org.glassfish.jersey.jersey.media.multipart</literal> package, such as
-                &jersey.media.multipart.FileDataBodyPart; or &jersey.media.multipart.StreamDataBodyPart;.
+                    </example>
+                </para>
+                <para>
+                    A common use-case for many users is sending files from client to server. For this purpose you can use classes from
+                    <literal>org.glassfish.jersey.jersey.media.multipart</literal> package, such as
+                    &jersey.media.multipart.FileDataBodyPart; or &jersey.media.multipart.StreamDataBodyPart;.
 
-                <example>
-                    <title>Multipart - sending files.</title>
+                    <example>
+                        <title>Multipart - sending files.</title>
 
-                    <programlisting language="java">// MediaType of the body part will be derived from the file.
+                        <programlisting language="java">// MediaType of the body part will be derived from the file.
 final FileDataBodyPart filePart = new FileDataBodyPart("my_pom", new File("pom.xml"));
 
 final FormDataMultiPart multipart = new FormDataMultiPart()
@@ -1683,19 +1683,76 @@ final FormDataMultiPart multipart = new FormDataMultiPart()
 final WebTarget target = // Create WebTarget.
 final Response response = target.request()
     .post(Entity.entity(multipart, multipart.getMediaType()));</programlisting>
-                </example>
-            </para>
-            <warning>
-                <para>
-                    Do not use &lit.jersey.apache.ApacheConnectorProvider; nor &lit.jersey.grizzly.GrizzlyConnectorProvider;
-                    neither &lit.jersey.jetty.JettyConnectorProvider; connector implementations with Jersey Multipart
-                    features. See <xref linkend="connectors.warning"/> warning for more details.
+                    </example>
                 </para>
-            </warning>
+                <warning>
+                    <para>
+                        Do not use &lit.jersey.apache.ApacheConnectorProvider; nor &lit.jersey.grizzly.GrizzlyConnectorProvider;
+                        neither &lit.jersey.jetty.JettyConnectorProvider; connector implementations with Jersey Multipart
+                        features. See <xref linkend="connectors.warning"/> warning for more details.
+                    </para>
+                </warning>
+            </section>
+
+            <section xml:id="multipart.client.rest">
+                <title>Client using Jakarta REST API</title>
+
+                <para>
+                &jaxrs.core.EntityPart; interface can be used as an entry point to use
+                &lit.jersey-media-multipart; module on the client side. This class represents multipart message is able
+                to hold an arbitrary number of &jaxrs.core.EntityPart;s. Default media type is
+                <link xlink:href='&wikipedia.uri;MIME#Mixed'>multipart/form-data</link>.
+
+                <example>
+                    <title>Using <literal>EntityPart.Builder</literal> for building an Entity</title>
+
+                    <programlisting language="java">
+final List&lt;EntityPart&gt; multiPartEntity = new List&lt;&gt;();
+list.add(EntityPart.withName("part-01").content("hello").build());
+list.add(EntityPart.withName("part-01").content(new JaxbBean("xml")).mediaType(MediaType.APPLICATION_XML_TYPE).build()); //same name
+list.add(EntityPart.withName("part-02").content(new JaxbBean("json")).mediaType(MediaType.APPLICATION_JSON_TYPE).build()); //other name
+final GenericEntity&lt;List&lt;EntityPart&gt;&gt; genericEntity = new GenericEntity&lt;&gt;(list) {};
+final Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
+
+final WebTarget target = // Create WebTarget.
+final Response response = target.request().post(entity);
+                    </programlisting>
+                </example>
+                </para>
+                <para>
+                    The common use-case for many users is sending files from client to server. It is also covered by
+                    &jaxrs.core.EntityPart;.Builder.
+                    <example>
+                        <title>EntityPart - sending files.</title>
+
+                        <programlisting language="java">// MediaType of the body part will be derived from the file.
+final List&lt;EntityPart&gt; multiPartEntity = new List&lt;&gt;();
+list.add(EntityPart.withFileName("file001.txt").content(new FileInputStream("file001.txt")).build());
+list.add(EntityPart.withFileName("mypom.xml").content(new FileInputStream("pom.xml")).build());
+
+final GenericEntity&lt;List&lt;EntityPart&gt;&gt; genericEntity = new GenericEntity&lt;&gt;(list) {};
+final Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
+
+final WebTarget target = // Create WebTarget.
+final Response response = target.request().post(entity);
+                        </programlisting>
+                    </example>
+                </para>
+            </section>
         </section>
 
         <section>
             <title>Server</title>
+            <itemizedlist>
+                <listitem>
+                    <para>&link.multipart.server.jersey;</para>
+                </listitem>
+                <listitem>
+                    <para>&link.multipart.server.rest;</para>
+                </listitem>
+            </itemizedlist>
+            <section xml:id="multipart.server.jersey">
+            <title>Jersey Server API</title>
 
             <para>
                 Returning a multipart response from server to client is not much different from the parts described in the client
@@ -1852,5 +1909,60 @@ public String postForm(
                 </tip>
             </section>
         </section>
+        <section xml:id="multipart.server.rest">
+                <title>Server using Jakarta REST API</title>
+                <para>
+                    Using &jaxrs.core.EntityPart; on the server side is similar to the client side.
+                    Jakarta REST specification allows for
+                    returning a &lit.jaxrs.core.Response; or a &lit.jdk6.List; of &lit.jaxrs.core.EntityPart;s.
+                </para>
+                <para>
+                    Receiving the &jaxrs.core.EntityPart;s can be done either using &lit.jaxrs.FormParam; annotations and
+                    &lit.jaxrs.core.EntityPart;, &lit.jdk6.InputStream; or &lit.jdk6.String; data-types, or using a
+                    &lit.jdk6.List; of &lit.jaxrs.core.EntityPart;s.
+                </para>
+
+                <example>
+                <title>Use of &lit.jaxrs.FormParam; annotation with &lit.jaxrs.core.EntityPart; &lit.jdk6.InputStream;
+                    and &lit.jdk6.String; types and returning a &lit.jaxrs.core.Response;</title>
+                <programlisting language="java">@POST
+@Path("/postFormVarious")
+public Response postFormVarious(@FormParam("name1") EntityPart part1,
+                @FormParam("name2") InputStream part2,
+                @FormParam("name3") String part3) throws IOException {
+    final List&lt;EntityPart&gt; list = new LinkedList&lt;&gt;();
+    list.add(EntityPart.withName(part1.getName())
+        .content(part1.getContent(String.class) + new String(part2.readAllBytes()) + part3)
+        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+        .build());
+    final GenericEntity&lt;List&lt;EntityPart&gt;&gt; genericEntity = new GenericEntity&lt;&gt;(list) {};
+    return Response.ok(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE).build();
+}
+            </programlisting>
+            </example>
+            <example>
+                <title>Receiving a &lit.jdk6.List; of &lit.jaxrs.core.EntityPart;s</title>
+                <programlisting language="java">@POST
+@Path("/postListForm")
+public String postEntityPartForm(@FormParam("part-0x") List&lt;EntityPart&gt; part) throws IOException {
+    final String entity = part.get(0).getContent(String.class) + part.get(1).getContent(String.class);
+    return entity;
+}
+                </programlisting>
+            </example>
+            <example>
+                <title>Returning a &lit.jdk6.List; of &lit.jaxrs.core.EntityPart;s</title>
+                <programlisting language="java">@GET
+@Produces(MediaType.MULTIPART_FORM_DATA)
+@Path("/getList")
+public List&lt;EntityPart&gt; getList() throws IOException {
+    final List&lt;EntityPart&gt; list = new LinkedList&lt;&gt;();
+    list.add(EntityPart.withName("name1").content("data1").build());
+    return list;
+}
+                </programlisting>
+            </example>
+        </section>
+    </section>
     </section>
 </chapter>

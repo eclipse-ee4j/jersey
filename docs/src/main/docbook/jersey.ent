@@ -215,6 +215,7 @@
 <!ENTITY jaxrs.core.Configuration "<link xlink:href='&jaxrs.javadoc.uri;/core/Configuration.html'>Configuration</link>">
 <!ENTITY jaxrs.core.Context "<link xlink:href='&jaxrs.javadoc.uri;/core/Context.html'>@Context</link>">
 <!ENTITY jaxrs.core.Cookie "<link xlink:href='&jaxrs.javadoc.uri;/core/Cookie.html'>Cookie</link>">
+<!ENTITY jaxrs.core.EntityPart "<link xlink:href='&jaxrs.javadoc.uri;/core/EntityPart.html'>EntityPart</link>">
 <!ENTITY jaxrs.core.EntityTag "<link xlink:href='&jaxrs.javadoc.uri;/core/EntityTag.html'>EntityTag</link>">
 <!ENTITY jaxrs.core.Feature "<link xlink:href='&jaxrs.javadoc.uri;/core/Feature.html'>Feature</link>">
 <!ENTITY jaxrs.core.Form "<link xlink:href='&jaxrs.javadoc.uri;/core/Form.html'>Form</link>">
@@ -761,6 +762,7 @@
 <!ENTITY lit.jaxrs.core.Context "<literal>@Context</literal>">
 <!ENTITY lit.jaxrs.core.Cookie "<literal>Cookie</literal>">
 <!ENTITY lit.jaxrs.core.EntityTag "<literal>EntityTag</literal>">
+<!ENTITY lit.jaxrs.core.EntityPart "<literal>EntityPart</literal>">
 <!ENTITY lit.jaxrs.core.Feature "<literal>Feature</literal>">
 <!ENTITY lit.jaxrs.core.Form "<literal>Form</literal>">
 <!ENTITY lit.jaxrs.core.GenericEntity "<literal>GenericEntity&lt;T&gt;</literal>">
@@ -806,6 +808,7 @@
 <!ENTITY lit.jdk6.InputStream "<literal>InputStream</literal>">
 <!ENTITY lit.jdk6.JAXBElement "<literal>JAXBElement</literal>">
 <!ENTITY lit.jdk6.KeyStore "<literal>KeyStore</literal>">
+<!ENTITY lit.jdk6.List "<literal>List</literal>">
 <!ENTITY lit.jdk6.Number "<literal>Number</literal>">
 <!ENTITY lit.jdk6.ObjectName "<literal>ObjectName</literal>">
 <!ENTITY lit.jdk6.ParameterizedType "<literal>ParameterizedType</literal>">
