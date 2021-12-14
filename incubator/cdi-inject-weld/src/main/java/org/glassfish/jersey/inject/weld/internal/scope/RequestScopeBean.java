@@ -30,6 +30,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.InjectionTargetFactory;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Singleton;
 
@@ -49,7 +50,8 @@ public class RequestScopeBean implements Bean<CdiRequestScope> {
      */
     public RequestScopeBean(BeanManager beanManager) {
         AnnotatedType<CdiRequestScope> annotatedType = beanManager.createAnnotatedType(CdiRequestScope.class);
-        this.injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<CdiRequestScope> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        this.injectionTarget = injectionTargetFactory.createInjectionTarget(null);
     }
 
     @Override
