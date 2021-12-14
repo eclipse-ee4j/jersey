@@ -28,6 +28,7 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.InjectionTargetFactory;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.RuntimeType;
@@ -105,7 +106,8 @@ public abstract class BeanHelper {
     public static <T> BindingBeanPair registerBean(RuntimeType runtimeType, ClassBinding<T> binding, AfterBeanDiscovery abd,
                                                    Collection<InjectionResolver> resolvers, BeanManager beanManager) {
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(binding.getService());
-        InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget<T> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         ClassBean<T> bean = new ClassBean<>(runtimeType, binding);
         bean.setInjectionTarget(getJerseyInjectionTarget(binding.getService(), injectionTarget, bean, resolvers));
