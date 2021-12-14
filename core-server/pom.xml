@@ -157,7 +157,6 @@
                     <forkCount>0</forkCount>
                     <reuseForks>true</reuseForks>
                     <systemPropertiesFile>${project.basedir}/etc/systemPropertiesFile</systemPropertiesFile>
-                    <argLine>--add-reads jakarta.ws.rs=ALL-UNNAMED --add-reads org.glassfish.jersey.inject.hk2=ALL-UNNAMED --add-opens java.base=ALL-UNNAMED --add-opens org.glassfish.jersey.inject.hk2=ALL-UNNAMED --add-opens org.glassfish.jersey.core.common=ALL-UNNAMED --illegal-access=permit</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -165,7 +164,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-compile</id>
+<!--                        <id>default-compile</id>-->
                         <configuration>
                             <!-- compile everything to ensure module-info contains right entries -->
                             <release>11</release>

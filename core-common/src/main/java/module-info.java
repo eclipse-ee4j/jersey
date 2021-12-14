@@ -50,6 +50,10 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.uri;
     exports org.glassfish.jersey.uri.internal;
     exports org.glassfish.jersey;
+    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
+
+    opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.internal;
 
     uses org.glassfish.jersey.internal.inject.InjectionManagerFactory;
     uses org.glassfish.jersey.internal.spi.AutoDiscoverable;
@@ -59,7 +63,4 @@ module org.glassfish.jersey.core.common {
     provides org.glassfish.jersey.internal.spi.AutoDiscoverable with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable;
     //provides org.osgi.framework.SynchronousBundleListener with org.glassfish.jersey.internal.OsgiRegistry;
 
-    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
-    opens org.glassfish.jersey.message.internal;
-    opens org.glassfish.jersey.internal;
 }
