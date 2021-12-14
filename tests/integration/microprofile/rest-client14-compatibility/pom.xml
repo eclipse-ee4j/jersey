@@ -60,7 +60,7 @@
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-api</artifactId>
             <!-- specifically this version we check with the backward compatibility -->
-            <version>1.4.1</version>
+            <version>${microprofile.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
