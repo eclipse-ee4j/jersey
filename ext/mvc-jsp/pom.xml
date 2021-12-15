@@ -54,7 +54,7 @@
                     <instructions>
                         <Import-Package>
                             jakarta.servlet.jsp.*;version="[3.0,4.0)",
-                            jakarta.servlet.*;version="!",
+                            jakarta.servlet.*;version="[5.0,7.0)",
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.jsp.*;version=${project.version}</Export-Package>
