@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +35,7 @@ import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
@@ -69,7 +70,10 @@ public class CdiExternalRequestScopeExtension implements Extension {
     private void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
         // we need the injection target so that CDI could instantiate the original interceptor for us
-        final InjectionTarget<CdiExternalRequestScope> interceptorTarget = beanManager.createInjectionTarget(requestScopeType);
+        final InjectionTargetFactory<CdiExternalRequestScope> injectionTargetFactory =
+                beanManager.getInjectionTargetFactory(requestScopeType);
+        final InjectionTarget<CdiExternalRequestScope> interceptorTarget =
+                injectionTargetFactory.createInjectionTarget(null);
 
 
         afterBeanDiscovery.addBean(new Bean<CdiExternalRequestScope>() {

@@ -29,6 +29,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.inject.spi.Unmanaged;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
@@ -295,10 +296,12 @@ public class CdiInjectionManager implements InjectionManager {
     @Override
     @SuppressWarnings("unchecked")
     public void inject(Object instance) {
+        CreationalContext creationalContext = createCreationalContext(null);
         AnnotatedType annotatedType = beanManager.createAnnotatedType((Class) instance.getClass());
-        InjectionTarget injectionTarget = beanManager.createInjectionTarget(annotatedType);
-        CreationalContext context = createCreationalContext(null);
-        injectionTarget.inject(instance, context);
+        InjectionTargetFactory injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget injectionTarget = injectionTargetFactory.createInjectionTarget(null);
+
+        injectionTarget.inject(instance, creationalContext);
     }
 
     @Override

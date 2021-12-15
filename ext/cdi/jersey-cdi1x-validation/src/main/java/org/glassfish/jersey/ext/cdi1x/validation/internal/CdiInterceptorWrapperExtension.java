@@ -37,6 +37,7 @@ import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.interceptor.Interceptor;
 
@@ -100,7 +101,10 @@ public class CdiInterceptorWrapperExtension implements Extension {
 
         // we need the injection target so that CDI could instantiate the original interceptor for us
         final AnnotatedType<ValidationInterceptor> interceptorType = interceptorAnnotatedType;
-        final InjectionTarget<ValidationInterceptor> interceptorTarget = beanManager.createInjectionTarget(interceptorType);
+        final InjectionTargetFactory<ValidationInterceptor> injectionTargetFactory =
+                beanManager.getInjectionTargetFactory(interceptorType);
+        final InjectionTarget<ValidationInterceptor> interceptorTarget =
+                injectionTargetFactory.createInjectionTarget(null);
 
 
         afterBeanDiscovery.addBean(new Bean<ValidationInterceptor>() {
