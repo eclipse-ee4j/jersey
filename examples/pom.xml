@@ -56,7 +56,6 @@
         <!--<module>bean-validation-webapp</module>-->
         <module>bookmark</module>
         <module>bookmark-em</module>
-        <module>library-mp-rest-client</module>
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
@@ -96,6 +95,7 @@
         <module>json-moxy</module>
         <module>json-processing-webapp</module>
         <module>json-with-padding</module>
+        <module>library-mp-rest-client</module>
         <module>managed-beans-webapp</module>
         <module>managed-client</module>
         <module>managed-client-webapp</module>
