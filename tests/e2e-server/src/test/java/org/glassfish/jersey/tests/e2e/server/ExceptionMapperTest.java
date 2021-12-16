@@ -137,6 +137,13 @@ public class ExceptionMapperTest extends JerseyTest {
         assertEquals(500, res.getStatus());
     }
 
+    @Test
+    public void testDefaultExceptionMapper() {
+        Response res = target().path("test/defaultExceptionMapper")
+                .request("test/test").get();
+        assertEquals(200, res.getStatus());
+    }
+
     @Path("test")
     public static class Resource {
 
@@ -173,6 +180,14 @@ public class ExceptionMapperTest extends JerseyTest {
             throw new Throwable("throwable",
                     new RuntimeException("runtime-exception",
                             new ClientErrorException("client-error", 499)));
+        }
+
+        @GET
+        @Path("defaultExceptionMapper")
+        public Response isRegisteredDefaultExceptionTest(@Context Providers providers) {
+            ExceptionMapper<Throwable> em = providers
+                    .getExceptionMapper(Throwable.class);
+            return Response.status((em == null) ? 500 : 200).build();
         }
     }
 

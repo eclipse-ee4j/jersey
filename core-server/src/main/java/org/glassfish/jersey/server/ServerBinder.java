@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.server;
 
+import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
@@ -44,5 +45,8 @@ class ServerBinder extends AbstractBinder {
 
         // JSONP
         bind(JsonWithPaddingInterceptor.class).to(WriterInterceptor.class).in(Singleton.class);
+
+        //Default exception mapper
+        bind(DefaultExceptionMapper.class).to(ExceptionMapper.class).in(Singleton.class);
     }
 }
