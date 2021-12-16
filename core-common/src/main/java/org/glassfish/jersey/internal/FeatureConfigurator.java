@@ -22,8 +22,9 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.Feature;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Registers JAX-RS {@link Feature} which are listed as SPIs for registration.
@@ -44,7 +45,8 @@ public class FeatureConfigurator extends AbstractFeatureConfigurator<Feature> {
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         final Map<String, Object> properties = bootstrapBag.getConfiguration().getProperties();
         if (PropertiesHelper.isJaxRsServiceLoadingEnabled(properties)) {
-            final List<Class<Feature>> features = loadImplementations(properties);
+            final Set<Class<Feature>> features = new HashSet<>();
+            features.addAll(loadImplementations(properties));
             features.addAll(loadImplementations(properties, Feature.class.getClassLoader()));
 
             registerFeatures(features, bootstrapBag);
