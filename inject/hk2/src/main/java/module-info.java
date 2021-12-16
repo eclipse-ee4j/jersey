@@ -16,8 +16,8 @@
 
 module org.glassfish.jersey.inject.hk2 {
 
-    requires jakarta.annotation;
-    requires jakarta.inject;
+    requires transitive jakarta.annotation;
+    requires transitive jakarta.inject;
     requires java.logging;
 
     requires org.glassfish.hk2.api;
