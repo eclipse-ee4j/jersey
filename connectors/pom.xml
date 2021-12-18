@@ -39,6 +39,7 @@
         <module>jdk-connector</module>
         <module>jetty-connector</module>
         <module>netty-connector</module>
+        <module>java-connector</module>
     </modules>
 
     <dependencies>
