@@ -544,7 +544,10 @@ public class ServerRuntime {
 
                     final long timestamp = tracingLogger.timestamp(ServerTraceEvent.EXCEPTION_MAPPING);
                     final ExceptionMapper mapper = runtime.exceptionMappers.findMapping(throwable);
-                    if (mapper != null) {
+                    if (mapper != null
+                            && !DefaultExceptionMapper.class.getName()
+                            .equals(mapper.getClass().getName())
+                    ) {
                         return processExceptionWithMapper(mapper, throwable, timestamp);
                     }
                     if (waeResponse != null) {
