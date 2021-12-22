@@ -83,5 +83,27 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.jersey.microprofile.config.*;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            org.eclipse.microprofile.config.*;version="!",
+                            *
+                        </Import-Package>
+                    </instructions>
+                    <unpackBundle>true</unpackBundle>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
