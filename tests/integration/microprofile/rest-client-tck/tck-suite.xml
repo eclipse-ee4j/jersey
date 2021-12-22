@@ -31,12 +31,6 @@
                     <exclude name="testProxy"></exclude>
                 </methods>
             </class>
-            <class name="org.eclipse.microprofile.rest.client.tck.cditests.CDIInterceptorTest">
-                <methods>
-                    <!--https://github.com/eclipse/microprofile-rest-client/pull/336-->
-                    <exclude name="testInterceptorNotInvokedWhenNoAnnotationApplied"></exclude>
-                </methods>
-            </class>
         </classes>
     </test>
 
