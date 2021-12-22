@@ -91,6 +91,8 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
                             ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>

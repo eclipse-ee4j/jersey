@@ -118,6 +118,8 @@
                             org.glassfish.jersey.restclient.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>
                     </instructions>

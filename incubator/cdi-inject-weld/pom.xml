@@ -124,6 +124,8 @@
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
                             ${jakarta.annotation.osgi.version},
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>
                     </instructions>
