@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,6 +52,7 @@ public class PostInvocationInterceptorTest {
     @Test
     public void testSyncNoConnectionPostInvocationInterceptor() {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new ProcessingExceptionFilter())
                 .register(new CounterPostInvocationInterceptor((a, b) -> false, (a, b) -> true))
                 .build().target(URL).request();
         try (Response r = builder.get()) {
@@ -198,6 +199,7 @@ public class PostInvocationInterceptorTest {
     @Test
     public void testPostOnExceptionWhenNoThrowableAndNoResponseContext() {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new ProcessingExceptionFilter())
                 .register(new CounterPostInvocationInterceptor(
                                   (a, b) -> false,
                                   (a, b) -> {
@@ -224,6 +226,7 @@ public class PostInvocationInterceptorTest {
     @Test
     public void testAsyncNoConnectionPostInvocationInterceptor() throws InterruptedException {
         final Invocation.Builder builder = ClientBuilder.newBuilder()
+                .register(new ProcessingExceptionFilter())
                 .register(new CounterPostInvocationInterceptor((a, b) -> false, (a, b) -> true))
                 .build().target(URL).request();
         try (Response r = builder.async().get(new TestInvocationCallback(a -> false, a -> true)).get()) {
@@ -262,6 +265,17 @@ public class PostInvocationInterceptorTest {
                 Assert.assertEquals(200, response.getStatus());
                 Assert.assertEquals(i, counter.get());
             }
+        }
+    }
+
+    private static class ProcessingExceptionFilter implements ClientRequestFilter {
+
+        @Override
+        public void filter(ClientRequestContext requestContext) throws IOException {
+            throw new ProcessingException(
+                    "new ClientResponse((ClientRequest) requestContext, Response.status(400).build())",
+                    new ConnectException()
+            );
         }
     }
 
