@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>3.0-RC3</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
