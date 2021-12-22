@@ -86,6 +86,11 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.servlet.internal</Export-Package>
+                        <Import-Package>
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

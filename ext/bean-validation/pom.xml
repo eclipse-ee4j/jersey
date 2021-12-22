@@ -58,6 +58,8 @@
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             jakarta.validation.*;resolution:=optional;version="[3,4)",
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>
                     </instructions>
