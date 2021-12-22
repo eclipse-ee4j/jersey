@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-api</artifactId>
-            <version>3.0-RC3</version>
+            <version>3.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.testng</groupId>
@@ -116,9 +116,12 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.restclient.*;version=${project.version}
+                            org.glassfish.jersey.microprofile.restclient.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            jakarta.enterprise.*;version="[3.0,5)",
+                            jakarta.decorator.*;version="[3.0,5)",
+                            org.eclipse.microprofile.config.*;version="!",
                             *
                         </Import-Package>
                     </instructions>
