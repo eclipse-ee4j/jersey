@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,7 +56,9 @@ import javax.ws.rs.core.GenericType;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.OsgiRegistry;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
-
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -1469,6 +1471,17 @@ public final class ReflectionHelper {
 
     private static final Class<?> bundleReferenceClass = AccessController.doPrivileged(
             classForNamePA("org.osgi.framework.BundleReference", null));
+    private static final LazyValue<Object> osgiInstance = Values.lazy((Value<Object>) () -> {
+        try {
+            if (bundleReferenceClass != null) {
+                return OsgiRegistry.getInstance();
+            }
+        } catch (final Throwable e) {
+            // Do nothing - instance is null.
+        }
+
+        return null;
+    });
 
     /**
      * Returns an {@link OsgiRegistry} instance.
@@ -1476,15 +1489,7 @@ public final class ReflectionHelper {
      * @return an {@link OsgiRegistry} instance or {@code null} if the class cannot be instantiated (not in OSGi environment).
      */
     public static OsgiRegistry getOsgiRegistryInstance() {
-        try {
-            if (bundleReferenceClass != null) {
-                return OsgiRegistry.getInstance();
-            }
-        } catch (final Exception e) {
-            // Do nothing - instance is null.
-        }
-
-        return null;
+        return (OsgiRegistry) osgiInstance.get();
     }
 
     /**
