@@ -14,21 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.inject.hk2 {
-
-    requires jakarta.annotation;
-    requires jakarta.inject;
+module org.glassfish.jersey.media.jaxb {
     requires java.logging;
-
-    requires org.glassfish.hk2.api;
-    requires org.glassfish.hk2.locator;
-    requires org.glassfish.hk2.utilities;
-
+    requires jakarta.ws.rs;
+    requires jakarta.xml.bind;
     requires org.glassfish.jersey.core.common;
 
-    exports org.glassfish.jersey.inject.hk2;
-    opens org.glassfish.jersey.inject.hk2;
+    opens org.glassfish.jersey.jaxb.internal;
 
-    provides org.glassfish.jersey.internal.inject.InjectionManagerFactory
-            with org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
+    exports org.glassfish.jersey.jaxb;
+    exports org.glassfish.jersey.jaxb.internal;
+
+    provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable
+            with org.glassfish.jersey.jaxb.internal.JaxbAutoDiscoverable;
 }

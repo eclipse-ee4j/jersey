@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,28 +16,30 @@
 
 module org.glassfish.jersey.core.common {
     requires transitive jakarta.ws.rs;
+    requires transitive jakarta.inject;
     requires static jakarta.xml.bind;
-    requires java.logging;
+    requires static jakarta.activation;
     requires jakarta.annotation;
+    requires java.logging;
     requires java.desktop;
-    requires jakarta.activation;
 
     // Filename-based auto-modules
-    requires transitive jakarta.inject;
-    requires org.osgi.core;
+    requires static org.osgi.core;
     requires osgi.resource.locator;
 
     // Exports rather all, which corresponds to previous state without module-info
+    exports org.glassfish.jersey;
+    exports org.glassfish.jersey.internal;
     exports org.glassfish.jersey.internal.config;
     exports org.glassfish.jersey.internal.guava;
     exports org.glassfish.jersey.internal.inject;
+    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
     exports org.glassfish.jersey.internal.l10n;
     exports org.glassfish.jersey.internal.sonar;
     exports org.glassfish.jersey.internal.spi;
     exports org.glassfish.jersey.internal.routing;
     exports org.glassfish.jersey.internal.util;
     exports org.glassfish.jersey.internal.util.collection;
-    exports org.glassfish.jersey.internal;
     exports org.glassfish.jersey.logging;
     exports org.glassfish.jersey.message;
     exports org.glassfish.jersey.message.internal;
@@ -49,18 +51,27 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.spi;
     exports org.glassfish.jersey.uri;
     exports org.glassfish.jersey.uri.internal;
-    exports org.glassfish.jersey;
-    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
 
-    opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
+    opens org.glassfish.jersey.message.internal;
 
+    uses jakarta.ws.rs.core.Feature;
+    uses jakarta.ws.rs.container.DynamicFeature;
+    uses jakarta.ws.rs.ext.RuntimeDelegate;
+
+    uses org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
+    uses org.glassfish.jersey.internal.ServiceFinder;
     uses org.glassfish.jersey.internal.inject.InjectionManagerFactory;
     uses org.glassfish.jersey.internal.spi.AutoDiscoverable;
     uses org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
+    uses org.glassfish.jersey.model.internal.spi.ParameterServiceProvider;
+    uses org.glassfish.jersey.spi.HeaderDelegateProvider;
+    uses org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
-    provides jakarta.ws.rs.ext.RuntimeDelegate with org.glassfish.jersey.internal.RuntimeDelegateImpl;
-    provides org.glassfish.jersey.internal.spi.AutoDiscoverable with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable;
-    //provides org.osgi.framework.SynchronousBundleListener with org.glassfish.jersey.internal.OsgiRegistry;
-
+    provides jakarta.ws.rs.ext.RuntimeDelegate
+            with org.glassfish.jersey.internal.RuntimeDelegateImpl;
+    provides org.glassfish.jersey.internal.spi.AutoDiscoverable
+            with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable,
+                    org.glassfish.jersey.internal.config.ExternalPropertiesAutoDiscoverable;
 }
