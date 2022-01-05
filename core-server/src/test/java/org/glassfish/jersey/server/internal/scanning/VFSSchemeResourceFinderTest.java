@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,24 @@ public class VFSSchemeResourceFinderTest extends AbstractFinderTest {
 
     @Before
     public void setUp() throws Exception {
+        final String separator = System.getProperty("path.separator");
+        final String oldClassPath = System.getProperty("java.class.path");
+        final String sureFireClassPath = System.getProperty("surefire.test.class.path");
+        final String modulePath = System.getProperty("jdk.module.path");
+        final StringBuilder classPath = new StringBuilder();
+        if (oldClassPath != null) {
+            classPath.append(oldClassPath);
+            classPath.append(separator);
+        }
+        if (sureFireClassPath != null) {
+            classPath.append(sureFireClassPath);
+            classPath.append(separator);
+        }
+        if (modulePath != null) {
+            classPath.append(modulePath);
+        }
+
+        final String[] entries = classPath.toString().split(separator);
 
         jaxRsApiPath = setUpJaxRsApiPath();
 
