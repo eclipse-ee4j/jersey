@@ -1,1 +1,2 @@
 org.glassfish.jersey.server.AutoDiscoverableServerTest$CommonAutoDiscoverable
+org.glassfish.jersey.server.filter.internal.ServerFiltersAutoDiscoverable

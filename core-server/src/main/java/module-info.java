@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,18 +34,44 @@ module org.glassfish.jersey.core.server {
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey.server;
     exports org.glassfish.jersey.server.spi;
-    exports org.glassfish.jersey.server.spi.internal;
     exports org.glassfish.jersey.server.model;
     exports org.glassfish.jersey.server.wadl;
     exports org.glassfish.jersey.server.wadl.config;
     exports org.glassfish.jersey.server.wadl.processor;
     exports org.glassfish.jersey.server.filter;
+    exports org.glassfish.jersey.server.filter.internal;
     exports org.glassfish.jersey.server.monitoring;
     exports org.glassfish.jersey.server.wadl.internal;
     exports org.glassfish.jersey.server.internal;
     exports org.glassfish.jersey.server.internal.inject;
+    exports org.glassfish.jersey.server.internal.monitoring;
+    exports org.glassfish.jersey.server.internal.process;
 
-    provides jakarta.ws.rs.core.Configuration with org.glassfish.jersey.server.ResourceConfig;
-//    provides jakarta.ws.rs.core.Configuration with org.glassfish.jersey.server.ServerConfig;
+    uses org.glassfish.jersey.server.spi.ComponentProvider;
+    uses org.glassfish.jersey.server.spi.ExternalRequestScope;
+    uses org.glassfish.jersey.server.spi.WebServerProvider;
 
+    opens com.sun.research.ws.wadl to jakarta.xml.bind;
+
+    opens org.glassfish.jersey.server;
+    opens org.glassfish.jersey.server.filter;
+    opens org.glassfish.jersey.server.filter.internal;
+    opens org.glassfish.jersey.server.internal;
+    opens org.glassfish.jersey.server.internal.inject;
+    opens org.glassfish.jersey.server.internal.monitoring;
+    opens org.glassfish.jersey.server.internal.monitoring.jmx;
+    opens org.glassfish.jersey.server.internal.process;
+    opens org.glassfish.jersey.server.internal.routing;
+    opens org.glassfish.jersey.server.model;
+    opens org.glassfish.jersey.server.wadl.processor;
+
+    provides jakarta.ws.rs.ext.RuntimeDelegate
+            with org.glassfish.jersey.server.internal.RuntimeDelegateImpl;
+    provides org.glassfish.jersey.internal.spi.AutoDiscoverable
+            with org.glassfish.jersey.server.filter.internal.ServerFiltersAutoDiscoverable;
+    provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable
+            with org.glassfish.jersey.server.wadl.internal.WadlAutoDiscoverable,
+                    org.glassfish.jersey.server.internal.monitoring.MonitoringAutodiscoverable;
+    provides org.glassfish.jersey.model.internal.spi.ParameterServiceProvider
+            with org.glassfish.jersey.server.model.Parameter.ServerParameterService;
 }

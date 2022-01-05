@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,16 +15,11 @@
  */
 
 module org.glassfish.jersey.client {
-    //requires jakarta.ws.rs;
-    requires org.glassfish.jersey.core.common;
-
     requires jakarta.annotation;
-
-    requires java.logging;
-    //requires java.base;
-
-
     requires jakarta.inject;
+    requires java.logging;
+
+    requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.client;
     exports org.glassfish.jersey.client.authentication;
@@ -33,6 +28,17 @@ module org.glassfish.jersey.client {
     exports org.glassfish.jersey.client.inject;
     exports org.glassfish.jersey.client.spi;
 
-    provides jakarta.ws.rs.client.ClientBuilder with
-            org.glassfish.jersey.client.JerseyClientBuilder;
+    opens org.glassfish.jersey.client;
+    opens org.glassfish.jersey.client.spi;
+    opens org.glassfish.jersey.client.filter;
+
+    // for Localization messages
+    opens org.glassfish.jersey.client.internal;
+    opens org.glassfish.jersey.client.internal.jdkconnector;
+
+    uses org.glassfish.jersey.client.spi.DefaultSslContextProvider;
+    uses org.glassfish.jersey.spi.ComponentProvider;
+
+    provides jakarta.ws.rs.client.ClientBuilder
+            with org.glassfish.jersey.client.JerseyClientBuilder;
 }
