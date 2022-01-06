@@ -54,6 +54,7 @@ public interface PropertiesDelegate {
      * @return {@code true} if a property matching the given name exists, or
      *         {@code false} otherwise.
      * @see #getProperty
+     * @since 3.1.0
      */
     public default boolean hasProperty(String name) {
         return getProperty(name) != null;
