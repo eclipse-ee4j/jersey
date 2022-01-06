@@ -104,6 +104,13 @@ public class ClientConfigTest {
     }
 
     @Test
+    public void testHasProperty() {
+        ClientConfig instance = new ClientConfig().property("name", "value");
+        assertTrue(instance.hasProperty("name"));
+        assertFalse(instance.hasProperty("other"));
+    }
+
+    @Test
     public void testGetProperty() {
         ClientConfig instance = new ClientConfig().property("name", "value");
         assertEquals("value", instance.getProperty("name"));

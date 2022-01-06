@@ -59,6 +59,14 @@ public final class TracingAwarePropertiesDelegate implements PropertiesDelegate 
     }
 
     @Override
+    public boolean hasProperty(final String name) {
+        if (tracingLogger != null && TracingLogger.PROPERTY_NAME.equals(name)) {
+            return true;
+        }
+        return propertiesDelegate.hasProperty(name);
+    }
+
+    @Override
     public Object getProperty(String name) {
         if (tracingLogger != null && TracingLogger.PROPERTY_NAME.equals(name)) {
             return tracingLogger;

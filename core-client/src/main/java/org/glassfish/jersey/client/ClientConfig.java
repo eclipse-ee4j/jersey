@@ -330,6 +330,11 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
         }
 
         @Override
+        public boolean hasProperty(final String name) {
+            return commonConfig.getConfiguration().hasProperty(name);
+        }
+
+        @Override
         public Object getProperty(final String name) {
             return commonConfig.getConfiguration().getProperty(name);
         }
