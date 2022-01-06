@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.grizzly2.servlet.GrizzlyWebContainerFactory;
+import org.glassfish.jersey.internal.Version;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.osgi.test.util.Helper;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -41,10 +43,9 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import static org.junit.Assert.assertEquals;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.vmOption;
 
 /**
- * NOTE: This test is excluded on JDK6 as it requires Servlet 3.1 API that is built against JDK 7.
- *
  * @author Jakub Podlesak
  * @author Michal Gajdos
  */
@@ -64,6 +65,9 @@ public class PackageScanningTest {
 
         options.addAll(Helper.expandedList(
                 // vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
+                JdkVersion.getJdkVersion().getMajor() > 16
+                    ? vmOption("--add-opens=java.base/java.net=ALL-UNNAMED")
+                    : null,
 
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-sse").versionAsInProject(),
 
