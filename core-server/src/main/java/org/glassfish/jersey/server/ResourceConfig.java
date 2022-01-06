@@ -756,6 +756,11 @@ public class ResourceConfig extends Application implements Configurable<Resource
     }
 
     @Override
+    public final boolean hasProperty(final String name) {
+        return state.hasProperty(name);
+    }
+
+    @Override
     public final Object getProperty(final String name) {
         return state.getProperty(name);
     }

@@ -170,6 +170,11 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
                     private final Map<String, Object> properties = new HashMap<>();
 
                     @Override
+                    public boolean hasProperty(final String name) {
+                        return properties.containsKey(name);
+                    }
+
+                    @Override
                     public Object getProperty(String name) {
                         return properties.get(name);
                     }

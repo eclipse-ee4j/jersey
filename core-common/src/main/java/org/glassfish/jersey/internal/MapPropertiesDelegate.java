@@ -64,6 +64,11 @@ public final class MapPropertiesDelegate implements PropertiesDelegate {
     }
 
     @Override
+    public boolean hasProperty(final String name) {
+        return store.containsKey(name);
+    }
+
+    @Override
     public Object getProperty(String name) {
         return store.get(name);
     }

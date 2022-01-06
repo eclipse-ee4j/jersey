@@ -89,6 +89,11 @@ abstract class InterceptorExecutor<T> implements InterceptorContext, PropertiesD
     }
 
     @Override
+    public boolean hasProperty(final String name) {
+        return propertiesDelegate.hasProperty(name);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return propertiesDelegate.getProperty(name);
     }

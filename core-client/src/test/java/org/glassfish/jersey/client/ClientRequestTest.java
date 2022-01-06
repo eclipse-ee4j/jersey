@@ -92,6 +92,9 @@ public class ClientRequestTest {
         assertFalse(request.getConfiguration().getPropertyNames().contains("name"));
         assertFalse(request.getPropertyNames().contains("name"));
 
+        assertFalse(request.getConfiguration().hasProperty("name"));
+        assertFalse(request.hasProperty("name"));
+
         assertNull(request.getConfiguration().getProperty("name"));
         assertNull(request.getProperty("name"));
 
@@ -108,6 +111,9 @@ public class ClientRequestTest {
 
         assertTrue(request.getConfiguration().getPropertyNames().contains("name"));
         assertFalse(request.getPropertyNames().contains("name"));
+
+        assertTrue(request.getConfiguration().hasProperty("name"));
+        assertFalse(request.hasProperty("name"));
 
         assertEquals("value-global", request.getConfiguration().getProperty("name"));
         assertNull(request.getProperty("name"));
@@ -127,6 +133,9 @@ public class ClientRequestTest {
         assertFalse(request.getConfiguration().getPropertyNames().contains("name"));
         assertTrue(request.getPropertyNames().contains("name"));
 
+        assertFalse(request.getConfiguration().hasProperty("name"));
+        assertTrue(request.hasProperty("name"));
+
         assertNull(request.getConfiguration().getProperty("name"));
         assertEquals("value-request", request.getProperty("name"));
 
@@ -144,6 +153,9 @@ public class ClientRequestTest {
 
         assertTrue(request.getConfiguration().getPropertyNames().contains("name"));
         assertTrue(request.getPropertyNames().contains("name"));
+
+        assertTrue(request.getConfiguration().hasProperty("name"));
+        assertTrue(request.hasProperty("name"));
 
         assertEquals("value-global", request.getConfiguration().getProperty("name"));
         assertEquals("value-request", request.getProperty("name"));
