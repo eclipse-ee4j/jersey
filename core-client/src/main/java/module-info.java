@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.client {
+module org.glassfish.jersey.core.client {
     requires jakarta.annotation;
     requires jakarta.inject;
     requires java.logging;

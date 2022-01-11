@@ -14,16 +14,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.ext.cdi1x {
+module org.glassfish.jersey.container.grizzly2.servlet {
+    requires jakarta.ws.rs;
+    requires transitive jakarta.servlet;
 
-    requires java.naming;
-    requires java.logging;
+    requires grizzly.http.servlet;
+    requires grizzly.http.server;
 
-    requires transitive org.glassfish.jersey.core.server;
-    requires transitive org.glassfish.jersey.core.common;
-    requires transitive org.glassfish.jersey.inject.hk2;
+    requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.container.servlet.core;
+    requires org.glassfish.jersey.container.grizzly2.http;
 
-    exports org.glassfish.jersey.ext.cdi1x.internal;
-    opens org.glassfish.jersey.ext.cdi1x.internal;
-
+    exports org.glassfish.jersey.grizzly2.servlet;
 }

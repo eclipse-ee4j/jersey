@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,14 +18,31 @@ package org.glassfish.jersey.server.internal.scanning;
 
 public abstract class AbstractFinderTest {
 
-    String setUpJaxRsApiPath() {
-        final String classPath = System.getProperty("surefire.test.class.path");
+    private static final String SEPARATOR = System.getProperty("path.separator");
 
-        return parseEntries(classPath);
+    String setUpJaxRsApiPath() {
+
+        final String oldClassPath = System.getProperty("java.class.path");
+        final String sureFireClassPath = System.getProperty("surefire.test.class.path");
+        final String modulePath = System.getProperty("jdk.module.path");
+        final StringBuilder classPath = new StringBuilder();
+        if (oldClassPath != null) {
+            classPath.append(oldClassPath);
+            classPath.append(SEPARATOR);
+        }
+        if (sureFireClassPath != null) {
+            classPath.append(sureFireClassPath);
+            classPath.append(SEPARATOR);
+        }
+        if (modulePath != null) {
+            classPath.append(modulePath);
+        }
+
+        return parseEntries(classPath.toString());
     }
 
     private static String parseEntries(String fullPath) {
-        final String[] entries = fullPath.split(System.getProperty("path.separator"));
+        final String[] entries = fullPath.split(SEPARATOR);
         for (final String entry : entries) {
             if (entry.contains("jakarta.ws.rs-api")) {
                 return entry;

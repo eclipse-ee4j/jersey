@@ -14,25 +14,30 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
-import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
+open module org.glassfish.jersey.container.grizzly2.http {
 
-module org.glassfish.jersey.inject.hk2 {
-
-    requires jakarta.annotation;
-    requires jakarta.inject;
+    requires java.net.http;
     requires java.logging;
 
-   //HK2 is not yet modularized
+    requires org.eclipse.jetty.http2.client;
+    requires org.eclipse.jetty.http2.http.client.transport;
+
+    requires org.bouncycastle.provider;
+    requires org.bouncycastle.pkix;
+    requires org.eclipse.jetty.client;
+
+    requires grizzly.http.server;
+    requires grizzly.http2;
+    requires grizzly.framework;
+
     requires org.glassfish.hk2.api;
     requires org.glassfish.hk2.locator;
-    requires org.glassfish.hk2.utilities;
 
+    requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
+    requires org.glassfish.jersey.inject.hk2;
 
-    exports org.glassfish.jersey.inject.hk2;
-    opens org.glassfish.jersey.inject.hk2;
-
-    provides InjectionManagerFactory
-            with Hk2InjectionManagerFactory;
+    exports org.glassfish.jersey.grizzly2.httpserver.test.application
+            to  org.glassfish.jersey.core.server;
 }
