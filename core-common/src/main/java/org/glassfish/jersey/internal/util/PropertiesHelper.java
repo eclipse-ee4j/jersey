@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -285,6 +285,15 @@ public final class PropertiesHelper {
      * @return value converted to the specified class type.
      */
     public static <T> T convertValue(Object value, Class<T> type) {
+
+        if (((type.equals(Integer.class)) || (type.equals(int.class))) && Number.class.isInstance(value)) {
+            final Integer number2Int = ((Number) value).intValue();
+            return  (T) number2Int;
+        } else if (((type.equals(Long.class)) || (type.equals(long.class))) && Number.class.isInstance(value)) {
+            final Long number2Long =  ((Number) value).longValue();
+            return  (T) number2Long;
+        }
+
         if (!type.isInstance(value)) {
             // TODO: Move string value readers from server to common and utilize them here
             final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(type));
