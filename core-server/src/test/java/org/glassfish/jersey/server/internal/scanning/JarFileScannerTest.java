@@ -51,25 +51,6 @@ public class JarFileScannerTest extends AbstractFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        final String separator = System.getProperty("path.separator");
-        final String oldClassPath = System.getProperty("java.class.path");
-        final String sureFireClassPath = System.getProperty("surefire.test.class.path");
-        final String modulePath = System.getProperty("jdk.module.path");
-        final StringBuilder classPath = new StringBuilder();
-        if (oldClassPath != null) {
-            classPath.append(oldClassPath);
-            classPath.append(separator);
-        }
-        if (sureFireClassPath != null) {
-            classPath.append(sureFireClassPath);
-            classPath.append(separator);
-        }
-        if (modulePath != null) {
-            classPath.append(modulePath);
-        }
-
-        final String[] entries = classPath.toString().split(separator);
-
         jaxRsApiPath = setUpJaxRsApiPath();
 
         if (jaxRsApiPath == null) {

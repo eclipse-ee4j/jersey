@@ -55,6 +55,7 @@ module org.glassfish.jersey.core.common {
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
     opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.spi;
 
     uses jakarta.ws.rs.core.Feature;
     uses jakarta.ws.rs.container.DynamicFeature;

@@ -34,6 +34,7 @@ module org.glassfish.jersey.core.server {
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey.server;
     exports org.glassfish.jersey.server.spi;
+    exports org.glassfish.jersey.server.spi.internal;
     exports org.glassfish.jersey.server.model;
     exports org.glassfish.jersey.server.wadl;
     exports org.glassfish.jersey.server.wadl.config;
