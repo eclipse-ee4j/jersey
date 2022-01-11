@@ -33,7 +33,7 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.internal.config;
     exports org.glassfish.jersey.internal.guava;
     exports org.glassfish.jersey.internal.inject;
-    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
+    exports org.glassfish.jersey.internal.jsr166;
     exports org.glassfish.jersey.internal.l10n;
     exports org.glassfish.jersey.internal.sonar;
     exports org.glassfish.jersey.internal.spi;
