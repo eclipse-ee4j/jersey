@@ -17,16 +17,16 @@
 package org.glassfish.jersey.jackson.internal.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-
-import java.util.Optional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElement;
+
+import java.util.Optional;
 
 @Path("/entity/")
-public final class ServiceTest {
+public final class Jaxb2ServiceTest {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
