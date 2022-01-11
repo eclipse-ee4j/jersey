@@ -29,12 +29,14 @@ module org.glassfish.jersey.core.server {
 
     // jersey common modules
     requires org.glassfish.jersey.core.common;
-    requires org.glassfish.jersey.client;
+    requires org.glassfish.jersey.core.client;
 
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey.server;
     exports org.glassfish.jersey.server.spi;
+    exports org.glassfish.jersey.server.spi.internal;
     exports org.glassfish.jersey.server.model;
+    exports org.glassfish.jersey.server.model.internal;
     exports org.glassfish.jersey.server.wadl;
     exports org.glassfish.jersey.server.wadl.config;
     exports org.glassfish.jersey.server.wadl.processor;
@@ -46,6 +48,7 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.internal.inject;
     exports org.glassfish.jersey.server.internal.monitoring;
     exports org.glassfish.jersey.server.internal.process;
+    exports org.glassfish.jersey.server.internal.scanning;
 
     uses org.glassfish.jersey.server.spi.ComponentProvider;
     uses org.glassfish.jersey.server.spi.ExternalRequestScope;

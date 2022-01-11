@@ -219,7 +219,7 @@ public class ResponseWriter implements ContainerResponseWriter {
                         //noinspection deprecation
                         response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                     } else {
-                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
+                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()/*, "Request failed."*/);
                     }
                 } catch (final IllegalStateException ex) {
                     // a race condition externally committing the response can still occur...

@@ -33,7 +33,7 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.internal.config;
     exports org.glassfish.jersey.internal.guava;
     exports org.glassfish.jersey.internal.inject;
-    exports org.glassfish.jersey.internal.jsr166 to org.glassfish.jersey.core.server;
+    exports org.glassfish.jersey.internal.jsr166;
     exports org.glassfish.jersey.internal.l10n;
     exports org.glassfish.jersey.internal.sonar;
     exports org.glassfish.jersey.internal.spi;
@@ -52,9 +52,12 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.uri;
     exports org.glassfish.jersey.uri.internal;
 
+    exports org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
+
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
     opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.spi;
 
     uses jakarta.ws.rs.core.Feature;
     uses jakarta.ws.rs.container.DynamicFeature;
