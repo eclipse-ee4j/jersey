@@ -53,4 +53,6 @@ public class NettyClientProperties {
      *  </p>
      */
     public static final String MAX_CONNECTIONS = "jersey.config.client.maxConnections";
+
+    public static final String ENABLE_SSL_HOSTNAME_VERIFICATION = "jersey.config.client.tls.enableHostnameVerification";
 }

@@ -32,6 +32,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLParameters;
+
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
@@ -60,6 +63,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.proxy.HttpProxyHandler;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.JdkSslContext;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -216,15 +220,9 @@ class NettyConnector implements Connector {
                     protected void initChannel(SocketChannel ch) throws Exception {
                      ChannelPipeline p = ch.pipeline();
 
-                     // Enable HTTPS if necessary.
-                     if ("https".equals(requestUri.getScheme())) {
-                         // making client authentication optional for now; it could be extracted to configurable property
-                         JdkSslContext jdkSslContext = new JdkSslContext(client.getSslContext(), true, ClientAuth.NONE);
-                         p.addLast(jdkSslContext.newHandler(ch.alloc()));
-                     }
+                     Configuration config = jerseyRequest.getConfiguration();
 
                      // http proxy
-                     Configuration config = jerseyRequest.getConfiguration();
                      final Object proxyUri = config.getProperties().get(ClientProperties.PROXY_URI);
                      if (proxyUri != null) {
                          final URI u = getProxyUri(proxyUri);
@@ -234,9 +232,28 @@ class NettyConnector implements Connector {
                          final String password = ClientProperties.getValue(
                                  config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
 
-                         p.addLast(new HttpProxyHandler(new InetSocketAddress(u.getHost(),
-                                                                              u.getPort() == -1 ? 8080 : u.getPort()),
-                                                        userName, password));
+                         InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(),
+                                                                             u.getPort() == -1 ? 8080 : u.getPort());
+                         p.addLast(userName == null ? new HttpProxyHandler(proxyAddr)
+                                                    : new HttpProxyHandler(proxyAddr, userName, password));
+                     }
+
+                     // Enable HTTPS if necessary.
+                     if ("https".equals(requestUri.getScheme())) {
+                         // making client authentication optional for now; it could be extracted to configurable property
+                         JdkSslContext jdkSslContext = new JdkSslContext(client.getSslContext(), true, ClientAuth.NONE);
+                         int port = requestUri.getPort();
+                         SslHandler sslHandler = jdkSslContext.newHandler(ch.alloc(), requestUri.getHost(),
+                                                                          port <= 0 ? 443 : port, executorService);
+                         if (ClientProperties.getValue(config.getProperties(),
+                                                       NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, true)) {
+                            SSLEngine sslEngine = sslHandler.engine();
+                            SSLParameters sslParameters = sslEngine.getSSLParameters();
+                            sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
+                            sslEngine.setSSLParameters(sslParameters);
+                         }
+
+                         p.addLast(sslHandler);
                      }
 
                      p.addLast(new HttpClientCodec());
