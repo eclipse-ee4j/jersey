@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -288,16 +288,8 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
          * We need to work around this and not use getPathInfo
          * for the decodedPath.
          */
-        final String decodedBasePath = request.getContextPath() + servletPath + "/";
-
-        final String encodedBasePath = UriComponent.encode(decodedBasePath,
-                UriComponent.Type.PATH);
-
-        if (!decodedBasePath.equals(encodedBasePath)) {
-            setResponseForInvalidUri(response, new ProcessingException("The servlet context path and/or the "
-                    + "servlet path contain characters that are percent encoded"));
-            return;
-        }
+        final String encodedBasePath = UriComponent.contextualEncode(
+                request.getContextPath() + servletPath, UriComponent.Type.PATH) + "/";
 
         final URI baseUri;
         final URI requestUri;
