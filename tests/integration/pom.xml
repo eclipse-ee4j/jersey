@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
     Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -91,6 +91,7 @@
         <module>jersey-4542</module>
         <module>jersey-4697</module>
         <module>jersey-4722</module>
+        <module>jersey-4949</module>
         <module>jetty-response-close</module>
         <module>microprofile</module>
         <module>portability-jersey-1</module>
