@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,10 +48,7 @@ public class JsonJacksonTest extends AbstractJsonOsgiIntegrationTest {
                 mavenBundle().groupId("com.fasterxml.jackson.core").artifactId("jackson-core").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml.jackson.core").artifactId("jackson-databind").versionAsInProject(),
                 mavenBundle().groupId("com.fasterxml.jackson.core").artifactId("jackson-annotations").versionAsInProject(),
-                mavenBundle().groupId("com.fasterxml.jackson.jaxrs").artifactId("jackson-jaxrs-base").versionAsInProject(),
-                mavenBundle().groupId("com.fasterxml.jackson.jaxrs").artifactId("jackson-jaxrs-json-provider")
-                        .versionAsInProject(),
-                mavenBundle().groupId("com.fasterxml.jackson.module").artifactId("jackson-module-jaxb-annotations")
+                mavenBundle().groupId("com.fasterxml.jackson.module").artifactId("jackson-module-jakarta-xmlbind-annotations")
                         .versionAsInProject()
         ));
 

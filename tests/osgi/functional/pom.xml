@@ -46,11 +46,6 @@
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
-                        <configuration>
-                            <testExcludes>
-                                <exclude>org/glassfish/jersey/osgi/test/basic/JsonJacksonTest.java</exclude>
-                            </testExcludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -347,7 +342,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -355,17 +350,6 @@
             <artifactId>jackson-annotations</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-base</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>

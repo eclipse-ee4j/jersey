@@ -137,6 +137,11 @@ public class JacksonJsonProvider
         super(new JsonMapperConfigurator(mapper, annotationsToUse));
     }
 
+    // Do not erase - Jersey required constructor
+    protected JacksonJsonProvider(JsonMapperConfigurator configurator) {
+        super(configurator);
+    }
+
     /**
      * Method that will return version information stored in and read from jar
      * that contains this class.
