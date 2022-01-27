@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 
 /**
  * TODO javadoc.
@@ -63,7 +63,7 @@ public class MyObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
     private static AnnotationIntrospector createJaxbJacksonAnnotationIntrospector() {
 
-        final AnnotationIntrospector jaxbIntrospector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+        final AnnotationIntrospector jaxbIntrospector = new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance());
         final AnnotationIntrospector jacksonIntrospector = new JacksonAnnotationIntrospector();
 
         return AnnotationIntrospector.pair(jacksonIntrospector, jaxbIntrospector);

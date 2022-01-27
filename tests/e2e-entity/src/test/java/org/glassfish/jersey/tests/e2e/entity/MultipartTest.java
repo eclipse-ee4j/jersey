@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -39,7 +40,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.client.ClientConfig;
-//import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jsonb.JsonBindingFeature;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -51,6 +52,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -58,7 +62,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Martin Matula
  */
+@RunWith(Parameterized.class)
 public class MultipartTest extends JerseyTest {
+
+    private static Class<? extends Feature> featureClass;
+
+    @Parameterized.Parameters(name = "Provider: {0}")
+    public static Iterable<Class[]> providers() {
+        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}, {JsonBindingFeature.class}});
+    }
+
+    public MultipartTest(Class<? extends Feature> featureProvider) {
+        super(configure(featureProvider));
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     public static class MyObject {
@@ -156,19 +172,21 @@ public class MultipartTest extends JerseyTest {
         }
     }
 
-    @Override
-    protected Application configure() {
+    protected static Application configure(Class<? extends Feature> featureClass) {
+        MultipartTest.featureClass = featureClass;
         return new ResourceConfig(MultipartResource.class, MessageBodyProvider.class)
                 .register(MultiPartFeature.class)
+                .register(featureClass);
 //                .register(JacksonFeature.class);
-                .register(JsonBindingFeature.class);
+//                .register(JsonBindingFeature.class);
     }
 
     @Override
     protected void configureClient(final ClientConfig config) {
         config.register(MultiPartFeature.class);
+        config.register(featureClass);
         //config.register(JacksonFeature.class);
-        config.register(JsonBindingFeature.class);
+        //config.register(JsonBindingFeature.class);
     }
 
     @Test
@@ -207,6 +225,10 @@ public class MultipartTest extends JerseyTest {
      */
     @Test
     public void testSpecificListAsParameter() throws Exception {
+        if (featureClass == MoxyJsonFeature.class) {
+            // No available MessageBodyWriter for class "class java.util.Arrays$ArrayList" and media type "application/json"
+            return;
+        }
         final MyObject object = new MyObject("object");
         final List<MyObject> list = Arrays.asList(new MyObject("list1"), new MyObject("list2"));
 
