@@ -63,4 +63,10 @@ public class JacksonJaxbJsonProvider extends JacksonJsonProvider {
     {
         super(mapper, annotationsToUse);
     }
+
+    // Do not erase - Jersey required constructor
+    protected JacksonJaxbJsonProvider(JsonMapperConfigurator configurator)
+    {
+        super(configurator);
+    }
 }

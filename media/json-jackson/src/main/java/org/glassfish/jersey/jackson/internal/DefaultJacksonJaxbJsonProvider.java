@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,15 +31,15 @@ import jakarta.inject.Singleton;
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
     //do not register JaxbAnnotationModule because it brakes default annotations processing
-    private static final String EXCLUDE_MODULE_NAME = "JaxbAnnotationModule";
+    private static final String[] EXCLUDE_MODULE_NAMES = {"JaxbAnnotationModule", "JakartaXmlBindAnnotationModule"};
 
     public DefaultJacksonJaxbJsonProvider() {
-        super();
+        super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
         findAndRegisterModules();
     }
 
     public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
-        super(annotationsToUse);
+        super(new JacksonMapperConfigurator(null, annotationsToUse));
         findAndRegisterModules();
     }
 
@@ -49,7 +49,9 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         final ObjectMapper mapper = _mapperConfig.getConfiguredMapper();
 
         final List<Module> modules = ObjectMapper.findModules();
-        modules.removeIf(mod -> mod.getModuleName().contains(EXCLUDE_MODULE_NAME));
+        for (String exludeModuleName : EXCLUDE_MODULE_NAMES) {
+            modules.removeIf(mod -> mod.getModuleName().contains(exludeModuleName));
+        }
 
         defaultMapper.registerModules(modules);
         if (mapper != null) {
