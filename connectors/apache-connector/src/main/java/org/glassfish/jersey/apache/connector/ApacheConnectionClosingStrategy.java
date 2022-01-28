@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -63,12 +63,15 @@ public interface ApacheConnectionClosingStrategy {
      * Strategy that aborts Apache HttpRequests for the case of Chunked Stream, closes the stream, and response next.
      */
     class GracefulClosingStrategy implements ApacheConnectionClosingStrategy {
+        private static final String UNIX_PROTOCOL = "unix";
+
         static final GracefulClosingStrategy INSTANCE = new GracefulClosingStrategy();
 
         @Override
         public void close(ClientRequest clientRequest, HttpUriRequest request, CloseableHttpResponse response, InputStream stream)
                 throws IOException {
-            if (response.getEntity() != null && response.getEntity().isChunked()) {
+            if (response.getEntity() != null && response.getEntity().isChunked()
+                    && !request.getURI().getScheme().equals(UNIX_PROTOCOL)) {
                 request.abort();
             }
             try {
