@@ -56,7 +56,7 @@
         </license>
         <license>
             <name>Modified BSD</name>
-            <url>http://asm.objectweb.org/license.html</url>
+            <url>https://asm.ow2.io/license.html</url>
             <distribution>repo</distribution>
             <comments>ASM @ jersey.repackaged.org.objectweb.asm</comments>
         </license>
