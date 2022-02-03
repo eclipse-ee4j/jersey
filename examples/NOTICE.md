@@ -87,7 +87,7 @@ KineticJS, v4.7.1
 * Copyright: Eric Rowell
 
 org.objectweb.asm Version 7.2
-* License: Modified BSD (http://asm.objectweb.org/license.html)
+* License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 
 org.osgi.core version 6.0.0
