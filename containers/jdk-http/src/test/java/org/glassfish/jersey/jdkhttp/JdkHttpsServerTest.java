@@ -53,14 +53,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
 
-    private static final String TRUSTSTORE_CLIENT_FILE = "./truststore_client";
+    private static final String TRUSTSTORE_CLIENT_FILE = "truststore_client";
     private static final String TRUSTSTORE_CLIENT_PWD = "asdfgh";
-    private static final String KEYSTORE_CLIENT_FILE = "./keystore_client";
+    private static final String KEYSTORE_CLIENT_FILE = "keystore_client";
     private static final String KEYSTORE_CLIENT_PWD = "asdfgh";
 
-    private static final String KEYSTORE_SERVER_FILE = "./keystore_server";
+    private static final String KEYSTORE_SERVER_FILE = "keystore_server";
     private static final String KEYSTORE_SERVER_PWD = "asdfgh";
-    private static final String TRUSTSTORE_SERVER_FILE = "./truststore_server";
+    private static final String TRUSTSTORE_SERVER_FILE = "truststore_server";
     private static final String TRUSTSTORE_SERVER_PWD = "asdfgh";
 
     private final ResourceConfig rc = new ResourceConfig(TestResource.class);

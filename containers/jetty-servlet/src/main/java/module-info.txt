@@ -1,0 +1,16 @@
+module org.glassfish.jersey.container.jetty.servlet {
+
+    requires jakarta.ws.rs;
+//    requires jakarta.servlet; //taken from jetty.servlet.api which is part of jetty server
+
+    requires org.eclipse.jetty.http;
+    requires org.eclipse.jetty.server;
+    requires org.eclipse.jetty.util;
+    requires org.eclipse.jetty.webapp;
+
+    requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.container.jetty.http;
+    requires static org.glassfish.jersey.container.servlet.core;
+
+    exports org.glassfish.jersey.jetty.servlet;
+}

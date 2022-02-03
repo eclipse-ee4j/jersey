@@ -318,7 +318,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
         if (webComponent.configSetStatusOverSendError) {
             response.reset();
             //noinspection deprecation
-            response.setStatus(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+            response.setStatus(badRequest.getStatusCode()/*, badRequest.getReasonPhrase()*/);
         } else {
             response.sendError(badRequest.getStatusCode(), badRequest.getReasonPhrase());
         }

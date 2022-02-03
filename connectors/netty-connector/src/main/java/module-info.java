@@ -10,5 +10,6 @@ module org.glassfish.jersey.netty.connector {
     requires org.glassfish.jersey.core.client;
 
     exports org.glassfish.jersey.netty.connector;
+    exports org.glassfish.jersey.netty.connector.internal;
 //    opens org.glassfish.jersey.netty.connector;
 }

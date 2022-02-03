@@ -47,6 +47,7 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.internal.inject;
     exports org.glassfish.jersey.server.internal.monitoring;
     exports org.glassfish.jersey.server.internal.process;
+    exports org.glassfish.jersey.server.internal.scanning;
 
     uses org.glassfish.jersey.server.spi.ComponentProvider;
     uses org.glassfish.jersey.server.spi.ExternalRequestScope;

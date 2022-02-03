@@ -144,7 +144,7 @@ public class ResponseWriter implements ContainerResponseWriter {
 
         final String reasonPhrase = responseContext.getStatusInfo().getReasonPhrase();
         if (reasonPhrase != null) {
-            response.setStatus(responseContext.getStatus(), reasonPhrase);
+            response.setStatus(responseContext.getStatus()/*, reasonPhrase*/);
         } else {
             response.setStatus(responseContext.getStatus());
         }
@@ -217,9 +217,9 @@ public class ResponseWriter implements ContainerResponseWriter {
                     if (configSetStatusOverSendError) {
                         response.reset();
                         //noinspection deprecation
-                        response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
+                        response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()/*, "Request failed."*/);
                     } else {
-                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
+                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()/*, "Request failed."*/);
                     }
                 } catch (final IllegalStateException ex) {
                     // a race condition externally committing the response can still occur...
