@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 
 import org.glassfish.jersey.inject.cdi.se.injector.CachedConstructorAnalyzer;
 import org.glassfish.jersey.inject.cdi.se.injector.InjectionUtils;
@@ -99,7 +100,8 @@ public class BeanHelper {
     public static <T> void registerBean(ClassBinding<T> binding, AfterBeanDiscovery abd, Collection<InjectionResolver> resolvers,
             BeanManager beanManager) {
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(binding.getService());
-        InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget<T> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         ClassBean<T> bean = new ClassBean<>(binding);
         bean.setInjectionTarget(getJerseyInjectionTarget(binding.getService(), injectionTarget, bean, resolvers));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,14 +20,17 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Displays the plugin help message.
  *
- * @goal help
- * @phase process-sources
- * @aggregator
+ * goal: help
+ * phase: process-sources
+ * aggregator
  */
+@Mojo(name = "help", aggregator = true, defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class HelpMojo extends AbstractMojo {
 
     private Log log;

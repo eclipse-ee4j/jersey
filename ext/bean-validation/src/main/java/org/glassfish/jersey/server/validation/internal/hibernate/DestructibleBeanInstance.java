@@ -12,6 +12,7 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 
 /**
  * @author Hardy Ferentschik
@@ -43,7 +44,9 @@ public class DestructibleBeanInstance<T> {
 
     private InjectionTarget<T> createInjectionTarget(BeanManager beanManager, Class<T> type) {
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(type);
-        return beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+
+        return injectionTargetFactory.createInjectionTarget(null);
     }
 
     private static <T> T createAndInjectBeans(BeanManager beanManager, InjectionTarget<T> injectionTarget) {

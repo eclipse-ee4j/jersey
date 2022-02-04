@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,10 @@ import org.apache.maven.execution.ProjectDependencyGraph;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.BufferedReader;
@@ -41,10 +45,11 @@ import java.util.Set;
  * The plugins main MOJO class.
  * Walks through the maven dependency tree and creates the docbook output file.
  *
- * @goal generate
- * @phase process-sources
- * @aggregator
+ * goal: generate
+ * phase: process-sources
+ * aggregator
  */
+@Mojo(name = "generate", aggregator = true, defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class GenerateJerseyModuleListMojo extends AbstractMojo {
 
     /**
@@ -82,6 +87,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      * @required
      * @readonly
      */
+    @Parameter(defaultValue = "${project.basedir}")
     private MavenProject mavenProject;
 
     /**
@@ -89,11 +95,13 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      * @required
      * @readonly
      */
+    @Parameter( defaultValue = "${session}", readonly = true )
     private MavenSession mavenSession;
 
     /**
      * @parameter default-value="modules.xml"
      */
+    @Parameter(defaultValue = "modules.xml")
     private String outputFileName;
 
     /**
@@ -103,6 +111,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      *
      * @parameter
      */
+    @Parameter
     private String templateFileName;
 
     /**
@@ -112,6 +121,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      *
      * @parameter
      */
+    @Parameter
     private String tableHeaderFileName;
 
     /**
@@ -120,6 +130,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      *
      * @parameter
      */
+    @Parameter
     private String tableFooterFileName;
 
     /**
@@ -129,11 +140,13 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
      *
      * @parameter
      */
+    @Parameter
     private String tableRowFileName;
 
     /**
      * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     private boolean outputUnmatched;
 
     private Configuration configuration;
