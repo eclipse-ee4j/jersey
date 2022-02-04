@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,8 +59,8 @@
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/jakarta.xml.bind">
 <!ENTITY jaxrs.release.uri "https://github.com/eclipse-ee4j/jaxrs-api">
-<!ENTITY jaxrs.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs.version;/jakarta/ws/rs">
-<!ENTITY jaxrs21.javadoc.uri "https://eclipse-ee4j.github.io/jaxrs-api/apidocs/&jax-rs21.version;/javax/ws/rs">
+<!ENTITY jaxrs.javadoc.uri "https://jakartaee.github.io/rest/apidocs/&jax-rs.version;/jakarta/ws/rs">
+<!ENTITY jaxrs21.javadoc.uri "https://jakartaee.github.io/rest/apidocs/&jax-rs21.version;/javax/ws/rs">
 <!ENTITY jaxrs31.spec.uri "https://jakarta.ee/specifications/restful-ws/&jax-rs31.spec.version;/jakarta-restful-ws-spec-&jax-rs31.spec.version;.html">
 <!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
 <!ENTITY jersey.documentation.uri "https://eclipse-ee4j.github.io/jersey.github.io">

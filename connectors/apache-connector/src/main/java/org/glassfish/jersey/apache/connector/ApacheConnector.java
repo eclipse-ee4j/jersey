@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -509,7 +509,7 @@ class ApacheConnector implements Connector {
             final HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null) {
+                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null && entity.getContentLength() >= 0) {
                     headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(entity.getContentLength()));
                 }
 

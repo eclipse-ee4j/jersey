@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -171,6 +171,32 @@ public class PropertiesHelperTest {
         assertEquals(myNonJerseyProperty, PropertiesHelper.getPropertyNameForRuntime(myNonJerseyProperty, RuntimeType.CLIENT));
         assertEquals(myNonJerseyProperty, PropertiesHelper.getPropertyNameForRuntime(myNonJerseyProperty, RuntimeType.CLIENT));
         assertEquals(myNonJerseyProperty, PropertiesHelper.getPropertyNameForRuntime(myNonJerseyProperty, null));
+    }
+
+    @Test
+    public void testconvertValue() {
+        Long lg = 10L;
+        long l = 10L;
+        Integer ig = 10;
+        int i = 10;
+
+        assertEquals(ig, PropertiesHelper.convertValue(i, Integer.class));
+        assertEquals(ig, PropertiesHelper.convertValue(ig, Integer.class));
+        assertEquals(ig, PropertiesHelper.convertValue(l, Integer.class));
+        assertEquals(ig, PropertiesHelper.convertValue(lg, Integer.class));
+        assertEquals(lg, PropertiesHelper.convertValue(i, Long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(ig, Long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(l, Long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(lg, Long.class));
+        assertEquals(ig, PropertiesHelper.convertValue(i, int.class));
+        assertEquals(ig, PropertiesHelper.convertValue(ig, int.class));
+        assertEquals(ig, PropertiesHelper.convertValue(l, int.class));
+        assertEquals(ig, PropertiesHelper.convertValue(lg, int.class));
+        assertEquals(lg, PropertiesHelper.convertValue(i, long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(ig, long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(l, long.class));
+        assertEquals(lg, PropertiesHelper.convertValue(lg, long.class));
+
     }
 
 }
