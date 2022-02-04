@@ -57,7 +57,6 @@
         <module>jersey-4542</module>
         <module>jersey-4697</module>
         <module>jersey-4722</module>
-        <module>jersey-4949</module>
         <module>microprofile</module>
 <!--        <module>spring4</module>-->
 <!--        <module>spring5</module>-->
@@ -163,6 +162,7 @@
                 <module>jersey-2878</module>
                 <module>jersey-2892</module>
                 <module>jersey-3796</module>
+                <module>jersey-4949</module>
                 <module>property-check</module>
                 <module>security-digest</module>
                 <module>servlet-2.5-autodiscovery-1</module>
