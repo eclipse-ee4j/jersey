@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -460,6 +460,8 @@ public class ServerRuntime {
                 final Iterable<ResponseErrorMapper> mappers = Providers.getAllProviders(runtime.injectionManager,
                         ResponseErrorMapper.class);
 
+                ContainerResponse processedResponse = null;
+
                 try {
                     Response processedError = null;
                     for (final ResponseErrorMapper mapper : mappers) {
@@ -470,11 +472,16 @@ public class ServerRuntime {
                     }
 
                     if (processedError != null) {
-                        processResponse(new ContainerResponse(processingContext.request(), processedError));
+                        processedResponse =
+                                processResponse(new ContainerResponse(processingContext.request(), processedError));
                         processed = true;
                     }
                 } catch (final Throwable throwable) {
                     LOGGER.log(Level.FINE, LocalizationMessages.ERROR_EXCEPTION_MAPPING_PROCESSED_RESPONSE_ERROR(), throwable);
+                } finally {
+                    if (processedResponse != null) {
+                        release(processedResponse);
+                    }
                 }
             }
 

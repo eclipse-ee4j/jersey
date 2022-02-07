@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -122,6 +122,11 @@ public abstract class AbstractWebAppTest {
 
                 // do not remove the following line
                 systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),
+
+                JdkVersion.getJdkVersion().getMajor() > 16
+                    ? vmOption("--add-opens=java.base/java.net=ALL-UNNAMED")
+                    : null,
+
                 // uncomment the following 4 lines should you need to debug from th felix console
                 // mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.gogo.runtime").version(gogoVersion),
                 // mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.gogo.shell").version(gogoVersion),

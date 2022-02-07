@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,10 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.container.DynamicFeature;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Registers JAX-RS {@link DynamicFeature} which are listed as SPIs for registration.
@@ -51,7 +53,8 @@ public class DynamicFeatureConfigurator extends AbstractFeatureConfigurator<Dyna
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         final Map<String, Object> properties = bootstrapBag.getConfiguration().getProperties();
         if (PropertiesHelper.isJaxRsServiceLoadingEnabled(properties)) {
-            final List<Class<DynamicFeature>> dynamicFeatures = loadImplementations(properties);
+            final Set<Class<DynamicFeature>> dynamicFeatures = new HashSet<>();
+            dynamicFeatures.addAll(loadImplementations(properties));
             dynamicFeatures.addAll(loadImplementations(properties, DynamicFeature.class.getClassLoader()));
 
             registerFeatures(dynamicFeatures, bootstrapBag);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.inject.spi.Unmanaged;
 
 import org.glassfish.jersey.inject.cdi.se.bean.JerseyBean;
@@ -236,9 +237,11 @@ public class CdiSeInjectionManager implements InjectionManager {
     @SuppressWarnings("unchecked")
     public void inject(Object instance) {
         if (isInitialized()) {
-            AnnotatedType annotatedType = beanManager.createAnnotatedType((Class) instance.getClass());
-            InjectionTarget injectionTarget = beanManager.createInjectionTarget(annotatedType);
             CreationalContext context = beanManager.createCreationalContext(null);
+            AnnotatedType annotatedType = beanManager.createAnnotatedType((Class) instance.getClass());
+            InjectionTargetFactory injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+            InjectionTarget injectionTarget = injectionTargetFactory.createInjectionTarget(null);
+
             injectionTarget.inject(instance, context);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.RuntimeType;
@@ -105,7 +106,8 @@ public abstract class BeanHelper {
     public static <T> BindingBeanPair registerBean(RuntimeType runtimeType, ClassBinding<T> binding, AfterBeanDiscovery abd,
                                                    Collection<InjectionResolver> resolvers, BeanManager beanManager) {
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(binding.getService());
-        InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget<T> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         ClassBean<T> bean = new ClassBean<>(runtimeType, binding);
         bean.setInjectionTarget(getJerseyInjectionTarget(binding.getService(), injectionTarget, bean, resolvers));
