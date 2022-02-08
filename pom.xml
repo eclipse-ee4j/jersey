@@ -188,7 +188,7 @@
         </license>
         <license>
             <name>Modified BSD</name>
-            <url>http://asm.objectweb.org/license.html</url>
+            <url>https://asm.ow2.io/license.html</url>
             <distribution>repo</distribution>
             <comments>ASM @ jersey.repackaged.org.objectweb.asm</comments>
         </license>
@@ -462,7 +462,7 @@
                                 All Rights Reserved. Use is subject to license terms.]]>
                         </bottom>
                         <links>
-                            <link>https://eclipse-ee4j.github.io/jaxrs-api/apidocs/2.1.6/</link>
+                            <link>https://jakartaee.github.io/rest/apidocs/2.1.6/</link>
                             <link>https://javaee.github.io/hk2/apidocs/</link>
                         </links>
                         <excludePackageNames>
