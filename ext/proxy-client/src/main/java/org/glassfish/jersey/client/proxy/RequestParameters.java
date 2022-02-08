@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,8 @@ class RequestParameters {
     RequestParameters(final WebTarget newTarget, final MultivaluedMap<String, Object> headers,
                              final List<Cookie> cookies, final Form form) {
 
-        this.headers = new MultivaluedHashMap<>(headers);
+        this.headers = new MultivaluedHashMap<>();
+        this.headers.putAll(headers);
         this.cookies = new LinkedList<>(cookies);
         this.form = new Form();
         this.form.asMap().putAll(form.asMap());
