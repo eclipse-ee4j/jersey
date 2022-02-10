@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,9 +55,13 @@ public class ExternalPropertiesConfigurationFactoryTest {
                 readExternalPropertiesMap().get("jersey.config.server.provider.scanning.recursive");
         Assert.assertNull(result);
         Assert.assertEquals(Boolean.TRUE,
+                getConfig().isProperty(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE));
+        Assert.assertEquals(Boolean.TRUE,
                 getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Boolean.class));
         Assert.assertEquals(Boolean.FALSE,
                 getConfig().as("jersey.config.client.readTimeout", Boolean.class));
+        Assert.assertEquals(Boolean.FALSE,
+                getConfig().isProperty("jersey.config.client.readTimeout"));
         Assert.assertEquals(1,
                 getConfig().as(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, Integer.class));
         Assert.assertEquals(10,
