@@ -213,7 +213,7 @@
         </license>
     </licenses>
 
-    <scm>    
+    <scm>
         <connection>scm:git:git@github.com:jersey/jersey.git</connection>
         <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jersey</url>
@@ -1595,6 +1595,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-http2</artifactId>
+                <version>${grizzly2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-http-servlet</artifactId>
                 <version>${grizzly2.version}</version>
             </dependency>
@@ -1612,6 +1617,11 @@
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-http-client</artifactId>
                 <version>${grizzly.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-npn-api</artifactId>
+                <version>${grizzly.npn.version}</version>
             </dependency>
 
             <dependency>
@@ -1747,6 +1757,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
 
@@ -1992,6 +2008,18 @@
                 <version>${xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcmail-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -2075,6 +2103,7 @@
         <asm.version>9.2</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
+        <bouncycastle.version>1.68</bouncycastle.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <microprofile.config.version>2.0</microprofile.config.version>
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
