@@ -52,6 +52,8 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.uri;
     exports org.glassfish.jersey.uri.internal;
 
+    exports org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
+
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
     opens org.glassfish.jersey.message.internal;
