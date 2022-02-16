@@ -16,6 +16,7 @@
 
 module org.glassfish.jersey.container.grizzly2.http {
     requires java.logging;
+    requires java.net.http;
 
     requires jakarta.ws.rs;
     requires jakarta.inject;
