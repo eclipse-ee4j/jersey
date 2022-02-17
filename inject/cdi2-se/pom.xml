@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -110,6 +110,24 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <!-- compile everything to ensure module-info contains right entries -->
+                            <release>11</release>
+                            <compilerArgs>
+                                <arg>--add-reads</arg>
+                                <arg>org.glassfish.jersey.inject.cdi2.se=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

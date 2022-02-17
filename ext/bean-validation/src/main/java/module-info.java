@@ -1,0 +1,2 @@
+module jersey.bean.validation {
+}
