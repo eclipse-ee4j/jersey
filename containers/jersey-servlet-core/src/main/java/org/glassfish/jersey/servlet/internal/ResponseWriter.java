@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -144,7 +144,7 @@ public class ResponseWriter implements ContainerResponseWriter {
 
         final String reasonPhrase = responseContext.getStatusInfo().getReasonPhrase();
         if (reasonPhrase != null) {
-            response.setStatus(responseContext.getStatus(), reasonPhrase);
+            response.setStatus(responseContext.getStatus());
         } else {
             response.setStatus(responseContext.getStatus());
         }
@@ -217,7 +217,7 @@ public class ResponseWriter implements ContainerResponseWriter {
                     if (configSetStatusOverSendError) {
                         response.reset();
                         //noinspection deprecation
-                        response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
+                        response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                     } else {
                         response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
                     }

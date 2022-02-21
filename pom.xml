@@ -1527,6 +1527,11 @@
                 <artifactId>jakarta.activation-api</artifactId>
                 <version>${jakarta.activation-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${servlet.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.sun.activation</groupId>
@@ -2174,6 +2179,8 @@
         <jstl.version>2.0.0</jstl.version>
         <jta.api.version>2.0.0</jta.api.version>
         <servlet5.version>5.0.0</servlet5.version>
+        <servlet6.version>6.0.0</servlet6.version>
+        <servlet.version>5.0.0</servlet.version> <!-- Keep this until Grizzly is Servlet 6 compatible -->
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
