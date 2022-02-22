@@ -230,9 +230,4 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
     public Set<Object> getInstances() {
         return null;
     }
-
-    // Jersey 2.x
-    private boolean hasProperty(String name) {
-        return getProperty(name) != null;
-    }
 }
