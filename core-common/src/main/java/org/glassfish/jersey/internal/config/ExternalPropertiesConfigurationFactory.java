@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.BiConsumer;
 
 /**
  * Factory for external properties providers
@@ -50,11 +51,19 @@ public class ExternalPropertiesConfigurationFactory {
      * @return map of merged properties from all found/plugged providers
      */
     static Map<String, Object> readExternalPropertiesMap() {
-
-        final ExternalConfigurationProvider provider = mergeConfigs(EXTERNAL_CONFIGURATION_PROVIDERS);
-        return provider == null ? Collections.emptyMap() : provider.getProperties();
+        return readExternalPropertiesMap(EXTERNAL_CONFIGURATION_PROVIDERS);
     }
 
+    /**
+     * Map of merged properties from all given providers
+     *
+     * @param externalConfigProviders list of providers to use
+     * @return map of merged properties from {@code externalConfigProviders} providers
+     */
+    private static Map<String, Object> readExternalPropertiesMap(List<ExternalConfigurationProvider> externalConfigProviders) {
+        final ExternalConfigurationProvider provider = mergeConfigs(externalConfigProviders);
+        return provider == null ? Collections.emptyMap() : provider.getProperties();
+    }
 
     /**
      * Input Configurable object shall be provided in order to be filled with all found properties
@@ -64,14 +73,28 @@ public class ExternalPropertiesConfigurationFactory {
      */
 
     public static boolean configure(Configurable config) {
+        return configure((k, v) -> config.property(k, v), EXTERNAL_CONFIGURATION_PROVIDERS);
+    }
 
+    /**
+     * Key Value pairs gathered by {@link ExternalConfigurationProvider}s are applied to a given {@code config}. The
+     * {@code config} can be for instance {@code (k,v) -> configurable.property(k,v)} of a
+     * {@link Configurable#property(String, Object) Configurable structure}, or {@code (k,v) -> properties.put(k,v)} of a
+     * {@link java.util.Properties#put(Object, Object) Properties structure}.
+     *
+     * @param config
+     * @param externalConfigurationProviders the providers to grab the properties from it.
+     * @return true if configured false otherwise.
+     */
+    public static boolean configure(BiConsumer<String, Object> config,
+                                    List<ExternalConfigurationProvider> externalConfigurationProviders) {
         if (config instanceof ExternalConfigurationModel) {
             return false; //shall not configure itself
         }
 
-        final Map<String, Object> properties = readExternalPropertiesMap();
+        final Map<String, Object> properties = readExternalPropertiesMap(externalConfigurationProviders);
 
-        properties.forEach((k, v) -> config.property(k, v));
+        properties.forEach((k, v) -> config.accept(k, v));
 
         return true;
     }
