@@ -39,7 +39,7 @@
         <module>jdk-connector</module>
         <module>jetty-connector</module>
         <module>netty-connector</module>
-        <module>java-connector</module>
+<!--        <module>java-connector</module> temporarily for M3-->
     </modules>
 
     <dependencies>
