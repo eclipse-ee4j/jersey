@@ -43,7 +43,7 @@ aopalliance Version 1
 
 Bean Validation API 3.0.0
 * License: Apache License, 2.0
-* Project: http://beanvalidation.org/1.1/
+* Project: https://projects.eclipse.org/projects/ee4j.bean-validation
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
@@ -61,7 +61,7 @@ Google Guava Version 18.0
 * License: Apache License, 2.0
 * Copyright (C) 2009 The Guava Authors
 
-javax.inject Version: 1
+jakarta.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
@@ -70,7 +70,7 @@ Javassist Version 3.25.0-GA
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.11.3
+Jackson JAX-RS Providers Version 2.13.0
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2011 FasterXML, LLC. All rights reserved unless otherwise indicated.
@@ -95,7 +95,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.0
+org.objectweb.asm Version 9.2
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 
