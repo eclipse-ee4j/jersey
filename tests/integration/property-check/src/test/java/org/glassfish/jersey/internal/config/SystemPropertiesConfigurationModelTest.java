@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,7 @@ public class SystemPropertiesConfigurationModelTest {
          *  (jdk.internal.loader.ClassLoaders$AppClassLoader) that current Guava version doesn't support.
          */
         if (JdkVersion.getJdkVersion().getMajor() == 8) {
-            SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
+            JerseySystemPropertiesConfigurationModel model = new JerseySystemPropertiesConfigurationModel();
             Predicate<Class<?>> containsAnnotation = clazz -> clazz.getAnnotation(PropertiesClass.class) != null
                     || clazz.getAnnotation(Property.class) != null;
             Predicate<Class<?>> notCommon = clazz -> clazz != CommonProperties.class;
@@ -69,7 +69,7 @@ public class SystemPropertiesConfigurationModelTest {
             List<String> propertyClasses = getClassesWithPredicate(ROOT_PACKAGE, notCommon, notTestProperties,
                     containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
             assertFalse(propertyClasses.isEmpty());
-            propertyClasses.removeAll(SystemPropertiesConfigurationModel.PROPERTY_CLASSES);
+            propertyClasses.removeAll(JerseySystemPropertiesConfigurationModel.PROPERTY_CLASSES);
             assertEquals("New properties have been found. "
                     + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
                     + propertyClasses, 0, propertyClasses.size());
@@ -91,7 +91,7 @@ public class SystemPropertiesConfigurationModelTest {
             System.setProperty(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, TEST_STRING);
             System.setProperty(MultiPartProperties.TEMP_DIRECTORY, TEST_STRING);
             System.setProperty(OAuth1ServerProperties.REALM, TEST_STRING);
-            SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
+            JerseySystemPropertiesConfigurationModel model = new JerseySystemPropertiesConfigurationModel();
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
             String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
             System.setProperty("java.security.policy", securityPolicy);

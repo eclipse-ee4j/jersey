@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,27 +16,9 @@
 
 package org.glassfish.jersey.internal.config;
 
-import org.glassfish.jersey.spi.ExternalConfigurationModel;
-import org.glassfish.jersey.spi.ExternalConfigurationProvider;
+class SystemPropertiesConfigurationProvider extends ExternalConfigurationProviderImpl {
 
-import java.util.Map;
-
-class SystemPropertiesConfigurationProvider implements ExternalConfigurationProvider {
-
-    private final SystemPropertiesConfigurationModel model = new SystemPropertiesConfigurationModel();
-    @Override
-    public Map<String, Object> getProperties() {
-        return model.getProperties();
+    public SystemPropertiesConfigurationProvider() {
+        super(new JerseySystemPropertiesConfigurationModel());
     }
-
-    @Override
-    public ExternalConfigurationModel getConfiguration() {
-        return model;
-    }
-
-    @Override
-    public ExternalConfigurationModel merge(ExternalConfigurationModel input) {
-        return input == null ? model : model.mergeProperties(input.getProperties());
-    }
-
 }
