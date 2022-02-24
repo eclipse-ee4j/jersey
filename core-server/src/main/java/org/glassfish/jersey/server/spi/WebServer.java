@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +28,11 @@ import org.glassfish.jersey.spi.Contract;
 /**
  * Jersey service contract for self-contained servers.
  * <p>
- * Runs a self-contained {@link Application} in a {@link Container} using a
- * Web Server implicitly started and stopped together with the application.
+ *      Runs a self-contained {@link Application} in a {@link Container} using a
+ *      Web Server implicitly started and stopped together with the application.
+ * </p>
+ * <p>
+ *     The WebServer instance is wrapped by the implementation of {@link jakarta.ws.rs.SeBootstrap.Instance}.
  * </p>
  *
  * @author Markus KARG (markus@headcrashing.eu)

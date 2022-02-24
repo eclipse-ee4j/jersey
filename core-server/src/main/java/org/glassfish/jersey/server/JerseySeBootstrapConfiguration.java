@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,19 +18,27 @@ package org.glassfish.jersey.server;
 
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.UriBuilder;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
+import org.glassfish.jersey.internal.config.SystemPropertiesConfigurationModel;
+import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
 
 import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 /**
@@ -40,6 +48,7 @@ import static java.lang.Boolean.TRUE;
  */
 public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configuration {
     private static final Logger LOGGER = Logger.getLogger(JerseySeBootstrapConfiguration.class.getName());
+    protected static final Random RANDOM = new Random();
     private final SeBootstrap.Configuration configuration;
 
     private JerseySeBootstrapConfiguration(SeBootstrap.Configuration configuration) {
@@ -61,14 +70,58 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
     public URI uri(boolean resolveDefaultPort) {
         final String protocol = configuration.protocol();
         final String host = configuration.host();
-        final int configPort = configuration.port();
-        final int port = (configPort < 0 && resolveDefaultPort)
-                ? isHttps() ? Container.DEFAULT_HTTPS_PORT : Container.DEFAULT_HTTP_PORT
-                : configPort;
+        final int port = resolveDefaultPort ? resolvePort() : configuration.port();
         final String rootPath = configuration.rootPath();
         final URI uri = UriBuilder.newInstance().scheme(protocol.toLowerCase()).host(host).port(port).path(rootPath)
                 .build();
         return uri;
+    }
+
+    private int resolvePort() {
+        final int configPort = configuration.port();
+        final int basePort = allowPrivilegedPorts() ? 0 : 8000;
+        final int port;
+        switch (configPort) {
+            case SeBootstrap.Configuration.DEFAULT_PORT:
+                port = basePort + (isHttps() ? Container.DEFAULT_HTTPS_PORT : Container.DEFAULT_HTTP_PORT);
+                break;
+            case SeBootstrap.Configuration.FREE_PORT:
+               port = _resolvePort(basePort == 0);
+               break;
+            default:
+                port = configPort;
+                break;
+        }
+        return port;
+    }
+
+    private int _resolvePort(boolean allowPrivilegedPort) {
+        final int basePort = allowPrivilegedPort ? 0 : 1023;
+        // Get the initial range parameters
+        final int lower = basePort;
+        final int range = 0xFFFF;
+
+        // Select a start point in the range
+        final int initialOffset = RANDOM.nextInt(range - lower);
+
+        // Loop the offset through all ports in the range and attempt
+        // to bind to each
+        int offset = initialOffset;
+        ServerSocket socket;
+        do {
+            final int port = lower + offset;
+            try {
+                socket = new ServerSocket(port);
+                socket.close();
+                return port;
+            } catch (IOException caught) {
+                // Swallow exceptions until the end
+            }
+            offset = (offset + 1) % range;
+        } while (offset != initialOffset);
+
+        // If a port can't be bound, throw the exception
+        throw new IllegalArgumentException("Couldn't bind to any port.");
     }
 
     /**
@@ -101,6 +154,16 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
     }
 
     /**
+     * Defines if the {@link WebServer} should start on a privileged port when port is not set.
+     * @return true if {@link ServerProperties#WEBSERVER_AUTO_START} is {@code true}, {@code false} otherwise.
+     */
+    public boolean allowPrivilegedPorts() {
+        return Optional.ofNullable(
+                (Boolean) configuration.property(ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS))
+                .orElse(FALSE);
+    }
+
+    /**
      * Factory method creating {@code JerseySeBootstrapConfiguration} wrapper around {@link SeBootstrap.Configuration}.
      * @param configuration wrapped configuration
      * @return {@code JerseySeBootstrapConfiguration} wrapper around {@link SeBootstrap.Configuration}.
@@ -129,8 +192,9 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
             PROPERTY_TYPES.put(SeBootstrap.Configuration.ROOT_PATH, String.class);
             PROPERTY_TYPES.put(SeBootstrap.Configuration.SSL_CONTEXT, SSLContext.class);
             PROPERTY_TYPES.put(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION, SSLClientAuthentication.class);
-            PROPERTY_TYPES.put(ServerProperties.WEBSERVER_CLASS, Class.class);
+            PROPERTY_TYPES.put(ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS, Boolean.class);
             PROPERTY_TYPES.put(ServerProperties.WEBSERVER_AUTO_START, Boolean.class);
+            PROPERTY_TYPES.put(ServerProperties.WEBSERVER_CLASS, Class.class);
         }
 
         private final Map<String, Object> properties = new HashMap<>();
@@ -138,7 +202,7 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
         private Builder() {
             this.properties.put(SeBootstrap.Configuration.PROTOCOL, "HTTP"); // upper case mandated by javadoc
             this.properties.put(SeBootstrap.Configuration.HOST, "localhost");
-            this.properties.put(SeBootstrap.Configuration.PORT, -1); // Auto-select port 80 for HTTP or 443 for HTTPS
+            this.properties.put(SeBootstrap.Configuration.PORT, -1); // Auto-select port 8080 for HTTP or 8443 for HTTPS
             this.properties.put(SeBootstrap.Configuration.ROOT_PATH, "/");
             this.properties.put(ServerProperties.WEBSERVER_CLASS, WebServer.class); // Auto-select first provider
             try {
@@ -149,6 +213,15 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
             this.properties.put(SeBootstrap.Configuration.SSL_CLIENT_AUTHENTICATION,
                     SeBootstrap.Configuration.SSLClientAuthentication.NONE);
             this.properties.put(ServerProperties.WEBSERVER_AUTO_START, TRUE);
+            this.properties.put(ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS, FALSE);
+
+            SystemPropertiesConfigurationModel propertiesConfigurationModel = new SystemPropertiesConfigurationModel(
+                    Collections.singletonList(Properties.class.getName())
+            );
+            from((name, aClass) -> String.class.equals(aClass) || Integer.class.equals(aClass) || Boolean.class.equals(aClass)
+                    ? propertiesConfigurationModel.getOptionalProperty(name, aClass)
+                    : Optional.empty()
+            );
         }
 
         @Override
@@ -207,5 +280,42 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
             }
             return this;
         }
+    }
+
+    /**
+     * Name the properties to be internally read from System properties by {@link ExternalPropertiesConfigurationFactory}.
+     * This is required just when SecurityManager is on, otherwise all system properties are read.
+     */
+    @PropertiesClass
+    private static class Properties {
+        /**
+         * See {@link SeBootstrap.Configuration#PROTOCOL} property.
+         */
+        public static final String SE_BOOTSTRAP_CONFIGURATION_PROTOCOL = SeBootstrap.Configuration.PROTOCOL;
+
+        /**
+         * See {@link SeBootstrap.Configuration#HOST} property.
+         */
+        public static final String SE_BOOTSTRAP_CONFIGURATION_HOST = SeBootstrap.Configuration.HOST;
+
+        /**
+         * See {@link SeBootstrap.Configuration#PORT} property.
+         */
+        public static final String SE_BOOTSTRAP_CONFIGURATION_PORT = SeBootstrap.Configuration.PORT;
+
+        /**
+         * See {@link SeBootstrap.Configuration#ROOT_PATH} property.
+         */
+        public static final String SE_BOOTSTRAP_CONFIGURATION_ROOT_PATH = SeBootstrap.Configuration.ROOT_PATH;
+
+        /**
+         * See {@link ServerProperties#WEBSERVER_ALLOW_PRIVILEGED_PORTS} property.
+         */
+        public static final String WEBSERVER_ALLOW_PRIVILEGED_PORTS  = ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS;
+
+        /**
+         * See {@link ServerProperties#WEBSERVER_AUTO_START} property.
+         */
+        public static final String WEBSERVER_AUTO_START = ServerProperties.WEBSERVER_AUTO_START;
     }
 }

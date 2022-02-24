@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,7 +64,7 @@ final class NettyHttpServer implements WebServer {
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
 
-        final URI uri = configuration.uri(false);
+        final URI uri = configuration.uri(true);
         this.port = NettyHttpContainerProvider.getPort(uri);
 
         this.container = container;

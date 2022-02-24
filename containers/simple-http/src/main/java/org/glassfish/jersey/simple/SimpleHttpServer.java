@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,7 +50,7 @@ final class SimpleHttpServer implements WebServer {
     SimpleHttpServer(final SimpleContainer container, final JerseySeBootstrapConfiguration configuration) {
         this.container = container;
         this.simpleServer = SimpleContainerFactory.create(
-                configuration.uri(false),
+                configuration.uri(true),
                 configuration.sslContext(),
                 configuration.sslClientAuthentication(),
                 this.container,
