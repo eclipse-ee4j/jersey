@@ -86,7 +86,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
     }
     @Override
     public <T> Optional<T> getOptionalProperty(String name, Class<T> clazz) {
-        return Optional.of(as(name, clazz));
+        return Optional.ofNullable(as(name, clazz));
     }
 
     @Override

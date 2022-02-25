@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
+import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
 
 
@@ -37,25 +38,6 @@ import org.glassfish.jersey.server.spi.WebServer;
  */
 @PropertiesClass
 public final class ServerProperties {
-
-    /**
-     * Defines the implementation of {@link WebServer} to bootstrap.
-     * <p>
-     * By default auto-selects the first server provider found.
-     * </p>
-     * @since 3.1.0
-     */
-    public static final String WEBSERVER_CLASS = "jersey.config.server.webserver.class";
-
-    /**
-     * Whether to automatically startup {@link WebServer} at bootstrap.
-     * <p>
-     * By default, servers are immediately listening to connections after bootstrap,
-     * so no explicit invocation of {@link WebServer#start()} is needed.
-     * </p>
-     * @since 3.1.0
-     */
-    public static final String WEBSERVER_AUTO_START = "jersey.config.server.webserver.autostart";
 
     /**
      * Defines one or more packages that contain application-specific resources and
@@ -782,6 +764,50 @@ public final class ServerProperties {
      */
     public static final String EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES =
             "jersey.config.server.empty.request.media.matches.any.consumes";
+
+    /**
+     * Defines whether to allow privileged ports (0-1023) to be used to start the {@link WebServer} implementation
+     * to be chosen from the unused ports when the {@link jakarta.ws.rs.SeBootstrap.Configuration#PORT} is set to {@code -1}
+     * or unset.
+     * <p>
+     * The default ports are {@link Container#DEFAULT_HTTP_PORT} for HTTP and {@link Container#DEFAULT_HTTPS_PORT}
+     * for HTTPS when {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code true} or 8080 for HTTP and 8443 for HTTPS when
+     * {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code false}.
+     * </p>
+     * <p>
+     * If {@link jakarta.ws.rs.SeBootstrap.Configuration#PORT} is set to {@code 0}, the implementation chooses random ports
+     * (0-65535) when {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code true}, or (1024-65535) when
+     * {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code false.}
+     * </p>
+     * <p>
+     * The default this is {@code false}. Use {@code true} to allow a restricted port number. The name of the configuration
+     * property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.0
+     */
+    public static final String WEBSERVER_ALLOW_PRIVILEGED_PORTS =
+            "jersey.config.server.bootstrap.webserver.allow.privileged.ports";
+
+    /**
+     * Whether to automatically startup {@link WebServer} at bootstrap.
+     * <p>
+     * By default, servers are immediately listening to connections after bootstrap,
+     * so no explicit invocation of {@link WebServer#start()} is needed. The name of the configuration
+     * property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.0
+     */
+    public static final String WEBSERVER_AUTO_START = "jersey.config.server.bootstrap.webserver.autostart";
+
+    /**
+     * Defines the implementation of {@link WebServer} to bootstrap.
+     * <p>
+     * By default auto-selects the first server provider found. The name of the configuration
+     * property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.0
+     */
+    public static final String WEBSERVER_CLASS = "jersey.config.server.bootstrap.webserver.class";
 
     /**
      * JVM argument to define the value of
