@@ -121,7 +121,7 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
         } while (offset != initialOffset);
 
         // If a port can't be bound, throw the exception
-        throw new IllegalArgumentException("Couldn't bind to any port.");
+        throw new IllegalArgumentException(LocalizationMessages.COULD_NOT_BIND_TO_ANY_PORT());
     }
 
     /**
