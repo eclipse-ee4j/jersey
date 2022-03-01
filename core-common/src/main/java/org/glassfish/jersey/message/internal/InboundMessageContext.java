@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -425,14 +425,14 @@ public abstract class InboundMessageContext {
     /**
      * Get Content-Length value.
      *
-     * @return Content-Length as integer if present and valid number. In other cases returns -1.
+     * @return Content-Length as long if present and valid number. In other cases returns -1.
      */
-    public int getLength() {
-        return singleHeader(HttpHeaders.CONTENT_LENGTH, new Function<String, Integer>() {
+    public long getLength() {
+        return singleHeader(HttpHeaders.CONTENT_LENGTH, new Function<String, Long>() {
             @Override
-            public Integer apply(String input) {
+            public Long apply(String input) {
                 try {
-                    return (input != null && !input.isEmpty()) ? Integer.parseInt(input) : -1;
+                    return (input != null && !input.isEmpty()) ? Long.parseLong(input) : -1;
                 } catch (NumberFormatException ex) {
                     throw new ProcessingException(ex);
                 }
