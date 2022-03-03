@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
@@ -39,7 +40,7 @@ import static org.junit.Assert.fail;
  * @author Martin Snyder
  */
 @RunWith(Theories.class)
-public class JarFileScannerTest {
+public class JarFileScannerTest extends AbstractFinderTest {
 
     @DataPoint
     public static final boolean RECURSIVE = true;
@@ -50,15 +51,7 @@ public class JarFileScannerTest {
 
     @Before
     public void setUp() throws Exception {
-        final String classPath = System.getProperty("java.class.path");
-        final String[] entries = classPath.split(System.getProperty("path.separator"));
-
-        for (final String entry : entries) {
-            if (entry.contains("jakarta.ws.rs-api")) {
-                jaxRsApiPath = entry;
-                break;
-            }
-        }
+        jaxRsApiPath = setUpJaxRsApiPath();
 
         if (jaxRsApiPath == null) {
             fail("Could not find jakarta.ws.rs-api.");

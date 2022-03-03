@@ -309,7 +309,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>${mvn.compiler.plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
                         <source>${java.version}</source>
@@ -321,9 +321,6 @@
                         </compilerArguments>
                         <showWarnings>false</showWarnings>
                         <fork>false</fork>
-                        <excludes>
-                            <exclude>module-info.java</exclude>
-                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -668,7 +665,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>5.1.4</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -862,10 +859,9 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
+                            <version>${mvn.compiler.plugin.version}</version>
                             <inherited>true</inherited>
                             <configuration>
-                                <source>${java.version}</source>
-                                <target>${java.version}</target>
                                 <excludes>
                                     <exclude>module-info.java</exclude>
                                 </excludes>
@@ -891,9 +887,9 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
+                            <version>${mvn.compiler.plugin.version}</version>
                             <inherited>true</inherited>
                             <executions>
-<!-- when module.info
                                 <execution>
                                     <id>default-compile</id>
                                     <configuration>
@@ -901,7 +897,6 @@
                                         <release>11</release>
                                     </configuration>
                                 </execution>
--->
                                 <execution>
                                     <id>base-compile</id>
                                     <goals>
@@ -2108,6 +2103,7 @@
         <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
         <checkstyle.version>8.28</checkstyle.version>
         <easymock.version>3.3</easymock.version>
+        <mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
 
         <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>

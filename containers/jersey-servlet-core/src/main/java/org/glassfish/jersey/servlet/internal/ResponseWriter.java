@@ -142,12 +142,7 @@ public class ResponseWriter implements ContainerResponseWriter {
             }
         }
 
-        final String reasonPhrase = responseContext.getStatusInfo().getReasonPhrase();
-        if (reasonPhrase != null) {
-            response.setStatus(responseContext.getStatus());
-        } else {
-            response.setStatus(responseContext.getStatus());
-        }
+        response.setStatus(responseContext.getStatus());
 
         if (!responseContext.hasEntity()) {
             return null;
@@ -219,7 +214,7 @@ public class ResponseWriter implements ContainerResponseWriter {
                         //noinspection deprecation
                         response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                     } else {
-                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Request failed.");
+                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()/*, "Request failed."*/);
                     }
                 } catch (final IllegalStateException ex) {
                     // a race condition externally committing the response can still occur...

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,14 +53,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
 
-    private static final String TRUSTSTORE_CLIENT_FILE = "./truststore_client";
+    private static final String TRUSTSTORE_CLIENT_FILE = "truststore_client";
     private static final String TRUSTSTORE_CLIENT_PWD = "asdfgh";
-    private static final String KEYSTORE_CLIENT_FILE = "./keystore_client";
+    private static final String KEYSTORE_CLIENT_FILE = "keystore_client";
     private static final String KEYSTORE_CLIENT_PWD = "asdfgh";
 
-    private static final String KEYSTORE_SERVER_FILE = "./keystore_server";
+    private static final String KEYSTORE_SERVER_FILE = "keystore_server";
     private static final String KEYSTORE_SERVER_PWD = "asdfgh";
-    private static final String TRUSTSTORE_SERVER_FILE = "./truststore_server";
+    private static final String TRUSTSTORE_SERVER_FILE = "truststore_server";
     private static final String TRUSTSTORE_SERVER_PWD = "asdfgh";
 
     private final ResourceConfig rc = new ResourceConfig(TestResource.class);

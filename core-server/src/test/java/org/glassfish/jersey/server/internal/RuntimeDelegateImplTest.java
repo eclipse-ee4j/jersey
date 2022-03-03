@@ -56,6 +56,11 @@ public class RuntimeDelegateImplTest {
      */
     @Test
     public void testRuntimeDelegateInstance() {
+        try {
+            RuntimeDelegate.getInstance().createEndpoint((Application) null, com.sun.net.httpserver.HttpHandler.class);
+        } catch (Exception e) {
+            // does not matter, this just makes sure the correct RuntimeDelegate is set
+        }
         assertSame(RuntimeDelegateImpl.class, RuntimeDelegate.getInstance().getClass());
     }
 

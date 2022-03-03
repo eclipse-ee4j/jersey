@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.server.wadl.internal.generators;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -402,7 +403,7 @@ public class WadlGeneratorJAXBGrammarGenerator implements WadlGenerator {
                                 });
                         parameterClassInstance = defaultConstructor.newInstance();
                     } catch (final InstantiationException | SecurityException | IllegalAccessException
-                            | IllegalArgumentException | InvocationTargetException ex) {
+                            | IllegalArgumentException | InvocationTargetException | InaccessibleObjectException ex) {
                         LOGGER.log(Level.FINE, null, ex);
                     } catch (final PrivilegedActionException ex) {
                         LOGGER.log(Level.FINE, null, ex.getCause());

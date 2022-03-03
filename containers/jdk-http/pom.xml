@@ -69,6 +69,23 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <!-- compile everything to ensure module-info contains right entries -->
+                            <release>11</release>
+                            <compilerArgs>
+                                <arg>--add-reads</arg>
+                                <arg>org.glassfish.jersey.container.jdk.http=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <resources>
@@ -82,5 +99,6 @@
     <properties>
         <!-- https://bugs.openjdk.java.net/browse/JDK-8211426 -->
         <surefire.security.argline>-Djdk.tls.client.protocols=TLSv1.2</surefire.security.argline>
+        <surefire.coverage.argline>--add-opens org.glassfish.jersey.container.jdk.http/org.glassfish.jersey.jdkhttp=ALL-UNNAMED --illegal-access=permit</surefire.coverage.argline>
     </properties>
 </project>
