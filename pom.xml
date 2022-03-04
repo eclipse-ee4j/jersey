@@ -418,6 +418,7 @@
                             -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}
                         </argLine>
                         <skipTests>${skip.tests}</skipTests>
+                        <trimStackTrace>false</trimStackTrace>
                     </configuration>
                     <dependencies>
                         <dependency>

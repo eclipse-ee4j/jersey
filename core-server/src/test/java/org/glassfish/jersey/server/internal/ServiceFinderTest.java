@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,12 @@
 
 package org.glassfish.jersey.server.internal;
 
+import static org.glassfish.jersey.server.JarUtils.createJarFile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -23,21 +29,114 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.server.JarUtils;
+import jakarta.ws.rs.container.DynamicFeature;
+import jakarta.ws.rs.core.Configurable;
 
+import org.glassfish.jersey.internal.ServiceConfigurationError;
+import org.glassfish.jersey.internal.ServiceFinder;
+import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
+import org.glassfish.jersey.internal.ServiceFinder.ServiceLookupIteratorProvider;
+import org.glassfish.jersey.internal.ServiceFinder.ServiceReflectionIteratorProvider;
+import org.glassfish.jersey.server.JarUtils;
+import org.glassfish.jersey.server.JaxRsFeatureRegistrationTest.DynamicFeatureImpl;
+import org.junit.AfterClass;
 import org.junit.Test;
-import static org.glassfish.jersey.server.JarUtils.createJarFile;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Michal Gajdos
  */
 public class ServiceFinderTest {
+
+    @AfterClass
+    public static void afterClass() {
+        // Restore the default
+        ServiceFinder.setIteratorProvider(null);
+    }
+
+    @Test
+    public void testExistingClass() {
+        ServiceIteratorProvider[] providers = new ServiceIteratorProvider[] {
+                new ServiceReflectionIteratorProvider(), new ServiceLookupIteratorProvider()};
+        for (ServiceIteratorProvider provider : providers) {
+            ServiceFinder.setIteratorProvider(provider);
+            ServiceFinder<?> serviceFinder = ServiceFinder.find(DynamicFeature.class);
+            checks(provider, serviceFinder);
+            serviceFinder = ServiceFinder.find("jakarta.ws.rs.container.DynamicFeature");
+            checks(provider, serviceFinder);
+        }
+    }
+
+    @Test
+    public void testMissingService() {
+        ServiceIteratorProvider[] providers = new ServiceIteratorProvider[] {
+                new ServiceReflectionIteratorProvider(), new ServiceLookupIteratorProvider()};
+        for (ServiceIteratorProvider provider : providers) {
+            ServiceFinder.setIteratorProvider(provider);
+            ServiceFinder<?> serviceFinder = ServiceFinder.find(Configurable.class);
+            assertFalse(serviceFinder.iterator().hasNext());
+            serviceFinder = ServiceFinder.find("jakarta.ws.rs.core.Configurable");
+            assertFalse(serviceFinder.iterator().hasNext());
+        }
+    }
+
+    @Test
+    public void testClassNotFound() {
+        ServiceIteratorProvider[] providers = new ServiceIteratorProvider[] {
+                new ServiceReflectionIteratorProvider(), new ServiceLookupIteratorProvider()};
+        for (ServiceIteratorProvider provider : providers) {
+            ServiceFinder.setIteratorProvider(provider);
+            ServiceFinder<?> serviceFinder = ServiceFinder.find("doesNotExist");
+            assertFalse(serviceFinder.iterator().hasNext());
+        }
+    }
+
+    @Test
+    public void testServiceReflectionIteratorProviderImplementationNotFound() {
+        ServiceFinder.setIteratorProvider(new ServiceReflectionIteratorProvider());
+        ServiceFinder<?> serviceFinder = ServiceFinder.find(ServiceExample.class, true);
+        assertFalse(serviceFinder.iterator().hasNext());
+        serviceFinder = ServiceFinder.find(ServiceExample.class, false);
+        try {
+            serviceFinder.iterator().hasNext();
+            fail("It is expected to fail");
+        } catch (ServiceConfigurationError e) {
+            // Expected
+        }
+    }
+
+    @Test
+    public void testServiceLookupIteratorProviderImplementationNotFound() {
+        ServiceFinder.setIteratorProvider(new ServiceLookupIteratorProvider());
+        ServiceFinder<?> serviceFinder = ServiceFinder.find(ServiceExample.class, true);
+        Iterator<?> iterator = serviceFinder.iterator();
+        try {
+            iterator.hasNext();
+            iterator.next();
+            fail("It is expected to fail");
+        } catch (java.util.ServiceConfigurationError e) {
+            // Expected
+        }
+        serviceFinder = ServiceFinder.find(ServiceExample.class, false);
+        iterator = serviceFinder.iterator();
+        try {
+            iterator.hasNext();
+            iterator.next();
+            fail("It is expected to fail");
+        } catch (java.util.ServiceConfigurationError e) {
+            // Expected
+        }
+    }
+
+    private void checks(ServiceIteratorProvider provider, ServiceFinder<?> serviceFinder) {
+        Iterator<?> iterator = serviceFinder.iterator();
+        assertTrue("No instance found with " + provider, iterator.hasNext());
+        Object dynamicFeature = iterator.next();
+        assertEquals(DynamicFeatureImpl.class, dynamicFeature.getClass());
+    }
 
     @Test
     public void testJarTopLevel() throws Exception {
@@ -49,6 +148,7 @@ public class ServiceFinderTest {
         final String path = ServiceFinderTest.class.getResource("").getPath();
         final ClassLoader classLoader = createClassLoader(path.substring(0, path.indexOf("org")), map);
 
+        ServiceFinder.setIteratorProvider(new ServiceReflectionIteratorProvider());
         final ServiceFinder<?> finder = createServiceFinder(classLoader, "jaxrs-components");
 
         final Set<Class<?>> s = new HashSet<>();

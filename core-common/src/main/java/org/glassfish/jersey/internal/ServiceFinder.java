@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,10 +31,12 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
@@ -229,7 +231,9 @@ public final class ServiceFinder<T> implements Iterable<T> {
      *                class loader (or, failing that the bootstrap class loader) is to
      *                be used
      * @param ignoreOnClassNotFound If a provider cannot be loaded by the class loader
-     *                              then move on to the next available provider.
+     *                              then move on to the next available provider. This value does
+     *                              not apply when the {@link ServiceIteratorProvider} is set to
+     *                              {@link ServiceLookupIteratorProvider}.
      * @throws ServiceConfigurationError If a provider-configuration file violates the specified format
      *                                   or names a provider class that cannot be found and instantiated
      * @see #find(Class)
@@ -279,7 +283,10 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * </pre>
      * @param service The service's abstract service class
      * @param ignoreOnClassNotFound If a provider cannot be loaded by the class loader
-     *                              then move on to the next available provider.
+     *                              then move on to the next available provider. This value does
+     *                              not apply when the {@link ServiceIteratorProvider} is set to
+     *                              {@link ServiceLookupIteratorProvider}.
+     *
      * @throws ServiceConfigurationError If a provider-configuration file violates the specified format
      *                                   or names a provider class that cannot be found and instantiated
      * @see #find(Class, ClassLoader)
@@ -312,7 +319,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * Register the service iterator provider to iterate on provider instances
      * or classes.
      * <p>
-     * The default implementation registered, {@link DefaultServiceIteratorProvider},
+     * The default implementation registered, {@link ServiceLookupIteratorProvider},
      * looks up provider classes in META-INF/service files.
      * <p>
      * This method must be called prior to any attempts to obtain provider
@@ -790,7 +797,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * Supports iteration of provider instances or classes.
      * <p>
      * The default implementation looks up provider classes from META-INF/services
-     * files, see {@link DefaultServiceIteratorProvider}.
+     * files, see {@link ServiceLookupIteratorProvider}.
      * This implementation may be overridden by invoking
      * {@link ServiceFinder#setIteratorProvider(org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider)}.
      */
@@ -806,7 +813,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
                 synchronized (sipLock) {
                     result = sip;
                     if (result == null) { // Second check (with locking)
-                        sip = result = new DefaultServiceIteratorProvider();
+                        sip = result = new ServiceLookupIteratorProvider();
                     }
                 }
             }
@@ -834,7 +841,9 @@ public final class ServiceFinder<T> implements Iterable<T> {
          *        classes.
          * @param ignoreOnClassNotFound if true ignore an instance if the
          *        corresponding provider class if cannot be found,
-         *        otherwise throw a {@link ClassNotFoundException}.
+         *        otherwise throw a {@link ClassNotFoundException}. This value does
+         *        not apply when the {@link ServiceIteratorProvider} is set to
+         *        {@link ServiceLookupIteratorProvider}.
          * @return the provider instance iterator.
          */
         public abstract <T> Iterator<T> createIterator(Class<T> service,
@@ -851,6 +860,8 @@ public final class ServiceFinder<T> implements Iterable<T> {
          * @param ignoreOnClassNotFound if true ignore the provider class if
          *        cannot be found,
          *        otherwise throw a {@link ClassNotFoundException}.
+         *        This value does not apply when the {@link ServiceIteratorProvider}
+         *        is set to {@link ServiceLookupIteratorProvider}.
          * @return the provider class iterator.
          */
         public abstract <T> Iterator<Class<T>> createClassIterator(Class<T> service,
@@ -860,13 +871,10 @@ public final class ServiceFinder<T> implements Iterable<T> {
     }
 
     /**
-     * The default service iterator provider that looks up provider classes in
+     * The service iterator provider that looks up provider classes in
      * META-INF/services files.
-     * <p>
-     * This class may utilized if a {@link ServiceIteratorProvider} needs to
-     * reuse the default implementation.
      */
-    public static final class DefaultServiceIteratorProvider extends ServiceIteratorProvider {
+    public static final class ServiceReflectionIteratorProvider extends ServiceIteratorProvider {
 
         @Override
         public <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
@@ -878,6 +886,43 @@ public final class ServiceFinder<T> implements Iterable<T> {
         public <T> Iterator<Class<T>> createClassIterator(final Class<T> service, final String serviceName,
                                                           final ClassLoader loader, final boolean ignoreOnClassNotFound) {
             return new LazyClassIterator<T>(service, serviceName, loader, ignoreOnClassNotFound);
+        }
+    }
+
+    /**
+     * The service iterator provider that looks up provider classes in
+     * META-INF/services files using {@link ServiceLoader}.
+     */
+    public static final class ServiceLookupIteratorProvider extends ServiceIteratorProvider {
+
+        @Override
+        public <T> Iterator<T> createIterator(final Class<T> service, final String serviceName,
+                                              final ClassLoader loader, final boolean ignoreOnClassNotFound) {
+            Class<T> clazz = fixGenericService(service, serviceName, loader, ignoreOnClassNotFound);
+            return ServiceLoader.load(clazz, loader).iterator();
+        }
+
+        @Override
+        public <T> Iterator<Class<T>> createClassIterator(final Class<T> service, final String serviceName,
+                                                          final ClassLoader loader, final boolean ignoreOnClassNotFound) {
+            Class<T> clazz = fixGenericService(service, serviceName, loader, ignoreOnClassNotFound);
+            List<Class<T>> classes = ServiceLoader.load(clazz, loader).stream()
+                    .map(provider -> (Class<T>) provider.type())
+                    .collect(Collectors.toList());
+            return classes.iterator();
+        }
+
+        private <T> Class<T> fixGenericService(final Class<T> service, final String serviceName,
+                final ClassLoader loader, final boolean ignoreOnClassNotFound) {
+            Class<T> clazz = service;
+            if (Object.class == service) {
+                try {
+                    clazz = (Class<T>) ReflectionHelper.classForNameWithExceptionPEA(serviceName, loader).run();
+                } catch (Exception e) {
+                    // Ignore it. Later, the service implementation will not be loaded.
+                }
+            }
+            return clazz;
         }
     }
 }
