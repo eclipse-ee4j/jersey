@@ -22,7 +22,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.Validator;
 
 import org.glassfish.jersey.jettison.internal.BaseJsonMarshaller;
 import org.glassfish.jersey.jettison.internal.BaseJsonUnmarshaller;
@@ -299,16 +298,5 @@ public final class JettisonJaxbContext extends JAXBContext implements JettisonCo
     @Override
     public Marshaller createMarshaller() throws JAXBException {
         return new JettisonJaxbMarshaller(jaxbContext, getJSONConfiguration());
-    }
-
-    /**
-     * Simply delegates to underlying JAXBContext implementation.
-     *
-     * @return what underlying JAXBContext returns
-     * @throws jakarta.xml.bind.JAXBException
-     */
-    @Override
-    public Validator createValidator() throws JAXBException {
-        return jaxbContext.createValidator();
     }
 }

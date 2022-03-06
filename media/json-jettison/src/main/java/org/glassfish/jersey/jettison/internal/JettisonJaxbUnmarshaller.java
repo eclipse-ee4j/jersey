@@ -123,16 +123,6 @@ public class JettisonJaxbUnmarshaller extends BaseJsonUnmarshaller implements Un
     }
 
     @Override
-    public void setValidating(boolean validating) throws JAXBException {
-        this.jaxbUnmarshaller.setValidating(validating);
-    }
-
-    @Override
-    public boolean isValidating() throws JAXBException {
-        return this.jaxbUnmarshaller.isValidating();
-    }
-
-    @Override
     public void setEventHandler(ValidationEventHandler validationEventHandler) throws JAXBException {
         this.jaxbUnmarshaller.setEventHandler(validationEventHandler);
     }
@@ -163,17 +153,17 @@ public class JettisonJaxbUnmarshaller extends BaseJsonUnmarshaller implements Un
     }
 
     @Override
-    public void setAdapter(XmlAdapter xmlAdapter) {
+    public <A extends XmlAdapter<?, ?>> void setAdapter(A xmlAdapter) {
         this.jaxbUnmarshaller.setAdapter(xmlAdapter);
     }
 
     @Override
-    public <A extends XmlAdapter> void setAdapter(Class<A> type, A adapter) {
+    public <A extends XmlAdapter<?, ?>> void setAdapter(Class<A> type, A adapter) {
         this.jaxbUnmarshaller.setAdapter(type, adapter);
     }
 
     @Override
-    public <A extends XmlAdapter> A getAdapter(Class<A> type) {
+    public <A extends XmlAdapter<?, ?>> A getAdapter(Class<A> type) {
         return this.jaxbUnmarshaller.getAdapter(type);
     }
 

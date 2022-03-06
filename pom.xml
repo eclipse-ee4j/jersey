@@ -2193,8 +2193,8 @@
         <jakarta.jsonp.version>2.1.0</jakarta.jsonp.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.1</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
-        <jaxb.ri.version>3.0.2</jaxb.ri.version>
+        <jakarta.jaxb.api.version>4.0.0</jakarta.jaxb.api.version>
+        <jaxb.ri.version>4.0.0-M3</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.version>11.0.7</jetty.version>

@@ -128,17 +128,17 @@ public final class JettisonJaxbMarshaller extends BaseJsonMarshaller implements 
     }
 
     @Override
-    public void setAdapter(XmlAdapter adapter) {
+    public <A extends XmlAdapter<?, ?>> void setAdapter(A adapter) {
         jaxbMarshaller.setAdapter(adapter);
     }
 
     @Override
-    public <A extends XmlAdapter> void setAdapter(Class<A> type, A adapter) {
+    public <A extends XmlAdapter<?, ?>> void setAdapter(Class<A> type, A adapter) {
         jaxbMarshaller.setAdapter(type, adapter);
     }
 
     @Override
-    public <A extends XmlAdapter> A getAdapter(Class<A> type) {
+    public <A extends XmlAdapter<?, ?>> A getAdapter(Class<A> type) {
         return jaxbMarshaller.getAdapter(type);
     }
 
