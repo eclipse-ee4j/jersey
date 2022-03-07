@@ -31,4 +31,7 @@ module org.glassfish.jersey.container.grizzly2.http {
 
     exports org.glassfish.jersey.grizzly2.httpserver;
     opens org.glassfish.jersey.grizzly2.httpserver;
+
+    exports org.glassfish.jersey.grizzly2.httpserver.test.application
+            to  org.glassfish.jersey.core.server;
 }

@@ -128,6 +128,8 @@
                         ${testMemory} -XX:+CrashOnOutOfMemoryError -XX:-HeapDumpOnOutOfMemoryError
                         -DtestTime=10 -DclientCount=30
                         -DclientImpl=${clientImpl}
+                        --add-exports
+                        org.glassfish.jersey.grizzly2.httpserver.test.application=org.glassfish.jersey.core.server
                     </argLine>
                     <trimStackTrace>false</trimStackTrace>
                     <parallel>methods</parallel>
