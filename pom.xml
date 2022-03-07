@@ -2203,7 +2203,7 @@
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>1.0.0</jsonp.ri.version>
         <jsonp.jaxrs.version>1.0.0</jsonp.jaxrs.version>
-        <moxy.version>3.0.2</moxy.version>
+        <moxy.version>4.0.0-M1</moxy.version>
         <yasson.version>2.0.3</yasson.version>
         <!-- END of Jakartified -->
 
