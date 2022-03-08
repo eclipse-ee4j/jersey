@@ -14,25 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
-import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
+module org.glassfish.jersey.ext.bean.validation {
 
-module org.glassfish.jersey.inject.hk2 {
-
-    requires jakarta.annotation;
-    requires jakarta.inject;
     requires java.logging;
 
-   //HK2 is not yet modularized
-    requires org.glassfish.hk2.api;
-    requires org.glassfish.hk2.locator;
-    requires org.glassfish.hk2.utilities;
+    requires jakarta.annotation;
+    requires jakarta.validation;
+    requires jakarta.ws.rs;
+    requires static jakarta.xml.bind;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.server;
 
-    exports org.glassfish.jersey.inject.hk2;
-    opens org.glassfish.jersey.inject.hk2;
+    requires org.glassfish.jersey.ext.cdi1x;
 
-    provides InjectionManagerFactory
-            with Hk2InjectionManagerFactory;
+    exports org.glassfish.jersey.server.validation;
+    exports org.glassfish.jersey.server.validation.internal.hibernate;
+    opens org.glassfish.jersey.server.validation.internal.hibernate;
 }
