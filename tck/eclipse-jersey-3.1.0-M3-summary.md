@@ -1,9 +1,9 @@
 ```
 ***********************************************************************************
 ***                        TCK bundle information                               ***
-*** Name:       jakarta-restful-ws-tck-3.1.0.zip                                     ***
+*** Name:       jakarta-restful-ws-tck-3.1.0.zip                                ***
 *** Bundle Copied to URL:    http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl//jakarta-restful-ws-tck-3.1.0.zip ***
-*** Date and size: date: 2022-03-09 19:11:44.156077492 +0000, size(b): 3198572        ***
+*** Date and size: date: 2022-03-09 19:11:44.156077492 +0000, size(b): 3198572  ***
 *** SHA256SUM: b76f3e60514b849d4ffed8ad3e2642f41954c333a6d105d61a029ecf194f8220 ***
 ***                                                                             ***
 ***********************************************************************************

@@ -44,9 +44,9 @@ the following is a summary of the TCK results for release of Eclipse Jersey 3.1.
 - [x] Any Additional Specification Certification Requirements<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None
 - [x] Java runtime used to run the implementation<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oracle JDK 11.0.2+9
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Open JDK 11.0.2+9
 - [x] Summary of the information for the certification environment, operating system, cloud, ...<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Linux
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Linux basic-ffzwn 5.14.14-200.fc34.x86_64 #1 SMP Wed Oct 20 16:15:12 UTC 2021 x86_64 GNU/Linux
 - [x] By checking this box I acknowledge that the Organization I represent accepts the terms of the [EFTL](https://www.eclipse.org/legal/tck.php).
 - [x] By checking this box I attest that all TCK requirements have been met, including any compatibility rules.
 
