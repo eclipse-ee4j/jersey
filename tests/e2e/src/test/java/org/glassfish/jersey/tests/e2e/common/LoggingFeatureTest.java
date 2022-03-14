@@ -266,7 +266,7 @@ public class LoggingFeatureTest {
 
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
                     .register(LoggingFeature.class)
