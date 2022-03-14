@@ -49,6 +49,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>logger level: {@link Level#FINE}</li>
  * <li>verbosity: {@link Verbosity#PAYLOAD_TEXT}</li>
  * <li>maximum entity size: {@value #DEFAULT_MAX_ENTITY_SIZE}</li>
+ * <li>line separator: {@link #DEFAULT_SEPARATOR}</li>
  * </ul>
  * <p>
  * Server configurable properties:
