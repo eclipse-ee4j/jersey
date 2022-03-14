@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -266,14 +266,12 @@ public class LoggingFeatureTest {
 
         }
 
-        @Test
+        @Test(expected = AssertionError.class)
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
-                    .register(LoggingFeature
-                            .builder()
-                            .withLogger(Logger.getLogger(LOGGER_NAME))
-                            .build()
-                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
                     .request()
                     .post(Entity.text(ENTITY));
 
