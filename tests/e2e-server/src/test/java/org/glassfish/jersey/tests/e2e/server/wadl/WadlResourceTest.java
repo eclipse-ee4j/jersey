@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -1009,7 +1009,12 @@ public class WadlResourceTest {
                     final String document = response.readEntity(String.class);
 
                     // check that the resulting document contains a method element with id="fooX"
-                    assertTrue(document.replaceAll("\n", " ").matches(".*<method[^>]+id=\"foo" + i + "\"[^>]*>.*"));
+                    assertTrue(document
+                            .replaceAll("\n", " ")
+                            .replaceAll("\r", "")
+                            .replaceAll("ns0:", "")
+                            .matches(".*<method[^>]+id=\"foo" + i + "\"[^>]*>.*")
+                    );
                 }
             }
         }
