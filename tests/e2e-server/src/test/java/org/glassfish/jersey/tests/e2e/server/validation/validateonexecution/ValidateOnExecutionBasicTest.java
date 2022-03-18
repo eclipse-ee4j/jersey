@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,12 +32,22 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.executable.ExecutableType;
 import jakarta.validation.executable.ValidateOnExecution;
 
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import org.eclipse.persistence.jaxb.BeanValidationMode;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.util.runner.RunSeparately;
 
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -289,6 +299,28 @@ public class ValidateOnExecutionBasicTest extends ValidateOnExecutionAbstractTes
         }
     }
 
+    /**
+     * Do not validate the bean by Moxy, validate just by Jersey
+     */
+    public static class MoxyNotValidateContextResolver implements ContextResolver<JAXBContext> {
+        @Override
+        public JAXBContext getContext(Class<?> type) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put(MarshallerProperties.BEAN_VALIDATION_MODE, BeanValidationMode.NONE);
+            try {
+                return JAXBContext.newInstance(new Class[]{type}, properties);
+            } catch (JAXBException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    protected void configureClient(ClientConfig config) {
+        config.register(MoxyNotValidateContextResolver.class);
+        super.configureClient(config);
+    }
+
     @Override
     protected Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
@@ -309,7 +341,8 @@ public class ValidateOnExecutionBasicTest extends ValidateOnExecutionAbstractTes
                 ValidateGetterExecutableOnTypeMatch.class,
                 ValidateGetterExecutableOnBeans.class,
                 ValidateGetterResourceMethod.class,
-                ValidateExecutableResource.class)
+                ValidateExecutableResource.class,
+                MoxyNotValidateContextResolver.class)
                 .property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
     }
 

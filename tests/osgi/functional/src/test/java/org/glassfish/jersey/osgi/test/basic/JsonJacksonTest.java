@@ -41,6 +41,9 @@ public class JsonJacksonTest extends AbstractJsonOsgiIntegrationTest {
         options.addAll(Helper.expandedList(
                 // vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
 
+                // TODO - remove when jackson-module-jakarta-xmlbind-annotations supports JAX-B/4
+                mavenBundle().groupId("jakarta.xml.bind").artifactId("jakarta.xml.bind-api").version("3.0.1"),
+
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-json-jackson").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.ext").artifactId("jersey-entity-filtering").versionAsInProject(),
 

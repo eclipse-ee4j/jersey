@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Properties;
 
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.CookieParam;
@@ -38,9 +39,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -89,8 +94,9 @@ public class WadlBeanParamTest extends JerseyTest {
          */
         @Override
         public boolean qualifyForComparison(final Element control, final Element test) {
-            if (test != null && !"param".equals(test.getNodeName())) {
-                return super.qualifyForComparison(control, test);
+            if (test != null && !"param".equals(test.getNodeName()) && !"ns0:param".equals(test.getNodeName())) {
+                boolean spr = super.qualifyForComparison(control, test);
+                return spr;
             }
             if (!(control != null && test != null
                           && equalsNamespace(control, test)

@@ -79,7 +79,7 @@ public class PackageScanningTest {
                         .versionAsInProject(),
 
                 // MBR/MBW for JSON-P is on the classpath.
-                mavenBundle().groupId("org.glassfish").artifactId("jakarta.json").versionAsInProject()
+                mavenBundle().groupId("jakarta.json").artifactId("jakarta.json-api").versionAsInProject()
         ));
 
         options = Helper.addPaxExamMavenLocalRepositoryProperty(options);
