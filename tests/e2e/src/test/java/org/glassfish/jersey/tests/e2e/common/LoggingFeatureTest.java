@@ -284,7 +284,7 @@ public class LoggingFeatureTest {
             assertThat(record.getMessage(), containsString(SEPARATOR));
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureMaxEntitySize() {
             final Response response = target("/text")
                     .register(LoggingFeature.class)
