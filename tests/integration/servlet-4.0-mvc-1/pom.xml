@@ -49,7 +49,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -85,12 +84,11 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <!--TODO jakartify this -->
                 <dependencies>
                     <dependency>
                         <groupId>jakarta.servlet</groupId>
                         <artifactId>jakarta.servlet-api</artifactId>
-                        <version>${servlet5.version}</version>
+                        <version>${servlet6.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>

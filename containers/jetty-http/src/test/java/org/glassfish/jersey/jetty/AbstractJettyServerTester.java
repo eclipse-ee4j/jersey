@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -82,7 +83,7 @@ public abstract class AbstractJettyServerTester {
         return UriBuilder.fromUri("http://localhost").port(getPort()).path(CONTEXT);
     }
 
-    public void startServer(Class... resources) {
+    public void startServer(Class<?>... resources) {
         ResourceConfig config = new ResourceConfig(resources);
         config.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
         startServer(config);
