@@ -269,11 +269,9 @@ public class LoggingFeatureTest {
         @Test
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
-                    .register(LoggingFeature
-                            .builder()
-                            .withLogger(Logger.getLogger(LOGGER_NAME))
-                            .build()
-                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
                     .request()
                     .post(Entity.text(ENTITY));
 
