@@ -32,7 +32,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
 <!--            <scope>provided</scope> Make this provided for jetty:run -->
         </dependency>
 

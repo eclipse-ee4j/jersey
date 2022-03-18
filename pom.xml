@@ -1530,7 +1530,7 @@
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>${servlet.version}</version>
+                <version>${servlet6.version}</version>
             </dependency>
 
             <dependency>
@@ -2145,8 +2145,10 @@
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
         <rxjava2.version>2.0.4</rxjava2.version>
-        <servlet3.version>3.0.1</servlet3.version>
+
         <servlet4.version>4.0.3</servlet4.version>
+        <servlet6.version>6.0.0</servlet6.version>
+
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
         <slf4j.version>1.7.21</slf4j.version>
@@ -2168,7 +2170,7 @@
         <!-- Jakartified -->
         <cdi.api.version>3.0.0</cdi.api.version>
         <ejb.version>4.0.0</ejb.version>
-        <grizzly2.version>3.0.1</grizzly2.version>
+        <grizzly2.version>4.0.0-M1</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <hk2.version>3.0.3</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[3.0,4)"</hk2.osgi.version>
@@ -2177,9 +2179,6 @@
         <jsp.version>3.1.0</jsp.version>
         <jstl.version>3.0.0</jstl.version>
         <jta.api.version>2.0.0</jta.api.version>
-        <servlet5.version>5.0.0</servlet5.version>
-        <servlet6.version>6.0.0</servlet6.version>
-        <servlet.version>5.0.0</servlet.version> <!-- Keep this until Grizzly is Servlet 6 compatible -->
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>

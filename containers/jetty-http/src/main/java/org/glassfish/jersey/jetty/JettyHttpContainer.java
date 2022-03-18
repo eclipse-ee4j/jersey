@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +37,6 @@ import jakarta.servlet.AsyncEvent;
 import jakarta.servlet.AsyncListener;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.SecurityContext;
 
 import jakarta.inject.Inject;
@@ -198,7 +198,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         if (configSetStatusOverSendError) {
             response.reset();
             //noinspection deprecation
-            response.setStatus(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
+            response.setStatus(BAD_REQUEST_STATUS.getStatusCode());
         } else {
             response.sendError(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
         }

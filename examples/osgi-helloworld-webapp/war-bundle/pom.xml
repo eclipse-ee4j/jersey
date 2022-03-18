@@ -57,7 +57,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version><!-- the current project's ${servlet2.version} is 2.4 and that's not enough -->
             <scope>provided</scope>
         </dependency>
 
