@@ -36,6 +36,7 @@
     <modules>
         <module>apache-connector</module>
         <module>grizzly-connector</module>
+        <module>helidon-connector</module>
         <module>jdk-connector</module>
         <module>jetty-connector</module>
         <module>netty-connector</module>
