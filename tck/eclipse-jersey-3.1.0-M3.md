@@ -38,7 +38,7 @@ the following is a summary of the TCK results for release of Eclipse Jersey 3.1.
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services 3.1.0](https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/ws/rs/jakarta.ws.rs-api/3.1.0/jakarta.ws.rs-api-3.1.0.jar)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL<br/>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Jakarta RESTful Web Services TCK 3.1.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-restful-ws-tck-3.1.0.zip)<br/>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SHA-256: b76f3e60514b849d4ffed8ad3e2642f41954c333a6d105d61a029ecf194f8220
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SHA-256: ea8cd6cc857af55f19468bbb09e8a30f41c60e8f7413a093e7007c3902a49070
 - [x] Public URL of TCK Results Summary<br/>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [TCK results summary](eclipse-jersey-3.1.0-M3-summary)
 - [x] Any Additional Specification Certification Requirements<br/>
@@ -53,7 +53,7 @@ the following is a summary of the TCK results for release of Eclipse Jersey 3.1.
  Test results:
 
  ```
-Number of Tests Passed      = 2731
+Number of Tests Passed      = 2730
 Number of Tests Failed      = 0   
 Number of Tests with Errors = 0   
 ```
