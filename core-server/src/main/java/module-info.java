@@ -40,6 +40,9 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.wadl;
     exports org.glassfish.jersey.server.wadl.config;
     exports org.glassfish.jersey.server.wadl.processor;
+    exports org.glassfish.jersey.server.wadl.internal.generators;
+    exports org.glassfish.jersey.server.wadl.internal.generators.resourcedoc;
+    exports org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model;
     exports org.glassfish.jersey.server.filter;
     exports org.glassfish.jersey.server.filter.internal;
     exports org.glassfish.jersey.server.monitoring;

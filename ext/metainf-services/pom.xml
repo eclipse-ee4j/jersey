@@ -61,6 +61,11 @@
                         <!-- Do not warn about using sun.misc.Unsafe -->
                         <XDignore.symbol.file />
                     </compilerArguments>
+                    <compilerArgs>
+<!--                        <arg>&#45;&#45;module-source-path=${build.sourceDirectory}</arg>-->
+<!--                        <arg>&#45;&#45;patch-module=org.glassfish.jersey.ext.metainf.services=${build.sourceDirectory}</arg>-->
+                        <arg>-Xdiags:verbose</arg>
+                    </compilerArgs>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>
