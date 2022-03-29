@@ -54,7 +54,7 @@ public class RequestScopeBean implements Bean<CdiRequestScope> {
         this.injectionTarget = injectionTargetFactory.createInjectionTarget(null);
     }
 
-    @Override
+    // @Override - Removed in CDI 4
     public boolean isNullable() {
         return false;
     }

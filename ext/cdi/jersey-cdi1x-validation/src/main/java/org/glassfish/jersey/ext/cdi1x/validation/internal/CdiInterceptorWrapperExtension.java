@@ -155,7 +155,7 @@ public class CdiInterceptorWrapperExtension implements Extension {
                 return false;
             }
 
-            @Override
+            // @Override - Removed in CDI 4
             public boolean isNullable() {
                 return false;
             }
