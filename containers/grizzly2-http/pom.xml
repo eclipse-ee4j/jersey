@@ -107,6 +107,15 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.glassfish.grizzly.*;version="[3.0,5.0)",
+                            *
+                        </Import-Package>
+                    </instructions>
+                    <unpackBundle>true</unpackBundle>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -154,34 +163,6 @@
                                     <configuration>
                                         <source>11</source>
                                         <target>11</target>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>default-testCompile</id>
-                                    <configuration>
-                                        <!--
-                                        Jetty client is not compatible with JDK8, older versions need different setup
-                                        JDK HTTP client is not in JDK8 at all
-                                        Jersey Client doesn't support HTTP/2 (at least not directly)
-                                        -->
-                                        <skip>true</skip>
                                     </configuration>
                                 </execution>
                             </executions>

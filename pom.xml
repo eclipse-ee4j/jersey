@@ -2157,8 +2157,8 @@
         <surefire.version>3.0.0-M5</surefire.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>4.0.2.Final</weld.version>
-        <validation.impl.version>7.0.1.Final</validation.impl.version>
+        <weld.version>5.0.0.CR2</weld.version>
+        <validation.impl.version>8.0.0.Alpha1</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.11.0</xerces.version>
 
@@ -2168,7 +2168,7 @@
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>7.0.0-M2</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>3.0.0</cdi.api.version>
+        <cdi.api.version>4.0.0</cdi.api.version>
         <ejb.version>4.0.0</ejb.version>
         <grizzly2.version>4.0.0-M1</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
@@ -2182,8 +2182,8 @@
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
-        <jakarta.el.version>4.0.0</jakarta.el.version>
-        <jakarta.el.impl.version>4.0.2</jakarta.el.impl.version>
+        <jakarta.el.version>5.0.0</jakarta.el.version>
+        <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.1.0</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>

@@ -71,6 +71,7 @@
                     <instructions>
                         <Import-Package>
                             jakarta.servlet.*;version="[5.0,7.0)",
+                            org.glassfish.grizzly.*;version="[3.0,5.0)",
                             *
                         </Import-Package>
                     </instructions>
