@@ -22,6 +22,7 @@ import org.glassfish.jersey.client.ClientRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 /**
  * Strategy that defines the way the Apache client releases resources. The client enables closing the content stream
@@ -57,12 +58,20 @@ public interface Apache5ConnectionClosingStrategy {
      * Strategy that aborts Apache HttpRequests for the case of Chunked Stream, closes the stream, and response next.
      */
     class Apache5GracefulClosingStrategy implements Apache5ConnectionClosingStrategy {
+        private static final String UNIX_PROTOCOL = "unix";
+
         static final Apache5GracefulClosingStrategy INSTANCE = new Apache5GracefulClosingStrategy();
 
         @Override
         public void close(ClientRequest clientRequest, HttpUriRequest request, CloseableHttpResponse response, InputStream stream)
                 throws IOException {
-            if (response.getEntity() != null && response.getEntity().isChunked()) {
+            boolean isUnixProtocol = false;
+            try {
+                isUnixProtocol = UNIX_PROTOCOL.equals(request.getUri().getScheme());
+            } catch (URISyntaxException ex) {
+                // Ignore
+            }
+            if (response.getEntity() != null && response.getEntity().isChunked() && !isUnixProtocol) {
                 request.abort();
             }
             try {
