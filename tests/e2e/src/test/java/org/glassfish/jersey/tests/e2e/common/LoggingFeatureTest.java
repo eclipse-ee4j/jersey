@@ -408,14 +408,14 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureRedactOneHeader() {
             String headerName = "X-Redact-This-Header";
             String headerValue = "sensitive-info";
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property("LOGGING_FEATURE_REDACT_HEADERS", headerName)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, headerName)
                     .request()
                     .header(headerName, headerValue)
                     .get();
@@ -431,14 +431,15 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureRedactOneHeaderNormalizing() {
             String headerName = "X-Redact-This-Header";
             String headerValue = "sensitive-info";
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property("LOGGING_FEATURE_REDACT_HEADERS", " " + headerName.toUpperCase(Locale.ROOT) + " ")
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS,
+                            " " + headerName.toUpperCase(Locale.ROOT) + " ")
                     .request()
                     .header(headerName, headerValue)
                     .get();
@@ -454,7 +455,7 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureRedactMultivaluedHeader() {
             String headerName = "X-Redact-This-Header";
             String firstHeaderValue = "sensitive-info";
@@ -462,7 +463,7 @@ public class LoggingFeatureTest {
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property("LOGGING_FEATURE_REDACT_HEADERS", headerName)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, headerName)
                     .request()
                     .header(headerName, firstHeaderValue)
                     .header(headerName, secondHeaderValue)
@@ -480,7 +481,7 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureRedactMultipleHeaders() {
             String firstHeaderName = "X-Redact-This-Header";
             String firstHeaderValue = "sensitive-info";
@@ -489,7 +490,7 @@ public class LoggingFeatureTest {
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property("LOGGING_FEATURE_REDACT_HEADERS", firstHeaderName + "," + secondHeaderName)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, firstHeaderName + "," + secondHeaderName)
                     .request()
                     .header(firstHeaderName, firstHeaderValue)
                     .header(secondHeaderName, secondHeaderValue)
@@ -508,14 +509,14 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testLoggingFeatureRedactZeroHeaders() {
             String headerName = HttpHeaders.AUTHORIZATION;
             String headerValue = "username:password";
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property("LOGGING_FEATURE_REDACT_HEADERS", "")
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, "")
                     .request()
                     .header(headerName, headerValue)
                     .get();
@@ -737,8 +738,6 @@ public class LoggingFeatureTest {
 
     private static final class ContainsHeaderMatcher extends SubstringMatcher {
 
-        private static final boolean ORDER_OF_HEADER_VALUES_IS_GUARANTEED = true;
-
         ContainsHeaderMatcher(String headerName, String... headerValues) {
             super(makeRegex(headerName, Arrays.asList(headerValues)));
         }
@@ -748,16 +747,9 @@ public class LoggingFeatureTest {
                     // Header name is case insensitive
                     .append("(?i)").append(quote(headerName)).append("(?-i): ");
 
-            if (headerValues.size() == 1) {
-                stringBuilder.append(quote(headerValues.get(0)));
-            } else if (headerValues.size() > 1) {
-                if (ORDER_OF_HEADER_VALUES_IS_GUARANTEED) {
-                    stringBuilder.append(String.join(",", headerValues));
-                } else {
-                    headerValues.forEach(headerValue -> stringBuilder
-                            .append("(?=.*").append(quote(headerValue)).append(",?)"));
-                }
-            }
+            // Not assuming order of header values is guaranteed to be consistent
+            headerValues.forEach(headerValue -> stringBuilder
+                    .append("(?=.*").append(quote(headerValue)).append(",?)"));
 
             return stringBuilder.append("[\\s\\S]*$").toString();
         }

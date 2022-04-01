@@ -44,6 +44,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_VERBOSITY}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE}</li>
  * <li>{@link #LOGGING_FEATURE_SEPARATOR}</li>
+ * <li>{@link #LOGGING_FEATURE_REDACT_HEADERS}</li>
  * </ul>
  * <p>
  * If any of the configuration value is not set, following default values are applied:
@@ -63,6 +64,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER}</li>
  * <li>{@link #LOGGING_FEATURE_SEPARATOR_SERVER}</li>
+ * <li>{@link #LOGGING_FEATURE_REDACT_HEADERS_SERVER}</li>
  * </ul>
  * Client configurable properties:
  * <ul>
@@ -71,6 +73,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>{@link #LOGGING_FEATURE_VERBOSITY_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT}</li>
  * <li>{@link #LOGGING_FEATURE_SEPARATOR_CLIENT}</li>
+ * <li>{@link #LOGGING_FEATURE_REDACT_HEADERS_CLIENT}</li>
  * </ul>
  *
  * @author Ondrej Kosatka
@@ -108,6 +111,7 @@ public class LoggingFeature implements Feature {
     private static final String VERBOSITY_POSTFIX = ".verbosity";
     private static final String MAX_ENTITY_POSTFIX = ".entity.maxSize";
     private static final String SEPARATOR_POSTFIX = ".separator";
+    private static final String REDACT_HEADERS_POSTFIX = ".headers.redact";
     private static final String LOGGING_FEATURE_COMMON_PREFIX = "jersey.config.logging";
     /**
      * Common logger name property.
@@ -129,6 +133,10 @@ public class LoggingFeature implements Feature {
      * Common property for configuring logging separator.
      */
     public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
+    /**
+     * Common property for configuring headers to be redacted.
+     */
+    public static final String LOGGING_FEATURE_REDACT_HEADERS = LOGGING_FEATURE_COMMON_PREFIX + REDACT_HEADERS_POSTFIX;
 
     private static final String LOGGING_FEATURE_SERVER_PREFIX = "jersey.config.server.logging";
     /**
@@ -151,6 +159,11 @@ public class LoggingFeature implements Feature {
      * Server property for configuring separator.
      */
     public static final String LOGGING_FEATURE_SEPARATOR_SERVER = LOGGING_FEATURE_SERVER_PREFIX + SEPARATOR_POSTFIX;
+    /**
+     * Server property for configuring headers to be redacted.
+     */
+    public static final String LOGGING_FEATURE_REDACT_HEADERS_SERVER =
+            LOGGING_FEATURE_SERVER_PREFIX + REDACT_HEADERS_POSTFIX;
 
     private static final String LOGGING_FEATURE_CLIENT_PREFIX = "jersey.config.client.logging";
     /**
@@ -173,6 +186,11 @@ public class LoggingFeature implements Feature {
      * Client property for logging separator.
      */
     public static final String LOGGING_FEATURE_SEPARATOR_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
+    /**
+     * Client property for configuring headers to be redacted.
+     */
+    public static final String LOGGING_FEATURE_REDACT_HEADERS_CLIENT =
+            LOGGING_FEATURE_CLIENT_PREFIX + REDACT_HEADERS_POSTFIX;
 
     private final LoggingFeatureBuilder builder;
 
@@ -318,7 +336,14 @@ public class LoggingFeature implements Feature {
                         LOGGING_FEATURE_MAX_ENTITY_SIZE,
                         DEFAULT_MAX_ENTITY_SIZE
                 ));
-        String redactHeaders = DEFAULT_REDACT_HEADERS;
+        final String redactHeaders = CommonProperties.getValue(
+                properties,
+                runtimeType == RuntimeType.SERVER
+                        ? LOGGING_FEATURE_REDACT_HEADERS_SERVER : LOGGING_FEATURE_REDACT_HEADERS_CLIENT,
+                CommonProperties.getValue(
+                        properties,
+                        LOGGING_FEATURE_REDACT_HEADERS,
+                        DEFAULT_REDACT_HEADERS));
 
         final Level loggerLevel = Level.parse(filterLevel);
 
