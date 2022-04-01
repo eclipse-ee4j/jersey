@@ -58,8 +58,6 @@
         <module>jersey-4697</module>
         <module>jersey-4722</module>
         <module>microprofile</module>
-<!--        <module>spring4</module>-->
-<!--        <module>spring5</module>-->
         <module>reactive-streams</module>
     </modules>
 
@@ -204,6 +202,15 @@
                 <module>servlet-request-wrapper-binding-2</module>
                 <module>sonar-test</module>
                 <module>tracing-support</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>spring6-jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>spring6</module>
             </modules>
         </profile>
     </profiles>
