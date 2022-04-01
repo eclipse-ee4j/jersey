@@ -386,7 +386,7 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test
         public void testAuthorizationHeaderRedactedByDefault() {
             String headerName = HttpHeaders.AUTHORIZATION;
             String headerValue = "username:password";
@@ -508,7 +508,7 @@ public class LoggingFeatureTest {
             assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
         }
 
-        @Test
+        @Test(expected = AssertionError.class)
         public void testLoggingFeatureRedactZeroHeaders() {
             String headerName = HttpHeaders.AUTHORIZATION;
             String headerValue = "username:password";

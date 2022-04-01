@@ -24,15 +24,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -104,6 +110,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     final Verbosity verbosity;
     final int maxEntitySize;
     final String separator;
+    final Predicate<String> redactHeaderPredicate;
 
     /**
      * Creates a logging filter using builder instance with custom logger and entity logging turned on,
@@ -125,6 +132,9 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         this.verbosity = builder.verbosity;
         this.maxEntitySize = Math.max(0, builder.maxEntitySize);
         this.separator = builder.separator;
+        this.redactHeaderPredicate = !builder.redactHeaders.isEmpty()
+                ? new RedactHeaderPredicate(builder.redactHeaders)
+                : header -> false;
     }
 
     /**
@@ -169,20 +179,28 @@ abstract class LoggingInterceptor implements WriterInterceptor {
             final List<?> val = headerEntry.getValue();
             final String header = headerEntry.getKey();
 
-            if (val.size() == 1) {
-                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append(separator);
-            } else {
-                final StringBuilder sb = new StringBuilder();
+            prefixId(b, id).append(prefix).append(header).append(": ");
+            getValuesAppender(header, val).accept(b, val);
+            b.append(separator);
+        }
+    }
+
+    private BiConsumer<StringBuilder, List<?>> getValuesAppender(String header, List<?> values) {
+        if (redactHeaderPredicate.test(header)) {
+            return (b, v) -> b.append("[redacted]");
+        } else if (values.size() == 1) {
+            return (b, v) -> b.append(v.get(0));
+        } else {
+            return (b, v) -> {
                 boolean add = false;
-                for (final Object s : val) {
+                for (final Object s : v) {
                     if (add) {
-                        sb.append(',');
+                        b.append(',');
                     }
                     add = true;
-                    sb.append(s);
+                    b.append(s);
                 }
-                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append(separator);
-            }
+            };
         }
     }
 
@@ -312,4 +330,23 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         }
     }
 
+    private static final class RedactHeaderPredicate implements Predicate<String> {
+        private final Set<String> headersToRedact;
+
+        RedactHeaderPredicate(Collection<String> headersToRedact) {
+            this.headersToRedact = headersToRedact.stream()
+                    .filter(Objects::nonNull)
+                    .map(RedactHeaderPredicate::normalize)
+                    .collect(Collectors.toSet());
+        }
+
+        @Override
+        public boolean test(String header) {
+            return headersToRedact.contains(normalize(header));
+        }
+
+        private static String normalize(String input) {
+            return input.trim().toLowerCase(Locale.ROOT);
+        }
+    }
 }

@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.logging;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.glassfish.jersey.CommonProperties;
 
@@ -50,6 +53,7 @@ import org.glassfish.jersey.CommonProperties;
  * <li>verbosity: {@link Verbosity#PAYLOAD_TEXT}</li>
  * <li>maximum entity size: {@value #DEFAULT_MAX_ENTITY_SIZE}</li>
  * <li>line separator: {@link #DEFAULT_SEPARATOR}</li>
+ * <li>redact headers: {@value #DEFAULT_REDACT_HEADERS}</li>
  * </ul>
  * <p>
  * Server configurable properties:
@@ -94,6 +98,10 @@ public class LoggingFeature implements Feature {
      * Default separator for entity logging.
      */
     public static final String DEFAULT_SEPARATOR = "\n";
+    /**
+     * Default headers to be redacted. If multiple, separate each header with a comma.
+     */
+    public static final String DEFAULT_REDACT_HEADERS = HttpHeaders.AUTHORIZATION;
 
     private static final String LOGGER_NAME_POSTFIX = ".logger.name";
     private static final String LOGGER_LEVEL_POSTFIX = ".logger.level";
@@ -269,7 +277,7 @@ public class LoggingFeature implements Feature {
     private static LoggingFeatureBuilder configureBuilderParameters(LoggingFeatureBuilder builder,
                                                    FeatureContext context, RuntimeType runtimeType) {
 
-        final Map properties = context.getConfiguration().getProperties();
+        final Map<String, ?> properties = context.getConfiguration().getProperties();
         //get values from properties (if any)
         final String filterLoggerName = CommonProperties.getValue(
                 properties,
@@ -283,14 +291,14 @@ public class LoggingFeature implements Feature {
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_LOGGER_LEVEL_SERVER : LOGGING_FEATURE_LOGGER_LEVEL_CLIENT,
                 CommonProperties.getValue(
-                        context.getConfiguration().getProperties(),
+                        properties,
                         LOGGING_FEATURE_LOGGER_LEVEL,
                         DEFAULT_LOGGER_LEVEL));
         final String filterSeparator = CommonProperties.getValue(
                 properties,
                 runtimeType == RuntimeType.SERVER ? LOGGING_FEATURE_SEPARATOR_SERVER : LOGGING_FEATURE_SEPARATOR_CLIENT,
                 CommonProperties.getValue(
-                        context.getConfiguration().getProperties(),
+                        properties,
                         LOGGING_FEATURE_SEPARATOR,
                         DEFAULT_SEPARATOR));
         final Verbosity filterVerbosity = CommonProperties.getValue(
@@ -310,6 +318,7 @@ public class LoggingFeature implements Feature {
                         LOGGING_FEATURE_MAX_ENTITY_SIZE,
                         DEFAULT_MAX_ENTITY_SIZE
                 ));
+        String redactHeaders = DEFAULT_REDACT_HEADERS;
 
         final Level loggerLevel = Level.parse(filterLevel);
 
@@ -319,6 +328,8 @@ public class LoggingFeature implements Feature {
         builder.maxEntitySize = builder.maxEntitySize == null ? filterMaxEntitySize : builder.maxEntitySize;
         builder.level = builder.level == null ? loggerLevel : builder.level;
         builder.separator = builder.separator == null ? filterSeparator : builder.separator;
+        builder.redactHeaders = builder.redactHeaders == null
+                ? Arrays.asList(redactHeaders.split(",")) : builder.redactHeaders;
 
         return builder;
     }
@@ -376,6 +387,7 @@ public class LoggingFeature implements Feature {
         Integer maxEntitySize;
         Level level;
         String separator;
+        Collection<String> redactHeaders;
 
         public LoggingFeatureBuilder() {
 
@@ -398,6 +410,10 @@ public class LoggingFeature implements Feature {
         }
         public LoggingFeatureBuilder separator(String separator) {
             this.separator = separator;
+            return this;
+        }
+        public LoggingFeatureBuilder redactHeaders(Collection<String> redactHeaders) {
+            this.redactHeaders = redactHeaders;
             return this;
         }
 
