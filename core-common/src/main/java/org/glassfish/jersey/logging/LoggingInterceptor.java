@@ -134,7 +134,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         this.verbosity = builder.verbosity;
         this.maxEntitySize = Math.max(0, builder.maxEntitySize);
         this.separator = builder.separator;
-        this.redactHeaderPredicate = !builder.redactHeaders.isEmpty()
+        this.redactHeaderPredicate = builder.redactHeaders != null && !builder.redactHeaders.isEmpty()
                 ? new RedactHeaderPredicate(builder.redactHeaders)
                 : header -> false;
     }
