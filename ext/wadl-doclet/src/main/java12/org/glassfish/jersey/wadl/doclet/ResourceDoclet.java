@@ -162,8 +162,10 @@ public class ResourceDoclet implements Doclet {
                         Map<DocTree.Kind, Map<String, String>> tags = getTags(docTrees.getDocCommentTree(method));
                         MethodTree methodTree = docTrees.getTree(method);
                         MethodDocType methodDocType = new MethodDocType();
-                        methodDocType.setMethodName(methodTree.getName().toString());
-                        methodDocType.setCommentText(getComments(docTrees.getDocCommentTree(method)));
+                        if (methodTree != null) {
+                            methodDocType.setMethodName(methodTree.getName().toString());
+                            methodDocType.setCommentText(getComments(docTrees.getDocCommentTree(method)));
+                        }
                         getTags(docTrees.getDocCommentTree(method));
                         StringBuilder arguments = new StringBuilder("(");
                         Map<String, String> paramTags = tags.get(DocTree.Kind.PARAM);
