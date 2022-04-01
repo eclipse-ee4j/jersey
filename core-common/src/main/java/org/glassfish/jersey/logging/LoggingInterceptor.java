@@ -46,6 +46,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
+import org.glassfish.jersey.internal.guava.Predicates;
 import org.glassfish.jersey.logging.LoggingFeature.Verbosity;
 import org.glassfish.jersey.message.MessageUtils;
 
@@ -337,6 +338,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         RedactHeaderPredicate(Collection<String> headersToRedact) {
             this.headersToRedact = headersToRedact.stream()
                     .filter(Objects::nonNull)
+                    .filter(Predicates.not(String::isEmpty))
                     .map(RedactHeaderPredicate::normalize)
                     .collect(Collectors.toSet());
         }
