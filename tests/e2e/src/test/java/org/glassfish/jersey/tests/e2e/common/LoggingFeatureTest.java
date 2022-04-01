@@ -490,7 +490,7 @@ public class LoggingFeatureTest {
             final Response response = target("/echo-headers")
                     .register(LoggingFeature.class)
                     .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
-                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, firstHeaderName + "," + secondHeaderName)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, firstHeaderName + ';' + secondHeaderName)
                     .request()
                     .header(firstHeaderName, firstHeaderValue)
                     .header(secondHeaderName, secondHeaderValue)

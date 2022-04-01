@@ -102,7 +102,7 @@ public class LoggingFeature implements Feature {
      */
     public static final String DEFAULT_SEPARATOR = "\n";
     /**
-     * Default headers to be redacted. If multiple, separate each header with a comma.
+     * Default headers to be redacted. If multiple, separate each header with a semicolon.
      */
     public static final String DEFAULT_REDACT_HEADERS = HttpHeaders.AUTHORIZATION;
 
@@ -354,7 +354,7 @@ public class LoggingFeature implements Feature {
         builder.level = builder.level == null ? loggerLevel : builder.level;
         builder.separator = builder.separator == null ? filterSeparator : builder.separator;
         builder.redactHeaders = builder.redactHeaders == null
-                ? Arrays.asList(redactHeaders.split(",")) : builder.redactHeaders;
+                ? Arrays.asList(redactHeaders.split(";")) : builder.redactHeaders;
 
         return builder;
     }

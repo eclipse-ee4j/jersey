@@ -124,7 +124,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      *  separator      delimiter for particular log lines. Default is Linux new line delimiter
-     *  redactHeaders  a string of comma separated HTTP headers to be redacted when logging.
+     *  redactHeaders  a collection of HTTP headers to be redacted when logging.
      */
 
     LoggingInterceptor(LoggingFeature.LoggingFeatureBuilder builder) {
