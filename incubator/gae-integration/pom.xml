@@ -55,5 +55,25 @@
                 <directory>${project.build.directory}/legal</directory>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <!-- compile everything to ensure module-info contains right entries -->
+                            <release>11</release>
+                            <compilerArgs>
+                                <arg>--add-reads</arg>
+                                <arg>org.glassfish.jersey.incubator.gae.integration=ALL-UNNAMED</arg>
+                                <arg>-Xdiags:verbose</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
