@@ -611,10 +611,6 @@ class Apache5Connector implements Connector {
         String contentType = clientRequest.getHeaderString(HttpHeaders.CONTENT_TYPE);
         String contentEncoding = clientRequest.getHeaderString(HttpHeaders.CONTENT_ENCODING);
 
-        if (contentType == null) {
-            throw new ProcessingException(LocalizationMessages.ERROR_DETERMINING_CONTENT_TYPE());
-        }
-
         final AbstractHttpEntity httpEntity = new AbstractHttpEntity(contentType, contentEncoding) {
             @Override
             public void close() throws IOException {
