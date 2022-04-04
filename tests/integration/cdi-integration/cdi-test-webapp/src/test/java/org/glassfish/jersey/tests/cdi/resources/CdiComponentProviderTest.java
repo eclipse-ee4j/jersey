@@ -22,12 +22,12 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.Test;
 
-import javax.enterprise.inject.Vetoed;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Application;
 import java.util.Collections;
 
 import static org.junit.Assert.assertFalse;
