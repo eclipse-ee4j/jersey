@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jdk.javadoc.doclet.DocletEnvironment;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ClassDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ParamDocType;
@@ -74,25 +75,27 @@ public class DocProcessorWrapper implements DocProcessor {
     }
 
     @Override
-    public void processClassDoc(TypeElement classDoc, ClassDocType classDocType) {
+    public void processClassDoc(TypeElement classDoc, ClassDocType classDocType, DocletEnvironment docEnv) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processClassDoc(classDoc, classDocType);
+            docProcessor.processClassDoc(classDoc, classDocType, docEnv);
         }
     }
 
     @Override
     public void processMethodDoc(ExecutableElement methodDoc,
-                                 MethodDocType methodDocType) {
+                                 MethodDocType methodDocType,
+                                 DocletEnvironment docEnv) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processMethodDoc(methodDoc, methodDocType);
+            docProcessor.processMethodDoc(methodDoc, methodDocType, docEnv);
         }
     }
 
     @Override
     public void processParamTag(VariableElement parameter,
-                                ParamDocType paramDocType) {
+                                ParamDocType paramDocType,
+                                DocletEnvironment docEnv) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processParamTag(parameter, paramDocType);
+            docProcessor.processParamTag(parameter, paramDocType, docEnv);
         }
     }
 

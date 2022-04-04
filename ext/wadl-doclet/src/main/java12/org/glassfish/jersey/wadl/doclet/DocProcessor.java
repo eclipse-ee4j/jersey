@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.wadl.doclet;
 
+import jdk.javadoc.doclet.DocletEnvironment;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ClassDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ParamDocType;
@@ -59,8 +60,9 @@ public interface DocProcessor {
      * @param classDoc     the class javadoc
      * @param classDocType the {@link ClassDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processClassDoc(TypeElement classDoc, ClassDocType classDocType);
+    void processClassDoc(TypeElement classDoc, ClassDocType classDocType, DocletEnvironment docEnv);
 
     /**
      * Process the provided methodDoc and add your custom information to the methodDocType.<br>
@@ -68,8 +70,9 @@ public interface DocProcessor {
      * @param methodDoc     the {@link ExecutableElement} representing the docs of your method.
      * @param methodDocType the related {@link MethodDocType} that will later be processed by the
      *                      {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processMethodDoc(ExecutableElement methodDoc, MethodDocType methodDocType);
+    void processMethodDoc(ExecutableElement methodDoc, MethodDocType methodDocType, DocletEnvironment docEnv);
 
     /**
      * Use this method to extend the provided {@link ParamDocType} with the information from the
@@ -78,7 +81,8 @@ public interface DocProcessor {
      * @param parameter    the parameter (that is documented or not)
      * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processParamTag(VariableElement parameter, ParamDocType paramDocType);
+    void processParamTag(VariableElement parameter, ParamDocType paramDocType, DocletEnvironment docEnv);
 
 }
