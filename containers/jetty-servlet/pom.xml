@@ -65,7 +65,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            jakarta.servlet.*;version="[5.0,6.0)",
+                            jakarta.servlet.*;version="[5.0,7.0)",
                             *
                         </Import-Package>
                     </instructions>
