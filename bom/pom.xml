@@ -258,11 +258,11 @@
                 <artifactId>jersey-rx-client-rxjava2</artifactId>
                 <version>${project.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.glassfish.jersey.ext.microprofile</groupId>-->
-<!--                <artifactId>jersey-mp-rest-client</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+                <artifactId>jersey-mp-rest-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-jaxb</artifactId>
