@@ -335,8 +335,8 @@ public class LoggingFeatureTest {
             // Check logs for header
             List<LogRecord> logRecords = getLoggedRecords();
             Matcher<String> matcher = new ContainsHeaderMatcher(headerName, headerValue);
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -357,8 +357,8 @@ public class LoggingFeatureTest {
             // Check logs for header
             List<LogRecord> logRecords = getLoggedRecords();
             Matcher<String> matcher = new ContainsHeaderMatcher(headerName, firstHeaderValue, secondHeaderValue);
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -382,8 +382,8 @@ public class LoggingFeatureTest {
             Matcher<String> matcher = allOf(
                     new ContainsHeaderMatcher(firstHeaderName, firstHeaderValue),
                     new ContainsHeaderMatcher(secondHeaderName, secondHeaderValue));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -404,8 +404,8 @@ public class LoggingFeatureTest {
             Matcher<String> matcher = allOf(
                     new ContainsHeaderMatcher(headerName, "[redacted]"),
                     not(containsString(headerValue)));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -427,8 +427,8 @@ public class LoggingFeatureTest {
             Matcher<String> matcher = allOf(
                     new ContainsHeaderMatcher(headerName, "[redacted]"),
                     not(containsString(headerValue)));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -451,8 +451,8 @@ public class LoggingFeatureTest {
             Matcher<String> matcher = allOf(
                     new ContainsHeaderMatcher(headerName, "[redacted]"),
                     not(containsString(headerValue)));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -477,8 +477,8 @@ public class LoggingFeatureTest {
                     new ContainsHeaderMatcher(headerName, "[redacted]"),
                     not(containsString(firstHeaderValue)),
                     not(containsString(secondHeaderValue)));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -505,8 +505,8 @@ public class LoggingFeatureTest {
                     not(containsString(firstHeaderValue)),
                     new ContainsHeaderMatcher(secondHeaderName, "[redacted]"),
                     not(containsString(secondHeaderValue)));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
 
         @Test
@@ -528,8 +528,8 @@ public class LoggingFeatureTest {
             Matcher<String> matcher = allOf(
                     new ContainsHeaderMatcher(headerName, headerValue),
                     not(containsString("[redacted]")));
-            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage().toLowerCase(), matcher);
-            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage().toLowerCase(), matcher);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
         }
     }
 
