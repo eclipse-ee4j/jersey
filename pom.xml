@@ -2160,7 +2160,7 @@
         <skip.e2e>false</skip.e2e>
         <slf4j.version>1.7.21</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
-        <spring5.version>5.1.5.RELEASE</spring5.version>
+        <spring5.version>5.3.18</spring5.version>
         <surefire.version>3.0.0-M5</surefire.version>
         <validation.impl.version>6.2.0.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
