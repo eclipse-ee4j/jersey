@@ -134,7 +134,7 @@ public class LoggingFeature implements Feature {
      */
     public static final String LOGGING_FEATURE_SEPARATOR = LOGGING_FEATURE_COMMON_PREFIX + SEPARATOR_POSTFIX;
     /**
-     * Common property for configuring headers to be redacted.
+     * Common property for configuring headers to be redacted. The headers are semicolon-separated.
      */
     public static final String LOGGING_FEATURE_REDACT_HEADERS = LOGGING_FEATURE_COMMON_PREFIX + REDACT_HEADERS_POSTFIX;
 
@@ -160,7 +160,7 @@ public class LoggingFeature implements Feature {
      */
     public static final String LOGGING_FEATURE_SEPARATOR_SERVER = LOGGING_FEATURE_SERVER_PREFIX + SEPARATOR_POSTFIX;
     /**
-     * Server property for configuring headers to be redacted.
+     * Server property for configuring headers to be redacted. The headers are semicolon-separated.
      */
     public static final String LOGGING_FEATURE_REDACT_HEADERS_SERVER =
             LOGGING_FEATURE_SERVER_PREFIX + REDACT_HEADERS_POSTFIX;
@@ -187,7 +187,7 @@ public class LoggingFeature implements Feature {
      */
     public static final String LOGGING_FEATURE_SEPARATOR_CLIENT = LOGGING_FEATURE_CLIENT_PREFIX + SEPARATOR_POSTFIX;
     /**
-     * Client property for configuring headers to be redacted.
+     * Client property for configuring headers to be redacted. The headers are semicolon-separated.
      */
     public static final String LOGGING_FEATURE_REDACT_HEADERS_CLIENT =
             LOGGING_FEATURE_CLIENT_PREFIX + REDACT_HEADERS_POSTFIX;
