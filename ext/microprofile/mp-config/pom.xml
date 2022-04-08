@@ -67,21 +67,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>io.helidon.microprofile.config</groupId>
-            <artifactId>helidon-microprofile-config</artifactId>
-            <version>${helidon.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-jetty</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -105,5 +90,69 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>JettyExclude</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/microprofile/config/ExternalPropertiesConfigurationFactoryTest.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>Jetty11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                    <artifactId>jersey-test-framework-provider-jetty</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>smallrye-dependency</id>
+            <activation>
+                <jdk>[1.8,17)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.smallrye.config</groupId>
+                    <artifactId>smallrye-config</artifactId>
+                    <version>${smallrye.config.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>helidon-config-dependency</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.helidon.microprofile.config</groupId>
+                    <artifactId>helidon-microprofile-config</artifactId>
+                    <version>${helidon.config.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
