@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -269,11 +269,9 @@ public class LoggingFeatureTest {
         @Test
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
-                    .register(LoggingFeature
-                            .builder()
-                            .withLogger(Logger.getLogger(LOGGER_NAME))
-                            .build()
-                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
                     .request()
                     .post(Entity.text(ENTITY));
 
@@ -284,6 +282,23 @@ public class LoggingFeatureTest {
             assertThat(record.getMessage(), containsString(SEPARATOR));
         }
 
+        @Test
+        public void testLoggingFeatureMaxEntitySize() {
+            final Response response = target("/text")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE, 1)
+                    .request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for trimmedEntity.
+            String trimmedEntity = ENTITY.charAt(0) + "...more...";
+            List<LogRecord> logRecords = getLoggedRecords();
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), containsString(trimmedEntity));
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), containsString(trimmedEntity));
+        }
     }
 
     /**

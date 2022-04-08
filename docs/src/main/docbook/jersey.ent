@@ -921,7 +921,7 @@
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT</literal>">
-<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATORE_CLIENT</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER</literal>">
