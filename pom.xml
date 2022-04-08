@@ -2178,7 +2178,7 @@
         <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.0.1</jakarta.jsonp.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.1</jakarta.validation.api.version>
+        <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version> <!--Can't be updated to 3.0.1 /OSGi incompatibility with JDK 1.8 -->
         <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
         <jaxb.ri.version>3.0.2</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
