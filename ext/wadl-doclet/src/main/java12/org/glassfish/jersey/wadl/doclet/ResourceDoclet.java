@@ -157,7 +157,7 @@ public class ResourceDoclet implements Doclet {
                     ClassDocType classDocType = new ClassDocType();
                     classDocType.setClassName(element.getQualifiedName().toString());
                     classDocType.setCommentText(getComments(docCommentTree));
-                    docProcessor.processClassDoc(element, classDocType, docEnv);
+                    docProcessor.processClassDocWithDocEnv(element, classDocType, docEnv);
                     for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {
                         Map<DocTree.Kind, Map<String, String>> tags = getTags(docTrees.getDocCommentTree(method));
                         MethodTree methodTree = docTrees.getTree(method);
@@ -172,7 +172,7 @@ public class ResourceDoclet implements Doclet {
                             arguments.append(parameter.asType()).append(COMA);
                             if (paramDocType != null) {
                                 methodDocType.getParamDocs().add(paramDocType);
-                                docProcessor.processParamTag(parameter, paramDocType, docEnv);
+                                docProcessor.processParamTagWithDocEnv(parameter, paramDocType, docEnv);
                             }
                         }
                         // Remove last comma if there are parameters
@@ -181,7 +181,7 @@ public class ResourceDoclet implements Doclet {
                         }
                         arguments.append(")");
                         methodDocType.setMethodSignature(arguments.toString());
-                        docProcessor.processMethodDoc(method, methodDocType, docEnv);
+                        docProcessor.processMethodDocWithDocEnv(method, methodDocType, docEnv);
                         methodDocType.setRequestDoc(buildRequestDocType(tags));
                         methodDocType.setResponseDoc(buildResponseDocType(tags));
                         classDocType.getMethodDocs().add(methodDocType);

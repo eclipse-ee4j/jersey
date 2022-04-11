@@ -27,7 +27,6 @@ import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.Pa
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.ExecutableElement;
-import com.sun.source.doctree.ParamTree;
 import javax.lang.model.element.VariableElement;
 
 public class DocProcessorWrapper implements DocProcessor {
@@ -75,28 +74,52 @@ public class DocProcessorWrapper implements DocProcessor {
     }
 
     @Override
-    public void processClassDoc(TypeElement classDoc, ClassDocType classDocType, DocletEnvironment docEnv) {
+    public void processClassDoc(TypeElement classDoc, ClassDocType classDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processClassDoc(classDoc, classDocType, docEnv);
+            docProcessor.processClassDoc(classDoc, classDocType);
         }
     }
 
     @Override
     public void processMethodDoc(ExecutableElement methodDoc,
-                                 MethodDocType methodDocType,
-                                 DocletEnvironment docEnv) {
+                                 MethodDocType methodDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processMethodDoc(methodDoc, methodDocType, docEnv);
+            docProcessor.processMethodDoc(methodDoc, methodDocType);
         }
     }
 
     @Override
     public void processParamTag(VariableElement parameter,
-                                ParamDocType paramDocType,
-                                DocletEnvironment docEnv) {
+                                ParamDocType paramDocType) {
         for (DocProcessor docProcessor : _docProcessors) {
-            docProcessor.processParamTag(parameter, paramDocType, docEnv);
+            docProcessor.processParamTag(parameter, paramDocType);
         }
     }
 
+    @Override
+    public void processClassDocWithDocEnv(TypeElement classDoc,
+                                          ClassDocType classDocType,
+                                          DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processClassDocWithDocEnv(classDoc, classDocType, docEnv);
+        }
+    }
+
+    @Override
+    public void processMethodDocWithDocEnv(ExecutableElement methodDoc,
+                                           MethodDocType methodDocType,
+                                           DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processMethodDocWithDocEnv(methodDoc, methodDocType, docEnv);
+        }
+    }
+
+    @Override
+    public void processParamTagWithDocEnv(VariableElement parameter,
+                                          ParamDocType paramDocType,
+                                          DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processParamTagWithDocEnv(parameter, paramDocType, docEnv);
+        }
+    }
 }

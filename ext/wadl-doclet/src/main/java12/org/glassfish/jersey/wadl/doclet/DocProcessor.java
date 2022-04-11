@@ -60,9 +60,9 @@ public interface DocProcessor {
      * @param classDoc     the class javadoc
      * @param classDocType the {@link ClassDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
-     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processClassDoc(TypeElement classDoc, ClassDocType classDocType, DocletEnvironment docEnv);
+    @Deprecated
+    void processClassDoc(TypeElement classDoc, ClassDocType classDocType);
 
     /**
      * Process the provided methodDoc and add your custom information to the methodDocType.<br>
@@ -70,9 +70,9 @@ public interface DocProcessor {
      * @param methodDoc     the {@link ExecutableElement} representing the docs of your method.
      * @param methodDocType the related {@link MethodDocType} that will later be processed by the
      *                      {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
-     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processMethodDoc(ExecutableElement methodDoc, MethodDocType methodDocType, DocletEnvironment docEnv);
+    @Deprecated
+    void processMethodDoc(ExecutableElement methodDoc, MethodDocType methodDocType);
 
     /**
      * Use this method to extend the provided {@link ParamDocType} with the information from the
@@ -81,8 +81,46 @@ public interface DocProcessor {
      * @param parameter    the parameter (that is documented or not)
      * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
      *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
-     * @param docEnv       the doclet environment used to process the classDoc
      */
-    void processParamTag(VariableElement parameter, ParamDocType paramDocType, DocletEnvironment docEnv);
+    @Deprecated
+    void processParamTag(VariableElement parameter, ParamDocType paramDocType);
+
+    /**
+     * Use this method to extend the provided {@link ClassDocType} with the information from
+     * the given {@link TypeElement}.
+     *
+     * @param classDoc     the class javadoc
+     * @param classDocType the {@link ClassDocType} to extend. This will later be processed by the
+     *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv       the doclet environment used to extract info from classDoc
+     */
+    default void processClassDocWithDocEnv(TypeElement classDoc, ClassDocType classDocType, DocletEnvironment docEnv) {
+        processClassDoc(classDoc, classDocType);
+    }
+
+    /**
+     * Process the provided methodDoc and add your custom information to the methodDocType.<br>
+     *
+     * @param methodDoc     the {@link ExecutableElement} representing the docs of your method.
+     * @param methodDocType the related {@link MethodDocType} that will later be processed by the
+     *                      {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv        the doclet environment used to extract info from methodDoc
+     */
+    default void processMethodDocWithDocEnv(ExecutableElement methodDoc, MethodDocType methodDocType, DocletEnvironment docEnv) {
+        processMethodDoc(methodDoc, methodDocType);
+    }
+
+    /**
+     * Use this method to extend the provided {@link ParamDocType} with the information from the
+     * given {@link ParamTag} and {@link Parameter}.
+     *
+     * @param parameter    the parameter (that is documented or not)
+     * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
+     *                     {@link org.glassfish.jersey.server.wadl.WadlGenerator}s.
+     * @param docEnv       the Doclet Environment used to extract info from parameter
+     */
+    default void processParamTagWithDocEnv(VariableElement parameter, ParamDocType paramDocType, DocletEnvironment docEnv) {
+        processParamTag(parameter, paramDocType);
+    }
 
 }
