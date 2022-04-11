@@ -112,7 +112,7 @@ public interface DocProcessor {
 
     /**
      * Use this method to extend the provided {@link ParamDocType} with the information from the
-     * given {@link ParamTag} and {@link Parameter}.
+     * given {@link VariableElement}.
      *
      * @param parameter    the parameter (that is documented or not)
      * @param paramDocType the {@link ParamDocType} to extend. This will later be processed by the
