@@ -112,12 +112,12 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 5.x-->
+                        <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 7.x-->
                         <Import-Package>
-                            com.sun.*;version="[4.0,7)",
+                            com.sun.*;version="[6.0,8)",
                             ${jakarta.annotation.osgi.version},
-                            org.glassfish.ejb.*;version="[4.0,7)",
-                            org.glassfish.internal.*;version="[4.0,7)",
+                            org.glassfish.ejb.*;version="[6.0,8)",
+                            org.glassfish.internal.*;version="[6.0,8)",
                             ${hk2.osgi.version},
                             *
                         </Import-Package>

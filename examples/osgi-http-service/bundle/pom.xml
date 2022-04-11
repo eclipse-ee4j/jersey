@@ -72,7 +72,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.examples.osgihttpservice</Export-Package>
-                        <Import-Package>jakarta.servlet.*;version="[5.0,6.0)",*</Import-Package>
+                        <Import-Package>jakarta.servlet.*;version="[5.0,7.0)",*</Import-Package>
                         <Bundle-Activator>org.glassfish.jersey.examples.osgihttpservice.Activator</Bundle-Activator>
                         <Implementation-Title>jersey-osgi-http-service-bundle</Implementation-Title>
                         <Implementation-Version>${project.version}</Implementation-Version>

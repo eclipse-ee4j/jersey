@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
+import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.junit.Test;
 import static org.junit.Assert.assertNotEquals;
 
@@ -118,12 +119,19 @@ public class LeadingSlashesTest extends JerseyContainerTest {
 
     @Test
     public void testSlashesWithBeginningEmptyPathParam() {
+        if (JettyTestContainerFactory.class.isInstance(factory)) {
+            return; // since Jetty 11.0.5
+        }
         Response result = call("///test");
         assertEquals("-", result.readEntity(String.class));
     }
 
     @Test
     public void testSlashesWithBeginningEmptyPathParamWithQueryParams() {
+        if (JettyTestContainerFactory.class.isInstance(factory)) {
+            return; // since Jetty 11.0.5
+        }
+
         URI hostPort = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
         WebTarget target = client().target(hostPort).path("///testParams")
                 .queryParam("bar", "Container")
@@ -135,6 +143,9 @@ public class LeadingSlashesTest extends JerseyContainerTest {
 
     @Test
     public void testEncodedQueryParams() {
+        if (JettyTestContainerFactory.class.isInstance(factory)) {
+            return; // Jetty 11.0.5
+        }
         URI hostPort = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
         WebTarget target = client().target(hostPort).path("///encoded")
                 .queryParam("query", "%dummy23+a");
