@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
     Copyright (c) 2019 Christian Kaltepoth. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -43,11 +43,12 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <scope>test</scope>
-        </dependency>
+            <version>${guava.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache-connector</artifactId>

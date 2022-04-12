@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -119,11 +119,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>27.0.1-jre</version>
-        </dependency>
+            <version>${guava.version}</version>
+        </dependency>-->
 
     </dependencies>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.tests.memleaks.testleak;
 
+import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -28,7 +30,6 @@ import javax.ws.rs.QueryParam;
 
 import javax.inject.Singleton;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * Resource that causes {@link OutOfMemoryError} exception upon repetitive call of {@link #invoke(int)} of an application that is
