@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -754,6 +754,9 @@ public abstract class InboundMessageContext {
      * @return context message body workers.
      */
     public MessageBodyWorkers getWorkers() {
+        if (workers == null) {
+            throw new ProcessingException(LocalizationMessages.RESPONSE_CLOSED());
+        }
         return workers;
     }
 
@@ -948,6 +951,7 @@ public abstract class InboundMessageContext {
      */
     public void close() {
         entityContent.close(true);
+        setWorkers(null);
     }
 
     /**
