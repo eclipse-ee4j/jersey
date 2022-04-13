@@ -31,7 +31,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jersey.version>3.1.0-M3</jersey.version>
+        <jersey.version>3.1.0-M3</jersey.version> <!-- the public version that pass the tck -->
         <glassfish.container.version>6.2.5</glassfish.container.version>
         <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <jakarta.platform.version>10.0.0-RC1</jakarta.platform.version>
@@ -308,7 +308,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>stop-domain</argument>
                             </arguments>
@@ -321,7 +322,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>start-domain</argument>
                             </arguments>
@@ -334,7 +336,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>set</argument>
                                 <argument>server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true</argument>
@@ -348,7 +351,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>--passwordfile</argument>
                                 <argument>${project.basedir}/j2ee.pass</argument>
@@ -368,7 +372,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>--passwordfile</argument>
                                 <argument>${project.basedir}/j2ee.pass</argument>
@@ -386,7 +391,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>--passwordfile</argument>
                                 <argument>${project.basedir}/javajoe.pass</argument>
@@ -406,7 +412,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>--passwordfile</argument>
                                 <argument>${project.basedir}/javajoe.pass</argument>
@@ -424,7 +431,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>list-file-users</argument>
                             </arguments>
@@ -437,7 +445,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/glassfish6/glassfish/bin/asadmin</executable>
+                            <workingDirectory>${asadmin.home}</workingDirectory>
+                            <executable>${asadmin}</executable>
                             <arguments>
                                 <argument>stop-domain</argument>
                             </arguments>
@@ -460,6 +469,7 @@
                             <excludes>
                                 <exclude>**/SeBootstrapIT.java</exclude>
                             </excludes>
+                            <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
                             <dependenciesToScan>jakarta.ws.rs:${tck.artifactId}</dependenciesToScan>
                             <systemPropertyVariables>
                                 <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
@@ -488,6 +498,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
+                            <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
                             <includes>
                                 <include>**/SeBootstrapIT.java</include>
                             </includes>
@@ -498,4 +509,36 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>onLinux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <asadmin.home>${basedir}</asadmin.home>
+                <asadmin>${project.build.directory}/glassfish6/glassfish/bin/asadmin</asadmin>
+            </properties>
+        </profile>
+        <profile>
+            <id>onWindows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <asadmin.home>${glassfish.home}/glassfish/bin</asadmin.home>
+                <asadmin>asadmin</asadmin>
+            </properties>
+        </profile>
+        <profile>
+            <id>jersey-tck</id>
+            <properties>
+                <jersey.version>3.1.0-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
+            </properties>
+        </profile>
+    </profiles>
 </project>

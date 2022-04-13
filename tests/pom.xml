@@ -105,5 +105,13 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>jersey-tck</id>
+            <modules>
+                <module>jersey-tck</module>
+            </modules>
+            <build>
+            </build>
+        </profile>
     </profiles>
 </project>
