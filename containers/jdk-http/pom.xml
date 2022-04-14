@@ -33,15 +33,10 @@
     <description>JDK Http Container</description>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
-            <version>${guava.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <scope>test</scope>
             <version>${commons.io.version}</version>
         </dependency>
     </dependencies>

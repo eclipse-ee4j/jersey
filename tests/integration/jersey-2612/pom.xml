@@ -38,12 +38,6 @@
             <artifactId>jersey-container-servlet-core</artifactId>
         </dependency>
 
-        <!--<dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-external</artifactId>

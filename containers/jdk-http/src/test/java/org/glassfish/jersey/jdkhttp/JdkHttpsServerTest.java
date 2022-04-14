@@ -38,8 +38,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Test;
 
-//import com.google.common.io.ByteStreams;
-
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsServer;
