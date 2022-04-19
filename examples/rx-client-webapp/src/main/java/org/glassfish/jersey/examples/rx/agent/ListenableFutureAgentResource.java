@@ -13,6 +13,7 @@ package org.glassfish.jersey.examples.rx.agent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -32,7 +33,6 @@ import org.glassfish.jersey.examples.rx.domain.Recommendation;
 import org.glassfish.jersey.server.ManagedAsync;
 import org.glassfish.jersey.server.Uri;
 
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -122,9 +122,9 @@ public class ListenableFutureAgentResource {
         final ListenableFuture<List<Recommendation>> recommendations = Futures.transform(
                 destinations, destinationList -> {
                     // Create new array list to avoid multiple remote calls.
-                    final List<Recommendation> recommendationList = Lists.newArrayList(Lists.transform(
-                            destinationList,
-                            destination -> new Recommendation(destination.getDestination(), null, 0)));
+                    final List<Recommendation> recommendationList = destinationList.stream().map(
+                            destination -> new Recommendation(destination.getDestination(), null, 0))
+                            .collect(Collectors.toList());
 
                     return recommendationList;
                 }, Executors.newSingleThreadExecutor());
@@ -152,7 +152,7 @@ public class ListenableFutureAgentResource {
         // Fill the list with weather forecast.
         return Futures.transform(recommendations, list ->
                 // For each recommendation ...
-                (List<Recommendation>) Futures.successfulAsList(Lists.transform(list, recommendation -> Futures.transform(
+                (List<Recommendation>) Futures.successfulAsList(list.stream().map(recommendation -> Futures.transform(
                         // ... get the weather forecast ...
                         forecast.resolveTemplate("destination", recommendation.getDestination()).request()
                                 .rx(RxListenableFutureInvoker.class)
@@ -161,7 +161,7 @@ public class ListenableFutureAgentResource {
                         forecast -> {
                             recommendation.setForecast(forecast.getForecast());
                             return recommendation;
-                        }, Executors.newSingleThreadExecutor()))), Executors.newSingleThreadExecutor());
+                        }, Executors.newSingleThreadExecutor())).collect(Collectors.toList())), Executors.newSingleThreadExecutor());
     }
 
     private ListenableFuture<List<Recommendation>> calculations(final ListenableFuture<List<Recommendation>> recommendations) {
@@ -170,7 +170,7 @@ public class ListenableFutureAgentResource {
         // Fill the list with price calculations.
         return Futures.transform(recommendations, list ->
                 // For each recommendation ...
-                (List<Recommendation>) Futures.successfulAsList(Lists.transform(list, recommendation -> Futures.transform(
+                (List<Recommendation>) Futures.successfulAsList(list.stream().map(recommendation -> Futures.transform(
                         // ... get the price calculation ...
                         calculation.resolveTemplate("from", "Moon")
                                    .resolveTemplate("to", recommendation.getDestination())
@@ -179,7 +179,7 @@ public class ListenableFutureAgentResource {
                         calculation -> {
                             recommendation.setPrice(calculation.getPrice());
                             return recommendation;
-                        }, Executors.newSingleThreadExecutor()))), Executors.newSingleThreadExecutor()
+                        }, Executors.newSingleThreadExecutor())).collect(Collectors.toList())), Executors.newSingleThreadExecutor()
         );
     }
 }
