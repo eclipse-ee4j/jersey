@@ -1528,6 +1528,12 @@
                 <version>${jta.api.version}</version>
             </dependency>
 
+            <!--<dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>--> <!-- The latest repackaged guava version is 18.0 -->
+
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-locator</artifactId>
