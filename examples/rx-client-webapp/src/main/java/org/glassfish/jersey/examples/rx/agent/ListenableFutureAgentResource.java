@@ -161,7 +161,9 @@ public class ListenableFutureAgentResource {
                         forecast -> {
                             recommendation.setForecast(forecast.getForecast());
                             return recommendation;
-                        }, Executors.newSingleThreadExecutor())).collect(Collectors.toList())), Executors.newSingleThreadExecutor());
+                        },
+                        Executors.newSingleThreadExecutor())).collect(Collectors.toList())),
+                Executors.newSingleThreadExecutor());
     }
 
     private ListenableFuture<List<Recommendation>> calculations(final ListenableFuture<List<Recommendation>> recommendations) {
@@ -179,7 +181,9 @@ public class ListenableFutureAgentResource {
                         calculation -> {
                             recommendation.setPrice(calculation.getPrice());
                             return recommendation;
-                        }, Executors.newSingleThreadExecutor())).collect(Collectors.toList())), Executors.newSingleThreadExecutor()
+                        },
+                        Executors.newSingleThreadExecutor())).collect(Collectors.toList())),
+                Executors.newSingleThreadExecutor()
         );
     }
 }
