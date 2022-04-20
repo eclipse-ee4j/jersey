@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.integration.jersey2612;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.ext.ParamConverter;
@@ -31,9 +32,6 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
-
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 
 @Singleton
 public class OptionalParamConverterProvider implements ParamConverterProvider {
@@ -53,7 +51,7 @@ public class OptionalParamConverterProvider implements ParamConverterProvider {
             return new ParamConverter<T>() {
                 @Override
                 public T fromString(final String value) {
-                    return rawType.cast(Optional.fromNullable(value));
+                    return rawType.cast(Optional.ofNullable(value));
                 }
 
                 @Override
@@ -71,8 +69,7 @@ public class OptionalParamConverterProvider implements ParamConverterProvider {
                 return new ParamConverter<T>() {
                     @Override
                     public T fromString(final String value) {
-                        return rawType.cast(Optional.fromNullable(value)
-                                                    .transform((Function<String, Object>) s -> converter.fromString(value)));
+                        return rawType.cast(Optional.ofNullable(value).map(o -> converter.fromString(value)));
                     }
 
                     @Override
