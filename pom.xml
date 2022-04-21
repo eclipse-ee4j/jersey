@@ -413,6 +413,8 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${surefire.version}</version>
                     <configuration>
+                        <!-- print full stack trace if error -->
+                        <trimStackTrace>false</trimStackTrace>
                         <!-- for convenience reasons, 'argLine' should not be overridden in child poms. if needed, a property should be declared and used here -->
                         <argLine>
                             -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}
@@ -614,6 +616,8 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.0.0-M3</version>
                     <configuration>
+                        <!-- print full stack trace if error -->
+                        <trimStackTrace>false</trimStackTrace>
                         <skipTests>${skip.tests}</skipTests>
                         <skipITs>${skip.tests}</skipITs>
                         <argLine>${failsafe.coverage.argline}</argLine>
