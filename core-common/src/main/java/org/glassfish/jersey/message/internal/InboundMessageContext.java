@@ -908,6 +908,9 @@ public abstract class InboundMessageContext {
                 // if the close() gets called at once from multiple threads somehow.
                 // We want to ignore these exceptions in the readEntity/bufferEntity operations though.
                 ReaderWriter.safelyClose(entityContent);
+
+                // workers are no longer required
+                setWorkers(null);
             }
         }
     }
