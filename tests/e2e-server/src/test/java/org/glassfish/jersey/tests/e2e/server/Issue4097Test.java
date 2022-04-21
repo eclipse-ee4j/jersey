@@ -26,9 +26,6 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
-import org.glassfish.jersey.test.spi.TestContainerException;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
 
 public class Issue4097Test extends JerseyTest {
@@ -36,11 +33,6 @@ public class Issue4097Test extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(Issue4097Resource.class);
-    }
-
-    @Override
-    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-        return new JdkHttpServerTestContainerFactory();
     }
 
     @Test
