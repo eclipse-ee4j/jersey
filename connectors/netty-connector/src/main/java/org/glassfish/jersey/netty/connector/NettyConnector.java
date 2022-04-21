@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.proxy.HttpProxyHandler;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
 import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.IdentityCipherSuiteFilter;
 import io.netty.handler.ssl.JdkSslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -241,7 +243,16 @@ class NettyConnector implements Connector {
                      // Enable HTTPS if necessary.
                      if ("https".equals(requestUri.getScheme())) {
                          // making client authentication optional for now; it could be extracted to configurable property
-                         JdkSslContext jdkSslContext = new JdkSslContext(client.getSslContext(), true, ClientAuth.NONE);
+                         JdkSslContext jdkSslContext = new JdkSslContext(
+                                 client.getSslContext(),
+                                 true,
+                                 (Iterable) null,
+                                 IdentityCipherSuiteFilter.INSTANCE,
+                                 (ApplicationProtocolConfig) null,
+                                 ClientAuth.NONE,
+                                 (String[]) null, /* enable default protocols */
+                                 false /* true if the first write request shouldn't be encrypted */
+                         );
                          int port = requestUri.getPort();
                          SslHandler sslHandler = jdkSslContext.newHandler(ch.alloc(), requestUri.getHost(),
                                                                           port <= 0 ? 443 : port, executorService);
