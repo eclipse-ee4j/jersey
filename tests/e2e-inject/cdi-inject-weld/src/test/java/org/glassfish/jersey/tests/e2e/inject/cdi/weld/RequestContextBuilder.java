@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -80,31 +80,33 @@ public class RequestContextBuilder {
         public void setWorkers(final MessageBodyWorkers workers) {
             super.setWorkers(workers);
             final byte[] entityBytes;
-            if (entity != null) {
-                final MultivaluedMap<String, Object> myMap = new MultivaluedHashMap<String, Object>(getHeaders());
-                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                OutputStream stream = null;
-                try {
-                    stream = workers.writeTo(entity, entity.getClass(), entityType.getType(),
-                            new Annotation[0], getMediaType(),
-                            myMap,
-                            propertiesDelegate, baos, Collections.<WriterInterceptor>emptyList());
-                } catch (final IOException | WebApplicationException ex) {
-                    Logger.getLogger(TestContainerRequest.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    if (stream != null) {
-                        try {
-                            stream.close();
-                        } catch (final IOException e) {
-                            // ignore
+            if (workers != null) {
+                if (entity != null) {
+                    final MultivaluedMap<String, Object> myMap = new MultivaluedHashMap<String, Object>(getHeaders());
+                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    OutputStream stream = null;
+                    try {
+                        stream = workers.writeTo(entity, entity.getClass(), entityType.getType(),
+                                new Annotation[0], getMediaType(),
+                                myMap,
+                                propertiesDelegate, baos, Collections.<WriterInterceptor>emptyList());
+                    } catch (final IOException | WebApplicationException ex) {
+                        Logger.getLogger(TestContainerRequest.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        if (stream != null) {
+                            try {
+                                stream.close();
+                            } catch (final IOException e) {
+                                // ignore
+                            }
                         }
                     }
+                    entityBytes = baos.toByteArray();
+                } else {
+                    entityBytes = new byte[0];
                 }
-                entityBytes = baos.toByteArray();
-            } else {
-                entityBytes = new byte[0];
+                setEntityStream(new ByteArrayInputStream(entityBytes));
             }
-            setEntityStream(new ByteArrayInputStream(entityBytes));
         }
     }
 
