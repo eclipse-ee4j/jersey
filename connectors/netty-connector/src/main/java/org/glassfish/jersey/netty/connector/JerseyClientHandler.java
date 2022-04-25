@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,12 +18,14 @@ package org.glassfish.jersey.netty.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
@@ -35,6 +37,7 @@ import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -46,21 +49,27 @@ import io.netty.handler.timeout.IdleStateEvent;
  */
 class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
+    private static final String LOCATION_HEADER = "Location";
+
     private final ClientRequest jerseyRequest;
     private final CompletableFuture<ClientResponse> responseAvailable;
     private final CompletableFuture<?> responseDone;
+    private final boolean followRedirects;
+    private final NettyConnector connector;
 
     private NettyInputStream nis;
     private ClientResponse jerseyResponse;
 
     private boolean readTimedOut;
 
-    JerseyClientHandler(ClientRequest request,
-                        CompletableFuture<ClientResponse> responseAvailable,
-                        CompletableFuture<?> responseDone) {
+    JerseyClientHandler(ClientRequest request, CompletableFuture<ClientResponse> responseAvailable,
+                        CompletableFuture<?> responseDone, NettyConnector connector) {
         this.jerseyRequest = request;
         this.responseAvailable = responseAvailable;
         this.responseDone = responseDone;
+        // Follow redirects by default
+        this.followRedirects = jerseyRequest.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true);
+        this.connector = connector;
     }
 
     @Override
@@ -83,7 +92,29 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
        if (jerseyResponse != null) {
           ClientResponse cr = jerseyResponse;
           jerseyResponse = null;
-          responseAvailable.complete(cr);
+          int responseStatus = cr.getStatus();
+          if (followRedirects
+                  && (responseStatus == HttpResponseStatus.MOVED_PERMANENTLY.code()
+                          || responseStatus == HttpResponseStatus.FOUND.code()
+                          || responseStatus == HttpResponseStatus.SEE_OTHER.code()
+                          || responseStatus == HttpResponseStatus.TEMPORARY_REDIRECT.code()
+                          || responseStatus == HttpResponseStatus.PERMANENT_REDIRECT.code())) {
+              String location = cr.getHeaderString(LOCATION_HEADER);
+              try {
+                  URI newUri = URI.create(location);
+                  ClientRequest newReq = new ClientRequest(jerseyRequest);
+                  newReq.setUri(newUri);
+                  // Do not complete responseAvailable and try with new URI
+                  // FIXME: This loops forever if HTTP response code is always a redirect.
+                  // Currently there is no client property to specify a limit of redirections.
+                  connector.execute(newReq, responseAvailable);
+              } catch (RuntimeException e) {
+                  // It could happen if location header is wrong
+                  responseAvailable.completeExceptionally(e);
+              }
+          } else {
+              responseAvailable.complete(cr);
+          }
        }
     }
 
@@ -91,7 +122,6 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
         if (msg instanceof HttpResponse) {
             final HttpResponse response = (HttpResponse) msg;
-
             jerseyResponse = new ClientResponse(new Response.StatusType() {
                 @Override
                 public int getStatusCode() {
