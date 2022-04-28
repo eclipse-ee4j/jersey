@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -89,8 +89,8 @@ public final class ApacheClientProperties {
 
     /**
      * A value of {@code true} indicates that configured connection manager should be shared
-     * among multiple Jersey {@link org.glassfish.jersey.client.ClientRuntime} instances. It means that closing
-     * a particular {@link org.glassfish.jersey.client.ClientRuntime} instance does not shut down the underlying
+     * among multiple Jersey {@code ClientRuntime} instances. It means that closing
+     * a particular {@code ClientRuntime} instance does not shut down the underlying
      * connection manager automatically. In such case, the connection manager life-cycle
      * should be fully managed by the application code. To release all allocated resources,
      * caller code should especially ensure {@link org.apache.http.conn.HttpClientConnectionManager#shutdown()} gets
@@ -114,7 +114,7 @@ public final class ApacheClientProperties {
      * <p/>
      * The value MUST be an instance of {@link org.apache.http.client.config.RequestConfig}.
      * <p/>
-     * If the property is absent default request configuration will be used.
+     * If the property is absent the default request configuration will be used.
      * <p/>
      * The name of the configuration property is <tt>{@value}</tt>.
      *
@@ -137,9 +137,9 @@ public final class ApacheClientProperties {
     /**
      * ConnectionReuseStrategy for the {@link org.apache.http.client.HttpClient}.
      * <p/>
-     * The value MUST be an instance of {@link org.apache.http.impl.ConnectionReuseStrategy}.
+     * The value MUST be an instance of {@link org.apache.http.ConnectionReuseStrategy}.
      * <p/>
-     * If the property is absent the default reuse strategy of the Apache HTTP library will be used
+     * If the property is absent the default reuse strategy of the Apache HTTP library will be used.
      * <p/>
      * The name of the configuration property is <tt>{@value}</tt>.
      */
@@ -158,7 +158,9 @@ public final class ApacheClientProperties {
 
 
     /**
-     * Strategy that closes the Apache Connection. Accepts an instance of {@link ApacheConnectionClosingStrategy}.
+     * <p>
+     *  Strategy that closes the Apache Connection. Accepts an instance of {@link ApacheConnectionClosingStrategy}.
+     * </p>
      *
      * @see ApacheConnectionClosingStrategy
      * @since 2.30
