@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,10 @@ import org.eclipse.jetty.client.HttpClient;
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
+ * <li>{@link JettyClientProperties#DISABLE_COOKIES}</li>*
+ * <li>{@link JettyClientProperties#ENABLE_SSL_HOSTNAME_VERIFICATION}</li>
  * <li>{@link JettyClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
- * <li>{@link JettyClientProperties#DISABLE_COOKIES}</li>
+ * <li>{@link JettyClientProperties#SYNC_LISTENER_RESPONSE_MAX_SIZE}</li>
  * </ul>
  * </p>
  * <p>
