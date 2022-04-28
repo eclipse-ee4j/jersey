@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import org.glassfish.jersey.message.MessageUtils;
 import org.glassfish.jersey.server.validation.ValidationErrorData;
@@ -117,7 +119,7 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
             // Invalid value.
             builder.append(isPlain ? "invalidValue = " : ("<span class=\"invalid-value\"><strong>invalidValue</strong> = "));
             builder.append(isPlain ? error.getInvalidValue()
-                            : escapeHtml(error.getInvalidValue()).concat("</span>")
+                            : StringEscapeUtils.escapeHtml4(error.getInvalidValue()) + "</span>"
             );
 
             builder.append(')');
@@ -138,11 +140,4 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
         entityStream.flush();
     }
 
-    private static final String escapeHtml(String origin) {
-        return origin == null ? ""
-                : origin.replaceAll("&", "&amp;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;");
-    }
 }
