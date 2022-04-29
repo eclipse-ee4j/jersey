@@ -150,7 +150,7 @@ the following links are provided:
 [examples-2.25.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/2.25.1/jersey-examples-2.25.1-all.zip
 [deps-2.x]: {{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html
 [deps-2.25.x]: {{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html
-[rn-2.x]: {{ site.links.newJerseyURL }}/release-notes/{{ site.latestVersion }}.html
+[rn-2.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latestVersion }}
 [rn-2.25.x]: {{ site.links.newJerseyURL }}/release-notes/2.25.1.html
 [tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
-[rn-3.x]: {{ site.links.newJerseyURL }}/release-notes/{{ site.latest3xVersion }}.html
+[rn-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
