@@ -46,8 +46,8 @@ mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
     -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion={{ site.latest3xVersion }}
 ```
 
-For the full list of updates for Jersey {{ site.latest3xVersion }}, see  [Jersey {{ site.latest3xVersion }}][tag-3.x] tag.
-To see the details about all changes, bug fixed and updates, please check the [Jersey {{ site.latest3xVersion }} Release Notes][rn-3.x].
+For the full list of updates for Jersey {{ site.latest3xVersion }}, details about all changes, bug fixed and updates, 
+please check the [Jersey {{ site.latest3xVersion }} Release Notes][rn-3.x].
 
 <h3>JAX-RS 2.1 / Jersey 2.26+</h3>
 
