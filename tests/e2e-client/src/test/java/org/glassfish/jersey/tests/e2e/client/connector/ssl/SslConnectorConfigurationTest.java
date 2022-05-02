@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
 
 import javax.net.ssl.SSLContext;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -78,7 +77,7 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
     public void testHTTPBasicAuth1() throws Exception {
         final SSLContext sslContext = getSslContext();
 
-        final ClientConfig cc = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+        final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
         final Client client = ClientBuilder.newBuilder()
                 .withConfig(cc)
                 .sslContext(sslContext)
@@ -101,7 +100,7 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
     public void testSSLAuth1() throws Exception {
         final SSLContext sslContext = getSslContext();
 
-        final ClientConfig cc = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+        final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
         final Client client = ClientBuilder.newBuilder()
                 .withConfig(cc)
                 .sslContext(sslContext)
