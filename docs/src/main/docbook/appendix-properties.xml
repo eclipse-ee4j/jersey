@@ -206,6 +206,17 @@
                             See <link linkend="logging.xml">logging</link> chapter for more information.
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -669,6 +680,17 @@
                             See <link linkend="logging.xml">logging</link> chapter for more information.
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.server.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -1050,6 +1072,17 @@
                         </entry>
                         <entry>
                             New line delimiter property (client side).
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.client.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
                             See <link linkend="logging_chapter">logging</link> chapter for more information.
                         </entry>
                     </row>
