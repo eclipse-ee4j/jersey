@@ -34,9 +34,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
             <scope>test</scope>
+            <version>${commons.io.version}</version>
         </dependency>
     </dependencies>
 

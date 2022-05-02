@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,17 +19,15 @@ package org.glassfish.jersey.test.maven.rule;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
 import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
-
-import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
 
 /**
  * Maven enforcer rule to enforce that given file does not contain line matching given pattern. When matched, exception is
@@ -67,25 +65,8 @@ public class PatternNotMatchedInFileRule extends AbstractNonCacheableEnforcerRul
         final Pattern patternCompiled = Pattern.compile(pattern);
         try {
 
-            final List<String> lines = Files.readLines(file, Charset.defaultCharset(), new LineProcessor<List<String>>() {
-                private List<String> matchedLines = new LinkedList<>();
-
-                @Override
-                public boolean processLine(final String line) throws IOException {
-                    if (patternCompiled.matcher(line).matches()) {
-                        matchedLines.add(line);
-                        if (maxMatchedLines != 0 && maxMatchedLines <= matchedLines.size()) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-                @Override
-                public List<String> getResult() {
-                    return matchedLines;
-                }
-            });
+            final List<String> lines = Files.lines(file.toPath(), Charset.defaultCharset())
+                    .filter(line -> patternCompiled.matcher(line).matches()).collect(Collectors.toList());
 
             if (lines.size() > 0) {
                 throw new EnforcerRuleException(
