@@ -564,9 +564,8 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                                 result.add(clazz);
                             } else if (LOGGER.isLoggable(Level.FINER)) {
                                 LOGGER.log(Level.FINER,
-                                    "Ignoring provider class " + clazz.getName() + " (in " + clazz.getModule() + ")"
-                                    + " because it is not assignable to " + serviceClass.getName()
-                                    + " (in " + serviceClass.getModule() + ")");
+                                    "Ignoring provider class " + clazz.getName() + " because it is not assignable to "
+                                    + " service class " + serviceClass.getName());
                             }
                         }
                     } catch (final Exception ex) {
