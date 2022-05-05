@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,7 +60,7 @@ public final class JdkConnectorProperties {
      * Value is expected to be positive {@link Integer}. Default value is {@value #DEFAULT_MAX_REDIRECTS}.
      * <p/>
      * HTTP redirection must be enabled by property {@link org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS},
-     * otherwise {@code MAX_HEADER_SIZE} is not applied.
+     * otherwise {@code MAX_REDIRECTS} is not applied.
      *
      * @see org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS
      * @see org.glassfish.jersey.jdk.connector.internal.RedirectException
@@ -70,14 +70,14 @@ public final class JdkConnectorProperties {
     /**
      * To set the cookie policy of this cookie manager.
      * <p/>
-     * The default value is ACCEPT_ORIGINAL_SERVER.
+     * The default value is {@link CookiePolicy#ACCEPT_ORIGINAL_SERVER}.
      *
      * @see java.net.CookieManager
      */
     public static final String COOKIE_POLICY = "jersey.config.client.JdkConnectorProvider.cookiePolicy";
 
     /**
-     * A maximal number of open connection to each destination. A destination is determined by the following triple:
+     * A maximum number of open connections per each destination. A destination is determined by the following triple:
      * <ul>
      * <li>host</li>
      * <li>port</li>

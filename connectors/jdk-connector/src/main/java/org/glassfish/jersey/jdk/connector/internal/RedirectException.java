@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import org.glassfish.jersey.client.ClientProperties;
  * <ul>
  * <li>
  * the chained redirection count exceeds the value of
- * {@link org.glassfish.jersey.client.JdkConnectorProvider#MAX_REDIRECTS}
+ * {@link org.glassfish.jersey.jdk.connector.JdkConnectorProperties#MAX_REDIRECTS}
  * </li>
  * <li>
  * or an infinite redirection loop is detected

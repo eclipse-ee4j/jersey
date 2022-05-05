@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -74,6 +75,15 @@ public class BufferingTest extends JerseyTest {
     }
 
     @Test
+    public void testApache5Connector() {
+        testWithBuffering(getApache5ConnectorConfig());
+        testWithChunkEncodingWithoutPropertyDefinition(getApache5ConnectorConfig());
+        testWithChunkEncodingWithPropertyDefinition(getApache5ConnectorConfig());
+        testWithChunkEncodingPerRequest(getApache5ConnectorConfig());
+        testDefaultOption(getApache5ConnectorConfig(), RequestEntityProcessing.CHUNKED);
+    }
+
+    @Test
     public void testGrizzlyConnector() {
         testWithBuffering(getGrizzlyConnectorConfig());
         testWithChunkEncodingWithoutPropertyDefinition(getGrizzlyConnectorConfig());
@@ -93,6 +103,10 @@ public class BufferingTest extends JerseyTest {
 
     private ClientConfig getApacheConnectorConfig() {
         return new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+    }
+
+    private ClientConfig getApache5ConnectorConfig() {
+        return new ClientConfig().connectorProvider(new Apache5ConnectorProvider());
     }
 
     private ClientConfig getGrizzlyConnectorConfig() {
