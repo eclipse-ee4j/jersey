@@ -2155,7 +2155,7 @@
         <skip.e2e>false</skip.e2e>
         <slf4j.version>1.7.21</slf4j.version>
         <spring6.version>6.0.0-M3</spring6.version>
-        <surefire.version>3.0.0-M5</surefire.version>
+        <surefire.version>3.0.0-M6</surefire.version>
         <validation.impl.version>6.2.0.Final</validation.impl.version>
 
         <!-- Jakartified, eligible for CQ -->
