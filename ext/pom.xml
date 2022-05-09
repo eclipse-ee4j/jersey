@@ -51,10 +51,7 @@
         <module>mvc-mustache</module>
         <module>proxy-client</module>
         <module>rx</module>
-        <!-- do not release spring 4 and spring 5 modules with Jersey 3.x
-        <module>spring4</module>
-        <module>spring5</module>
-        -->
+        <module>spring6</module>
         <module>wadl-doclet</module>
         <module>microprofile</module>
     </modules>

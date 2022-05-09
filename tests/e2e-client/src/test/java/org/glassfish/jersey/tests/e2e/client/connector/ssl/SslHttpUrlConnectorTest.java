@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -94,9 +96,16 @@ public class SslHttpUrlConnectorTest extends AbstractConnectorServerTest {
      */
     @Test
     public void testConcurrentRequestsWithCustomSSLContext() throws Exception {
+        if (HttpUrlConnectorProvider.class.isInstance(connectorProvider)
+                || (ApacheConnectorProvider.class.isInstance(connectorProvider))
+                || (Apache5ConnectorProvider.class.isInstance(connectorProvider))) {
+            return;
+        }
         final SSLContext sslContext = getSslContext();
 
+        final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
         final Client client = ClientBuilder.newBuilder()
+            .withConfig(cc)
             .sslContext(sslContext)
             .register(HttpAuthenticationFeature.basic("user", "password"))
             .register(LoggingFeature.class)

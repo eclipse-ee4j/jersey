@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,15 +24,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -40,6 +46,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.WriterInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
+import org.glassfish.jersey.internal.guava.Predicates;
 import org.glassfish.jersey.logging.LoggingFeature.Verbosity;
 import org.glassfish.jersey.message.MessageUtils;
 
@@ -104,6 +111,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
     final Verbosity verbosity;
     final int maxEntitySize;
     final String separator;
+    final Predicate<String> redactHeaderPredicate;
 
     /**
      * Creates a logging filter using builder instance with custom logger and entity logging turned on,
@@ -117,6 +125,7 @@ abstract class LoggingInterceptor implements WriterInterceptor {
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      *  separator      delimiter for particular log lines. Default is Linux new line delimiter
+     *  redactHeaders  a collection of HTTP headers to be redacted when logging.
      */
 
     LoggingInterceptor(LoggingFeature.LoggingFeatureBuilder builder) {
@@ -125,6 +134,9 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         this.verbosity = builder.verbosity;
         this.maxEntitySize = Math.max(0, builder.maxEntitySize);
         this.separator = builder.separator;
+        this.redactHeaderPredicate = builder.redactHeaders != null && !builder.redactHeaders.isEmpty()
+                ? new RedactHeaderPredicate(builder.redactHeaders)
+                : header -> false;
     }
 
     /**
@@ -169,20 +181,28 @@ abstract class LoggingInterceptor implements WriterInterceptor {
             final List<?> val = headerEntry.getValue();
             final String header = headerEntry.getKey();
 
-            if (val.size() == 1) {
-                prefixId(b, id).append(prefix).append(header).append(": ").append(val.get(0)).append(separator);
-            } else {
-                final StringBuilder sb = new StringBuilder();
+            prefixId(b, id).append(prefix).append(header).append(": ");
+            getValuesAppender(header, val).accept(b, val);
+            b.append(separator);
+        }
+    }
+
+    private BiConsumer<StringBuilder, List<?>> getValuesAppender(String header, List<?> values) {
+        if (redactHeaderPredicate.test(header)) {
+            return (b, v) -> b.append("[redacted]");
+        } else if (values.size() == 1) {
+            return (b, v) -> b.append(v.get(0));
+        } else {
+            return (b, v) -> {
                 boolean add = false;
-                for (final Object s : val) {
+                for (final Object s : v) {
                     if (add) {
-                        sb.append(',');
+                        b.append(',');
                     }
                     add = true;
-                    sb.append(s);
+                    b.append(s);
                 }
-                prefixId(b, id).append(prefix).append(header).append(": ").append(sb.toString()).append(separator);
-            }
+            };
         }
     }
 
@@ -305,11 +325,31 @@ abstract class LoggingInterceptor implements WriterInterceptor {
             if ((off | len | ba.length - (len + off) | off + len) < 0) {
                 throw new IndexOutOfBoundsException();
             }
-            if ((baos.size() + len) <= maxEntitySize) {
+            if (baos.size() <= maxEntitySize) {
                 baos.write(ba, off, len);
             }
             out.write(ba, off, len);
         }
     }
 
+    private static final class RedactHeaderPredicate implements Predicate<String> {
+        private final Set<String> headersToRedact;
+
+        RedactHeaderPredicate(Collection<String> headersToRedact) {
+            this.headersToRedact = headersToRedact.stream()
+                    .filter(Objects::nonNull)
+                    .filter(Predicates.not(String::isEmpty))
+                    .map(RedactHeaderPredicate::normalize)
+                    .collect(Collectors.toSet());
+        }
+
+        @Override
+        public boolean test(String header) {
+            return headersToRedact.contains(normalize(header));
+        }
+
+        private static String normalize(String input) {
+            return input.trim().toLowerCase(Locale.ROOT);
+        }
+    }
 }

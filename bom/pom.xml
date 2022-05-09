@@ -65,6 +65,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
+                <artifactId>jersey-apache5-connector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-helidon-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -193,16 +198,11 @@
                 <artifactId>jersey-proxy-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.glassfish.jersey.ext</groupId>-->
-<!--                <artifactId>jersey-spring4</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.glassfish.jersey.ext</groupId>-->
-<!--                <artifactId>jersey-spring5</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-spring6</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>
                 <artifactId>jersey-declarative-linking</artifactId>
@@ -263,11 +263,11 @@
                 <artifactId>jersey-rx-client-rxjava2</artifactId>
                 <version>${project.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.glassfish.jersey.ext.microprofile</groupId>-->
-<!--                <artifactId>jersey-mp-rest-client</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+                <artifactId>jersey-mp-rest-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-jaxb</artifactId>
