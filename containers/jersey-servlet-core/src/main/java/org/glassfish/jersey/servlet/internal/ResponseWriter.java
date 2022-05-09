@@ -233,6 +233,7 @@ public class ResponseWriter implements ContainerResponseWriter {
             }
         } finally {
             requestTimeoutHandler.close();
+            responseContext.completeExceptionally(error);
             rethrow(error);
         }
     }

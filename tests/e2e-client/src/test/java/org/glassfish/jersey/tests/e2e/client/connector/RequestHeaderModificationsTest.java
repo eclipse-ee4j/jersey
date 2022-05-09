@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,6 +52,7 @@ import jakarta.ws.rs.ext.WriterInterceptorContext;
 import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
@@ -103,10 +104,12 @@ public class RequestHeaderModificationsTest extends JerseyTest {
                 {GrizzlyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {JettyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {ApacheConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
+                {Apache5ConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {HttpUrlConnectorProvider.class, true, true},
                 {GrizzlyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {JettyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {ApacheConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
+                {Apache5ConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
         }));
     }
 

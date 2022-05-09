@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jdk.javadoc.doclet.DocletEnvironment;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ClassDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ParamDocType;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.ExecutableElement;
-import com.sun.source.doctree.ParamTree;
 import javax.lang.model.element.VariableElement;
 
 public class DocProcessorWrapper implements DocProcessor {
@@ -96,4 +96,30 @@ public class DocProcessorWrapper implements DocProcessor {
         }
     }
 
+    @Override
+    public void processClassDocWithDocEnv(TypeElement classDoc,
+                                          ClassDocType classDocType,
+                                          DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processClassDocWithDocEnv(classDoc, classDocType, docEnv);
+        }
+    }
+
+    @Override
+    public void processMethodDocWithDocEnv(ExecutableElement methodDoc,
+                                           MethodDocType methodDocType,
+                                           DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processMethodDocWithDocEnv(methodDoc, methodDocType, docEnv);
+        }
+    }
+
+    @Override
+    public void processParamTagWithDocEnv(VariableElement parameter,
+                                          ParamDocType paramDocType,
+                                          DocletEnvironment docEnv) {
+        for (DocProcessor docProcessor : _docProcessors) {
+            docProcessor.processParamTagWithDocEnv(parameter, paramDocType, docEnv);
+        }
+    }
 }

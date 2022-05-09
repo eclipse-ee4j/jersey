@@ -35,6 +35,7 @@
 
     <modules>
         <module>apache-connector</module>
+        <module>apache5-connector</module>
         <module>grizzly-connector</module>
         <module>helidon-connector</module>
         <module>jdk-connector</module>
@@ -67,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
