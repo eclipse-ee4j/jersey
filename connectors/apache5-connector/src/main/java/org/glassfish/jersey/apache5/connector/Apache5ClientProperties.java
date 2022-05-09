@@ -90,8 +90,8 @@ public final class Apache5ClientProperties {
 
     /**
      * A value of {@code true} indicates that configured connection manager should be shared
-     * among multiple Jersey {@link org.glassfish.jersey.client.ClientRuntime} instances. It means that closing
-     * a particular {@link org.glassfish.jersey.client.ClientRuntime} instance does not shut down the underlying
+     * among multiple Jersey {@code ClientRuntime} instances. It means that closing
+     * a particular {@code ClientRuntime} instance does not shut down the underlying
      * connection manager automatically. In such case, the connection manager life-cycle
      * should be fully managed by the application code. To release all allocated resources,
      * caller code should especially ensure {@link org.apache.hc.client5.http.io.HttpClientConnectionManager#close()} gets
@@ -124,7 +124,7 @@ public final class Apache5ClientProperties {
     public static final String REQUEST_CONFIG = "jersey.config.apache5.client.requestConfig";
 
     /**
-     * HttpRequestRetryHandler which will be used to create {@link org.apache.hc.client5.http.classic.HttpClient}.
+     * HttpRequestRetryStrategy which will be used to create {@link org.apache.hc.client5.http.classic.HttpClient}.
      * <p/>
      * The value MUST be an instance of {@link org.apache.hc.client5.http.HttpRequestRetryStrategy}.
      * <p/>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -646,6 +646,16 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry><literal>org.glassfish.jersey.connectors:jersey-apache-connector</literal></entry>
                         </row>
                         <row>
+                            <entry>Apache 5 HTTP client</entry>
+                            <entry>&jersey.apache5.Apache5ConnectorProvider;</entry>
+                            <entry><literal>org.glassfish.jersey.connectors:jersey-apache5-connector</literal></entry>
+                        </row>
+                        <row>
+                            <entry>Helidon HTTP client</entry>
+                            <entry>&jersey.helidon.HelidonConnectorProvider;</entry>
+                            <entry><literal>org.glassfish.jersey.connectors:jersey-helidon-connector</literal></entry>
+                        </row>
+                        <row>
                             <entry>Jetty HTTP client</entry>
                             <entry>&jersey.jetty.JettyConnectorProvider;</entry>
                             <entry><literal>org.glassfish.jersey.connectors:jersey-jetty-connector</literal></entry>
@@ -751,6 +761,89 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
             register &lit.jersey.client.Connector; instances in the Jersey &jersey.client.ClientConfig;. The new
             &lit.jersey.client.ConnectorProvider; SPI must be used instead to configure a custom client-side transport connector.
         </para>
+        <section>
+            <title>Client Connectors Properties</title>
+            <para>
+                For each &jersey.client.Connector; a property file defining properties tweaking the actual
+                &lit.jersey.client.Connector; exists. There are &jersey.client.ClientProperties; properties that apply to the
+                default &jersey.client.HttpUrlConnectorProvider;. Many of the properties are also understood by
+                various <literal>Connectors</literal>. Each of the &lit.jersey.client.ConnectorProvider;
+                defines properties that apply to it.
+            </para>
+            <para>
+                Moreover, each &jersey.client.Connector; supports a list of properties that are unique for the
+                &jersey.client.Connector;. The list of the client connector properties can be found in the
+                <xref linkend="appendix-properties"/>.
+            </para>
+        </section>
+        <section>
+            <title>Applying additional settings to Connectors</title>
+            <para>
+                It is not possible to provide all the settings the underlying HTTP Clients support. For Apache HTTP Client, and
+                for Jetty HTTP Client, it is possible to access directly the HTTP Client classes and invoke setter methods there.
+            </para>
+            <section>
+                <title>Apache HttpClientBuilder Configuration</title>
+                <para>
+                    For Apache Connector, an &jersey.apache.ApacheHttpClientBuilderConfigurator; SPI allows for invoking methods
+                    of <literal>org.apache.http.impl.client.HttpClientBuilder</literal>, such as <literal>setDefaultCredentialsProvider</literal>:
+                    <programlisting language="java" linenumbering="numbered">
+                        org.apache.http.client.CredentialsProvider credentialsProvider = new org.apache.http.impl.client.BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(
+                            org.apache.http.auth.AuthScope.ANY,
+                            new org.apache.http.auth.UsernamePasswordCredentials("name", "password")
+                        );
+                        ApacheHttpClientBuilderConfigurator apacheHttpClientBuilderConfigurator = (httpClientBuilder) -> {
+                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                        };
+
+                        ClientConfig cc = new ClientConfig();
+                        cc.register(apacheHttpClientBuilderConfigurator);
+                        cc.connectorProvider(new ApacheConnectorProvider());
+                        Client client = ClientBuilder.newClient(cc);
+                        ...
+                    </programlisting>
+                </para>
+            </section>
+            <section>
+                <title>Apache 5 HttpClientBuilder Configuration</title>
+                <para>
+                    For Apache 5 Connector, an &jersey.apache5.Apache5HttpClientBuilderConfigurator; SPI allows for invoking methods
+                    of <literal>org.apache.hc.client5.http.impl.classic.HttpClientBuilder</literal>, such as <literal>setDefaultCredentialsProvider</literal>:
+                    <programlisting language="java" linenumbering="numbered">
+                        org.apache.hc.client5.http.auth.CredentialsStore credentialsProvider = new org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(
+                            new org.apache.hc.client5.http.auth.AuthScope("localhost", getPort()),
+                            new org.apache.hc.client5.http.auth.UsernamePasswordCredentials("name", "password".toCharArray())
+                        );
+                        Apache5HttpClientBuilderConfigurator apache5HttpClientBuilderConfigurator = (httpClientBuilder) -> {
+                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                        };
+
+                        ClientConfig cc = new ClientConfig();
+                        cc.register(apache5HttpClientBuilderConfigurator);
+                        cc.connectorProvider(new Apache5ConnectorProvider());
+                        Client client = ClientBuilder.newClient(cc);
+                        ...
+                    </programlisting>
+                </para>
+            </section>
+            <section>
+                <title>Jetty HttpClient Configuration</title>
+                <para>
+                    For Jetty Connector, an &jersey.jetty.JettyHttpClientSupplier; SPI allows for providing a configured instance
+                    of <literal>org.eclipse.jetty.client.HttpClient</literal>:
+                    <programlisting language="java" linenumbering="numbered">
+                        HttpClient httpClient = new HttpClient(...);
+                        ClientConfig clientConfig = new ClientConfig()
+                            .connectorProvider(new JettyConnectorProvider())
+                            .register(new JettyHttpClientSupplier(httpClient));
+                        Client client = ClientBuilder.newClient(clientConfig);
+                        ...
+                    </programlisting>
+                </para>
+            </section>
+        </section>
     </section>
 
     <section>
@@ -773,7 +866,7 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
                     in interceptor (you don't need to register this interceptor). Check the javadoc of the
                     &jersey.client.EncodingFeature; in order to use it.</member>
                 <member>&jersey.client.HttpAuthenticationFeature;: HTTP Authentication Feature
-                    (see <xref linkend="ssl" />
+                    (see <link xlink:href="#authentication">authentication</link>
                     below).</member>
             </simplelist>
 
@@ -919,7 +1012,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
         </para>
 
         <section>
-            <title>Http Authentication Support</title>
+            <title><anchor xml:id="authentication"/>Http Authentication Support</title>
             <para>Jersey supports Basic and Digest HTTP Authentication.</para>
             <important>
                 <para>

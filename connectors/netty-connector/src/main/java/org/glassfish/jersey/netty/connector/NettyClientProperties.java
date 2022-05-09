@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,4 +53,19 @@ public class NettyClientProperties {
      *  </p>
      */
     public static final String MAX_CONNECTIONS = "jersey.config.client.maxConnections";
+
+    /**
+     * <p>
+     *     Sets the endpoint identification algorithm to HTTPS.
+     * </p>
+     * <p>
+     *     The default value is {@code true} (for HTTPS uri scheme).
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.35
+     * @see javax.net.ssl.SSLParameters#setEndpointIdentificationAlgorithm(String)
+     */
+    public static final String ENABLE_SSL_HOSTNAME_VERIFICATION = "jersey.config.client.tls.enableHostnameVerification";
 }

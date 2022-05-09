@@ -107,18 +107,21 @@ import org.glassfish.jersey.message.internal.Statuses;
  * <p/>
  * The following properties are only supported at construction of this class:
  * <ul>
+ * <li>{@link Apache5ClientProperties#CONNECTION_CLOSING_STRATEGY}</li>
  * <li>{@link Apache5ClientProperties#CONNECTION_MANAGER}</li>
- * <li>{@link Apache5ClientProperties#REQUEST_CONFIG}</li>
- * <li>{@link Apache5ClientProperties#CREDENTIALS_PROVIDER}</li>
+ * <li>{@link Apache5ClientProperties#CONNECTION_MANAGER_SHARED}</li>
  * <li>{@link Apache5ClientProperties#DISABLE_COOKIES}</li>
+ * <li>{@link Apache5ClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link Apache5ClientProperties#KEEPALIVE_STRATEGY}</li>
+ * <li>{@link Apache5ClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
- * <li>{@link Apache5ClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
+ * <li>{@link Apache5ClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link Apache5ClientProperties#RETRY_STRATEGY}</li>
  * <li>{@link Apache5ClientProperties#REUSE_STRATEGY}</li>
+ * <li>{@link Apache5ClientProperties#USE_SYSTEM_PROPERTIES}</li>
  * </ul>
  * <p>
  * This connector uses {@link RequestEntityProcessing#CHUNKED chunked encoding} as a default setting. This can
