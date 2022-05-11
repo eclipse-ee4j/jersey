@@ -22,6 +22,10 @@ module org.glassfish.jersey.container.simple.http {
 
     requires static jakarta.xml.bind;
 
+    requires simple.common;
+    requires simple.http;
+    requires simple.transport;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
 

@@ -27,8 +27,10 @@ module org.glassfish.jersey.ext.bean.validation {
     requires org.glassfish.jersey.core.server;
 
     requires org.glassfish.jersey.ext.cdi1x;
+    requires jakarta.cdi;
 
     exports org.glassfish.jersey.server.validation;
     exports org.glassfish.jersey.server.validation.internal.hibernate;
+    exports org.glassfish.jersey.server.validation.internal;
     opens org.glassfish.jersey.server.validation.internal.hibernate;
 }

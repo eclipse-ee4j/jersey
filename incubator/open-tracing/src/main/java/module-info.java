@@ -19,6 +19,9 @@ module org.glassfish.jersey.incubator.open.tracing {
 
     requires jakarta.ws.rs;
 
+    requires opentracing.api;
+    requires opentracing.util;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
 

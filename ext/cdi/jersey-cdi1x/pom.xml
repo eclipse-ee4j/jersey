@@ -113,22 +113,6 @@
                     <skipTests>${skip.tests}</skipTests>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <configuration>
-                            <release>11</release>
-                            <compilerArgs>
-                                <arg>--add-reads</arg>
-                                <arg>org.glassfish.jersey.ext.cdi1x=ALL-UNNAMED</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

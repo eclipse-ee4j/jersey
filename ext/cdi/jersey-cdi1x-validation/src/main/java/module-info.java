@@ -19,6 +19,10 @@ module org.glassfish.jersey.ext.cdi1x.validation {
     requires jakarta.inject;
     requires jakarta.interceptor.api;
 
+    requires jakarta.cdi;
+
+    requires org.hibernate.validator.cdi;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.inject.hk2;

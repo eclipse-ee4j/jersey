@@ -17,6 +17,8 @@
 module org.glassfish.jersey.ext.rx.client.guava {
     requires jakarta.ws.rs;
 
+    requires guava;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
 

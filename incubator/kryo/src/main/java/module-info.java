@@ -18,6 +18,8 @@ module org.glassfish.jersey.incubator.media.kryo {
     requires jakarta.annotation;
     requires jakarta.ws.rs;
 
+    requires kryo;
+
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.kryo;

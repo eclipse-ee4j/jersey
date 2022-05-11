@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.wadl.doclet;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -50,9 +49,6 @@ import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.Re
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ResourceDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ResponseDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.WadlParamType;
-
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationDesc.ElementValuePair;

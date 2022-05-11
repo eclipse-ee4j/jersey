@@ -23,12 +23,15 @@ module org.glassfish.jersey.media.multipart {
 
     requires jakarta.xml.bind;
 
-    requires org.glassfish.jersey.core.common;
+    requires org.jvnet.mimepull;
+
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.core.client;
+    requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.media.multipart;
     exports org.glassfish.jersey.media.multipart.internal;
 
+    opens org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.media.multipart.internal;
 }
