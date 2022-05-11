@@ -44,21 +44,6 @@
 
     <profiles>
         <profile>
-            <id>jdk1.8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.8.0</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>jdk1.8_11</id>
             <activation>
                 <jdk>[1.8,12)</jdk>
@@ -80,24 +65,6 @@
                                         <source>${java.sourceDirectory}</source>
                                         <source>${java8_11.sourceDirectory}</source>
                                     </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-compile</id>
-                                <configuration>
-                                    <!-- compile everything to ensure module-info contains right entries -->
-                                    <release>11</release>
-                                    <compilerArgs>
-                                        <arg>--add-reads</arg>
-                                        <arg>org.glassfish.jersey.ext.wadl.doclet=ALL-UNNAMED</arg>
-                                        <arg>-Xdiags:verbose</arg>
-                                    </compilerArgs>
                                 </configuration>
                             </execution>
                         </executions>
@@ -215,10 +182,6 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-jaxb</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>

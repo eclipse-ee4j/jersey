@@ -22,6 +22,13 @@ module org.glassfish.jersey.inject.cdi2.se {
     requires jakarta.interceptor.api;
     requires jakarta.ws.rs;
 
+    requires jakarta.cdi;
+    requires weld.api;
+    requires weld.spi;
+
+    requires weld.core.impl;
+    requires weld.se.core;
+
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.inject.cdi.se;

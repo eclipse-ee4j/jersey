@@ -17,6 +17,8 @@
 module org.glassfish.jersey.incubator.gae.integration {
     requires jakarta.ws.rs;
 
+    requires appengine.api;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
 

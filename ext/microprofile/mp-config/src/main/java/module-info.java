@@ -16,6 +16,7 @@
 
 module org.glassfish.jersey.ext.mp.config {
     requires jakarta.ws.rs;
+    requires microprofile.config.api;
 
     requires org.glassfish.jersey.core.common;
 

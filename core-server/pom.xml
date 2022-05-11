@@ -163,23 +163,6 @@
                     </argLine>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-<!--                        <id>default-compile</id>-->
-                        <configuration>
-                            <!-- compile everything to ensure module-info contains right entries -->
-                            <release>11</release>
-                            <compilerArgs>
-                                <arg>--add-reads</arg>
-                                <arg>org.glassfish.jersey.core.server=ALL-UNNAMED</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

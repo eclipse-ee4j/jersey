@@ -18,6 +18,8 @@ module org.glassfish.jersey.ext.weld2.se {
     requires jakarta.inject;
     requires jakarta.cdi;
 
+    requires weld.api;
+
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.ext.cdi1x;

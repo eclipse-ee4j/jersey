@@ -19,6 +19,8 @@ module org.glassfish.jersey.ext.mvc.freemarker {
     requires jakarta.servlet;
     requires jakarta.ws.rs;
 
+    requires freemarker;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.ext.mvc;

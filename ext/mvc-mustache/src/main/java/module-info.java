@@ -19,6 +19,8 @@ module org.glassfish.jersey.ext.mvc.mustache {
     requires jakarta.servlet;
     requires jakarta.ws.rs;
 
+    requires compiler;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.ext.mvc;

@@ -21,6 +21,8 @@ module org.glassfish.jersey.media.json.jettison {
     requires jakarta.ws.rs;
     requires static jakarta.xml.bind;
 
+    requires jettison;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.media.jaxb;
 

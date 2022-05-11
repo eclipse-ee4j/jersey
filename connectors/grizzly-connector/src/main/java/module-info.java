@@ -19,6 +19,9 @@ module org.glassfish.jersey.grizzly.connector {
 
     requires jakarta.ws.rs;
 
+    requires grizzly.framework;
+    requires grizzly.http.client;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
 

@@ -20,6 +20,7 @@ module org.glassfish.jersey.ext.mvc.bean.validation {
     requires jakarta.ws.rs;
 
     requires org.glassfish.jersey.ext.mvc;
+    requires org.glassfish.jersey.ext.bean.validation;
 
     exports org.glassfish.jersey.server.mvc.beanvalidation;
 }

@@ -17,13 +17,13 @@
 module org.glassfish.jersey.ext.mvc {
     requires java.logging;
 
-    requires jakarta.annotation;
-    requires jakarta.inject;
-    requires jakarta.servlet;
-    requires jakarta.ws.rs;
+    requires transitive jakarta.annotation;
+    requires transitive jakarta.inject;
+    requires transitive jakarta.servlet;
+    requires transitive jakarta.ws.rs;
 
-    requires org.glassfish.jersey.core.server;
-    requires org.glassfish.jersey.core.common;
+    requires transitive org.glassfish.jersey.core.server;
+    requires transitive org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.server.mvc;
     exports org.glassfish.jersey.server.mvc.internal;

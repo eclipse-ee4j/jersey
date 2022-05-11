@@ -19,6 +19,11 @@ module org.glassfish.jersey.ext.cdi1x {
     requires java.naming;
     requires java.logging;
 
+    requires jakarta.cdi;
+    requires jakarta.annotation;
+
+    requires org.glassfish.hk2.api;
+
     requires transitive org.glassfish.jersey.core.server;
     requires transitive org.glassfish.jersey.core.common;
     requires transitive org.glassfish.jersey.inject.hk2;

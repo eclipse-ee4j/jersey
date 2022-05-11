@@ -64,24 +64,6 @@
                     <unpackBundle>true</unpackBundle>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <configuration>
-                            <!-- compile everything to ensure module-info contains right entries -->
-                            <release>11</release>
-                            <compilerArgs>
-                                <arg>--add-reads</arg>
-                                <arg>org.glassfish.jersey.media.json.processing=ALL-UNNAMED</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -129,4 +111,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <properties>
+        <surefire.coverage.argline>--add-opens org.eclipse.parsson.media/org.eclipse.parsson.media=ALL-UNNAMED --illegal-access=permit</surefire.coverage.argline>
+    </properties>
 </project>
