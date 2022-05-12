@@ -1849,4 +1849,55 @@
             </tgroup>
         </table>
     </section>
+    <section xml:id="appendix-properties-client-jnh">
+        <title>Java java.net.http client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.jnh.JavaNetHttpClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Java java.net.http HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.COOKIE_HANDLER;</entry>
+                        <entry><literal>jersey.config.jnh.client.cookieHandler</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of the <literal>java.net.CookieHandler</literal> that should be used by the
+                                <literal>java.net.http.HttpClient</literal>. If this option is not set,
+                                <literal>java.net.http.HttpClient#cookieHandler()</literal> will return an empty
+                                <literal>java.util.Optional</literal> and therefore no cookie handler will be used.
+                            </para>
+                            <para>
+                                A provided value to this option has to be of type <literal>java.net.CookieHandler</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.SSL_PARAMETERS;</entry>
+                        <entry><literal>jersey.config.jnh.client.sslParameters</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the maximum number of idle connections that will be simultaneously kept
+                                alive, per destination. The default is 5.
+                            </para>
+                            <para>
+                                This property is a Jersey alternative to System property <literal>http.maxConnections</literal>.
+                                The Jersey property takes precedence over the system property.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </appendix>

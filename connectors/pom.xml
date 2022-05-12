@@ -40,8 +40,8 @@
         <module>helidon-connector</module>
         <module>jdk-connector</module>
         <module>jetty-connector</module>
+        <module>jnh-connector</module>
         <module>netty-connector</module>
-<!--        <module>java-connector</module> temporarily for M3-->
     </modules>
 
     <dependencies>

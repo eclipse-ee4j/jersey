@@ -670,6 +670,11 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry>&jersey.jdk.JdkConnectorProvider;</entry>
                             <entry><literal>org.glassfish.jersey.connectors:jersey-jdk-connector</literal></entry>
                         </row>
+                        <row>
+                            <entry>Java java.net.http client</entry>
+                            <entry>&jersey.jnh.JavaNetHttpConnectorProvider;</entry>
+                            <entry><literal>org.glassfish.jersey.connectors:jersey-jnh-connector</literal></entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>

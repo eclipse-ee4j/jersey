@@ -56,9 +56,10 @@ import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -105,11 +106,13 @@ public class RequestHeaderModificationsTest extends JerseyTest {
                 {JettyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {ApacheConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
                 {Apache5ConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
+                {JavaNetHttpConnectorProvider.class, true, false},
                 {HttpUrlConnectorProvider.class, true, true},
                 {GrizzlyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {JettyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {ApacheConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
                 {Apache5ConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
+                {JavaNetHttpConnectorProvider.class, true, true},
         }));
     }
 
