@@ -25,6 +25,13 @@ module org.glassfish.jersey.incubator.cdi.inject.weld {
 
     requires java.logging;
 
+    requires weld.api;
+    requires weld.spi;
+    requires weld.core.impl;
+    requires weld.se.core;
+    requires weld.probe.core;
+    requires grizzly.http.server;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;

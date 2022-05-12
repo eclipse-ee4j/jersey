@@ -14,22 +14,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.incubator.declarative.linking {
-    requires jakarta.el;
+module org.glassfish.jersey.ext.mp.rest.client {
+    requires java.logging;
+
+    requires jakarta.annotation;
+    requires jakarta.cdi;
     requires jakarta.inject;
+    requires jakarta.interceptor.api;
+    requires jakarta.json;
     requires jakarta.ws.rs;
 
-    requires jakarta.xml.bind;
+    requires microprofile.rest.client.api;
+    requires microprofile.config.api;
+    requires org.reactivestreams;
 
-    requires java.logging;
-    requires java.desktop;
-
+    requires org.glassfish.jersey.ext.cdi1x;
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
-
-    opens org.glassfish.jersey.linking;
-    exports org.glassfish.jersey.linking;
-
-    exports org.glassfish.jersey.linking.contributing;
-    exports org.glassfish.jersey.linking.mapping;
+    requires org.glassfish.jersey.inject.hk2;
+    requires org.glassfish.jersey.media.sse;
 }

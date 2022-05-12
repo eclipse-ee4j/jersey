@@ -27,4 +27,5 @@ open module org.glassfish.jersey.incubator.declarative.linking {
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
+    requires jsonassert;
 }
