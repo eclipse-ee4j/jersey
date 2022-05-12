@@ -1887,12 +1887,12 @@
                         <entry><literal>jersey.config.jnh.client.sslParameters</literal></entry>
                         <entry>
                             <para>
-                                This property determines the maximum number of idle connections that will be simultaneously kept
-                                alive, per destination. The default is 5.
+                                Configuration of SSL parameters used by the <literal>java.net.http.HttpClient</literal>.
+                                If this option is not set, then the <literal>java.net.http.HttpClient</literal> will use
+                                <it>implementation specific</it> default values.
                             </para>
                             <para>
-                                This property is a Jersey alternative to System property <literal>http.maxConnections</literal>.
-                                The Jersey property takes precedence over the system property.
+                                A provided value to this option has to be of type <literal>javax.net.ssl.SSLParameters</literal>.
                             </para>
                         </entry>
                     </row>
