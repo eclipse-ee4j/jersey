@@ -73,7 +73,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <show>package</show>
-		    <detectJavaApiLink>false</detectJavaApiLink>
+		            <detectJavaApiLink>false</detectJavaApiLink>
+                    <detectLinks>false</detectLinks>
+                    <detectOfflineLinks>false</detectOfflineLinks>
                 </configuration>
             </plugin>
             <plugin>

@@ -134,22 +134,19 @@
         <profile>
             <id>InaccessibleObjectException</id>
             <activation><jdk>[16,)</jdk></activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>
+            <properties>
+                <surefire.coverage.argline>
                                 --add-opens java.base/java.util.zip=ALL-UNNAMED
                                 --add-opens java.base/java.util=ALL-UNNAMED
-                            </argLine>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+                </surefire.coverage.argline>
+            </properties>
         </profile>
     </profiles>
+
+    <!--<properties>
+        <surefire.coverage.argline>&#45;&#45;add-opens java.base/java.util.zip=org.glassfish.jersey.incubator.declarative.linking
+            &#45;&#45;add-opens java.base/java.util=org.glassfish.jersey.incubator.declarative.linking &#45;&#45;illegal-access=permit</surefire.coverage.argline>
+    </properties>-->
 
     <build>
         <resources>

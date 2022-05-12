@@ -23,6 +23,7 @@ module org.glassfish.jersey.media.json.jackson {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.module.jaxb;
+    requires com.fasterxml.jackson.module.jakarta.xmlbind;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
