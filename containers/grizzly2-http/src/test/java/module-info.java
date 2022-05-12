@@ -25,6 +25,8 @@ open module org.glassfish.jersey.container.grizzly2.http {
     requires org.bouncycastle.provider;
     requires org.bouncycastle.pkix;
     requires org.eclipse.jetty.client;
+    requires org.hamcrest;
+    requires junit;
 
     requires grizzly.http.server;
     requires grizzly.http2;
