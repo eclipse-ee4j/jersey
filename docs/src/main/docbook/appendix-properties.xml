@@ -1850,14 +1850,14 @@
         </table>
     </section>
     <section xml:id="appendix-properties-client-jnh">
-        <title>Java java.net.http client configuration properties</title>
+        <title>Java Net HTTP client configuration properties</title>
 
         <para>
             List of client configuration properties that can be found in &jersey.jnh.JavaNetHttpClientProperties; class.
         </para>
 
         <table>
-            <title>List of Java java.net.http HTTP client configuration properties</title>
+            <title>List of Java Net HTTP client configuration properties</title>
             <tgroup cols="3">
                 <thead>
                     <row>
