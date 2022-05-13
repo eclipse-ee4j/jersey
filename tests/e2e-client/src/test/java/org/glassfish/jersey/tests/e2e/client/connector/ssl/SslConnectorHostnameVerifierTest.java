@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,8 +68,12 @@ public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTes
      */
     @Test
     public void testHostnameVerifierApplied() throws Exception {
-        // Grizzly and Jetty connectors don't support Hostname Verification
-        if (isExcluded(Arrays.asList(GrizzlyConnectorProvider.class, JettyConnectorProvider.class))) {
+        // Grizzly, JavaNetHttp, and Jetty connectors don't support Hostname Verification
+        if (isExcluded(Arrays.asList(
+                GrizzlyConnectorProvider.class,
+                JettyConnectorProvider.class,
+                JavaNetHttpConnectorProvider.class)
+        )) {
             return;
         }
 

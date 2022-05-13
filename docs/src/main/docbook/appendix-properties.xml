@@ -1849,4 +1849,55 @@
             </tgroup>
         </table>
     </section>
+    <section xml:id="appendix-properties-client-jnh">
+        <title>Java Net HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.jnh.JavaNetHttpClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Java Net HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.COOKIE_HANDLER;</entry>
+                        <entry><literal>jersey.config.jnh.client.cookieHandler</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of the <literal>java.net.CookieHandler</literal> that should be used by the
+                                <literal>java.net.http.HttpClient</literal>. If this option is not set,
+                                <literal>java.net.http.HttpClient#cookieHandler()</literal> will return an empty
+                                <literal>java.util.Optional</literal> and therefore no cookie handler will be used.
+                            </para>
+                            <para>
+                                A provided value to this option has to be of type <literal>java.net.CookieHandler</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.SSL_PARAMETERS;</entry>
+                        <entry><literal>jersey.config.jnh.client.sslParameters</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of SSL parameters used by the <literal>java.net.http.HttpClient</literal>.
+                                If this option is not set, then the <literal>java.net.http.HttpClient</literal> will use
+                                <it>implementation specific</it> default values.
+                            </para>
+                            <para>
+                                A provided value to this option has to be of type <literal>javax.net.ssl.SSLParameters</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </appendix>

@@ -29,6 +29,7 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 
 import org.glassfish.jersey.tests.e2e.client.connector.ProviderFiltering;
 import org.junit.After;
@@ -63,7 +64,8 @@ public abstract class AbstractConnectorServerTest {
                 {new GrizzlyConnectorProvider()},
                 {new JettyConnectorProvider()},
                 {new ApacheConnectorProvider()},
-                {new Apache5ConnectorProvider()}
+                {new Apache5ConnectorProvider()},
+                {new JavaNetHttpConnectorProvider()}
         }));
     }
 

@@ -37,6 +37,7 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -66,6 +67,7 @@ public class HttpPatchTest extends JerseyTest {
                 {Apache5ConnectorProvider.class},
                 {NettyConnectorProvider.class},
                 {JdkConnectorProvider.class},
+                {JavaNetHttpConnectorProvider.class}
                 }));
     }
 
