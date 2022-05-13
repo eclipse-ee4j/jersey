@@ -20,7 +20,7 @@ module org.glassfish.jersey.container.servlet.core {
 
     requires jakarta.ws.rs;
     requires jakarta.inject;
-    requires transitive jakarta.persistence;
+    requires jakarta.persistence;
     requires static jakarta.servlet;
 
     requires org.glassfish.jersey.core.common;
