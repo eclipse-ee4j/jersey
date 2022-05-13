@@ -14,22 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.container.servlet.core {
-    requires java.logging;
-    requires java.naming;
-
+module org.glassfish.jersey.tests.integration.cdi.test.webapp {
+    requires jakarta.annotation;
     requires jakarta.ws.rs;
     requires jakarta.inject;
-    requires transitive jakarta.persistence;
-    requires static jakarta.servlet;
+    requires jakarta.cdi;
 
-    requires org.glassfish.jersey.core.common;
-    requires org.glassfish.jersey.core.server;
+    requires java.logging;
 
-    exports org.glassfish.jersey.servlet;
-    exports org.glassfish.jersey.servlet.internal;
-    exports org.glassfish.jersey.servlet.internal.spi;
-    exports org.glassfish.jersey.servlet.spi;
-
-    opens org.glassfish.jersey.servlet;
+    opens org.glassfish.jersey.tests.cdi.resources;
 }
