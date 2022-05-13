@@ -537,6 +537,7 @@
 <!ENTITY jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#IDLE_CONNECTION_PRUNE_TIMEOUT'>NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS'>NettyClientProperties.MAX_CONNECTIONS</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS_TOTAL "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS_TOTAL'>NettyClientProperties.MAX_CONNECTIONS_TOTAL</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_REDIRECTS'>NettyClientProperties.MAX_REDIRECTS</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">

@@ -22,9 +22,11 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -152,7 +154,7 @@ class NettyConnector implements Connector {
     public ClientResponse apply(ClientRequest jerseyRequest) {
         try {
             CompletableFuture<ClientResponse> response = new CompletableFuture<>();
-            execute(jerseyRequest, response);
+            execute(jerseyRequest, new HashSet<>(), response);
             return response.join();
         } catch (CompletionException cex) {
             final Throwable t = cex.getCause() == null ? cex : cex.getCause();
@@ -172,11 +174,11 @@ class NettyConnector implements Connector {
                 jerseyCallback.failure(th);
             }
         }, executorService);
-        execute(jerseyRequest, response);
+        execute(jerseyRequest, new HashSet<>(), response);
         return response;
     }
 
-    protected void execute(final ClientRequest jerseyRequest,
+    protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
             final CompletableFuture<ClientResponse> responseAvailable) {
         Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
         if (timeout == null || timeout < 0) {
@@ -298,7 +300,8 @@ class NettyConnector implements Connector {
             // assert: it is ok to abort the entire response, if responseDone is completed exceptionally - in particular, nothing
             //         will leak
             final Channel ch = chan;
-            JerseyClientHandler clientHandler = new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone, this);
+            JerseyClientHandler clientHandler =
+                    new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone, redirectUriHistory, this);
             // read timeout makes sense really as an inactivity timeout
             ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
                                   new IdleStateHandler(0, 0, timeout, TimeUnit.MILLISECONDS));

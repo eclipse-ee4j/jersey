@@ -17,12 +17,14 @@
 package org.glassfish.jersey.netty.connector;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.net.URI;
 import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -32,6 +34,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.netty.connector.internal.RedirectException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -39,7 +42,7 @@ import org.junit.Test;
 public class FollowRedirectsTest extends JerseyTest {
 
     private static final Logger LOGGER = Logger.getLogger(FollowRedirectsTest.class.getName());
-    private static final String REDIRECT_URL = "http://localhost:9998/test";
+    private static final String TEST_URL = "http://localhost:9998/test";
 
     @Path("/test")
     public static class RedirectResource {
@@ -51,7 +54,19 @@ public class FollowRedirectsTest extends JerseyTest {
         @GET
         @Path("redirect")
         public Response redirect() {
-            return Response.seeOther(URI.create(REDIRECT_URL)).build();
+            return Response.seeOther(URI.create(TEST_URL)).build();
+        }
+
+        @GET
+        @Path("loop")
+        public Response loop() {
+            return Response.seeOther(URI.create(TEST_URL + "/loop")).build();
+        }
+
+        @GET
+        @Path("redirect2")
+        public Response redirect2() {
+            return Response.seeOther(URI.create(TEST_URL + "/redirect")).build();
         }
     }
 
@@ -108,5 +123,41 @@ public class FollowRedirectsTest extends JerseyTest {
         Response r = t.path("test/redirect").request().get();
         assertEquals(303, r.getStatus());
         client.close();
+    }
+
+    @Test
+    public void testInfiniteLoop() {
+        WebTarget t = target("test/loop");
+        t.property(ClientProperties.FOLLOW_REDIRECTS, true);
+        try {
+            t.request().get();
+            fail("Expected exception");
+        } catch (ProcessingException e) {
+            assertEquals(RedirectException.class, e.getCause().getClass());
+            assertEquals(LocalizationMessages.REDIRECT_INFINITE_LOOP(), e.getCause().getMessage());
+        }
+    }
+
+    @Test
+    public void testRedirectLimitReached() {
+        WebTarget t = target("test/redirect2");
+        t.property(ClientProperties.FOLLOW_REDIRECTS, true);
+        t.property(NettyClientProperties.MAX_REDIRECTS, 1);
+        try {
+            t.request().get();
+            fail("Expected exception");
+        } catch (ProcessingException e) {
+            assertEquals(RedirectException.class, e.getCause().getClass());
+            assertEquals(LocalizationMessages.REDIRECT_LIMIT_REACHED(1), e.getCause().getMessage());
+        }
+    }
+
+    @Test
+    public void testRedirectNoLimitReached() {
+        WebTarget t = target("test/redirect2");
+        t.property(ClientProperties.FOLLOW_REDIRECTS, true);
+        Response r = t.request().get();
+        assertEquals(200, r.getStatus());
+        assertEquals("GET", r.readEntity(String.class));
     }
 }

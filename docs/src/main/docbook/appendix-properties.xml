@@ -1810,6 +1810,18 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_REDIRECTS;</entry>
+                        <entry><literal>jersey.config.client.NettyConnectorProvider.maxRedirect</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the maximal number of redirects during single request. Value is expected to be
+                                positive number. Default value is 5.
+                                HTTP redirection must be enabled by property org.glassfish.jersey.client.ClientProperties.FOLLOW_REDIRECTS
+                                otherwise &jersey.netty.NettyClientProperties.MAX_REDIRECTS; is not applied.
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>

@@ -20,15 +20,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
+import org.glassfish.jersey.netty.connector.internal.RedirectException;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -49,12 +52,15 @@ import io.netty.handler.timeout.IdleStateEvent;
  */
 class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final String LOCATION_HEADER = "Location";
+    private static final int DEFAULT_MAX_REDIRECTS = 5;
 
+    // Modified only by the same thread. No need to synchronize it.
+    private final Set<URI> redirectUriHistory;
     private final ClientRequest jerseyRequest;
     private final CompletableFuture<ClientResponse> responseAvailable;
     private final CompletableFuture<?> responseDone;
     private final boolean followRedirects;
+    private final int maxRedirects;
     private final NettyConnector connector;
 
     private NettyInputStream nis;
@@ -63,12 +69,14 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     private boolean readTimedOut;
 
     JerseyClientHandler(ClientRequest request, CompletableFuture<ClientResponse> responseAvailable,
-                        CompletableFuture<?> responseDone, NettyConnector connector) {
+                        CompletableFuture<?> responseDone, Set<URI> redirectUriHistory, NettyConnector connector) {
+        this.redirectUriHistory = redirectUriHistory;
         this.jerseyRequest = request;
         this.responseAvailable = responseAvailable;
         this.responseDone = responseDone;
         // Follow redirects by default
         this.followRedirects = jerseyRequest.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true);
+        this.maxRedirects = jerseyRequest.resolveProperty(NettyClientProperties.MAX_REDIRECTS, DEFAULT_MAX_REDIRECTS);
         this.connector = connector;
     }
 
@@ -99,18 +107,30 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                           || responseStatus == HttpResponseStatus.SEE_OTHER.code()
                           || responseStatus == HttpResponseStatus.TEMPORARY_REDIRECT.code()
                           || responseStatus == HttpResponseStatus.PERMANENT_REDIRECT.code())) {
-              String location = cr.getHeaderString(LOCATION_HEADER);
-              try {
-                  URI newUri = URI.create(location);
-                  ClientRequest newReq = new ClientRequest(jerseyRequest);
-                  newReq.setUri(newUri);
-                  // Do not complete responseAvailable and try with new URI
-                  // FIXME: This loops forever if HTTP response code is always a redirect.
-                  // Currently there is no client property to specify a limit of redirections.
-                  connector.execute(newReq, responseAvailable);
-              } catch (RuntimeException e) {
-                  // It could happen if location header is wrong
-                  responseAvailable.completeExceptionally(e);
+              String location = cr.getHeaderString(HttpHeaders.LOCATION);
+              if (location == null || location.isEmpty()) {
+                  responseAvailable.completeExceptionally(new RedirectException(LocalizationMessages.REDIRECT_NO_LOCATION()));
+              } else {
+                  try {
+                      URI newUri = URI.create(location);
+                      boolean alreadyRequested = !redirectUriHistory.add(newUri);
+                      if (alreadyRequested) {
+                          // infinite loop detection
+                          responseAvailable.completeExceptionally(
+                                  new RedirectException(LocalizationMessages.REDIRECT_INFINITE_LOOP()));
+                      } else if (redirectUriHistory.size() > maxRedirects) {
+                          // maximal number of redirection
+                          responseAvailable.completeExceptionally(
+                                  new RedirectException(LocalizationMessages.REDIRECT_LIMIT_REACHED(maxRedirects)));
+                      } else {
+                          ClientRequest newReq = new ClientRequest(jerseyRequest);
+                          newReq.setUri(newUri);
+                          connector.execute(newReq, redirectUriHistory, responseAvailable);
+                      }
+                  } catch (IllegalArgumentException e) {
+                      responseAvailable.completeExceptionally(
+                              new RedirectException(LocalizationMessages.REDIRECT_ERROR_DETERMINING_LOCATION(location)));
+                  }
               }
           } else {
               responseAvailable.complete(cr);
