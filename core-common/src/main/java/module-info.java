@@ -71,6 +71,7 @@ module org.glassfish.jersey.core.common {
     uses org.glassfish.jersey.model.internal.spi.ParameterServiceProvider;
     uses org.glassfish.jersey.spi.HeaderDelegateProvider;
     uses org.glassfish.jersey.spi.ExternalConfigurationProvider;
+    uses org.glassfish.jersey.spi.ComponentProvider;
 
     provides jakarta.ws.rs.ext.RuntimeDelegate
             with org.glassfish.jersey.internal.RuntimeDelegateImpl;

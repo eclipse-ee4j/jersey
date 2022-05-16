@@ -14,6 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+import org.glassfish.jersey.message.filtering.spi.AbstractEntityProcessor;
+import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityGraph;
+import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityInspector;
+import org.glassfish.jersey.message.filtering.spi.EntityProcessor;
+import org.glassfish.jersey.message.filtering.spi.EntityProcessorContext;
+import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
+import org.glassfish.jersey.message.filtering.spi.ObjectGraphTransformer;
+import org.glassfish.jersey.message.filtering.spi.ObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
+import org.glassfish.jersey.message.filtering.spi.ScopeResolver;
+
 module org.glassfish.jersey.ext.entity.filtering {
     requires java.logging;
 
@@ -27,5 +40,18 @@ module org.glassfish.jersey.ext.entity.filtering {
 
     exports org.glassfish.jersey.message.filtering;
     exports org.glassfish.jersey.message.filtering.spi;
+
+    uses AbstractEntityProcessor;
+    uses AbstractObjectProvider;
+    uses EntityGraph;
+    uses EntityGraphProvider;
+    uses EntityInspector;
+    uses EntityProcessor;
+    uses EntityProcessorContext;
+    uses ObjectGraph;
+    uses ObjectGraphTransformer;
+    uses ObjectProvider;
+    uses ScopeProvider;
+    uses ScopeResolver;
 
 }

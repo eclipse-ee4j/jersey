@@ -14,6 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+import org.glassfish.jersey.servlet.internal.spi.ExtendedServletContainerProvider;
+import org.glassfish.jersey.servlet.internal.spi.RequestContextProvider;
+import org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider;
+import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
+import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
+import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
+import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
+
 module org.glassfish.jersey.container.servlet.core {
     requires java.logging;
     requires java.naming;
@@ -32,4 +40,13 @@ module org.glassfish.jersey.container.servlet.core {
     exports org.glassfish.jersey.servlet.spi;
 
     opens org.glassfish.jersey.servlet;
+
+    uses AsyncContextDelegate;
+    uses AsyncContextDelegateProvider;
+    uses FilterUrlMappingsProvider;
+
+    uses ExtendedServletContainerProvider;
+    uses RequestContextProvider;
+    uses RequestScopedInitializerProvider;
+    uses ServletContainerProvider;
 }

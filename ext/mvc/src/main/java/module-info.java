@@ -14,6 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+import org.glassfish.jersey.server.mvc.spi.AbstractTemplateProcessor;
+import org.glassfish.jersey.server.mvc.spi.TemplateProcessor;
+import org.glassfish.jersey.server.mvc.spi.ViewableContext;
+
 module org.glassfish.jersey.ext.mvc {
     requires java.logging;
 
@@ -28,4 +32,8 @@ module org.glassfish.jersey.ext.mvc {
     exports org.glassfish.jersey.server.mvc;
     exports org.glassfish.jersey.server.mvc.internal;
     exports org.glassfish.jersey.server.mvc.spi;
+
+    uses TemplateProcessor;
+    uses ViewableContext;
+    uses AbstractTemplateProcessor;
 }
