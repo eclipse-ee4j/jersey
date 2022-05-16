@@ -34,6 +34,7 @@ module org.glassfish.jersey.core.client {
     exports org.glassfish.jersey.client.http;
     exports org.glassfish.jersey.client.inject;
     exports org.glassfish.jersey.client.spi;
+    exports org.glassfish.jersey.client.internal;
 
     opens org.glassfish.jersey.client;
     opens org.glassfish.jersey.client.spi;
