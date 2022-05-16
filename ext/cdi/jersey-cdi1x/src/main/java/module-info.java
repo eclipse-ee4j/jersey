@@ -14,6 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+import org.glassfish.jersey.ext.cdi1x.internal.spi.BeanManagerProvider;
+import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
+import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
+import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionTargetListener;
+import org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider;
+
 module org.glassfish.jersey.ext.cdi1x {
 
     requires java.naming;
@@ -33,4 +39,9 @@ module org.glassfish.jersey.ext.cdi1x {
     exports org.glassfish.jersey.ext.cdi1x.spi;
     opens org.glassfish.jersey.ext.cdi1x.internal;
 
+    uses Hk2CustomBoundTypesProvider;
+    uses BeanManagerProvider;
+    uses InjectionManagerInjectedTarget;
+    uses InjectionManagerStore;
+    uses InjectionTargetListener;
 }
