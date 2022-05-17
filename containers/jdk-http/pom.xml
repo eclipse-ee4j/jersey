@@ -89,6 +89,5 @@
     <properties>
         <!-- https://bugs.openjdk.java.net/browse/JDK-8211426 -->
         <surefire.security.argline>-Djdk.tls.client.protocols=TLSv1.2</surefire.security.argline>
-        <surefire.coverage.argline>--add-opens org.glassfish.jersey.container.jdk.http/org.glassfish.jersey.jdkhttp=ALL-UNNAMED --illegal-access=permit</surefire.coverage.argline>
     </properties>
 </project>
