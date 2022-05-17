@@ -14,8 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.jersey_1964 {
+module org.glassfish.jersey.tests.integration.jersey_2637 {
+    requires jakarta.servlet;
     requires jakarta.ws.rs;
     requires jakarta.xml.bind;
+
     requires org.glassfish.jersey.core.server;
 }
