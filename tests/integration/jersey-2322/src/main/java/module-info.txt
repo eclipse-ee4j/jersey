@@ -13,9 +13,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+//TODO - fixme as soon as json-jackson module is modularized
+module org.glassfish.jersey.tests.integration.jersey_2322 {
+    requires com.fasterxml.jackson.databind;
 
-module org.glassfish.jersey.tests.integration.jersey_1964 {
     requires jakarta.ws.rs;
-    requires jakarta.xml.bind;
+
     requires org.glassfish.jersey.core.server;
 }
