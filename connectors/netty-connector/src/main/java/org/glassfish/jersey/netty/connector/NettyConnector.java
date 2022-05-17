@@ -22,9 +22,11 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -151,7 +153,9 @@ class NettyConnector implements Connector {
     @Override
     public ClientResponse apply(ClientRequest jerseyRequest) {
         try {
-            return execute(jerseyRequest).join();
+            CompletableFuture<ClientResponse> response = new CompletableFuture<>();
+            execute(jerseyRequest, new HashSet<>(), response);
+            return response.join();
         } catch (CompletionException cex) {
             final Throwable t = cex.getCause() == null ? cex : cex.getCause();
             throw new ProcessingException(t.getMessage(), t);
@@ -162,19 +166,25 @@ class NettyConnector implements Connector {
 
     @Override
     public Future<?> apply(final ClientRequest jerseyRequest, final AsyncConnectorCallback jerseyCallback) {
-        return execute(jerseyRequest).whenCompleteAsync((r, th) -> {
-                  if (th == null) jerseyCallback.response(r);
-                  else jerseyCallback.failure(th);
-               }, executorService);
+        CompletableFuture<ClientResponse> response = new CompletableFuture<>();
+        response.whenCompleteAsync((r, th) -> {
+            if (th == null) {
+                jerseyCallback.response(r);
+            } else {
+                jerseyCallback.failure(th);
+            }
+        }, executorService);
+        execute(jerseyRequest, new HashSet<>(), response);
+        return response;
     }
 
-    protected CompletableFuture<ClientResponse> execute(final ClientRequest jerseyRequest) {
+    protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
+            final CompletableFuture<ClientResponse> responseAvailable) {
         Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
         if (timeout == null || timeout < 0) {
             throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(timeout));
         }
 
-        final CompletableFuture<ClientResponse> responseAvailable = new CompletableFuture<>();
         final CompletableFuture<?> responseDone = new CompletableFuture<>();
 
         final URI requestUri = jerseyRequest.getUri();
@@ -290,7 +300,8 @@ class NettyConnector implements Connector {
             // assert: it is ok to abort the entire response, if responseDone is completed exceptionally - in particular, nothing
             //         will leak
             final Channel ch = chan;
-            JerseyClientHandler clientHandler = new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone);
+            JerseyClientHandler clientHandler =
+                    new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone, redirectUriHistory, this);
             // read timeout makes sense really as an inactivity timeout
             ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
                                   new IdleStateHandler(0, 0, timeout, TimeUnit.MILLISECONDS));
@@ -411,8 +422,6 @@ class NettyConnector implements Connector {
         } catch (InterruptedException e) {
             responseDone.completeExceptionally(e);
         }
-
-        return responseAvailable;
     }
 
     private String buildPathWithQueryParameters(URI requestUri) {
