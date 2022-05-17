@@ -121,9 +121,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <surefire.coverage.argline>--add-opens org.glassfish.jersey.media.multipart/org.glassfish.jersey.media.multipart=ALL-UNNAMED --illegal-access=permit</surefire.coverage.argline>
-    </properties>
+    <!--<properties>
+        <surefire.coverage.argline>&#45;&#45;add-opens org.glassfish.jersey.media.multipart/org.glassfish.jersey.media.multipart=ALL-UNNAMED &#45;&#45;illegal-access=permit</surefire.coverage.argline>
+    </properties>-->
 
     <profiles>
         <profile>

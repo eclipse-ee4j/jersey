@@ -112,6 +112,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <surefire.coverage.argline>--add-opens org.eclipse.parsson.media/org.eclipse.parsson.media=ALL-UNNAMED --illegal-access=permit</surefire.coverage.argline>
+        <surefire.coverage.argline>--add-opens org.eclipse.parsson.media/org.eclipse.parsson.media=ALL-UNNAMED</surefire.coverage.argline>
     </properties>
 </project>
