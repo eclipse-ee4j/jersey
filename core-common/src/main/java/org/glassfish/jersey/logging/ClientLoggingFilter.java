@@ -83,7 +83,7 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
         printRequestLine(b, "Sending client request", id, context.getMethod(), context.getUri());
         printPrefixedHeaders(b, id, REQUEST_PREFIX, context.getStringHeaders());
 
-        if (context.hasEntity() && printEntity(verbosity, context.getMediaType())) {
+        if (printEntity(verbosity, context.getMediaType()) && context.hasEntity()) {
             final OutputStream stream = new LoggingStream(b, context.getEntityStream());
             context.setEntityStream(stream);
             context.setProperty(ENTITY_LOGGER_PROPERTY, stream);
@@ -107,7 +107,7 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
         printResponseLine(b, "Client response received", id, responseContext.getStatus());
         printPrefixedHeaders(b, id, RESPONSE_PREFIX, responseContext.getHeaders());
 
-        if (responseContext.hasEntity() && printEntity(verbosity, responseContext.getMediaType())) {
+        if (printEntity(verbosity, responseContext.getMediaType()) && responseContext.hasEntity()) {
             responseContext.setEntityStream(logInboundEntity(b, responseContext.getEntityStream(),
                     MessageUtils.getCharset(responseContext.getMediaType())));
         }
