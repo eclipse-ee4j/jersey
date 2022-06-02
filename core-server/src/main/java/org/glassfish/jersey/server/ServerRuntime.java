@@ -449,10 +449,9 @@ public class ServerRuntime {
                         request.getResponseWriter().failure(responseError);
                     } finally {
                         completionCallbackRunner.onComplete(responseError);
-
-                        defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
                     }
 
+                    defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
                 }
 
             } finally {
