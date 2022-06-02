@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!--
 
-    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -577,6 +577,15 @@ final Application application = new ResourceConfig()
                     structures look like. Detailed description of all Jackson features is out of scope of this guide. The example
                     below gives you a hint on how to wire your &lit.jersey.media.ObjectMapper; (&jersey.media.ObjectMapper1;)
                     instance into your Jersey application.
+                </para>
+
+                <para>
+                    Since the 2.36 version of Jersey it is possible to filter (include/exclude) Jackson modules by properties
+                    &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES; and &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES;
+                    (with their client/server derivatives). If the &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES; property is used,
+                    only those named modules will be used for JSON processing. On the other hand if the &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES;
+                    property is used, those listed modules will be explicitly excluded from processing while other (not listed) will remain. Please note that
+                    the <literal>JaxbAnnotationModule</literal> module is always excluded from processing and this is not configurable.
                 </para>
 
                 <para>

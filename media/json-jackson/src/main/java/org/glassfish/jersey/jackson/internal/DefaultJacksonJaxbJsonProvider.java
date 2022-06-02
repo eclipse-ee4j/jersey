@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,16 @@ package org.glassfish.jersey.jackson.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.Module;
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
+import java.util.Arrays;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 
 /**
  * Entity Data provider based on Jackson JSON provider.
@@ -30,30 +35,55 @@ import javax.inject.Singleton;
 @Singleton
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
+    @Context
+    private Configuration commonConfig;
+
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String EXCLUDE_MODULE_NAME = "JaxbAnnotationModule";
 
     public DefaultJacksonJaxbJsonProvider() {
         super();
-        findAndRegisterModules();
     }
 
     public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
         super(annotationsToUse);
-        findAndRegisterModules();
     }
 
+    @PostConstruct
     private void findAndRegisterModules() {
 
         final ObjectMapper defaultMapper = _mapperConfig.getDefaultMapper();
         final ObjectMapper mapper = _mapperConfig.getConfiguredMapper();
 
-        final List<Module> modules = ObjectMapper.findModules();
-        modules.removeIf(mod -> mod.getModuleName().contains(EXCLUDE_MODULE_NAME));
+        final List<Module> modules = filterModules();
 
         defaultMapper.registerModules(modules);
         if (mapper != null) {
             mapper.registerModules(modules);
         }
+    }
+
+    private List<Module> filterModules() {
+        final String disabledModules =
+                CommonProperties.getValue(commonConfig.getProperties(),
+                        commonConfig.getRuntimeType(),
+                        CommonProperties.JSON_JACKSON_DISABLED_MODULES, String.class);
+        final String enabledModules =
+                CommonProperties.getValue(commonConfig.getProperties(),
+                        commonConfig.getRuntimeType(),
+                        CommonProperties.JSON_JACKSON_ENABLED_MODULES, String.class);
+
+        final List<Module> modules = ObjectMapper.findModules();
+        modules.removeIf(mod -> mod.getModuleName().contains(EXCLUDE_MODULE_NAME));
+
+        if (enabledModules != null && !enabledModules.isEmpty()) {
+            final List<String> enabledModulesList = Arrays.asList(enabledModules.split(","));
+            modules.removeIf(mod -> !enabledModulesList.contains(mod.getModuleName()));
+        } else if (disabledModules != null && !disabledModules.isEmpty()) {
+            final List<String> disabledModulesList = Arrays.asList(disabledModules.split(","));
+            modules.removeIf(mod -> disabledModulesList.contains(mod.getModuleName()));
+        }
+
+        return modules;
     }
 }
