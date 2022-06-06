@@ -19,6 +19,7 @@ module org.glassfish.jersey.ext.bean.validation {
     requires java.logging;
 
     requires jakarta.annotation;
+    requires jakarta.inject;
     requires jakarta.validation;
     requires jakarta.ws.rs;
     requires static jakarta.xml.bind;

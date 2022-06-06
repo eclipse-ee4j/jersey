@@ -15,11 +15,11 @@
  */
 
 module org.glassfish.jersey.container.grizzly2.http {
-    requires transitive java.logging;
-    requires transitive java.net.http;
+    requires java.logging;
+    requires java.net.http;
 
-    requires transitive jakarta.ws.rs;
-    requires transitive jakarta.inject;
+    requires jakarta.ws.rs;
+    requires jakarta.inject;
     requires static jakarta.xml.bind;
 
     requires grizzly.framework;

@@ -303,6 +303,10 @@
         <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
         <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
         <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
+        <surefire.coverage.argline>
+            --add-reads org.glassfish.jersey.core.common=ALL-UNNAMED
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
     </properties>
 
 </project>

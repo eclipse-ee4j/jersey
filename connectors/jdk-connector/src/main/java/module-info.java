@@ -20,6 +20,8 @@ module org.glassfish.jersey.jdk.connector {
     requires jakarta.ws.rs;
     requires static jakarta.activation;
 
+    requires osgi.resource.locator;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
 

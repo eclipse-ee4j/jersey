@@ -82,5 +82,11 @@
              </plugin>
          </plugins>
     </build>
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads org.glassfish.jersey.container.servlet.core=ALL-UNNAMED
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 
 </project>
