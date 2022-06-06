@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,6 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
-import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
@@ -84,10 +83,9 @@ public final class NettyHttpServerProviderTest {
         final SeBootstrap.Configuration configuration = configuration(getPort(), FALSE);
 
         // when
-        final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
         final WebServer webServer = Application.class.isInstance(application)
-                ? webServerProvider.createServer(WebServer.class, (Application) application, jerseySeConfig)
-                : webServerProvider.createServer(WebServer.class, (Class<Application>) application, jerseySeConfig);
+                ? webServerProvider.createServer(WebServer.class, (Application) application, configuration)
+                : webServerProvider.createServer(WebServer.class, (Class<Application>) application, configuration);
         final Object nativeHandle = webServer.unwrap(Object.class);
         final CompletionStage<?> start = webServer.start();
         final Object startResult = start.toCompletableFuture().get();
@@ -160,8 +158,7 @@ public final class NettyHttpServerProviderTest {
         final SeBootstrap.Configuration configuration = configuration(SeBootstrap.Configuration.FREE_PORT, TRUE);
 
         // when
-        final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
-        final WebServer webServer = webServerProvider.createServer(WebServer.class, application, jerseySeConfig);
+        final WebServer webServer = webServerProvider.createServer(WebServer.class, application, configuration);
 
         // then
         assertThat(webServer.port(), is(greaterThan(0)));

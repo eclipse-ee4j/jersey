@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,10 +72,8 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
                     ? (Class<WebServer>) configuration.property(ServerProperties.WEBSERVER_CLASS)
                     : WebServer.class;
 
-            final JerseySeBootstrapConfiguration jerseySeConfiguration
-                    = JerseySeBootstrapConfiguration.from(configuration);
             final WebServer webServer
-                    = WebServerFactory.createServer(httpServerClass, application, jerseySeConfiguration);
+                    = WebServerFactory.createServer(httpServerClass, application, configuration);
             return instance(configuration, webServer);
         });
     }
@@ -89,10 +87,8 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
                     ? (Class<WebServer>) configuration.property(ServerProperties.WEBSERVER_CLASS)
                     : WebServer.class;
 
-            final JerseySeBootstrapConfiguration jerseySeConfiguration
-                    = JerseySeBootstrapConfiguration.from(configuration);
             final WebServer webServer
-                    = WebServerFactory.createServer(httpServerClass, applicationClass, jerseySeConfiguration);
+                    = WebServerFactory.createServer(httpServerClass, applicationClass, configuration);
             return instance(configuration, webServer);
         });
     }

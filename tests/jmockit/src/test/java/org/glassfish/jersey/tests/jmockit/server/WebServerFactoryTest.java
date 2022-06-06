@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Iterator;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -30,7 +31,6 @@ import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.guava.Iterators;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
-import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.WebServerFactory;
 import org.glassfish.jersey.server.spi.WebServer;
 import org.glassfish.jersey.server.spi.WebServerProvider;
@@ -50,7 +50,7 @@ public final class WebServerFactoryTest {
     @Test
     public final void shouldBuildServer(@Mocked final Application mockApplication,
                                         @Mocked final WebServer mockServer,
-                                        @Mocked final JerseySeBootstrapConfiguration mockConfiguration,
+                                        @Mocked final SeBootstrap.Configuration mockConfiguration,
                                         @Mocked final InjectionManager mockInjectionManager) {
         // given
         ServiceFinder.setIteratorProvider(new ServiceIteratorProvider() {
@@ -63,7 +63,7 @@ public final class WebServerFactoryTest {
                             public final <U extends WebServer> U createServer(
                                     final Class<U> type,
                                     final Application application,
-                                    final JerseySeBootstrapConfiguration configuration) {
+                                    final SeBootstrap.Configuration configuration) {
                                 return application == mockApplication && configuration == mockConfiguration
                                         ? type.cast(mockServer)
                                         : null;
@@ -73,7 +73,7 @@ public final class WebServerFactoryTest {
                             public <T extends WebServer> T createServer(
                                     final Class<T> type,
                                     final Class<? extends Application> applicationClass,
-                                    final JerseySeBootstrapConfiguration configuration) {
+                                    final SeBootstrap.Configuration configuration) {
                                 return null;
                             }
                         }
