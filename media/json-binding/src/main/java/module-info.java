@@ -19,6 +19,8 @@ module org.glassfish.jersey.media.jsonb {
     requires jakarta.ws.rs;
     requires jakarta.json.bind;
 
+    requires osgi.resource.locator;
+
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.jsonb;

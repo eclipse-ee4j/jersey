@@ -21,6 +21,8 @@ module org.glassfish.jersey.inject.hk2 {
 
     requires jakarta.annotation;
     requires jakarta.inject;
+    requires jakarta.ws.rs;
+
     requires java.logging;
 
    //HK2 is not yet modularized

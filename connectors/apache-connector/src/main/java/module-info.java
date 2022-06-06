@@ -19,8 +19,8 @@ module org.glassfish.jersey.apache.connector {
 
     requires jakarta.ws.rs;
 
-    requires transitive org.apache.httpcomponents.httpcore;
-    requires transitive org.apache.httpcomponents.httpclient;
+    requires org.apache.httpcomponents.httpcore;
+    requires org.apache.httpcomponents.httpclient;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;

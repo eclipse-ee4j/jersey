@@ -19,6 +19,9 @@ open module org.glassfish.jersey.container.grizzly2.http {
     requires java.net.http;
     requires java.logging;
 
+    requires jakarta.inject;
+    requires jakarta.ws.rs;
+
     requires org.eclipse.jetty.http2.client;
     requires org.eclipse.jetty.http2.http.client.transport;
 

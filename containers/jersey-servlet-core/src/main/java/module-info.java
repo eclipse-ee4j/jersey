@@ -14,14 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.glassfish.jersey.servlet.internal.spi.ExtendedServletContainerProvider;
-import org.glassfish.jersey.servlet.internal.spi.RequestContextProvider;
-import org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider;
-import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
-import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
-import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
-import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
-
 module org.glassfish.jersey.container.servlet.core {
     requires java.logging;
     requires java.naming;
@@ -29,7 +21,9 @@ module org.glassfish.jersey.container.servlet.core {
     requires jakarta.ws.rs;
     requires jakarta.inject;
     requires jakarta.persistence;
-    requires static jakarta.servlet;
+    requires jakarta.servlet;
+
+    requires osgi.resource.locator;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
@@ -41,12 +35,12 @@ module org.glassfish.jersey.container.servlet.core {
 
     opens org.glassfish.jersey.servlet;
 
-    uses AsyncContextDelegate;
-    uses AsyncContextDelegateProvider;
-    uses FilterUrlMappingsProvider;
+    uses org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
+    uses org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
+    uses org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
 
-    uses ExtendedServletContainerProvider;
-    uses RequestContextProvider;
-    uses RequestScopedInitializerProvider;
-    uses ServletContainerProvider;
+    uses org.glassfish.jersey.servlet.internal.spi.ExtendedServletContainerProvider;
+    uses org.glassfish.jersey.servlet.internal.spi.RequestContextProvider;
+    uses org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider;
+    uses org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
 }

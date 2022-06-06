@@ -14,16 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.client.spi.DefaultSslContextProvider;
-import org.glassfish.jersey.client.spi.InvocationBuilderListener;
-import org.glassfish.jersey.client.spi.PostInvocationInterceptor;
-import org.glassfish.jersey.client.spi.PreInvocationInterceptor;
-
 module org.glassfish.jersey.core.client {
     requires jakarta.annotation;
     requires jakarta.inject;
+    requires jakarta.ws.rs;
+
     requires java.logging;
 
     requires org.glassfish.jersey.core.common;
@@ -44,12 +39,12 @@ module org.glassfish.jersey.core.client {
     opens org.glassfish.jersey.client.internal;
     opens org.glassfish.jersey.client.internal.jdkconnector;
 
-    uses AsyncConnectorCallback;
-    uses ConnectorProvider;
-    uses DefaultSslContextProvider;
-    uses InvocationBuilderListener;
-    uses PostInvocationInterceptor;
-    uses PreInvocationInterceptor;
+    uses org.glassfish.jersey.client.spi.AsyncConnectorCallback;
+    uses org.glassfish.jersey.client.spi.ConnectorProvider;
+    uses org.glassfish.jersey.client.spi.DefaultSslContextProvider;
+    uses org.glassfish.jersey.client.spi.InvocationBuilderListener;
+    uses org.glassfish.jersey.client.spi.PostInvocationInterceptor;
+    uses org.glassfish.jersey.client.spi.PreInvocationInterceptor;
 
     provides jakarta.ws.rs.client.ClientBuilder
             with org.glassfish.jersey.client.JerseyClientBuilder;

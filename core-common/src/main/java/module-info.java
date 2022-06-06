@@ -15,8 +15,8 @@
  */
 
 module org.glassfish.jersey.core.common {
-    requires transitive jakarta.ws.rs;
-    requires transitive jakarta.inject;
+    requires jakarta.ws.rs;
+    requires jakarta.inject;
     requires static jakarta.xml.bind;
     requires static jakarta.activation;
     requires jakarta.annotation;
@@ -25,7 +25,7 @@ module org.glassfish.jersey.core.common {
 
     // Filename-based auto-modules
     requires static org.osgi.core;
-    requires osgi.resource.locator;
+    requires static osgi.resource.locator;
 
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey;

@@ -15,7 +15,7 @@
  */
 
 module org.glassfish.jersey.core.server {
-    requires transitive jakarta.ws.rs;
+    requires jakarta.ws.rs;
     requires static jakarta.xml.bind;
     requires java.logging;
     requires jakarta.annotation;

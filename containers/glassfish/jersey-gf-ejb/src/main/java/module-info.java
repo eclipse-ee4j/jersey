@@ -32,6 +32,7 @@ module org.glasfish.jersey.gf.ejb {
     requires org.glassfish.hk2.api;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.ext.cdi1x;
     requires org.glassfish.jersey.inject.hk2;

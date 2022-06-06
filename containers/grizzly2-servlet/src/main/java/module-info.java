@@ -16,7 +16,7 @@
 
 module org.glassfish.jersey.container.grizzly2.servlet {
     requires jakarta.ws.rs;
-    requires transitive jakarta.servlet;
+    requires jakarta.servlet;
 
     requires grizzly.http.servlet;
     requires grizzly.http.server;

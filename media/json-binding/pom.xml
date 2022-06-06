@@ -103,4 +103,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <surefire.coverage.argline>--add-modules=ALL-MODULE-PATH</surefire.coverage.argline>
+    </properties>
 </project>
