@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.jersey.grizzly2.httpserver;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -33,18 +34,18 @@ import org.glassfish.jersey.server.spi.WebServerProvider;
 public final class GrizzlyHttpServerProvider implements WebServerProvider {
 
     @Override
-    public final <T extends WebServer> T createServer(final Class<T> type, final Application application,
-                                                      final JerseySeBootstrapConfiguration configuration) {
-        return GrizzlyHttpServer.class == type || WebServer.class == type
-                ? type.cast(new GrizzlyHttpServer(application, configuration))
+    public <T extends WebServer> T createServer(final Class<T> type, final Application application,
+                                                      final SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(GrizzlyHttpServer.class, type, configuration)
+                ? type.cast(new GrizzlyHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 
     @Override
     public <T extends WebServer> T createServer(Class<T> type, Class<? extends Application> applicationClass,
-                                                JerseySeBootstrapConfiguration configuration) {
-        return GrizzlyHttpServer.class == type || WebServer.class == type
-                ? type.cast(new GrizzlyHttpServer(applicationClass, configuration))
+                                                SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(GrizzlyHttpServer.class, type, configuration)
+                ? type.cast(new GrizzlyHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 }

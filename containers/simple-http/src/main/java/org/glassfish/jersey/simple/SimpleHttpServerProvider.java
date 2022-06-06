@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.jersey.simple;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
@@ -33,17 +34,17 @@ public final class SimpleHttpServerProvider implements WebServerProvider {
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Application application,
-                                                      final JerseySeBootstrapConfiguration configuration) {
-        return SimpleHttpServer.class == type || WebServer.class == type
-                ? type.cast(new SimpleHttpServer(application, configuration))
+                                                      final SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(SimpleHttpServer.class, type, configuration)
+                ? type.cast(new SimpleHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
-                                                final JerseySeBootstrapConfiguration configuration) {
-        return SimpleHttpServer.class == type || WebServer.class == type
-                ? type.cast(new SimpleHttpServer(applicationClass, configuration))
+                                                final SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(SimpleHttpServer.class, type, configuration)
+                ? type.cast(new SimpleHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 }

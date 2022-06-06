@@ -731,6 +731,78 @@
         </table>
     </section>
 
+    <section xml:id="appendix-properties-webserver">
+        <title>SeBootstrap and WebServer related configuration properties</title>
+
+        <para>
+            List of SeBootstrap configuration properties that can be found in &jersey.server.ServerProperties; class.
+        </para>
+
+        <table>
+        <title>List of SeBootstrap and WebServer configuration properties</title>
+        <tgroup cols="3">
+        <thead>
+            <row>
+                <entry>Constant</entry>
+                <entry>Value</entry>
+                <entry>Description</entry>
+            </row>
+        </thead>
+        <tbody>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.allow.privileged.ports</literal></entry>
+                <entry>
+                    <para>
+                        Defines whether to allow privileged ports (0-1023) to be used to start the
+                        &lit.jersey.server.spi.WebServer; implementation to be chosen from the unused ports when the
+                        &lit.jaxrs.SeBootstrap.Configuration; PORT is set to <literal>-1</literal> or unset.
+                    </para>
+                    <para>
+                        The default ports are 80 for HTTP and 443 for HTTPS when
+                        <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.true; or 8080 for HTTP and 8443 for HTTPS when
+                        <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.false;.
+                    </para>
+                    <para>
+                        If &lit.jaxrs.SeBootstrap.Configuration; PORT is set to <literal>0</literal>, the implementation scans for
+                        random port (0-65535) when <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.true;, or
+                        (1024-65535) when <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.false;.
+                    </para>
+                    <para>
+                        The default this is &lit.false;. Use &lit.true; to allow a restricted port number.
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_AUTO_START;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.autostart</literal></entry>
+                <entry>
+                    <para>
+                        Whether to automatically startup <literal>WebServer</literal> at bootstrap.
+                    </para>
+                    <para>
+                        By default, servers are immediately listening to connections after bootstrap,
+                        so no explicit invocation of <literal>WebServer#start()</literal> is needed.
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_CLASS;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.class</literal></entry>
+                <entry>
+                    <para>
+                        Defines the implementation of <literal>WebServer</literal> to bootstrap.
+                    </para>
+                    <para>
+                        By default auto-selects the first server provider found.
+                    </para>
+                </entry>
+            </row>
+        </tbody>
+        </tgroup>
+        </table>
+    </section>
+
     <section xml:id="appendix-properties-servlet">
         <title>Servlet configuration properties</title>
 

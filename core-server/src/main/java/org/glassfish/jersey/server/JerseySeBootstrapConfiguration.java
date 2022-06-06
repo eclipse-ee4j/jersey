@@ -96,7 +96,7 @@ public final class JerseySeBootstrapConfiguration implements SeBootstrap.Configu
     }
 
     private int _resolvePort(boolean allowPrivilegedPort) {
-        final int basePort = allowPrivilegedPort ? 0 : 1023;
+        final int basePort = allowPrivilegedPort ? 0 : 1024;
         // Get the initial range parameters
         final int lower = basePort;
         final int range = 0xFFFF;
