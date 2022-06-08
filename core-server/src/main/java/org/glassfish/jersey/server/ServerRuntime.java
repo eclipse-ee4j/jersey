@@ -365,11 +365,11 @@ public class ServerRuntime {
 
         public void process(ContainerResponse response) {
             processingContext.monitoringEventBuilder().setContainerResponse(response);
-            response = processResponse(response);
+            response = processResponse(response, null);
             release(response);
         }
 
-        private ContainerResponse processResponse(ContainerResponse response) {
+        private ContainerResponse processResponse(ContainerResponse response, Throwable unmappedThrowable) {
             final Stage<ContainerResponse> respondingRoot = processingContext.createRespondingRoot();
 
             if (respondingRoot != null) {
@@ -379,7 +379,7 @@ public class ServerRuntime {
 
             // no-exception zone
             // the methods below are guaranteed to not throw any exceptions
-            completionCallbackRunner.onComplete(null);
+            completionCallbackRunner.onComplete(unmappedThrowable);
             return response;
         }
 
@@ -427,7 +427,7 @@ public class ServerRuntime {
                 final Response exceptionResponse = mapException(throwable);
                 try {
                     response = preProcessResponse(exceptionResponse, request);
-                    processResponse(response);
+                    processResponse(response, null);
                 } catch (final Throwable respError) {
                     LOGGER.log(Level.SEVERE, LocalizationMessages.ERROR_PROCESSING_RESPONSE_FROM_ALREADY_MAPPED_EXCEPTION());
                     processingContext.monitoringEventBuilder()
@@ -448,9 +448,10 @@ public class ServerRuntime {
                     try {
                         request.getResponseWriter().failure(responseError);
                     } finally {
-                        completionCallbackRunner.onComplete(responseError);
-
                         defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
+
+                        // completionCallbackRunner.onComplete(responseError); is called from
+                        // processResponseWithDefaultExceptionMapper
                     }
 
                 }
@@ -488,7 +489,7 @@ public class ServerRuntime {
 
                     if (processedError != null) {
                         processedResponse =
-                                processResponse(new ContainerResponse(processingContext.request(), processedError));
+                                processResponse(new ContainerResponse(processingContext.request(), processedError), null);
                         processed = true;
                     }
                 } catch (final Throwable throwable) {
@@ -545,10 +546,7 @@ public class ServerRuntime {
 
                     final long timestamp = tracingLogger.timestamp(ServerTraceEvent.EXCEPTION_MAPPING);
                     final ExceptionMapper mapper = runtime.exceptionMappers.findMapping(throwable);
-                    if (mapper != null
-                            && !DefaultExceptionMapper.class.getName()
-                            .equals(mapper.getClass().getName())
-                    ) {
+                    if (mapper != null && !DefaultExceptionMapper.class.isInstance(mapper)) {
                         return processExceptionWithMapper(mapper, throwable, timestamp);
                     }
                     if (waeResponse != null) {
@@ -625,7 +623,7 @@ public class ServerRuntime {
                                                                             ContainerRequest request) {
             long timestamp = tracingLogger.timestamp(ServerTraceEvent.EXCEPTION_MAPPING);
             final Response response = processExceptionWithMapper(DEFAULT_EXCEPTION_MAPPER, exception, timestamp);
-            return processResponse(preProcessResponse(response, request));
+            return processResponse(preProcessResponse(response, request), exception);
         }
 
         private ContainerResponse writeResponse(final ContainerResponse response) {
