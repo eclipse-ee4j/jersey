@@ -261,7 +261,7 @@ class NettyConnector implements Connector {
                      } else {
                          ProxySelector sel = ProxySelector.getDefault();
                          for (Proxy proxy: sel.select(requestUri)) {
-                             if (proxy.type().equals(Proxy.Type.HTTP)) {
+                             if (Proxy.Type.HTTP.equals(proxy.type())) {
                                  SocketAddress proxyAddress = proxy.address();
                                  if (InetSocketAddress.class.isInstance(proxy.address())) {
                                      InetSocketAddress proxyAddr = (InetSocketAddress) proxyAddress;
