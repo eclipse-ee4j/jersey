@@ -38,7 +38,7 @@ public class DefaultJsonJacksonProviderForDisabledModulesTest extends JerseyTest
     @Override
     protected final Application configure() {
         return new ResourceConfig(ServiceTest.class, JAXBServiceTest.class)
-                .property("jersey.config.json.jackson.disabled.modules", "jackson-module-kotlin,Jdk8Module");
+                .property("jersey.config.json.jackson.disabled.modules", "Jdk8Module");
     }
 
     @Test
