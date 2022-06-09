@@ -2196,7 +2196,7 @@
         <jta.api.version>1.3.3</jta.api.version>
         <microprofile.config.version>2.0.1</microprofile.config.version>
         <mimepull.version>1.9.13</mimepull.version>
-        <moxy.version>2.7.9</moxy.version>
+        <moxy.version>2.7.10</moxy.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
