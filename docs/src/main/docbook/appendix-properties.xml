@@ -148,6 +148,42 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES; /
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT; /
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.json.jackson.enabled.modules</literal>
+                            <literal>jersey.config.client.json.jackson.enabled.modules</literal>
+                            <literal>jersey.config.server.json.jackson.enabled.modules</literal>
+                        </entry>
+                        <entry>
+                            Comma separated list of jackson modules which shall be used for json-jackson provider.
+                            If set, only those modules will be used for JSON processing.
+
+                            Default value is <literal>NULL</literal>
+                            @since 2.36
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES; /
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT; /
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.json.jackson.disabled.modules</literal>
+                            <literal>jersey.config.client.json.jackson.disabled.modules</literal>
+                            <literal>jersey.config.server.json.jackson.disabled.modules</literal>
+                        </entry>
+                        <entry>
+                            Comma separated list of jackson modules which shall be excluded from json-jackson provider.
+                            If set, those modules will be excluded from JSON processing.
+
+                            Default value is <literal>NULL</literal>
+                            @since 2.36
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME;
                         </entry>
                         <entry>
