@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,12 @@ public final class ExternalProperties {
      * without going through the proxy.
      */
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+
+    /**
+     * This integer value determines the maximum number, for a given request,
+     * of HTTP redirects that will be automatically followed by the protocol handler.
+     */
+    public static final String HTTP_MAX_REDIRECTS = "http.maxRedirects";
 
     /**
      * Prevent instantiation.
