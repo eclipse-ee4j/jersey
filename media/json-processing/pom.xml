@@ -57,8 +57,7 @@
                         <!-- TODO: change to ${range;[==,+);${jsonp.api.version}} once the version is final-->
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
-                            jakarta.json.*;version="[0,3)",
-                            org.glassfish.json.*;version="[0,3)",
+                            jakarta.json.*;version="[2,3)",
                             *
                         </Import-Package>
                     </instructions>
@@ -81,13 +80,12 @@
             <artifactId>jakarta.json-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.json</artifactId>
-            <classifier>module</classifier>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jsonp-jaxrs</artifactId>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson-media</artifactId>
         </dependency>
 
         <dependency>

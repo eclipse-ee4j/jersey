@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -69,8 +69,9 @@ public class JsonProcessingTest {
                 // JSON processing.
                 mavenBundle().groupId("org.glassfish.jersey.media").artifactId("jersey-media-json-processing")
                         .versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("jakarta.json").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish").artifactId("jsonp-jaxrs").versionAsInProject()
+                mavenBundle().groupId("jakarta.json").artifactId("jakarta.json-api").versionAsInProject(),
+                mavenBundle().groupId("org.eclipse.parsson").artifactId("parsson").versionAsInProject(),
+                mavenBundle().groupId("org.eclipse.parsson").artifactId("parsson-media").versionAsInProject()
         ));
 
         options = Helper.addPaxExamMavenLocalRepositoryProperty(options);

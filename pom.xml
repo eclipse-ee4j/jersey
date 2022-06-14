@@ -1841,14 +1841,13 @@
                 <version>${jakarta.jsonp.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.json</artifactId>
-                <classifier>module</classifier>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
                 <version>${jsonp.ri.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jsonp-jaxrs</artifactId>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson-media</artifactId>
                 <version>${jsonp.jaxrs.version}</version>
             </dependency>
 
@@ -2122,11 +2121,10 @@
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>6.0.0</hk2.config.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpclient5.version>5.1.2</httpclient5.version>
         <jackson.version>2.13.3</jackson.version>
-        <javassist.version>3.25.0-GA</javassist.version>
+        <javassist.version>3.28.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
@@ -2169,16 +2167,17 @@
         <graalvm.version>20.3.2</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>6.0.0</gf.impl.version>
+        <gf.impl.version>6.2.5</gf.impl.version>
+        <hk2.config.version>6.2.5</hk2.config.version>
         <!-- Jakartified -->
         <cdi.api.version>3.0.0</cdi.api.version>
-        <ejb.version>4.0.0</ejb.version>
+        <ejb.version>4.0.1</ejb.version>
         <grizzly2.version>3.0.1</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-        <hk2.version>3.0.2</hk2.version>
+        <hk2.version>3.0.3</hk2.version>
         <jsp.version>3.0.0</jsp.version>
         <jstl.version>2.0.0</jstl.version>
-        <jta.api.version>2.0.0</jta.api.version>
+        <jta.api.version>2.0.1</jta.api.version>
         <servlet5.version>5.0.0</servlet5.version>
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
@@ -2188,22 +2187,22 @@
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.0.0</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
-        <jakarta.interceptor.version>2.0.0</jakarta.interceptor.version>
-        <jakarta.jsonp.version>2.0.1</jakarta.jsonp.version>
+        <jakarta.interceptor.version>2.0.1</jakarta.interceptor.version>
+        <jakarta.jsonp.version>2.0.2</jakarta.jsonp.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version> <!--Can't be updated to 3.0.1 /OSGi incompatibility with JDK 1.8 -->
         <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
         <jaxb.ri.version>3.0.2</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.7</jetty.version>
-        <jetty.plugin.version>11.0.7</jetty.plugin.version>
+        <jetty.version>11.0.9</jetty.version>
+        <jetty.plugin.version>11.0.9</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
-        <jsonp.ri.version>2.0.1</jsonp.ri.version>
-        <jsonp.jaxrs.version>2.0.1</jsonp.jaxrs.version>
+        <jsonp.ri.version>1.0.0</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.0.0</jsonp.jaxrs.version>
         <moxy.version>3.0.2</moxy.version>
-        <yasson.version>2.0.3</yasson.version>
+        <yasson.version>2.0.4</yasson.version>
         <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
