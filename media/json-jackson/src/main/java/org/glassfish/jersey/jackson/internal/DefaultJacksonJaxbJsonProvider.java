@@ -55,7 +55,7 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         final ObjectMapper defaultMapper = _mapperConfig.getDefaultMapper();
         final ObjectMapper mapper = _mapperConfig.getConfiguredMapper();
 
-        final List<Module> modules = ObjectMapper.findModules();
+        final List<Module> modules =  filterModules();
 
         defaultMapper.registerModules(modules);
         if (mapper != null) {
