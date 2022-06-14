@@ -70,10 +70,10 @@ Javassist Version 3.25.0-GA
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.11.3
+Jackson JAX-RS Providers Version 2.13.3
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
-* Copyright: (c) 2009-2011 FasterXML, LLC. All rights reserved unless otherwise indicated.
+* Copyright: (c) 2009-2022 FasterXML, LLC. All rights reserved unless otherwise indicated.
 
 jQuery v1.12.4
 * License: jquery.org/license
@@ -95,7 +95,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.0
+org.objectweb.asm Version 9.3
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

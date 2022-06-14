@@ -396,6 +396,12 @@
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PROVIDER_DEFAULT_DISABLE'>CommonProperties.PROVIDER_DEFAULT_DISABLE</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
@@ -537,6 +543,7 @@
 <!ENTITY jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#IDLE_CONNECTION_PRUNE_TIMEOUT'>NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS'>NettyClientProperties.MAX_CONNECTIONS</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS_TOTAL "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS_TOTAL'>NettyClientProperties.MAX_CONNECTIONS_TOTAL</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_REDIRECTS'>NettyClientProperties.MAX_REDIRECTS</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">

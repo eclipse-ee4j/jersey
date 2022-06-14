@@ -2091,7 +2091,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.2</asm.version>
+        <asm.version>9.3</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <bouncycastle.version>1.68</bouncycastle.version>
@@ -2125,7 +2125,7 @@
         <hk2.config.version>6.0.0</hk2.config.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpclient5.version>5.1.2</httpclient5.version>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>

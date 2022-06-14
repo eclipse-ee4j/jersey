@@ -68,4 +68,18 @@ public class NettyClientProperties {
      * @see javax.net.ssl.SSLParameters#setEndpointIdentificationAlgorithm(String)
      */
     public static final String ENABLE_SSL_HOSTNAME_VERIFICATION = "jersey.config.client.tls.enableHostnameVerification";
+
+    /**
+     * The maximal number of redirects during single request.
+     * <p/>
+     * Value is expected to be positive {@link Integer}. Default value is {@value #DEFAULT_MAX_REDIRECTS}.
+     * <p/>
+     * HTTP redirection must be enabled by property {@link org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS},
+     * otherwise {@code MAX_REDIRECTS} is not applied.
+     *
+     * @since 2.36
+     * @see org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS
+     * @see org.glassfish.jersey.netty.connector.internal.RedirectException
+     */
+    public static final String MAX_REDIRECTS = "jersey.config.client.NettyConnectorProvider.maxRedirects";
 }
