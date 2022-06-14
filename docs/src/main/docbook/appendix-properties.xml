@@ -149,8 +149,8 @@
                     </row>
                     <row>
                         <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES; /
-                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT; /
-                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER;
+                                &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT; /
+                                &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER;
                         </entry>
                         <entry>
                             <literal>jersey.config.json.jackson.enabled.modules</literal>
@@ -167,8 +167,8 @@
                     </row>
                     <row>
                         <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES; /
-                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT; /
-                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER;
+                            &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT; /
+                            &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER;
                         </entry>
                         <entry>
                             <literal>jersey.config.json.jackson.disabled.modules</literal>
