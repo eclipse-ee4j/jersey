@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -256,6 +256,55 @@ public final class CommonProperties {
     public static final String JAXRS_SERVICE_LOADING_ENABLE = "jakarta.ws.rs.loadServices";
 
     /**
+     * Comma separated list of jackson modules which are only enabled (only those modules will be used)
+     * for json-jackson processing
+     *
+     * @since 2.36
+     */
+    public static final String JSON_JACKSON_ENABLED_MODULES = "jersey.config.json.jackson.enabled.modules";
+
+    /**
+     * Client-specific version of {@link CommonProperties#JSON_JACKSON_ENABLED_MODULES}.
+     *
+     * If present, it overrides the generic one for the client environment.
+     * @since 2.36
+     */
+    public static final String JSON_JACKSON_ENABLED_MODULES_CLIENT = "jersey.config.client.json.jackson.enabled.modules";
+
+    /**
+     * Server-specific version of {@link CommonProperties#JSON_JACKSON_ENABLED_MODULES}.
+     *
+     * If present, it overrides the generic one for the server environment.
+     * @since 2.36
+     */
+    public static final String JSON_JACKSON_ENABLED_MODULES_SERVER = "jersey.config.server.json.jackson.enabled.modules";
+
+    /**
+     * Comma separated list of jackson modules which shall be excluded from json-jackson processing.
+     * the JaxbAnnotationModule is always excluded (cannot be configured).
+     *
+     * @since 2.36
+     */
+
+    public static final String JSON_JACKSON_DISABLED_MODULES = "jersey.config.json.jackson.disabled.modules";
+
+    /**
+     * Client-specific version of {@link CommonProperties#JSON_JACKSON_DISABLED_MODULES}.
+     *
+     * If present, it overrides the generic one for the client environment.
+     * @since 2.36
+     */
+    public static final String JSON_JACKSON_DISABLED_MODULES_CLIENT = "jersey.config.client.json.jackson.disabled.modules";
+
+    /**
+     * Server-specific version of {@link CommonProperties#JSON_JACKSON_DISABLED_MODULES}.
+     *
+     * If present, it overrides the generic one for the client environment.
+     * @since 2.36
+     */
+    public static final String JSON_JACKSON_DISABLED_MODULES_SERVER = "jersey.config.server.json.jackson.disabled.modules";
+
+    /**
      * Prevent instantiation.
      */
     private CommonProperties() {
@@ -274,7 +323,7 @@ public final class CommonProperties {
      *
      * @since 2.8
      */
-    public static Object getValue(final Map<String, ?> properties, final String propertyName, final Class<?> type) {
+    public static <T> T getValue(final Map<String, ?> properties, final String propertyName, final Class<T> type) {
         return PropertiesHelper.getValue(properties, propertyName, type, CommonProperties.LEGACY_FALLBACK_MAP);
     }
 

@@ -83,7 +83,7 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
         printRequestLine(b, "Server has received a request", id, context.getMethod(), context.getUriInfo().getRequestUri());
         printPrefixedHeaders(b, id, REQUEST_PREFIX, context.getHeaders());
 
-        if (context.hasEntity() && printEntity(verbosity, context.getMediaType())) {
+        if (printEntity(verbosity, context.getMediaType()) && context.hasEntity()) {
             context.setEntityStream(
                     logInboundEntity(b, context.getEntityStream(), MessageUtils.getCharset(context.getMediaType())));
         }
@@ -105,7 +105,7 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
         printResponseLine(b, "Server responded with a response", id, responseContext.getStatus());
         printPrefixedHeaders(b, id, RESPONSE_PREFIX, responseContext.getStringHeaders());
 
-        if (responseContext.hasEntity() && printEntity(verbosity, responseContext.getMediaType())) {
+        if (printEntity(verbosity, responseContext.getMediaType()) && responseContext.hasEntity()) {
             final OutputStream stream = new LoggingStream(b, responseContext.getEntityStream());
             responseContext.setEntityStream(stream);
             requestContext.setProperty(ENTITY_LOGGER_PROPERTY, stream);

@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -63,7 +62,7 @@ public abstract class ProviderBase<
      */
     public final static String HEADER_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options";
 
-    protected final static String CLASS_NAME_NO_CONTENT_EXCEPTION = "javax.ws.rs.core.NoContentException";
+    protected final static String CLASS_NAME_NO_CONTENT_EXCEPTION = "jakarta.ws.rs.core.NoContentException";
 
     private final static String NO_CONTENT_MESSAGE = "No content (empty input stream)";
 
