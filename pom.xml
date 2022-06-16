@@ -2174,7 +2174,7 @@
         <surefire.version>3.0.0-M6</surefire.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>5.0.0.CR2</weld.version>
+        <weld.version>5.0.0.SP2</weld.version>
         <weld3.version>3.1.7.SP1</weld3.version>
         <validation.impl.version>8.0.0.Alpha1</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
@@ -2186,9 +2186,9 @@
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>7.0.0-M2</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>4.0.0</cdi.api.version>
+        <cdi.api.version>4.0.1</cdi.api.version>
         <ejb.version>4.0.1</ejb.version>
-        <grizzly2.version>4.0.0-M1</grizzly2.version>
+        <grizzly2.version>4.0.0</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <hk2.version>3.0.3</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[3.0,4)"</hk2.osgi.version>
@@ -2203,18 +2203,18 @@
         <jakarta.el.version>5.0.0</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
-        <jakarta.annotation.version>2.1.0</jakarta.annotation.version>
+        <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.1.0</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.1.0</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.1</jakarta.validation.api.version>
+        <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>4.0.0</jakarta.jaxb.api.version>
-        <jaxb.ri.version>4.0.0-M3</jaxb.ri.version>
+        <jaxb.ri.version>4.0.0</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.7</jetty.version>
-        <jetty.plugin.version>11.0.7</jetty.plugin.version>
+        <jetty.version>11.0.9</jetty.version>
+        <jetty.plugin.version>11.0.9</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>
         <jsonp.ri.version>1.1.0</jsonp.ri.version>
