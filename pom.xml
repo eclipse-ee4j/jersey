@@ -236,7 +236,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>${enforcer.version}</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -2106,6 +2106,7 @@
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
+        <enforcer.version>3.1.0</enforcer.version>
 
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
