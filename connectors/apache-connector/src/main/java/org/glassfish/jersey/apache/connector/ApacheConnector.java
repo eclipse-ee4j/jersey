@@ -51,6 +51,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.internal.HttpUrlConnector;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -279,21 +280,18 @@ class ApacheConnector implements Connector {
             clientBuilder.setRetryHandler((HttpRequestRetryHandler) retryHandler);
         }
 
-        final Object proxyUri;
-        proxyUri = config.getProperty(ClientProperties.PROXY_URI);
+        URI proxyUri = HttpUrlConnector.getProxyUri(config);
         if (proxyUri != null) {
-            final URI u = getProxyUri(proxyUri);
-            final HttpHost proxy = new HttpHost(u.getHost(), u.getPort(), u.getScheme());
-            final String userName;
-            userName = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_USERNAME, String.class);
+            HttpHost proxy = new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+            String userName = ClientProperties.getValue(config.getProperties(),
+                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
             if (userName != null) {
-                final String password;
-                password = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
-
+                String password = ClientProperties.getValue(config.getProperties(),
+                        ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
                 if (password != null) {
                     final CredentialsProvider credsProvider = new BasicCredentialsProvider();
                     credsProvider.setCredentials(
-                            new AuthScope(u.getHost(), u.getPort()),
+                            new AuthScope(proxyUri.getHost(), proxyUri.getPort()),
                             new UsernamePasswordCredentials(userName, password)
                     );
                     clientBuilder.setDefaultCredentialsProvider(credsProvider);

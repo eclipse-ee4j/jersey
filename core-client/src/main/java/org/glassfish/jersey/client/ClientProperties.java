@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -519,5 +519,24 @@ public final class ClientProperties {
      */
     public static <T> T getValue(final Map<String, ?> properties, final String key, final Class<T> type) {
         return PropertiesHelper.getValue(properties, key, type, null);
+    }
+
+    /**
+     * Get the value of the specified property. If null, it will obtain it from System property.
+     * <p/>
+     * If the property is not set the method will return {@code null}.
+     *
+     * @param properties Map of properties to get the property value from.
+     * @param key        Name of the property.
+     * @param systemKey  Name of the System property.
+     * @return Value of the property or {@code null}.
+     * @since 2.37
+     */
+    public static String getValue(Map<String, ?> properties, String key, String systemKey) {
+        String value = PropertiesHelper.getValue(properties, key, String.class, null);
+        if (value == null) {
+            value = System.getProperty(systemKey);
+        }
+        return value;
     }
 }

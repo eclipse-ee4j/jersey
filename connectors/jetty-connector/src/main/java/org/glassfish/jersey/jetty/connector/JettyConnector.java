@@ -31,36 +31,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
-
-import javax.net.ssl.SSLContext;
-
-import org.eclipse.jetty.client.util.BasicAuthentication;
-import org.eclipse.jetty.client.util.BytesContentProvider;
-import org.eclipse.jetty.client.util.FutureResponseListener;
-import org.eclipse.jetty.client.util.OutputStreamContentProvider;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.ClientRequest;
-import org.glassfish.jersey.client.ClientResponse;
-import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
-import org.glassfish.jersey.client.spi.Connector;
-import org.glassfish.jersey.internal.util.collection.ByteBufferInputStream;
-import org.glassfish.jersey.internal.util.collection.NonBlockingInputStream;
-import org.glassfish.jersey.message.internal.HeaderUtils;
-import org.glassfish.jersey.message.internal.OutboundMessageContext;
-import org.glassfish.jersey.message.internal.Statuses;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpProxy;
@@ -71,6 +53,10 @@ import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.api.Result;
+import org.eclipse.jetty.client.util.BasicAuthentication;
+import org.eclipse.jetty.client.util.BytesContentProvider;
+import org.eclipse.jetty.client.util.FutureResponseListener;
+import org.eclipse.jetty.client.util.OutputStreamContentProvider;
 import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http.HttpFields;
 import org.eclipse.jetty.http.HttpHeader;
@@ -78,6 +64,17 @@ import org.eclipse.jetty.util.HttpCookieStore;
 import org.eclipse.jetty.util.Jetty;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.ClientRequest;
+import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.internal.HttpUrlConnector;
+import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
+import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.internal.util.collection.ByteBufferInputStream;
+import org.glassfish.jersey.internal.util.collection.NonBlockingInputStream;
+import org.glassfish.jersey.message.internal.HeaderUtils;
+import org.glassfish.jersey.message.internal.OutboundMessageContext;
+import org.glassfish.jersey.message.internal.Statuses;
 
 /**
  * A {@link Connector} that utilizes the Jetty HTTP Client to send and receive
@@ -187,17 +184,17 @@ class JettyConnector implements Connector {
             auth.addAuthentication((BasicAuthentication) basicAuthProvider);
         }
 
-        final Object proxyUri = config.getProperties().get(ClientProperties.PROXY_URI);
+        URI proxyUri = HttpUrlConnector.getProxyUri(config);
         if (proxyUri != null) {
-            final URI u = getProxyUri(proxyUri);
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
-            proxyConfig.getProxies().add(new HttpProxy(u.getHost(), u.getPort()));
-
-            final Object proxyUsername = config.getProperties().get(ClientProperties.PROXY_USERNAME);
+            proxyConfig.getProxies().add(new HttpProxy(proxyUri.getHost(), proxyUri.getPort()));
+            String proxyUsername = ClientProperties.getValue(config.getProperties(),
+                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
             if (proxyUsername != null) {
-                final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
-                auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>",
-                        String.valueOf(proxyUsername), String.valueOf(proxyPassword)));
+                String proxyPassword = ClientProperties.getValue(config.getProperties(),
+                        ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
+                auth.addAuthentication(new BasicAuthentication(proxyUri, "<<ANY_REALM>>",
+                        proxyUsername, proxyPassword));
             }
         }
 
@@ -221,17 +218,6 @@ class JettyConnector implements Connector {
             throw new ProcessingException("Failed to start the client.", e);
         }
         this.cookieStore = client.getCookieStore();
-    }
-
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static URI getProxyUri(final Object proxy) {
-        if (proxy instanceof URI) {
-            return (URI) proxy;
-        } else if (proxy instanceof String) {
-            return URI.create((String) proxy);
-        } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
-        }
     }
 
     /**

@@ -319,7 +319,7 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private URI getProxyUri(Object proxy) {
+    private static URI getProxyUriValue(Object proxy) {
         if (proxy instanceof URI) {
             return (URI) proxy;
         } else if (proxy instanceof String) {
@@ -329,16 +329,15 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private String getFromConfigOrSystem(ClientRequest request, String clientProperty, String systemProperty) {
-        String result = request.resolveProperty(clientProperty, String.class);
-        if (result == null) {
-            result = System.getProperty(systemProperty);
-        }
-        return result;
-    }
-
-    private URI getProxyUri(ClientRequest request) {
-        Configuration config = request.getConfiguration();
+    /**
+     * Builds an URI from {@link ClientProperties#PROXY_URI}.
+     * In case it is not set, it will build it from System properties http.proxyHost and http.proxyPort.
+     * Otherwise returns null.
+     *
+     * @param config the configuration containing properties
+     * @return the URI or null
+     */
+    public static URI getProxyUri(Configuration config) {
         Object proxyUri = config.getProperty(ClientProperties.PROXY_URI);
         if (proxyUri == null) {
             String proxyHost = System.getProperty("http.proxyHost");
@@ -347,7 +346,7 @@ public class HttpUrlConnector implements Connector {
                 return URI.create(proxyHost + ":" + proxyPort);
             }
         } else {
-            return getProxyUri(proxyUri);
+            return getProxyUriValue(proxyUri);
         }
         return null;
     }
@@ -355,10 +354,12 @@ public class HttpUrlConnector implements Connector {
     private ClientResponse _apply(final ClientRequest request) throws IOException {
         final HttpURLConnection uc;
         Proxy proxy = null;
-        URI proxyUri = getProxyUri(request);
+        URI proxyUri = getProxyUri(request.getConfiguration());
         if (proxyUri != null) {
-            String username = getFromConfigOrSystem(request, ClientProperties.PROXY_USERNAME, "http.proxyUser");
-            String password = getFromConfigOrSystem(request, ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
+            String username = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
+            String password = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
             if (username != null && password != null) {
                 StringBuilder auth = new StringBuilder().append(username).append(":").append(password);
                 String encoded = "Basic " + Base64.getEncoder().encodeToString(auth.toString().getBytes());

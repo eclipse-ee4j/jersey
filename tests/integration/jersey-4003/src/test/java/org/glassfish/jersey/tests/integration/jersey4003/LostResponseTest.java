@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,18 @@
 
 package org.glassfish.jersey.tests.integration.jersey4003;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.glassfish.jersey.client.JerseyCompletionStageRxInvoker;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import org.mockito.Mockito;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -34,17 +36,15 @@ import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.JerseyCompletionStageRxInvoker;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 public class LostResponseTest {
 
@@ -59,7 +59,7 @@ public class LostResponseTest {
         HttpUrlConnectorProvider.ConnectionFactory connectionFactory =
                 Mockito.mock(HttpUrlConnectorProvider.ConnectionFactory.class);
         HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
-        Mockito.when(connectionFactory.getConnection(Mockito.any(URL.class))).thenReturn(connection);
+        Mockito.when(connectionFactory.getConnection(Mockito.any(URL.class), Mockito.any())).thenReturn(connection);
 
         OutputStream outputStream = Mockito.mock(OutputStream.class);
         Mockito.when(connection.getOutputStream()).thenReturn(outputStream);

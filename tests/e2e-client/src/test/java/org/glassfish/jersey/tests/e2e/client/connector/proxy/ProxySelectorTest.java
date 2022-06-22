@@ -66,9 +66,9 @@ public class ProxySelectorTest {
     @Parameterized.Parameters(name = "{index}: {0}")
     public static List<Object[]> testData() {
         return Arrays.asList(new Object[][]{
-//                {ApacheConnectorProvider.class},
-//                {Apache5ConnectorProvider.class},
-//                {JettyConnectorProvider.class},
+                {ApacheConnectorProvider.class},
+                {Apache5ConnectorProvider.class},
+                {JettyConnectorProvider.class},
                 {NettyConnectorProvider.class},
                 {HttpUrlConnectorProvider.class},
         });
@@ -103,8 +103,8 @@ public class ProxySelectorTest {
 
     @Test
     public void testGetSuccess() {
-        // Next applies for HttpUrlConnectorProvider. It seems Netty is not supporting user/pass in System properties
-        if (connectorProvider.getClass() == HttpUrlConnectorProvider.class) {
+        // It seems Netty is not supporting user/pass in System properties
+        if (connectorProvider.getClass() != NettyConnectorProvider.class) {
             try {
                 System.setProperty("http.proxyUser", PROXY_USERNAME);
                 System.setProperty("http.proxyPassword", PROXY_PASSWORD);
