@@ -16,11 +16,14 @@
 
 package org.glassfish.jersey.client;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
+import java.net.Proxy;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URL;
@@ -30,6 +33,10 @@ import java.security.cert.Certificate;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSocketFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -39,17 +46,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.glassfish.jersey.client.internal.HttpUrlConnector;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Various tests for the default client connector.
@@ -91,7 +91,7 @@ public class HttpUrlConnectorTest {
     public void testResolvedRequestUri() {
         HttpUrlConnectorProvider.ConnectionFactory factory = new HttpUrlConnectorProvider.ConnectionFactory() {
             @Override
-            public HttpURLConnection getConnection(URL endpointUrl) throws IOException {
+            public HttpURLConnection getConnection(URL endpointUrl, Proxy proxy) throws IOException {
                 HttpURLConnection result = (HttpURLConnection) endpointUrl.openConnection();
                 return wrapRedirectedHttp(result);
             }
@@ -435,7 +435,7 @@ public class HttpUrlConnectorTest {
         ClientRequest request = client.target("https://localhost:8080").request().buildGet().request();
         HttpUrlConnectorProvider.ConnectionFactory factory = new HttpUrlConnectorProvider.ConnectionFactory() {
             @Override
-            public HttpURLConnection getConnection(URL endpointUrl) throws IOException {
+            public HttpURLConnection getConnection(URL endpointUrl, Proxy proxy) throws IOException {
                 HttpURLConnection result = (HttpURLConnection) endpointUrl.openConnection();
                 return wrapNoContentHttps(result);
             }

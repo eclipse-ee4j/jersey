@@ -25,6 +25,7 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
@@ -72,6 +73,7 @@ public class ProxyTest {
                 {Apache5ConnectorProvider.class},
                 {JettyConnectorProvider.class},
                 {NettyConnectorProvider.class},
+                {HttpUrlConnectorProvider.class},
         });
     }
 
@@ -110,7 +112,8 @@ public class ProxyTest {
         client().property(ClientProperties.PROXY_USERNAME, ProxyTest.PROXY_USERNAME);
         client().property(ClientProperties.PROXY_PASSWORD, ProxyTest.PROXY_PASSWORD);
         Response response = target("proxyTest").request().get();
-        assertEquals(200, response.getStatus());
+        response.bufferEntity();
+        assertEquals(response.readEntity(String.class), 200, response.getStatus());
     }
 
     private static Server server;

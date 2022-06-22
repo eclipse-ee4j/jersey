@@ -18,6 +18,7 @@ package org.glassfish.jersey.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -263,17 +264,18 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * </p>
          *
          * @param url the endpoint URL.
+         * @param proxy the configured proxy or null.
          * @return the {@link java.net.HttpURLConnection}.
          * @throws java.io.IOException in case the connection cannot be provided.
          */
-        public HttpURLConnection getConnection(URL url) throws IOException;
+        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException;
     }
 
     private static class DefaultConnectionFactory implements ConnectionFactory {
 
         @Override
-        public HttpURLConnection getConnection(final URL url) throws IOException {
-            return (HttpURLConnection) url.openConnection();
+        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
+            return (HttpURLConnection) (proxy != null ? url.openConnection(proxy) : url.openConnection());
         }
     }
 
