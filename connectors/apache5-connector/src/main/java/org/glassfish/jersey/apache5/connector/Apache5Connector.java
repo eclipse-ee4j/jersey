@@ -89,6 +89,7 @@ import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.TextUtils;
 import org.apache.hc.core5.util.Timeout;
 import org.apache.hc.core5.util.VersionInfo;
+import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -283,12 +284,13 @@ class Apache5Connector implements Connector {
 
         URI proxyUri = HttpUrlConnector.getProxyUri(config);
         if (proxyUri != null) {
+            // TODO No proxy hosts?
             HttpHost proxy = new HttpHost(proxyUri.getScheme(), proxyUri.getHost(), proxyUri.getPort());
             String userName = ClientProperties.getValue(config.getProperties(),
-                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
+                    ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
             if (userName != null) {
                 String password = ClientProperties.getValue(config.getProperties(),
-                        ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
+                        ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
 
                 if (password != null) {
                     final CredentialsStore credsProvider = new BasicCredentialsProvider();

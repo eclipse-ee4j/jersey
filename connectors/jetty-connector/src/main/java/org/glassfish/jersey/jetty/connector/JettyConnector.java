@@ -64,6 +64,7 @@ import org.eclipse.jetty.util.HttpCookieStore;
 import org.eclipse.jetty.util.Jetty;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -186,13 +187,14 @@ class JettyConnector implements Connector {
 
         URI proxyUri = HttpUrlConnector.getProxyUri(config);
         if (proxyUri != null) {
+            // TODO No proxy hosts?
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
             proxyConfig.getProxies().add(new HttpProxy(proxyUri.getHost(), proxyUri.getPort()));
             String proxyUsername = ClientProperties.getValue(config.getProperties(),
-                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
+                    ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
             if (proxyUsername != null) {
                 String proxyPassword = ClientProperties.getValue(config.getProperties(),
-                        ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
+                        ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
                 auth.addAuthentication(new BasicAuthentication(proxyUri, "<<ANY_REALM>>",
                         proxyUsername, proxyPassword));
             }

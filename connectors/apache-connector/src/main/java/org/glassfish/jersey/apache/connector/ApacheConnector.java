@@ -47,6 +47,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -282,12 +283,13 @@ class ApacheConnector implements Connector {
 
         URI proxyUri = HttpUrlConnector.getProxyUri(config);
         if (proxyUri != null) {
+            // TODO No proxy hosts?
             HttpHost proxy = new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
             String userName = ClientProperties.getValue(config.getProperties(),
-                    ClientProperties.PROXY_USERNAME, "http.proxyUser");
+                    ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
             if (userName != null) {
                 String password = ClientProperties.getValue(config.getProperties(),
-                        ClientProperties.PROXY_PASSWORD, "http.proxyPassword");
+                        ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
                 if (password != null) {
                     final CredentialsProvider credsProvider = new BasicCredentialsProvider();
                     credsProvider.setCredentials(
