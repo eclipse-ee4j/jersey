@@ -34,6 +34,10 @@
         Functional Jersey OSGi tests
     </description>
 
+    <properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
