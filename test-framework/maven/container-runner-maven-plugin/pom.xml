@@ -119,7 +119,7 @@
         <dependency>
             <groupId>org.codehaus.gmavenplus</groupId>
             <artifactId>gmavenplus-plugin</artifactId>
-            <version>1.13.1</version>
+            <version>${org.codehaus.gmavenplus.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.maven.shared</groupId>

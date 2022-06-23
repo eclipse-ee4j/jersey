@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,8 +112,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import com.google.common.collect.ImmutableMap;
 
 import com.sun.research.ws.wadl.Method;
 import com.sun.research.ws.wadl.Param;
@@ -1279,7 +1278,7 @@ public class WadlResourceTest {
                                     XPathConstants.NODE))
             );
             XMLUnit.setXpathNamespaceContext(
-                    new SimpleNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02")));
+                    new SimpleNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02")));
             final ElementQualifier elementQualifier = new RecursiveElementNameAndTextQualifier();
             diff.overrideElementQualifier(elementQualifier);
             XMLAssert.assertXMLEqual(diff, true);
