@@ -533,10 +533,6 @@ public final class ClientProperties {
      * @since 2.37
      */
     public static String getValue(Map<String, ?> properties, String key, String systemKey) {
-        String value = PropertiesHelper.getValue(properties, key, String.class, null);
-        if (value == null) {
-            value = System.getProperty(systemKey);
-        }
-        return value;
+        return PropertiesHelper.getValue(properties, key, System.getProperty(systemKey), String.class, null);
     }
 }

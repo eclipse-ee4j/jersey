@@ -24,8 +24,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
@@ -46,7 +44,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,17 +57,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class ProxySelectorTest {
     private static final String NO_PASS = "no-pass";
-    private static final String PROXY_USERNAME = "proxy-user";
-    private static final String PROXY_PASSWORD = "proxy-password";
 
     @Parameterized.Parameters(name = "{index}: {0}")
     public static List<Object[]> testData() {
         return Arrays.asList(new Object[][]{
-                {ApacheConnectorProvider.class},
-                {Apache5ConnectorProvider.class},
-                {JettyConnectorProvider.class},
+//                {ApacheConnectorProvider.class},
+//                {Apache5ConnectorProvider.class},
+//                {JettyConnectorProvider.class},
                 {NettyConnectorProvider.class},
-                {HttpUrlConnectorProvider.class},
         });
     }
 
@@ -98,23 +92,6 @@ public class ProxySelectorTest {
             assertEquals(407, response.getStatus());
         } catch (ProcessingException pe) {
             Assert.assertTrue(pe.getMessage().contains("407")); // netty
-        }
-    }
-
-    @Test
-    public void testGetSuccess() {
-        // It seems Netty is not supporting user/pass in System properties
-        if (connectorProvider.getClass() != NettyConnectorProvider.class) {
-            try {
-                System.setProperty("http.proxyUser", PROXY_USERNAME);
-                System.setProperty("http.proxyPassword", PROXY_PASSWORD);
-                Response response = target("proxyTest").request().get();
-                response.bufferEntity();
-                assertEquals(response.readEntity(String.class), 200, response.getStatus());
-            } finally {
-                System.clearProperty("http.proxyUser");
-                System.clearProperty("http.proxyPassword");
-            }
         }
     }
 
@@ -171,29 +148,6 @@ public class ProxySelectorTest {
                            HttpServletResponse response) {
             if (request.getHeader(NO_PASS) != null) {
                 response.setStatus(Integer.parseInt(request.getHeader(NO_PASS)));
-            } else if (request.getHeader("Proxy-Authorization") != null) {
-                String proxyAuthorization = request.getHeader("Proxy-Authorization");
-                String decoded = new String(Base64.getDecoder().decode(proxyAuthorization.substring(6).getBytes()));
-                final String[] split = decoded.split(":");
-                final String username = split[0];
-                final String password = split[1];
-
-                if (!username.equals(PROXY_USERNAME)) {
-                    response.setStatus(400);
-                    System.out.println("Found unexpected username: " + username);
-                }
-
-                if (!password.equals(PROXY_PASSWORD)) {
-                    response.setStatus(400);
-                    System.out.println("Found unexpected password: " + username);
-                }
-
-                if (response.getStatus() != 400) {
-                    response.setStatus(200);
-                    if ("CONNECT".equalsIgnoreCase(baseRequest.getMethod())) { // NETTY way of doing proxy
-                        httpConnect.add(baseRequest.getHttpChannel());
-                    }
-                }
             } else {
                 response.setStatus(407);
                 response.addHeader("Proxy-Authenticate", "Basic");

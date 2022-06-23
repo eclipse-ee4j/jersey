@@ -331,64 +331,25 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    /**
-     * Builds an URI from {@link ClientProperties#PROXY_URI}.
-     * In case it is not set, it will build it from System properties http.proxyHost and http.proxyPort.
-     * Otherwise returns null.
-     *
-     * @param config the configuration containing properties
-     * @return the URI or null
-     */
-    public static URI getProxyUri(Configuration config) {
-        URI uri = null;
-        Object proxyUri = config.getProperty(ClientProperties.PROXY_URI);
-        if (proxyUri == null) {
-            String proxyHost = System.getProperty(ExternalProperties.HTTP_PROXY_HOST);
-            String proxyPort = System.getProperty(ExternalProperties.HTTP_PROXY_PORT);
-            if (proxyHost != null && proxyPort != null) {
-                if (proxyHost.startsWith("http://")) {
-                    uri = URI.create(proxyHost + ":" + proxyPort);
-                } else {
-                    uri = URI.create("http://" + proxyHost + ":" + proxyPort);
-                }
-            }
-        } else {
-            uri = getProxyUriValue(proxyUri);
-        }
-        return uri;
-    }
-
     private ClientResponse _apply(final ClientRequest request) throws IOException {
         final HttpURLConnection uc;
         Proxy proxy = null;
-        boolean skipProxy = false;
-        // Evaluate HTTP_NON_PROXY_HOSTS if HTTP_PROXY_HOST is also set
-        if (System.getProperty(ExternalProperties.HTTP_PROXY_HOST) != null
-                && System.getProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS) != null) {
-            String[] nonProxyHosts = System.getProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS)
-                    .trim().split("\\|");
-            String currentHost = request.getUri().getHost();
-            for (String nonProxyHost : nonProxyHosts) {
-                if (Pattern.matches(nonProxyHost, currentHost)) {
-                    skipProxy = true;
-                    break;
+        Object proxyUri = request.getConfiguration().getProperties().get(ClientProperties.PROXY_URI);
+        if (proxyUri != null) {
+            URI uri = getProxyUriValue(proxyUri);
+            String username = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
+            String password = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
+            if (username != null) {
+                StringBuilder auth = new StringBuilder().append(username).append(":");
+                if (password != null) {
+                    auth.append(password);
                 }
+                String encoded = "Basic " + Base64.getEncoder().encodeToString(auth.toString().getBytes());
+                request.getHeaders().put("Proxy-Authorization", Arrays.asList(encoded));
             }
-        }
-        if (!skipProxy) {
-            URI proxyUri = getProxyUri(request.getConfiguration());
-            if (proxyUri != null) {
-                String username = ClientProperties.getValue(request.getConfiguration().getProperties(),
-                        ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
-                String password = ClientProperties.getValue(request.getConfiguration().getProperties(),
-                        ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
-                if (username != null && password != null) {
-                    StringBuilder auth = new StringBuilder().append(username).append(":").append(password);
-                    String encoded = "Basic " + Base64.getEncoder().encodeToString(auth.toString().getBytes());
-                    request.getHeaders().put("Proxy-Authorization", Arrays.asList(encoded));
-                }
-                proxy = new Proxy(Type.HTTP, new InetSocketAddress(proxyUri.getHost(), proxyUri.getPort()));
-            }
+            proxy = new Proxy(Type.HTTP, new InetSocketAddress(uri.getHost(), uri.getPort()));
         }
         uc = this.connectionFactory.getConnection(request.getUri().toURL(), proxy);
         uc.setDoInput(true);
