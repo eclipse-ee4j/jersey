@@ -59,6 +59,7 @@
         <module>jersey-4722</module>
         <module>microprofile</module>
         <module>reactive-streams</module>
+        <module>jersey-5087</module>
     </modules>
 
     <profiles>
