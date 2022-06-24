@@ -16,15 +16,11 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.Proxy;
 import java.net.Socket;
 import java.net.URL;
 import java.util.List;
@@ -34,12 +30,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
@@ -47,7 +44,10 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
+
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test custom socket factory in HttpUrlConnection using SSL
@@ -70,7 +70,7 @@ public class SslHttpUrlConnectorTest extends AbstractConnectorServerTest {
                 .connectorProvider(new HttpUrlConnectorProvider().connectionFactory(
                         new HttpUrlConnectorProvider.ConnectionFactory() {
                             @Override
-                            public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
+                            public HttpURLConnection getConnection(final URL url) throws IOException {
                                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
                                 connection.setSSLSocketFactory(socketFactory);
                                 return connection;

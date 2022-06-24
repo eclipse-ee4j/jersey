@@ -264,18 +264,34 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * </p>
          *
          * @param url the endpoint URL.
+         * @return the {@link java.net.HttpURLConnection}.
+         * @throws java.io.IOException in case the connection cannot be provided.
+         */
+        public HttpURLConnection getConnection(URL url) throws IOException;
+
+        /**
+         * Get a {@link java.net.HttpURLConnection} for a given URL.
+         * <p>
+         * Implementation of the method MUST be thread-safe and MUST ensure that
+         * a dedicated {@link java.net.HttpURLConnection} instance is returned for concurrent
+         * requests.
+         * </p>
+         *
+         * @param url the endpoint URL.
          * @param proxy the configured proxy or null.
          * @return the {@link java.net.HttpURLConnection}.
          * @throws java.io.IOException in case the connection cannot be provided.
          */
-        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException;
+        default HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
+            return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+        }
     }
 
     private static class DefaultConnectionFactory implements ConnectionFactory {
 
         @Override
-        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
-            return (HttpURLConnection) (proxy != null ? url.openConnection(proxy) : url.openConnection());
+        public HttpURLConnection getConnection(final URL url) throws IOException {
+            return (HttpURLConnection) url.openConnection();
         }
     }
 
