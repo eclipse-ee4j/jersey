@@ -19,4 +19,7 @@ module org.glassfish.jersey.tests.integration.jersey_1883 {
     requires jakarta.ws.rs;
     requires jakarta.inject;
     requires jakarta.xml.bind;
+
+    requires org.glassfish.jersey.core.server;
+    requires org.glassfish.jersey.inject.hk2;
 }

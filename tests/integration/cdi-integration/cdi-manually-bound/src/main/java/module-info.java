@@ -26,4 +26,5 @@ module org.glassfish.jersey.tests.integration.cdi.manually.bound {
     requires org.glassfish.jersey.ext.cdi1x;
 
     opens org.glassfish.jersey.tests.cdi.manuallybound;
+    exports org.glassfish.jersey.tests.cdi.manuallybound;
 }

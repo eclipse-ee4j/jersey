@@ -14,8 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.glassfish.jersey.media.sse.internal.JerseySseEventSource;
-
 module org.glassfish.jersey.media.sse {
     requires java.logging;
 
@@ -36,5 +34,5 @@ module org.glassfish.jersey.media.sse {
     opens org.glassfish.jersey.media.sse.internal;
 
     provides jakarta.ws.rs.sse.SseEventSource.Builder with
-            JerseySseEventSource.Builder;
+            org.glassfish.jersey.media.sse.internal.JerseySseEventSource.Builder;
 }

@@ -42,10 +42,10 @@ import jakarta.ws.rs.ext.Providers;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 
-class InjectionChecker {
-    static final String APPLICATION_PROPERTY = "ApplicationProperty";
-    static final String HEADER = "HttpHeader";
-    static final String ROOT = "resource";
+public class InjectionChecker {
+    public static final String APPLICATION_PROPERTY = "ApplicationProperty";
+    public static final String HEADER = "HttpHeader";
+    public static final String ROOT = "resource";
 
     static boolean checkApplication(Application application, StringBuilder sb) {
         if (application == null) {

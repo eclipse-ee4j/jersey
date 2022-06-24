@@ -22,4 +22,7 @@ module org.glassfish.jersey.ext.cdi.rs.inject {
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.inject.hk2;
     requires org.glassfish.jersey.ext.cdi1x;
+
+    opens org.glassfish.jersey.ext.cdi1x.inject.internal;
+    exports org.glassfish.jersey.ext.cdi1x.inject.internal;
 }

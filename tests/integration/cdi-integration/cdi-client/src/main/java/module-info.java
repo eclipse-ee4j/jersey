@@ -20,4 +20,5 @@ module org.glassfish.jersey.tests.integration.cdi.client {
     requires jakarta.cdi;
 
     opens org.glassfish.jersey.tests.cdi.client;
+    exports org.glassfish.jersey.tests.cdi.client;
 }
