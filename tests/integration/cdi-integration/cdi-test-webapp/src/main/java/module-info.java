@@ -23,4 +23,5 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp {
     requires java.logging;
 
     opens org.glassfish.jersey.tests.cdi.resources;
+    exports org.glassfish.jersey.tests.cdi.resources;
 }

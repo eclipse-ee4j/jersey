@@ -22,5 +22,6 @@ module org.glassfish.jersey.tests.integration.cdi.resource.context {
 
     requires org.glassfish.jersey.core.server;
 
+    exports org.glassfish.jersey.tests.cdi.resourceatcontext;
     opens org.glassfish.jersey.tests.cdi.resourceatcontext;
 }

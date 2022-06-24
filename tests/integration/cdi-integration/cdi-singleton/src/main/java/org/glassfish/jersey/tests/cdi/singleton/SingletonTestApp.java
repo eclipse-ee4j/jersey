@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class SingletonTestApp extends Application {
 
-    static final SingletonResource[] SINGLETON_RESOURCES = new SingletonResource[3];
+    public static final SingletonResource[] SINGLETON_RESOURCES = new SingletonResource[3];
 
     @Override
     public Set<Class<?>> getClasses() {

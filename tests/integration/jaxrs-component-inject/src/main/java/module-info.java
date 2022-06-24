@@ -18,5 +18,7 @@ module org.glassfish.jersey.tests.integration.jaxrs.component.inject {
     requires jakarta.ws.rs;
     requires jakarta.xml.bind;
 
+    requires org.glassfish.jersey.core.common;
+
     exports org.glassfish.jersey.tests.jaxrs.inject;
 }

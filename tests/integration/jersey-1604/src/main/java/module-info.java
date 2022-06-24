@@ -17,4 +17,7 @@
 module org.glassfish.jersey.tests.integration.jersey_1604 {
     requires jakarta.ws.rs;
     requires jakarta.xml.bind;
+
+    requires org.glassfish.jersey.core.server;
+    requires org.glassfish.jersey.core.client;
 }

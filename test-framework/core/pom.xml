@@ -38,6 +38,10 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
@@ -76,6 +80,14 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <surefire.coverage.argline>
+            --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
+            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 
     <profiles>
         <profile>

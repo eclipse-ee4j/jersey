@@ -28,4 +28,5 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server {
     requires org.glassfish.jersey.container.servlet.core;
 
     opens org.glassfish.jersey.tests.cdi.inject;
+    exports org.glassfish.jersey.tests.cdi.inject;
 }

@@ -19,4 +19,5 @@ module org.glassfish.jersey.tests.integration.cdi.singleton {
     requires jakarta.inject;
 
     opens org.glassfish.jersey.tests.cdi.singleton;
+    exports org.glassfish.jersey.tests.cdi.singleton;
 }
