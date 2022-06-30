@@ -21,7 +21,7 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server {
     requires jakarta.inject;
     requires jakarta.cdi;
     requires jakarta.servlet;
-    requires jakarta.persistence;
+//    requires jakarta.persistence;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;

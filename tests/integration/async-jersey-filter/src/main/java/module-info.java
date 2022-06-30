@@ -16,7 +16,7 @@
 
 module org.glassfish.jersey.tests.integration.async.jersey.filter {
     requires jakarta.inject;
-    requires jakarta.persistence;
+//    requires jakarta.persistence;
     requires jakarta.servlet;
     requires jakarta.ws.rs;
 

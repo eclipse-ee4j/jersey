@@ -21,7 +21,7 @@ module org.glassfish.jersey.media.sse {
     requires jakarta.inject;
     requires jakarta.ws.rs;
 
-    requires jakarta.xml.bind;
+    requires static jakarta.xml.bind;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
