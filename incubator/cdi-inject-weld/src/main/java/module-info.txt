@@ -20,7 +20,7 @@ module org.glassfish.jersey.incubator.cdi.inject.weld {
     requires jakarta.inject;
     requires jakarta.interceptor.api;
     requires jakarta.servlet;
-    requires jakarta.persistence;
+//  requires jakarta.persistence;
     requires jakarta.ws.rs;
 
     requires java.logging;

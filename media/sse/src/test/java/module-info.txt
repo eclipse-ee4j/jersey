@@ -14,17 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.jdk.connector {
+module org.glassfish.jersey.media.sse {
     requires java.logging;
 
+    requires jakarta.inject;
     requires jakarta.ws.rs;
-    requires static jakarta.activation;
 
-    requires osgi.resource.locator;
+    requires jakarta.xml.bind; //it's test
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
+    requires org.glassfish.jersey.core.server;
 
-    exports org.glassfish.jersey.jdk.connector;
-    exports org.glassfish.jersey.jdk.connector.internal;
+    requires junit;
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
+
+    requires org.glassfish.jersey.tests.framework.core;
+
+    exports org.glassfish.jersey.media.sse;
+    exports org.glassfish.jersey.media.sse.internal;
+    opens org.glassfish.jersey.media.sse;
 }

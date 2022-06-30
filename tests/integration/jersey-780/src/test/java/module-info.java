@@ -16,7 +16,7 @@
 
 module org.glassfish.jersey.tests.integration.jersey_780 {
     requires jakarta.ws.rs;
-    requires jakarta.persistence;
+//    requires jakarta.persistence;
 
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.tests.framework.core;
