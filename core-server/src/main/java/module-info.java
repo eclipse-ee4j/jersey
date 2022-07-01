@@ -19,7 +19,7 @@ module org.glassfish.jersey.core.server {
     requires static jakarta.xml.bind;
     requires java.logging;
     requires jakarta.annotation;
-    requires java.desktop;
+    requires static java.desktop;
     requires java.management;
     requires jakarta.activation;
     requires jakarta.inject;

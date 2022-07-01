@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.bv;
+package org.glassfish.jersey.tests.cdi.bv.test;
 
 import java.net.URI;
 

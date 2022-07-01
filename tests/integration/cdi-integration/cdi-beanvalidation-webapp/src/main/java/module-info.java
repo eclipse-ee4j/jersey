@@ -14,8 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-//TODO - fixme when jakarta.validation with proper module-info is released
 module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp {
+    requires jakarta.inject;
     requires jakarta.ws.rs;
     requires jakarta.xml.bind;
     requires jakarta.cdi;
@@ -28,4 +28,5 @@ module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp {
     requires org.glassfish.jersey.ext.cdi1x;
 
     exports org.glassfish.jersey.tests.cdi.bv;
+    opens org.glassfish.jersey.tests.cdi.bv;
 }

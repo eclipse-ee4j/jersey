@@ -14,14 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.bv;
+package org.glassfish.jersey.tests.cdi.bv.test;
 
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.glassfish.jersey.tests.cdi.bv.Hk2Application;
 
 /**
  * Validation result test for raw HK2 environment.

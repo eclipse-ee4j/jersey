@@ -1,10 +1,12 @@
-package $package;
+package ${package}.test;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+
+import ${package}.Main;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
