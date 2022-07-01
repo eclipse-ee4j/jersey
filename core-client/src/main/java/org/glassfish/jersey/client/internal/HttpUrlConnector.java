@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,13 +21,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -37,17 +42,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -314,10 +321,37 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
+    private static URI getProxyUriValue(Object proxy) {
+        if (proxy instanceof URI) {
+            return (URI) proxy;
+        } else if (proxy instanceof String) {
+            return URI.create((String) proxy);
+        } else {
+            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
+        }
+    }
+
     private ClientResponse _apply(final ClientRequest request) throws IOException {
         final HttpURLConnection uc;
-
-        uc = this.connectionFactory.getConnection(request.getUri().toURL());
+        Proxy proxy = null;
+        Object proxyUri = request.getConfiguration().getProperties().get(ClientProperties.PROXY_URI);
+        if (proxyUri != null) {
+            URI uri = getProxyUriValue(proxyUri);
+            String username = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_USERNAME, ExternalProperties.HTTP_PROXY_USER);
+            String password = ClientProperties.getValue(request.getConfiguration().getProperties(),
+                    ClientProperties.PROXY_PASSWORD, ExternalProperties.HTTP_PROXY_PASSWORD);
+            if (username != null) {
+                StringBuilder auth = new StringBuilder().append(username).append(":");
+                if (password != null) {
+                    auth.append(password);
+                }
+                String encoded = "Basic " + Base64.getEncoder().encodeToString(auth.toString().getBytes());
+                request.getHeaders().put("Proxy-Authorization", Arrays.asList(encoded));
+            }
+            proxy = new Proxy(Type.HTTP, new InetSocketAddress(uri.getHost(), uri.getPort()));
+        }
+        uc = this.connectionFactory.getConnection(request.getUri().toURL(), proxy);
         uc.setDoInput(true);
 
         final String httpMethod = request.getMethod();
