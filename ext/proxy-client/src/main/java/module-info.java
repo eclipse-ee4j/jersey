@@ -15,7 +15,7 @@
  */
 
 module org.glassfish.jersey.ext.proxy.client {
-    requires java.desktop;
+    requires static java.desktop;
 
     requires jakarta.ws.rs;
 

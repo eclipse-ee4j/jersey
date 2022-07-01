@@ -14,25 +14,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.ext.bean.validation {
-
-    requires java.logging;
-
-    requires jakarta.annotation;
+module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp.test {
+    requires jakarta.cdi;
     requires jakarta.inject;
     requires jakarta.validation;
     requires jakarta.ws.rs;
-    requires static jakarta.xml.bind;
+
+    requires weld.se.core;
+    requires grizzly.http.server;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
+    requires org.glassfish.jersey.inject.hk2;
+    requires org.glassfish.jersey.container.grizzly2.http;
+    requires org.glassfish.jersey.ext.weld2.se;
 
-    requires org.glassfish.jersey.ext.cdi1x;
-    requires jakarta.cdi;
+    requires org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp;
 
-    exports org.glassfish.jersey.server.validation;
-    exports org.glassfish.jersey.server.validation.internal.hibernate;
-    exports org.glassfish.jersey.server.validation.internal;
-    opens org.glassfish.jersey.server.validation.internal;
-    opens org.glassfish.jersey.server.validation.internal.hibernate;
+    requires junit;
+    requires hamcrest.core;
+
+    requires org.glassfish.jersey.tests.framework.core;
+    requires org.glassfish.jersey.tests.framework.provider.external;
+    requires org.glassfish.jersey.tests.framework.provider.grizzly;
+
+    exports org.glassfish.jersey.tests.cdi.bv.test;
+    opens org.glassfish.jersey.tests.cdi.bv.test;
 }

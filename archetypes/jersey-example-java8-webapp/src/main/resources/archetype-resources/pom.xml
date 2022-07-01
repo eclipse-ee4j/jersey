@@ -70,8 +70,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>

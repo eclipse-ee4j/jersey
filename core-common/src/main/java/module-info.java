@@ -21,7 +21,7 @@ module org.glassfish.jersey.core.common {
     requires static jakarta.activation;
     requires jakarta.annotation;
     requires java.logging;
-    requires java.desktop;
+    requires static java.desktop;
 
     // Filename-based auto-modules
     requires static org.osgi.core;

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.bv;
+package org.glassfish.jersey.tests.cdi.bv.test;
 
 import jakarta.ws.rs.core.Application;
 
@@ -22,6 +22,7 @@ import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 
+import org.glassfish.jersey.tests.cdi.bv.CdiApplication;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;

@@ -57,4 +57,7 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
+    </properties>
 </project>

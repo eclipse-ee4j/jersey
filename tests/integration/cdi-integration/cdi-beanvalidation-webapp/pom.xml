@@ -90,9 +90,23 @@
         </dependency>
 
         <dependency>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <type>pom</type>
+            <artifactId>jersey-test-framework-provider-external</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-http</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -125,4 +139,12 @@
     <build>
         <finalName>${project.artifactId}</finalName>
     </build>
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads jakarta.validation=weld.api
+            --add-reads jakarta.validation=weld.core.impl
+            --add-opens jakarta.validation/jakarta.validation=weld.core.impl
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 </project>
