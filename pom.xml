@@ -2069,12 +2069,6 @@
             </dependency>
 
             <dependency>
-               <groupId>org.json</groupId>
-               <artifactId>json</artifactId>
-               <version>${json.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>io.opentracing</groupId>
                 <artifactId>opentracing-api</artifactId>
                 <version>${opentracing.version}</version>
@@ -2218,6 +2212,5 @@
         <servlet4.version>4.0.4</servlet4.version>
         <yasson.version>1.0.11</yasson.version>
         <gson.version>2.9.0</gson.version>
-        <json.version>20220320</json.version>
     </properties>
 </project>

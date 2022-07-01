@@ -31,7 +31,6 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.gson.JsonGsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONObject;
 import org.junit.Test;
 
 public class GsonDefaultTest extends JerseyTest {
@@ -52,15 +51,6 @@ public class GsonDefaultTest extends JerseyTest {
         public Obj get() {
             Obj entity = new Obj();
             entity.setValue("get");
-            return entity;
-        }
-
-        @POST
-        @Consumes("application/json")
-        @Produces("application/json")
-        @Path("/jsonObject")
-        public JSONObject jsonObject(JSONObject entity) {
-            entity.put("bar", "bar");
             return entity;
         }
     }
@@ -92,17 +82,6 @@ public class GsonDefaultTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         obj = response.readEntity(Obj.class);
         assertEquals("bar", obj.getValue());
-    }
-
-    @Test
-    public void jsonObject() {
-        JSONObject entity = new JSONObject();
-        entity.put("foo", "foo");
-        assertEquals("{\"foo\":\"foo\"}", entity.toString());
-        Response response = target("/test/jsonObject").request().post(Entity.json(entity));
-        assertEquals(200, response.getStatus());
-        entity = response.readEntity(JSONObject.class);
-        assertEquals("{\"foo\":\"foo\",\"bar\":\"bar\"}", entity.toString());
     }
 
     public static class Obj {
