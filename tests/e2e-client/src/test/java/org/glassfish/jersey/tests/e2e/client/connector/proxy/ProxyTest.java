@@ -27,6 +27,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.AfterClass;
@@ -71,6 +72,7 @@ public class ProxyTest {
         return Arrays.asList(new Object[][]{
                 {ApacheConnectorProvider.class},
                 {Apache5ConnectorProvider.class},
+                {GrizzlyConnectorProvider.class},
                 {JettyConnectorProvider.class},
                 {NettyConnectorProvider.class},
                 {HttpUrlConnectorProvider.class},
@@ -98,9 +100,11 @@ public class ProxyTest {
 
     @Test
     public void testGet407() {
+        // Grizzly sends (String)null password and username
+        int expected = GrizzlyConnectorProvider.class.isInstance(connectorProvider) ? 400 : 407;
         client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
         try (Response response = target("proxyTest").request().get()) {
-            assertEquals(407, response.getStatus());
+            assertEquals(expected, response.getStatus());
         } catch (ProcessingException pe) {
             Assert.assertTrue(pe.getMessage().contains("407")); // netty
         }
