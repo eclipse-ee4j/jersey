@@ -19,8 +19,6 @@ package org.glassfish.jersey.netty.connector;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -48,7 +47,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -69,7 +67,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.proxy.HttpProxyHandler;
-import io.netty.handler.proxy.ProxyConnectionEvent;
 import io.netty.handler.proxy.ProxyHandler;
 import io.netty.handler.ssl.ApplicationProtocolConfig;
 import io.netty.handler.ssl.ClientAuth;
@@ -80,10 +77,12 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.resolver.NoopAddressResolverGroup;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -235,6 +234,18 @@ class NettyConnector implements Connector {
 
             if (chan == null) {
                Bootstrap b = new Bootstrap();
+
+               // http proxy
+               Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(jerseyRequest);
+               if (!proxy.isPresent()) {
+                   proxy = ClientProxy.proxyFromProperties(requestUri);
+               }
+               proxy.ifPresent(clientProxy -> {
+                   b.resolver(NoopAddressResolverGroup.INSTANCE); // request hostname resolved by the HTTP proxy
+               });
+
+               final Optional<ClientProxy> handlerProxy = proxy;
+
                b.group(group)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
@@ -245,41 +256,14 @@ class NettyConnector implements Connector {
                      Configuration config = jerseyRequest.getConfiguration();
 
                      // http proxy
-                     final Object proxyUri = config.getProperties().get(ClientProperties.PROXY_URI);
-                     if (proxyUri != null) {
-                         final URI u = getProxyUri(proxyUri);
-
-                         final String userName = ClientProperties.getValue(
-                                 config.getProperties(), ClientProperties.PROXY_USERNAME, String.class);
-                         final String password = ClientProperties.getValue(
-                                 config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
-
+                     handlerProxy.ifPresent(clientProxy -> {
+                         final URI u = clientProxy.uri();
                          InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(),
-                                                                             u.getPort() == -1 ? 8080 : u.getPort());
-                         ProxyHandler proxy = createProxyHandler(jerseyRequest, proxyAddr, userName, password, connectTimeout);
-                         p.addLast(proxy);
-                     } else {
-                         ProxySelector sel = ProxySelector.getDefault();
-                         for (Proxy proxy: sel.select(requestUri)) {
-                             if (Proxy.Type.HTTP.equals(proxy.type())) {
-                                 SocketAddress proxyAddress = proxy.address();
-                                 if (InetSocketAddress.class.isInstance(proxy.address())) {
-                                     InetSocketAddress proxyAddr = (InetSocketAddress) proxyAddress;
-                                     if (proxyAddr.isUnresolved()
-                                             && proxyAddr.getHostName() != null
-                                             && proxyAddr.getHostName().startsWith("http://")) {
-                                         proxyAddress = new InetSocketAddress(
-                                                 proxyAddr.getHostString().substring(7), proxyAddr.getPort()
-                                         );
-                                     }
-                                 }
-                                 ProxyHandler proxyHandler
-                                         = createProxyHandler(jerseyRequest, proxyAddress, null, null, connectTimeout);
-                                 p.addLast(proxyHandler);
-                                 break;
-                             }
-                         }
-                     }
+                                 u.getPort() == -1 ? 8080 : u.getPort());
+                         ProxyHandler proxy1 = createProxyHandler(jerseyRequest, proxyAddr,
+                                 clientProxy.userName(), clientProxy.password(), connectTimeout);
+                         p.addLast(proxy1);
+                     });
 
                      // Enable HTTPS if necessary.
                      if ("https".equals(requestUri.getScheme())) {
@@ -469,17 +453,6 @@ class NettyConnector implements Connector {
     public void close() {
         group.shutdownGracefully();
         executorService.shutdown();
-    }
-
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static URI getProxyUri(final Object proxy) {
-        if (proxy instanceof URI) {
-            return (URI) proxy;
-        } else if (proxy instanceof String) {
-            return URI.create((String) proxy);
-        } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
-        }
     }
 
     protected static class PruneIdlePool extends ChannelDuplexHandler {

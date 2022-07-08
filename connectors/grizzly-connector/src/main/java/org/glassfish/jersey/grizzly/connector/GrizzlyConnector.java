@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -39,6 +40,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.Version;
@@ -83,7 +85,7 @@ class GrizzlyConnector implements Connector {
     GrizzlyConnector(final Client client,
                      final Configuration config,
                      final GrizzlyConnectorProvider.AsyncClientCustomizer asyncClientCustomizer) {
-        AsyncHttpClientConfig.Builder builder = new AsyncHttpClientConfig.Builder();
+        final AsyncHttpClientConfig.Builder builder = new AsyncHttpClientConfig.Builder();
 
         ExecutorService executorService;
         if (config != null) {
@@ -95,7 +97,7 @@ class GrizzlyConnector implements Connector {
                 executorService = Executors.newCachedThreadPool();
             }
 
-            builder = builder.setExecutorService(executorService);
+            builder.setExecutorService(executorService);
 
             builder.setConnectTimeout(ClientProperties.getValue(config.getProperties(),
                                                                 ClientProperties.CONNECT_TIMEOUT, 10000));
@@ -103,29 +105,23 @@ class GrizzlyConnector implements Connector {
             builder.setRequestTimeout(ClientProperties.getValue(config.getProperties(),
                                                                 ClientProperties.READ_TIMEOUT, 10000));
 
-            Object proxyUri;
-            proxyUri = config.getProperty(ClientProperties.PROXY_URI);
-            if (proxyUri != null) {
-                final URI u = getProxyUri(proxyUri);
+            final Optional<ClientProxy> proxy = ClientProxy.proxyFromConfiguration(config);
+            proxy.ifPresent(clientProxy -> {
+                final URI u = clientProxy.uri();
                 final Properties proxyProperties = new Properties();
                 proxyProperties.setProperty(ProxyUtils.PROXY_PROTOCOL, u.getScheme());
                 proxyProperties.setProperty(ProxyUtils.PROXY_HOST, u.getHost());
                 proxyProperties.setProperty(ProxyUtils.PROXY_PORT, String.valueOf(u.getPort()));
 
-                final String userName = ClientProperties.getValue(
-                        config.getProperties(), ClientProperties.PROXY_USERNAME, String.class);
-                if (userName != null) {
-                    proxyProperties.setProperty(ProxyUtils.PROXY_USER, userName);
-
-                    final String password = ClientProperties.getValue(
-                            config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
-                    if (password != null) {
-                        proxyProperties.setProperty(ProxyUtils.PROXY_PASSWORD, password);
+                if (clientProxy.userName() != null) {
+                    proxyProperties.setProperty(ProxyUtils.PROXY_USER, clientProxy.userName());
+                    if (clientProxy.password() != null) {
+                        proxyProperties.setProperty(ProxyUtils.PROXY_PASSWORD, clientProxy.password());
                     }
                 }
                 ProxyServerSelector proxyServerSelector = ProxyUtils.createProxyServerSelector(proxyProperties);
                 builder.setProxyServerSelector(proxyServerSelector);
-            }
+            });
         } else {
             executorService = Executors.newCachedThreadPool();
             builder.setExecutorService(executorService);
@@ -140,23 +136,12 @@ class GrizzlyConnector implements Connector {
         }
 
         if (asyncClientCustomizer != null) {
-            builder = asyncClientCustomizer.customize(client, config, builder);
+            asyncClientCustomizer.customize(client, config, builder);
         }
 
         AsyncHttpClientConfig asyncClientConfig = builder.build();
 
         this.grizzlyClient = new AsyncHttpClient(new GrizzlyAsyncHttpProvider(asyncClientConfig), asyncClientConfig);
-    }
-
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static URI getProxyUri(final Object proxy) {
-        if (proxy instanceof URI) {
-            return (URI) proxy;
-        } else if (proxy instanceof String) {
-            return URI.create((String) proxy);
-        } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
-        }
     }
 
     /**

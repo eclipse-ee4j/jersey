@@ -520,19 +520,4 @@ public final class ClientProperties {
     public static <T> T getValue(final Map<String, ?> properties, final String key, final Class<T> type) {
         return PropertiesHelper.getValue(properties, key, type, null);
     }
-
-    /**
-     * Get the value of the specified property. If null, it will obtain it from System property.
-     * <p/>
-     * If the property is not set the method will return {@code null}.
-     *
-     * @param properties Map of properties to get the property value from.
-     * @param key        Name of the property.
-     * @param systemKey  Name of the System property.
-     * @return Value of the property or {@code null}.
-     * @since 2.37
-     */
-    public static String getValue(Map<String, ?> properties, String key, String systemKey) {
-        return PropertiesHelper.getValue(properties, key, System.getProperty(systemKey), String.class, null);
-    }
 }
