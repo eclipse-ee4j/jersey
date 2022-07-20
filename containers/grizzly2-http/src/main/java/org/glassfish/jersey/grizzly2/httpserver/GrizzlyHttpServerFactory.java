@@ -194,6 +194,31 @@ public final class GrizzlyHttpServerFactory {
     /**
      * Create new {@link HttpServer} instance.
      *
+     * @param uri                   uri on which the {@link ApplicationHandler} will be deployed. Only first path
+     *                              segment will be used as context path, the rest will be ignored.
+     * @param config                web application configuration.
+     * @param secure                used for call {@link NetworkListener#setSecure(boolean)}.
+     * @param sslEngineConfigurator Ssl settings to be passed to {@link NetworkListener#setSSLEngineConfig}.
+     * @param parentContext         DI provider specific context with application's registered bindings.
+     * @param start                 if set to false, server will not get started, this allows end users to set
+     *                              additional properties on the underlying listener.
+     * @return newly created {@code HttpServer}.
+     * @throws ProcessingException in case of any failure when creating a new {@code HttpServer} instance.
+     * @see GrizzlyHttpContainer
+     * @since 3.1
+     */
+    public static HttpServer createHttpServer(final URI uri,
+                                              final ResourceConfig config,
+                                              final boolean secure,
+                                              final SSLEngineConfigurator sslEngineConfigurator,
+                                              final Object parentContext,
+                                              final boolean start) {
+        return createHttpServer(uri, new GrizzlyHttpContainer(config, parentContext), secure, sslEngineConfigurator, start);
+    }
+
+    /**
+     * Create new {@link HttpServer} instance.
+     *
      * @param uri           uri on which the {@link ApplicationHandler} will be deployed. Only first path
      *                      segment will be used as context path, the rest will be ignored.
      * @param config        web application configuration.
@@ -207,6 +232,27 @@ public final class GrizzlyHttpServerFactory {
                                               final ResourceConfig config,
                                               final Object parentContext) {
         return createHttpServer(uri, new GrizzlyHttpContainer(config, parentContext), false, null, true);
+    }
+
+    /**
+     * Create new {@link HttpServer} instance.
+     *
+     * @param uri           uri on which the {@link ApplicationHandler} will be deployed. Only first path
+     *                      segment will be used as context path, the rest will be ignored.
+     * @param config        web application configuration.
+     * @param parentContext DI provider specific context with application's registered bindings.
+     * @param start         if set to false, server will not get started, this allows end users to set
+     *                      additional properties on the underlying listener.
+     * @return newly created {@code HttpServer}.
+     * @throws ProcessingException in case of any failure when creating a new {@code HttpServer} instance.
+     * @see GrizzlyHttpContainer
+     * @since 3.1
+     */
+    public static HttpServer createHttpServer(final URI uri,
+                                              final ResourceConfig config,
+                                              final Object parentContext,
+                                              final boolean start) {
+        return createHttpServer(uri, new GrizzlyHttpContainer(config, parentContext), false, null, start);
     }
 
     /**
