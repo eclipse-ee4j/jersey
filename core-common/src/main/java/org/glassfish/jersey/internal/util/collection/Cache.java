@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +17,7 @@
 
 package org.glassfish.jersey.internal.util.collection;
 
+import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -105,6 +107,15 @@ public class Cache<K, V> implements Function<K, V> {
      */
     public void clear() {
         cache.clear();
+    }
+
+    /**
+     * Get the cache keys
+     *
+     * @return
+     */
+    public Enumeration<K> keys() {
+        return cache.keys();
     }
 
     /**

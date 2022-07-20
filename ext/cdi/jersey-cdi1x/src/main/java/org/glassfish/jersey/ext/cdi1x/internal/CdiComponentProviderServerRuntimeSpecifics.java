@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,6 +49,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.Enumeration;
 
 /**
  * Server side runtime CDI ComponentProvider specific implementation.
@@ -223,6 +225,17 @@ class CdiComponentProviderServerRuntimeSpecifics implements CdiComponentProvider
     @Override
     public boolean isJaxRsResource(Class<?> resource) {
         return jaxRsResourceCache.apply(resource);
+    }
+
+    @Override
+    public void clearJaxRsResource(ClassLoader loader) {
+        Enumeration<Class<?>> keys = jaxRsResourceCache.keys();
+        while (keys.hasMoreElements()) {
+            Class<?> key = keys.nextElement();
+            if (key.getClassLoader() == loader) {
+                jaxRsResourceCache.remove(key);
+            }
+        }
     }
 
     @Override
