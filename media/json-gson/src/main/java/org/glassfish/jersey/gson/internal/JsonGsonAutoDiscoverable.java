@@ -29,7 +29,7 @@ import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
  *
  * @see JsonGsonFeature
  */
-@Priority(AutoDiscoverable.DEFAULT_PRIORITY - 210)
+@Priority(AutoDiscoverable.DEFAULT_PRIORITY)
 public class JsonGsonAutoDiscoverable implements ForcedAutoDiscoverable {
 
     @Override
