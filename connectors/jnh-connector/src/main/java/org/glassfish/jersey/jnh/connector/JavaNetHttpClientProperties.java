@@ -57,6 +57,26 @@ public class JavaNetHttpClientProperties {
     public static final String SSL_PARAMETERS = "jersey.config.jnh.client.sslParameters";
 
     /**
+     * The credential provider that should be used to retrieve
+     * credentials from a user.
+     *
+     */
+    public static final String PREEMPTIVE_BASIC_AUTHENTICATION =
+            "jersey.config.jnh.client.preemptiveBasicAuthentication";
+
+    /**
+     * A value of {@code false} indicates the client should handle cookies
+     * automatically using HttpClient's default cookie policy. A value
+     * of {@code false} will cause the client to ignore all cookies.
+     * <p/>
+     * The value MUST be an instance of {@link java.lang.Boolean}.
+     * If the property is absent the default value is {@code false}
+     */
+    public static final String DISABLE_COOKIES =
+            "jersey.config.jnh.client.disableCookies";
+
+
+    /**
      * Prevent this class from instantiation.
      */
     private JavaNetHttpClientProperties() {}

@@ -23,6 +23,8 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.client.innate.Expect100ContinueUsage;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.Version;
@@ -35,7 +37,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Authenticator;
 import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -43,9 +52,11 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Provides a Jersey client {@link Connector}, which internally uses Java's {@link HttpClient}.
@@ -77,14 +88,15 @@ public class JavaNetHttpConnector implements Connector {
         if (sslContext != null) {
             httpClientBuilder.sslContext(sslContext);
         }
-        Integer connectTimeout = getPropertyOrNull(configuration, ClientProperties.CONNECT_TIMEOUT, Integer.class);
-        if (connectTimeout != null) {
-            httpClientBuilder.connectTimeout(Duration.of(connectTimeout, ChronoUnit.MILLIS));
-        }
-        CookieHandler cookieHandler =
+        final CookieHandler cookieHandler =
                 getPropertyOrNull(configuration, JavaNetHttpClientProperties.COOKIE_HANDLER, CookieHandler.class);
         if (cookieHandler != null) {
             httpClientBuilder.cookieHandler(cookieHandler);
+        }
+        final Boolean disableCookies =
+                getPropertyOrNull(configuration, JavaNetHttpClientProperties.DISABLE_COOKIES, Boolean.class);
+        if (Boolean.TRUE.equals(disableCookies)) {
+            httpClientBuilder.cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_NONE));
         }
         Boolean redirect = getPropertyOrNull(configuration, ClientProperties.FOLLOW_REDIRECTS, Boolean.class);
         if (redirect != null) {
@@ -97,7 +109,39 @@ public class JavaNetHttpConnector implements Connector {
         if (sslParameters != null) {
             httpClientBuilder.sslParameters(sslParameters);
         }
+        final Authenticator preemptiveAuthenticator =
+                getPropertyOrNull(configuration,
+                        JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION, Authenticator.class);
+        if (preemptiveAuthenticator != null) {
+            httpClientBuilder.authenticator(preemptiveAuthenticator);
+        }
+        configureProxy(httpClientBuilder, configuration);
         this.httpClient = httpClientBuilder.build();
+    }
+
+    private static void configureProxy(HttpClient.Builder builder, final Configuration config) {
+
+        final Optional<ClientProxy> proxy = ClientProxy.proxyFromConfiguration(config);
+        proxy.ifPresent(clientProxy -> {
+            final URI u = clientProxy.uri();
+            final InetSocketAddress proxyAddress = new InetSocketAddress(u.getHost(),
+                    u.getPort());
+            if (clientProxy.userName() != null) {
+                final Authenticator authenticator = new Authenticator() {
+                    @Override
+                    public PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(clientProxy.userName(), clientProxy.password() == null
+                                ? null : clientProxy.password().toCharArray());
+                    }
+                    @Override
+                    protected RequestorType getRequestorType() {
+                        return RequestorType.PROXY;
+                    }
+                };
+                builder.authenticator(authenticator);
+            }
+            builder.proxy(ProxySelector.of(proxyAddress));
+        });
     }
 
     /**
@@ -113,7 +157,9 @@ public class JavaNetHttpConnector implements Connector {
 
         @Override
         public OutputStream getOutputStream(int contentLength) throws IOException {
-            return this.byteArrayOutputStream = new ByteArrayOutputStream(contentLength);
+            this.byteArrayOutputStream = contentLength > 0 ? new ByteArrayOutputStream(contentLength)
+                    : new ByteArrayOutputStream();
+            return this.byteArrayOutputStream;
         }
     }
 
@@ -147,7 +193,16 @@ public class JavaNetHttpConnector implements Connector {
                 builder.header(headerName, headerValue);
             }
         }
+        final Integer connectTimeout = request.resolveProperty(ClientProperties.READ_TIMEOUT, Integer.class);
+        if (connectTimeout != null) {
+            builder.timeout(Duration.ofMillis(connectTimeout));
+        }
+        processExtensions(builder, request);
         return builder.build();
+    }
+
+     private static void processExtensions(HttpRequest.Builder builder, ClientRequest request) {
+        builder.expectContinue(Expect100ContinueUsage.isAllowed(request, request.getMethod()));
     }
 
     /**
@@ -232,5 +287,13 @@ public class JavaNetHttpConnector implements Connector {
     @Override
     public void close() {
 
+    }
+
+    public CookieHandler getCookieHandler() {
+        final Optional<CookieHandler> cookieHandler = httpClient.cookieHandler();
+        if (cookieHandler.isPresent()) {
+            return cookieHandler.get();
+        }
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.client.internal;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
-import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.innate.Expect100ContinueUsage;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -32,26 +32,9 @@ class HttpUrlExpect100ContinueConnectorExtension
     @Override
     public  void invoke(ClientRequest request, HttpURLConnection uc) {
 
-        final long length = request.getLengthLong();
-        final RequestEntityProcessing entityProcessing = request.resolveProperty(
-                ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
-
-        final Boolean expectContinueActivated = request.resolveProperty(
-                ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
-        final Long expectContinueSizeThreshold = request.resolveProperty(
-                ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
-
-        final boolean allowStreaming = length > expectContinueSizeThreshold
-                || entityProcessing == RequestEntityProcessing.CHUNKED;
-
-        if (!Boolean.TRUE.equals(expectContinueActivated)
-                || !("POST".equals(uc.getRequestMethod()) || "PUT".equals(uc.getRequestMethod()))
-                || !allowStreaming
-        ) {
-            return;
+        if (Expect100ContinueUsage.isAllowed(request, uc.getRequestMethod())) {
+            uc.setRequestProperty("Expect", "100-Continue");
         }
-        uc.setRequestProperty("Expect", "100-Continue");
     }
 
     @Override
