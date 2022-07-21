@@ -2061,6 +2061,12 @@
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
             </dependency>
+            
+            <dependency>
+               <groupId>com.google.code.gson</groupId>
+               <artifactId>gson</artifactId>
+               <version>${gson.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.opentracing</groupId>
@@ -2205,5 +2211,6 @@
         <servlet3.version>3.0.1</servlet3.version>
         <servlet4.version>4.0.4</servlet4.version>
         <yasson.version>1.0.11</yasson.version>
+        <gson.version>2.9.0</gson.version>
     </properties>
 </project>
