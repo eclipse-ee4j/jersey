@@ -61,9 +61,8 @@ public class ProxySelectorTest {
     @Parameterized.Parameters(name = "{index}: {0}")
     public static List<Object[]> testData() {
         return Arrays.asList(new Object[][]{
-//                {ApacheConnectorProvider.class},
-//                {Apache5ConnectorProvider.class},
-//                {JettyConnectorProvider.class},
+                // Apache, Grizzly, Jetty have the proxy set on constructor, i.e. ProxySelector cannot choose based on URI.
+                // HttpUrlConnector ignores proxy on localhost.
                 {NettyConnectorProvider.class},
         });
     }

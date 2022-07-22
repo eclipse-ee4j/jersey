@@ -2046,6 +2046,12 @@
             </dependency>
 
             <dependency>
+               <groupId>com.google.code.gson</groupId>
+               <artifactId>gson</artifactId>
+               <version>${gson.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.opentracing</groupId>
                 <artifactId>opentracing-api</artifactId>
                 <version>${opentracing.version}</version>
@@ -2164,6 +2170,7 @@
         <spring6.version>6.0.0-M3</spring6.version>
         <surefire.version>3.0.0-M6</surefire.version>
         <validation.impl.version>6.2.0.Final</validation.impl.version>
+        <gson.version>2.9.0</gson.version>
 
         <!-- Jakartified, eligible for CQ -->
         <weld.version>4.0.2.Final</weld.version>
