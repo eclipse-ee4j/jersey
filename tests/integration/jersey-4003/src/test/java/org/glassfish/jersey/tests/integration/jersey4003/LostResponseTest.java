@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,7 +59,7 @@ public class LostResponseTest {
         HttpUrlConnectorProvider.ConnectionFactory connectionFactory =
                 Mockito.mock(HttpUrlConnectorProvider.ConnectionFactory.class);
         HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
-        Mockito.when(connectionFactory.getConnection(Mockito.any(URL.class))).thenReturn(connection);
+        Mockito.when(connectionFactory.getConnection(Mockito.any(URL.class), Mockito.any())).thenReturn(connection);
 
         OutputStream outputStream = Mockito.mock(OutputStream.class);
         Mockito.when(connection.getOutputStream()).thenReturn(outputStream);
