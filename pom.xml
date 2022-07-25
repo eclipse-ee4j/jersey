@@ -236,7 +236,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>${enforcer.version}</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -248,6 +248,7 @@
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                         </execution>
@@ -2063,6 +2064,12 @@
             </dependency>
 
             <dependency>
+               <groupId>com.google.code.gson</groupId>
+               <artifactId>gson</artifactId>
+               <version>${gson.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.opentracing</groupId>
                 <artifactId>opentracing-api</artifactId>
                 <version>${opentracing.version}</version>
@@ -2124,6 +2131,15 @@
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
+        <enforcer.version>3.1.0</enforcer.version>
+
+        <!--versions, extracted here due to maven-enforcer-plugin -->
+        <slf4j.version>2.0.0-alpha6</slf4j.version>
+        <commons.codec.version>1.15</commons.codec.version>
+        <reactive.streams.version>1.0.3</reactive.streams.version>
+        <com.uber.jaeger.version>0.27.0</com.uber.jaeger.version>
+        <org.codehaus.gmavenplus.version>1.13.1</org.codehaus.gmavenplus.version>
+        <!-- end of versions extracted here due to maven-enforcer-plugin -->
 
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
@@ -2148,7 +2164,7 @@
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.44</jmockit.version>
         <junit5.version>5.6.0</junit5.version>
-        <kryo.version>4.0.1</kryo.version>
+        <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.75.Final</netty.version>
@@ -2169,9 +2185,9 @@
 
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
-        <slf4j.version>1.7.21</slf4j.version>
         <spring6.version>6.0.0-M3</spring6.version>
         <surefire.version>3.0.0-M6</surefire.version>
+        <gson.version>2.9.0</gson.version>
 
         <!-- Jakartified, eligible for CQ -->
         <weld.version>5.0.0.SP2</weld.version>
