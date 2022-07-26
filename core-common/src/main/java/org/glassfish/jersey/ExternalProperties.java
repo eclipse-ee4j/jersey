@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,10 +32,20 @@ public final class ExternalProperties {
     public static final String HTTP_PROXY_PORT = "http.proxyPort";
 
     /**
-     * Property used to indicates the hosts that should be accessed
+     * Property used to indicate the hosts that should be accessed
      * without going through the proxy.
      */
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+
+    /**
+     * Property used to specify the user name to authenticate with the proxy.
+     */
+    public static final String HTTP_PROXY_USER = "http.proxyUser";
+
+    /**
+     * Property used to specify the password to authenticate with the proxy.
+     */
+    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
 
     /**
      * Prevent instantiation.

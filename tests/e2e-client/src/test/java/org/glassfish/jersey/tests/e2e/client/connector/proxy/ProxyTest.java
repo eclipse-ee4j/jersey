@@ -25,7 +25,9 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.AfterClass;
@@ -70,8 +72,10 @@ public class ProxyTest {
         return Arrays.asList(new Object[][]{
                 {ApacheConnectorProvider.class},
                 {Apache5ConnectorProvider.class},
+                {GrizzlyConnectorProvider.class},
                 {JettyConnectorProvider.class},
                 {NettyConnectorProvider.class},
+                {HttpUrlConnectorProvider.class},
         });
     }
 
@@ -96,9 +100,11 @@ public class ProxyTest {
 
     @Test
     public void testGet407() {
+        // Grizzly sends (String)null password and username
+        int expected = GrizzlyConnectorProvider.class.isInstance(connectorProvider) ? 400 : 407;
         client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
         try (Response response = target("proxyTest").request().get()) {
-            assertEquals(407, response.getStatus());
+            assertEquals(expected, response.getStatus());
         } catch (ProcessingException pe) {
             Assert.assertTrue(pe.getMessage().contains("407")); // netty
         }
@@ -110,7 +116,8 @@ public class ProxyTest {
         client().property(ClientProperties.PROXY_USERNAME, ProxyTest.PROXY_USERNAME);
         client().property(ClientProperties.PROXY_PASSWORD, ProxyTest.PROXY_PASSWORD);
         Response response = target("proxyTest").request().get();
-        assertEquals(200, response.getStatus());
+        response.bufferEntity();
+        assertEquals(response.readEntity(String.class), 200, response.getStatus());
     }
 
     private static Server server;
