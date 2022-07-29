@@ -392,8 +392,8 @@ class JettyConnector implements Connector {
         final AtomicBoolean callbackInvoked = new AtomicBoolean(false);
         final Throwable failure;
         try {
-            final CompletableFuture<ClientResponse> responseFuture =
-                    new CompletableFuture<ClientResponse>().whenComplete(
+            final CompletableFuture<ClientResponse> responseFuture = new CompletableFuture<ClientResponse>();
+            responseFuture.whenComplete(
                             (clientResponse, throwable) -> {
                                 if (throwable != null && throwable instanceof CancellationException) {
                                     // take care of future cancellation
