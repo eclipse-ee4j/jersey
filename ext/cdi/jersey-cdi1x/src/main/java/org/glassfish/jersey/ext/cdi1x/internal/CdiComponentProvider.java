@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,12 +59,16 @@ import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -855,6 +859,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 beanManager.createAnnotatedType(ProcessJAXRSAnnotatedTypes.class),
                 "Jersey " + ProcessJAXRSAnnotatedTypes.class.getName()
         );
+    }
+
+    @SuppressWarnings("unused")
+    private void beforeShutDown(@Observes final BeforeShutdown beforeShutdown, final BeanManager beanManager) {
+        runtimeSpecifics.clearJaxRsResource(Thread.currentThread().getContextClassLoader());
     }
 
     /**
