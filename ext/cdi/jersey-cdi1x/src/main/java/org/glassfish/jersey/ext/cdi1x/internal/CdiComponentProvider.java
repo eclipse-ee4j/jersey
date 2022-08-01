@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,6 +66,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.BeforeShutdown;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
@@ -958,6 +959,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 beanManager.createAnnotatedType(ProcessJAXRSAnnotatedTypes.class),
                 "Jersey " + ProcessJAXRSAnnotatedTypes.class.getName()
         );
+    }
+
+    @SuppressWarnings("unused")
+    private void beforeShutDown(@Observes final BeforeShutdown beforeShutdown, final BeanManager beanManager) {
+        runtimeSpecifics.clearJaxRsResource(Thread.currentThread().getContextClassLoader());
     }
 
     /**
