@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -205,7 +205,7 @@ public final class GrizzlyHttpServerFactory {
      * @return newly created {@code HttpServer}.
      * @throws ProcessingException in case of any failure when creating a new {@code HttpServer} instance.
      * @see GrizzlyHttpContainer
-     * @since 3.1
+     * @since 2.37
      */
     public static HttpServer createHttpServer(final URI uri,
                                               final ResourceConfig config,
@@ -246,7 +246,7 @@ public final class GrizzlyHttpServerFactory {
      * @return newly created {@code HttpServer}.
      * @throws ProcessingException in case of any failure when creating a new {@code HttpServer} instance.
      * @see GrizzlyHttpContainer
-     * @since 3.1
+     * @since 2.37
      */
     public static HttpServer createHttpServer(final URI uri,
                                               final ResourceConfig config,
