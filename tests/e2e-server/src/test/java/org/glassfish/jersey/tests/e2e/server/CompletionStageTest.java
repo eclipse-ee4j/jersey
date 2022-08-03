@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,8 @@ public class CompletionStageTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class);
+        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class)
+                .property(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
     }
 
     @Test
@@ -103,6 +104,14 @@ public class CompletionStageTest extends JerseyTest {
 
         assertThat(response.getStatus(), is(200));
         assertThat(response.readEntity(String.class), is(ENTITY));
+    }
+
+    @Test
+    public void testGetCompletedAsyncResponse() {
+        Response response = target("cs/completedAsyncResponse").request().get();
+
+        assertThat(response.getStatus(), is(200));
+        assertThat(response.readEntity(List.class).get(0), is(ENTITY));
     }
 
     @Test
@@ -211,6 +220,14 @@ public class CompletionStageTest extends JerseyTest {
         public CompletionStage<String> getCompletedAsync() {
             CompletableFuture<String> cs = new CompletableFuture<>();
             delaySubmit(() -> cs.complete(ENTITY));
+            return cs;
+        }
+
+        @GET
+        @Path("/completedAsyncResponse")
+        public CompletionStage<Response> getCompletedAsyncResponse() {
+            CompletableFuture<Response> cs = new CompletableFuture<>();
+            delaySubmit(() -> cs.complete(Response.ok().entity(Collections.singletonList(ENTITY)).build()));
             return cs;
         }
 
