@@ -1898,7 +1898,7 @@
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.2</version>
+                <version>${commons.logging.version}</version>
             </dependency>
 
             <!-- Weld -->
@@ -1958,38 +1958,33 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13.1</version>
+                <version>${junit4.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter</artifactId>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
                 <version>${junit5.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit5.version}</version>
-                <scope>test</scope>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>6.9.6</version>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.21.0</version>
+                <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.awaitility</groupId>
                 <artifactId>awaitility</artifactId>
-                <version>4.1.1</version>
+                <version>${awaitility.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2033,21 +2028,21 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>7.0.0</version>
+                <version>${felix.framework.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
-                <version>1.5.0</version>
+                <version>${felix.eventadmin.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework.security</artifactId>
-                <version>2.6.1</version>
+                <version>${felix.framework.security.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -2085,7 +2080,7 @@
     </dependencyManagement>
 
     <properties>
-        <archetype.mvn.plugin.version>2.4</archetype.mvn.plugin.version>
+        <archetype.mvn.plugin.version>3.2.1</archetype.mvn.plugin.version>
 
         <findbugs.skip>false</findbugs.skip>
         <findbugs.threshold>Low</findbugs.threshold>
@@ -2118,25 +2113,26 @@
         <asm.version>9.3</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
-        <bouncycastle.version>1.68</bouncycastle.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
         <commons.io.version>2.11.0</commons.io.version>
+        <commons.logging.version>1.2</commons.logging.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
-        <checkstyle.mvn.plugin.version>3.1.0</checkstyle.mvn.plugin.version>
-        <checkstyle.version>8.28</checkstyle.version>
+        <checkstyle.mvn.plugin.version>3.1.2</checkstyle.mvn.plugin.version>
+        <checkstyle.version>10.3.2</checkstyle.version>
         <easymock.version>3.3</easymock.version>
 
-        <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
+        <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
-        <findbugs.version>3.0.4</findbugs.version>
-        <freemarker.version>2.3.27-incubating</freemarker.version>
-        <gae.version>1.9.59</gae.version>
+        <findbugs.version>3.0.5</findbugs.version>
+        <freemarker.version>2.3.31</freemarker.version>
+        <gae.version>1.9.98</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <enforcer.version>3.1.0</enforcer.version>
 
         <!--versions, extracted here due to maven-enforcer-plugin -->
         <slf4j.version>2.0.0-alpha6</slf4j.version>
         <commons.codec.version>1.15</commons.codec.version>
-        <reactive.streams.version>1.0.3</reactive.streams.version>
+        <reactive.streams.version>1.0.4</reactive.streams.version>
         <com.uber.jaeger.version>0.27.0</com.uber.jaeger.version>
         <org.codehaus.gmavenplus.version>1.13.1</org.codehaus.gmavenplus.version>
         <!-- end of versions extracted here due to maven-enforcer-plugin -->
@@ -2144,55 +2140,63 @@
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
         <microprofile.rest.client.version>3.0</microprofile.rest.client.version>
-        <helidon.config.version>3.0.0-M1</helidon.config.version>
-        <smallrye.config.version>3.0.0-RC1</smallrye.config.version>
+        <helidon.config.version>3.0.0</helidon.config.version>
+        <smallrye.config.version>3.0.0-RC4</smallrye.config.version>
 
 
-        <grizzly2.version>2.4.4</grizzly2.version>
+        <grizzly2.version>4.0.0</grizzly2.version>
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
         <!--<helidon.version>1.0.3</helidon.version>-->
         <xmlunit.version>1.6</xmlunit.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <httpclient5.version>5.1.2</httpclient5.version>
+        <httpcore.version>4.4.15</httpcore.version>
+        <httpclient5.version>5.1.3</httpclient5.version>
         <jackson.version>2.13.3</jackson.version>
-        <javassist.version>3.28.0-GA</javassist.version>
-        <jboss.logging.version>3.3.0.Final</jboss.logging.version>
+        <javassist.version>3.29.0-GA</javassist.version>
+        <jboss.logging.version>3.5.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
-        <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
-        <jmh.version>1.10.2</jmh.version>
+        <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.5.0 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
+        <jmh.version>1.35</jmh.version>
         <jmockit.version>1.44</jmockit.version>
-        <junit5.version>5.6.0</junit5.version>
+        <junit4.version>4.13.2</junit4.version>
+        <junit5.version>5.9.0</junit5.version>
+        <testng.version>7.6.1</testng.version>
+        <assertj.version>3.23.1</assertj.version>
+        <awaitility.version>4.2.0</awaitility.version>
+        <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
+        <felix.framework.security.version>2.8.3</felix.framework.security.version>
+        <felix.framework.version>7.0.5</felix.framework.version>
         <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
-        <mustache.version>0.8.17</mustache.version>
-        <netty.version>4.1.75.Final</netty.version>
+        <mustache.version>0.9.10</mustache.version>
+        <netty.version>4.1.79.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
-        <opentracing.version>0.30.0</opentracing.version>
+        <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <osgi.service.cm.version>1.6.0</osgi.service.cm.version>
+        <osgi.service.cm.version>1.6.1</osgi.service.cm.version>
         <pax.exam.version>4.13.4</pax.exam.version>
-        <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
+        <pax.web.version>8.0.6</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
-        <rxjava.version>1.2.5</rxjava.version>
-        <rxjava2.version>2.0.4</rxjava2.version>
+        <rxjava.version>1.3.8</rxjava.version>
+        <rxjava2.version>2.2.21</rxjava2.version>
 
-        <servlet4.version>4.0.3</servlet4.version>
+        <servlet4.version>4.0.4</servlet4.version>
         <servlet6.version>6.0.0</servlet6.version>
 
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
         <spring6.version>6.0.0-M3</spring6.version>
-        <surefire.version>3.0.0-M6</surefire.version>
-        <gson.version>2.9.0</gson.version>
+        <surefire.version>3.0.0-M7</surefire.version>
+        <gson.version>2.9.1</gson.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>5.0.0.SP2</weld.version>
-        <weld3.version>3.1.7.SP1</weld3.version>
-        <validation.impl.version>8.0.0.Alpha1</validation.impl.version>
+        <weld.version>5.0.1.Final</weld.version>
+<!--        <weld3.version>3.1.7.SP1</weld3.version>-->
+        <validation.impl.version>8.0.0.CR1</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <xerces.version>2.12.2</xerces.version>
 
@@ -2200,29 +2204,29 @@
         <graalvm.version>20.3.2</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>7.0.0-M2</gf.impl.version>
+        <gf.impl.version>7.0.0-M4</gf.impl.version>
         <!-- Jakartified -->
         <cdi.api.version>4.0.1</cdi.api.version>
         <ejb.version>4.0.1</ejb.version>
-        <grizzly2.version>4.0.0</grizzly2.version>
+<!--        <grizzly2.version>4.0.0</grizzly2.version>-->
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <hk2.version>3.0.3</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[3.0,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[3.0,4)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>7.0.0-M2</hk2.config.version>
+        <hk2.config.version>7.0.0-M4</hk2.config.version>
         <jsp.version>3.1.0</jsp.version>
         <jstl.version>3.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
-        <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
+        <istack.commons.runtime.version>4.1.1</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
-        <jakarta.el.version>5.0.0</jakarta.el.version>
+        <jakarta.el.version>5.0.1</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.1.0</jakarta.interceptor.version>
-        <jakarta.jsonp.version>2.1.0</jakarta.jsonp.version>
+        <jakarta.jsonp.version>2.1.1</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>4.0.0</jakarta.jaxb.api.version>
@@ -2231,15 +2235,15 @@
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.version>11.0.9</jetty.version>
         <jetty.plugin.version>11.0.9</jetty.plugin.version>
-        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
+<!--        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>-->
         <jsonb.api.version>3.0.0</jsonb.api.version>
-        <jsonp.ri.version>1.1.0</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.0</jsonp.jaxrs.version>
+        <jsonp.ri.version>1.1.1</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.1.1</jsonp.jaxrs.version>
         <moxy.version>4.0.0-M3</moxy.version>
-        <yasson.version>3.0.0-RC2</yasson.version>
+        <yasson.version>3.0.1</yasson.version>
         <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
-        <mimepull.version>1.9.13</mimepull.version>
+        <mimepull.version>1.9.15</mimepull.version>
     </properties>
 </project>

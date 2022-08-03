@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.opentracing.propagation.TextMapAdapter;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 
@@ -36,7 +37,6 @@ import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMapExtractAdapter;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 
@@ -84,7 +84,7 @@ class OpenTracingApplicationEventListener implements ApplicationEventListener {
                         (entry) -> OpenTracingUtils.formatList(entry.getValue())));
 
         final SpanContext extractedContext =
-                globalTracer.extract(Format.Builtin.HTTP_HEADERS, new TextMapExtractAdapter(mappedHeaders));
+                globalTracer.extract(Format.Builtin.HTTP_HEADERS, new TextMapAdapter(mappedHeaders));
 
         Tracer.SpanBuilder spanBuilder = globalTracer
                 .buildSpan(OpenTracingFeature.DEFAULT_REQUEST_SPAN_NAME)
@@ -92,14 +92,14 @@ class OpenTracingApplicationEventListener implements ApplicationEventListener {
                 .withTag(Tags.HTTP_METHOD.getKey(), request.getMethod())
                 .withTag(Tags.HTTP_URL.getKey(), request.getRequestUri().toASCIIString())
                 .withTag(LocalizationMessages.OPENTRACING_TAG_REQUEST_HEADERS(),
-                        OpenTracingUtils.headersAsString(request.getHeaders()))
+                        OpenTracingUtils.headersAsString(request.getRequestHeaders()))
                 .withTag(LocalizationMessages.OPENTRACING_TAG_HAS_REQUEST_ENTITY(), request.hasEntity());
 
         if (extractedContext != null) {
             spanBuilder = spanBuilder.asChildOf(extractedContext);
         }
 
-        final Span span = spanBuilder.startManual();
+        final Span span = spanBuilder.start();
         request.setProperty(OpenTracingFeature.SPAN_CONTEXT_PROPERTY, span);
         span.log(LocalizationMessages.OPENTRACING_LOG_REQUEST_STARTED());
         return span;
@@ -157,7 +157,7 @@ class OpenTracingApplicationEventListener implements ApplicationEventListener {
 
                     resourceSpan = globalTracer.buildSpan(OpenTracingFeature.DEFAULT_RESOURCE_SPAN_NAME)
                                                .asChildOf(requestSpan)
-                                               .startManual();
+                                               .start();
 
                     event.getContainerRequest().setProperty(OpenTracingFeature.SPAN_CONTEXT_PROPERTY, resourceSpan);
                     break;

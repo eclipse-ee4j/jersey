@@ -63,7 +63,7 @@ public abstract class JerseyContainerTest extends JerseyTest {
         return factory;
     }
 
-    protected static List<TestContainerFactory> listContainerFactories(TestContainerFactory...factories) {
+    protected static List<TestContainerFactory> listContainerFactories(TestContainerFactory... factories) {
         final JdkVersion version = JdkVersion.getJdkVersion();
         boolean isJDK8 = version.getMajor() == 1;
         final List<TestContainerFactory> filtered = new LinkedList<>();
