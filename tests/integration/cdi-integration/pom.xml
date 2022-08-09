@@ -61,4 +61,15 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>gf-inject</id>
+            <activation>
+                <jdk>[11,16)</jdk>
+            </activation>
+            <modules>
+                <module>gf-cdi-inject</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
