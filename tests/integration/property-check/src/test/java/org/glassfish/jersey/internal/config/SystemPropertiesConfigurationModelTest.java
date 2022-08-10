@@ -44,7 +44,6 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.oauth1.OAuth1ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SystemPropertiesConfigurationModelTest {
@@ -78,7 +77,6 @@ public class SystemPropertiesConfigurationModelTest {
     }
 
     @Test
-    @Ignore("System.setSecurityManager is deprecated in JDK 19 and there is no replacement")
     public void propertyLoadedWhenSecurityException() {
         final String TEST_STRING = "test";
         SecurityManager sm = System.getSecurityManager();
