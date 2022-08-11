@@ -78,8 +78,8 @@ public class StreamingTest extends JerseyTest {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         @Path("json")
-        public String json() {
-            return "great success";
+        public AnObject json() {
+            return new AnObject("a field", 42);
         }
     }
 
