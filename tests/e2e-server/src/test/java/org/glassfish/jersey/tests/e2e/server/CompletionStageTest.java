@@ -65,8 +65,7 @@ public class CompletionStageTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class)
-                .property(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
+        return new ResourceConfig(CompletionStageResource.class, DataBeanWriter.class);
     }
 
     @Test
@@ -272,7 +271,6 @@ public class CompletionStageTest extends JerseyTest {
         @GET
         @Path("/databeanlist")
         public CompletionStage<List<DataBean>> getDataBeanList(@Context ContainerRequestContext requestContext) {
-            requestContext.setProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
             return CompletableFuture.completedFuture(Collections.singletonList(new DataBean(ENTITY)));
         }
 
