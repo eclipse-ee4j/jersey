@@ -57,7 +57,7 @@ public class JavaNetHttpClientProperties {
     public static final String SSL_PARAMETERS = "jersey.config.jnh.client.sslParameters";
 
     /**
-     * The credential provider that should be used to retrieve
+     * An instance of the {@link java.net.Authenticator} class that should be used to retrieve
      * credentials from a user.
      *
      */

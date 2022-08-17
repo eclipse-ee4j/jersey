@@ -1918,6 +1918,12 @@
             </tgroup>
         </table>
     </section>
+    <section xml:id="appendix-properties-client-jnh">
+        <title>Java Net HTTP client configuration properties</title>
+        <para>
+            List of client configuration properties that can be found in &jersey.jnh.JavaNetHttpClientProperties; class.
+        </para>
+    </section>
     <section xml:id="appendix-properties-client-netty">
         <title>Netty HTTP client configuration properties</title>
 
@@ -2030,6 +2036,41 @@
                             </para>
                             <para>
                                 A provided value to this option has to be of type <literal>javax.net.ssl.SSLParameters</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION;</entry>
+                        <entry><literal>jersey.config.jnh.client.preemptiveBasicAuthentication</literal></entry>
+                        <entry>
+                            <para>
+                                An instance of the Authenticator class which represents an object that knows how to
+                                obtain authentication for a network connection should be used.
+                            </para>
+                            <para>
+                                If an <literal>java.net.Authenticator</literal> instance is found,
+                                it is then used for the given request.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.net.Authenticator</literal>.
+                                If the property is absent, no authentication is used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.DISABLE_COOKIES;</entry>
+                        <entry><literal>jersey.config.jnh.client.disableCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client should handle cookies
+                                automatically using HttpClient's default cookie policy. A value
+                                of &lit.true; will cause the client to ignore all cookies.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
                             </para>
                         </entry>
                     </row>
