@@ -54,6 +54,7 @@ import org.junit.Test;
 
 public class StreamingTest extends JerseyTest {
     private static final Logger LOGGER = Logger.getLogger(StreamingTest.class.getName());
+    public static final String FIELD_CONTENT = "a field";
 
     @Path("/test")
     public static class StreamingResource {
@@ -79,7 +80,7 @@ public class StreamingTest extends JerseyTest {
         @Produces(MediaType.APPLICATION_JSON)
         @Path("json")
         public AnObject json() {
-            return new AnObject("a field", 42);
+            return new AnObject(FIELD_CONTENT, 42);
         }
     }
 
@@ -176,7 +177,7 @@ public class StreamingTest extends JerseyTest {
                 .get(AnObject.class)
                 .get();
 
-        assertThat("Listening the stream for bytes starts after headers are received", result, equalTo("blabla"));
+        assertThat( result.getaField(), equalTo(FIELD_CONTENT));
     }
 
     private StreamingStatistics computeOutputStatistics(Supplier<InputStream> stream, long httpCallStart) throws IOException {
@@ -224,6 +225,10 @@ public class StreamingTest extends JerseyTest {
     public static class AnObject {
         private String aField;
         private int anotherField;
+
+        public AnObject() {
+            //empty constructor for jackson
+        }
 
         public AnObject(String aField, int anotherField) {
             this.aField = aField;
