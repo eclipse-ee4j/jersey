@@ -123,7 +123,8 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
-                            ${jakarta.annotation.osgi.version},
+                            ${cdi.osgi.version},
+                            ${javax.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

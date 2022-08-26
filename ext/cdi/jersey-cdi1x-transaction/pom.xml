@@ -91,7 +91,11 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.transaction.internal</Export-Package>
-                        <Import-Package>${javax.annotation.osgi.version},*</Import-Package>
+                        <Import-Package>
+                            ${javax.annotation.osgi.version},
+                            ${cdi.osgi.version},
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

@@ -87,6 +87,7 @@
                         <Import-Package>
                             ${javax.annotation.osgi.version},
                             ${hk2.osgi.version},
+                            ${cdi.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

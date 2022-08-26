@@ -57,6 +57,7 @@
                         <Export-Package>org.glassfish.jersey.server.validation.*;version=${project.version}</Export-Package>
                         <Import-Package>
                             ${javax.annotation.osgi.version},
+                            ${cdi.osgi.version},
                             javax.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
                             *
                         </Import-Package>
