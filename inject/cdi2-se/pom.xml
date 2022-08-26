@@ -91,6 +91,7 @@
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
+                            ${cdi.osgi.version},
                             ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>

@@ -1438,7 +1438,7 @@
                     <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                     <windowtitle>Jersey ${jersey.version} API</windowtitle>
                     <bottom>
-                        <![CDATA[Copyright &#169; 2007-2021,
+                        <![CDATA[Copyright &#169; 2007-2022,
                             <a href="http://www.oracle.com">Oracle</a>
                             and/or its affiliates.
                             All Rights Reserved. Use is subject to license terms.]]>
@@ -2221,6 +2221,7 @@
         <hk2.config.version>6.2.5</hk2.config.version>
         <!-- Jakartified -->
         <cdi.api.version>3.0.0</cdi.api.version>
+        <cdi.osgi.version>javax.enterprise.*;version="[3.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
         <grizzly2.version>3.0.1</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
