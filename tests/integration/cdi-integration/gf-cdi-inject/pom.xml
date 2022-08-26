@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>2.37-SNAPSHOT</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>gf-cdi-inject-on-server</artifactId>
@@ -31,10 +31,10 @@
     <description>Embedded GF tests @Inject</description>
 
     <properties>
-        <glassfish.home>${project.build.directory}/payara5</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <modules.dir>${glassfish.home}/glassfish/modules</modules.dir>
         <glassfish.container.version>${gf.impl.version}</glassfish.container.version>
-        <junit.jupiter.version>5.7.2</junit.jupiter.version>
+        <junit.jupiter.version>${junit5.version}</junit.jupiter.version>
     </properties>
 
     <dependencies>
@@ -45,18 +45,12 @@
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency> This does not work with GF 5.1 -->
-<!--            <groupId>org.jboss.arquillian.container</groupId>-->
-<!--            <artifactId>arquillian-glassfish-managed-3.1</artifactId>-->
-<!--            <version>1.0.2</version>-->
-<!--        </dependency>-->
-
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
-            <scope>test</scope>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-glassfish-managed-6</artifactId>
+            <version>1.0.0.Alpha1</version>
         </dependency>
+
 
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -104,11 +98,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-<!--                                    <groupId>org.glassfish.main.distributions</groupId>-->
-<!--                                    <artifactId>glassfish</artifactId>-->
-                                    <groupId>fish.payara.distributions</groupId>
-                                    <artifactId>payara</artifactId>
-                                    <version>5.2022.2</version>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${gf.impl.version}</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}</outputDirectory>

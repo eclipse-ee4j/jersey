@@ -112,7 +112,7 @@
                             org.glassfish.jersey.microprofile.restclient.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            gf-cdi-inject-on-server,
+                            ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
                             org.eclipse.microprofile.config.*;version="!",
                             *

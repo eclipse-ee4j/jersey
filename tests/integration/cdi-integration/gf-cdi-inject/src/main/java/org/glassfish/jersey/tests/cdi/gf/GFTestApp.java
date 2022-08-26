@@ -16,13 +16,15 @@
 
 package org.glassfish.jersey.tests.cdi.gf;
 
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 @ApplicationPath("/test")
 public class GFTestApp extends ResourceConfig {
     public GFTestApp() {
         super(GFTestResource.class);
+        property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
     }
 }

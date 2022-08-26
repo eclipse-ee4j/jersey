@@ -58,7 +58,7 @@
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             ${cdi.osgi.version},
-                            jakarta.validation.*;resolution:=optional;version="${range;[==,3);${javax.validation.api.version}}",
+                            jakarta.validation.*;resolution:=optional;version="${range;[==,4);${jakarta.validation.api.version}}",
                             *
                         </Import-Package>
                     </instructions>
