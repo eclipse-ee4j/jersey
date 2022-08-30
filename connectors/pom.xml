@@ -81,7 +81,7 @@
         <profile>
             <id>HelidonConnector</id>
             <activation>
-                <jdk>11</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <modules>
                 <module>helidon-connector</module>

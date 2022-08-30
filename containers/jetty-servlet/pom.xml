@@ -67,6 +67,7 @@
                     <instructions>
                         <Import-Package>
                             javax.servlet.*;version="[2.4,5.0)",
+                            ${jetty.osgi.version},
                             *
                         </Import-Package>
                     </instructions>
