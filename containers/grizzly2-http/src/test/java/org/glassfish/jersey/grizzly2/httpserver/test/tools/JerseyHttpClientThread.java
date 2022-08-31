@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
 
@@ -50,7 +51,7 @@ public class JerseyHttpClientThread extends ClientThread {
     @Override
     public void doGetAndCheckResponse() throws Throwable {
         final WebTarget path = client.target(getSettings().targetUri.toString());
-        final Builder builder = path.request();
+        final Invocation.Builder builder = path.request();
         final Response response = builder.get();
         final String responseMsg = response.readEntity(String.class);
         assertEquals(200, response.getStatus());

@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.bundles</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaxrs-ri</artifactId>
@@ -305,6 +305,7 @@
                         <Private-Package>
                             com.sun.research.ws.wadl
                         </Private-Package>
+                        <Multi-Release>true</Multi-Release>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                     <excludeDependencies>*;scope=compile</excludeDependencies>
