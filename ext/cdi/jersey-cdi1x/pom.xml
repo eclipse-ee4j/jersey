@@ -87,6 +87,7 @@
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             ${hk2.osgi.version},
+                            ${cdi.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

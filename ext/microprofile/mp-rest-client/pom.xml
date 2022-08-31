@@ -112,7 +112,7 @@
                             org.glassfish.jersey.microprofile.restclient.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            jakarta.enterprise.*;version="[3.0,5)",
+                            ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
                             org.eclipse.microprofile.config.*;version="!",
                             *
