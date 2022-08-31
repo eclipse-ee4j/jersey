@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -159,7 +159,7 @@ public class JerseyEntityPartBuilderProvider implements EntityPartBuilderProvide
                 final StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart();
                 streamDataBodyPart.setFilename(fileName);
                 fillFormData(streamDataBodyPart);
-                streamDataBodyPart.setStreamEntity(content);
+                streamDataBodyPart.setStreamEntity(content, mediaType);
                 return streamDataBodyPart;
             }
         }
@@ -173,7 +173,11 @@ public class JerseyEntityPartBuilderProvider implements EntityPartBuilderProvide
             protected FormDataBodyPart build() {
                 final FileDataBodyPart fileDataBodyPart = new FileDataBodyPart();
                 fillFormData(fileDataBodyPart);
-                fileDataBodyPart.setFileEntity(content);
+                if (mediaType != null) {
+                    fileDataBodyPart.setFileEntity(content, mediaType);
+                } else {
+                    fileDataBodyPart.setFileEntity(content);
+                }
                 return fileDataBodyPart;
             }
         }

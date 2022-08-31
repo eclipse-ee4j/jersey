@@ -236,7 +236,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>${enforcer.version}</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -248,6 +248,7 @@
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                         </execution>
@@ -2063,6 +2064,12 @@
             </dependency>
 
             <dependency>
+               <groupId>com.google.code.gson</groupId>
+               <artifactId>gson</artifactId>
+               <version>${gson.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.opentracing</groupId>
                 <artifactId>opentracing-api</artifactId>
                 <version>${opentracing.version}</version>
@@ -2108,7 +2115,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.2</asm.version>
+        <asm.version>9.3</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <bouncycastle.version>1.68</bouncycastle.version>
@@ -2124,6 +2131,15 @@
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <gae.version>1.9.59</gae.version>
         <grizzly.client.version>1.16</grizzly.client.version>
+        <enforcer.version>3.1.0</enforcer.version>
+
+        <!--versions, extracted here due to maven-enforcer-plugin -->
+        <slf4j.version>2.0.0-alpha6</slf4j.version>
+        <commons.codec.version>1.15</commons.codec.version>
+        <reactive.streams.version>1.0.3</reactive.streams.version>
+        <com.uber.jaeger.version>0.27.0</com.uber.jaeger.version>
+        <org.codehaus.gmavenplus.version>1.13.1</org.codehaus.gmavenplus.version>
+        <!-- end of versions extracted here due to maven-enforcer-plugin -->
 
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
@@ -2139,7 +2155,7 @@
         <xmlunit.version>1.6</xmlunit.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpclient5.version>5.1.2</httpclient5.version>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
@@ -2148,7 +2164,7 @@
         <jmh.version>1.10.2</jmh.version>
         <jmockit.version>1.44</jmockit.version>
         <junit5.version>5.6.0</junit5.version>
-        <kryo.version>4.0.1</kryo.version>
+        <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.8.17</mustache.version>
         <netty.version>4.1.75.Final</netty.version>
@@ -2169,12 +2185,12 @@
 
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
-        <slf4j.version>1.7.21</slf4j.version>
         <spring6.version>6.0.0-M3</spring6.version>
         <surefire.version>3.0.0-M6</surefire.version>
+        <gson.version>2.9.0</gson.version>
 
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>5.0.0.CR2</weld.version>
+        <weld.version>5.0.0.SP2</weld.version>
         <weld3.version>3.1.7.SP1</weld3.version>
         <validation.impl.version>8.0.0.Alpha1</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
@@ -2186,9 +2202,9 @@
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>7.0.0-M2</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>4.0.0</cdi.api.version>
-        <ejb.version>4.0.0</ejb.version>
-        <grizzly2.version>4.0.0-M1</grizzly2.version>
+        <cdi.api.version>4.0.1</cdi.api.version>
+        <ejb.version>4.0.1</ejb.version>
+        <grizzly2.version>4.0.0</grizzly2.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <hk2.version>3.0.3</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[3.0,4)"</hk2.osgi.version>
@@ -2196,25 +2212,25 @@
         <hk2.config.version>7.0.0-M2</hk2.config.version>
         <jsp.version>3.1.0</jsp.version>
         <jstl.version>3.0.0</jstl.version>
-        <jta.api.version>2.0.0</jta.api.version>
+        <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
         <jakarta.el.version>5.0.0</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
-        <jakarta.annotation.version>2.1.0</jakarta.annotation.version>
+        <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.1.0</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.1.0</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.1</jakarta.validation.api.version>
+        <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>4.0.0</jakarta.jaxb.api.version>
-        <jaxb.ri.version>4.0.0-M3</jaxb.ri.version>
+        <jaxb.ri.version>4.0.0</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
-        <jetty.version>11.0.7</jetty.version>
-        <jetty.plugin.version>11.0.7</jetty.plugin.version>
+        <jetty.version>11.0.9</jetty.version>
+        <jetty.plugin.version>11.0.9</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>
         <jsonp.ri.version>1.1.0</jsonp.ri.version>

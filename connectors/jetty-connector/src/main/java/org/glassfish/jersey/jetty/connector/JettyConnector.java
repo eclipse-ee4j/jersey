@@ -57,6 +57,7 @@ import org.eclipse.jetty.client.util.OutputStreamContentProvider;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.collection.ByteBufferInputStream;
@@ -193,19 +194,17 @@ class JettyConnector implements Connector {
             auth.addAuthentication((BasicAuthentication) basicAuthProvider);
         }
 
-        final Object proxyUri = config.getProperties().get(ClientProperties.PROXY_URI);
-        if (proxyUri != null) {
-            final URI u = getProxyUri(proxyUri);
+        final Optional<ClientProxy> proxy = ClientProxy.proxyFromConfiguration(config);
+        proxy.ifPresent(clientProxy -> {
             final ProxyConfiguration proxyConfig = client.getProxyConfiguration();
+            final URI u = clientProxy.uri();
             proxyConfig.getProxies().add(new HttpProxy(u.getHost(), u.getPort()));
 
-            final Object proxyUsername = config.getProperties().get(ClientProperties.PROXY_USERNAME);
-            if (proxyUsername != null) {
-                final Object proxyPassword = config.getProperties().get(ClientProperties.PROXY_PASSWORD);
+            if (clientProxy.userName() != null) {
                 auth.addAuthentication(new BasicAuthentication(u, "<<ANY_REALM>>",
-                        String.valueOf(proxyUsername), String.valueOf(proxyPassword)));
+                        clientProxy.userName(), clientProxy.password()));
             }
-        }
+        });
 
         if (disableCookies) {
             client.setCookieStore(new HttpCookieStore.Empty());
@@ -227,17 +226,6 @@ class JettyConnector implements Connector {
             throw new ProcessingException("Failed to start the client.", e);
         }
         this.cookieStore = client.getCookieStore();
-    }
-
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static URI getProxyUri(final Object proxy) {
-        if (proxy instanceof URI) {
-            return (URI) proxy;
-        } else if (proxy instanceof String) {
-            return URI.create((String) proxy);
-        } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
-        }
     }
 
     /**
