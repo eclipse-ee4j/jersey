@@ -305,6 +305,7 @@
                         <Private-Package>
                             com.sun.research.ws.wadl
                         </Private-Package>
+                        <Multi-Release>true</Multi-Release>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                     <excludeDependencies>*;scope=compile</excludeDependencies>
