@@ -87,7 +87,7 @@
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.servlet.internal</Export-Package>
                         <Import-Package>
-                            jakarta.enterprise.*;version="[3.0,5)",
+                            ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>

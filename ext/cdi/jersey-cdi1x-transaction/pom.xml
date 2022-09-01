@@ -37,7 +37,7 @@
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>9.0.0-RC2</version>
+            <version>9.1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -92,9 +92,9 @@
                     <instructions>
                         <Export-Package>org.glassfish.jersey.ext.cdi1x.transaction.internal</Export-Package>
                         <Import-Package>
-                            jakarta.enterprise.*;version="[3.0,5)",
-                            jakarta.decorator.*;version="[3.0,5)",
                             ${jakarta.annotation.osgi.version},
+                            ${cdi.osgi.version},
+                            jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>
                     </instructions>
