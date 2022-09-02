@@ -470,6 +470,7 @@
 <!ENTITY jersey.jetty.JettyClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#DISABLE_COOKIES'>JettyClientProperties.DISABLE_COOKIES</link>" >
 <!ENTITY jersey.jetty.JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>" >
 <!ENTITY jersey.jetty.JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#TOTAL_TIMEOUT'>JettyClientProperties.TOTAL_TIMEOUT</link>" >
 <!ENTITY jersey.jetty.JettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyConnectorProvider.html'>JettyConnectorProvider</link>">
 <!ENTITY jersey.jetty.JettyHttpContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainer.html'>JettyHttpContainer</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerFactory.html'>JettyHttpContainerFactory</link>">
