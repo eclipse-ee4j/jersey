@@ -1790,6 +1790,23 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.jetty.client.totalTimeout</literal></entry>
+                        <entry>
+                            <para>
+                                Total timeout interval for request/response conversation, in milliseconds.
+                                Opposed to &jersey.client.ClientProperties.READ_TIMEOUT;.
+                            </para>
+                            <para>
+                                The value MUST be an instance convertible to <literal>Integer</literal>.
+                                The value of zero <literal>0</literal> is equivalent to an interval of infinity.
+                            </para>
+                            <para>
+                                The default value is <literal>0</literal> (infinity).
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
