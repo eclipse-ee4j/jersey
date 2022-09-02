@@ -16,17 +16,13 @@
 
 package org.glassfish.jersey.tests.integration.jersey4697;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.management.JMX;
@@ -52,8 +48,7 @@ import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 public class MonitoringEventListenerTest extends JerseyTest {
 
