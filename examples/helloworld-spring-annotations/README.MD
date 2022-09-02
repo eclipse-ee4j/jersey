@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -10,7 +10,7 @@ Jersey Spring Integration Spring Helloworld WebApp Example
 ==========================================================
 
 This example demonstrates how to create simple Jersey application that
-utilises Spring 3 DI features based on Spring annotations, packaged into WAR file.
+utilises Spring 6 DI features based on Spring annotations, packaged into WAR file.
 
 Contents
 --------

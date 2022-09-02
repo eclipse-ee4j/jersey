@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -28,7 +28,7 @@ public class App {
 
     private static final URI BASE_URI = URI.create("http://localhost:8080/base/");
 
-    public static final String ROOT_PATH = "base";
+    public static final String ROOT_PATH = "spring-resource";
 
     public static void main(String[] args) {
         try {
