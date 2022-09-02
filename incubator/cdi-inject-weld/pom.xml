@@ -124,7 +124,7 @@
                         <Import-Package>
                             sun.misc.*;resolution:=optional,
                             ${cdi.osgi.version},
-                            ${javax.annotation.osgi.version},
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>
