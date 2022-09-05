@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,7 +52,7 @@ import static org.junit.Assert.assertEquals;
 
 public class MonitoringEventListenerTest extends JerseyTest {
 
-    private static final long TIMEOUT = 500;
+    private static final long TIMEOUT = 1000;
     private static final String MBEAN_EXCEPTION =
             "org.glassfish.jersey:type=MonitoringEventListenerTest,subType=Global,exceptions=ExceptionMapper";
 
@@ -116,6 +116,7 @@ public class MonitoringEventListenerTest extends JerseyTest {
         resourceConfig.property(ServerProperties.MONITORING_ENABLED, true);
         resourceConfig.property(ServerProperties.MONITORING_STATISTICS_ENABLED, true);
         resourceConfig.property(ServerProperties.MONITORING_STATISTICS_MBEANS_ENABLED, true);
+        // Scheduler will process 1000 events per second
         resourceConfig.property(ServerProperties.MONITORING_STATISTICS_REFRESH_INTERVAL, 1);
         resourceConfig.setApplicationName("MonitoringEventListenerTest");
         return resourceConfig;
@@ -126,17 +127,18 @@ public class MonitoringEventListenerTest extends JerseyTest {
         final Long ERRORS_BEFORE_FAIL = 10L;
         // Send some requests to process some statistics.
         request(ERRORS_BEFORE_FAIL);
-        // Give some time to the scheduler to collect data.
+        // Give some time to process events
         Thread.sleep(TIMEOUT);
-        // All events were consumed by scheduler
+        // Verify the exceptionMapperEvents is empty, because no event of this type was sent yet
         queueIsEmpty();
-        // Make the scheduler to fail. No more statistics are collected.
+        // Sending one event that will make an internal error in the scheduler.
+        // No new events will be pushed in the queues after this.
         makeFailure();
-        // Sending again requests
+        // Sending again requests. These events will not be processed, so they will not be counted for statistics.
         request(20);
+        // The expectation is that the scheduler is not going to process previous events because there was a failure before.
+        // We give some time before checking that no new errors are registered.
         Thread.sleep(TIMEOUT);
-        // No new events should be accepted because scheduler is not working.
-        queueIsEmpty();
         Long monitoredErrors = mappedErrorsFromJMX(MBEAN_EXCEPTION);
         assertEquals(ERRORS_BEFORE_FAIL, monitoredErrors);
     }
