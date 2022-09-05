@@ -124,7 +124,7 @@
                             jakarta.servlet.*;version="[5.0,7.0)",
                             sun.misc.*;resolution:=optional,
                             ${jakarta.annotation.osgi.version},
-                            jakarta.enterprise.*;version="[3.0,5)",
+                            ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
                             *
                         </Import-Package>
