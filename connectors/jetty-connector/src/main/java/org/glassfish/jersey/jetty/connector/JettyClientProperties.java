@@ -86,6 +86,24 @@ public final class JettyClientProperties {
         "jersey.config.jetty.client.syncListenerResponseMaxSize";
 
     /**
+     * Total timeout interval for request/response conversation, in milliseconds.
+     * Opposed to {@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT}.
+     * <p>
+     * The value MUST be an instance convertible to {@link java.lang.Integer}. The
+     * value of zero (0) is equivalent to an interval of infinity.
+     * </p>
+     * <p>
+     * The default value is zero (infinity).
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @since 2.37
+     */
+    public static final String TOTAL_TIMEOUT = "jersey.config.jetty.client.totalTimeout";
+
+    /**
      * Get the value of the specified property.
      *
      * If the property is not set or the real value type is not compatible with the specified value type, returns {@code null}.
