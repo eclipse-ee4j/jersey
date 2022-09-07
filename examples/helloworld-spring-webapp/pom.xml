@@ -81,7 +81,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
+            <version>${servlet6.version}</version>
         </dependency>
 
         <dependency>
