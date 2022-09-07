@@ -126,6 +126,7 @@
                             ${jakarta.annotation.osgi.version},
                             ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

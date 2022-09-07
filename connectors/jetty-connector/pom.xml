@@ -98,6 +98,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            ${jetty.osgi.version},
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
