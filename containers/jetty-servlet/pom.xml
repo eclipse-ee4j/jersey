@@ -66,6 +66,7 @@
                     <instructions>
                         <Import-Package>
                             jakarta.servlet.*;version="[5.0,7.0)",
+                            ${jetty.osgi.version},
                             *
                         </Import-Package>
                     </instructions>
