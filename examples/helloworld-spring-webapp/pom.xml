@@ -25,14 +25,22 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>helloworld-spring-webapp</artifactId>
     <packaging>war</packaging>
     <name>jersey-examples-helloworld-spring-webapp</name>
 
-    <description>Spring 4 Integration Jersey Example</description>
+    <description>Spring 6 Integration Jersey Example</description>
+
+    <repositories>
+        <repository>
+            <name>Spring Repository</name>
+            <id>spring-repository</id>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -43,11 +51,37 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring4.version}</version>
-            <scope>compile</scope>
+            <version>${spring6.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring6.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring6.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring6.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring6.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet5.version}</version>
         </dependency>
 
         <dependency>
@@ -64,15 +98,8 @@
 
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-spring4</artifactId>
+            <artifactId>jersey-spring6</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>servlet-api-2.5</artifactId>
-            <version>${jetty.servlet.api.25.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -86,8 +113,13 @@
         <plugins>
             <!-- Run the application using "mvn jetty:run" to deploy to Jetty-->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <webApp>
+                        <contextPath>/helloworld-spring-webapp</contextPath>
+                    </webApp>
+                </configuration>
             </plugin>
         </plugins>
     </build>

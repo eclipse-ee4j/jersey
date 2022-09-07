@@ -78,8 +78,6 @@
         <module>helloworld-pure-jax-rs</module>
         <module>helloworld-webapp</module>
         <module>helloworld-weld</module>
-<!--        <module>helloworld-spring-webapp</module>-->
-<!--        <module>helloworld-spring-annotations</module>-->
         <module>http-patch</module>
         <module>http-trace</module>
         <module>https-clientserver-grizzly</module>
@@ -278,5 +276,18 @@
             </resource>
         </resources>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>helloworld-spring-webapp</module>
+                <module>helloworld-spring-annotations</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

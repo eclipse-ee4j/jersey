@@ -2127,7 +2127,7 @@
         each module; the default exclude filter file is at etc/config/findbugs-exclude.xml -->
         <findbugs.exclude />
         <findbugs.glassfish.logging.validLoggerPrefixes>
-            javax.enterprise
+            jakarta.enterprise
         </findbugs.glassfish.logging.validLoggerPrefixes>
         <java.version>11</java.version>
 <!--        <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>-->
@@ -2264,6 +2264,7 @@
         <jaxb.ri.version>4.0.0</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
+        <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>11.0.9</jetty.version>
         <jetty.plugin.version>11.0.9</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
