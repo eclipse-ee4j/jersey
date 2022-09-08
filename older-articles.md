@@ -13,6 +13,15 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=266" target="_blank">Jersey 2.37, 3.0.8, and 3.1.0-M8</a></h4>
+Sep 8, 2022 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=258" target="_blank">Jersey 3.1.0 – Incompatibilities and changes</a></h4>
+Jul 22, 2022 | Jan Supol
+
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=254" target="_blank">Jersey 3.1.0-M3 has been released!</a></h4>
+Jun 24, 2022 | Jan Supol
+
 <h4> <a class="article" href="{{ site.links.honzablog }}/?p=243" target="_blank">Jersey 2.35, and Jersey 3.0.3</a></h4>
 Oct 21, 2021 | Jan Supol
 

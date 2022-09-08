@@ -126,13 +126,13 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 <h3>Latest Articles</h3>
 
 <table style="width:100%;border:none;">
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=266" target="_blank">Jersey 2.37, 3.0.8, and 3.1.0-M8</a>                   </td><td> Sep 8, 2022 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=258" target="_blank">Jersey 3.1.0 – Incompatibilities and changes</a>       </td><td> Jul 22, 2022 </td><td> Jan Supol </td> </tr>
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=254" target="_blank">Jersey 3.1.0-M3 has been released!</a>                 </td><td> Jun 9, 2022 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=243" target="_blank">Jersey 2.35, and Jersey 3.0.3</a>                      </td><td> Oct 21, 2021 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=238" target="_blank">Very Merry Christmas with Jersey 2.33</a>              </td><td> Dec 24, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=235" target="_blank">Happy Jakarta EE 9 with Jersey 3.0.0</a>               </td><td> Dec 03, 2020 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=202" target="_blank">Understanding Jakarta EE 9</a>                         </td><td> Oct 12, 2020 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">What is new in Jersey 2.32</a>                         </td><td> Oct 10, 2020 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=190" target="_blank">Jersey 2.30.1 has been released</a>                         </td><td> March 1, 2020 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=171" target="_blank">New Features in Jersey Client</a>                         </td><td> Jan 13, 2020 </td><td> Jan Supol </td> </tr>
 </table>
 
 <br/>
