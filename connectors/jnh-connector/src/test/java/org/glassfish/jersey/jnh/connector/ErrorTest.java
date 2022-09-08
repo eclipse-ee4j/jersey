@@ -22,6 +22,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -29,6 +30,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
@@ -67,13 +72,11 @@ public class ErrorTest extends JerseyTest {
 
     @Test
     public void testPostError() {
-        WebTarget r = target("test");
+        final WebTarget target = target("test");
 
         for (int i = 0; i < 100; i++) {
-            try {
-                r.request().post(Entity.text("POST"));
-            } catch (ClientErrorException ex) {
-            }
+            final Response resp = target.request().post(Entity.text("POST"));
+            assertEquals(500, resp.getStatus());
         }
     }
 
@@ -92,13 +95,18 @@ public class ErrorTest extends JerseyTest {
     }
 
     @Test
-    public void testPostErrorAsync() {
-        WebTarget r = target("test");
+    public void testPostErrorAsync() throws ExecutionException, InterruptedException {
+        final WebTarget target = target("test");
+
+        final List<Future<Response>> responses = new ArrayList<>(100);
 
         for (int i = 0; i < 100; i++) {
-            try {
-                r.request().async().post(Entity.text("POST"));
-            } catch (ClientErrorException ex) {
+                responses.add(target.request().async().post(Entity.text("POST")));
+        }
+        for (int i = responses.size() - 1; i >= 0;) {
+            if (responses.get(i).isDone()) {
+                assertEquals(500, responses.remove(i).get().getStatus());
+                i--;
             }
         }
     }
