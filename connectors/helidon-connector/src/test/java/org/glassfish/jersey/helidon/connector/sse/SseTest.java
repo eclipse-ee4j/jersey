@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import org.glassfish.jersey.helidon.connector.HelidonConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import jakarta.annotation.PostConstruct;
@@ -107,7 +106,6 @@ public class SseTest extends JerseyTest {
     }
 
     @Test
-    @Ignore //TODO - remove after jakartification
     public void testSend() throws InterruptedException {
         final StringBuilder sb = new StringBuilder();
         final CountDownLatch latch = new CountDownLatch(10);
