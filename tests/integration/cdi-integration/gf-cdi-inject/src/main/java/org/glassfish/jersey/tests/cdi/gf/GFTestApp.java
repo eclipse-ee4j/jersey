@@ -16,13 +16,42 @@
 
 package org.glassfish.jersey.tests.cdi.gf;
 
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
 
 import javax.ws.rs.ApplicationPath;
 
 @ApplicationPath("/test")
 public class GFTestApp extends ResourceConfig {
+    public static final String RELOADER = "RELOADER";
+    private Reloader reloader = new Reloader();
+
     public GFTestApp() {
         super(GFTestResource.class);
+        register(reloader);
+
+        property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
+        property(RELOADER, reloader);
+    }
+
+    static class Reloader implements ContainerLifecycleListener {
+        Container container;
+
+        @Override
+        public void onStartup(Container container) {
+            this.container = container;
+        }
+
+        @Override
+        public void onReload(Container container) {
+
+        }
+
+        @Override
+        public void onShutdown(Container container) {
+
+        }
     }
 }

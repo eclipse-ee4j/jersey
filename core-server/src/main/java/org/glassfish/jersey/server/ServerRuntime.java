@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -231,43 +231,50 @@ public class ServerRuntime {
                         requestScopeInstance, externalRequestScope.open(injectionManager));
         context.initAsyncContext(asyncResponderHolder);
 
-        requestScope.runInScope(requestScopeInstance, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // set base URI into response builder thread-local variable
-                    // for later resolving of relative location URIs
-                    if (!disableLocationHeaderRelativeUriResolution) {
-                        final URI uriToUse =
-                                rfc7231LocationHeaderRelativeUriResolution ? request.getRequestUri() : request.getBaseUri();
-                        OutboundJaxrsResponse.Builder.setBaseUri(uriToUse);
+        try {
+            requestScope.runInScope(requestScopeInstance, new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // set base URI into response builder thread-local variable
+                        // for later resolving of relative location URIs
+                        if (!disableLocationHeaderRelativeUriResolution) {
+                            final URI uriToUse =
+                                    rfc7231LocationHeaderRelativeUriResolution ? request.getRequestUri() : request.getBaseUri();
+                            OutboundJaxrsResponse.Builder.setBaseUri(uriToUse);
+                        }
+
+                        final Ref<Endpoint> endpointRef = Refs.emptyRef();
+                        final RequestProcessingContext data = Stages.process(context, requestProcessingRoot, endpointRef);
+
+                        final Endpoint endpoint = endpointRef.get();
+                        if (endpoint == null) {
+                            // not found
+                            throw new NotFoundException();
+                        }
+
+                        final ContainerResponse response = endpoint.apply(data);
+
+                        if (!asyncResponderHolder.isAsync()) {
+                            responder.process(response);
+                        } else {
+                            externalRequestScope.suspend(asyncResponderHolder.externalContext, injectionManager);
+                        }
+                    } catch (final Throwable throwable) {
+                        responder.process(throwable);
+                    } finally {
+                        asyncResponderHolder.release();
+                        // clear base URI from the thread
+                        OutboundJaxrsResponse.Builder.clearBaseUri();
                     }
-
-                    final Ref<Endpoint> endpointRef = Refs.emptyRef();
-                    final RequestProcessingContext data = Stages.process(context, requestProcessingRoot, endpointRef);
-
-                    final Endpoint endpoint = endpointRef.get();
-                    if (endpoint == null) {
-                        // not found
-                        throw new NotFoundException();
-                    }
-
-                    final ContainerResponse response = endpoint.apply(data);
-
-                    if (!asyncResponderHolder.isAsync()) {
-                        responder.process(response);
-                    } else {
-                        externalRequestScope.suspend(asyncResponderHolder.externalContext, injectionManager);
-                    }
-                } catch (final Throwable throwable) {
-                    responder.process(throwable);
-                } finally {
-                    asyncResponderHolder.release();
-                    // clear base URI from the thread
-                    OutboundJaxrsResponse.Builder.clearBaseUri();
                 }
+            });
+        } catch (RuntimeException illegalStateException) {
+            if (!IllegalStateException.class.isInstance(illegalStateException.getCause()) || !injectionManager.isShutdown()) {
+                // consume the IllegalStateException: InjectionManager has been closed.
+                throw illegalStateException;
             }
-        });
+        }
     }
 
     /**
