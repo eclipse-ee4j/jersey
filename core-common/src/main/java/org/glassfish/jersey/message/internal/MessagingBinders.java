@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +17,13 @@
 package org.glassfish.jersey.message.internal;
 
 import java.security.AccessController;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.ws.rs.RuntimeType;
@@ -48,6 +50,14 @@ import org.glassfish.jersey.spi.HeaderDelegateProvider;
 public final class MessagingBinders {
 
     private static final Logger LOGGER = Logger.getLogger(MessagingBinders.class.getName());
+    private static final Map<EnabledProvidersBinder.Provider, AtomicBoolean> warningMap;
+
+    static {
+        warningMap = new HashMap<>();
+        for (EnabledProvidersBinder.Provider provider : EnabledProvidersBinder.Provider.values()) {
+            warningMap.put(provider, new AtomicBoolean(false));
+        }
+    }
 
     /**
      * Prevents instantiation.
@@ -223,21 +233,23 @@ public final class MessagingBinders {
                     }
                     providerBinder.bind(binder, provider);
                 } else {
-                    switch (provider) {
-                        case DOMSOURCE:
-                        case SAXSOURCE:
-                        case STREAMSOURCE:
-                            LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(provider.className,
-                                    "MessageBodyReader<" + provider.className + ">")
-                            );
-                            break;
-                        case DATASOURCE:
-                        case RENDEREDIMAGE:
-                        case SOURCE:
-                            LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(provider.className,
-                                    "MessageBodyWriter<" + provider.className + ">")
-                            );
-                            break;
+                    if (warningMap.get(provider).compareAndSet(false, true)) {
+                        switch (provider) {
+                            case DOMSOURCE:
+                            case SAXSOURCE:
+                            case STREAMSOURCE:
+                                LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(
+                                        provider.className, "MessageBodyReader<" + provider.className + ">")
+                                );
+                                break;
+                            case DATASOURCE:
+                            case RENDEREDIMAGE:
+                            case SOURCE:
+                                LOGGER.warning(LocalizationMessages.DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(
+                                        provider.className, "MessageBodyWriter<" + provider.className + ">")
+                                );
+                                break;
+                        }
                     }
                 }
             }
