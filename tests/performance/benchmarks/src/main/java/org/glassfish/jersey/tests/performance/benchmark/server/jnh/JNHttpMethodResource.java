@@ -31,9 +31,9 @@ import java.util.List;
 @Path("HttpMethod")
 public class JNHttpMethodResource {
 
-    private final static int BOOK_LIST_SIZE=1000;
+    private static final int BOOK_LIST_SIZE = 1000;
 
-    private final static List<Book> bookList = generateBooks();
+    private static final List<Book> bookList = generateBooks();
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
