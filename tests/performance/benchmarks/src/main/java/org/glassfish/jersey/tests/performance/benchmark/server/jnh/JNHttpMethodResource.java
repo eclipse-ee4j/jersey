@@ -23,9 +23,15 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Path("HttpMethod")
@@ -33,7 +39,7 @@ public class JNHttpMethodResource {
 
     private static final int BOOK_LIST_SIZE = 1000;
 
-    private static final List<Book> bookList = generateBooks();
+    public static final List<Book> bookList = generateBooks();
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -63,6 +69,14 @@ public class JNHttpMethodResource {
                 book.getTitle(),
                 book.getId()));*/
     }
+    @POST
+    @Path("postBooks")
+    public Response postBooks(InputStream data) throws IOException {
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(data));
+        long linesReceived = reader.lines().count();
+        reader.close();
+        return linesReceived == bookList.size() ? Response.ok().build() : Response.serverError().build();
+    }
 
     @PUT
     @Path("putBook")
@@ -86,6 +100,6 @@ public class JNHttpMethodResource {
         for (int i = 0; i < BOOK_LIST_SIZE; i++) {
             books.add(new Book("Title: " + i, "Author: " + i, i));
         }
-        return books;
+        return Collections.unmodifiableList(books);
     }
 }

@@ -58,4 +58,8 @@ public class Book {
     public void setId(int id) {
         this.id = id;
     }
+
+    public byte[] toByteArray() {
+        return String.format("%s, %s, %d", title, author, id).getBytes();
+    }
 }

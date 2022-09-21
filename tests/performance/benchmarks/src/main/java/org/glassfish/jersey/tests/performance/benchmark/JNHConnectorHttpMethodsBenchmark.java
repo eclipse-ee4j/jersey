@@ -20,6 +20,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.StreamingOutput;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
@@ -29,6 +30,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.tests.performance.benchmark.server.jnh.Book;
 import org.glassfish.jersey.tests.performance.benchmark.server.jnh.JNHApplication;
+import org.glassfish.jersey.tests.performance.benchmark.server.jnh.JNHttpMethodResource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -48,6 +50,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -171,6 +174,30 @@ public class JNHConnectorHttpMethodsBenchmark {
         defaultClient.target(BASE_URI).path(REQUEST_TARGET).path("postBook")
                 .request().post(Entity.json(postDefaultBook));
     }
+
+    @Benchmark
+    public void measureBigPost() {
+        client.target(BASE_URI).path(REQUEST_TARGET).path("postBooks")
+                .request().post(Entity.entity(convertLongEntity(JNHttpMethodResource.bookList), MediaType.TEXT_PLAIN_TYPE));
+    }
+
+    @Benchmark
+    public void measureBigPostDefault() {
+        defaultClient.target(BASE_URI).path(REQUEST_TARGET).path("postBooks")
+                .request().post(Entity.entity(convertLongEntity(JNHttpMethodResource.bookList), MediaType.TEXT_PLAIN_TYPE));
+    }
+
+    private static final StreamingOutput convertLongEntity(List<Book> books) {
+        return out -> {
+            int offset = 0;
+            while (offset < books.size()) {
+                out.write(books.get(offset).toByteArray());
+                out.write('\n');
+                offset++;
+            }
+        };
+    }
+
 
     @Benchmark
     public void measurePut() {
