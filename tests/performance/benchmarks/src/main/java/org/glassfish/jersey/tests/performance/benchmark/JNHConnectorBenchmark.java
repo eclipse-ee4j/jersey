@@ -29,8 +29,8 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.tests.performance.benchmark.server.jnh.Book;
-import org.glassfish.jersey.tests.performance.benchmark.server.jnh.JNHApplication;
-import org.glassfish.jersey.tests.performance.benchmark.server.jnh.JNHttpMethodResource;
+import org.glassfish.jersey.tests.performance.benchmark.server.jnh.BookShelfApplication;
+import org.glassfish.jersey.tests.performance.benchmark.server.jnh.BookShelfResource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 16, time = 1)
 @Fork(1)
 @State(Scope.Benchmark)
-public class JNHConnectorHttpMethodsBenchmark {
+public class JNHConnectorBenchmark {
 
     private static final URI BASE_URI = URI.create("http://localhost:8080/");
 
@@ -81,7 +81,7 @@ public class JNHConnectorHttpMethodsBenchmark {
     @Setup
     public void start() throws Exception {
         server =
-                GrizzlyHttpServerFactory.createHttpServer(BASE_URI, new JNHApplication(), false);
+                GrizzlyHttpServerFactory.createHttpServer(BASE_URI, new BookShelfApplication(), false);
         final TCPNIOTransport transport = server.getListener("grizzly").getTransport();
         transport.setSelectorRunnersCount(4);
         transport.setWorkerThreadPoolConfig(ThreadPoolConfig.defaultConfig().setCorePoolSize(8).setMaxPoolSize(8));
@@ -178,13 +178,13 @@ public class JNHConnectorHttpMethodsBenchmark {
     @Benchmark
     public void measureBigPost() {
         client.target(BASE_URI).path(REQUEST_TARGET).path("postBooks")
-                .request().post(Entity.entity(convertLongEntity(JNHttpMethodResource.bookList), MediaType.TEXT_PLAIN_TYPE));
+                .request().post(Entity.entity(convertLongEntity(BookShelfResource.bookList), MediaType.TEXT_PLAIN_TYPE));
     }
 
     @Benchmark
     public void measureBigPostDefault() {
         defaultClient.target(BASE_URI).path(REQUEST_TARGET).path("postBooks")
-                .request().post(Entity.entity(convertLongEntity(JNHttpMethodResource.bookList), MediaType.TEXT_PLAIN_TYPE));
+                .request().post(Entity.entity(convertLongEntity(BookShelfResource.bookList), MediaType.TEXT_PLAIN_TYPE));
     }
 
     private static final StreamingOutput convertLongEntity(List<Book> books) {
@@ -227,7 +227,7 @@ public class JNHConnectorHttpMethodsBenchmark {
     public static void main(final String[] args) throws Exception {
         final Options opt = new OptionsBuilder()
                 // Register our benchmarks.
-                .include(JNHConnectorHttpMethodsBenchmark.class.getSimpleName())
+                .include(JNHConnectorBenchmark.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

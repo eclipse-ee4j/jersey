@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Path("HttpMethod")
-public class JNHttpMethodResource {
+public class BookShelfResource {
 
     private static final int BOOK_LIST_SIZE = 1000;
 

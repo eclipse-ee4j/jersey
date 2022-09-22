@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.performance.benchmark.server.jnh;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
-public class JNHApplication  extends ResourceConfig {
-    public JNHApplication() {
-        register(JNHttpMethodResource.class);
+public class BookShelfApplication extends ResourceConfig {
+    public BookShelfApplication() {
+        register(BookShelfResource.class);
     }
 }
