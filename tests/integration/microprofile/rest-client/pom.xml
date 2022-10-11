@@ -78,6 +78,13 @@
             <artifactId>wiremock</artifactId>
             <version>2.21.0</version>
             <scope>test</scope>
+            <!-- Remove when a new higher version depends on Guava 24+  -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions> 
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
