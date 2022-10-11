@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Map;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.CookieParam;
@@ -37,7 +38,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -47,21 +47,18 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.ElementNameAndTextQualifier;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests whether WADL for a {@link BeanParam} annotated resource method parameter is generated properly.
@@ -168,7 +165,7 @@ public class WadlBeanParamTest extends JerseyTest {
                                 XPathConstants.NODE))
         );
         XMLUnit.setXpathNamespaceContext(
-                new SimpleNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02")));
+                new SimpleNamespaceContext(Map.of("wadl", "http://wadl.dev.java.net/2009/02")));
         diff.overrideElementQualifier(elementQualifier);
         XMLAssert.assertXMLEqual(diff, true);
     }

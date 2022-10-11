@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
-
-import com.google.common.io.ByteStreams;
 
 /**
  * A simple SSL-secured HTTP server for testing purposes.
@@ -80,34 +78,34 @@ final class Server {
      * @return an instance of the started SSL-secured HTTP test server.
      */
     public static Server start(String keystore) throws IOException {
-        final InputStream trustStore = Server.class.getResourceAsStream(SERVER_TRUST_STORE);
-        final InputStream keyStore = Server.class.getResourceAsStream(keystore);
+        try (InputStream trustStore = Server.class.getResourceAsStream(SERVER_TRUST_STORE);
+                InputStream keyStore = Server.class.getResourceAsStream(keystore);) {
+            // Grizzly ssl configuration
+            SSLContextConfigurator sslContext = new SSLContextConfigurator();
 
-        // Grizzly ssl configuration
-        SSLContextConfigurator sslContext = new SSLContextConfigurator();
+            // set up security context
+            sslContext.setKeyStoreBytes(keyStore.readAllBytes());  // contains server key pair
+            sslContext.setKeyStorePass("asdfgh");
+            sslContext.setTrustStoreBytes(trustStore.readAllBytes()); // contains client certificate
+            sslContext.setTrustStorePass("asdfgh");
 
-        // set up security context
-        sslContext.setKeyStoreBytes(ByteStreams.toByteArray(keyStore));  // contains server key pair
-        sslContext.setKeyStorePass("asdfgh");
-        sslContext.setTrustStoreBytes(ByteStreams.toByteArray(trustStore)); // contains client certificate
-        sslContext.setTrustStorePass("asdfgh");
+            ResourceConfig rc = new ResourceConfig();
+            rc.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
+            rc.registerClasses(RootResource.class, SecurityFilter.class, AuthenticationExceptionMapper.class);
 
-        ResourceConfig rc = new ResourceConfig();
-        rc.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
-        rc.registerClasses(RootResource.class, SecurityFilter.class, AuthenticationExceptionMapper.class);
+            final HttpServer grizzlyServer = GrizzlyHttpServerFactory.createHttpServer(
+                    getBaseURI(),
+                    rc,
+                    true,
+                    new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true)
+            );
 
-        final HttpServer grizzlyServer = GrizzlyHttpServerFactory.createHttpServer(
-                getBaseURI(),
-                rc,
-                true,
-                new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true)
-        );
+            // start Grizzly embedded server //
+            LOGGER.info("Jersey app started. Try out " + BASE_URI + "\nHit CTRL + C to stop it...");
+            grizzlyServer.start();
 
-        // start Grizzly embedded server //
-        LOGGER.info("Jersey app started. Try out " + BASE_URI + "\nHit CTRL + C to stop it...");
-        grizzlyServer.start();
-
-        return new Server(grizzlyServer);
+            return new Server(grizzlyServer);
+        }
     }
 
     /**

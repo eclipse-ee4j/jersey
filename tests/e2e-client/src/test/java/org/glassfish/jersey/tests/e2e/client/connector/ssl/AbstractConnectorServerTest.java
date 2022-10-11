@@ -35,8 +35,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import com.google.common.io.ByteStreams;
-
 /**
  * SSL connector hostname verification tests.
  *
@@ -95,14 +93,15 @@ public abstract class AbstractConnectorServerTest {
     }
 
     protected SSLContext getSslContext() throws IOException {
-        final InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
-        final InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);
-        return SslConfigurator.newInstance()
-                .trustStoreBytes(ByteStreams.toByteArray(trustStore))
-                .trustStorePassword("asdfgh")
-                .keyStoreBytes(ByteStreams.toByteArray(keyStore))
-                .keyPassword("asdfgh")
-                .createSSLContext();
+        try (InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
+                InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);) {
+            return SslConfigurator.newInstance()
+                    .trustStoreBytes(trustStore.readAllBytes())
+                    .trustStorePassword("asdfgh")
+                    .keyStoreBytes(keyStore.readAllBytes())
+                    .keyPassword("asdfgh")
+                    .createSSLContext();
+        }
     }
 
     protected String serverKeyStore() {

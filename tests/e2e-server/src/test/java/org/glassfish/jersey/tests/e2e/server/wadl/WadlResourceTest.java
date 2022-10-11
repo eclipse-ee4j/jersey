@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,13 @@
  */
 
 package org.glassfish.jersey.tests.e2e.server.wadl;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,6 +40,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -52,8 +60,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import javax.inject.Named;
 import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;
@@ -71,6 +77,12 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.ElementQualifier;
+import org.custommonkey.xmlunit.SimpleNamespaceContext;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.util.SaxHelper;
 import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
@@ -89,13 +101,6 @@ import org.glassfish.jersey.server.wadl.internal.WadlGeneratorImpl;
 import org.glassfish.jersey.server.wadl.internal.WadlUtils;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementQualifier;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,14 +110,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import com.google.common.collect.ImmutableMap;
 
 import com.sun.research.ws.wadl.Method;
 import com.sun.research.ws.wadl.Param;
@@ -1279,7 +1276,7 @@ public class WadlResourceTest {
                                     XPathConstants.NODE))
             );
             XMLUnit.setXpathNamespaceContext(
-                    new SimpleNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02")));
+                    new SimpleNamespaceContext(Map.of("wadl", "http://wadl.dev.java.net/2009/02")));
             final ElementQualifier elementQualifier = new RecursiveElementNameAndTextQualifier();
             diff.overrideElementQualifier(elementQualifier);
             XMLAssert.assertXMLEqual(diff, true);
