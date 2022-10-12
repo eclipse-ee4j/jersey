@@ -34,6 +34,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1275,8 +1276,10 @@ public class WadlResourceTest {
                             xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
                                     XPathConstants.NODE))
             );
+            Map<String, String> map = new HashMap<>();
+            map.put("wadl", "http://wadl.dev.java.net/2009/02");
             XMLUnit.setXpathNamespaceContext(
-                    new SimpleNamespaceContext(Map.of("wadl", "http://wadl.dev.java.net/2009/02")));
+                    new SimpleNamespaceContext(Collections.unmodifiableMap(map)));
             final ElementQualifier elementQualifier = new RecursiveElementNameAndTextQualifier();
             diff.overrideElementQualifier(elementQualifier);
             XMLAssert.assertXMLEqual(diff, true);

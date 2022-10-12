@@ -22,6 +22,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.BeanParam;
@@ -164,8 +166,10 @@ public class WadlBeanParamTest extends JerseyTest {
                         xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
                                 XPathConstants.NODE))
         );
+        Map<String, String> map = new HashMap<>();
+        map.put("wadl", "http://wadl.dev.java.net/2009/02");
         XMLUnit.setXpathNamespaceContext(
-                new SimpleNamespaceContext(Map.of("wadl", "http://wadl.dev.java.net/2009/02")));
+                new SimpleNamespaceContext(Collections.unmodifiableMap(map)));
         diff.overrideElementQualifier(elementQualifier);
         XMLAssert.assertXMLEqual(diff, true);
     }

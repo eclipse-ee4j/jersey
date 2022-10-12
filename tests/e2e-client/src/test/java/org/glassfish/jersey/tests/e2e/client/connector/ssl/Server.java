@@ -84,9 +84,9 @@ final class Server {
             SSLContextConfigurator sslContext = new SSLContextConfigurator();
 
             // set up security context
-            sslContext.setKeyStoreBytes(keyStore.readAllBytes());  // contains server key pair
+            sslContext.setKeyStoreBytes(AbstractConnectorServerTest.toBytes(keyStore));  // contains server key pair
             sslContext.setKeyStorePass("asdfgh");
-            sslContext.setTrustStoreBytes(trustStore.readAllBytes()); // contains client certificate
+            sslContext.setTrustStoreBytes(AbstractConnectorServerTest.toBytes(trustStore)); // contains client certificate
             sslContext.setTrustStorePass("asdfgh");
 
             ResourceConfig rc = new ResourceConfig();
