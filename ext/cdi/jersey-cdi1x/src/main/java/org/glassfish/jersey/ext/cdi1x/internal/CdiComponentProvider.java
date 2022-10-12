@@ -39,10 +39,8 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.Vetoed;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.inject.Singleton;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import javax.annotation.ManagedBean;
@@ -51,6 +49,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterTypeDiscovery;
 import javax.enterprise.inject.spi.Annotated;
@@ -68,7 +67,6 @@ import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -118,7 +116,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private final Set<Type> jaxrsInjectableTypes = new HashSet<>();
     private final Set<Type> hk2ProvidedTypes = Collections.synchronizedSet(new HashSet<Type>());
     private final Set<Type> jerseyVetoedTypes = Collections.synchronizedSet(new HashSet<Type>());
-    private final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
+    private static final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
     private final ThreadLocal<InjectionManager> threadInjectionManagers = new ThreadLocal<>();
 
     /**
@@ -870,11 +868,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      * Add a predicate to test HK2 dependency to create a CDI bridge bean to HK2 for it.
      * @param predicate to test whether given class is a HK2 dependency.
      */
-    public void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
+    public static void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
         jerseyOrDependencyTypes.add(new DependencyPredicate(predicate));
     }
 
-    private final class DependencyPredicate implements Predicate<Class<?>> {
+    private static final class DependencyPredicate implements Predicate<Class<?>> {
         private final Predicate<Class<?>> predicate;
 
         public DependencyPredicate(Predicate<Class<?>> predicate) {
@@ -891,7 +889,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DependencyPredicate that = (DependencyPredicate) o;
-            return predicate.getClass().equals(that.predicate);
+            return predicate.getClass().equals(that.predicate.getClass());
         }
 
         @Override
