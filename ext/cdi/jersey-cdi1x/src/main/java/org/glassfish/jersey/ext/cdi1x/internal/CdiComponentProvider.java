@@ -552,7 +552,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      *
      * @return HK2 injection manager.
      */
-    /* package */ InjectionManager getEffectiveInjectionManager() {
+    public InjectionManager getEffectiveInjectionManager() {
         return injectionManagerStore.getEffectiveInjectionManager();
     }
 
@@ -669,7 +669,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public void inject(final Object t, final CreationalContext cc) {
             InjectionManager injectingManager = getEffectiveInjectionManager();
-            if (injectingManager == null) {
+            if (injectingManager == null || /* reload */ injectingManager.isShutdown()) {
                 injectingManager = effectiveInjectionManager;
                 threadInjectionManagers.set(injectingManager);
             }
@@ -735,7 +735,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public Object create(final CreationalContext creationalContext) {
             InjectionManager injectionManager = getEffectiveInjectionManager();
-            if (injectionManager == null) {
+            if (injectionManager == null || /* reload */ injectionManager.isShutdown()) {
                 injectionManager = threadInjectionManagers.get();
             }
 

@@ -20,6 +20,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
@@ -33,5 +35,13 @@ public class GFTestResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String info() {
         return uriInfo.getBaseUri().toASCIIString();
+    }
+
+    @GET
+    @Path("reload")
+    public String reload(@Context Application application) {
+        GFTestApp.Reloader reloader = (GFTestApp.Reloader) application.getProperties().get(GFTestApp.RELOADER);
+        reloader.container.reload();
+        return GFTestApp.RELOADER;
     }
 }

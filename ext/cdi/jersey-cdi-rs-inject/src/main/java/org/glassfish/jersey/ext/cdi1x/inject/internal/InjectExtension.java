@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.ext.cdi1x.inject.internal;
 
-import org.glassfish.jersey.ext.cdi1x.inject.JerseyContext;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
@@ -37,7 +36,9 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.InjectionTargetFactory;
+import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.inject.Singleton;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.container.ResourceInfo;
@@ -56,6 +57,7 @@ import java.security.AccessController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * <p>
@@ -70,11 +72,12 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 class InjectExtension implements Extension {
-    private static final Class<?> SERVLET_CONFIG_CLASS =
-            AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.servlet.ServletConfig"));
+    private static final Class<?> WEB_CONFIG_CLASS =
+            AccessController.doPrivileged(ReflectionHelper.classForNamePA("org.glassfish.jersey.servlet.WebConfig"));
     private AnnotatedType<ServletReferenceProducer> interceptorAnnotatedType;
 
-    private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType, BeanManager beanManager) {
+    private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType,
+                                      BeanManager beanManager) {
         final Class<?> baseClass = (Class<?>) processAnnotatedType.getAnnotatedType().getBaseType();
         if (Application.class.isAssignableFrom(baseClass) && Configuration.class.isAssignableFrom(baseClass)) {
             if (!baseClass.isAnnotationPresent(Alternative.class)) {
@@ -84,7 +87,7 @@ class InjectExtension implements Extension {
     }
 
     private void beforeDiscoveryObserver(@Observes final BeforeBeanDiscovery bbf, final BeanManager beanManager) {
-        if (SERVLET_CONFIG_CLASS != null) {
+        if (WEB_CONFIG_CLASS != null) {
             interceptorAnnotatedType = beanManager.createAnnotatedType(ServletReferenceProducer.class);
             bbf.addAnnotatedType(interceptorAnnotatedType, ServletReferenceProducer.class.getName());
         }
@@ -92,83 +95,94 @@ class InjectExtension implements Extension {
     }
 
     private void afterDiscoveryObserver(@Observes final AfterBeanDiscovery abd, final BeanManager beanManager) {
-        if (SERVLET_CONFIG_CLASS != null) {
-            final Set<Annotation> qualifiers = new HashSet<>();
+        if (WEB_CONFIG_CLASS != null) {
+            abd.addBean(new ServletReferenceProducerBean(beanManager));
+        }
+    }
+
+    @Singleton
+    private final class ServletReferenceProducerBean implements Bean<ServletReferenceProducer>, PassivationCapable {
+        private final Set<Annotation> qualifiers = new HashSet<>();
+        private final Set<Type> types = new HashSet<>(2);
+        private final InjectionTarget<ServletReferenceProducer> interceptorTarget;
+        private final String id = UUID.randomUUID().toString();
+
+        private ServletReferenceProducerBean(BeanManager beanManager) {
             qualifiers.add(new CdiJerseyContextAnnotation());
             qualifiers.add(new CdiAnyAnnotation());
 
-            final Set<Type> types = new HashSet<>(2);
             types.add(ServletReferenceProducer.class);
             types.add(Object.class);
 
-            // we need the injection target so that CDI could instantiate the original interceptor for us
             final AnnotatedType<ServletReferenceProducer> interceptorType = interceptorAnnotatedType;
             final InjectionTargetFactory<ServletReferenceProducer> injectionTargetFactory =
                     beanManager.getInjectionTargetFactory(interceptorType);
-            final InjectionTarget<ServletReferenceProducer> interceptorTarget =
-                    injectionTargetFactory.createInjectionTarget(null);
 
-            abd.addBean(new Bean<ServletReferenceProducer>() {
-                @Override
-                public Set<Type> getTypes() {
-                    return types;
-                }
+            interceptorTarget = injectionTargetFactory.createInjectionTarget(null);
+        }
+        @Override
+        public Set<Type> getTypes() {
+            return types;
+        }
 
-                @Override
-                public Set<Annotation> getQualifiers() {
-                    return qualifiers;
-                }
+        @Override
+        public Set<Annotation> getQualifiers() {
+            return qualifiers;
+        }
 
-                @Override
-                public Class<? extends Annotation> getScope() {
-                    return RequestScoped.class;
-                }
+        @Override
+        public Class<? extends Annotation> getScope() {
+            return RequestScoped.class;
+        }
 
-                @Override
-                public String getName() {
-                    return ServletReferenceProducer.class.getName();
-                }
+        @Override
+        public String getName() {
+            return ServletReferenceProducer.class.getName();
+        }
 
-                @Override
-                public Set<Class<? extends Annotation>> getStereotypes() {
-                    return Collections.emptySet();
-                }
+        @Override
+        public Set<Class<? extends Annotation>> getStereotypes() {
+            return Collections.emptySet();
+        }
 
-                @Override
-                public boolean isAlternative() {
-                    return false;
-                }
+        @Override
+        public boolean isAlternative() {
+            return false;
+        }
 
-                @Override
-                public ServletReferenceProducer create(CreationalContext<ServletReferenceProducer> creationalContext) {
-                    final ServletReferenceProducer result = interceptorTarget.produce(creationalContext);
-                    interceptorTarget.inject(result, creationalContext);
-                    interceptorTarget.postConstruct(result);
-                    return result;
-                }
+        @Override
+        public ServletReferenceProducer create(CreationalContext<ServletReferenceProducer> creationalContext) {
+            final ServletReferenceProducer result = interceptorTarget.produce(creationalContext);
+            interceptorTarget.inject(result, creationalContext);
+            interceptorTarget.postConstruct(result);
+            return result;
+        }
 
-                @Override
-                public void destroy(ServletReferenceProducer servletProducer,
-                                    CreationalContext<ServletReferenceProducer> creationalContext) {
-                    interceptorTarget.preDestroy(servletProducer);
-                    interceptorTarget.dispose(servletProducer);
-                    creationalContext.release();
-                }
+        @Override
+        public void destroy(ServletReferenceProducer servletProducer,
+                            CreationalContext<ServletReferenceProducer> creationalContext) {
+            interceptorTarget.preDestroy(servletProducer);
+            interceptorTarget.dispose(servletProducer);
+            creationalContext.release();
+        }
 
-                @Override
-                public Class<?> getBeanClass() {
-                    return ServletReferenceProducer.class;
-                }
+        @Override
+        public Class<?> getBeanClass() {
+            return ServletReferenceProducer.class;
+        }
 
-                @Override
-                public Set<InjectionPoint> getInjectionPoints() {
-                    return interceptorTarget.getInjectionPoints();
-                }
+        @Override
+        public Set<InjectionPoint> getInjectionPoints() {
+            return interceptorTarget.getInjectionPoints();
+        }
 
-                public boolean isNullable() {
-                    return false;
-                }
-            });
+        public boolean isNullable() {
+            return false;
+        }
+
+        @Override
+        public String getId() {
+            return id;
         }
     }
 

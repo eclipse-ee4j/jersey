@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.ext.cdi1x.inject;
+package org.glassfish.jersey.ext.cdi1x.inject.internal;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * &#64;Inject
- * &#64;JerseyContext
+ * &#64;JerseyContext //internal
  * HttpServletRequest httpServletRequest;
  * </pre>
  * or as iterable of all {@code HttpServletRequest} beans

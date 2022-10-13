@@ -16,11 +16,12 @@
 
 package org.glassfish.jersey.ext.cdi1x.inject.internal;
 
-import org.glassfish.jersey.ext.cdi1x.inject.JerseyContext;
+import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
@@ -35,38 +36,49 @@ class ServletReferenceProducer {
     @Inject
     InjectionManager injectionManager;
 
+    @Inject
+    BeanManager beanManager;
+
     @Produces
     @JerseyContext
     @RequestScoped
     public HttpServletRequest produceHttpServletRequest() {
-        return injectionManager.getInstance(HttpServletRequest.class);
+        return injectionManager().getInstance(HttpServletRequest.class);
     }
 
     @Produces
     @JerseyContext
     @RequestScoped
     public HttpServletResponse produceHttpServletResponse() {
-        return injectionManager.getInstance(HttpServletResponse.class);
+        return injectionManager().getInstance(HttpServletResponse.class);
     }
 
     @Produces
     @JerseyContext
     @RequestScoped
     public ServletContext produceServletContext() {
-        return injectionManager.getInstance(ServletContext.class);
+        return injectionManager().getInstance(ServletContext.class);
     }
 
     @Produces
     @JerseyContext
     @RequestScoped
     public ServletConfig produceServletConfig() {
-        return injectionManager.getInstance(ServletConfig.class);
+        return injectionManager().getInstance(ServletConfig.class);
     }
 
     @Produces
     @JerseyContext
     @RequestScoped
     public FilterConfig produceFilterConfig() {
-        return injectionManager.getInstance(FilterConfig.class);
+        return injectionManager().getInstance(FilterConfig.class);
+    }
+
+    private InjectionManager injectionManager() {
+        InjectionManager injectionManager = beanManager.getExtension(CdiComponentProvider.class).getEffectiveInjectionManager();
+        if (injectionManager != null && !injectionManager.isShutdown()) {
+            return injectionManager;
+        }
+        return this.injectionManager;
     }
 }
