@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Providers;
 
 public class ParentInject implements ParentChecker {
@@ -106,9 +105,6 @@ public class ParentInject implements ParentChecker {
     @Context
     protected HttpServletRequest contextHttpServletRequest;
 
-    @Inject
-    protected HttpServletRequest injectHttpServletRequest;
-
     @Context
     protected WebConfig contextWebConfig;
 
@@ -118,20 +114,11 @@ public class ParentInject implements ParentChecker {
     @Context
     protected HttpServletResponse contextHttpServletResponse;
 
-    @Inject
-    protected HttpServletResponse injectHttpServletResponse;
-
     @Context
     protected ServletConfig contextServletConfig;
 
-    @Inject
-    protected ServletConfig injectServletConfig;
-
     @Context
     protected ServletContext contextServletContext;
-
-    @Inject
-    protected ServletContext injectServletContext;
 
     @Override
     public boolean checkInjected(StringBuilder stringBuilder) {
@@ -148,11 +135,7 @@ public class ParentInject implements ParentChecker {
         injected &= InjectionChecker.checkSecurityContext(injectSecurityContext, stringBuilder);
         injected &= InjectionChecker.checkUriInfo(injectUriInfo, stringBuilder);
 
-        injected &= InjectionChecker.checkHttpServletRequest(injectHttpServletRequest, stringBuilder);
-        injected &= InjectionChecker.checkHttpServletResponse(injectHttpServletResponse, stringBuilder);
         injected &= InjectionChecker.checkWebConfig(injectWebConfig, stringBuilder);
-        injected &= InjectionChecker.checkServletConfig(injectServletConfig, stringBuilder);
-        injected &= InjectionChecker.checkServletContext(injectServletContext, stringBuilder);
 
         return injected;
     }
@@ -182,7 +165,7 @@ public class ParentInject implements ParentChecker {
     }
 
     protected boolean checkApplication(Application application, StringBuilder stringBuilder) {
-        return InjectionChecker.checkApplication(contextApplication, stringBuilder);
+        return InjectionChecker.checkApplication(application, stringBuilder);
     }
 
     protected boolean checkConfiguration(Configuration configuration, StringBuilder stringBuilder) {
