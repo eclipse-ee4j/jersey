@@ -2148,7 +2148,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.3</asm.version>
+        <asm.version>9.4</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
