@@ -51,7 +51,6 @@ abstract class AbstractHk2InjectionManager implements InjectionManager {
     private static final ServiceLocatorFactory factory = ServiceLocatorFactory.getInstance();
 
     private ServiceLocator locator;
-    private Boolean isShutdown = Boolean.FALSE; // TODO replace by getServiceLocator().isShutDown() in 3.x
 
     /**
      * Private constructor.
@@ -183,12 +182,11 @@ abstract class AbstractHk2InjectionManager implements InjectionManager {
         } else {
             getServiceLocator().shutdown();
         }
-        isShutdown = Boolean.TRUE;
     }
 
     @Override
     public boolean isShutdown() {
-        return isShutdown;
+        return getServiceLocator().isShutdown();
     }
 
     @Override
