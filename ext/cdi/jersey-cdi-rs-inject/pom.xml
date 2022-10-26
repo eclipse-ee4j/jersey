@@ -45,6 +45,13 @@
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet5.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -66,6 +73,7 @@
                     <instructions>
                         <Import-Package>
                             ${cdi.osgi.version},
+                            jakarta.servlet.*;version="[2.4,5.0)";resolution:=optional,
                             *
                         </Import-Package>
                     </instructions>

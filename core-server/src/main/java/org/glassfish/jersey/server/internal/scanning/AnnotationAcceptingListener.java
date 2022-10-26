@@ -276,6 +276,12 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             return null;
         }
 
+        @Override
+        public ClassVisitor getDelegate() {
+            //do nothing
+            return null;
+        }
+
         private Class getClassForName(final String className) {
             try {
                 final OsgiRegistry osgiRegistry = ReflectionHelper.getOsgiRegistryInstance();
@@ -303,7 +309,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V19;
+        private static final int WARN_VERSION = Opcodes.V20;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;
