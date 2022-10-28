@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,12 +44,12 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Paul Sandoz
@@ -398,7 +398,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
+    @Disabled("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
             + " Allow repeatable write in jersey?")
     public void testAuthPost() {
         CredentialsProvider credentialsProvider = new org.apache.http.impl.client.BasicCredentialsProvider();
@@ -474,7 +474,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
+    @Disabled("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
             + " Allow repeatable write in jersey?")
     public void testAuthInteractivePost() {
         CredentialsProvider credentialsProvider = new org.apache.http.impl.client.BasicCredentialsProvider();

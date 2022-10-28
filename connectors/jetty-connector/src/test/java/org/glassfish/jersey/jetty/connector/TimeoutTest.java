@@ -16,12 +16,6 @@
 
 package org.glassfish.jersey.jetty.connector;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +40,13 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Martin Matula
@@ -200,7 +200,7 @@ public class TimeoutTest extends JerseyTest {
         int pauseMillis = 50;
 
         try {
-        target("test")
+            target("test")
                 .property(JettyClientProperties.TOTAL_TIMEOUT, 100L)
                 .property(CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER, "-1")
                 .path("stream")

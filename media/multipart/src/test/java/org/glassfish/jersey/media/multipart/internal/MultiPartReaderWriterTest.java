@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,11 +34,12 @@ import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.MultiPart;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for {@link org.glassfish.jersey.media.multipart.internal.MultiPartReaderClientSide} (in the client) and
@@ -49,7 +50,7 @@ public class MultiPartReaderWriterTest extends MultiPartJerseyTest {
     private static Path TMP_DIRECTORY;
     private static String ORIGINAL_TMP_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
@@ -59,7 +60,7 @@ public class MultiPartReaderWriterTest extends MultiPartJerseyTest {
         System.setProperty("java.io.tmpdir", TMP_DIRECTORY.toString());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
 
@@ -201,14 +202,15 @@ public class MultiPartReaderWriterTest extends MultiPartJerseyTest {
     /**
      * Test sending a completely empty MultiPart.
      */
-    @Test(expected = ProcessingException.class)
+    @Test
     public void testSix() {
-        target()
-                .path("multipart/six")
-                .request("text/plain")
-                .post(Entity.entity(new MultiPart(), "multipart/mixed"), String.class);
-
-        fail("Should have thrown an exception about zero body parts");
+        assertThrows(ProcessingException.class, () -> {
+            target()
+                    .path("multipart/six")
+                    .request("text/plain")
+                    .post(Entity.entity(new MultiPart(), "multipart/mixed"), String.class);
+            fail("Should have thrown an exception about zero body parts");
+        });
     }
 
     /**
@@ -312,14 +314,14 @@ public class MultiPartReaderWriterTest extends MultiPartJerseyTest {
         final MultiPart response = target.request("multipart/mixed")
                 .put(Entity.entity(entity, "multipart/mixed"), MultiPart.class);
         final String actual = response.getBodyParts().get(0).getEntityAs(String.class);
-        assertEquals("Length for multiplier " + multiplier, expected.length(), actual.length());
-        assertEquals("Content for multiplier " + multiplier, expected, actual);
+        assertEquals(expected.length(), actual.length(), "Length for multiplier " + multiplier);
+        assertEquals(expected, actual, "Content for multiplier " + multiplier);
         response.cleanup();
     }
 
     private void checkMediaType(final MediaType expected, final MediaType actual) {
-        assertEquals("Expected MediaType=" + expected, expected.getType(), actual.getType());
-        assertEquals("Expected MediaType=" + expected, expected.getSubtype(), actual.getSubtype());
+        assertEquals(expected.getType(), actual.getType(), "Expected MediaType=" + expected);
+        assertEquals(expected.getSubtype(), actual.getSubtype(), "Expected MediaType=" + expected);
     }
 
 }

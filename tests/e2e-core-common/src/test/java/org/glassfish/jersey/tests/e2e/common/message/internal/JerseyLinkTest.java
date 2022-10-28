@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,11 +26,11 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for LinkTest class.
@@ -55,12 +55,12 @@ public class JerseyLinkTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         RuntimeDelegate.setInstance(new TestRuntimeDelegate());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         RuntimeDelegate.setInstance(null);
     }

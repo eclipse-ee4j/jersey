@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,9 +37,9 @@ import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Petr Bouda
@@ -56,7 +56,7 @@ public class InboundEventReaderTest {
         HEADERS.put("Content-Type", Collections.singletonList("text/event-stream"));
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         injectionManager = Injections.createInjectionManager();
         injectionManager.register(new TestBinder());

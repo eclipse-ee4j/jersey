@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,65 +16,73 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test injection of request depending instances works as expected.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class RequestSensitiveTest extends CdiTest {
+public class RequestSensitiveTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected", "alpha", "App: alpha"},
-                {"app-field-injected", "gogol", "App: gogol"},
-                {"app-field-injected", "elcaro", "App: elcaro"},
-                {"app-ctor-injected", "alpha", "App: alpha"},
-                {"app-ctor-injected", "gogol", "App: gogol"},
-                {"app-ctor-injected", "elcaro", "App: elcaro"},
-                {"request-field-injected", "alpha", "Request: alpha"},
-                {"request-field-injected", "gogol", "Request: gogol"},
-                {"request-field-injected", "oracle", "Request: oracle"},
-                {"request-ctor-injected", "alpha", "Request: alpha"},
-                {"request-ctor-injected", "gogol", "Request: gogol"},
-                {"request-ctor-injected", "oracle", "Request: oracle"}
-        });
+    public static Collection<String[]> testData() {
+        return Arrays.asList(
+                new String[] {"app-field-injected", "alpha", "App: alpha"},
+                new String[] {"app-field-injected", "gogol", "App: gogol"},
+                new String[] {"app-field-injected", "elcaro", "App: elcaro"},
+                new String[] {"app-ctor-injected", "alpha", "App: alpha"},
+                new String[] {"app-ctor-injected", "gogol", "App: gogol"},
+                new String[] {"app-ctor-injected", "elcaro", "App: elcaro"},
+                new String[] {"request-field-injected", "alpha", "Request: alpha"},
+                new String[] {"request-field-injected", "gogol", "Request: gogol"},
+                new String[] {"request-field-injected", "oracle", "Request: oracle"},
+                new String[] {"request-ctor-injected", "alpha", "Request: alpha"},
+                new String[] {"request-ctor-injected", "gogol", "Request: gogol"},
+                new String[] {"request-ctor-injected", "oracle", "Request: oracle"}
+        );
     }
 
-    final String resource, straight, echoed;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param resource uri of the resource to be tested.
-     * @param straight request specific input.
-     * @param echoed   CDI injected service should produce this out of previous, straight, parameter.
-     */
-    public RequestSensitiveTest(final String resource, final String straight, final String echoed) {
-        this.resource = resource;
-        this.straight = straight;
-        this.echoed = echoed;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        for (String[] args : testData()) {
+            RequestSensitiveTemplateTest test = new RequestSensitiveTemplateTest(args[0], args[1], args[2]) {};
+            tests.add(TestHelper.toTestContainer(test,
+                    String.format("%s (%s)", RequestSensitiveTemplateTest.class.getSimpleName(), Arrays.toString(args))));
+        }
+        return tests;
     }
 
-    @Test
-    public void testCdiInjection() {
-        final String s = target().path(resource).queryParam("s", straight).request().get(String.class);
-        assertThat(s, equalTo(echoed));
-    }
+    public abstract static class RequestSensitiveTemplateTest extends CdiTest {
+        String resource;
+        String straight;
+        String echoed;
 
-    @Test
-    public void testHk2Injection() {
-        final String s = target().path(resource).path("path").path(straight).request().get(String.class);
-        assertThat(s, equalTo(String.format("%s/path/%s", resource, straight)));
+        public RequestSensitiveTemplateTest(String resource, String straight, String echoed) {
+            this.resource = resource;
+            this.straight = straight;
+            this.echoed = echoed;
+        }
+
+        @Test
+        public void testCdiInjection() {
+            final String s = target().path(resource).queryParam("s", straight).request().get(String.class);
+            assertThat(s, equalTo(echoed));
+        }
+
+        @Test
+        public void testHk2Injection() {
+            final String s = target().path(resource).path("path").path(straight).request().get(String.class);
+            assertThat(s, equalTo(String.format("%s/path/%s", resource, straight)));
+        }
     }
 }

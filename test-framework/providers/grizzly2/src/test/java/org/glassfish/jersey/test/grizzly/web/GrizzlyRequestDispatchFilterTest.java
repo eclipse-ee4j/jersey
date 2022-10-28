@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,8 +42,8 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 import org.glassfish.grizzly.servlet.HttpServletRequestImpl;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Reproducer for JERSEY-1893.
@@ -214,22 +214,22 @@ public class GrizzlyRequestDispatchFilterTest extends JerseyTest {
 
         // check that the regular filter gets involved
         s = target.path("direct").request().get(String.class);
-        Assert.assertEquals("[DIRECT]", s);
+        Assertions.assertEquals("[DIRECT]", s);
 
         // the regular filter should work for directly requested forward resource as well.
         s = target.path("forward").request().get(String.class);
-        Assert.assertEquals("[FORWARD]", s);
+        Assertions.assertEquals("[FORWARD]", s);
 
         // forward action should enforce forward filter to be invoked
         s = target.queryParam("action", "forward").request().get(String.class);
-        Assert.assertEquals(">>FORWARD", s);
+        Assertions.assertEquals(">>FORWARD", s);
 
         // direct call to the include resource
         s = target.path("included").request().get(String.class);
-        Assert.assertEquals("[INCLUDED]", s);
+        Assertions.assertEquals("[INCLUDED]", s);
 
         // include call should involve both regular and include filter
         s = target.path("included").queryParam("action", "include").request().get(String.class);
-        Assert.assertEquals("[SOMETHING INCLUDED]", s);
+        Assertions.assertEquals("[SOMETHING INCLUDED]", s);
     }
 }

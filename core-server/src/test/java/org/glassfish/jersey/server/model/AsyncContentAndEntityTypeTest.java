@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,9 +37,9 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test of fix for issues JERSEY-1088 and JERSEY-1089.
@@ -91,7 +91,7 @@ public class AsyncContentAndEntityTypeTest {
             response = responseFuture.get();
         }
 
-        assertTrue("Status: " + response.getStatus(), response.getStatus() < 300);
+        assertTrue(response.getStatus() < 300, "Status: " + response.getStatus());
         assertEquals("Foo", response.getEntity());
         assertEquals(foo, response.getMediaType());
 

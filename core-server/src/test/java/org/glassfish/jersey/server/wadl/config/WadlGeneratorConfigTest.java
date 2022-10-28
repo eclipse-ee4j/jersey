@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,8 @@ import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.sun.research.ws.wadl.Application;
 import com.sun.research.ws.wadl.Method;
@@ -64,8 +64,8 @@ public class WadlGeneratorConfigTest {
         TestInjectionManagerFactory.BootstrapResult result = TestInjectionManagerFactory.createInjectionManager();
         WadlGenerator wadlGenerator = config.createWadlGenerator(result.injectionManager);
 
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
-        Assert.assertEquals(MyWadlGenerator.class, ((MyWadlGenerator2) wadlGenerator).getDelegate().getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator.class, ((MyWadlGenerator2) wadlGenerator).getDelegate().getClass());
     }
 
     @Test
@@ -76,8 +76,8 @@ public class WadlGeneratorConfigTest {
                 .prop("foo", propValue)
                 .build();
         WadlGenerator wadlGenerator = config.createWadlGenerator(result.injectionManager);
-        Assert.assertEquals(MyWadlGenerator.class, wadlGenerator.getClass());
-        Assert.assertEquals(((MyWadlGenerator) wadlGenerator).getFoo(), propValue);
+        Assertions.assertEquals(MyWadlGenerator.class, wadlGenerator.getClass());
+        Assertions.assertEquals(((MyWadlGenerator) wadlGenerator).getFoo(), propValue);
 
         final String propValue2 = "baz";
         config = WadlGeneratorConfig.generator(MyWadlGenerator.class)
@@ -85,12 +85,12 @@ public class WadlGeneratorConfigTest {
                 .prop("bar", propValue2)
                 .build();
         wadlGenerator = config.createWadlGenerator(result.injectionManager);
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
         final MyWadlGenerator2 wadlGenerator2 = (MyWadlGenerator2) wadlGenerator;
-        Assert.assertEquals(wadlGenerator2.getBar(), propValue2);
+        Assertions.assertEquals(wadlGenerator2.getBar(), propValue2);
 
-        Assert.assertEquals(MyWadlGenerator.class, wadlGenerator2.getDelegate().getClass());
-        Assert.assertEquals(((MyWadlGenerator) wadlGenerator2.getDelegate()).getFoo(), propValue);
+        Assertions.assertEquals(MyWadlGenerator.class, wadlGenerator2.getDelegate().getClass());
+        Assertions.assertEquals(((MyWadlGenerator) wadlGenerator2.getDelegate()).getFoo(), propValue);
     }
 
     @Test
@@ -114,12 +114,12 @@ public class WadlGeneratorConfigTest {
         WadlGeneratorConfig config = new MyWadlGeneratorConfig();
         WadlGenerator wadlGenerator = config.createWadlGenerator(result.injectionManager);
 
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
         final MyWadlGenerator2 wadlGenerator2 = (MyWadlGenerator2) wadlGenerator;
-        Assert.assertEquals(wadlGenerator2.getBar(), propValue2);
+        Assertions.assertEquals(wadlGenerator2.getBar(), propValue2);
 
-        Assert.assertEquals(MyWadlGenerator.class, wadlGenerator2.getDelegate().getClass());
-        Assert.assertEquals(((MyWadlGenerator) wadlGenerator2.getDelegate()).getFoo(), propValue);
+        Assertions.assertEquals(MyWadlGenerator.class, wadlGenerator2.getDelegate().getClass());
+        Assertions.assertEquals(((MyWadlGenerator) wadlGenerator2.getDelegate()).getFoo(), propValue);
     }
 
     public abstract static class BaseWadlGenerator implements WadlGenerator {
@@ -271,11 +271,11 @@ public class WadlGeneratorConfigTest {
         TestInjectionManagerFactory.BootstrapResult result = TestInjectionManagerFactory.createInjectionManager();
         WadlGenerator wadlGenerator = config.createWadlGenerator(result.injectionManager);
 
-        Assert.assertEquals(MyWadlGenerator3.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator3.class, wadlGenerator.getClass());
 
         MyWadlGenerator3 g = (MyWadlGenerator3) wadlGenerator;
-        Assert.assertNotNull(g.foo);
-        Assert.assertEquals(g.foo.s, "string");
-        Assert.assertNotNull(g.bar);
+        Assertions.assertNotNull(g.foo);
+        Assertions.assertEquals(g.foo.s, "string");
+        Assertions.assertNotNull(g.bar);
     }
 }

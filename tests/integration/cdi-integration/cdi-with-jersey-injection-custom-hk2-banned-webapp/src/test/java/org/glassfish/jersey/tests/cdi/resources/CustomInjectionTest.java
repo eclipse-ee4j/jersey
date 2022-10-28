@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,68 +16,73 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test custom HK2 injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class CustomInjectionTest extends CdiTest {
+public class CustomInjectionTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected"},
-                {"app-ctor-injected"},
-                {"request-field-injected"},
-                {"request-ctor-injected"},
-        });
+    public static List<String> testData() {
+        return Arrays.asList("app-field-injected", "app-ctor-injected", "request-field-injected", "request-ctor-injected");
     }
 
-    final String resource;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param resource query parameter.
-     */
-    public CustomInjectionTest(final String resource) {
-        this.resource = resource;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        for (String resource : testData()) {
+            CustomInjectionTemplateTest test = new CustomInjectionTemplateTest(resource) {};
+            tests.add(TestHelper.toTestContainer(test,
+                    String.format("%s (%s)", CustomInjectionTemplateTest.class.getSimpleName(), resource)));
+        }
+        return tests;
     }
 
-    /**
-     * Check that for one no NPE happens on the server side,
-     * and the custom bound instance of {@link CdiInjectedType} gets CDI injected.
-     */
-    @Test
-    public void testCustomHk2Injection1() {
-        final WebTarget target = target().path(resource).path("custom");
-        final Response response = target.request().get();
-        assertThat(response.getStatus(), equalTo(200));
-        assertThat(response.readEntity(String.class), equalTo("CDI injected"));
-    }
+    public abstract static class CustomInjectionTemplateTest extends CdiTest {
+        String resource;
 
-    /**
-     * Check that for one no NPE happens on the server side,
-     * and the custom bound instance of {@link MyApplication.MyInjection} gets CDI injected.
-     */
-    @Test
-    public void testCustomHk2Injection2() {
-        final WebTarget target = target().path(resource).path("custom2");
-        final Response response = target.request().get();
-        assertThat(response.getStatus(), equalTo(200));
-        assertThat(response.readEntity(String.class), equalTo("CDI would love this"));
+        public CustomInjectionTemplateTest(String resource) {
+            this.resource = resource;
+        }
+
+        /**
+         * Check that for one no NPE happens on the server side,
+         * and the custom bound instance of {@link CdiInjectedType} gets CDI injected.
+         */
+        @Test
+        public void testCustomHk2Injection1() {
+            final WebTarget target = target().path(resource).path("custom");
+            final Response response = target.request().get();
+            assertThat(response.getStatus(), equalTo(200));
+            assertThat(response.readEntity(String.class), equalTo("CDI injected"));
+        }
+
+        /**
+         * Check that for one no NPE happens on the server side,
+         * and the custom bound instance of {@link MyApplication.MyInjection} gets CDI injected.
+         */
+        @Test
+        public void testCustomHk2Injection2(String resource) {
+            final WebTarget target = target().path(resource).path("custom2");
+            final Response response = target.request().get();
+            assertThat(response.getStatus(), equalTo(200));
+            assertThat(response.readEntity(String.class), equalTo("CDI would love this"));
+        }
     }
 }

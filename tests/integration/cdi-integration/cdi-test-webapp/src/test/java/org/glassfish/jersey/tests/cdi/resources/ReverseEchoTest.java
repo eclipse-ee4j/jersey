@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,49 +16,34 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for qualified injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class ReverseEchoTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha", "ahpla"},
-                {"gogol", "logog"},
-                {"elcaro", "oracle"}
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("alpha", "ahpla"),
+                Arguments.of("gogol", "logog"),
+                Arguments.of("elcaro", "oracle")
+        );
     }
 
-    final String in, out;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param in query parameter.
-     * @param out expected output.
-     */
-    public ReverseEchoTest(String in, String out) {
-        this.in = in;
-        this.out = out;
-    }
-
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String in, String out) {
         WebTarget reverseService = target().path("reverse").queryParam("s", in);
         String s = reverseService.request().get(String.class);
         assertThat(s, equalTo(out));

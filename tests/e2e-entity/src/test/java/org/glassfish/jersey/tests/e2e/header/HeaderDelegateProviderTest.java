@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import org.glassfish.jersey.message.internal.HeaderValueException;
 import org.glassfish.jersey.message.internal.InboundMessageContext;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,7 +48,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class HeaderDelegateProviderTest {
     static final String HEADER_NAME = "BEAN_HEADER";
@@ -148,7 +148,7 @@ public class HeaderDelegateProviderTest {
                 found++;
             }
         }
-        Assert.assertEquals(2, found);
+        Assertions.assertEquals(2, found);
     }
 
     @Test
@@ -203,7 +203,7 @@ public class HeaderDelegateProviderTest {
         };
         inboundMessageContext.header(HttpHeaders.CONTENT_TYPE, "");
         MediaType mediaType = inboundMessageContext.getMediaType();
-        Assert.assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, mediaType);
+        Assertions.assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, mediaType);
     }
 
     @Test
@@ -222,13 +222,13 @@ public class HeaderDelegateProviderTest {
         outboundMessageContext = new OutboundMessageContext(config.getConfiguration());
         outboundMessageContext.getHeaders().add(HttpHeaders.CONTENT_TYPE, "");
         MediaType mediaType = outboundMessageContext.getMediaType();
-        Assert.assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, mediaType);
+        Assertions.assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, mediaType);
     }
 
     private void testMap(MultivaluedMap<String, String> map, String expectedValue) {
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            Assert.assertEquals(HEADER_NAME, entry.getKey());
-            Assert.assertEquals(expectedValue, entry.getValue().iterator().next());
+            Assertions.assertEquals(HEADER_NAME, entry.getKey());
+            Assertions.assertEquals(expectedValue, entry.getValue().iterator().next());
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.json;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
 import javax.ws.rs.client.Entity;
@@ -64,7 +64,7 @@ public class JsonWithoutExceptionMapperTest extends JerseyTest {
     public void testZullBooleanValue() {
         String response = target().request(MediaType.APPLICATION_JSON)
                 .buildPost(Entity.entity("zull", MediaType.APPLICATION_JSON_TYPE)).invoke().readEntity(String.class);
-        Assert.assertFalse(response.contains("zull"));
-        Assert.assertTrue(response.equals(LowPriorityExceptionMapper.class.getSimpleName()));
+        Assertions.assertFalse(response.contains("zull"));
+        Assertions.assertTrue(response.equals(LowPriorityExceptionMapper.class.getSimpleName()));
     }
 }

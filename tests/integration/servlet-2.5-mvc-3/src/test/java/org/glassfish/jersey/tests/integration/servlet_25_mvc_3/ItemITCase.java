@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,14 +21,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_3.resource.Book;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ItemITCase extends TestSupport {
 
@@ -52,7 +52,7 @@ public class ItemITCase extends TestSupport {
     }
 
     @Test
-    @Ignore("Jetty 9 is ignoring the charset")
+    @Disabled("Jetty 9 is ignoring the charset")
     public void testResourceAsHtmlIso88592() throws Exception {
         final Response response = item1resource().path("iso").request().get();
         response.bufferEntity();
@@ -60,13 +60,13 @@ public class ItemITCase extends TestSupport {
         final String htmlUtf8 = response.readEntity(String.class);
 
         assertItemHtmlResponse(htmlUtf8);
-        assertFalse("Response shouldn't contain Ha\u0161ek but was: " + htmlUtf8, htmlUtf8.contains("Ha\u0161ek"));
+        assertFalse(htmlUtf8.contains("Ha\u0161ek"), "Response shouldn't contain Ha\u0161ek but was: " + htmlUtf8);
 
         final byte[] bytes = response.readEntity(byte[].class);
         final String htmlIso = new String(bytes, "ISO-8859-2");
 
         assertItemHtmlResponse(htmlIso);
-        assertFalse("Response shouldn't contain Ha\u0161ek but was: " + htmlIso, htmlIso.contains("Ha\u0161ek"));
+        assertFalse(htmlIso.contains("Ha\u0161ek"), "Response shouldn't contain Ha\u0161ek but was: " + htmlIso);
         assertResponseContains(htmlIso, new String("Ha\u0161ek".getBytes(Charset.forName("UTF-8")), "ISO-8859-2"));
     }
 
@@ -76,8 +76,8 @@ public class ItemITCase extends TestSupport {
         System.out.println("Item XML is: " + text);
 
         final Book response = item1resource().request("application/xml").get(Book.class);
-        assertNotNull("Should have returned an item!", response);
-        assertEquals("item title", "Svejk", response.getTitle());
+        assertNotNull(response, "Should have returned an item!");
+        assertEquals("Svejk", response.getTitle(), "item title");
     }
 
     @Test

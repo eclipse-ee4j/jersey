@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,8 +34,8 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import net.java.html.json.Model;
 
@@ -104,7 +104,7 @@ public class ModelEntityOnListTest extends AbstractTypeTester {
         GenericType<List<MyBean>> ge = new GenericType<List<MyBean>>() {};
         List<MyBean> teb = response.readEntity(ge);
 
-        assertEquals("one element in list: " + teb, 1, teb.size());
-        assertEquals("value", "hello", teb.get(0).getValue());
+        assertEquals(1, teb.size(), "one element in list: " + teb);
+        assertEquals("hello", teb.get(0).getValue(), "value");
     }
 }

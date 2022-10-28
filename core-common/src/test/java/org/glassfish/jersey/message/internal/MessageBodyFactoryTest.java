@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,10 +27,10 @@ import javax.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.message.WriterModel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import static org.glassfish.jersey.message.internal.MessageBodyFactory.WORKER_BY_TYPE_COMPARATOR;
 
@@ -46,9 +46,9 @@ public class MessageBodyFactoryTest {
         for (WriterModel a : list) {
             for (WriterModel b : list) {
                 assertEquals(
-                        "Comparator breaks contract: compare(a, b) != -compare(b, a)",
                         -Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(a, b)),
-                        Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(b, a)));
+                        Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(b, a)),
+                        "Comparator breaks contract: compare(a, b) != -compare(b, a)");
 
                 for (WriterModel c : list) {
                     if (WORKER_BY_TYPE_COMPARATOR.compare(a, b) > 0
@@ -59,9 +59,9 @@ public class MessageBodyFactoryTest {
 
                     if (WORKER_BY_TYPE_COMPARATOR.compare(a, b) == 0) {
                         assertEquals(
-                                "Comparator breaks contract: a == b but a < c and b > c or vice versa",
                                 Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(a, c)),
-                                Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(b, c)));
+                                Integer.signum(WORKER_BY_TYPE_COMPARATOR.compare(b, c)),
+                                "Comparator breaks contract: a == b but a < c and b > c or vice versa");
                     }
                 }
             }

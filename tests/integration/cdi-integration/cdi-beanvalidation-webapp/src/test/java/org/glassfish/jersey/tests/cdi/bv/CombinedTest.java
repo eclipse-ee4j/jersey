@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,12 +34,11 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import org.hamcrest.CoreMatchers;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test both Jersey apps running simultaneously within a single Grizzly HTTP server
@@ -69,7 +68,7 @@ public class CombinedTest {
     Client client;
     WebTarget cdiTarget, hk2Target;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         if (isDefaultTestContainerFactorySet && Hk2InjectionManagerFactory.isImmediateStrategy()) {
             initializeWeld();
@@ -78,12 +77,12 @@ public class CombinedTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void beforeIsImmediate() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
-    @After
+    @AfterEach
     public void after() {
         if (isDefaultTestContainerFactorySet && Hk2InjectionManagerFactory.isImmediateStrategy()) {
             cdiServer.shutdownNow();
@@ -94,69 +93,69 @@ public class CombinedTest {
 
     @Test
     public void testParamValidatedResourceNoParam() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testParamValidatedResourceNoParam(cdiTarget);
         BaseValidationTest._testParamValidatedResourceNoParam(hk2Target);
     }
 
     @Test
     public void testParamValidatedResourceParamProvided() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testParamValidatedResourceParamProvided(cdiTarget);
         BaseValidationTest._testParamValidatedResourceParamProvided(hk2Target);
     }
 
     @Test
     public void testFieldValidatedResourceNoParam() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testFieldValidatedResourceNoParam(cdiTarget);
         BaseValidationTest._testFieldValidatedResourceNoParam(hk2Target);
     }
 
     @Test
     public void testFieldValidatedResourceParamProvided() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testFieldValidatedResourceParamProvided(cdiTarget);
         BaseValidationTest._testFieldValidatedResourceParamProvided(hk2Target);
     }
 
     @Test
     public void testPropertyValidatedResourceNoParam() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testPropertyValidatedResourceNoParam(cdiTarget);
         BaseValidationTest._testPropertyValidatedResourceNoParam(hk2Target);
     }
 
     @Test
     public void testPropertyValidatedResourceParamProvided() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testPropertyValidatedResourceParamProvided(cdiTarget);
         BaseValidationTest._testPropertyValidatedResourceParamProvided(hk2Target);
     }
 
     @Test
     public void testOldFashionedResourceNoParam() {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testOldFashionedResourceNoParam(cdiTarget);
         BaseValidationTest._testOldFashionedResourceNoParam(hk2Target);
     }
 
     @Test
     public void testOldFashionedResourceParamProvided() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testOldFashionedResourceParamProvided(cdiTarget);
         BaseValidationTest._testOldFashionedResourceParamProvided(hk2Target);
     }
 
     @Test
     public void testNonJaxRsValidationFieldValidatedResourceNoParam() {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testNonJaxRsValidationFieldValidatedResourceNoParam(cdiTarget);
     }
 
     @Test
     public void testNonJaxRsValidationFieldValidatedResourceParamProvided() {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         BaseValidationTest._testNonJaxRsValidationFieldValidatedResourceParamProvided(cdiTarget);
     }
 

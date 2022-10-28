@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
@@ -30,10 +31,8 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.google.common.io.ByteStreams;
 
@@ -42,7 +41,6 @@ import com.google.common.io.ByteStreams;
  *
  * @author Petr Bouda
  */
-@RunWith(Parameterized.class)
 public abstract class AbstractConnectorServerTest {
 
     // Default truststore and keystore
@@ -55,24 +53,20 @@ public abstract class AbstractConnectorServerTest {
      *
      * @return test parameters.
      */
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {new HttpUrlConnectorProvider()},
-                {new GrizzlyConnectorProvider()},
-                {new JettyConnectorProvider()},
-                {new ApacheConnectorProvider()},
-                {new Apache5ConnectorProvider()}
-        });
+    public static Stream<ConnectorProvider> testData() {
+        return Stream.of(
+                new HttpUrlConnectorProvider(),
+                new GrizzlyConnectorProvider(),
+                new JettyConnectorProvider(),
+                new ApacheConnectorProvider(),
+                new Apache5ConnectorProvider()
+        );
     }
-
-    @Parameterized.Parameter(0)
-    public ConnectorProvider connectorProvider;
 
     private final Object serverGuard = new Object();
     private Server server = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         synchronized (serverGuard) {
             if (server != null) {
@@ -83,7 +77,7 @@ public abstract class AbstractConnectorServerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         synchronized (serverGuard) {
             if (server == null) {

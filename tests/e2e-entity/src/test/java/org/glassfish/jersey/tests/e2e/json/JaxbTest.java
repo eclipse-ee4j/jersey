@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,14 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.glassfish.grizzly.utils.ArrayUtils;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.AnotherArrayTestBean;
 import org.glassfish.jersey.tests.e2e.json.entity.AttrAndCharDataBean;
 import org.glassfish.jersey.tests.e2e.json.entity.ComplexBeanWithAttributes;
@@ -51,15 +53,13 @@ import org.glassfish.jersey.tests.e2e.json.entity.TreeModel;
 import org.glassfish.jersey.tests.e2e.json.entity.TwoListsWrapperBean;
 import org.glassfish.jersey.tests.e2e.json.entity.User;
 import org.glassfish.jersey.tests.e2e.json.entity.UserTable;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class JaxbTest extends AbstractJsonTest {
+public class JaxbTest {
 
     private static final Class<?>[] CLASSES = {
             AnotherArrayTestBean.class,
@@ -92,10 +92,6 @@ public class JaxbTest extends AbstractJsonTest {
             User.class,
             UserTable.class
     };
-
-    public JaxbTest(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
-    }
 
     /**
      * checks provided string to be a number
@@ -130,18 +126,21 @@ public class JaxbTest extends AbstractJsonTest {
         return  true;
     }
 
-    @Parameterized.Parameters()
-    public static Collection<JsonTestSetup[]> getJsonProviders() throws Exception {
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() throws Exception {
+        List<DynamicContainer> tests = new ArrayList<>();
         final Class<?>[]
                 filteredClasses = (isJavaVersionSupported()) ? CLASSES : ArrayUtils.remove(CLASSES, EncodedContentBean.class);
-        final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<>();
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
             for (final Class<?> entityClass : filteredClasses) {
-                jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(entityClass, jsonProvider)});
+                JsonTestSetup setupTest = new JsonTestSetup(entityClass, jsonProvider);
+                JsonTest jsonTest = new JsonTest(setupTest) {};
+                tests.add(TestHelper.toTestContainer(jsonTest,
+                    String.format("jaxbTest (%s, %s)", entityClass.getSimpleName(), jsonProvider.getClass().getSimpleName())));
             }
         }
 
-        return jsonTestSetups;
+        return tests;
     }
 }

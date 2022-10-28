@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,18 +43,18 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * Tests {@link org.glassfish.jersey.client.authentication.HttpAuthenticationFeature}.
  *
  * @author Miroslav Fuksa
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HttpAuthorizationTest extends JerseyTest {
 
     @NameBinding
@@ -253,6 +253,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBasicPreemptive() {
         Response response = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.basicBuilder().credentials("homer", "Homer").build())
@@ -261,6 +262,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBasicNonPreemptive() {
         Response response = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.basicBuilder().nonPreemptive().credentials("homer", "Homer").build())
@@ -269,6 +271,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBasicNonPreemptiveWithEmptyPassword() {
         final WebTarget target = target().path("resource")
                 .register(HttpAuthenticationFeature.basicBuilder().nonPreemptive().build());
@@ -279,7 +282,7 @@ public class HttpAuthorizationTest extends JerseyTest {
             response = target().path("resource").path("basic")
                     .register(HttpAuthenticationFeature.basicBuilder().nonPreemptive().build())
                     .request().get();
-            Assert.fail("should throw an exception as credentials are missing");
+            Assertions.fail("should throw an exception as credentials are missing");
         } catch (Exception e) {
             // ok
         }
@@ -292,6 +295,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testUniversalBasic() {
         Response response = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.universalBuilder().credentials("homer", "Homer").build())
@@ -304,6 +308,7 @@ public class HttpAuthorizationTest extends JerseyTest {
      * insensitve.
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testUniversalBasicCaseSensitivity() {
         Response response;
 
@@ -330,6 +335,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testUniversalBasicWrongPassword() {
         Response response = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.universalBuilder().credentials("homer", "FOO").build())
@@ -338,6 +344,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBasicWithDifferentCredentials() {
         final WebTarget target = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.basicBuilder().credentials("marge", "Marge").build());
@@ -346,6 +353,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBasicUniversalWithDifferentCredentials() {
         final WebTarget target = target().path("resource").path("basic")
                 .register(HttpAuthenticationFeature.universalBuilder().credentials("marge", "Marge").build());
@@ -378,6 +386,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigest() {
         Response response = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.digest("homer", "Homer"))
@@ -386,6 +395,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestWithPasswords() {
         final WebTarget target = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.digest("homer", "Homer"));
@@ -393,6 +403,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testUniversalDigestWithPasswords() {
         final WebTarget target = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.universalBuilder().credentials("homer", "Homer").build());
@@ -420,6 +431,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestWithEmptyDefaultPassword() {
         final WebTarget target = target().path("resource")
                 .register(HttpAuthenticationFeature.digest());
@@ -427,6 +439,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestUniversalWithEmptyDefaultPassword() {
         final WebTarget target = target().path("resource")
                 .register(HttpAuthenticationFeature.universalBuilder().build());
@@ -452,7 +465,7 @@ public class HttpAuthorizationTest extends JerseyTest {
                     .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME, "bart")
                     .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD, "Bart")
                     .get();
-            Assert.fail("should throw an exception as no credentials were supplied for digest auth");
+            Assertions.fail("should throw an exception as no credentials were supplied for digest auth");
         } catch (Exception e) {
             // ok
         }
@@ -464,15 +477,16 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     private void check(Response response, int status, String entity) {
-        Assert.assertEquals(status, response.getStatus());
-        Assert.assertEquals(entity, response.readEntity(String.class));
+        Assertions.assertEquals(status, response.getStatus());
+        Assertions.assertEquals(entity, response.readEntity(String.class));
     }
 
     private void check(Response response, int status) {
-        Assert.assertEquals(status, response.getStatus());
+        Assertions.assertEquals(status, response.getStatus());
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestUniversalSimple() {
         Response response = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.universalBuilder().credentials("homer", "Homer").build())
@@ -481,6 +495,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestUniversalSimple2() {
         Response response = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.universalBuilder().credentialsForDigest("homer", "Homer").build())
@@ -489,6 +504,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestUniversalSimple3() {
         Response response = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.universalBuilder()
@@ -500,6 +516,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDigestUniversalSimple4() {
         Response response = target().path("resource").path("digest")
                 .register(HttpAuthenticationFeature.universal("homer", "Homer"))
@@ -508,6 +525,7 @@ public class HttpAuthorizationTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testUniversal() {
         final WebTarget target = target().path("resource")
                 .register(HttpAuthenticationFeature.universal("homer", "Homer"));

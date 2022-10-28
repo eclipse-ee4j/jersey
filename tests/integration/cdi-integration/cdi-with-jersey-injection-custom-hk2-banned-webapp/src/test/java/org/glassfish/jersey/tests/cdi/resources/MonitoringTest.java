@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,60 +16,63 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for monitoring statistics injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class MonitoringTest extends CdiTest {
+public class MonitoringTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected"},
-                {"app-ctor-injected"},
-                {"request-field-injected"},
-                {"request-ctor-injected"}
-        });
+    public static Collection<String> testData() {
+        return Arrays.asList("app-field-injected", "app-ctor-injected", "request-field-injected", "request-ctor-injected");
     }
 
-    final String resource;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param resource uri of resource to be tested.
-     */
-    public MonitoringTest(final String resource) {
-        this.resource = resource;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        for (String resource : testData()) {
+            MonitoringTemplateTest test = new MonitoringTemplateTest(resource) {};
+            tests.add(TestHelper.toTestContainer(test,
+                    String.format("%s (%s)", MonitoringTemplateTest.class.getSimpleName(), resource)));
+        }
+        return tests;
     }
 
-    /**
-     * Make several requests and check the counter keeps incrementing.
-     *
-     * @throws Exception in case of unexpected test failure.
-     */
-    @Test
-    public void testRequestCount() throws Exception {
-        final WebTarget target = target().path(resource).path("requestCount");
-        Thread.sleep(1000); // this is to allow statistics on the server side to get updated
-        final int start = Integer.decode(target.request().get(String.class));
-        for (int i = 1; i < 4; i++) {
+    public abstract static class MonitoringTemplateTest extends CdiTest {
+        String resource;
+
+        public MonitoringTemplateTest(String resource) {
+            this.resource = resource;
+        }
+
+        /**
+         * Make several requests and check the counter keeps incrementing.
+         *
+         * @throws Exception in case of unexpected test failure.
+         */
+        @Test
+        public void testRequestCount() throws Exception {
+            final WebTarget target = target().path(resource).path("requestCount");
             Thread.sleep(1000); // this is to allow statistics on the server side to get updated
-            final int next = Integer.decode(target.request().get(String.class));
-            assertThat(String.format("testing %s", resource), next, equalTo(start + i));
+            final int start = Integer.decode(target.request().get(String.class));
+            for (int i = 1; i < 4; i++) {
+                Thread.sleep(1000); // this is to allow statistics on the server side to get updated
+                final int next = Integer.decode(target.request().get(String.class));
+                assertThat(String.format("testing %s", resource), next, equalTo(start + i));
+            }
         }
     }
 }

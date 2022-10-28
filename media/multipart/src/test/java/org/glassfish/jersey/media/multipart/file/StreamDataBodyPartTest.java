@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,13 +24,13 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.BodyPartTest;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for the {@link StreamDataBodyPart} class which checks the class' main
@@ -50,7 +50,7 @@ public class StreamDataBodyPartTest extends BodyPartTest {
     private StreamDataBodyPart cut;
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         cut = new StreamDataBodyPart();
@@ -60,7 +60,7 @@ public class StreamDataBodyPartTest extends BodyPartTest {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         bodyPart = null;
         super.tearDown();

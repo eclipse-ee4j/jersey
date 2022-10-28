@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,8 +39,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link BeanParam bean param injections}.
@@ -59,32 +59,32 @@ public class BeanParamTest extends JerseyTest {
     public void compareBeanWithStandardParams() {
         FullBean bean = getFullBean();
         Response response = doRequest(bean, "resource/compareBean");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("true", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("true", response.readEntity(String.class));
     }
 
     @Test
     public void testSingleFullBean() {
         FullBean bean = getFullBean();
         Response response = doRequest(bean, "resource/singleBean");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(bean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(bean.toString(), response.readEntity(String.class));
     }
 
     @Test
     public void testSingleConstructorInitializedBean() {
         FullBean bean = getFullBean();
         Response response = doRequest(bean, "resource/constructorBean");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(bean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(bean.toString(), response.readEntity(String.class));
     }
 
     @Test
     public void testTwoFullBeans() {
         FullBean bean = getFullBean();
         Response response = doRequest(bean, "resource/twoBeans");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(bean.toString() + " / " + bean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(bean.toString() + " / " + bean.toString(), response.readEntity(String.class));
     }
 
     @Test
@@ -92,8 +92,8 @@ public class BeanParamTest extends JerseyTest {
         FullBean fullBean = getFullBean();
         SmallBean smallBean = new SmallBean(fullBean);
         Response response = doRequest(fullBean, "resource/differentBeans");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(fullBean.toString() + " / " + smallBean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(fullBean.toString() + " / " + smallBean.toString(), response.readEntity(String.class));
     }
 
     @Test
@@ -103,10 +103,10 @@ public class BeanParamTest extends JerseyTest {
         fullBean.setMatrixParam("not-encoded/a?&&+./?");
 
         Response response = doRequest(fullBean, "resource/encodedBean");
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
 
         EncodedBean bean = new EncodedBean("not-encoded/a?&&+./?", "encoded%2Fa%3F%26%26%2B.%2F%3F");
-        Assert.assertEquals(bean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(bean.toString(), response.readEntity(String.class));
     }
 
     private Response doRequest(FullBean bean, String path) {
@@ -489,8 +489,8 @@ public class BeanParamTest extends JerseyTest {
     public void testResourceInitializedBySetter() {
         FullBean bean = getFullBean();
         final Response response = doRequest(bean, "resource-setter");
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(bean.toString(), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(bean.toString(), response.readEntity(String.class));
     }
 
 }

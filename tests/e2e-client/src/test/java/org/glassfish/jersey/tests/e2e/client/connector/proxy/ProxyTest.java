@@ -30,13 +30,11 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,19 +45,16 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Moved from jetty-connector
  * @author Marcelo Rubim
  */
-@RunWith(Parameterized.class)
 public class ProxyTest {
     private static final Charset CHARACTER_SET = Charset.forName("iso-8859-1");
     private static final String PROXY_URI = "http://127.0.0.1:9997";
@@ -67,94 +62,133 @@ public class ProxyTest {
     private static final String PROXY_PASSWORD = "proxy-password";
     private static final String NO_PASS = "no-pass";
 
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][]{
-                {ApacheConnectorProvider.class},
-                {Apache5ConnectorProvider.class},
-                {GrizzlyConnectorProvider.class},
-                {JettyConnectorProvider.class},
-                {NettyConnectorProvider.class},
-                {HttpUrlConnectorProvider.class},
-        });
-    }
-
-    private final ConnectorProvider connectorProvider;
-
-    public ProxyTest(Class<? extends ConnectorProvider> connectorProviderClass)
-            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        this.connectorProvider = connectorProviderClass.getConstructor().newInstance();
-    }
-
-    protected void configureClient(ClientConfig config) {
-        config.connectorProvider(connectorProvider);
-    }
-
-    @Test
-    public void testGetNoPass() {
-        client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
-        try (Response response = target("proxyTest").request().header(NO_PASS, 200).get()) {
-            assertEquals(200, response.getStatus());
+    public static class ApacheConnectorProviderProxyTest extends ProxyTemplateTest {
+        public ApacheConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(ApacheConnectorProvider.class);
         }
     }
 
-    @Test
-    public void testGet407() {
-        // Grizzly sends (String)null password and username
-        int expected = GrizzlyConnectorProvider.class.isInstance(connectorProvider) ? 400 : 407;
-        client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
-        try (Response response = target("proxyTest").request().get()) {
-            assertEquals(expected, response.getStatus());
-        } catch (ProcessingException pe) {
-            Assert.assertTrue(pe.getMessage().contains("407")); // netty
+    public static class Apache5ConnectorProviderProxyTest extends ProxyTemplateTest {
+        public Apache5ConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(Apache5ConnectorProvider.class);
         }
     }
 
-    @Test
-    public void testGetSuccess() {
-        client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
-        client().property(ClientProperties.PROXY_USERNAME, ProxyTest.PROXY_USERNAME);
-        client().property(ClientProperties.PROXY_PASSWORD, ProxyTest.PROXY_PASSWORD);
-        Response response = target("proxyTest").request().get();
-        response.bufferEntity();
-        assertEquals(response.readEntity(String.class), 200, response.getStatus());
-    }
-
-    private static Server server;
-    @BeforeClass
-    public static void startFakeProxy() {
-        server = new Server(9997);
-        server.setHandler(new ProxyHandler());
-        try {
-            server.start();
-        } catch (Exception e) {
-
+    public static class GrizzlyConnectorProviderProxyTest extends ProxyTemplateTest {
+        public GrizzlyConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(GrizzlyConnectorProvider.class);
         }
     }
 
-    @AfterClass
-    public static void tearDownProxy() {
-        try {
-            server.stop();
-        } catch (Exception e) {
-
+    public static class JettyConnectorProviderProxyTest extends ProxyTemplateTest {
+        public JettyConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(JettyConnectorProvider.class);
         }
     }
 
-    private static Client client;
-    @Before
-    public void beforeEach() {
-        ClientConfig config = new ClientConfig();
-        this.configureClient(config);
-        client = ClientBuilder.newClient(config);
+    public static class NettyConnectorProviderProxyTest extends ProxyTemplateTest {
+        public NettyConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(NettyConnectorProvider.class);
+        }
     }
 
-    private Client client() {
-        return client;
+    public static class HttpUrlConnectorProviderProxyTest extends ProxyTemplateTest {
+        public HttpUrlConnectorProviderProxyTest()
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+                IllegalAccessException {
+            super(HttpUrlConnectorProvider.class);
+        }
     }
 
-    private WebTarget target(String path) {
-        return client().target("http://localhost:9998").path(path);
+    public abstract static class ProxyTemplateTest {
+        private final ConnectorProvider connectorProvider;
+
+        public ProxyTemplateTest(Class<? extends ConnectorProvider> connectorProviderClass)
+                throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+            this.connectorProvider = connectorProviderClass.getConstructor().newInstance();
+        }
+
+
+        protected void configureClient(ClientConfig config) {
+            config.connectorProvider(connectorProvider);
+        }
+
+        @Test
+        public void testGetNoPass() {
+            client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
+            try (Response response = target("proxyTest").request().header(NO_PASS, 200).get()) {
+                assertEquals(200, response.getStatus());
+            }
+        }
+
+        @Test
+        public void testGet407() {
+            // Grizzly sends (String)null password and username
+            int expected = GrizzlyConnectorProvider.class.isInstance(connectorProvider) ? 400 : 407;
+            client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
+            try (Response response = target("proxyTest").request().get()) {
+                assertEquals(expected, response.getStatus());
+            } catch (ProcessingException pe) {
+                Assertions.assertTrue(pe.getMessage().contains("407")); // netty
+            }
+        }
+
+        @Test
+        public void testGetSuccess() {
+            client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
+            client().property(ClientProperties.PROXY_USERNAME, ProxyTest.PROXY_USERNAME);
+            client().property(ClientProperties.PROXY_PASSWORD, ProxyTest.PROXY_PASSWORD);
+            Response response = target("proxyTest").request().get();
+            response.bufferEntity();
+            assertEquals(200, response.getStatus(), response.readEntity(String.class));
+        }
+
+        private static Server server;
+        @BeforeAll
+        public static void startFakeProxy() {
+            server = new Server(9997);
+            server.setHandler(new ProxyHandler());
+            try {
+                server.start();
+            } catch (Exception e) {
+
+            }
+        }
+
+        @AfterAll
+        public static void tearDownProxy() {
+            try {
+                server.stop();
+            } catch (Exception e) {
+
+            }
+        }
+
+        private static Client client;
+        @BeforeEach
+        public void beforeEach() {
+            ClientConfig config = new ClientConfig();
+            this.configureClient(config);
+            client = ClientBuilder.newClient(config);
+        }
+
+        private Client client() {
+            return client;
+        }
+
+        private WebTarget target(String path) {
+            return client().target("http://localhost:9998").path(path);
+        }
     }
 
     static class ProxyHandler extends AbstractHandler {

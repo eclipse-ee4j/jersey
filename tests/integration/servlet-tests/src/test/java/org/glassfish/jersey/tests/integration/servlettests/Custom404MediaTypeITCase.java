@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,8 +25,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miroslav Fuksa
@@ -70,18 +70,18 @@ public class Custom404MediaTypeITCase extends JerseyTest {
                 .queryParam(SuppressContentLengthFilter.PARAMETER_NAME_SUPPRESS_CONTENT_LENGTH, suppressContentLength)
                 .request()
                 .get();
-        Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("application/something", response.getMediaType().toString());
-        Assert.assertEquals("not found custom entity", response.readEntity(String.class));
+        Assertions.assertEquals(404, response.getStatus());
+        Assertions.assertEquals("application/something", response.getMediaType().toString());
+        Assertions.assertEquals("not found custom entity", response.readEntity(String.class));
     }
 
     private void testCustom404WithEmtpyEntityStringImpl(final boolean suppressContentLength) {
         final Response response = target().path("custom404/resource404/content-type-empty-entity")
                 .queryParam(SuppressContentLengthFilter.PARAMETER_NAME_SUPPRESS_CONTENT_LENGTH, suppressContentLength)
                 .request().get();
-        Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("application/something", response.getMediaType().toString());
-        Assert.assertEquals("", response.readEntity(String.class));
+        Assertions.assertEquals(404, response.getStatus());
+        Assertions.assertEquals("application/something", response.getMediaType().toString());
+        Assertions.assertEquals("", response.readEntity(String.class));
     }
 
 }

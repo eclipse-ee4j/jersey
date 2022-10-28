@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,8 +35,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Libor Kamolis
@@ -97,9 +97,9 @@ public class ResponseLinksTest extends JerseyTest {
         WebTarget target = target("test");
         Response response = target.path("1").request(MediaType.APPLICATION_JSON).get();
         Set<Link> links = response.getLinks();
-        Assert.assertEquals(1, links.size());
-        Assert.assertNotNull(response.getLink("prev"));
-        Assert.assertTrue(response.getLink("prev").getUri().toString().endsWith("1?limit=50"));
+        Assertions.assertEquals(1, links.size());
+        Assertions.assertNotNull(response.getLink("prev"));
+        Assertions.assertTrue(response.getLink("prev").getUri().toString().endsWith("1?limit=50"));
     }
 
     /**
@@ -110,12 +110,12 @@ public class ResponseLinksTest extends JerseyTest {
         WebTarget target = target("test");
         Response response = target.path("2").request(MediaType.APPLICATION_JSON).get();
         Set<Link> links = response.getLinks();
-        Assert.assertEquals(2, links.size());
-        Assert.assertNotNull(response.getLink("prev"));
-        Assert.assertTrue(response.getLink("prev").getUri().toString().endsWith("2?limit=50"));
-        Assert.assertNotNull(response.getLink("next"));
-        Assert.assertEquals("next page", response.getLink("next").getTitle());
-        Assert.assertTrue(response.getLink("next").getUri().toString().endsWith("2?limit=50&action=next"));
+        Assertions.assertEquals(2, links.size());
+        Assertions.assertNotNull(response.getLink("prev"));
+        Assertions.assertTrue(response.getLink("prev").getUri().toString().endsWith("2?limit=50"));
+        Assertions.assertNotNull(response.getLink("next"));
+        Assertions.assertEquals("next page", response.getLink("next").getTitle());
+        Assertions.assertTrue(response.getLink("next").getUri().toString().endsWith("2?limit=50&action=next"));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,22 +33,20 @@ import javax.ws.rs.ext.Providers;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Paul Sandoz
  * @author Martin Matula
  */
-@RunWith(Enclosed.class)
 public class ContextResolverMediaTypeTest {
 
     @Produces("text/plain")
     @Provider
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class TextPlainContextResolver implements ContextResolver<String> {
 
         public String getContext(Class<?> objectType) {
@@ -58,7 +56,7 @@ public class ContextResolverMediaTypeTest {
 
     @Produces("text/*")
     @Provider
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class TextContextResolver implements ContextResolver<String> {
 
         public String getContext(Class<?> objectType) {
@@ -68,7 +66,7 @@ public class ContextResolverMediaTypeTest {
 
     @Produces("*/*")
     @Provider
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class WildcardContextResolver implements ContextResolver<String> {
 
         public String getContext(Class<?> objectType) {
@@ -78,7 +76,7 @@ public class ContextResolverMediaTypeTest {
 
     @Produces({"text/plain", "text/html"})
     @Provider
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class TextPlainHtmlContextResolver implements ContextResolver<String> {
 
         public String getContext(Class<?> objectType) {
@@ -89,7 +87,7 @@ public class ContextResolverMediaTypeTest {
 
     @Produces("text/html")
     @Provider
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class TextHtmlContextResolver implements ContextResolver<String> {
 
         public String getContext(Class<?> objectType) {
@@ -99,7 +97,7 @@ public class ContextResolverMediaTypeTest {
     }
 
     @Path("/")
-    @Ignore("This class is not a test class & must be ignored by the Enclosed test runner.")
+    @Disabled("This class is not a test class & must be ignored by the Enclosed test runner.")
     public static class ContextResource {
 
         @Context
@@ -125,6 +123,7 @@ public class ContextResolverMediaTypeTest {
         }
     }
 
+    @Nested
     public static class ProduceTest extends JerseyTest {
 
         @Override
@@ -151,6 +150,7 @@ public class ContextResolverMediaTypeTest {
         }
     }
 
+    @Nested
     public static class ProducesTest extends JerseyTest {
 
         @Override
@@ -177,6 +177,7 @@ public class ContextResolverMediaTypeTest {
         }
     }
 
+    @Nested
     public static class ProducesSeparateTest extends JerseyTest {
 
         @Override
@@ -204,6 +205,7 @@ public class ContextResolverMediaTypeTest {
         }
     }
 
+    @Nested
     public static class ProducesXXXTest extends JerseyTest {
 
         @Override

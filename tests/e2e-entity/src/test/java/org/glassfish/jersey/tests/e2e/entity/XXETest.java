@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,12 +39,12 @@ import org.glassfish.jersey.jaxb.FeatureSupplier;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests xml security.
@@ -170,7 +170,7 @@ public class XXETest extends JerseyTest {
         assertEquals("", s);
     }
 
-    @Ignore // TODO
+    @Disabled // TODO
     @Test
     public void testJAXBListSecure() {
         final String s = target().path("jaxb/list").request("application/xml").post(Entity.entity(getListDocument(),

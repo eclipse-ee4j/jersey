@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,9 +21,9 @@ import java.util.NoSuchElementException;
 
 import org.glassfish.jersey.server.ResourceFinder;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stepan Vavra
@@ -32,7 +32,7 @@ public class BundleSchemeScannerTest {
 
     private ResourceFinder bundleSchemeScanner;
 
-    @Before
+    @BeforeEach
     public void setUpBundleSchemeScanner() throws Exception {
         String canonicalName = getClass().getCanonicalName();
         URI uri = getClass().getClassLoader().getResource(canonicalName.replace('.', '/') + ".class").toURI();
@@ -41,15 +41,17 @@ public class BundleSchemeScannerTest {
 
     @Test
     public void hasNextReturnsTrue() throws Exception {
-        Assert.assertTrue(bundleSchemeScanner.hasNext());
+        Assertions.assertTrue(bundleSchemeScanner.hasNext());
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void multipleNextInvocationFails() throws Exception {
-        bundleSchemeScanner.next();
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            bundleSchemeScanner.next();
 
-        Assert.assertFalse(bundleSchemeScanner.hasNext());
-        bundleSchemeScanner.next(); // throw NoSuchElementException
+            Assertions.assertFalse(bundleSchemeScanner.hasNext());
+            bundleSchemeScanner.next(); // throw NoSuchElementException
+        });
     }
 
     /**
@@ -59,12 +61,14 @@ public class BundleSchemeScannerTest {
      *
      * @throws Exception
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void openFinishesTheIteration() throws Exception {
-        Assert.assertNotNull(bundleSchemeScanner.open());
-        Assert.assertFalse(bundleSchemeScanner.hasNext());
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            Assertions.assertNotNull(bundleSchemeScanner.open());
+            Assertions.assertFalse(bundleSchemeScanner.hasNext());
 
-        bundleSchemeScanner.next(); // throw NoSuchElementException
+            bundleSchemeScanner.next(); // throw NoSuchElementException
+        });
     }
 
 }

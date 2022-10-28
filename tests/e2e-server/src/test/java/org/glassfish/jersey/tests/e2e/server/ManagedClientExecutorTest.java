@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,8 +53,8 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test, that managed client uses the custom executor service.
@@ -257,13 +257,13 @@ public class ManagedClientExecutorTest extends JerseyTest {
     @Test
     public void testManagedClientExecutor() {
         final String response = target().path("test/executor").request().get(String.class);
-        Assert.assertEquals("foo-executor-service-0", response);
+        Assertions.assertEquals("foo-executor-service-0", response);
     }
 
     @Test
     public void testManagedClientScheduledExecutor() {
         final String response = target().path("test/scheduledExecutor").request().get(String.class);
-        Assert.assertEquals("bar-executor-service bar-executor-service", response);
+        Assertions.assertEquals("bar-executor-service bar-executor-service", response);
         System.out.println(response);
     }
 }

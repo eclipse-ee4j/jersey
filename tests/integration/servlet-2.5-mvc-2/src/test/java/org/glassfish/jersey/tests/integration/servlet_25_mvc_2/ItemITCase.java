@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,9 +21,9 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.servlet_25_mvc_2.resource.Book;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ItemITCase extends TestSupport {
 
@@ -48,8 +48,8 @@ public class ItemITCase extends TestSupport {
     }
 
     private void assertItemXmlResponse(final Book response) {
-        assertNotNull("Should have returned an item!", response);
-        assertEquals("item title", "Svejk", response.getTitle());
+        assertNotNull(response, "Should have returned an item!");
+        assertEquals("Svejk", response.getTitle(), "item title");
     }
 
     protected WebTarget item1resource() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.helidon.connector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,8 +38,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the parallel execution of multiple requests.
@@ -119,15 +119,15 @@ public class ParallelTest extends JerseyTest {
 
             startBarrier.await(1, TimeUnit.SECONDS);
 
-            assertTrue("Waiting for clients to finish has timed out.", doneLatch.await(5 * getAsyncTimeoutMultiplier(),
-                                                                                       TimeUnit.SECONDS));
+            assertTrue(doneLatch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS),
+                "Waiting for clients to finish has timed out.");
 
-            assertEquals("Resource counter", PARALLEL_CLIENTS, resourceCounter.get());
+            assertEquals(PARALLEL_CLIENTS, resourceCounter.get(), "Resource counter");
 
-            assertEquals("Received counter", PARALLEL_CLIENTS, receivedCounter.get());
+            assertEquals(PARALLEL_CLIENTS, receivedCounter.get(), "Received counter");
         } finally {
             executor.shutdownNow();
-            Assert.assertTrue("Executor termination", executor.awaitTermination(5, TimeUnit.SECONDS));
+            Assertions.assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS), "Executor termination");
         }
     }
 }

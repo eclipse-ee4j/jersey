@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,11 @@ package org.glassfish.jersey.server.spring.aspect4j;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Aspect4JTest extends JerseyTest {
 
@@ -31,7 +31,7 @@ public class Aspect4JTest extends JerseyTest {
 
     private TestAspect testAspect;
 
-    @Before
+    @BeforeEach
     public void before() {
         testAspect.reset();
     }

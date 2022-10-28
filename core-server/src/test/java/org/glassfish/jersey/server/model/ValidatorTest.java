@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,12 +68,12 @@ import org.glassfish.jersey.server.internal.inject.ParamExtractorConfigurator;
 import org.glassfish.jersey.server.internal.inject.ValueParamProviderConfigurator;
 import org.glassfish.jersey.server.model.internal.ModelErrors;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Taken from Jersey 1: jersey-server:com.sun.jersey.server.impl.modelapi.validation.ResourceModelValidatorTest.java
@@ -374,7 +374,7 @@ public class ValidatorTest {
     }
 
     @Test
-    @Ignore("Multiple entity validation not implemented yet.")
+    @Disabled("Multiple entity validation not implemented yet.")
     // TODO implement validation
     public void suspendedTestMoreThanOneEntity() throws Exception {
         LOGGER.info("An issue should be reported if a resource method takes more than one entity params:");
@@ -1013,7 +1013,7 @@ public class ValidatorTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     // TODO: need to add validation to detect ambiguous problems of ResourceSubPathRoot and two other resources.
     public void testTwoOverlappingSubResourceValidation() throws Exception {
         List<ResourceModelIssue> issues = testResourceValidation(ResourceRoot.class, ResourceSubPathRoot.class);
@@ -1022,7 +1022,7 @@ public class ValidatorTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testTwoOverlappingResourceValidation() throws Exception {
         List<ResourceModelIssue> issues = testResourceValidation(ResourceRoot.class, ResourceRootNotUnique.class);
         assertEquals(1, issues.size());

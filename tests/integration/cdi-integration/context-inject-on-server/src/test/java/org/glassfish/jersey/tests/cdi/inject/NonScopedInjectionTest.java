@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,11 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -36,11 +37,12 @@ import javax.ws.rs.core.Response;
 public class NonScopedInjectionTest extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -50,6 +52,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -81,7 +84,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonscope").path("injected").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
         }
     }
 
@@ -90,7 +93,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonscope").path("contexted").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
         }
     }
 
@@ -99,7 +102,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonexisting").path("contexted").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.EXPECTATION_FAILED.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.EXPECTATION_FAILED.getStatusCode(), r.getStatus());
         }
     }
 
@@ -108,7 +111,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonexisting").path("injected").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.EXPECTATION_FAILED.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.EXPECTATION_FAILED.getStatusCode(), r.getStatus());
         }
     }
 
@@ -117,7 +120,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonscope").path("iae").path("injected").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
         }
     }
 
@@ -126,7 +129,7 @@ public class NonScopedInjectionTest extends JerseyTest {
         try (Response r = target(InjectionChecker.ROOT).path("nonscope").path("iae").path("contexted").request()
                 .header(InjectionChecker.HEADER, InjectionChecker.HEADER).get()) {
             System.out.println(r.readEntity(String.class));
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
         }
     }
 }

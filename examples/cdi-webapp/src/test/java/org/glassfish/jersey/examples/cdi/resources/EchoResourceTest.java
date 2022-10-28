@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,48 +10,30 @@
 
 package org.glassfish.jersey.examples.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the echo resource.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class EchoResourceTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha"},
-                {"AAA"},
-                {"b"},
-                {"1"}
-        });
+    public static Stream<String> testData() {
+        return Stream.of("alpha", "AAA", "b", "1");
     }
 
-    final String a;
-
-    /**
-     * Create a new test case based on the above defined parameters.
-     *
-     * @param a path parameter value
-     */
-    public EchoResourceTest(String a) {
-        this.a = a;
-    }
-
-    @Test
-    public void testEchoResource() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testEchoResource(String a) {
 
         final WebTarget target = target().path("echo").path(a);
 
@@ -61,8 +43,9 @@ public class EchoResourceTest extends CdiTest {
         assertThat(s, containsString(a));
     }
 
-    @Test
-    public void testEchoParamCtorResource() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testEchoParamCtorResource(String a) {
 
         final WebTarget target = target().path("echoparamconstructor").path(a);
 

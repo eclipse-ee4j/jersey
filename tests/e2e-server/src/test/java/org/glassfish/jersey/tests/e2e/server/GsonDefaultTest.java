@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -31,7 +31,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.gson.JsonGsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GsonDefaultTest extends JerseyTest {
 

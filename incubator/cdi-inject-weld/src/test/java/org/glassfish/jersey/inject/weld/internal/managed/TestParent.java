@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,27 +20,27 @@ import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
 public class TestParent {
     protected static SeContainer container;
     protected InjectionManager injectionManager;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         SeContainerInitializer containerInitializer = SeContainerInitializer.newInstance();
         container = containerInitializer.initialize();
     }
 
-    @Before
+    @BeforeEach
     public void init() {
         injectionManager = Injections.createInjectionManager();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws Exception {
         container.close();
     }

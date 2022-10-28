@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,7 @@
 package org.glassfish.jersey.tests.integration.tracing;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -35,31 +34,19 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 'ALL' tracing support test that is running in external Jetty container.
  *
  * @author Libor Kramolis
  */
-@RunWith(Parameterized.class)
 public class AllTracingSupportITCase extends JerseyTest {
 
-    private final String resourcePath;
-
-    public AllTracingSupportITCase(String resourcePath) {
-        this.resourcePath = resourcePath;
-    }
-
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"/root"},
-                {"/async"},
-        });
+    public static Stream<String> testData() {
+        return Stream.of("/root", "/async");
     }
 
     //
@@ -88,16 +75,18 @@ public class AllTracingSupportITCase extends JerseyTest {
     // tests
     //
 
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("NAME").request();
         Response response = builder.get();
         assertXJerseyTrace(response, false);
         assertEquals(200, response.getStatus());
     }
 
-    @Test
-    public void testRuntimeException() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testRuntimeException(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("runtime-exception").request();
 
         Response response = builder.get();
@@ -105,8 +94,9 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals(500, response.getStatus());
     }
 
-    @Test
-    public void testMappedException() throws InterruptedException, IOException {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testMappedException(String resourcePath) throws InterruptedException, IOException {
         Invocation.Builder builder = resource(resourcePath).path("mapped-exception").request();
 
         Response response = builder.get();
@@ -114,8 +104,9 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals(501, response.getStatus());
     }
 
-    @Test
-    public void testGet405() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet405(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).request();
 
         Response response = builder.get();
@@ -123,8 +114,9 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals(405, response.getStatus());
     }
 
-    @Test
-    public void testPostSubResourceMethod() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testPostSubResourceMethod(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("sub-resource-method").request();
 
         Response response = builder.post(Entity.entity(new Message("POST"), Utils.APPLICATION_X_JERSEY_TEST));
@@ -132,8 +124,9 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals("TSOP", response.readEntity(Message.class).getText());
     }
 
-    @Test
-    public void testPostSubResourceLocator() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testPostSubResourceLocator(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("sub-resource-locator").request();
 
         Response response = builder.post(Entity.entity(new Message("POST"), Utils.APPLICATION_X_JERSEY_TEST));
@@ -141,16 +134,18 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals("TSOP", response.readEntity(Message.class).getText());
     }
 
-    @Test
-    public void testPostSubResourceLocatorNull() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testPostSubResourceLocatorNull(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("sub-resource-locator-null").request();
 
         Response response = builder.post(Entity.entity(new Message("POST"), Utils.APPLICATION_X_JERSEY_TEST));
         assertEquals(404, response.getStatus());
     }
 
-    @Test
-    public void testPostSubResourceLocatorSubResourceMethod() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testPostSubResourceLocatorSubResourceMethod(String resourcePath) {
         Invocation.Builder builder = resource(resourcePath).path("sub-resource-locator").path("sub-resource-method").request();
 
         Response response = builder.post(Entity.entity(new Message("POST"), Utils.APPLICATION_X_JERSEY_TEST));
@@ -158,27 +153,29 @@ public class AllTracingSupportITCase extends JerseyTest {
         assertEquals("TSOP", response.readEntity(Message.class).getText());
     }
 
-    @Test
-    public void testTraceInnerException() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testTraceInnerException(String resourcePath) {
         // PRE_MATCHING_REQUEST_FILTER
-        testTraceInnerExceptionImpl(Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_WEB_APPLICATION, 500, false);
-        testTraceInnerExceptionImpl(Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_PROCESSING, 500, true);
-        testTraceInnerExceptionImpl(Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_ANY, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_WEB_APPLICATION, 500, false);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_PROCESSING, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.PRE_MATCHING_REQUEST_FILTER_THROW_ANY, 500, true);
         // MESSAGE_BODY_WRITER
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_WRITER_THROW_WEB_APPLICATION, 500, false);
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_WRITER_THROW_PROCESSING, 500, true);
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_WRITER_THROW_ANY, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_WRITER_THROW_WEB_APPLICATION, 500, false);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_WRITER_THROW_PROCESSING, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_WRITER_THROW_ANY, 500, true);
         // MESSAGE_BODY_READER
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_READER_THROW_WEB_APPLICATION, 500, false);
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_READER_THROW_PROCESSING, 500, true);
-        testTraceInnerExceptionImpl(Utils.TestAction.MESSAGE_BODY_READER_THROW_ANY, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_READER_THROW_WEB_APPLICATION, 500, false);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_READER_THROW_PROCESSING, 500, true);
+        testTraceInnerExceptionImpl(resourcePath, Utils.TestAction.MESSAGE_BODY_READER_THROW_ANY, 500, true);
     }
 
     //
     // utils
     //
 
-    private void testTraceInnerExceptionImpl(Utils.TestAction testAction, int expectedStatus, boolean exceptionExpected) {
+    private void testTraceInnerExceptionImpl(String resourcePath, Utils.TestAction testAction,
+            int expectedStatus, boolean exceptionExpected) {
         Invocation.Builder builder = resource(resourcePath).request();
         builder.header(Utils.HEADER_TEST_ACTION, testAction);
 
@@ -201,11 +198,11 @@ public class AllTracingSupportITCase extends JerseyTest {
                 }
             }
         }
-        assertEquals("Just one FINISHED expected!", 1, finished);
+        assertEquals(1, finished, "Just one FINISHED expected!");
         if (exceptionExpected) {
-            assertEquals("EXCEPTION expected!", 1, exceptionMapping);
+            assertEquals(1, exceptionMapping, "EXCEPTION expected!");
         } else {
-            assertEquals("EXCEPTION NOT expected!", 0, exceptionMapping);
+            assertEquals(0, exceptionMapping, "EXCEPTION NOT expected!");
         }
     }
 

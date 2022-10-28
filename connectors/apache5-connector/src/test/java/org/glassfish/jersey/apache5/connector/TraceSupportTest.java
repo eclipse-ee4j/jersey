@@ -45,10 +45,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This very basic resource showcases support of a HTTP TRACE method,
@@ -129,9 +129,9 @@ public class TraceSupportTest extends JerseyTest {
 
         String responseEntity = response.readEntity(String.class);
         for (String expectedFragment : expectedFragmentsProgrammatic) {
-            assertTrue("Expected fragment '" + expectedFragment + "' not found in response:\n" + responseEntity,
-                    // toLowerCase - http header field names are case insensitive
-                    responseEntity.contains(expectedFragment));
+            assertTrue(// toLowerCase - http header field names are case insensitive
+                    responseEntity.contains(expectedFragment),
+                    "Expected fragment '" + expectedFragment + "' not found in response:\n" + responseEntity);
         }
     }
 
@@ -143,9 +143,9 @@ public class TraceSupportTest extends JerseyTest {
 
         String responseEntity = response.readEntity(String.class);
         for (String expectedFragment : expectedFragmentsAnnotated) {
-            assertTrue("Expected fragment '" + expectedFragment + "' not found in response:\n" + responseEntity,
-                    // toLowerCase - http header field names are case insensitive
-                    responseEntity.contains(expectedFragment));
+            assertTrue(// toLowerCase - http header field names are case insensitive
+                    responseEntity.contains(expectedFragment),
+                    "Expected fragment '" + expectedFragment + "' not found in response:\n" + responseEntity);
         }
     }
 

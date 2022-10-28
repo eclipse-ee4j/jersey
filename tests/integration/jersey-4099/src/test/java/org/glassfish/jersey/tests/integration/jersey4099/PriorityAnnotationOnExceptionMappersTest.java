@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Christian Kaltepoth. All rights reserved.
+ * Copyright (c) 2019, 2022 Christian Kaltepoth. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,15 +19,18 @@ package org.glassfish.jersey.tests.integration.jersey4099;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PriorityAnnotationOnExceptionMappersTest extends JerseyTest {
 
     private Weld weld;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         weld = new Weld();
@@ -35,6 +38,7 @@ public class PriorityAnnotationOnExceptionMappersTest extends JerseyTest {
         super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,14 @@
 
 package org.glassfish.jersey.tests.jmockit.server.internal.scanning;
 
-import mockit.Expectations;
 import mockit.Injectable;
+import mockit.MockUp;
 import mockit.Tested;
 import mockit.Verifications;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.internal.scanning.ResourceFinderException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,8 +37,9 @@ import java.util.List;
 import java.util.Vector;
 import java.util.jar.JarInputStream;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit tests for {@link PackageNamesScanner}.
@@ -52,7 +53,7 @@ public class PackageNamesScannerTest {
 
     private String jaxRsApiPath;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final String classPath = System.getProperty("java.class.path");
         final String[] entries = classPath.split(System.getProperty("path.separator"));
@@ -71,27 +72,27 @@ public class PackageNamesScannerTest {
 
     @Test
     public void testWsJarScheme() {
-        assertTrue("Expected at least one class to be found.",
-                new PackageNamesScanner(createTestClassLoader("wsjar", createTestURLStreamHandler("wsjar"), jaxRsApiPath),
-                        packages, false).hasNext());
+        assertTrue(new PackageNamesScanner(createTestClassLoader("wsjar", createTestURLStreamHandler("wsjar"), jaxRsApiPath),
+                packages, false).hasNext(), "Expected at least one class to be found.");
     }
 
     @Test
     public void testJarScheme() {
         // Uses default class loader
-        assertTrue("Expected at least one class to be found.", new PackageNamesScanner(packages, false).hasNext());
+        assertTrue(new PackageNamesScanner(packages, false).hasNext(), "Expected at least one class to be found.");
     }
 
     @Test
     public void testZipScheme() {
-        assertTrue("Expected at least one class to be found.",
-                new PackageNamesScanner(createTestClassLoader("zip", createTestURLStreamHandler("zip"), jaxRsApiPath),
-                        packages, false).hasNext());
+        assertTrue(new PackageNamesScanner(createTestClassLoader("zip", createTestURLStreamHandler("zip"), jaxRsApiPath),
+                        packages, false).hasNext(), "Expected at least one class to be found.");
     }
 
-    @Test(expected = ResourceFinderException.class)
+    @Test
     public void testInvalidScheme() {
-        new PackageNamesScanner(createTestClassLoader("bad", createTestURLStreamHandler("bad"), jaxRsApiPath), packages, false);
+        assertThrows(ResourceFinderException.class,
+                () -> new PackageNamesScanner(
+                        createTestClassLoader("bad", createTestURLStreamHandler("bad"), jaxRsApiPath), packages, false));
     }
 
 
@@ -110,7 +111,7 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new Expectations(InputStream.class){};
+        new MockUp(InputStream.class){};
 
         scanner1.reset();
 
@@ -134,7 +135,7 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new Expectations(JarInputStream.class){};
+        new MockUp(JarInputStream.class){};
 
         scanner1.close();
 
@@ -159,9 +160,8 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new Expectations(JarInputStream.class) {{
+        new MockUp(JarInputStream.class) {{
             stream.getNextJarEntry();
-            result = null;
             stream.close();
         }};
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miroslav Fuksa
@@ -57,14 +57,14 @@ public class QueryParamEncodingTest extends JerseyTest {
     @Test
     public void testEncoded() {
         final Response response = target().path("resource/encoded").queryParam("query", "%dummy23+a").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("true:%25dummy23%2Ba", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("true:%25dummy23%2Ba", response.readEntity(String.class));
     }
 
     @Test
     public void testDecoded() {
         final Response response = target().path("resource/decoded").queryParam("query", "%dummy23+a").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("true:%dummy23+a", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("true:%dummy23+a", response.readEntity(String.class));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,14 +47,13 @@ import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.hamcrest.core.AllOf;
 import org.hamcrest.core.StringContains;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Sanity test for {@link Invocation.Builder#rx()} methods.
@@ -75,16 +74,13 @@ public class ClientRxTest {
         CLIENT_WITH_EXECUTOR = ClientBuilder.newBuilder().executorService(EXECUTOR_SERVICE).build();
     }
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @After
+    @AfterEach
     public void afterTest() {
         CLIENT.close();
         CLIENT_WITH_EXECUTOR.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         EXECUTOR_SERVICE.shutdownNow();
     }
@@ -96,7 +92,7 @@ public class ClientRxTest {
 
         String s = target(CLIENT).request().rx(TestRxInvoker.class).get();
 
-        assertTrue("Provided RxInvoker was not used.", s.startsWith("rxTestInvoker"));
+        assertTrue(s.startsWith("rxTestInvoker"), "Provided RxInvoker was not used.");
     }
 
     @Test
@@ -104,8 +100,8 @@ public class ClientRxTest {
         // implicit register (not saying that the contract is RxInvokerProvider).
         String s = target(CLIENT_WITH_EXECUTOR).register(TestRxInvokerProvider.class).request().rx(TestRxInvoker.class).get();
 
-        assertTrue("Provided RxInvoker was not used.", s.startsWith("rxTestInvoker"));
-        assertTrue("Executor Service was not passed to RxInvoker", s.contains("rxTest-"));
+        assertTrue(s.startsWith("rxTestInvoker"), "Provided RxInvoker was not used.");
+        assertTrue(s.contains("rxTest-"), "Executor Service was not passed to RxInvoker");
     }
 
     @Test
@@ -119,7 +115,7 @@ public class ClientRxTest {
                 .request().rx().get().toCompletableFuture().get()) {
 
             assertEquals(200, r.getStatus());
-            assertTrue("Executor Service was not passed to RxInvoker", threadName.get().contains("rxTest-"));
+            assertTrue(threadName.get().contains("rxTest-"), "Executor Service was not passed to RxInvoker");
         }
     }
 
@@ -131,8 +127,8 @@ public class ClientRxTest {
                 .register(TestExecutorServiceProvider.class)
                 .request().rx(TestRxInvoker.class).get();
 
-        assertTrue("Provided RxInvoker was not used.", s.startsWith("rxTestInvoker"));
-        assertTrue("Executor Service was not passed to RxInvoker", s.contains("rxTest-"));
+        assertTrue(s.startsWith("rxTestInvoker"), "Provided RxInvoker was not used.");
+        assertTrue(s.contains("rxTest-"), "Executor Service was not passed to RxInvoker");
     }
 
     @Test
@@ -147,27 +143,33 @@ public class ClientRxTest {
                 .request().rx().get().toCompletableFuture().get()) {
 
             assertEquals(200, r.getStatus());
-            assertTrue("Executor Service was not passed to RxInvoker", threadName.get().contains("rxTest-"));
+            assertTrue(threadName.get().contains("rxTest-"), "Executor Service was not passed to RxInvoker");
         }
     }
 
     @Test
     public void testRxInvokerInvalid() {
-        Invocation.Builder request = target(CLIENT).request();
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage(AllOf.allOf(new StringContains("null"), new StringContains("clazz")));
-        request.rx(null).get();
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Invocation.Builder request = target(CLIENT).request();
+            request.rx(null).get();
+        });
+        String message = exception.getMessage();
+        Assertions.assertTrue(AllOf.allOf(new StringContains("null"), new StringContains("clazz")).matches(message));
     }
 
     @Test
     public void testRxInvokerNotRegistered() {
-        Invocation.Builder request = target(CLIENT).request();
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage(AllOf.allOf(
-                new StringContains("TestRxInvoker"),
-                new StringContains("not registered"),
-                new StringContains("RxInvokerProvider")));
-        request.rx(TestRxInvoker.class).get();
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+            Invocation.Builder request = target(CLIENT).request();
+            request.rx(TestRxInvoker.class).get();
+        });
+        String message = exception.getMessage();
+        Assertions.assertTrue(AllOf.allOf(
+                 new StringContains("TestRxInvoker"),
+                 new StringContains("not registered"),
+                 new StringContains("RxInvokerProvider"))
+             .matches(message));
+
     }
 
     @Test
@@ -258,8 +260,8 @@ public class ClientRxTest {
                 .register(PriorityTestExecutorServiceProvider.class)
                 .request().rx(PriorityTestRxInvoker.class).get();
 
-        assertTrue("Provided RxInvoker was not used.", s.startsWith("PriorityTestRxInvoker"));
-        assertTrue("@ClientAsyncExecutor Executor Service was not passed to RxInvoker", s.contains("TRUE"));
+        assertTrue(s.startsWith("PriorityTestRxInvoker"), "Provided RxInvoker was not used.");
+        assertTrue(s.contains("TRUE"), "@ClientAsyncExecutor Executor Service was not passed to RxInvoker");
     }
 
     @ClientAsyncExecutor

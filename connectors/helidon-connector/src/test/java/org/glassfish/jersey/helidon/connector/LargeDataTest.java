@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -106,9 +106,8 @@ public class LargeDataTest extends JerseyTest {
                 throw exception;
             }
 
-            Assert.assertEquals("Unexpected error: " + response.getStatus(),
-                    Status.Family.SUCCESSFUL,
-                    response.getStatusInfo().getFamily());
+            Assertions.assertEquals(Status.Family.SUCCESSFUL, response.getStatusInfo().getFamily(),
+                    "Unexpected error: " + response.getStatus());
         } finally {
             response.close();
         }

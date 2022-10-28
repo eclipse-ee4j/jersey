@@ -38,8 +38,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests chunk encoding and possibility of buffering the entity.
@@ -135,8 +135,8 @@ public class BufferingTest extends JerseyTest {
         WebTarget target = client.target(UriBuilder.fromUri(getBaseUri()).path("resource").build());
 
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(expected, response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(expected, response.readEntity(String.class));
     }
 
     private void testWithChunkEncodingWithPropertyDefinition(ClientConfig cc) {
@@ -168,13 +168,13 @@ public class BufferingTest extends JerseyTest {
 
         String entity = getVeryLongString();
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("chunked", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("chunked", response.readEntity(String.class));
 
         response = target.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
                 .request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
     }
 
     public String getVeryLongString() {

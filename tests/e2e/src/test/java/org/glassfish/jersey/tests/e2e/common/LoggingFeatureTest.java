@@ -55,9 +55,9 @@ import org.glassfish.jersey.test.TestProperties;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.core.SubstringMatcher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -72,8 +72,8 @@ import static org.hamcrest.Matchers.lessThan;
  *
  * @author Michal Gajdos
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
+@Suite
+@SelectClasses({
         LoggingFeatureTest.ClientTest.class,
         LoggingFeatureTest.ContainerTest.class,
         LoggingFeatureTest.ContainerAutodiscoveryTest.class,
@@ -739,7 +739,7 @@ public class LoggingFeatureTest {
     private static final class ContainsHeaderMatcher extends SubstringMatcher {
 
         ContainsHeaderMatcher(String headerName, String... headerValues) {
-            super(makeRegex(headerName, Arrays.asList(headerValues)));
+            super("matching regex", true, makeRegex(headerName, Arrays.asList(headerValues)));
         }
 
         private static String makeRegex(String headerName, List<String> headerValues) {
@@ -761,11 +761,6 @@ public class LoggingFeatureTest {
         @Override
         protected boolean evalSubstringOf(String string) {
             return string.matches(substring);
-        }
-
-        @Override
-        protected String relationship() {
-            return "matching regex";
         }
     }
 }

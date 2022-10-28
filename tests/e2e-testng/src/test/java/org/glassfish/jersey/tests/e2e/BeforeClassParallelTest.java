@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.glassfish.jersey.test.ContainerPerClassTestNgStrategy;
 import org.glassfish.jersey.test.spi.TestNgStrategy;
 
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,13 +36,13 @@ public class BeforeClassParallelTest extends AbstractParallelTest {
 
     private ConcurrentMap<Integer, String> values = new ConcurrentHashMap<>();
 
-    @BeforeClass
+    @BeforeAll
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
-    @AfterClass
+    @AfterAll
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

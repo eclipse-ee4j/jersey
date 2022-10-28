@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * JERSEY-2345 Reproducer.
@@ -119,11 +120,13 @@ public class AbortingFilterTest extends JerseyTest {
      * Try to abort response in a container request filter. With an invalid WWW-Authenticate header (according to HTTP specs)
      * and HttpUrlConnector, it throws an exception. This is an original scenario reported by jrh3k5 on java.net
      */
-    @Test(expected = ProcessingException.class)
+    @Test
     public void testAbortingFilter() {
-        final Response response = target().path("simple").request().get();
-        int status = response.getStatus();
-        logger.info("Response status is: " + status);
+        assertThrows(ProcessingException.class, () -> {
+            final Response response = target().path("simple").request().get();
+            int status = response.getStatus();
+            logger.info("Response status is: " + status);
+        });
     }
 
     /**
@@ -144,11 +147,13 @@ public class AbortingFilterTest extends JerseyTest {
     /**
      * This test shows, that the behaviour is not caused by the use of the filters, but by the response content itself.
      */
-    @Test(expected = ProcessingException.class)
+    @Test
     public void testDirectResponse() {
-        final Response response = target().path("simple/direct").request().get();
-        int status = response.getStatus();
-        logger.info("Response status is: " + status);
+        assertThrows(ProcessingException.class, () -> {
+            final Response response = target().path("simple/direct").request().get();
+            int status = response.getStatus();
+            logger.info("Response status is: " + status);
+        });
     }
 
     /**

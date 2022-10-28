@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,17 +10,15 @@
 
 package org.glassfish.jersey.examples.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Ensure CDI and JAX-RS scopes are well aligned, so that dynamic proxies
@@ -28,31 +26,15 @@ import static org.junit.Assert.assertThat;
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class ProxyScopeAlignmentTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"one"},
-                {"too"},
-                {"much"}
-        });
+    public static Stream<String> testData() {
+        return Stream.of("one", "too", "much");
     }
 
-    final String p;
-
-    /**
-     * Create a new test case based on the above defined parameters.
-     *
-     * @param p path parameter value
-     */
-    public ProxyScopeAlignmentTest(String p) {
-        this.p = p;
-    }
-
-    @Test
-    public void testUiInjection() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testUiInjection(String p) {
 
         final WebTarget app = target().path("ui-app").path(p);
         final WebTarget req = target().path("ui-req").path(p);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,9 @@ import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.test.memleak.common.AbstractMemoryLeakSimpleTest;
 import org.glassfish.jersey.test.memleak.common.MemoryLeakSucceedingTimeout;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Reproducer for JERSEY-2786.
@@ -39,8 +38,8 @@ public class EndlessShutdownHookLeakTest extends AbstractMemoryLeakSimpleTest {
 
     private static final Logger LOGGER = Logger.getLogger(EndlessShutdownHookLeakTest.class.getName());
 
-    @Rule
-    public Timeout globalTimeout = new MemoryLeakSucceedingTimeout();
+    @RegisterExtension
+    public InvocationInterceptor globalTimeout = new MemoryLeakSucceedingTimeout();
 
     final Client client = ClientBuilder.newClient();
     final WebTarget target = client.target("http://example.com");

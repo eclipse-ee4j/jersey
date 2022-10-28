@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,9 +33,9 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Miroslav Fuksa
@@ -288,10 +288,10 @@ public class ExtendedExceptionMapperTest extends JerseyTest {
     private void _test(String input, String expectedMapper) {
         final Response response = target("resource").request().post(Entity.entity(input, MediaType.TEXT_PLAIN_TYPE));
         if (expectedMapper == null) {
-            Assert.assertEquals(500, response.getStatus());
+            Assertions.assertEquals(500, response.getStatus());
         } else {
-            Assert.assertEquals(200, response.getStatus());
-            Assert.assertEquals(expectedMapper, response.readEntity(String.class));
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals(expectedMapper, response.readEntity(String.class));
         }
     }
 

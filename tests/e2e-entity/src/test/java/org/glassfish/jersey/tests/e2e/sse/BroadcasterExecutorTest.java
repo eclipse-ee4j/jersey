@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,8 +44,8 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Managed executor service injection and propagation into broadcaster test.
@@ -166,15 +166,15 @@ public class BroadcasterExecutorTest extends JerseyTest {
 
         target().path("sse/push/firstBroadcast").request().get(String.class);
         target().path("sse/push/secondBroadcast").request().get(String.class);
-        Assert.assertTrue("txLatch time-outed.", txLatch.await(2000, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(txLatch.await(2000, TimeUnit.MILLISECONDS), "txLatch time-outed.");
 
         target().path("sse/close").request().get();
-        Assert.assertTrue("closeLatch time-outed.", closeLatch.await(2000, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(closeLatch.await(2000, TimeUnit.MILLISECONDS), "closeLatch time-outed.");
 
-        Assert.assertTrue("send either not invoked at all or from wrong thread", sendThreadOk);
-        Assert.assertTrue("onComplete either not invoked at all or from wrong thread", onCompleteThreadOk);
+        Assertions.assertTrue(sendThreadOk, "send either not invoked at all or from wrong thread");
+        Assertions.assertTrue(onCompleteThreadOk, "onComplete either not invoked at all or from wrong thread");
 
-        Assert.assertTrue("Client event called from wrong thread ( " + onEventThreadName[0] + ")",
-               onEventThreadName[0].startsWith("custom-client-executor"));
+        Assertions.assertTrue(onEventThreadName[0].startsWith("custom-client-executor"),
+                "Client event called from wrong thread ( " + onEventThreadName[0] + ")");
     }
 }

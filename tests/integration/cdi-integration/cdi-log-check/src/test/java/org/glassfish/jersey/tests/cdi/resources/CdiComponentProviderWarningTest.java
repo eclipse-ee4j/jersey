@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,26 +22,28 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CdiComponentProviderWarningTest extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -53,6 +55,7 @@ public class CdiComponentProviderWarningTest extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -84,7 +87,7 @@ public class CdiComponentProviderWarningTest extends JerseyTest {
         for (final LogRecord logRecord : getLoggedRecords()) {
             if (logRecord.getLoggerName().equals("org.glassfish.jersey.internal.Errors")
                     && logRecord.getMessage().contains(searchInLog)) {
-                Assert.fail("Checking CDI bean is a JAX-RS resource should not cast warnings");
+                Assertions.fail("Checking CDI bean is a JAX-RS resource should not cast warnings");
             }
         }
     }

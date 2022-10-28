@@ -172,6 +172,29 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/ByteBufferInputStreamTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tests-with-additional-permissions</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>-Djava.security.policy=${project.build.directory}/test-classes/surefire-jdk17.policy</argLine>
+                            <includes>
+                                <include>**/ByteBufferInputStreamTest.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <!-- Execute test classes in parallel - 1 thread per CPU core. -->
                     <parallel>classesAndMethods</parallel>
@@ -206,8 +229,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

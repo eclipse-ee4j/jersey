@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,11 +28,11 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.uri.UriTemplate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Servlet 2.5 initialization test #01.
@@ -61,10 +61,9 @@ public class Servlet25Init1ITCase extends JerseyTest {
     @Test
     public void testHelloWorldAtWrongPath() {
         Response r = target().path("application_path/helloworld").request().get();
-        assertTrue(
+        assertTrue(r.getStatus() >= 400,
                 "Request to application_path/helloworld should have failed, but did not. That means two applications are "
-                        + "registered.",
-                r.getStatus() >= 400);
+                        + "registered.");
     }
 
     @Test
@@ -76,13 +75,13 @@ public class Servlet25Init1ITCase extends JerseyTest {
     @Test
     public void testUnreachableResource() {
         Response r = target().path("servlet_path/unreachable").request().get();
-        assertTrue("Managed to reach a resource that is not registered in the application.", r.getStatus() >= 400);
+        assertTrue(r.getStatus() >= 400, "Managed to reach a resource that is not registered in the application.");
     }
 
     @Test
     public void testUnreachableResourceAtWrongPath() {
         Response r = target().path("application_path/unreachable").request().get();
-        assertTrue("Managed to reach a resource that is not registered in the application.", r.getStatus() >= 400);
+        assertTrue(r.getStatus() >= 400, "Managed to reach a resource that is not registered in the application.");
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import org.glassfish.jersey.jdkhttp.JdkHttpHandlerContainer;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test class for {@link JdkHttpHandlerContainer}.
@@ -70,7 +70,7 @@ public class JdkHttpServerContainerTest extends JerseyTest {
     public void testJdkHttpServerContainerTarget() {
         final Response response = target().path("one").request().get();
 
-        assertEquals("Response status unexpected.", 200, response.getStatus());
-        assertEquals("Response entity unexpected.", "get", response.readEntity(String.class));
+        assertEquals(200, response.getStatus(), "Response status unexpected.");
+        assertEquals("get", response.readEntity(String.class), "Response entity unexpected.");
     }
 }

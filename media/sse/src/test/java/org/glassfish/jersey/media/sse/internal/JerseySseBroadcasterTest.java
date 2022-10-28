@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,8 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.SseEventSink;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link javax.ws.rs.sse.SseBroadcaster} test.
@@ -35,27 +33,26 @@ import org.junit.rules.ExpectedException;
  */
 public class JerseySseBroadcasterTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     private static final String TEST_EXCEPTION_MSG = "testException";
 
     @Test
     public void testOnErrorNull() {
-        try (JerseySseBroadcaster broadcaster = new JerseySseBroadcaster()) {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            try (JerseySseBroadcaster broadcaster = new JerseySseBroadcaster()) {
 
-            thrown.expect(IllegalArgumentException.class);
-            broadcaster.onError(null);
-        }
+                broadcaster.onError(null);
+            }
+        });
     }
 
     @Test
     public void testOnCloseNull() {
-        try (JerseySseBroadcaster jerseySseBroadcaster = new JerseySseBroadcaster()) {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            try (JerseySseBroadcaster jerseySseBroadcaster = new JerseySseBroadcaster()) {
 
-            thrown.expect(IllegalArgumentException.class);
-            jerseySseBroadcaster.onClose(null);
-        }
+                jerseySseBroadcaster.onClose(null);
+            }
+        });
     }
 
     @Test
@@ -89,7 +86,7 @@ public class JerseySseBroadcasterTest {
             });
 
             broadcaster.broadcast(new JerseySse().newEvent("ping"));
-            Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+            Assertions.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
         }
     }
 
@@ -124,7 +121,7 @@ public class JerseySseBroadcasterTest {
             });
 
             broadcaster.close();
-            Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+            Assertions.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
         }
     }
 

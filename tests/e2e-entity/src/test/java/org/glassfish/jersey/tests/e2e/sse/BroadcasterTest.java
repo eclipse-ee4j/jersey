@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.sse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -166,8 +166,8 @@ public class BroadcasterTest extends JerseyTest {
         eventSourceA.register(event -> resultsA2.add(event.readData()));
         eventSourceA.open();
 
-        Assert.assertTrue(resultsA1.waitBroadcast()); //some delay is required to process consumer and producer
-        Assert.assertTrue(resultsA2.waitBroadcast()); //some delay is required to process consumer and producer
+        Assertions.assertTrue(resultsA1.waitBroadcast()); //some delay is required to process consumer and producer
+        Assertions.assertTrue(resultsA2.waitBroadcast()); //some delay is required to process consumer and producer
 
         target().path("sse/push/firstBroadcast").request().get(String.class);
 
@@ -180,56 +180,56 @@ public class BroadcasterTest extends JerseyTest {
         eventSourceB.register(event -> resultsB2.add(event.readData()));
         eventSourceB.open();
 
-        Assert.assertTrue(resultsB1.waitBroadcast()); //some delay is required to process consumer and producer
-        Assert.assertTrue(resultsB2.waitBroadcast()); //some delay is required to process consumer and producer
+        Assertions.assertTrue(resultsB1.waitBroadcast()); //some delay is required to process consumer and producer
+        Assertions.assertTrue(resultsB2.waitBroadcast()); //some delay is required to process consumer and producer
 
         target().path("sse/push/secondBroadcast").request().get(String.class);
 
-        Assert.assertTrue("Waiting for resultsA1 to be complete failed.",
-                resultsA1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
-        Assert.assertTrue("Waiting for resultsA2 to be complete failed.",
-                resultsA2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(resultsA1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS),
+                "Waiting for resultsA1 to be complete failed.");
+        Assertions.assertTrue(resultsA2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS),
+                "Waiting for resultsA2 to be complete failed.");
 
-        Assert.assertTrue("Waiting for resultsB1 to be complete failed.",
-                resultsB1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
-        Assert.assertTrue("Waiting for resultsB2 to be complete failed.",
-                resultsB2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(resultsB1.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS),
+                "Waiting for resultsB1 to be complete failed.");
+        Assertions.assertTrue(resultsB2.getEventCountDown().await(ASYNC_WAIT_TIMEOUT, TimeUnit.MILLISECONDS),
+                "Waiting for resultsB2 to be complete failed.");
 
-        Assert.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(txLatch.await(5000, TimeUnit.MILLISECONDS));
 
         // Event1, Event2, Event3, firstBroadcast, secondBroadcast
-        Assert.assertEquals("resultsA1 does not contain 5 elements.", 5, resultsA1.size());
-        Assert.assertEquals("resultsA2 does not contain 5 elements.", 5, resultsA2.size());
-        Assert.assertTrue("resultsA1 does not contain expected data",
-                resultsA1.get(0).equals("Event1")
+        Assertions.assertEquals(5, resultsA1.size(), "resultsA1 does not contain 5 elements.");
+        Assertions.assertEquals(5, resultsA2.size(), "resultsA2 does not contain 5 elements.");
+        Assertions.assertTrue(resultsA1.get(0).equals("Event1")
                         && resultsA1.get(1).equals("Event2")
                         && resultsA1.get(2).equals("Event3")
                         && resultsA1.get(3).equals("firstBroadcast")
-                        && resultsA1.get(4).equals("secondBroadcast"));
+                        && resultsA1.get(4).equals("secondBroadcast"),
+                        "resultsA1 does not contain expected data");
 
-        Assert.assertTrue("resultsA2 does not contain expected data",
-                resultsA2.get(0).equals("Event1")
+        Assertions.assertTrue(resultsA2.get(0).equals("Event1")
                         && resultsA2.get(1).equals("Event2")
                         && resultsA2.get(2).equals("Event3")
                         && resultsA2.get(3).equals("firstBroadcast")
-                        && resultsA2.get(4).equals("secondBroadcast"));
+                        && resultsA2.get(4).equals("secondBroadcast"),
+                        "resultsA2 does not contain expected data");
 
-        Assert.assertEquals("resultsB1 does not contain 4 elements.", 4, resultsB1.size());
-        Assert.assertEquals("resultsB2 does not contain 4 elements.", 4, resultsB2.size());
-        Assert.assertTrue("resultsB1 does not contain expected data",
-                resultsB1.get(0).equals("Event1")
+        Assertions.assertEquals(4, resultsB1.size(), "resultsB1 does not contain 4 elements.");
+        Assertions.assertEquals(4, resultsB2.size(), "resultsB2 does not contain 4 elements.");
+        Assertions.assertTrue(resultsB1.get(0).equals("Event1")
                         && resultsB1.get(1).equals("Event2")
                         && resultsB1.get(2).equals("Event3")
-                        && resultsB1.get(3).equals("secondBroadcast"));
+                        && resultsB1.get(3).equals("secondBroadcast"),
+                        "resultsB1 does not contain expected data");
 
-        Assert.assertTrue("resultsB2 does not contain expected data",
-                resultsB2.get(0).equals("Event1")
+        Assertions.assertTrue(resultsB2.get(0).equals("Event1")
                         && resultsB2.get(1).equals("Event2")
                         && resultsB2.get(2).equals("Event3")
-                        && resultsB2.get(3).equals("secondBroadcast"));
+                        && resultsB2.get(3).equals("secondBroadcast"),
+                        "resultsB2 does not contain expected data");
         target().path("sse/close").request().get();
         closeLatch.await();
-        Assert.assertTrue("Sse instances injected into resource and constructor differ. Sse should have been injected"
-                + "as a singleton", isSingleton);
+        Assertions.assertTrue(isSingleton, "Sse instances injected into resource and constructor differ. "
+                + "Sse should have been injected as a singleton");
     }
 }

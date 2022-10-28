@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,17 +57,15 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.MultiPart;
 
-import org.junit.Test;
-import org.jvnet.mimepull.MIMEMessage;
-import org.jvnet.mimepull.MIMEParsingException;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for multipart {@code MessageBodyReader} and {@code MessageBodyWriter} as well as {@code FormDataMultiPart} and {@code
@@ -754,7 +752,7 @@ public class FormDataMultiPartReaderWriterTest extends MultiPartJerseyTest {
     }
 
     private void checkMediaType(final MediaType expected, final MediaType actual) {
-        assertEquals("Expected MediaType=" + expected, expected.getType(), actual.getType());
-        assertEquals("Expected MediaType=" + expected, expected.getSubtype(), actual.getSubtype());
+        assertEquals(expected.getType(), actual.getType(), "Expected MediaType=" + expected);
+        assertEquals(expected.getSubtype(), actual.getSubtype(), "Expected MediaType=" + expected);
     }
 }

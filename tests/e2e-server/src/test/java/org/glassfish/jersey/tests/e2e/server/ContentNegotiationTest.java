@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests determining media type of the response (especially that qs quality parameter is respected when
@@ -161,8 +161,8 @@ public class ContentNegotiationTest extends JerseyTest {
     public void testWithoutDefinedRequestedMediaType() {
         WebTarget target = target().path("/persons");
         Response response = target.request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
     }
 
     @Test
@@ -171,54 +171,54 @@ public class ContentNegotiationTest extends JerseyTest {
         //From Class javadoc: "The elements in the returned array are not sorted and are not in any particular order."
         //If there are same endpoints it is necessary to use quality parameter to ensure ordering.
         Response response = target().path("/persons/twoMethodsOneEndpoint").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
     }
 
     @Test
     public void testWithoutDefinedRequestedMediaTypeOrQualityModifiersJson() {
         Response response = target().path("/persons/shouldPickFirstJson").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
     }
 
     @Test
     public void testWithoutDefinedRequestedMediaTypeOrQualityModifiersXml() {
         Response response = target().path("/persons/shouldPickFirstXml").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
     }
 
     @Test
     public void test() {
         WebTarget target = target().path("/persons");
         Response response = target.request(MediaType.WILDCARD).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
     }
 
     @Test
     public void testInverted() {
         WebTarget target = target().path("/persons/inverted");
         Response response = target.request(MediaType.WILDCARD).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
     }
 
     @Test
     public void testInvertedWithJSONPreferredByClient() {
         WebTarget target = target().path("/persons/inverted");
         Response response = target.request("application/json;q=1.0", "application/xml;q=0.8").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
     }
 
     @Test
     public void testReordered() {
         WebTarget target = target().path("/persons/reordered");
         Response response = target.request(MediaType.WILDCARD).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
     }
 
     /**
@@ -230,7 +230,7 @@ public class ContentNegotiationTest extends JerseyTest {
         WebTarget target = target().path("/persons/reordered");
         Response response = target.request("application/json;q=0.8", "application/xml;q=0.9",
                 "unknown/hello;qs=1.0").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, response.getMediaType());
     }
 }

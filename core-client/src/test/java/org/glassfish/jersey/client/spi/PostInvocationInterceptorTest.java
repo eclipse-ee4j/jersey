@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.client.spi;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
@@ -44,7 +44,7 @@ public class PostInvocationInterceptorTest {
 
     private AtomicInteger counter;
 
-    @Before
+    @BeforeEach
     public void setup() {
         counter = new AtomicInteger();
     }
@@ -55,10 +55,10 @@ public class PostInvocationInterceptorTest {
                 .register(new CounterPostInvocationInterceptor((a, b) -> false, (a, b) -> true))
                 .build().target(URL).request();
         try (Response r = builder.get()) {
-            Assert.fail();
+            Assertions.fail();
         } catch (ProcessingException pe) {
-            Assert.assertEquals(1000, counter.get());
-            Assert.assertEquals(ConnectException.class, pe.getCause().getClass());
+            Assertions.assertEquals(1000, counter.get());
+            Assertions.assertEquals(ConnectException.class, pe.getCause().getClass());
         }
     }
 
@@ -74,8 +74,8 @@ public class PostInvocationInterceptorTest {
                         }))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-            Assert.assertEquals(1000, counter.get()); // counter.increment would be after ISE
+            Assertions.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(1000, counter.get()); // counter.increment would be after ISE
         }
     }
 
@@ -91,8 +91,8 @@ public class PostInvocationInterceptorTest {
                         }))
                 .build().target(URL).request();
         try (Response response = builder.async().get().get()) {
-            Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-            Assert.assertEquals(1000, counter.get()); // counter.increment would be after ISE
+            Assertions.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(1000, counter.get()); // counter.increment would be after ISE
         }
     }
 
@@ -111,8 +111,8 @@ public class PostInvocationInterceptorTest {
         try (Response response = builder.async()
                 .get(new TestInvocationCallback(a -> a.getStatus() == Response.Status.ACCEPTED.getStatusCode(), a -> false))
                 .get()) {
-            Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-            Assert.assertEquals(1000, counter.get()); // counter.increment would be after ISE
+            Assertions.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(1000, counter.get()); // counter.increment would be after ISE
         }
     }
 
@@ -147,8 +147,8 @@ public class PostInvocationInterceptorTest {
                         400)
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
-            Assert.assertEquals(2000, counter.get());
+            Assertions.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(2000, counter.get());
         }
     }
 
@@ -170,7 +170,7 @@ public class PostInvocationInterceptorTest {
                         200)
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.fail();
+            Assertions.fail();
         } catch (IllegalStateException pe) {
            // expected
         }
@@ -189,9 +189,9 @@ public class PostInvocationInterceptorTest {
                         (a, b) -> false))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
-            Assert.assertEquals(1, counter.get());
-            Assert.assertEquals("HELLO", response.readEntity(String.class));
+            Assertions.assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(1, counter.get());
+            Assertions.assertEquals("HELLO", response.readEntity(String.class));
         }
     }
 
@@ -216,8 +216,8 @@ public class PostInvocationInterceptorTest {
                         300)
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-            Assert.assertEquals(2000, counter.get());
+            Assertions.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(2000, counter.get());
         }
     }
 
@@ -227,11 +227,11 @@ public class PostInvocationInterceptorTest {
                 .register(new CounterPostInvocationInterceptor((a, b) -> false, (a, b) -> true))
                 .build().target(URL).request();
         try (Response r = builder.async().get(new TestInvocationCallback(a -> false, a -> true)).get()) {
-            Assert.fail();
+            Assertions.fail();
         } catch (ExecutionException ee) {
-            Assert.assertEquals(1000, counter.get());
-            Assert.assertEquals(ProcessingException.class, ee.getCause().getClass());
-            Assert.assertEquals(ConnectException.class, ee.getCause().getCause().getClass());
+            Assertions.assertEquals(1000, counter.get());
+            Assertions.assertEquals(ProcessingException.class, ee.getCause().getClass());
+            Assertions.assertEquals(ConnectException.class, ee.getCause().getCause().getClass());
         }
     }
 
@@ -248,7 +248,7 @@ public class PostInvocationInterceptorTest {
                         }))
                 .build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
         }
     }
 
@@ -259,8 +259,8 @@ public class PostInvocationInterceptorTest {
                 .register(new AbortRequestFilter()).build().target(URL).request();
         for (int i = 1; i != 10; i++) {
             try (Response response = builder.get()) {
-                Assert.assertEquals(200, response.getStatus());
-                Assert.assertEquals(i, counter.get());
+                Assertions.assertEquals(200, response.getStatus());
+                Assertions.assertEquals(i, counter.get());
             }
         }
     }
@@ -276,12 +276,12 @@ public class PostInvocationInterceptorTest {
 
         @Override
         public void completed(Response response) {
-            Assert.assertTrue(responsePredicate.test(response));
+            Assertions.assertTrue(responsePredicate.test(response));
         }
 
         @Override
         public void failed(Throwable throwable) {
-            Assert.assertTrue(throwablePredicate.test(throwable));
+            Assertions.assertTrue(throwablePredicate.test(throwable));
         }
     }
 
@@ -297,13 +297,13 @@ public class PostInvocationInterceptorTest {
 
         @Override
         public void afterRequest(ClientRequestContext requestContext, ClientResponseContext responseContext) {
-            Assert.assertTrue(afterRequest.test(requestContext, responseContext));
+            Assertions.assertTrue(afterRequest.test(requestContext, responseContext));
             counter.getAndIncrement();
         }
 
         @Override
         public void onException(ClientRequestContext requestContext, ExceptionContext exceptionContext) {
-            Assert.assertTrue(onException.test(requestContext, exceptionContext));
+            Assertions.assertTrue(onException.test(requestContext, exceptionContext));
             counter.addAndGet(1000);
         }
     }
@@ -317,7 +317,7 @@ public class PostInvocationInterceptorTest {
 
         @Override
         public void beforeRequest(ClientRequestContext requestContext) {
-            Assert.assertTrue(predicate.test(requestContext));
+            Assertions.assertTrue(predicate.test(requestContext));
             counter.incrementAndGet();
         }
     }

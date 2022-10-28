@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,12 +40,12 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Buffered response entity tests.
@@ -267,13 +267,13 @@ public class ResponseReadAndBufferEntityTest extends JerseyTest {
         // Read entity should not fail - we silently consume the underlying IOException from closed input stream.
         final String entity = response.readEntity(String.class, null);
         assertThat("Unexpected response.", entity.toString(), equalTo(Resource.ENTITY));
-        assertEquals("Close not invoked on underlying input stream.", 1, entityStream.getCloseCount());
+        assertEquals(1, entityStream.getCloseCount(), "Close not invoked on underlying input stream.");
 
         // Close should not fail and should be idempotent
         response.close();
         response.close();
         response.close();
-        assertEquals("Close invoked too many times on underlying input stream.", 1, entityStream.getCloseCount());
+        assertEquals(1, entityStream.getCloseCount(), "Close invoked too many times on underlying input stream.");
 
         try {
             // UC-1.1 : Try to read an unbuffered entity from a closed context
@@ -307,7 +307,7 @@ public class ResponseReadAndBufferEntityTest extends JerseyTest {
         entityStream.setCorruptClose(true);
 
         response.bufferEntity();
-        assertEquals("Close not invoked on underlying input stream.", 1, entityStream.getCloseCount());
+        assertEquals(1, entityStream.getCloseCount(), "Close not invoked on underlying input stream.");
 
         String entity;
         entity = response.readEntity(String.class, null);
@@ -319,7 +319,7 @@ public class ResponseReadAndBufferEntityTest extends JerseyTest {
         response.close();
         response.close();
         response.close();
-        assertEquals("Close invoked too many times on underlying input stream.", 1, entityStream.getCloseCount());
+        assertEquals(1, entityStream.getCloseCount(), "Close invoked too many times on underlying input stream.");
 
         try {
             // UC-2.1 : Try to read a buffered entity from a closed context

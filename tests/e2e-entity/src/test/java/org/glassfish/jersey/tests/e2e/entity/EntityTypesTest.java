@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -73,24 +73,25 @@ import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.glassfish.jersey.jettison.JettisonFeature;
 import org.glassfish.jersey.message.internal.FileProvider;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Paul Sandoz
  * @author Martin Matula
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EntityTypesTest extends AbstractTypeTester {
 
     @Path("InputStreamResource")
@@ -110,6 +111,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testInputStream() {
         final ByteArrayInputStream in = new ByteArrayInputStream("CONTENT".getBytes());
         _test(in, InputStreamResource.class);
@@ -120,6 +122,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testString() {
         _test("CONTENT", StringResource.class);
     }
@@ -133,6 +136,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testByteArrayRepresentation() {
         _test("CONTENT".getBytes(), ByteArrayResource.class);
     }
@@ -144,6 +148,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentation() {
         _test(new JaxbBean("CONTENT"), JaxbBeanResource.class, MediaType.APPLICATION_XML_TYPE);
     }
@@ -155,11 +160,13 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationMediaType() {
         _test(new JaxbBean("CONTENT"), JaxbBeanResourceMediaType.class, MediaType.valueOf("application/foo+xml"));
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationError() {
         final WebTarget target = target("JaxbBeanResource");
 
@@ -175,6 +182,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanTextRepresentation() {
         _test(new JaxbBean("CONTENT"), JaxbBeanTextResource.class, MediaType.TEXT_XML_TYPE);
     }
@@ -186,6 +194,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentation() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanResource.class, MediaType.APPLICATION_XML_TYPE);
     }
@@ -201,6 +210,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementListXMLRepresentation() {
         _testListOrArray(true, MediaType.APPLICATION_XML_TYPE);
     }
@@ -218,14 +228,15 @@ public class EntityTypesTest extends AbstractTypeTester {
                 .asList((JAXBElement<String>[]) in);
         final List<JAXBElement<String>> outList = isList ? ((List<JAXBElement<String>>) out) : Arrays
                 .asList((JAXBElement<String>[]) out);
-        assertEquals("Lengths differ", inList.size(), outList.size());
+        assertEquals(inList.size(), outList.size(), "Lengths differ");
         for (int i = 0; i < inList.size(); i++) {
-            assertEquals("Names of elements at index " + i + " differ", inList.get(i).getName(), outList.get(i).getName());
-            assertEquals("Values of elements at index " + i + " differ", inList.get(i).getValue(), outList.get(i).getValue());
+            assertEquals(inList.get(i).getName(), outList.get(i).getName(), "Names of elements at index " + i + " differ");
+            assertEquals(inList.get(i).getValue(), outList.get(i).getValue(), "Values of elements at index " + i + " differ");
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementListJSONRepresentation() {
         _testListOrArray(true, MediaType.APPLICATION_JSON_TYPE);
     }
@@ -244,11 +255,13 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementArrayXMLRepresentation() {
         _testListOrArray(false, MediaType.APPLICATION_XML_TYPE);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementArrayJSONRepresentation() {
         _testListOrArray(false, MediaType.APPLICATION_JSON_TYPE);
     }
@@ -260,11 +273,13 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationMediaType() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanResourceMediaType.class, MediaType.valueOf("application/foo+xml"));
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationError() {
         final WebTarget target = target("JAXBElementBeanResource");
 
@@ -280,6 +295,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanTextRepresentation() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanTextResource.class, MediaType.TEXT_XML_TYPE);
     }
@@ -291,6 +307,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationMediaTypeAtom() {
         _test(new JaxbBean("CONTENT"), JaxbBeanResourceAtom.class, MediaType.valueOf("application/atom+xml"));
     }
@@ -318,6 +335,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentation() {
         final WebTarget target = target("JAXBTypeResource");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -332,6 +350,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationMediaType() {
         final WebTarget target = target("JAXBTypeResourceMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -365,6 +384,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentation() {
         final WebTarget target = target("JAXBObjectResource");
         final Object in = new JaxbBean("CONTENT");
@@ -379,6 +399,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentationMediaType() {
         final WebTarget target = target("JAXBObjectResourceMediaType");
         final Object in = new JaxbBean("CONTENT");
@@ -387,6 +408,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentationError() {
         final WebTarget target = target("JAXBObjectResource");
 
@@ -400,6 +422,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFileRepresentation() throws IOException {
         final FileProvider fp = new FileProvider();
         final File in = fp.readFrom(File.class, File.class, null, null, null,
@@ -415,6 +438,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFormRepresentation() {
         final Form fp = new Form();
         fp.param("Email", "johndoe@gmail.com");
@@ -442,6 +466,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONObjectRepresentation() throws Exception {
         final JSONObject object = new JSONObject();
         object.put("userid", 1234)
@@ -459,6 +484,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONObjectRepresentationGeneralMediaTyp() throws Exception {
         final JSONObject object = new JSONObject();
         object.put("userid", 1234)
@@ -476,6 +502,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONArrayRepresentation() throws Exception {
         final JSONArray array = new JSONArray();
         array.put("One").put("Two").put("Three").put(1).put(2.0);
@@ -490,6 +517,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONArrayRepresentationGeneralMediaType() throws Exception {
         final JSONArray array = new JSONArray();
         array.put("One").put("Two").put("Three").put(1).put(2.0);
@@ -528,6 +556,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testReaderRepresentation() throws Exception {
         _test(new StringReader("CONTENT"), ReaderResource.class);
     }
@@ -539,6 +568,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testStreamSourceRepresentation() throws Exception {
         final StreamSource ss = new StreamSource(
                 new ByteArrayInputStream(XML_DOCUMENT.getBytes()));
@@ -550,6 +580,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testSAXSourceRepresentation() throws Exception {
         final StreamSource ss = new StreamSource(
                 new ByteArrayInputStream(XML_DOCUMENT.getBytes()));
@@ -561,6 +592,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDOMSourceRepresentation() throws Exception {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         final Document d = dbf.newDocumentBuilder().parse(new InputSource(new StringReader(XML_DOCUMENT)));
@@ -573,6 +605,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDocumentRepresentation() throws Exception {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         final Document d = dbf.newDocumentBuilder().parse(new InputSource(new StringReader(XML_DOCUMENT)));
@@ -591,6 +624,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFormMultivaluedMapRepresentation() {
         final MultivaluedMap<String, String> fp = new MultivaluedStringMap();
         fp.add("Email", "johndoe@gmail.com");
@@ -620,6 +654,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testStreamingOutputRepresentation() throws Exception {
         final WebTarget target = target("StreamingOutputResource");
         assertEquals("CONTENT", target.request().get(String.class));
@@ -632,6 +667,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanJSONRepresentation() {
         final WebTarget target = target("JAXBElementBeanJSONResource");
 
@@ -643,10 +679,10 @@ public class EntityTypesTest extends AbstractTypeTester {
         final byte[] inBytes = getRequestEntity();
         final byte[] outBytes = getEntityAsByteArray(rib);
 
-        assertEquals(new String(outBytes), inBytes.length, outBytes.length);
+        assertEquals(inBytes.length, outBytes.length, new String(outBytes));
         for (int i = 0; i < inBytes.length; i++) {
             if (inBytes[i] != outBytes[i]) {
-                assertEquals("Index: " + i, inBytes[i], outBytes[i]);
+                assertEquals(inBytes[i], outBytes[i], "Index: " + i);
             }
         }
     }
@@ -658,6 +694,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationJSON() {
         final WebTarget target = target("JaxbBeanResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -672,6 +709,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationJSONMediaType() {
         final WebTarget target = target("JaxbBeanResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -686,6 +724,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationJSON() {
         final WebTarget target = target("JAXBElementBeanResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -700,6 +739,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationJSONMediaType() {
         final WebTarget target = target("JAXBElementBeanResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -719,6 +759,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationJSON() {
         final WebTarget target = target("JAXBTypeResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -738,6 +779,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationJSONMediaType() {
         final WebTarget target = target("JAXBTypeResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -752,7 +794,8 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
-    @Ignore("TODO: unignore once fi support implemented (JERSEY-1190)")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("TODO: unignore once fi support implemented (JERSEY-1190)")
     // TODO: unignore once fi support implemented (JERSEY-1190)
     public void testJaxbBeanRepresentationFastInfoset() {
         final WebTarget target = target("JaxbBeanResourceFastInfoset");
@@ -768,7 +811,8 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
-    @Ignore("TODO: unignore once fi support implemented (JERSEY-1190)")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("TODO: unignore once fi support implemented (JERSEY-1190)")
     // TODO: unignore once fi support implemented (JERSEY-1190)
     public void testJAXBElementBeanRepresentationFastInfoset() {
         final WebTarget target = target("JAXBElementBeanResourceFastInfoset");
@@ -789,7 +833,8 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
-    @Ignore("TODO: unignore once fi support implemented (JERSEY-1190)")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("TODO: unignore once fi support implemented (JERSEY-1190)")
     // TODO: unignore once fi support implemented (JERSEY-1190)
     public void testJAXBTypeRepresentationFastInfoset() {
         final WebTarget target = target("JAXBTypeResourceFastInfoset");
@@ -883,6 +928,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBArrayRepresentation() {
         final WebTarget target = target("JAXBArrayResource");
 
@@ -907,6 +953,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationMediaType() {
         final WebTarget target = target("JAXBListResourceMediaType");
 
@@ -964,6 +1011,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationError() {
         final WebTarget target = target("JAXBListResource");
 
@@ -982,7 +1030,8 @@ public class EntityTypesTest extends AbstractTypeTester {
      * TODO, the unmarshalling fails.
      */
     @Test
-    @Ignore("TODO: unignore once fi support implemented (JERSEY-1190)")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("TODO: unignore once fi support implemented (JERSEY-1190)")
     // TODO: unignore once fi support implemented (JERSEY-1190)
     public void testJAXBListRepresentationFastInfoset() {
         final WebTarget target = target("JAXBListResourceFastInfoset");
@@ -1046,6 +1095,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSON() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -1118,6 +1168,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONMediaType() throws Exception {
         final WebTarget target = target("JAXBListResourceJSONMediaType");
 
@@ -1158,6 +1209,7 @@ public class EntityTypesTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testNoContentTypeJaxbEntity() throws IOException {
         assertThat(target("NoContentTypeJAXBResource").request("application/xml").post(Entity.xml(new JaxbBean("foo")))
                         .getMediaType(),

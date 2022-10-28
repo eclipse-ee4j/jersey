@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,18 +42,19 @@ import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Reproducer tests for JERSEY-2462 on Grizzly, Jetty and Simple HTTP server.
  *
  * @author Marek Potociar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({Jersey2462Test.GrizzlyContainerTest.class,
+@Suite
+@SelectClasses({Jersey2462Test.GrizzlyContainerTest.class,
         Jersey2462Test.JettyContainerTest.class,
         Jersey2462Test.SimpleContainerTest.class})
 public class Jersey2462Test {

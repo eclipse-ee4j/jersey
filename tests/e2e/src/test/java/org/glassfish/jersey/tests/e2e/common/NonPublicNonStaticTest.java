@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,13 +36,13 @@ import javax.ws.rs.ext.Provider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests deployment of non-standard or invalid resources and providers.
@@ -53,8 +53,8 @@ import static org.junit.Assert.assertTrue;
  * @author Paul Sandoz
  * @author Adam Lindenthal
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({NonPublicNonStaticTest.NonStaticResourceTest.class,
+@Suite
+@SelectClasses({NonPublicNonStaticTest.NonStaticResourceTest.class,
         NonPublicNonStaticTest.NonStaticResourceSubResourceTest.class,
         NonPublicNonStaticTest.NonPublicResourceTest.class,
         NonPublicNonStaticTest.NonPublicResourceSubResourceTest.class,
@@ -304,8 +304,8 @@ public class NonPublicNonStaticTest {
                     break;
                 }
             }
-            assertTrue("Expected log message (1st) was not found.", firstFound);
-            assertTrue("Expected log message (2nd) was not found.", secondFound);
+            assertTrue(firstFound, "Expected log message (1st) was not found.");
+            assertTrue(secondFound, "Expected log message (2nd) was not found.");
         }
     }
 
@@ -316,9 +316,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(NonStaticResourceSubResource.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testNonStaticResource() throws IOException {
-            target().path("/non-static-sub/class").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("/non-static-sub/class").request().get(String.class));
         }
     }
 
@@ -329,9 +330,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(NonPublicResource.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testNonPublicResource() throws IOException {
-            target().path("/non-public").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("/non-public").request().get(String.class));
         }
     }
 
@@ -342,9 +344,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(NonPublicResourceSubResource.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testNonPublicResource() throws IOException {
-            target().path("/non-public-sub/class").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("/non-public-sub/class").request().get(String.class));
         }
     }
 
@@ -366,7 +369,7 @@ public class NonPublicNonStaticTest {
                     break;
                 }
             }
-            assertTrue("Expected log record was not found.", found);
+            assertTrue(found, "Expected log record was not found.");
         }
     }
 
@@ -377,9 +380,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(AbstractResourceSubResource.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testAbstractResourceSubResource() throws IOException {
-            target().path("abstract-sub/class").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("abstract-sub/class").request().get(String.class));
         }
     }
 
@@ -406,8 +410,8 @@ public class NonPublicNonStaticTest {
                     break;
                 }
             }
-            assertTrue("Expected log message (1st) was not found.", firstFound);
-            assertTrue("Expected log message (2nd) was not found.", secondFound);
+            assertTrue(firstFound, "Expected log message (1st) was not found.");
+            assertTrue(secondFound, "Expected log message (2nd) was not found.");
         }
     }
 
@@ -418,9 +422,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(InterfaceResourceSubResource.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testInterfaceResourceSubResource() throws IOException {
-            target().path("interface-sub/class").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("interface-sub/class").request().get(String.class));
         }
     }
 
@@ -431,9 +436,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(NonPublicResourceWithConstructor.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testNonPublicResourceWithConstructor() throws IOException {
-            target().path("non-public-with-constructor").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("non-public-with-constructor").request().get(String.class));
         }
     }
 
@@ -444,9 +450,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(NonPublicResourceSubResourceWithConstructor.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testNonPublicResourceSubResourceWithConstructor() throws IOException {
-            target().path("non-public-sub-with-constructor/class").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("non-public-sub-with-constructor/class").request().get(String.class));
         }
     }
 
@@ -458,9 +465,10 @@ public class NonPublicNonStaticTest {
             return new ResourceConfig(PublicResourceWithPrivateConstructor.class);
         }
 
-        @Test(expected = InternalServerErrorException.class)
+        @Test
         public void testPublicResourceWithPrivateConstructor() throws IOException {
-            target().path("public-with-private-constructor").request().get(String.class);
+            assertThrows(InternalServerErrorException.class,
+                    () -> target().path("public-with-private-constructor").request().get(String.class));
         }
     }
 
@@ -482,7 +490,7 @@ public class NonPublicNonStaticTest {
                     break;
                 }
             }
-            assertTrue("Expected log record was not found.", found);
+            assertTrue(found, "Expected log record was not found.");
         }
     }
 
@@ -525,7 +533,7 @@ public class NonPublicNonStaticTest {
                     break;
                 }
             }
-            assertTrue("Expected log record was not found.", found);
+            assertTrue(found, "Expected log record was not found.");
         }
     }
 

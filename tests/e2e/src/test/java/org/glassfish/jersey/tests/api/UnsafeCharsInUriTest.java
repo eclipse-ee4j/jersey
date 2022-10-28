@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,9 +34,9 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertArrayEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * Test if URI can contain unsafe characters in the query parameter, e.g. for sending JSON
@@ -82,7 +82,7 @@ public class UnsafeCharsInUriTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("Incorrectly written test (doesn't deal with http encoding).")
+    @Disabled("Incorrectly written test (doesn't deal with http encoding).")
     public void testSecialCharsInQueryParam() throws IOException {
         // quotes are encoded by browsers, curly brackets are not, so the quotes will be sent pre-encoded
         // HTTP 1.0 is used for simplicity

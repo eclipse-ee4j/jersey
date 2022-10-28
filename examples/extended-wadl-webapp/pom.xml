@@ -90,6 +90,12 @@
             <artifactId>pax-exam-link-mvn</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- OSGi runtime - Felix -->
         <dependency>
