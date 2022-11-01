@@ -16,18 +16,15 @@
 
 package org.glassfish.jersey.tests.api;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
-
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import java.text.ParseException;
+import java.util.Date;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -219,6 +216,11 @@ public class ContentDispositionTest {
         } catch (ParseException ex) {
             fail(ex.getMessage());
         }
+    }
+
+    @Test
+    public void rfc6266WithoutLanguage() throws ParseException {
+        assertFileNameExt("myfile.txt", "myfile.txt", "utf-8''myfile.txt");
     }
 
     private void assertFileNameExt(
