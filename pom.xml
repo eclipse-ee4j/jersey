@@ -449,7 +449,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -2149,7 +2149,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.3</asm.version>
+        <asm.version>9.4</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <bouncycastle.version>1.68</bouncycastle.version>

@@ -290,6 +290,11 @@ public class CdiSeInjectionManager implements InjectionManager {
     }
 
     @Override
+    public boolean isShutdown() {
+        return !container.isRunning();
+    }
+
+    @Override
     public void inject(Object injectMe, String classAnalyzer) {
         // TODO: Used only in legacy CDI integration.
         throw new UnsupportedOperationException();

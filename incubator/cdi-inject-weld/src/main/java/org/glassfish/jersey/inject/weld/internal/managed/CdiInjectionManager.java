@@ -333,6 +333,11 @@ public class CdiInjectionManager implements InjectionManager {
 
     }
 
+    @Override
+    public boolean isShutdown() {
+        return false;
+    }
+
     protected Binder getBindings() {
         return bindings;
     }
