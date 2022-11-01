@@ -33,6 +33,7 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.message.MessageUtils;
@@ -55,6 +56,8 @@ final class DigestAuthenticator {
     private final HttpAuthenticationFilter.Credentials credentials;
 
     private final Map<URI, DigestScheme> digestCache;
+    private final boolean cacheOnly2xx;
+    private final boolean validateChallenge;
 
     /**
      * Create a new instance initialized from credentials and configuration.
@@ -62,9 +65,14 @@ final class DigestAuthenticator {
      * @param credentials Credentials. Can be {@code null} if there are no default credentials.
      * @param limit       Maximum number of URIs that should be kept in the cache containing URIs and their
      *                    {@link org.glassfish.jersey.client.authentication.DigestAuthenticator.DigestScheme}.
+     * @param cacheOnly2xx See {@link HttpAuthenticationFeature#HTTP_AUTHENTICATION_CACHE_ONLY_2XX}
+     * @param validateChallenge See {@link HttpAuthenticationFeature#HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE}
      */
-    DigestAuthenticator(final HttpAuthenticationFilter.Credentials credentials, final int limit) {
+    DigestAuthenticator(final HttpAuthenticationFilter.Credentials credentials, final int limit,
+                        final boolean cacheOnly2xx, final boolean validateChallenge) {
         this.credentials = credentials;
+        this.cacheOnly2xx = cacheOnly2xx;
+        this.validateChallenge = validateChallenge;
 
         digestCache = Collections.synchronizedMap(new LinkedHashMap<URI, DigestScheme>(limit) {
             // use id as it is an anonymous inner class with changed behaviour
@@ -135,12 +143,22 @@ final class DigestAuthenticator {
             final boolean success = HttpAuthenticationFilter.repeatRequest(request, response, createNextAuthToken(digestScheme,
                     request, cred));
             URI cacheKey = AuthenticationUtil.getCacheKey(request);
-            if (success) {
+            if (success && challengeShouldBeCached(digestScheme, response)) {
                 digestCache.put(cacheKey, digestScheme);
             } else {
                 digestCache.remove(cacheKey);
             }
             return success;
+        }
+        return true;
+    }
+
+    private boolean challengeShouldBeCached(final DigestScheme digestScheme, final ClientResponseContext response) {
+        if (cacheOnly2xx && response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
+            return false;
+        }
+        if (validateChallenge && (digestScheme.getNonce() == null || digestScheme.getRealm() == null)) {
+            return false;
         }
         return true;
     }

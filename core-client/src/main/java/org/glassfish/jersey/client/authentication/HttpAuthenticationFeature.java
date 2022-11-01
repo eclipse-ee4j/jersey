@@ -450,6 +450,36 @@ public class HttpAuthenticationFeature implements Feature {
      * </p>
      */
     public static final String HTTP_AUTHENTICATION_DIGEST_PASSWORD = "jersey.config.client.http.auth.digest.password";
+    /**
+     * Key of the property that can be set into the {@link javax.ws.rs.core.Configuration client configuration}
+     * using {@link javax.ws.rs.core.Configuration#setProperty(String, Object)}.
+     * <p>
+     * A value of {@code true} will cause the client to not cache authentication related information for
+     * any response outside the range [200,300).
+     * <p>
+     * The default behavior is to cache information for any non-401 status which can cause incorrect behavior
+     * with faulty servers that respond with other 4XX or 5XX statuses.
+     * <p>
+     * The value MUST be an instance of {@link java.lang.Boolean}.
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     */
+    public static final String HTTP_AUTHENTICATION_CACHE_ONLY_2XX = "jersey.config.client.http.auth.cacheOnly2xx";
+    /**
+     * Key of the property that can be set into the {@link javax.ws.rs.core.Configuration client configuration}
+     * using {@link javax.ws.rs.core.Configuration#setProperty(String, Object)}.
+     * <p>
+     * A value of {@code true} will cause the client to validate Digest authentication challenges and
+     * only cache challenges that appears valid.
+     * <p>
+     * The default behavior is to not validate.
+     * <p>
+     * The value MUST be an instance of {@link java.lang.Boolean}.
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     */
+    public static final String HTTP_AUTHENTICATION_DIGEST_VALIDATE_CHALLENGE =
+            "jersey.config.client.http.auth.digest.validateChallenge";
 
     /**
      * Create the builder of the http authentication feature working in basic authentication mode. The builder
