@@ -194,7 +194,7 @@ public class ClassReader {
     this.b = classFileBuffer;
     // Check the class' major_version. This field is after the magic and minor_version fields, which
     // use 4 and 2 bytes respectively.
-    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V19) {
+    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V20) {
       throw new IllegalArgumentException(
           "Unsupported class file major version " + readShort(classFileOffset + 6));
     }
@@ -375,7 +375,7 @@ public class ClassReader {
   }
 
   /**
-   * Returns the internal of name of the super class (see {@link Type#getInternalName()}). For
+   * Returns the internal name of the super class (see {@link Type#getInternalName()}). For
    * interfaces, the super class is {@link Object}.
    *
    * @return the internal name of the super class, or {@literal null} for {@link Object} class.
@@ -859,7 +859,7 @@ public class ClassReader {
       currentOffset += 2;
     }
 
-    // Read the  'provides_count' and 'provides' fields.
+    // Read the 'provides_count' and 'provides' fields.
     int providesCount = readUnsignedShort(currentOffset);
     currentOffset += 2;
     while (providesCount-- > 0) {
