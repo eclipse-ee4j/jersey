@@ -14,34 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.gf;
+package org.glassfish.jersey.tests.cdi.inject;
 
-import jakarta.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Response;
 
-@Path("/")
-public class GFTestResource {
-    @Inject
-    UriInfo uriInfo;
+@RequestScoped
+@Path("/servlet")
+public class ServletResource extends ServletInject {
 
     @GET
-    @Path("info")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String info() {
-        return uriInfo.getBaseUri().toASCIIString();
+    public Response checkApp() {
+        return super.check();
     }
 
     @GET
-    @Path("reload")
-    public String reload(@Context Application application) {
-        GFTestApp.Reloader reloader = (GFTestApp.Reloader) application.getProperties().get(GFTestApp.RELOADER);
-        reloader.container.reload();
-        return GFTestApp.RELOADER;
+    @Path("exception")
+    public Response throwE() {
+        throw new IllegalArgumentException();
     }
 }
