@@ -2168,7 +2168,7 @@
         <enforcer.version>3.1.0</enforcer.version>
 
         <!--versions, extracted here due to maven-enforcer-plugin -->
-        <slf4j.version>2.0.0-alpha6</slf4j.version>
+        <slf4j.version>2.0.0</slf4j.version>
         <commons.codec.version>1.15</commons.codec.version>
         <reactive.streams.version>1.0.3</reactive.streams.version>
         <com.uber.jaeger.version>0.27.0</com.uber.jaeger.version>
