@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,14 +74,27 @@ public abstract class AbstractTest {
         return apply(requestBuilder.build());
     }
 
+    protected void _test(int expectedStatus, String requestUri, String accept, Cookie... cookies)
+            throws ExecutionException, InterruptedException {
+        ContainerResponse response = getResponseContext(requestUri, accept, cookies);
+        assertEquals(expectedStatus, response.getStatus());
+        if (200 == expectedStatus) {
+            assertEquals("content", response.getEntity());
+        }
+    }
+
     protected void _test(String requestUri, String accept, Cookie... cookies)
             throws ExecutionException, InterruptedException {
-
-        assertEquals("content", getResponseContext(requestUri, accept, cookies).getEntity());
+        _test(200, requestUri, accept, cookies);
     }
 
     protected void _test(String requestUri, Cookie... cookies) throws ExecutionException, InterruptedException {
-        _test(requestUri, null, cookies);
+        _test(200, requestUri, null, cookies);
+    }
+
+    protected void _test(int expectedStatus, String requestUri, Cookie... cookies)
+            throws ExecutionException, InterruptedException {
+        _test(expectedStatus, requestUri, null, cookies);
     }
 
     public ApplicationHandler app() {

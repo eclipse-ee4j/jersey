@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,10 +68,6 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     public static class ResourceStringListEmpty {
         @GET
         public String doGetString(@QueryParam("args") List<BigDecimal> args) {
-            assertEquals(3, args.size());
-            assertEquals(null, args.get(0));
-            assertEquals(null, args.get(1));
-            assertEquals(null, args.get(2));
             return "content";
         }
     }
@@ -162,17 +158,24 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     }
 
     @Test
-    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
+    public void testStringConstructorListEmptyWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-
-        _test("/?args&args&args", "application/stringlist");
+        // When parameters are wrong, status is not 200
+        _test(404, "/?args&args&args", "application/stringlist");
     }
 
     @Test
     public void testStringConstructorNullGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringNull.class);
+        // When parameters are wrong, status is not 200
+        _test(404, "/?arg1=&arg2=", null);
+    }
 
-        _test("/?arg1=&arg2=");
+    @Test
+    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
+        initiateWebApplication(ResourceStringListEmpty.class);
+        // When no parameters, the list is empty
+        _test("/", "application/stringlist");
     }
 
     @Test
@@ -201,6 +204,13 @@ public class QueryParamStringConstructorTest extends AbstractTest {
         initiateWebApplication(ResourceStringListEmptyDefault.class);
 
         _test("/");
+    }
+
+    @Test
+    public void testStringConstructorListEmpty() throws ExecutionException, InterruptedException {
+        initiateWebApplication(ResourceStringListEmptyDefault.class);
+        // When parameters are wrong, status is not 200
+        _test(404, "/?args=");
     }
 
     @Test

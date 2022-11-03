@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,10 +72,6 @@ public class HeaderParamStringConstructorTest extends AbstractTest {
 
         @GET
         public String doGetString(@HeaderParam("args") List<BigDecimal> args) {
-            assertEquals(3, args.size());
-            assertEquals(null, args.get(0));
-            assertEquals(null, args.get(1));
-            assertEquals(null, args.get(2));
             return "content";
         }
     }
@@ -173,17 +169,25 @@ public class HeaderParamStringConstructorTest extends AbstractTest {
     }
 
     @Test
-    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
+    public void testStringConstructorListWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-
-        assertEquals("content", apply(
+        // When parameters are wrong, status is not 200
+        // FIXME Why 400 instead of 404 like in other cases?. Investigate it.
+        assertEquals(400, apply(
                 RequestContextBuilder.from("/", "GET")
                         .accept("application/stringlist")
                         .header("args", "")
                         .header("args", "")
                         .header("args", "")
                         .build()
-        ).getEntity());
+        ).getStatus());
+    }
+
+    @Test
+    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
+        initiateWebApplication(ResourceStringListEmpty.class);
+        // When no parameters, the list is empty
+        _test("/");
     }
 
     @Test
