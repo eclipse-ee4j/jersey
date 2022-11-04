@@ -236,7 +236,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.1.0</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -248,6 +248,7 @@
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                         </execution>
@@ -2192,7 +2193,7 @@
         <rxjava2.version>2.0.4</rxjava2.version>
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
-        <slf4j.version>1.7.21</slf4j.version>
+        <slf4j.version>2.0.3</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
         <spring5.version>5.3.18</spring5.version>
         <surefire.version>3.0.0-M5</surefire.version>
@@ -2216,7 +2217,7 @@
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
-        <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
+        <istack.commons.runtime.version>3.0.12</istack.commons.runtime.version>
         <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <javax.el.version>3.0.3</javax.el.version>
         <javax.el.impl.version>3.0.4</javax.el.impl.version>
@@ -2231,7 +2232,7 @@
         <jaxrs.api.impl.version>2.1.6</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[9.4,11)"</jetty.osgi.version>
-        <jetty.version>9.4.46.v20220331</jetty.version>
+        <jetty.version>9.4.49.v20220914</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
         <jsonp.ri.version>1.1.6</jsonp.ri.version>
