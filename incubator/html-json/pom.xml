@@ -40,6 +40,7 @@
 
     <properties>
         <net.java.html.version>1.5.1</net.java.html.version>
+        <enforcer.skip>true</enforcer.skip>
     </properties>
 
     <dependencies>
