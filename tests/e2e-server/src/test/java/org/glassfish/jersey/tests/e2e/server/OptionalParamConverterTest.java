@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -156,8 +156,8 @@ public class OptionalParamConverterTest extends JerseyTest {
         Response invalid = target("/OptionalResource/fromDate").queryParam(PARAM_NAME, "invalid").request().get();
         assertEquals(200, missing.getStatus());
         assertEquals(new Date(1609459200000L), missing.readEntity(Date.class));
-        assertEquals(404, empty.getStatus());
-        assertFalse(empty.hasEntity());
+        assertEquals(200, empty.getStatus());
+        assertEquals(new Date(1609459200000L), empty.readEntity(Date.class));
         assertEquals(200, notEmpty.getStatus());
         assertEquals(new Date(1619870400000L), notEmpty.readEntity(Date.class));
         assertEquals(404, invalid.getStatus());
@@ -173,8 +173,8 @@ public class OptionalParamConverterTest extends JerseyTest {
         Response invalid = target("/OptionalResource/fromInstant").queryParam(PARAM_NAME, "invalid").request().get();
         assertEquals(200, missing.getStatus());
         assertEquals("2021-01-01T00:00:00Z", missing.readEntity(String.class));
-        assertEquals(404, empty.getStatus());
-        assertFalse(empty.hasEntity());
+        assertEquals(200, empty.getStatus());
+        assertEquals("2021-01-01T00:00:00Z", empty.readEntity(String.class));
         assertEquals(200, notEmpty.getStatus());
         assertEquals("2021-05-01T12:00:00Z", notEmpty.readEntity(String.class));
         assertEquals(404, invalid.getStatus());

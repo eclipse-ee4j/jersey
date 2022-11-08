@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -135,7 +135,11 @@ public class ParamConverters {
 
                 @Override
                 public T _fromString(final String value) throws Exception {
-                    return rawType.cast(valueOf.invoke(null, value));
+                    if (value.isEmpty()) {
+                        return null;
+                    } else {
+                        return rawType.cast(valueOf.invoke(null, value));
+                    }
                 }
             };
         }
@@ -235,6 +239,8 @@ public class ParamConverters {
                 public T fromString(final String value) {
                     if (value == null) {
                         throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                    } else if (value.isEmpty()) {
+                        return null;
                     }
                     try {
                         return rawType.cast(HttpDateFormat.readDate(value));
@@ -279,11 +285,15 @@ public class ParamConverters {
                     } else {
                         final List<ClassTypePair> ctps = ReflectionHelper.getTypeArgumentAndClass(genericType);
                         final ClassTypePair ctp = (ctps.size() == 1) ? ctps.get(0) : null;
-
+                        final boolean empty = value.isEmpty();
                         for (ParamConverterProvider provider : Providers.getProviders(manager, ParamConverterProvider.class)) {
                             final ParamConverter<?> converter = provider.getConverter(ctp.rawClass(), ctp.type(), annotations);
                             if (converter != null) {
-                                return (T) Optional.of(value).map(s -> converter.fromString(value));
+                                if (empty) {
+                                    return (T) Optional.empty();
+                                } else {
+                                    return (T) Optional.of(value).map(s -> converter.fromString(value));
+                                }
                             }
                         }
                         /*
@@ -322,7 +332,7 @@ public class ParamConverters {
 
                 @Override
                 public T fromString(String value) {
-                    if (value == null) {
+                    if (value == null || value.isEmpty()) {
                         return (T) optionals.empty();
                     } else {
                         return (T) optionals.of(value);

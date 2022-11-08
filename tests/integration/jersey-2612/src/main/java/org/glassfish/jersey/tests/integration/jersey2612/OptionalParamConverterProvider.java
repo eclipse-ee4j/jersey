@@ -63,13 +63,16 @@ public class OptionalParamConverterProvider implements ParamConverterProvider {
         final Set<ParamConverterProvider> converterProviders =
                 Providers.getProviders(injectionManager, ParamConverterProvider.class);
         for (ParamConverterProvider provider : converterProviders) {
-            @SuppressWarnings("unchecked")
             final ParamConverter<?> converter = provider.getConverter(ctp.rawClass(), ctp.type(), annotations);
             if (converter != null) {
                 return new ParamConverter<T>() {
                     @Override
                     public T fromString(final String value) {
-                        return rawType.cast(Optional.ofNullable(value).map(o -> converter.fromString(value)));
+                        if (value.isEmpty()) {
+                            return rawType.cast(Optional.empty());
+                        } else {
+                            return rawType.cast(Optional.ofNullable(value).map(o -> converter.fromString(value)));
+                        }
                     }
 
                     @Override
