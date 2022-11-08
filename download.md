@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
@@ -12,10 +12,45 @@
 [//]: # "  "
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
+<h3>Jakarta RESTful WebServices 3.1.0 / Jersey {{ site.latest31xVersion }}</h3>
 
-<h3>Jakarta RESTful WebServices 3.0.0 / Jersey {{ site.latest3xVersion }}</h3>                             
+Jersey&nbsp;{{ site.latest31xVersion }}, that implements [Jakarta RESTful WebServices 3.1][jaxrs-3.1] API is the future release of Jersey.
+Note that Jersey 2.x releases will continue along with Jersey 3.1.x releases.
 
-Jersey&nbsp;{{ site.latest3xVersion }}, that implements [Jakarta RESTful WebServices 3.0][jaxrs-3.0] API is the future release of Jersey. 
+For the convenience of non-maven developers the following links are provided:
+
+*   [<var class="icon-cloud-download"></var> Jersey 3.1.x bundle][zip-3.1.x] bundle contains
+    the Jakarta RESTful WebServices 3.1.0 API jar, all the core Jersey module jars as well as all the required 3rd-party
+    dependencies.
+
+All the Jersey 3.1 release binaries, including the source & apidocs jars, are available for
+download under the Jersey 3.1 maven root group identifier `org.glassfish.jersey` from the 
+[maven central repository][mvn-central] as well as from the [Sonatype maven repository][mvn-oss].
+
+Chances are you are using Apache Maven as a build & dependency management tool for your project.
+If you do, there is a very easy and convenient way to start playing with Jersey {{ site.latest31xVersion }} by generating
+the skeleton application from one of the Jersey 3.1 maven archetypes that we provide.
+
+For instance, to create a Jersey {{ site.latest31xVersion }} application using the Grizzly 3.1 HTTP server container, use
+
+```bash
+mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
+    -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeVersion={{ site.latest31xVersion }}
+```
+
+If you want to create a Servlet container deployable Jersey {{ site.latest31xVersion }} web application instead, use
+
+```bash
+mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
+    -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion={{ site.latest31xVersion }}
+```
+
+For the full list of updates for Jersey {{ site.latest31xVersion }}, details about all changes, bug fixed and updates,
+please check the [Jersey {{ site.latest31xVersion }} Release Notes][rn-3.1.x].
+
+<h3>Jakarta RESTful WebServices 3.0.0 / Jersey {{ site.latest30xVersion }}</h3>                             
+
+Jersey&nbsp;{{ site.latest30xVersion }}, that implements [Jakarta RESTful WebServices 3.0][jaxrs-3.0] API is the future release of Jersey. 
 Note that Jersey 2.x releases will continue along with Jersey 3.x releases.             
 
 For the convenience of non-maven developers the following links are provided:
@@ -29,25 +64,25 @@ download under the Jersey 3 maven root group identifier `org.glassfish.jersey` 
 [maven central repository][mvn-central] as well as from the [Sonatype maven repository][mvn-oss].
 
 Chances are you are using Apache Maven as a build & dependency management tool for your project.
-If you do, there is a very easy and convenient way to start playing with Jersey {{ site.latest3xVersion }} by generating
+If you do, there is a very easy and convenient way to start playing with Jersey {{ site.latest30xVersion }} by generating
 the skeleton application from one of the Jersey 3 maven archetypes that we provide.
 
-For instance, to create a Jersey {{ site.latest3xVersion }} application using the Grizzly 3 HTTP server container, use
+For instance, to create a Jersey {{ site.latest30xVersion }} application using the Grizzly 3 HTTP server container, use
 
 ```bash
 mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
-    -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeVersion={{ site.latest3xVersion }}
+    -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeVersion={{ site.latest30xVersion }}
 ```
 
-If you want to create a Servlet container deployable Jersey {{ site.latest3xVersion }} web application instead, use
+If you want to create a Servlet container deployable Jersey {{ site.latest30xVersion }} web application instead, use
 
 ```bash
 mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
-    -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion={{ site.latest3xVersion }}
+    -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion={{ site.latest30xVersion }}
 ```
 
-For the full list of updates for Jersey {{ site.latest3xVersion }}, details about all changes, bug fixed and updates, 
-please check the [Jersey {{ site.latest3xVersion }} Release Notes][rn-3.x].
+For the full list of updates for Jersey {{ site.latest30xVersion }}, details about all changes, bug fixed and updates, 
+please check the [Jersey {{ site.latest30xVersion }} Release Notes][rn-3.x].
 
 <h3>JAX-RS 2.1 / Jersey 2.26+</h3>
 
@@ -140,10 +175,12 @@ the following links are provided:
 [jar-1.x]: https://repo1.maven.org/maven2/com/sun/eclipse-ee4j/jersey-bundle/1.19.1/jersey-bundle-1.19.1.jar
 [deps-1.x]: {{ site.links.newJerseyURL }}/documentation/1.19.1/chapter_deps.html
 
+[jaxrs-3.1]: https://jakarta.ee/specifications/restful-ws/3.1/
 [jaxrs-3.0]: https://jakarta.ee/specifications/restful-ws/3.0/
 [jaxrs-2.1]: https://jcp.org/en/jsr/detail?id=370
 [jaxrs-2.0]: https://jcp.org/en/jsr/detail?id=339
-[zip-3.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latest3xVersion }}/jaxrs-ri-{{ site.latest3xVersion }}.zip
+[zip-3.1.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latest31xVersion }}/jaxrs-ri-{{ site.latest31xVersion }}.zip
+[zip-3.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latest30xVersion }}/jaxrs-ri-{{ site.latest30xVersion }}.zip
 [zip-2.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/{{ site.latestVersion }}/jaxrs-ri-{{ site.latestVersion }}.zip
 [zip-2.25.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jaxrs-ri/2.25.1/jaxrs-ri-2.25.1.zip
 [examples-2.x]: https://repo1.maven.org/maven2/org/glassfish/jersey/bundles/jersey-examples/{{ site.latestVersion }}/jersey-examples-{{ site.latestVersion }}-all.zip
@@ -152,5 +189,7 @@ the following links are provided:
 [deps-2.25.x]: {{ site.links.newJerseyURL }}/documentation/latest/modules-and-dependencies.html
 [rn-2.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latestVersion }}
 [rn-2.25.x]: {{ site.links.newJerseyURL }}/release-notes/2.25.1.html
-[tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
-[rn-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
+[tag-3.1.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest31xVersion }}
+[tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
+[rn-3.1.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest31xVersion }}
+[rn-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
