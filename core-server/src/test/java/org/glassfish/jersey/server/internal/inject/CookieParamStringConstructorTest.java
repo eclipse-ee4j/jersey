@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,6 +71,8 @@ public class CookieParamStringConstructorTest extends AbstractTest {
 
         @GET
         public String doGetString(@CookieParam("args") List<BigDecimal> args) {
+            assertEquals(1, args.size());
+            assertEquals(null, args.get(0));
             return "content";
         }
     }
@@ -155,17 +157,10 @@ public class CookieParamStringConstructorTest extends AbstractTest {
     }
 
     @Test
-    public void testStringConstructorListWrongTypeGet() throws ExecutionException, InterruptedException {
+    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
 
         _test("/", "application/stringlist", new Cookie("args", ""));
-    }
-
-    @Test
-    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
-        initiateWebApplication(ResourceStringListEmpty.class);
-        // When no parameters, the list is empty
-        _test("/");
     }
 
     @Test

@@ -68,6 +68,10 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     public static class ResourceStringListEmpty {
         @GET
         public String doGetString(@QueryParam("args") List<BigDecimal> args) {
+            assertEquals(3, args.size());
+            assertEquals(null, args.get(0));
+            assertEquals(null, args.get(1));
+            assertEquals(null, args.get(2));
             return "content";
         }
     }
@@ -118,6 +122,7 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     public static class ResourceStringListEmptyDefault {
         @GET
         public String doGetString(@QueryParam("args") List<BigDecimal> args) {
+            assertEquals(0, args.size());
             return "content";
         }
     }
@@ -157,8 +162,9 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     }
 
     @Test
-    public void testStringConstructorListEmptyWrongTypeGet() throws ExecutionException, InterruptedException {
+    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
+
         _test("/?args&args&args", "application/stringlist");
     }
 
@@ -166,14 +172,7 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     public void testStringConstructorNullGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringNull.class);
         // When parameters are wrong, status is not 200
-        _test(404, "/?arg1=&arg2=", null);
-    }
-
-    @Test
-    public void testStringConstructorListEmptyGet() throws ExecutionException, InterruptedException {
-        initiateWebApplication(ResourceStringListEmpty.class);
-        // When no parameters, the list is empty
-        _test("/", "application/stringlist");
+        _test(404, "/?arg1=&arg2=");
     }
 
     @Test
@@ -202,13 +201,6 @@ public class QueryParamStringConstructorTest extends AbstractTest {
         initiateWebApplication(ResourceStringListEmptyDefault.class);
 
         _test("/");
-    }
-
-    @Test
-    public void testStringConstructorListEmpty() throws ExecutionException, InterruptedException {
-        initiateWebApplication(ResourceStringListEmptyDefault.class);
-
-        _test("/?args=");
     }
 
     @Test

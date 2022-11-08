@@ -104,7 +104,9 @@ public class Issue4790Test extends JerseyTest {
             .queryParam("list", "")
             .request()
             .get();
-        assertEquals(404, response.getStatus());
+        assertEquals(200, response.getStatus());
+        assertEquals("1: [null]",
+                response.readEntity(String.class));
     }
 
     @Test
