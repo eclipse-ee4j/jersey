@@ -157,9 +157,8 @@ public class CookieParamStringConstructorTest extends AbstractTest {
     @Test
     public void testStringConstructorListWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-        // When parameters are wrong, status is not 200
-        // FIXME Why 400 instead of 404 like in other cases?. Investigate it.
-        _test(400, "/", "application/stringlist", new Cookie("args", ""));
+
+        _test("/", "application/stringlist", new Cookie("args", ""));
     }
 
     @Test

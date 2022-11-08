@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,7 +61,20 @@ abstract class CollectionExtractor<T> extends AbstractParamValueExtractor<T>
         final Collection<T> valueList = newCollection();
         if (stringList != null) {
             for (final String v : stringList) {
-                valueList.add(fromString(v));
+                try {
+                    valueList.add(fromString(v));
+                } catch (ProcessingException e) {
+                    if (v.isEmpty()) {
+                        // One of the items failed to be converted. If it is caused
+                        // by empty value, we set that element as null in the list.
+                        // We don't check null values before because there could be
+                        // custom implementations that transform null into some other value.
+                        valueList.add(null);
+                    } else {
+                        // Re-throw it
+                        throw e;
+                    }
+                }
             }
         } else if (isDefaultValueRegistered()) {
             valueList.add(defaultValue());

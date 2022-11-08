@@ -108,6 +108,17 @@ public class Issue4790Test extends JerseyTest {
     }
 
     @Test
+    public void emptyStringQueryParamReturnsListWithNullInside() {
+        Response response = target("/uuid")
+            .queryParam("list", "ec0cf621-d744-4a1c-b1d8-4b8a44b3dad7", "", "ac0cf621-d744-4a1c-b1d8-4b8a44b3dad7")
+            .request()
+            .get();
+        assertEquals(200, response.getStatus());
+        assertEquals("3: [ec0cf621-d744-4a1c-b1d8-4b8a44b3dad7, null, ac0cf621-d744-4a1c-b1d8-4b8a44b3dad7]",
+                response.readEntity(String.class));
+    }
+
+    @Test
     public void missingQueryParamReturnsEmptyList() {
         Response response = target("/uuid")
             .request()

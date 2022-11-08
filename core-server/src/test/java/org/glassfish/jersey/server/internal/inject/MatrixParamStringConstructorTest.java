@@ -146,10 +146,10 @@ public class MatrixParamStringConstructorTest extends AbstractTest {
     }
 
     @Test
-    public void testStringConstructorListWrognTypeGet() throws ExecutionException, InterruptedException {
+    public void testStringConstructorListWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-        // When parameters are wrong, status is not 200
-        _test(404, "/;args;args;args", "application/stringlist");
+
+        _test("/;args;args;args", "application/stringlist");
     }
 
     @Test

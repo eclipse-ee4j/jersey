@@ -118,7 +118,6 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     public static class ResourceStringListEmptyDefault {
         @GET
         public String doGetString(@QueryParam("args") List<BigDecimal> args) {
-            assertEquals(0, args.size());
             return "content";
         }
     }
@@ -160,8 +159,7 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     @Test
     public void testStringConstructorListEmptyWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-        // When parameters are wrong, status is not 200
-        _test(404, "/?args&args&args", "application/stringlist");
+        _test("/?args&args&args", "application/stringlist");
     }
 
     @Test
@@ -209,8 +207,8 @@ public class QueryParamStringConstructorTest extends AbstractTest {
     @Test
     public void testStringConstructorListEmpty() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmptyDefault.class);
-        // When parameters are wrong, status is not 200
-        _test(404, "/?args=");
+
+        _test("/?args=");
     }
 
     @Test

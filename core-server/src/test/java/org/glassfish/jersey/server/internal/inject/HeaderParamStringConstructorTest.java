@@ -171,9 +171,8 @@ public class HeaderParamStringConstructorTest extends AbstractTest {
     @Test
     public void testStringConstructorListWrongTypeGet() throws ExecutionException, InterruptedException {
         initiateWebApplication(ResourceStringListEmpty.class);
-        // When parameters are wrong, status is not 200
-        // FIXME Why 400 instead of 404 like in other cases?. Investigate it.
-        assertEquals(400, apply(
+
+        assertEquals(200, apply(
                 RequestContextBuilder.from("/", "GET")
                         .accept("application/stringlist")
                         .header("args", "")
