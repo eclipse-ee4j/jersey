@@ -42,6 +42,9 @@ import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ManyFilteringsSubE
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.OneFilteringOnPropertiesEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.OneFilteringSubEntity;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -52,6 +55,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Michal Gajdos
  */
+@Suite
+@SelectClasses({
+        JsonEntityFilteringOnPropertiesTest.JacksonFeatureJsonEntityFilteringOnPropertiesTest.class,
+        JsonEntityFilteringOnPropertiesTest.JsonEntityFilteringOnPropertiesTemplateTest.class,
+        JsonEntityFilteringOnPropertiesTest.MoxyJsonFeatureJsonEntityFilteringOnPropertiesTest.class
+})
 public class JsonEntityFilteringOnPropertiesTest {
 
     public static class MoxyJsonFeatureJsonEntityFilteringOnPropertiesTest extends JsonEntityFilteringOnPropertiesTemplateTest {

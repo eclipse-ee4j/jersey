@@ -16,14 +16,14 @@
 
 package org.glassfish.jersey.tests.jmockit.server.internal.scanning;
 
+import mockit.Expectations;
 import mockit.Injectable;
-import mockit.MockUp;
 import mockit.Tested;
 import mockit.Verifications;
 import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.server.internal.scanning.ResourceFinderException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,9 +37,8 @@ import java.util.List;
 import java.util.Vector;
 import java.util.jar.JarInputStream;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for {@link PackageNamesScanner}.
@@ -53,7 +52,7 @@ public class PackageNamesScannerTest {
 
     private String jaxRsApiPath;
 
-    @BeforeEach
+    @Before
     public void setUp() throws Exception {
         final String classPath = System.getProperty("java.class.path");
         final String[] entries = classPath.split(System.getProperty("path.separator"));
@@ -72,27 +71,27 @@ public class PackageNamesScannerTest {
 
     @Test
     public void testWsJarScheme() {
-        assertTrue(new PackageNamesScanner(createTestClassLoader("wsjar", createTestURLStreamHandler("wsjar"), jaxRsApiPath),
-                packages, false).hasNext(), "Expected at least one class to be found.");
+        assertTrue("Expected at least one class to be found.",
+                new PackageNamesScanner(createTestClassLoader("wsjar", createTestURLStreamHandler("wsjar"), jaxRsApiPath),
+                        packages, false).hasNext());
     }
 
     @Test
     public void testJarScheme() {
         // Uses default class loader
-        assertTrue(new PackageNamesScanner(packages, false).hasNext(), "Expected at least one class to be found.");
+        assertTrue("Expected at least one class to be found.", new PackageNamesScanner(packages, false).hasNext());
     }
 
     @Test
     public void testZipScheme() {
-        assertTrue(new PackageNamesScanner(createTestClassLoader("zip", createTestURLStreamHandler("zip"), jaxRsApiPath),
-                        packages, false).hasNext(), "Expected at least one class to be found.");
+        assertTrue("Expected at least one class to be found.",
+                new PackageNamesScanner(createTestClassLoader("zip", createTestURLStreamHandler("zip"), jaxRsApiPath),
+                        packages, false).hasNext());
     }
 
-    @Test
+    @Test(expected = ResourceFinderException.class)
     public void testInvalidScheme() {
-        assertThrows(ResourceFinderException.class,
-                () -> new PackageNamesScanner(
-                        createTestClassLoader("bad", createTestURLStreamHandler("bad"), jaxRsApiPath), packages, false));
+        new PackageNamesScanner(createTestClassLoader("bad", createTestURLStreamHandler("bad"), jaxRsApiPath), packages, false);
     }
 
 
@@ -111,7 +110,7 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new MockUp(InputStream.class){};
+        new Expectations(InputStream.class){};
 
         scanner1.reset();
 
@@ -135,7 +134,7 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new MockUp(JarInputStream.class){};
+        new Expectations(JarInputStream.class){};
 
         scanner1.close();
 
@@ -160,8 +159,9 @@ public class PackageNamesScannerTest {
         JarInputStream stream = new JarInputStream(
                 new ByteArrayInputStream("test".getBytes(), 0, 4));
 
-        new MockUp(JarInputStream.class) {{
+        new Expectations(JarInputStream.class) {{
             stream.getNextJarEntry();
+            result = null;
             stream.close();
         }};
 

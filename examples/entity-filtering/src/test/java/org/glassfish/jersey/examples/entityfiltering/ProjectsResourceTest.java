@@ -10,6 +10,9 @@
 
 package org.glassfish.jersey.examples.entityfiltering;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.core.Feature;
@@ -22,8 +25,11 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -36,8 +42,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class ProjectsResourceTest {
 
-    public abstract static class ProjectsResourceTemplateTest extends JerseyTest {
-        public ProjectsResourceTemplateTest(final Class<?extends Feature> filteringProvider) {
+    public static Iterable<Class<? extends Feature>> providers() {
+        return Arrays.asList(MoxyJsonFeature.class, JacksonFeature.class);
+    }
+
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        providers().forEach(feature -> {
+            ProjectsResourceTemplateTest test = new ProjectsResourceTemplateTest(feature);
+            tests.add(TestHelper.toTestContainer(test, feature.getSimpleName()));
+        });
+        return tests;
+    }
+
+    public static class ProjectsResourceTemplateTest extends JerseyTest {
+        public ProjectsResourceTemplateTest(final Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(EntityFilteringFeature.class)
                     .packages("org.glassfish.jersey.examples.entityfiltering.resource")
                     .register(filteringProvider));
@@ -87,17 +107,4 @@ public class ProjectsResourceTest {
         }
     }
 
-    @Nested
-    public static class MoxyJsonFeatureProjectsResourceTest extends ProjectsResourceTemplateTest {
-        public MoxyJsonFeatureProjectsResourceTest() {
-            super(MoxyJsonFeature.class);
-        }
-    }
-
-    @Nested
-    public static class JacksonFeatureProjectsResourceTest extends ProjectsResourceTemplateTest {
-        public JacksonFeatureProjectsResourceTest() {
-            super(JacksonFeature.class);
-        }
-    }
 }

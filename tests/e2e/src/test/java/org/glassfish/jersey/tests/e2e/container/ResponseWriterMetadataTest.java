@@ -40,6 +40,7 @@ import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.test.spi.TestHelper;
 import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -127,6 +128,7 @@ public class ResponseWriterMetadataTest {
                     .property(ServerProperties.OUTBOUND_CONTENT_LENGTH_BUFFER, 1);
         }
 
+        @Test
         @ParameterizedTest
         @MethodSource("parameters")
         public void testResponse() {

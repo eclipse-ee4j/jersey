@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Michal Gajdos
  */
-@Disabled("Test Supplier Injection -> this test require dispose() method from Factory")
+//@Disabled("Test Supplier Injection -> this test require dispose() method from Factory")
 public class RequestScopeTest extends JerseyTest {
 
     @Override

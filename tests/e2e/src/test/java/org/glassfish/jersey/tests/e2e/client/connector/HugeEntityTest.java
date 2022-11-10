@@ -42,6 +42,9 @@ import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -50,6 +53,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Jakub Podlesak
  */
+@Suite
+@SelectClasses({HugeEntityTest.GrizzlyConnectorProviderHugeEntityTest.class,
+        HugeEntityTest.JdkConnectorProviderHugeEntityTest.class})
 public class HugeEntityTest {
 
     private static final int BUFFER_LENGTH = 1024 * 1024; // 1M

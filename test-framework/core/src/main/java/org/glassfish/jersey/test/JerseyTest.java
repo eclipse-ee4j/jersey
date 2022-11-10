@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.test;
 
+import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.security.AccessController;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * Parent class for testing JAX-RS and Jersey-based applications using Jersey test framework.
@@ -616,7 +618,7 @@ public abstract class JerseyTest {
     @BeforeEach
     public void setUp() throws Exception {
         synchronized (this) {
-            if (activeThreadCount.getAndIncrement() == 0) {
+            if (!isConcurrent() || activeThreadCount.getAndIncrement() == 0) {
                 registerLogHandlerIfEnabled();
                 final TestContainer testContainer = createTestContainer(context);
 
@@ -631,6 +633,24 @@ public abstract class JerseyTest {
     }
 
     /**
+     * Do not setup multiple containers for concurrent junit 5 environment not to hit Address already in use exception
+     * @return true when TestInstance.Lifecycle.PER_CLASS annotation is used and the test run in concurrent
+     */
+    private boolean isConcurrent() {
+        Annotation[] annotations = this.getClass().getAnnotations();
+        for (Annotation annotation : annotations) {
+            // check the name first for JUnit 4 only environment
+            if (annotation.annotationType().getName().equals("org.junit.jupiter.api.TestInstance")) {
+                TestInstance testInstance = (TestInstance) annotation;
+                if (testInstance != null && testInstance.value() == TestInstance.Lifecycle.PER_CLASS) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Tear down the test by {@link TestContainer#stop() stopping} the test container obtained from the
      * {@link #getTestContainerFactory() test container factory} and by {@link javax.ws.rs.client.Client#close() closing}
      * and discarding the {@link #configureClient(org.glassfish.jersey.client.ClientConfig) pre-configured} test client
@@ -642,7 +662,7 @@ public abstract class JerseyTest {
     @AfterEach
     public void tearDown() throws Exception {
         synchronized (this) {
-            if (activeThreadCount.decrementAndGet() == 0) {
+            if (!isConcurrent() || activeThreadCount.decrementAndGet() == 0) {
                 if (isLogRecordingEnabled()) {
                     unregisterLogHandler();
                 }

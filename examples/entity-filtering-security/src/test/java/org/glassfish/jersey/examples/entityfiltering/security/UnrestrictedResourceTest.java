@@ -20,7 +20,15 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +40,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class UnrestrictedResourceTest {
 
-    public abstract static class UnrestrictedResourceTemplateTest extends JerseyTest {
+    public static Iterable<Class<? extends Feature>> providers() {
+        return Arrays.asList(MoxyJsonFeature.class, JacksonFeature.class);
+    }
+
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        providers().forEach(feature -> {
+            UnrestrictedResourceTemplateTest test = new UnrestrictedResourceTemplateTest(feature) {};
+            tests.add(TestHelper.toTestContainer(test, feature.getSimpleName()));
+        });
+        return tests;
+    }
+
+    public static class UnrestrictedResourceTemplateTest extends JerseyTest {
         public UnrestrictedResourceTemplateTest(final Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(SecurityEntityFilteringFeature.class)
                     .packages("org.glassfish.jersey.examples.entityfiltering.security")
@@ -56,18 +78,6 @@ public class UnrestrictedResourceTest {
             // Null values.
             assertThat(entity.getDenyAll(), nullValue());
             assertThat(mixedField.getUserField(), nullValue());
-        }
-    }
-
-    public static class MoxyJsonFeatureUnrestrictedResourceTest extends UnrestrictedResourceTemplateTest {
-        public MoxyJsonFeatureUnrestrictedResourceTest() {
-            super(MoxyJsonFeature.class);
-        }
-    }
-
-    public static class JacksonFeatureUnrestrictedResourceTest extends UnrestrictedResourceTemplateTest {
-        public JacksonFeatureUnrestrictedResourceTest() {
-            super(JacksonFeature.class);
         }
     }
 }

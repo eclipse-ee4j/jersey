@@ -40,12 +40,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * Use-cases to check whether empty class causes problems (JERSEY-2824 reproducer).
  *
  * @author Michal Gajdos
  */
+@Suite
+@SelectClasses({
+        JsonEmptyEntityTest.JacksonFeatureJsonEmptyEntityTest.class,
+        JsonEmptyEntityTest.MoxyJsonFeatureJsonEmptyEntityTest.class
+})
 public class JsonEmptyEntityTest {
 
     public static class MoxyJsonFeatureJsonEmptyEntityTest extends JsonEmptyEntityTemplateTest {

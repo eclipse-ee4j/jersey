@@ -33,6 +33,9 @@ import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexSubEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexSubSubEntity;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -41,6 +44,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Michal Gajdos
  */
+@Suite
+@SelectClasses({
+        JsonEntityFilteringScopesTest.JacksonFeatureJsonEntityFilteringScopesTest.class,
+        JsonEntityFilteringScopesTest.MoxyJsonFeatureJsonEntityFilteringScopesTest.class
+})
 public class JsonEntityFilteringScopesTest {
 
     public static class MoxyJsonFeatureJsonEntityFilteringScopesTest extends JsonEntityFilteringScopesTemplateTest {

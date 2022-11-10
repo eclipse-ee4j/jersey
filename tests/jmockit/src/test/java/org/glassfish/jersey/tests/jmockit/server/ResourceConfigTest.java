@@ -23,13 +23,11 @@ import org.glassfish.jersey.server.internal.scanning.PackageNamesScanner;
 import org.glassfish.jersey.tests.jmockit.server.innerstatic.InnerStaticClass;
 import org.glassfish.jersey.tests.jmockit.server.toplevel.PublicRootResourceClass;
 import org.glassfish.jersey.tests.jmockit.server.toplevelinnerstatic.PublicRootResourceInnerStaticClass;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 /**
  * @author Pavel Bucek
  */
-@Disabled("@Mocked cannot be used with Iterator (since 1.45)")
 public class ResourceConfigTest {
 
     /**

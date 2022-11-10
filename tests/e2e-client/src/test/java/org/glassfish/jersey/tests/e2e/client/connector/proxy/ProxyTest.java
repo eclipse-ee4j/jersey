@@ -35,6 +35,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,6 +57,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Moved from jetty-connector
  * @author Marcelo Rubim
  */
+@Suite
+@SelectClasses({
+        ProxyTest.ApacheConnectorProviderProxyTest.class,
+        ProxyTest.Apache5ConnectorProviderProxyTest.class,
+        ProxyTest.GrizzlyConnectorProviderProxyTest.class,
+        ProxyTest.JettyConnectorProviderProxyTest.class,
+        ProxyTest.NettyConnectorProviderProxyTest.class,
+        ProxyTest.HttpUrlConnectorProviderProxyTest.class
+})
 public class ProxyTest {
     private static final Charset CHARACTER_SET = Charset.forName("iso-8859-1");
     private static final String PROXY_URI = "http://127.0.0.1:9997";

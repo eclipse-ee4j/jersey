@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
  *
  * @author Jakub Podlesak
  */
+@SuppressWarnings({"unchecked", "deprecation"})
 @RunWith(ConcurrentRunner.class)
 public class ConcurrentRunnerTest extends TestCase {
 

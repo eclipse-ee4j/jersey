@@ -47,6 +47,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit4.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -54,4 +55,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <dependencies>
+                    <!-- JUnit vintage engine to run JUnit 4 tests -->
+                    <dependency>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                        <version>${junit5.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

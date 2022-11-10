@@ -33,6 +33,8 @@ import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,6 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Stepan Kopriva
  */
+@Suite
+@SelectClasses({MethodTest.JdkConnectorProviderMethodTest.class,
+        MethodTest.GrizzlyConnectorProviderMethodTest.class})
 public class MethodTest {
 
     private static final String PATH = "test";

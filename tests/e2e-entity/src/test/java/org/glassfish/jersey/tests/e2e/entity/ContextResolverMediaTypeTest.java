@@ -36,12 +36,22 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Paul Sandoz
  * @author Martin Matula
  */
+@Suite
+@SelectClasses({
+        ContextResolverMediaTypeTest.ProduceTest.class,
+        ContextResolverMediaTypeTest.ProducesSeparateTest.class,
+        ContextResolverMediaTypeTest.ProducesTest.class,
+        ContextResolverMediaTypeTest.ProducesXXXTest.class,
+})
 public class ContextResolverMediaTypeTest {
 
     @Produces("text/plain")

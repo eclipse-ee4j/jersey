@@ -22,8 +22,9 @@ import java.util.concurrent.ConcurrentMap;
 import org.glassfish.jersey.test.ContainerPerClassTestNgStrategy;
 import org.glassfish.jersey.test.spi.TestNgStrategy;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,13 +37,13 @@ public class BeforeClassParallelTest extends AbstractParallelTest {
 
     private ConcurrentMap<Integer, String> values = new ConcurrentHashMap<>();
 
-    @BeforeAll
+    @BeforeClass
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
-    @AfterAll
+    @AfterClass
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

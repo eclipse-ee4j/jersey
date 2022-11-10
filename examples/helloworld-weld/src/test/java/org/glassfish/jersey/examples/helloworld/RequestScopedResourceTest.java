@@ -98,6 +98,14 @@ public class RequestScopedResourceTest extends JerseyTest {
     }
 
     @Override
+    @AfterAll
+    public void tearDown() throws Exception {
+        super.tearDown();
+        System.out.printf("SYNC: %d, ASYNC: %d, STRAIGHT: %d%n",
+                parameterizedCounter.intValue(), parameterizedAsyncCounter.intValue(), straightCounter.intValue());
+    }
+
+    @Override
     protected ResourceConfig configure() {
         //        enable(TestProperties.LOG_TRAFFIC);
         return App.createJaxRsApp();

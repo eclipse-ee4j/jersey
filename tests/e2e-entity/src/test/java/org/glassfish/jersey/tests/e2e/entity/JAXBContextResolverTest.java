@@ -38,6 +38,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,6 +49,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Paul Sandoz
  * @author Martin Matula
  */
+@Suite
+@SelectClasses({
+        JAXBContextResolverTest.JAXBContextTest.class,
+        JAXBContextResolverTest.JAXBContextAllTest.class,
+        JAXBContextResolverTest.JAXBContextAppTest.class,
+        JAXBContextResolverTest.JAXBContextAllWithOtherJaxbBeanTest.class,
+        JAXBContextResolverTest.JAXBContextTextTest.class,
+        JAXBContextResolverTest.UnmarshallerAllTest.class,
+        JAXBContextResolverTest.UnmarshallerAppTest.class,
+        JAXBContextResolverTest.UnmarshallerFooTest.class,
+        JAXBContextResolverTest.UnmarshallerTest.class,
+        JAXBContextResolverTest.UnmarshallerTextTest.class
+})
 public class JAXBContextResolverTest {
 
     @Provider
