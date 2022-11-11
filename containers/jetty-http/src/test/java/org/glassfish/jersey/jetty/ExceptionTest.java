@@ -66,6 +66,19 @@ public class ExceptionTest extends AbstractJettyServerTester {
     }
 
     @Test
+    public void test400StatusCodeForIllegalHeaderValue() throws IOException {
+        startServer(ExceptionResource.class);
+        URI testUri = getUri().build();
+        BasicHttpRequest request = new BasicHttpRequest("GET", testUri.toString() + "/400");
+        request.addHeader("X-Forwarded-Host", "_foo.com");
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+
+        CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);
+
+        assertEquals(400, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
     public void test400StatusCode() throws IOException {
         startServer(ExceptionResource.class);
         Client client = ClientBuilder.newClient();
