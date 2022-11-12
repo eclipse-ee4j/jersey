@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -179,6 +179,11 @@ public class ExceptionMapperFactory implements ExceptionMappers {
             Set<ExceptionMapperType> exceptionMapperTypes = new LinkedHashSet<>();
             for (ServiceHolder<ExceptionMapper> mapperHandle: mapperHandles) {
                 ExceptionMapper mapper = mapperHandle.getInstance();
+
+                // the default exception mapper is processed by the ServerRuntime
+                if ("org.glassfish.jersey.server.DefaultExceptionMapper".equals(mapper.getClass().getName())) {
+                    continue;
+                }
 
                 if (Proxy.isProxyClass(mapper.getClass())) {
                     SortedSet<Class<? extends ExceptionMapper>> mapperTypes =

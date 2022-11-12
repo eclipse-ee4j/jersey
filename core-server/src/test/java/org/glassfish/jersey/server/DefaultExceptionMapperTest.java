@@ -22,11 +22,14 @@ import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.CompletionCallback;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.internal.ExceptionMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultExceptionMapperTest {
     public static final String MESSAGE = "DefaultExceptionMapperTest I/O Exception";
@@ -56,6 +59,17 @@ public class DefaultExceptionMapperTest {
         }
 
         Assert.assertEquals(1, counter.get());
+    }
+
+    @Test
+    public void testDefaultExceptionMapperNotRegisteredInExceptionMapperFactory() {
+        ResourceConfig resourceConfig = new ResourceConfig();
+        ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
+
+        // use InjectionManager from ApplicationHandler to set up the default bindings
+        ExceptionMapperFactory exceptionMapperFactory = new ExceptionMapperFactory(applicationHandler.getInjectionManager());
+
+        assertThat(exceptionMapperFactory.find(Throwable.class)).isNull();
     }
 
     @Path("/")
