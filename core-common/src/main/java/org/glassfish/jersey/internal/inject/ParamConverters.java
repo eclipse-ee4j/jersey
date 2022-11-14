@@ -135,11 +135,7 @@ public class ParamConverters {
 
                 @Override
                 public T _fromString(final String value) throws Exception {
-                    if (value.isEmpty()) {
-                        return null;
-                    } else {
-                        return rawType.cast(valueOf.invoke(null, value));
-                    }
+                    return rawType.cast(valueOf.invoke(null, value));
                 }
             };
         }
@@ -239,8 +235,6 @@ public class ParamConverters {
                 public T fromString(final String value) {
                     if (value == null) {
                         throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
-                    } else if (value.isEmpty()) {
-                        return null;
                     }
                     try {
                         return rawType.cast(HttpDateFormat.readDate(value));
