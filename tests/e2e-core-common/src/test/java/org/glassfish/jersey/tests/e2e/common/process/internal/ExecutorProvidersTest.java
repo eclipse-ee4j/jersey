@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,10 +40,10 @@ import org.glassfish.jersey.spi.ScheduledThreadPoolExecutorProvider;
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
 
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * ExecutorProviders unit tests.
@@ -205,7 +205,7 @@ public class ExecutorProvidersTest extends AbstractBinder {
     /**
      * Set-up the tests.
      */
-    @Before
+    @BeforeEach
     public void setup() {
         injectionManager = Injections.createInjectionManager(this);
         ExecutorProviders.registerExecutorBindings(injectionManager);
@@ -262,8 +262,8 @@ public class ExecutorProvidersTest extends AbstractBinder {
     }
 
     private void testShutDown(String name, ExecutorService executorService) throws InterruptedException {
-        assertTrue(name + " not shutdown", executorService.isShutdown());
-        assertTrue(name + " not terminated", executorService.isTerminated());
+        assertTrue(executorService.isShutdown(), name + " not shutdown");
+        assertTrue(executorService.isTerminated(), name + " not terminated");
     }
 
 }

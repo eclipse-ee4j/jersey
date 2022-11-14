@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,11 +26,12 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test that a raw CDI managed bean gets JAX-RS injected.
@@ -40,6 +41,7 @@ import static org.junit.Assert.assertThat;
 public class SecondJaxRsInjectedCdiBeanTest extends JerseyTest {
     Weld weld;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         weld = new Weld();
@@ -47,6 +49,7 @@ public class SecondJaxRsInjectedCdiBeanTest extends JerseyTest {
         super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         weld.shutdown();

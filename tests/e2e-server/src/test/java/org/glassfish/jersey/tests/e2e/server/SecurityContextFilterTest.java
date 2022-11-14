@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,9 +30,9 @@ import javax.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * End to end test class for testing security context in the Filter and
@@ -63,11 +63,11 @@ public class SecurityContextFilterTest extends JerseyTest {
 
         @Override
         public void filter(ContainerRequestContext context) {
-            Assert.assertNotNull(context.getSecurityContext());
+            Assertions.assertNotNull(context.getSecurityContext());
 
             // test injections
             // TODO: won't work until SecurityContext is proxiable
-//            Assert.assertEquals(context.getSecurityContext(), securityContext);
+//            Assertions.assertEquals(context.getSecurityContext(), securityContext);
 
             String header = context.getHeaders().getFirst(SKIP_FILTER);
             if ("true".equals(header)) {
@@ -129,7 +129,7 @@ public class SecurityContextFilterTest extends JerseyTest {
         Response response = target().path("test").request().header(SKIP_FILTER, "true").get();
         assertEquals(200, response.getStatus());
         String entity = response.readEntity(String.class);
-        Assert.assertTrue(!entity.equals(PRINCIPAL_NAME));
+        Assertions.assertTrue(!entity.equals(PRINCIPAL_NAME));
     }
 
     /**
@@ -148,7 +148,7 @@ public class SecurityContextFilterTest extends JerseyTest {
         // TODO: inject SecurityContext directly once JERSEY-1282 is fixed
         @GET
         public String getPrincipal(@Context ContainerRequestContext crc) {
-            Assert.assertNotNull(crc.getSecurityContext());
+            Assertions.assertNotNull(crc.getSecurityContext());
             Principal userPrincipal = crc.getSecurityContext().getUserPrincipal();
             return userPrincipal == null ? PRINCIPAL_IS_NULL : userPrincipal.getName();
         }

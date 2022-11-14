@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,8 @@ package org.glassfish.jersey.tests.api;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -50,10 +51,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test if the location response header relative URI is correctly resolved within complex cases with interceptors, filters,
@@ -85,6 +86,7 @@ public class LocationHeaderFiltersTest extends JerseyTest {
      * In this case it prepares executor thread pool of size one and initializes the thread.
      * @throws Exception
      */
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -147,8 +149,8 @@ public class LocationHeaderFiltersTest extends JerseyTest {
         @GET
         @Path("locationAborted")
         public String locationTestAborted() {
-            assertTrue("The resource method locationTestAborted() should not have been called. The post-matching filter was "
-                    + "not configured correctly. ", false);
+            assertTrue(false, "The resource method locationTestAborted() should not have been called. "
+                    + "The post-matching filter was not configured correctly.");
             return "DUMMY_RESPONSE"; // this string should never reach the client (the resource method will not be called)
         }
 
@@ -161,8 +163,8 @@ public class LocationHeaderFiltersTest extends JerseyTest {
         @GET
         @Path("locationAbortedPreMatching")
         public String locationTestPreMatchingAborted() {
-            assertTrue("The resource method locationTestPreMatchingAborted() should not have been called. The pre-matching "
-                    + "filter was not configured correctly. ", false);
+            assertTrue(false, "The resource method locationTestPreMatchingAborted() should not have been called. "
+                    + "The pre-matching filter was not configured correctly.");
             return "DUMMY_RESPONSE"; // this string should never reach the client (the resource method will not be called)
         }
 
@@ -587,8 +589,8 @@ public class LocationHeaderFiltersTest extends JerseyTest {
 
     private void checkResponseFilter(final String resourcePath, final String expectedRelativeUri) {
         final Response response = target().path(resourcePath).request().get(Response.class);
-        assertNotEquals("Message from response filter: " + response.readEntity(String.class),
-                response.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        assertNotEquals(response.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                "Message from response filter: " + response.readEntity(String.class));
         assertEquals(getBaseUri() + expectedRelativeUri, response.getLocation().toString());
     }
 }

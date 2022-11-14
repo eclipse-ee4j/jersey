@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,11 +43,11 @@ import javax.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests {@link ParamConverter param converters} as e2e test.
@@ -131,7 +131,7 @@ public class ParamConverterTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("TODO: ParamConversion not yet implemented in the ResponseBuilder (JERSEY-1385).")
+    @Disabled("TODO: ParamConversion not yet implemented in the ResponseBuilder (JERSEY-1385).")
     // TODO: JERSEY-1385: after clarifying with spec the ResponseBuilder paramconversion should be finished (or removed)
     public void testStringParamInResponse() {
         final Response response = target().path("resource/response").request().get();

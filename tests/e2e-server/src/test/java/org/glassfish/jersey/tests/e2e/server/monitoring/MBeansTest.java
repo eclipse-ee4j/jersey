@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,11 +43,11 @@ import org.glassfish.jersey.server.spi.AbstractContainerLifecycleListener;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Miroslav Fuksa
@@ -159,10 +159,10 @@ public class MBeansTest extends JerseyTest {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
-        Assert.assertTrue(StatisticsListener.ON_SHUTDOWN_CALLED);
+        Assertions.assertTrue(StatisticsListener.ON_SHUTDOWN_CALLED);
 
     }
 
@@ -211,7 +211,7 @@ public class MBeansTest extends JerseyTest {
         final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         final ObjectName name = new ObjectName("org.glassfish.jersey:type=myApplication,subType=Global,global=Configuration");
         final String str = (String) mBeanServer.getAttribute(name, "ApplicationName");
-        Assert.assertEquals("myApplication", str);
+        Assertions.assertEquals("myApplication", str);
 
         checkResourceMBean("/resource");
         checkResourceMBean("/resource/sub");
@@ -231,7 +231,7 @@ public class MBeansTest extends JerseyTest {
         try {
             mbean = mBeanServer.getObjectInstance(objectName);
         } catch (InstanceNotFoundException e) {
-            Assert.fail("Resource MBean name '" + name + "' not found.");
+            Assertions.fail("Resource MBean name '" + name + "' not found.");
         }
         assertNotNull(mbean);
     }

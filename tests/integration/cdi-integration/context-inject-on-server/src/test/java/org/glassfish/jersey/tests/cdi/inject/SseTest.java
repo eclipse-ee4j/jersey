@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,11 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -44,11 +45,12 @@ import java.util.concurrent.TimeUnit;
 public class SseTest extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -58,6 +60,7 @@ public class SseTest extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -112,19 +115,19 @@ public class SseTest extends JerseyTest {
             });
             source.open();
             registerLatch.await(5000, TimeUnit.MILLISECONDS);
-            Assert.assertEquals(0, registerLatch.getCount());
+            Assertions.assertEquals(0, registerLatch.getCount());
 
             try (Response response = target(InjectionChecker.ROOT).path("broadcast").path(injectType)
                     .request()
                     .post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE))) {
                 String readEntity = response.readEntity(String.class);
                 // System.out.println(readEntity);
-                Assert.assertEquals(readEntity, response.getStatus(), Response.Status.NO_CONTENT.getStatusCode());
+                Assertions.assertEquals(response.getStatus(), Response.Status.NO_CONTENT.getStatusCode(), readEntity);
 
             }
             broadcastLatch.await(5000, TimeUnit.MILLISECONDS);
         }
-        Assert.assertTrue(byteArrayOutputStream.toString().contains(entity));
-        Assert.assertEquals(0, broadcastLatch.getCount());
+        Assertions.assertTrue(byteArrayOutputStream.toString().contains(entity));
+        Assertions.assertEquals(0, broadcastLatch.getCount());
     }
 }

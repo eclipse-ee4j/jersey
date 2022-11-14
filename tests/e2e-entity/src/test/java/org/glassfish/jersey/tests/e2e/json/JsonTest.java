@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,18 +49,18 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Common functionality for JSON tests that are using multiple JSON providers (e.g. MOXy, Jackson, Jettison).
  *
  * @author Michal Gajdos
  */
-public abstract class AbstractJsonTest extends JerseyTest {
+public abstract class JsonTest extends JerseyTest {
 
     private static final String PKG_NAME = "org/glassfish/jersey/tests/e2e/json/entity/";
-    private static final Logger LOGGER = Logger.getLogger(AbstractJsonTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JsonTest.class.getName());
 
     /**
      * Helper class representing configuration for one test case.
@@ -259,7 +259,7 @@ public abstract class AbstractJsonTest extends JerseyTest {
                 jsonProvider instanceof JsonTestProvider.MoxyJsonTestProvider);
     }
 
-    protected AbstractJsonTest(final JsonTestSetup jsonTestSetup) throws Exception {
+    JsonTest(final JsonTestSetup jsonTestSetup) throws Exception {
         super(configureJaxrsApplication(jsonTestSetup));
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
@@ -326,8 +326,9 @@ public abstract class AbstractJsonTest extends JerseyTest {
         // TODO remove once JUnit supports parameterized tests with custom names
         // TODO (see http://stackoverflow.com/questions/650894/change-test-name-of-parameterized-tests
         // TODO or https://github.com/KentBeck/junit/pull/393)
-        assertEquals(String.format("%s - %s: Received JSON entity content does not match expected JSON entity content.",
+        assertEquals(entity, receivedEntity,
+                String.format("%s - %s: Received JSON entity content does not match expected JSON entity content.",
                 getJsonTestSetup().getJsonProvider().getClass().getSimpleName(),
-                getJsonTestSetup().getEntityClass().getSimpleName()), entity, receivedEntity);
+                getJsonTestSetup().getEntityClass().getSimpleName()));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,9 @@
 package org.glassfish.jersey.tests.e2e.entity.filtering.json;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -31,6 +33,7 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
 import org.glassfish.jersey.tests.e2e.entity.filtering.DefaultFilteringScope;
 import org.glassfish.jersey.tests.e2e.entity.filtering.PrimaryDetailedView;
 import org.glassfish.jersey.tests.e2e.entity.filtering.SecondaryDetailedView;
@@ -39,26 +42,18 @@ import org.glassfish.jersey.tests.e2e.entity.filtering.domain.FilteredClassEntit
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ManyFilteringsOnClassEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ManyFilteringsSubEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.OneFilteringSubEntity;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Suite;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        JsonEntityFilteringServerTest.ConfigurationServerTest.class,
-        JsonEntityFilteringServerTest.ConfigurationDefaultViewServerTest.class,
-        JsonEntityFilteringServerTest.AnnotationsServerTest.class,
-        JsonEntityFilteringServerTest.AnnotationsOverConfigurationServerTest.class
-})
 public class JsonEntityFilteringServerTest {
 
     @Path("/")
@@ -117,15 +112,37 @@ public class JsonEntityFilteringServerTest {
         }
     }
 
-    @RunWith(Parameterized.class)
-    public static class ConfigurationServerTest extends JerseyTest {
+    public static Iterable<Class<? extends Feature>> providers() {
+        return Arrays.asList(MoxyJsonFeature.class, JacksonFeature.class);
+    }
 
-        @Parameterized.Parameters(name = "Provider: {0}")
-        public static Iterable<Class[]> providers() {
-            return Arrays.asList(new Class[][] {{MoxyJsonFeature.class}, {JacksonFeature.class}});
-        }
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        providers().forEach(filteringProvider -> {
+            ConfigurationServerTest test1 = new ConfigurationServerTest(filteringProvider) {};
+            tests.add(TestHelper.toTestContainer(test1,
+                    ConfigurationServerTest.class.getSimpleName() + " (" + filteringProvider.getSimpleName() + ")"));
 
-        public ConfigurationServerTest(final Class<Feature> filteringProvider) {
+            ConfigurationDefaultViewServerTest test2 = new ConfigurationDefaultViewServerTest(filteringProvider) {};
+            tests.add(TestHelper.toTestContainer(test2,
+                    ConfigurationDefaultViewServerTest.class.getSimpleName() + " (" + filteringProvider.getSimpleName() + ")"));
+
+            AnnotationsServerTest test3 = new AnnotationsServerTest(filteringProvider) {};
+            tests.add(TestHelper.toTestContainer(test3,
+                    AnnotationsServerTest.class.getSimpleName() + " (" + filteringProvider.getSimpleName() + ")"));
+
+            AnnotationsOverConfigurationServerTest test4 = new AnnotationsOverConfigurationServerTest(filteringProvider) {};
+            tests.add(TestHelper.toTestContainer(test4,
+                    AnnotationsOverConfigurationServerTest.class.getSimpleName()
+                    + " (" + filteringProvider.getSimpleName() + ")"));
+        });
+        return tests;
+    }
+
+    public abstract static class ConfigurationServerTest extends JerseyTest {
+
+        public ConfigurationServerTest(Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(Resource.class, EntityFilteringFeature.class)
                     .register(filteringProvider)
                     .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, PrimaryDetailedView.Factory.get()));
@@ -145,15 +162,9 @@ public class JsonEntityFilteringServerTest {
         }
     }
 
-    @RunWith(Parameterized.class)
-    public static class ConfigurationDefaultViewServerTest extends JerseyTest {
+    public abstract static class ConfigurationDefaultViewServerTest extends JerseyTest {
 
-        @Parameterized.Parameters(name = "Provider: {0}")
-        public static Iterable<Class[]> providers() {
-            return Arrays.asList(new Class[][] {{MoxyJsonFeature.class}, {JacksonFeature.class}});
-        }
-
-        public ConfigurationDefaultViewServerTest(final Class<Feature> filteringProvider) {
+        public ConfigurationDefaultViewServerTest(final Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(Resource.class, EntityFilteringFeature.class).register(filteringProvider));
 
             enable(TestProperties.DUMP_ENTITY);
@@ -184,15 +195,9 @@ public class JsonEntityFilteringServerTest {
         }
     }
 
-    @RunWith(Parameterized.class)
-    public static class AnnotationsServerTest extends JerseyTest {
+    public abstract static class AnnotationsServerTest extends JerseyTest {
 
-        @Parameterized.Parameters(name = "Provider: {0}")
-        public static Iterable<Class[]> providers() {
-            return Arrays.asList(new Class[][] {{MoxyJsonFeature.class}, {JacksonFeature.class}});
-        }
-
-        public AnnotationsServerTest(final Class<Feature> filteringProvider) {
+        public AnnotationsServerTest(final Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(Resource.class, EntityFilteringFeature.class).register(filteringProvider));
 
             enable(TestProperties.DUMP_ENTITY);
@@ -210,15 +215,9 @@ public class JsonEntityFilteringServerTest {
         }
     }
 
-    @RunWith(Parameterized.class)
-    public static class AnnotationsOverConfigurationServerTest extends JerseyTest {
+    public abstract static class AnnotationsOverConfigurationServerTest extends JerseyTest {
 
-        @Parameterized.Parameters(name = "Provider: {0}")
-        public static Iterable<Class[]> providers() {
-            return Arrays.asList(new Class[][] {{MoxyJsonFeature.class}, {JacksonFeature.class}});
-        }
-
-        public AnnotationsOverConfigurationServerTest(final Class<Feature> filteringProvider) {
+        public AnnotationsOverConfigurationServerTest(final Class<? extends Feature> filteringProvider) {
             super(new ResourceConfig(Resource.class, EntityFilteringFeature.class)
                     .register(filteringProvider)
                     .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, new DefaultFilteringScope()));

@@ -25,10 +25,11 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -36,12 +37,13 @@ import javax.ws.rs.core.Response;
 public class ServletTest extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
     @Override
+    @BeforeEach
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
             weld = new Weld();
@@ -51,6 +53,7 @@ public class ServletTest extends JerseyTest {
     }
 
     @Override
+    @AfterEach
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
             weld.shutdown();
@@ -81,7 +84,7 @@ public class ServletTest extends JerseyTest {
             if (response.getStatus() != Response.Status.OK.getStatusCode()) {
                 System.out.println(response.readEntity(String.class));
             }
-            Assert.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+            Assertions.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
         }
     }
 
@@ -92,7 +95,7 @@ public class ServletTest extends JerseyTest {
             if (response.getStatus() != Response.Status.OK.getStatusCode()) {
                 System.out.println(response.readEntity(String.class));
             }
-            Assert.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+            Assertions.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
         }
     }
 

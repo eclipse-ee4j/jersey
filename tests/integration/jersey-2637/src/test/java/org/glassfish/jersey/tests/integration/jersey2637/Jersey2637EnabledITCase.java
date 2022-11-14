@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2637;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -29,25 +28,19 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Reproducer tests for JERSEY-2637 - Query params can be injected using {@link javax.ws.rs.FormParam}.
  */
-@RunWith(Parameterized.class)
 public class Jersey2637EnabledITCase extends JerseyTest {
 
-    @Parameterized.Parameters(name = "path = {0}")
-    public static Collection<Object[]> paths() {
-        return Arrays.asList(new Object[][]{{"defaut"}, {"enabled"}});
+    public static Stream<String> paths() {
+        return Stream.of("defaut", "enabled");
     }
-
-    @Parameterized.Parameter
-    public String path;
 
     @Override
     protected Application configure() {
@@ -59,8 +52,9 @@ public class Jersey2637EnabledITCase extends JerseyTest {
         return new ExternalTestContainerFactory();
     }
 
-    @Test
-    public void testFormParams() throws Exception {
+    @ParameterizedTest
+    @MethodSource("paths")
+    public void testFormParams(String path) throws Exception {
         final Form form = new Form()
                 .param("username", "user")
                 .param("password", "pass");
@@ -70,8 +64,9 @@ public class Jersey2637EnabledITCase extends JerseyTest {
         assertThat(response.readEntity(String.class), is("user_pass"));
     }
 
-    @Test
-    public void testQueryParams() throws Exception {
+    @ParameterizedTest
+    @MethodSource("paths")
+    public void testQueryParams(String path) throws Exception {
         final Response response = target(path)
                 .queryParam("username", "user").queryParam("password", "pass")
                 .request()
@@ -80,8 +75,9 @@ public class Jersey2637EnabledITCase extends JerseyTest {
         assertThat(response.readEntity(String.class), is("user_pass"));
     }
 
-    @Test
-    public void testDoubleQueryParams() throws Exception {
+    @ParameterizedTest
+    @MethodSource("paths")
+    public void testDoubleQueryParams(String path) throws Exception {
         final Response response = target(path)
                 .queryParam("username", "user").queryParam("password", "pass")
                 .queryParam("username", "user").queryParam("password", "pass")
@@ -91,8 +87,9 @@ public class Jersey2637EnabledITCase extends JerseyTest {
         assertThat(response.readEntity(String.class), is("user_pass"));
     }
 
-    @Test
-    public void testEncodedQueryParams() throws Exception {
+    @ParameterizedTest
+    @MethodSource("paths")
+    public void testEncodedQueryParams(String path) throws Exception {
         final Response response = target(path)
                 .queryParam("username", "us%20er").queryParam("password", "pass")
                 .request()
@@ -101,8 +98,9 @@ public class Jersey2637EnabledITCase extends JerseyTest {
         assertThat(response.readEntity(String.class), is("us er_pass"));
     }
 
-    @Test
-    public void testFormAndQueryParams() throws Exception {
+    @ParameterizedTest
+    @MethodSource("paths")
+    public void testFormAndQueryParams(String path) throws Exception {
         final Form form = new Form()
                 .param("username", "user")
                 .param("password", "pass");

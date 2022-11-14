@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,11 +29,11 @@ import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * OutboundJaxrsResponse unit tests.
@@ -96,7 +96,7 @@ public class OutboundJaxrsResponseTest {
         RuntimeDelegate.setInstance(new TestRuntimeDelegate());
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         rb = new OutboundJaxrsResponse.Builder(new OutboundMessageContext((Configuration) null)).status(Response.Status.OK);
     }
@@ -110,7 +110,7 @@ public class OutboundJaxrsResponseTest {
         final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
-        assertFalse("Buffer entity should return 'false' if no entity.", r.bufferEntity());
+        assertFalse(r.bufferEntity(), "Buffer entity should return 'false' if no entity.");
     }
 
     /**
@@ -121,7 +121,7 @@ public class OutboundJaxrsResponseTest {
         final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(new Object()).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
-        assertFalse("Buffer entity should return 'false' for non-stream entity.", r.bufferEntity());
+        assertFalse(r.bufferEntity(), "Buffer entity should return 'false' for non-stream entity.");
     }
 
     /**
@@ -133,10 +133,10 @@ public class OutboundJaxrsResponseTest {
         final OutboundJaxrsResponse r = OutboundJaxrsResponse.from(rb.entity(tis).build(), null);
         r.getContext().setStreamProvider(TEST_PROVIDER);
 
-        assertTrue("Buffer entity should return 'true' for stream entity.", r.bufferEntity());
-        assertTrue("Second call to buffer entity should return 'true' for stream entity.", r.bufferEntity()); // second call
-        assertTrue("Buffered stream has not been fully read.", tis.isRead);
-        assertTrue("Buffered stream has not been closed after buffering.", tis.isClosed);
+        assertTrue(r.bufferEntity(), "Buffer entity should return 'true' for stream entity.");
+        assertTrue(r.bufferEntity(), "Second call to buffer entity should return 'true' for stream entity."); // second call
+        assertTrue(tis.isRead, "Buffered stream has not been fully read.");
+        assertTrue(tis.isClosed, "Buffered stream has not been closed after buffering.");
     }
 
     /**
@@ -193,8 +193,8 @@ public class OutboundJaxrsResponseTest {
         }
         r.close(); // second call should pass
 
-        assertFalse("Unbuffered closed response stream entity should not be read.", tis.isRead);
-        assertTrue("Closed response stream entity should have been closed.", tis.isClosed);
+        assertFalse(tis.isRead, "Unbuffered closed response stream entity should not be read.");
+        assertTrue(tis.isClosed, "Closed response stream entity should have been closed.");
     }
 
     /**
@@ -245,8 +245,8 @@ public class OutboundJaxrsResponseTest {
         }
         r.close(); // second call should pass
 
-        assertFalse("Unbuffered closed response stream entity should not be read.", tis.isRead);
-        assertTrue("Closed response stream entity should have been closed.", tis.isClosed);
+        assertFalse(tis.isRead, "Unbuffered closed response stream entity should not be read.");
+        assertTrue(tis.isClosed, "Closed response stream entity should have been closed.");
     }
 
 }

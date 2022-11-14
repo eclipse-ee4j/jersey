@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,12 +42,11 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.message.DeflateEncoder;
 import org.glassfish.jersey.message.GZipEncoder;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Client-side content encoding filter unit tests.
@@ -148,7 +147,7 @@ public class EncodingFilterTest {
             response.readEntity(String.class);
             fail("Exception caused by invalid gzip stream expected.");
         } catch (ProcessingException ex) {
-            assertTrue("Response input stream not closed when exception is thrown.", responseStream.isClosed);
+            assertTrue(responseStream.isClosed, "Response input stream not closed when exception is thrown.");
         }
     }
 
@@ -177,7 +176,7 @@ public class EncodingFilterTest {
             client.target(UriBuilder.fromUri("/").build()).request().get(String.class);
             fail("Exception caused by invalid gzip stream expected.");
         } catch (ProcessingException ex) {
-            assertTrue("Response input stream not closed when exception is thrown.", responseStream.isClosed);
+            assertTrue(responseStream.isClosed, "Response input stream not closed when exception is thrown.");
         }
     }
 

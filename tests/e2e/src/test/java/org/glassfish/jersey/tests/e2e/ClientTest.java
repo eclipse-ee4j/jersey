@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,11 +38,11 @@ import javax.ws.rs.core.Variant;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Marek Potociar
@@ -132,12 +132,12 @@ public class ClientTest extends JerseyTest {
 
         reqHeaders = r.readEntity(String.class).toLowerCase();
         for (final String expected : new String[] {"custom-header:[custom-value]", "custom-header:custom-value"}) {
-            assertTrue(String.format("Request headers do not contain expected '%s' entry:\n%s", expected, reqHeaders),
-                    reqHeaders.contains(expected));
+            assertTrue(reqHeaders.contains(expected),
+                    String.format("Request headers do not contain expected '%s' entry:\n%s", expected, reqHeaders));
         }
         final String unexpected = "content-encoding";
-        assertFalse(String.format("Request headers contains unexpected '%s' entry:\n%s", unexpected, reqHeaders),
-                reqHeaders.contains(unexpected));
+        assertFalse(reqHeaders.contains(unexpected),
+                String.format("Request headers contains unexpected '%s' entry:\n%s", unexpected, reqHeaders));
 
         ib = target.request("*/*");
         i = ib.build("POST",
@@ -146,7 +146,7 @@ public class ClientTest extends JerseyTest {
 
         final String expected = "content-encoding:[deflate]";
         reqHeaders = r.readEntity(String.class).toLowerCase();
-        assertTrue(String.format("Request headers do not contain expected '%s' entry:\n%s", expected, reqHeaders),
-                reqHeaders.contains(expected));
+        assertTrue(reqHeaders.contains(expected),
+                String.format("Request headers do not contain expected '%s' entry:\n%s", expected, reqHeaders));
     }
 }

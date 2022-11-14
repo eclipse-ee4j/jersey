@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import javax.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class InjectionManagerTest extends TestParent {
 
@@ -31,16 +31,16 @@ public class InjectionManagerTest extends TestParent {
     public void injectionManagerTest() {
         injectionManager.completeRegistration();
         final InjectionManagerInjectedBean bean = injectionManager.getInstance(InjectionManagerInjectedBean.class);
-        Assert.assertNotNull(bean);
+        Assertions.assertNotNull(bean);
         InjectionManager got = bean.getInjectionManager();
-        Assert.assertEquals(injectionManager, got);
+        Assertions.assertEquals(injectionManager, got);
 
         final InjectionManager clientInjectionManager = new CdiInjectionManagerFactory().create(null, RuntimeType.CLIENT);
         clientInjectionManager.completeRegistration();
         final InjectionManagerInjectedBean clientBean = clientInjectionManager.getInstance(InjectionManagerInjectedBean.class);
-        Assert.assertNotNull(clientBean);
+        Assertions.assertNotNull(clientBean);
         InjectionManager gotClient = clientBean.getInjectionManager();
-        Assert.assertEquals(clientInjectionManager, gotClient);
+        Assertions.assertEquals(clientInjectionManager, gotClient);
     }
 
     @Dependent

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Grizzly test container base URI tests.
@@ -67,7 +67,7 @@ public class BaseUriTest extends JerseyTest {
         final WebTarget target = target("root");
 
         final String s = target.request().get(String.class);
-        Assert.assertEquals("GET", s);
+        Assertions.assertEquals("GET", s);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class BaseUriTest extends JerseyTest {
         final WebTarget target = target("root/sub");
 
         final String s = target.request().get(String.class);
-        Assert.assertEquals("sub", s);
+        Assertions.assertEquals("sub", s);
     }
 
 }

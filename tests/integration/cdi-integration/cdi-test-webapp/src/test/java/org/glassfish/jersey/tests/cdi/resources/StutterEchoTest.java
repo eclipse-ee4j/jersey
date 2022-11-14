@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,47 +16,32 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for qualified injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class StutterEchoTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][]{
-            {"alpha", "alphaalpha"},
-            {"gogol", "gogolgogol"},
-            {"elcaro", "elcaroelcaro"}
-        });
-    };
-
-    final String in, out;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param in query parameter.
-     * @param out expected output.
-     */
-    public StutterEchoTest(String in, String out) {
-        this.in = in;
-        this.out = out;
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+            Arguments.of("alpha", "alphaalpha"),
+            Arguments.of("gogol", "gogolgogol"),
+            Arguments.of("elcaro", "elcaroelcaro")
+        );
     }
 
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String in, String out) {
         String s = target().path("stutter").queryParam("s", in).request().get(String.class);
         assertThat(s, equalTo(out));
     }

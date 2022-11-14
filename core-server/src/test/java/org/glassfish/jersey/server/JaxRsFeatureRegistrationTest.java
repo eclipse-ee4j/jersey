@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 package org.glassfish.jersey.server;
 
 import org.glassfish.jersey.CommonProperties;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.container.ResourceInfo;
@@ -47,8 +47,8 @@ public class JaxRsFeatureRegistrationTest {
         final ResourceConfig config = new ResourceConfig();
         final ApplicationHandler ah = new ApplicationHandler(config);
 
-        Assert.assertTrue(ah.getConfiguration().isRegistered(FeatureImpl.class));
-        Assert.assertTrue(ah.getConfiguration().isRegistered(DynamicFeatureImpl.class));
+        Assertions.assertTrue(ah.getConfiguration().isRegistered(FeatureImpl.class));
+        Assertions.assertTrue(ah.getConfiguration().isRegistered(DynamicFeatureImpl.class));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class JaxRsFeatureRegistrationTest {
                 .property(CommonProperties.JAXRS_SERVICE_LOADING_ENABLE, "false");
         final ApplicationHandler ah = new ApplicationHandler(config);
 
-        Assert.assertFalse(ah.getConfiguration().isRegistered(FeatureImpl.class));
-        Assert.assertFalse(ah.getConfiguration().isRegistered(DynamicFeatureImpl.class));
+        Assertions.assertFalse(ah.getConfiguration().isRegistered(FeatureImpl.class));
+        Assertions.assertFalse(ah.getConfiguration().isRegistered(DynamicFeatureImpl.class));
     }
 }

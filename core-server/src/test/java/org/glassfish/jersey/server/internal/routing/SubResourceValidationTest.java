@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,9 +27,9 @@ import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * This tests disabling of a sub resource locator validation.
@@ -81,7 +81,7 @@ public class SubResourceValidationTest {
             final ContainerResponse response = applicationHandler.apply(
                     RequestContextBuilder.from("/root/sub", "GET").build()).get();
             // should throw an exception or return 500
-            Assert.assertEquals(500, response.getStatus());
+            Assertions.assertEquals(500, response.getStatus());
         } catch (Exception e) {
             // ok
         }

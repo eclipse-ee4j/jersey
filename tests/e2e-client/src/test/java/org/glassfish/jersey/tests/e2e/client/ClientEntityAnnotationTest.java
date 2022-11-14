@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,8 +33,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests annotations of entity on the client side.
@@ -59,8 +59,8 @@ public class ClientEntityAnnotationTest extends JerseyTest {
         Entity<String> post = Entity.entity("test", MediaType.WILDCARD_TYPE,
                 annotations);
         final Response response = target().path("resource").request().post(post);
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("test", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("test", response.readEntity(String.class));
     }
 
 
@@ -69,8 +69,8 @@ public class ClientEntityAnnotationTest extends JerseyTest {
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
             final Annotation[] entityAnnotations = requestContext.getEntityAnnotations();
-            Assert.assertEquals(1, entityAnnotations.length);
-            Assert.assertEquals(MyProvider.class.getAnnotation(Provider.class), entityAnnotations[0]);
+            Assertions.assertEquals(1, entityAnnotations.length);
+            Assertions.assertEquals(MyProvider.class.getAnnotation(Provider.class), entityAnnotations[0]);
         }
     }
 

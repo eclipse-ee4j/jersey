@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.server.mvc.provider.TestViewProcessor;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Michal Gajdos
@@ -93,9 +94,10 @@ public class ErrorTemplateTest extends JerseyTest {
         }
     }
 
-    @Test(expected = InternalServerErrorException.class)
+    @Test
     public void testErrorMethodTemplateSubResource() throws Exception {
-        target("subResourceTemplate").request().get(String.class);
+        assertThrows(InternalServerErrorException.class,
+                () -> target("subResourceTemplate").request().get(String.class));
     }
 
     @Test

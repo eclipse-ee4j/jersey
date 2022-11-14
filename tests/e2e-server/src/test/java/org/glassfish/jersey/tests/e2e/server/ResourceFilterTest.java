@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,13 +44,13 @@ import javax.annotation.Priority;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JAX-RS name-bound filter tests.
@@ -116,9 +116,9 @@ public class ResourceFilterTest extends JerseyTest {
 
     private void test(String name) {
         Response r = target("basic").path(name).request().get();
-        assertEquals("Unexpected HTTP response status code.", 200, r.getStatus());
-        assertTrue("Response does not have entity.", r.hasEntity());
-        assertEquals("Unexpected response entity value.", name, r.readEntity(String.class));
+        assertEquals(200, r.getStatus(), "Unexpected HTTP response status code.");
+        assertTrue(r.hasEntity(), "Response does not have entity.");
+        assertEquals(name, r.readEntity(String.class), "Unexpected response entity value.");
     }
 
     @Path("/basic")

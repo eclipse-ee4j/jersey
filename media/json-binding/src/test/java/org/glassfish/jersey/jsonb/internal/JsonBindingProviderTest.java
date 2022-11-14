@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Markus KARG
+ * Copyright (c) 2020, 2022 Markus KARG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,8 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Providers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit Test for {@link JsonBindingProvider}.
@@ -47,18 +48,20 @@ import org.junit.Test;
  */
 public final class JsonBindingProviderTest {
 
-    @Test(expected = NoContentException.class)
+    @Test
     public final void shouldThrowNoContentException() throws IOException {
-        // given
-        final Providers providers = new EmptyProviders();
-        final MessageBodyReader<Foo> mbr = (MessageBodyReader) new JsonBindingProvider(providers);
+        assertThrows(NoContentException.class, () -> {
+            // given
+            final Providers providers = new EmptyProviders();
+            final MessageBodyReader<Foo> mbr = (MessageBodyReader) new JsonBindingProvider(providers);
 
-        // when
-        mbr.readFrom(Foo.class, Foo.class, new Annotation[0], APPLICATION_JSON_TYPE,
-                new MultivaluedHashMap<>(), new ByteArrayInputStream(new byte[0]));
+            // when
+            mbr.readFrom(Foo.class, Foo.class, new Annotation[0], APPLICATION_JSON_TYPE,
+                    new MultivaluedHashMap<>(), new ByteArrayInputStream(new byte[0]));
 
-        // then
-        // should throw NoContentException
+            // then
+            // should throw NoContentException
+        });
     }
 
     private static final class Foo {

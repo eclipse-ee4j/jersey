@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,9 +55,9 @@ import org.glassfish.jersey.server.ManagedAsyncExecutor;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link org.glassfish.jersey.spi.ExecutorServiceProvider} E2E tests.
@@ -277,10 +277,10 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("resource", response.readEntity(String.class));
 
         // no executors should be created or released at this point yet
-        assertEquals("Unexpected number of created client executors", 0, provider.executorCreationCount);
-        assertEquals("Unexpected number of released client executors", 0, provider.executorReleaseCount);
-        assertEquals("Unexpected number of client executors stored in the set.",
-                0, provider.executors.size());
+        assertEquals(0, provider.executorCreationCount, "Unexpected number of created client executors");
+        assertEquals(0, provider.executorReleaseCount, "Unexpected number of released client executors");
+        assertEquals(0, provider.executors.size(),
+                "Unexpected number of client executors stored in the set.");
 
         Future<Response> fr = client.target(getBaseUri()).path("resource").request().async().get();
         response = fr.get();
@@ -289,18 +289,16 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("resource", response.readEntity(String.class));
 
         // single executor should be created but not released at this point yet
-        assertEquals("Unexpected number of created client executors", 1, provider.executorCreationCount);
-        assertEquals("Unexpected number of released client executors", 0, provider.executorReleaseCount);
-        assertEquals("Unexpected number of client executors stored in the set.",
-                1, provider.executors.size());
+        assertEquals(1, provider.executorCreationCount, "Unexpected number of created client executors");
+        assertEquals(0, provider.executorReleaseCount, "Unexpected number of released client executors");
+        assertEquals(1, provider.executors.size(), "Unexpected number of client executors stored in the set.");
 
         client.close();
 
         // the created executor needs to be released by now; no more executors should be created
-        assertEquals("Unexpected number of created client executors", 1, provider.executorCreationCount);
-        assertEquals("Unexpected number of released client executors", 1, provider.executorReleaseCount);
-        assertEquals("Unexpected number of client executors stored in the set.",
-                0, provider.executors.size());
+        assertEquals(1, provider.executorCreationCount, "Unexpected number of created client executors");
+        assertEquals(1, provider.executorReleaseCount, "Unexpected number of released client executors");
+        assertEquals(0, provider.executors.size(), "Unexpected number of client executors stored in the set.");
     }
 
     /**
@@ -319,10 +317,9 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("resource", response.readEntity(String.class));
 
         // no executors should be created or released at this point yet
-        assertEquals("Unexpected number of created server executors", 0, serverExecutorProvider.executorCreationCount);
-        assertEquals("Unexpected number of released server executors", 0, serverExecutorProvider.executorReleaseCount);
-        assertEquals("Unexpected number of server executors stored in the set.",
-                0, serverExecutorProvider.executors.size());
+        assertEquals(0, serverExecutorProvider.executorCreationCount, "Unexpected number of created server executors");
+        assertEquals(0, serverExecutorProvider.executorReleaseCount, "Unexpected number of released server executors");
+        assertEquals(0, serverExecutorProvider.executors.size(), "Unexpected number of server executors stored in the set.");
 
         response = target("resource/async").request().get();
 
@@ -330,18 +327,16 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("async-resource-passed", response.readEntity(String.class));
 
         // single executor should be created but not released at this point yet
-        assertEquals("Unexpected number of created server executors", 1, serverExecutorProvider.executorCreationCount);
-        assertEquals("Unexpected number of released server executors", 0, serverExecutorProvider.executorReleaseCount);
-        assertEquals("Unexpected number of server executors stored in the set.",
-                1, serverExecutorProvider.executors.size());
+        assertEquals(1, serverExecutorProvider.executorCreationCount, "Unexpected number of created server executors");
+        assertEquals(0, serverExecutorProvider.executorReleaseCount, "Unexpected number of released server executors");
+        assertEquals(1, serverExecutorProvider.executors.size(), "Unexpected number of server executors stored in the set.");
 
         tearDown(); // stopping test container
 
         // the created executor needs to be released by now; no more executors should be created
-        assertEquals("Unexpected number of created server executors", 1, serverExecutorProvider.executorCreationCount);
-        assertEquals("Unexpected number of released server executors", 1, serverExecutorProvider.executorReleaseCount);
-        assertEquals("Unexpected number of server executors stored in the set.",
-                0, serverExecutorProvider.executors.size());
+        assertEquals(1, serverExecutorProvider.executorCreationCount, "Unexpected number of created server executors");
+        assertEquals(1, serverExecutorProvider.executorReleaseCount, "Unexpected number of released server executors");
+        assertEquals(0, serverExecutorProvider.executors.size(), "Unexpected number of server executors stored in the set.");
 
         setUp(); // re-starting test container to ensure proper post-test tearDown.
     }
@@ -361,18 +356,16 @@ public class ExecutorServiceProviderTest extends JerseyTest {
         assertEquals("custom-async-resource-passed", response.readEntity(String.class));
 
         // single executor should be created but not released at this point yet
-        assertEquals("Unexpected number of created server executors", 1, serverExecutorProvider.executorCreationCount);
-        assertEquals("Unexpected number of released server executors", 0, serverExecutorProvider.executorReleaseCount);
-        assertEquals("Unexpected number of server executors stored in the set.",
-                1, serverExecutorProvider.executors.size());
+        assertEquals(1, serverExecutorProvider.executorCreationCount, "Unexpected number of created server executors");
+        assertEquals(0, serverExecutorProvider.executorReleaseCount, "Unexpected number of released server executors");
+        assertEquals(1, serverExecutorProvider.executors.size(), "Unexpected number of server executors stored in the set.");
 
         tearDown(); // stopping test container
 
         // the created executor needs to be released by now; no more executors should be created
-        assertEquals("Unexpected number of created server executors", 1, serverExecutorProvider.executorCreationCount);
-        assertEquals("Unexpected number of released server executors", 1, serverExecutorProvider.executorReleaseCount);
-        assertEquals("Unexpected number of server executors stored in the set.",
-                0, serverExecutorProvider.executors.size());
+        assertEquals(1, serverExecutorProvider.executorCreationCount, "Unexpected number of created server executors");
+        assertEquals(1, serverExecutorProvider.executorReleaseCount, "Unexpected number of released server executors");
+        assertEquals(0, serverExecutorProvider.executors.size(), "Unexpected number of server executors stored in the set.");
 
         setUp(); // re-starting test container to ensure proper post-test tearDown.
     }

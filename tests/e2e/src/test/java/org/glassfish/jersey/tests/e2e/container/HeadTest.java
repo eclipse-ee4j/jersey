@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -31,24 +32,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class HeadTest extends JerseyContainerTest {
+public class HeadTest extends JerseyTest {
 
     private static final List<TestContainerFactory> FACTORIES = Arrays.asList(
             new GrizzlyTestContainerFactory(),
@@ -56,9 +56,8 @@ public class HeadTest extends JerseyContainerTest {
             new SimpleTestContainerFactory(),
             new JettyTestContainerFactory());
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<TestContainerFactory[]> parameters() throws Exception {
-        return FACTORIES.stream().map(input -> new TestContainerFactory[]{input}).collect(Collectors.toList());
+    public static Stream<TestContainerFactory> parameters() throws Exception {
+        return FACTORIES.stream();
     }
 
     @Path("/")
@@ -88,18 +87,21 @@ public class HeadTest extends JerseyContainerTest {
         return new ResourceConfig(Resource.class);
     }
 
-    @Test
-    public void testHeadString() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void testHeadString(TestContainerFactory factory) {
         _testHead("string", MediaType.TEXT_PLAIN_TYPE);
     }
 
-    @Test
-    public void testHeadByte() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void testHeadByte(TestContainerFactory factory) {
         _testHead("byte", MediaType.APPLICATION_OCTET_STREAM_TYPE);
     }
 
-    @Test
-    public void testHeadByteArrayInputStream() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void testHeadByteArrayInputStream(TestContainerFactory factory) {
         _testHead("ByteArrayInputStream", MediaType.APPLICATION_OCTET_STREAM_TYPE);
     }
 

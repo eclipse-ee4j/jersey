@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,12 +21,12 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.memleak.common.AbstractMemoryLeakWebAppTest;
 import org.glassfish.jersey.test.memleak.common.MemoryLeakSucceedingTimeout;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This is an integration test that reproduces JERSEY-2786 by calling RESTful resource {@link ClientShutdownLeakResource}
@@ -41,13 +41,13 @@ public class ShutdownLeakResourceITCase extends AbstractMemoryLeakWebAppTest {
         return new TestApplication();
     }
 
-    @Rule
-    public Timeout globalTimeout = new MemoryLeakSucceedingTimeout(20_000);
+    @RegisterExtension
+    public InvocationInterceptor globalTimeout = new MemoryLeakSucceedingTimeout(20_000);
 
     @Test
     public void testTheLeakResourceOnce() {
         final Response response = target("client/invoke").request().post(null);
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test

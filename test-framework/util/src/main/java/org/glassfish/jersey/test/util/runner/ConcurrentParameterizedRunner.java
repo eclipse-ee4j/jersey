@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,8 +44,13 @@ import org.glassfish.jersey.Beta;
  * be merged into {@link ConcurrentRunner} in the future.
  *
  * @author Jakub Podlesak
+ *
+ * @deprecated in connection with transition to JUnit 5 usage of this class is obsolete. Alternatively can be used
+ * specific junit 5
+ * <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parallel-execution">executions tools</a>.
  */
 @Beta
+@Deprecated
 public class ConcurrentParameterizedRunner extends BlockJUnit4ClassRunner {
 
     public final int FINISH_WAIT_CYCLE_MS = 2000;

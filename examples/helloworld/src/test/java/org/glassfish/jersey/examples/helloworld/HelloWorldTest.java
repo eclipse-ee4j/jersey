@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -27,17 +27,19 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
-import org.glassfish.jersey.test.util.runner.RunSeparately;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HelloWorldTest extends JerseyTest {
 
     @Override
@@ -58,7 +60,9 @@ public class HelloWorldTest extends JerseyTest {
 //    }
 
     @Test
-    @Ignore("not compatible with test framework (doesn't use client())")
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
+    @Disabled("not compatible with test framework (doesn't use client())")
     public void testHelloWorld() throws Exception {
         URL getUrl = UriBuilder.fromUri(getBaseUri()).path(App.ROOT_PATH).build().toURL();
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
@@ -74,18 +78,24 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testConnection() {
         Response response = target().path(App.ROOT_PATH).request("text/plain").get();
         assertEquals(200, response.getStatus());
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testClientStringResponse() {
         String s = target().path(App.ROOT_PATH).request().get(String.class);
         assertEquals(HelloWorldResource.CLICHED_MESSAGE, s);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testAsyncClientRequests() throws InterruptedException {
         final int REQUESTS = 10;
         final CountDownLatch latch = new CountDownLatch(REQUESTS);
@@ -116,6 +126,8 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testHead() {
         Response response = target().path(App.ROOT_PATH).request().head();
         assertEquals(200, response.getStatus());
@@ -123,6 +135,8 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testFooBarOptions() {
         Response response = target().path(App.ROOT_PATH).request().header("Accept", "foo/bar").options();
         assertEquals(200, response.getStatus());
@@ -133,6 +147,8 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testTextPlainOptions() {
         Response response = target().path(App.ROOT_PATH).request().header("Accept", MediaType.TEXT_PLAIN).options();
         assertEquals(200, response.getStatus());
@@ -150,6 +166,8 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ)
     public void testMissingResourceNotFound() {
         Response response;
 
@@ -161,7 +179,7 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ_WRITE)
     public void testLoggingFilterClientClass() {
         Client client = client();
         client.register(CustomLoggingFilter.class).property("foo", "bar");
@@ -173,7 +191,7 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ_WRITE)
     public void testLoggingFilterClientInstance() {
         Client client = client();
         client.register(new CustomLoggingFilter()).property("foo", "bar");
@@ -185,7 +203,7 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ_WRITE)
     public void testLoggingFilterTargetClass() {
         WebTarget target = target().path(App.ROOT_PATH);
         target.register(CustomLoggingFilter.class).property("foo", "bar");
@@ -197,7 +215,7 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ_WRITE)
     public void testLoggingFilterTargetInstance() {
         WebTarget target = target().path(App.ROOT_PATH);
         target.register(new CustomLoggingFilter()).property("foo", "bar");
@@ -209,7 +227,7 @@ public class HelloWorldTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
+    @ResourceLock(value = "dummy", mode = ResourceAccessMode.READ_WRITE)
     public void testConfigurationUpdate() {
         Client client1 = client();
         client1.register(CustomLoggingFilter.class).property("foo", "bar");

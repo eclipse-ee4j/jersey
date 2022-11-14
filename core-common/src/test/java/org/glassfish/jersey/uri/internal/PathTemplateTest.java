@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,8 @@ package org.glassfish.jersey.uri.internal;
 
 import org.glassfish.jersey.uri.PathTemplate;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -31,14 +31,14 @@ public class PathTemplateTest {
     public void testBasicOperations() throws Exception {
         PathTemplate tmpl = new PathTemplate("/{id : \\d+}/test");
         assertEquals(
-                "getNumberOfTemplateVariables() returned invalid number",
                 1,
-                tmpl.getNumberOfTemplateVariables()
+                tmpl.getNumberOfTemplateVariables(),
+                "getNumberOfTemplateVariables() returned invalid number"
         );
         assertEquals(
-                "getNumberOfExplicitRegexes() returned invalid number",
                 1,
-                tmpl.getNumberOfExplicitRegexes()
+                tmpl.getNumberOfExplicitRegexes(),
+                "getNumberOfExplicitRegexes() returned invalid number"
         );
     }
 }

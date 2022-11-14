@@ -59,6 +59,9 @@
                     <mainClass>org.glassfish.jersey.examples.helloworld.netty.App</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 

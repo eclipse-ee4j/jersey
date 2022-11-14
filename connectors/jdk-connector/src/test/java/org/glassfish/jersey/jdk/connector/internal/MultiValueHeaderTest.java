@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,8 @@ import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Adam Lindenthal
@@ -74,10 +74,10 @@ public class MultiValueHeaderTest extends JerseyTest {
                 .header("tools", "drill")
                 .get();
 
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
 
         final String values = response.getHeaderString("animals");
-        Assert.assertEquals("mole,hedgehog,bat,rabbit", values);
+        Assertions.assertEquals("mole,hedgehog,bat,rabbit", values);
     }
 
 }

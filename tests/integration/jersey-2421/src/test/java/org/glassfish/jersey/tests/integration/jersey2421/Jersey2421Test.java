@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,9 +41,10 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.internal.NullOutputStream;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Reproducer tests for JERSEY-2421.
@@ -115,8 +116,8 @@ public class Jersey2421Test {
     /**
      * Test that classes from jersey-server module cannot be loaded.
      */
-    @Test(expected = ClassNotFoundException.class)
+    @Test
     public void testLoadJerseyServerClass() throws Exception {
-        Class.forName("org.glassfish.jersey.server.ResourceConfig");
+        assertThrows(ClassNotFoundException.class, () -> Class.forName("org.glassfish.jersey.server.ResourceConfig"));
     }
 }

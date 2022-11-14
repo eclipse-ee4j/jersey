@@ -40,8 +40,8 @@ import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RetryStrategyTest extends JerseyTest {
     private static final int READ_TIMEOUT_MS = 100;

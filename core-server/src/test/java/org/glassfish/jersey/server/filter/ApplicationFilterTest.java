@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,10 +39,10 @@ import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test for JAX-RS filters.
@@ -149,7 +149,7 @@ public class ApplicationFilterTest {
         final ApplicationHandler application = new ApplicationHandler(resourceConfig);
         final ContainerResponse response = application.apply(RequestContextBuilder.from("/simple", "GET").build()).get();
         assertEquals(200, response.getStatus());
-        Assert.assertTrue(simpleFilter.called);
+        assertTrue(simpleFilter.called);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ApplicationFilterTest {
         final ApplicationHandler application = new ApplicationHandler(resourceConfig);
         final ContainerResponse response = application.apply(RequestContextBuilder.from("/NOT-FOUND", "GET").build()).get();
         assertEquals(404, response.getStatus());
-        Assert.assertFalse(simpleFilter.called);
+        Assertions.assertFalse(simpleFilter.called);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class ApplicationFilterTest {
         final ContainerResponse response = application.apply(RequestContextBuilder.from("/simple", "POST").entity("entity")
                 .build()).get();
         assertEquals(405, response.getStatus());
-        Assert.assertFalse(simpleFilter.called);
+        Assertions.assertFalse(simpleFilter.called);
     }
 
     @Path("simple")
@@ -320,7 +320,7 @@ public class ApplicationFilterTest {
         final ApplicationHandler application = new ApplicationHandler(resourceConfig);
         try {
             application.apply(RequestContextBuilder.from("/test", "GET").build()).get().getStatus();
-            Assert.fail("should throw an exception");
+            Assertions.fail("should throw an exception");
         } catch (final Exception e) {
             // ok
         }

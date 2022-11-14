@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.jersey.tests.e2e.server.validation.validateonexecution;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.executable.ExecutableType;
@@ -25,9 +27,6 @@ import javax.validation.executable.ValidateOnExecution;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.glassfish.jersey.tests.e2e.server.validation.Extended;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author Michal Gajdos

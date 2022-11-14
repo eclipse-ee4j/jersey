@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -44,6 +44,6 @@ public class HelidonConfigApplicationTest extends JerseyTest {
         final String response = target("/config/getProperty/{name}")
                 .resolveTemplate("name", "jersey.config.disableMetainfServicesLookup")
                 .request(MediaType.TEXT_PLAIN).get(String.class);
-        Assert.assertEquals("true", response);
+        Assertions.assertEquals("true", response);
     }
 }

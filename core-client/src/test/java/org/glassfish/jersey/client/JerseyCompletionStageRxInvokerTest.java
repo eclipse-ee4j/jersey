@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,10 +31,11 @@ import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 
 import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -48,7 +49,7 @@ public class JerseyCompletionStageRxInvokerTest {
     private Client client;
     private ExecutorService executor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         client = ClientBuilder.newClient().register(TerminalClientRequestFilter.class);
         executor = new ScheduledThreadPoolExecutor(1, new ThreadFactoryBuilder()
@@ -57,7 +58,7 @@ public class JerseyCompletionStageRxInvokerTest {
                 .build());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         executor.shutdown();
         client.close();
@@ -70,7 +71,7 @@ public class JerseyCompletionStageRxInvokerTest {
     }
 
     @Test
-    @Ignore("TODO JAX-RS 2.1")
+    @Disabled("TODO JAX-RS 2.1")
     public void testNewClientExecutor() throws Exception {
         testClient(ClientBuilder.newBuilder()
                                 .executorService(executor)
@@ -88,41 +89,45 @@ public class JerseyCompletionStageRxInvokerTest {
         testInvoker(invoker, 404, false);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundReadEntityViaClass() throws Throwable {
-        try {
-            client.target("http://jersey.java.net")
-                  .request()
-                  .header("Response-Status", 404)
-                  .rx()
-                  .get(String.class)
-                  .toCompletableFuture()
-                  .get();
-        } catch (final Exception expected) {
-            // java.util.concurrent.ExecutionException
-            throw expected
-                    // javax.ws.rs.NotFoundException
-                    .getCause();
-        }
+        Assertions.assertThrows(NotFoundException.class, () -> {
+            try {
+                client.target("http://jersey.java.net")
+                      .request()
+                      .header("Response-Status", 404)
+                      .rx()
+                      .get(String.class)
+                      .toCompletableFuture()
+                      .get();
+            } catch (final Exception expected) {
+                // java.util.concurrent.ExecutionException
+                throw expected
+                        // javax.ws.rs.NotFoundException
+                        .getCause();
+            }
+        });
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundReadEntityViaGenericType() throws Throwable {
-        try {
-            client.target("http://jersey.java.net")
-                  .request()
-                  .header("Response-Status", 404)
-                  .rx()
-                  .get(new GenericType<String>() {
-                  })
-                  .toCompletableFuture()
-                  .get();
-        } catch (final Exception expected) {
-            // java.util.concurrent.ExecutionException
-            throw expected
-                    // javax.ws.rs.NotFoundException
-                    .getCause();
-        }
+        Assertions.assertThrows(NotFoundException.class, () ->{
+            try {
+                client.target("http://jersey.java.net")
+                      .request()
+                      .header("Response-Status", 404)
+                      .rx()
+                      .get(new GenericType<String>() {
+                      })
+                      .toCompletableFuture()
+                      .get();
+            } catch (final Exception expected) {
+                // java.util.concurrent.ExecutionException
+                throw expected
+                        // javax.ws.rs.NotFoundException
+                        .getCause();
+            }
+        });
     }
 
     @Test

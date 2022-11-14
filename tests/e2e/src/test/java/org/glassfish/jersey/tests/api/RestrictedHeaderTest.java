@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,9 +35,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test setting headers that are restricted by {@link java.net.HttpURLConnection}.
@@ -70,13 +70,13 @@ public class RestrictedHeaderTest extends JerseyTest {
         return new ResourceConfig(MyResource.class, LoggingFeature.class);
     }
 
-    @Ignore("The setting of allowRestrictedHeaders system property is global and cached. Only "
+    @Disabled("The setting of allowRestrictedHeaders system property is global and cached. Only "
             + "one of both testForbiddenHeadersNotAllowed() and testForbiddenHeadersAllowed() can be run during one test.")
     @Test
     public void testForbiddenHeadersNotAllowed() {
         Client client = ClientBuilder.newClient();
         Response response = testHeaders(client);
-        Assert.assertEquals(500, response.getStatus());
+        Assertions.assertEquals(500, response.getStatus());
     }
 
     /**
@@ -92,7 +92,7 @@ public class RestrictedHeaderTest extends JerseyTest {
 
         Response response = testHeaders(client);
         System.out.println(response.readEntity(String.class));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     /**

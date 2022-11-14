@@ -22,9 +22,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +54,7 @@ public class HttpProxyTest extends JerseyTest {
         return new ResourceConfig(ProxyTestResource.class);
     }
 
-    @Before
+    @BeforeEach
     public void startFakeProxy() {
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
         System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
@@ -73,7 +73,7 @@ public class HttpProxyTest extends JerseyTest {
 
         Response response = target("resource").request().get();
 
-        Assert.assertEquals(407, response.getStatus());
+        Assertions.assertEquals(407, response.getStatus());
     }
 
     @Test
@@ -82,9 +82,9 @@ public class HttpProxyTest extends JerseyTest {
 
         Response response = target("resource").request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("OK", response.readEntity(String.class));
-        Assert.assertFalse(proxyHit);
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("OK", response.readEntity(String.class));
+        Assertions.assertFalse(proxyHit);
     }
 
     class ProxyHandler extends AbstractHandler {

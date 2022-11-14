@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -53,9 +51,6 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
 
     private SSLContext serverSslContext;
     private SSLParameters serverSslParameters;
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     @Override
     protected TestContainerFactory getTestContainerFactory() {
@@ -113,48 +108,48 @@ public class GrizzlyTwoWaySslWebTest extends JerseyTest {
         WebTarget target = client.target(getBaseUri()).path("more-secure");
 
         String s = target.request().get(String.class);
-        Assert.assertEquals("GET", s);
+        Assertions.assertEquals("GET", s);
     }
 
     @Test
     public void testGetFailsWhenClientDoesNotTrustsServer() {
-        SSLContext clientSslContext = SslUtils.createClientSslContext(true, false);
+        Assertions.assertThrows(ProcessingException.class, () -> {
+            SSLContext clientSslContext = SslUtils.createClientSslContext(true, false);
 
-        Client client = ClientBuilder.newBuilder()
-                .sslContext(clientSslContext)
-                .build();
+            Client client = ClientBuilder.newBuilder()
+                    .sslContext(clientSslContext)
+                    .build();
 
-        WebTarget target = client.target(getBaseUri()).path("more-secure");
+            WebTarget target = client.target(getBaseUri()).path("more-secure");
 
-        exception.expect(ProcessingException.class);
-
-        target.request().get(String.class);
+            target.request().get(String.class);
+        });
     }
 
     @Test
     public void testGetFailsWhenClientCanNotIdentifyItselfToTheServer() {
-        SSLContext clientSslContext = SslUtils.createClientSslContext(false, true);
+        Assertions.assertThrows(ProcessingException.class, () -> {
+            SSLContext clientSslContext = SslUtils.createClientSslContext(false, true);
 
-        Client client = ClientBuilder.newBuilder()
-                .sslContext(clientSslContext)
-                .build();
+            Client client = ClientBuilder.newBuilder()
+                    .sslContext(clientSslContext)
+                    .build();
 
-        WebTarget target = client.target(getBaseUri()).path("more-secure");
+            WebTarget target = client.target(getBaseUri()).path("more-secure");
 
-        exception.expect(ProcessingException.class);
-
-        target.request().get(String.class);
+            target.request().get(String.class);
+        });
     }
 
     @Test
     public void testGetFailsWhenClientExecutesRequestWithoutHavingSslConfigured() {
-        Client client = ClientBuilder.newClient();
+        Assertions.assertThrows(ProcessingException.class, () -> {
+            Client client = ClientBuilder.newClient();
 
-        WebTarget target = client.target(getBaseUri()).path("more-secure");
+            WebTarget target = client.target(getBaseUri()).path("more-secure");
 
-        exception.expect(ProcessingException.class);
-
-        target.request().get(String.class);
+            target.request().get(String.class);
+        });
     }
 
 }

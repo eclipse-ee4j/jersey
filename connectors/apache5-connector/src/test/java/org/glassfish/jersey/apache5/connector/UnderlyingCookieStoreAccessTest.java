@@ -23,9 +23,9 @@ import javax.ws.rs.client.WebTarget;
 import org.apache.hc.client5.http.cookie.CookieStore;
 import org.glassfish.jersey.client.ClientConfig;
 
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * Test of access to the underlying CookieStore instance used by the connector.
@@ -44,9 +44,9 @@ public class UnderlyingCookieStoreAccessTest {
         final WebTarget target = client.target("http://localhost/");
         final CookieStore csOnTarget = Apache5ConnectorProvider.getCookieStore(target);
 
-        assertNotNull("CookieStore instance set on JerseyClient should not be null.", csOnClient);
-        assertNotNull("CookieStore instance set on JerseyWebTarget should not be null.", csOnTarget);
-        assertSame("CookieStore instance set on JerseyClient should be the same instance as the one set on JerseyWebTarget"
-                + "(provided the target instance has not been further configured).", csOnClient, csOnTarget);
+        assertNotNull(csOnClient, "CookieStore instance set on JerseyClient should not be null.");
+        assertNotNull(csOnTarget, "CookieStore instance set on JerseyWebTarget should not be null.");
+        assertSame(csOnClient, csOnTarget, "CookieStore instance set on JerseyClient should be the same instance as the one "
+                + "set on JerseyWebTarget (provided the target instance has not been further configured).");
     }
 }

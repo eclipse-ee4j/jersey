@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,8 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import net.java.html.json.Model;
 import net.java.html.json.Property;
@@ -88,6 +88,6 @@ public class ModelEntityTest extends AbstractTypeTester {
         assertEquals(200, response.getStatus());
         final MyBean teb = response.readEntity(MyBean.class);
 
-        assertEquals("value", "hello", teb.getValue());
+        assertEquals("hello", teb.getValue(), "value");
     }
 }

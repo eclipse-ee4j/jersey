@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.sun.research.ws.wadl.Application;
 import com.sun.research.ws.wadl.Method;
@@ -61,7 +61,7 @@ public class WadlGeneratorConfigurationLoaderTest {
                 TestInjectionManagerFactory.createInjectionManager(resourceConfig);
         final WadlGenerator wadlGenerator = WadlGeneratorConfigLoader.loadWadlGeneratorsFromConfig(resourceConfig.getProperties())
                 .createWadlGenerator(result.injectionManager);
-        Assert.assertEquals(MyWadlGenerator.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator.class, wadlGenerator.getClass());
 
     }
 
@@ -75,7 +75,7 @@ public class WadlGeneratorConfigurationLoaderTest {
                 TestInjectionManagerFactory.createInjectionManager(resourceConfig);
         final WadlGenerator wadlGenerator = WadlGeneratorConfigLoader.loadWadlGeneratorsFromConfig(resourceConfig.getProperties())
                 .createWadlGenerator(result.injectionManager);
-        Assert.assertTrue(wadlGenerator instanceof MyWadlGenerator);
+        Assertions.assertTrue(wadlGenerator instanceof MyWadlGenerator);
     }
 
     public static class MyWadlGenerator implements WadlGenerator {

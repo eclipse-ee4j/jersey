@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import javax.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -49,16 +49,16 @@ public class ClientInstanceInjectionTest extends TestParent {
         });
 
         InjectedBean bean = injectionManager.getInstance(InjectedBean.class);
-        Assert.assertNotNull(bean);
-        Assert.assertEquals("6", bean.get());
+        Assertions.assertNotNull(bean);
+        Assertions.assertEquals("6", bean.get());
 
         InjectedBean bean1 = clientInjectionManager1.getInstance(InjectedBean.class);
-        Assert.assertNotNull(bean1);
-        Assert.assertEquals("11", bean1.get());
+        Assertions.assertNotNull(bean1);
+        Assertions.assertEquals("11", bean1.get());
 
         InjectedBean bean2 = clientInjectionManager2.getInstance(InjectedBean.class);
-        Assert.assertNotNull(bean2);
-        Assert.assertEquals("16", bean2.get());
+        Assertions.assertNotNull(bean2);
+        Assertions.assertEquals("16", bean2.get());
 
         injectionManager.shutdown();
         clientInjectionManager1.shutdown();
@@ -104,16 +104,16 @@ public class ClientInstanceInjectionTest extends TestParent {
         });
 
         InjectedSupplierBean bean = injectionManager.getInstance(InjectedSupplierBean.class);
-        Assert.assertNotNull(bean);
-        Assert.assertEquals("6", bean.get());
+        Assertions.assertNotNull(bean);
+        Assertions.assertEquals("6", bean.get());
 
         InjectedSupplierBean bean1 = clientInjectionManager1.getInstance(InjectedSupplierBean.class);
-        Assert.assertNotNull(bean1);
-        Assert.assertEquals("11", bean1.get());
+        Assertions.assertNotNull(bean1);
+        Assertions.assertEquals("11", bean1.get());
 
         InjectedSupplierBean bean2 = clientInjectionManager2.getInstance(InjectedSupplierBean.class);
-        Assert.assertNotNull(bean2);
-        Assert.assertEquals("16", bean2.get());
+        Assertions.assertNotNull(bean2);
+        Assertions.assertEquals("16", bean2.get());
     }
 
     @Dependent
@@ -173,12 +173,12 @@ public class ClientInstanceInjectionTest extends TestParent {
         });
 
         InjectedClientServerSupplierBean beanServer = injectionManager.getInstance(InjectedClientServerSupplierBean.class);
-        Assert.assertNotNull(beanServer);
-        Assert.assertEquals("SERVER", beanServer.get());
+        Assertions.assertNotNull(beanServer);
+        Assertions.assertEquals("SERVER", beanServer.get());
 
         InjectedClientServerSupplierBean beanClient = clientInjectionManager.getInstance(InjectedClientServerSupplierBean.class);
-        Assert.assertNotNull(beanClient);
-        Assert.assertEquals("CLIENT", beanClient.get());
+        Assertions.assertNotNull(beanClient);
+        Assertions.assertEquals("CLIENT", beanClient.get());
     }
 
     @Dependent

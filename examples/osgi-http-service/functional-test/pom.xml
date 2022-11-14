@@ -122,6 +122,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -218,7 +219,7 @@
                                 <!--
                                 excluded due to javax.servlet-api collision -
                                 more than one version is required, so it is not possible to execute that test.
-                                (since pax-exam version 4.13.4)
+                                (since pax-exam version 4.13.5)
                                   -->
                                 <exclude>org.glassfish.jersey.examples.osgihttpservice.test.GrizzlyHttpServiceFelixTest</exclude>
                             </excludes>

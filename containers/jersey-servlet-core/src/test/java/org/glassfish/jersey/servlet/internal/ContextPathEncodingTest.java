@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.servlet.ServletContainer;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -141,8 +141,8 @@ public class ContextPathEncodingTest {
 
         @Override
         public Value<Integer> service(URI baseUri, URI requestUri, HttpServletRequest request, HttpServletResponse response) {
-            Assert.assertEquals(this.baseUri, baseUri.toASCIIString());
-            Assert.assertEquals(this.requestUri, requestUri.toASCIIString());
+            Assertions.assertEquals(this.baseUri, baseUri.toASCIIString());
+            Assertions.assertEquals(this.requestUri, requestUri.toASCIIString());
             return Values.of(0);
         }
 

@@ -24,10 +24,10 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Jakub Podlesak
@@ -45,7 +45,7 @@ public class ReloadTestIT extends JerseyTest {
     }
 
     @Test
-    @Ignore //TODO - fix after 2.36
+    @Disabled //TODO - fix after 2.36
     public void testReload() throws Exception {
         Response response = target().path("helloworld").request().get();
         assertEquals(200, response.getStatus());

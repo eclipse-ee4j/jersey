@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,13 +30,13 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AbstractJaxbProviderTest {
     private InjectionManager injectionManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         injectionManager = SaxParserFactoryInjectionProviderTest.createInjectionManager();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,9 @@
 package org.glassfish.jersey.client.spi;
 
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
 import javax.ws.rs.ProcessingException;
@@ -43,7 +43,7 @@ public class PreInvocationInterceptorTest {
 
     private AtomicInteger counter;
 
-    @Before
+    @BeforeEach
     public void setup() {
         counter = new AtomicInteger();
     }
@@ -55,7 +55,7 @@ public class PreInvocationInterceptorTest {
                 .register(new CounterRequestFilter(a -> a.get() == 1))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.build("GET").invoke()) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -66,7 +66,7 @@ public class PreInvocationInterceptorTest {
                 .register(new CounterRequestFilter(a -> a.get() == 1))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.method("GET")) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -77,7 +77,7 @@ public class PreInvocationInterceptorTest {
                 .register(new PropertyRequestFilter(a -> PROPERTY_VALUE.equals(a.getProperty(PROPERTY_NAME))))
                 .register(AbortRequestFilter.class).build().target(URL).request().property(PROPERTY_NAME, PROPERTY_VALUE);
         try (Response response = builder.method("GET")) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -88,7 +88,7 @@ public class PreInvocationInterceptorTest {
                 .register(InjectedPreInvocationInterceptor.class)
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.method("GET")) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -101,7 +101,7 @@ public class PreInvocationInterceptorTest {
                 .register(new PropertyRequestFilter(a -> Thread.currentThread().getName().startsWith(EXECUTOR_THREAD_NAME)))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.async().method("GET").get()) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -114,7 +114,7 @@ public class PreInvocationInterceptorTest {
                 .register(new PropertyRequestFilter(a -> Thread.currentThread().getName().startsWith(EXECUTOR_THREAD_NAME)))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.rx().method("GET").toCompletableFuture().get()) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -129,7 +129,7 @@ public class PreInvocationInterceptorTest {
                 .register(new PropertyRequestFilter(a -> {throw new IllegalStateException(); }))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
         }
     }
 
@@ -154,9 +154,9 @@ public class PreInvocationInterceptorTest {
                 .register(new PropertyRequestFilter(a -> {throw new IllegalStateException(); }))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.fail();
+            Assertions.fail();
         } catch (ProcessingException exception) {
-            Assert.assertEquals(IllegalStateException.class, exception.getCause().getClass());
+            Assertions.assertEquals(IllegalStateException.class, exception.getCause().getClass());
         }
     }
 
@@ -169,7 +169,7 @@ public class PreInvocationInterceptorTest {
                 .register(new Priority200PreInvocationInterceptor(a -> a.get() < 2){})
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         }
     }
 
@@ -181,10 +181,10 @@ public class PreInvocationInterceptorTest {
                 .register(new Priority100PreInvocationInterceptor(a -> {throw new RuntimeException("TWO"); }))
                 .register(AbortRequestFilter.class).build().target(URL).request();
         try (Response response = builder.get()) {
-            Assert.fail();
+            Assertions.fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals("ONE", e.getSuppressed()[0].getMessage());
-            Assert.assertEquals("TWO", e.getSuppressed()[1].getMessage());
+            Assertions.assertEquals("ONE", e.getSuppressed()[0].getMessage());
+            Assertions.assertEquals("TWO", e.getSuppressed()[1].getMessage());
         }
     }
 
@@ -195,8 +195,8 @@ public class PreInvocationInterceptorTest {
                 .register(new AbortRequestFilter()).build().target(URL).request();
         for (int i = 1; i != 10; i++) {
             try (Response response = builder.get()) {
-                Assert.assertEquals(200, response.getStatus());
-                Assert.assertEquals(i, counter.get());
+                Assertions.assertEquals(200, response.getStatus());
+                Assertions.assertEquals(i, counter.get());
             }
         }
     }
@@ -217,7 +217,7 @@ public class PreInvocationInterceptorTest {
 
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
-            Assert.assertTrue(consumer.test(counter));
+            Assertions.assertTrue(consumer.test(counter));
             counter.getAndIncrement();
         }
     }
@@ -231,7 +231,7 @@ public class PreInvocationInterceptorTest {
 
         @Override
         public void beforeRequest(ClientRequestContext requestContext) {
-            Assert.assertTrue(predicate.test(counter));
+            Assertions.assertTrue(predicate.test(counter));
             counter.getAndIncrement();
         }
     }
@@ -245,7 +245,7 @@ public class PreInvocationInterceptorTest {
 
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
-            Assert.assertTrue(predicate.test(requestContext));
+            Assertions.assertTrue(predicate.test(requestContext));
         }
     }
 
@@ -258,7 +258,7 @@ public class PreInvocationInterceptorTest {
 
         @Override
         public void beforeRequest(ClientRequestContext requestContext) {
-            Assert.assertTrue(predicate.test(requestContext));
+            Assertions.assertTrue(predicate.test(requestContext));
         }
     }
 
@@ -268,8 +268,8 @@ public class PreInvocationInterceptorTest {
 
         @Override
         public void beforeRequest(ClientRequestContext requestContext) {
-            Assert.assertNotNull(configuration);
-            Assert.assertEquals(PROPERTY_VALUE, configuration.getProperty(PROPERTY_NAME));
+            Assertions.assertNotNull(configuration);
+            Assertions.assertEquals(PROPERTY_VALUE, configuration.getProperty(PROPERTY_NAME));
         }
     }
 

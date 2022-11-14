@@ -44,12 +44,12 @@ import org.glassfish.jersey.client.authentication.ResponseAuthenticationExceptio
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Paul Sandoz
@@ -398,7 +398,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
+    @Disabled("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
             + " Allow repeatable write in jersey?")
     public void testAuthPost() {
         CredentialsStore credentialsProvider = new BasicCredentialsProvider();
@@ -474,7 +474,7 @@ public class AuthTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
+    @Disabled("JERSEY-1750: Cannot retry request with a non-repeatable request entity. How to buffer the entity?"
             + " Allow repeatable write in jersey?")
     public void testAuthInteractivePost() {
         CredentialsStore credentialsProvider = new BasicCredentialsProvider();

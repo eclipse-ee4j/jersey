@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,21 +24,21 @@ import javax.inject.Provider;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import org.hamcrest.core.StringStartsWith;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProviderInjectionTest {
 
     private InjectionManager injectionManager;
 
-    @Before
+    @BeforeEach
     public void setup() {
         injectionManager = BindingTestHelper.createInjectionManager();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         injectionManager.shutdown();
     }

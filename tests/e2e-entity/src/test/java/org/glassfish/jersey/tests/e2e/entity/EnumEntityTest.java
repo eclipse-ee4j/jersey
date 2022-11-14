@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,11 @@ package org.glassfish.jersey.tests.e2e.entity;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EnumEntityTest extends JerseyTest {
 
     public enum SimpleEnum {
@@ -91,41 +92,45 @@ public class EnumEntityTest extends JerseyTest {
     // Server side tests
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testSimpleEnumServerReader() {
         for (SimpleEnum value : SimpleEnum.values()) {
             try (Response r = target("simple").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testValueEnumServerReader() {
         for (ValueEnum value : ValueEnum.values()) {
             try (Response r = target("value").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testSimpleEnumServerWriter() {
         for (SimpleEnum value : SimpleEnum.values()) {
             try (Response r = target("simple").request(MediaType.TEXT_PLAIN_TYPE)
                     .put(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testValueEnumServerWriter() {
         for (ValueEnum value : ValueEnum.values()) {
             try (Response r = target("value").request(MediaType.TEXT_PLAIN_TYPE)
                     .put(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }
@@ -133,41 +138,45 @@ public class EnumEntityTest extends JerseyTest {
     // Client side tests
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testSimpleEnumClientReader() {
         for (SimpleEnum value : SimpleEnum.values()) {
             try (Response r = target("simple").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value, r.readEntity(SimpleEnum.class));
+                Assertions.assertEquals(value, r.readEntity(SimpleEnum.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testValueEnumClientReader() {
         for (ValueEnum value : ValueEnum.values()) {
             try (Response r = target("value").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value.name(), MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value, r.readEntity(ValueEnum.class));
+                Assertions.assertEquals(value, r.readEntity(ValueEnum.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testSimpleEnumClientWriter() {
         for (SimpleEnum value : SimpleEnum.values()) {
             try (Response r = target("echo").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value, MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testValueEnumClientWriter() {
         for (ValueEnum value : ValueEnum.values()) {
             try (Response r = target("echo").request(MediaType.TEXT_PLAIN_TYPE)
                     .post(Entity.entity(value, MediaType.TEXT_PLAIN_TYPE))) {
-                Assert.assertEquals(value.name(), r.readEntity(String.class));
+                Assertions.assertEquals(value.name(), r.readEntity(String.class));
             }
         }
     }

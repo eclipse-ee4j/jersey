@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,50 +10,35 @@
 
 package org.glassfish.jersey.examples.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the echo with injected param managed bean resource.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class EchoParamBeanTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha", "beta"},
-                {"AAA", "BBB"},
-                {"b", "a"},
-                {"1$s", "2&d"}
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("alpha", "beta"),
+                Arguments.of("AAA", "BBB"),
+                Arguments.of("b", "a"),
+                Arguments.of("1$s", "2&d")
+        );
     }
 
-    final String a, b;
-
-    /**
-     * Create a new test case based on the above defined parameters.
-     *
-     * @param a query parameter value
-     * @param b path parameter value
-     */
-    public EchoParamBeanTest(String a, String b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    @Test
-    public void testEchoParamResource() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testEchoParamResource(String a, String b) {
 
         final WebTarget target = target().path("echofield").path(b);
 

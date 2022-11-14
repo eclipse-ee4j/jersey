@@ -23,8 +23,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -66,8 +66,8 @@ public class HttpEntityTest extends JerseyTest {
         InputStreamEntity entity = new InputStreamEntity(bais, ContentType.TEXT_PLAIN);
 
         try (Response response = target().request().post(Entity.entity(entity, MediaType.APPLICATION_OCTET_STREAM))) {
-            Assert.assertEquals(200, response.getStatus());
-            Assert.assertEquals(ECHO_MESSAGE, response.readEntity(String.class));
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals(ECHO_MESSAGE, response.readEntity(String.class));
         }
     }
 
@@ -76,8 +76,8 @@ public class HttpEntityTest extends JerseyTest {
         ByteArrayEntity entity = new ByteArrayEntity(ECHO_MESSAGE.getBytes(), ContentType.TEXT_PLAIN);
 
         try (Response response = target().request().post(Entity.entity(entity, MediaType.APPLICATION_OCTET_STREAM))) {
-            Assert.assertEquals(200, response.getStatus());
-            Assert.assertEquals(ECHO_MESSAGE, response.readEntity(String.class));
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals(ECHO_MESSAGE, response.readEntity(String.class));
         }
     }
 }

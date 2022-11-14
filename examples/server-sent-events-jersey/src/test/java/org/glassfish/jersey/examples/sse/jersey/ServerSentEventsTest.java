@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -39,12 +39,12 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * SSE example resources test.
@@ -93,8 +93,8 @@ public class ServerSentEventsTest extends JerseyTest {
         target().path(App.ROOT_PATH).request().post(Entity.text("message"));
 
         try {
-            assertTrue("Waiting for message to be delivered has timed out.",
-                    latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS));
+            assertTrue(latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS),
+                    "Waiting for message to be delivered has timed out.");
         } finally {
             eventSource.close();
         }
@@ -139,8 +139,8 @@ public class ServerSentEventsTest extends JerseyTest {
                         }
                     });
 
-            assertTrue("Waiting for receiver thread to start has timed out.",
-                    startLatch.await(5, TimeUnit.SECONDS));
+            assertTrue(startLatch.await(5, TimeUnit.SECONDS),
+                    "Waiting for receiver thread to start has timed out.");
 
             for (int i = 0; i < MAX_MESSAGES; i++) {
                 target(App.ROOT_PATH).request().post(Entity.text("message " + i));

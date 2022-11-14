@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,12 +34,11 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import org.hamcrest.CoreMatchers;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test two Jersey apps running simultaneously within a single Grizzly HTTP server
@@ -70,9 +69,9 @@ public class NonJaxRsBeanJaxRsInjectionTest {
     Client client;
     WebTarget mainTarget, secondaryTarget;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
 
         if (isDefaultTestContainerFactorySet) {
             initializeWeld();
@@ -81,7 +80,7 @@ public class NonJaxRsBeanJaxRsInjectionTest {
         }
     }
 
-    @After
+    @AfterEach
     public void after() {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
             if (isDefaultTestContainerFactorySet) {
@@ -94,7 +93,7 @@ public class NonJaxRsBeanJaxRsInjectionTest {
 
     @Test
     public void testPathAndHeader() throws Exception {
-        Assume.assumeThat(isDefaultTestContainerFactorySet, CoreMatchers.is(true));
+        Assumptions.assumeTrue(isDefaultTestContainerFactorySet);
         JaxRsInjectedCdiBeanTest._testPathAndHeader(mainTarget);
         SecondJaxRsInjectedCdiBeanTest._testPathAndHeader(secondaryTarget);
     }

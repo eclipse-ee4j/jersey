@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,11 +44,12 @@ import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.model.ResourceModel;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test model processor.
@@ -56,7 +57,7 @@ import static org.junit.Assert.assertEquals;
  * @author Miroslav Fuksa
  *
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ModelProcessorTest extends JerseyTest {
 
     public static class ModelProcessorFeature implements Feature {
@@ -229,6 +230,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceAGet() {
         Response response = target("/a").request().get();
         assertEquals(200, response.getStatus());
@@ -237,6 +239,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceAPost() {
         Response response = target("/a").request().post(Entity.entity("post", MediaType.TEXT_PLAIN_TYPE));
         assertEquals(200, response.getStatus());
@@ -245,6 +248,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceAOptions() {
         Response response = target("/a").request(MediaType.TEXT_PLAIN_TYPE).options();
         assertEquals(200, response.getStatus());
@@ -253,6 +257,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceAChildGet() {
         Response response = target("/a/child").request().get();
         assertEquals(200, response.getStatus());
@@ -261,6 +266,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceALocatorGet() {
         Response response = target("/a/locator").request().get();
         assertEquals(200, response.getStatus());
@@ -269,6 +275,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceALocatorOptions() {
         Response response = target("/a/locator").request(MediaType.TEXT_PLAIN_TYPE).options();
         assertEquals(204, response.getStatus());
@@ -277,6 +284,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBGet() {
         Response response = target("/b").request().get();
         assertEquals(200, response.getStatus());
@@ -285,6 +293,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBOptions() {
         Response response = target("/b").request(MediaType.TEXT_PLAIN_TYPE).options();
         assertEquals(200, response.getStatus());
@@ -293,6 +302,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBLocatorGet() {
         Response response = target("/b/locator").request().get();
         assertEquals(200, response.getStatus());
@@ -301,6 +311,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBLocatorOptions() {
         Response response = target("/b/locator").request(MediaType.TEXT_PLAIN_TYPE).options();
         assertEquals(204, response.getStatus());
@@ -309,6 +320,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceAMyResource() {
         Response response = target("/a/my-resource").request().get();
         assertEquals(200, response.getStatus());
@@ -317,6 +329,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceALocatorMyResource() {
         Response response = target("/a/locator/my-resource").request(MediaType.TEXT_PLAIN_TYPE).get();
         assertEquals(200, response.getStatus());
@@ -325,6 +338,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBMyResource() {
         Response response = target("/b/my-resource").request().get();
         assertEquals(200, response.getStatus());
@@ -333,6 +347,7 @@ public class ModelProcessorTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testInfo() {
         Response response = target("/model").request().get();
         assertEquals(200, response.getStatus());

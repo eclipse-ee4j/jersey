@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.tests.integration.jersey2704.services.HappyService;
 import org.glassfish.jersey.tests.integration.jersey2704.services.SadService;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -82,7 +82,7 @@ public class Jersey2704ITCase extends JerseyTest {
      */
     @Test
     public void testCorrectInjection() throws IOException {
-        Assert.assertEquals(200, test(HappyService.class));
+        Assertions.assertEquals(200, test(HappyService.class));
     }
 
     /**
@@ -93,6 +93,6 @@ public class Jersey2704ITCase extends JerseyTest {
      */
     @Test
     public void testMisingInjection() throws IOException {
-        Assert.assertEquals(600, test(SadService.class));
+        Assertions.assertEquals(600, test(SadService.class));
     }
 }

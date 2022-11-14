@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,8 +45,8 @@ import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * JAX-RS {@link SseEventSource} and {@link SseEventSink} test.
@@ -117,9 +117,9 @@ public class SseEventSinkToEventSourceTest extends JerseyTest {
             eventSource.open();
             final boolean allTransmitted = transmitLatch.await(5000, TimeUnit.MILLISECONDS);
             final boolean allReceived = receivedLatch.await(5000, TimeUnit.MILLISECONDS);
-            Assert.assertTrue(allTransmitted);
-            Assert.assertTrue(allReceived);
-            Assert.assertEquals(30, results.size());
+            Assertions.assertTrue(allTransmitted);
+            Assertions.assertTrue(allReceived);
+            Assertions.assertEquals(30, results.size());
         } catch (final InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,16 +137,16 @@ public class SseEventSinkToEventSourceTest extends JerseyTest {
             try {
                 results.add(inboundEvent.readData(Integer.class));
                 receiveLatch.countDown();
-                Assert.assertEquals(INTEGER_SSE_NAME, inboundEvent.getName());
+                Assertions.assertEquals(INTEGER_SSE_NAME, inboundEvent.getName());
             } catch (ProcessingException ex) {
                 throw new RuntimeException("Error when deserializing of data.", ex);
             }
         };
         eventSource.register(listener, INTEGER_SSE_NAME);
         eventSource.open();
-        Assert.assertTrue(transmitLatch.await(5000, TimeUnit.MILLISECONDS));
-        Assert.assertTrue(receiveLatch.await(5000, TimeUnit.MILLISECONDS));
-        Assert.assertEquals(10, results.size());
+        Assertions.assertTrue(transmitLatch.await(5000, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(receiveLatch.await(5000, TimeUnit.MILLISECONDS));
+        Assertions.assertEquals(10, results.size());
     }
 
 
@@ -164,15 +164,13 @@ public class SseEventSinkToEventSourceTest extends JerseyTest {
 
         eventSource.open();
         final boolean sent = transmitLatch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-        Assert.assertTrue("Awaiting for SSE message has timeout. Not all message were sent.", sent);
+        Assertions.assertTrue(sent, "Awaiting for SSE message has timeout. Not all message were sent.");
 
         final boolean handled2 = count2.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-        Assert.assertTrue(
-                "Awaiting for SSE message has timeout. Not all message were handled by eventSource2.", handled2);
+        Assertions.assertTrue(handled2, "Awaiting for SSE message has timeout. Not all message were handled by eventSource2.");
 
         final boolean handled1 = count1.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-        Assert.assertTrue(
-                "Awaiting for SSE message has timeout. Not all message were handled by eventSource1.", handled1);
+        Assertions.assertTrue(handled1, "Awaiting for SSE message has timeout. Not all message were handled by eventSource1.");
 
     }
 

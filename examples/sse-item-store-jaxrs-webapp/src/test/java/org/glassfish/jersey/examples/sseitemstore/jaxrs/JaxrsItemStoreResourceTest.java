@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -45,15 +45,16 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.describedAs;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Item store test.
@@ -103,6 +104,7 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
         return client.get();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
@@ -161,9 +163,8 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
             open(sources);
             items.forEach((item) -> postItem(itemsTarget, item));
 
-            assertTrue("Waiting to receive all events has timed out.",
-                    latch.await((1000 + MAX_LISTENERS * RECONNECT_DEFAULT) * getAsyncTimeoutMultiplier(),
-                            TimeUnit.MILLISECONDS));
+            assertTrue(latch.await((1000 + MAX_LISTENERS * RECONNECT_DEFAULT) * getAsyncTimeoutMultiplier(),
+                    TimeUnit.MILLISECONDS), "Waiting to receive all events has timed out.");
 
             // need to force disconnect on server in order for EventSource.close(...) to succeed with HttpUrlConnection
             sendCommand(itemsTarget, "disconnect");
@@ -172,18 +173,18 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
         }
 
         String postedItems = itemsTarget.request().get(String.class);
-        items.forEach((item) -> assertTrue("Item '" + item + "' not stored on server.", postedItems.contains(item)));
+        items.forEach((item) -> assertTrue(postedItems.contains(item), "Item '" + item + "' not stored on server."));
 
         final AtomicInteger queueId = new AtomicInteger(0);
         indexQueues.forEach((indexes) -> {
             for (int i = 0; i < items.size(); i++) {
-                assertTrue("Event for '" + items.get(i) + "' not received in queue " + queueId.get(), indexes.contains(i));
+                assertTrue(indexes.contains(i), "Event for '" + items.get(i) + "' not received in queue " + queueId.get());
             }
-            assertEquals("Not received the expected number of events in queue " + queueId.get(), items.size(), indexes.size());
+            assertEquals(items.size(), indexes.size(), "Not received the expected number of events in queue " + queueId.get());
             queueId.incrementAndGet();
         });
 
-        assertEquals("Number of received 'size' events does not match.", items.size() * MAX_LISTENERS, sizeEventsCount.get());
+        assertEquals(items.size() * MAX_LISTENERS, sizeEventsCount.get(), "Number of received 'size' events does not match.");
     }
 
     /**
@@ -248,9 +249,8 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
 
             sendCommand(itemsTarget, "reconnect now");
 
-            assertTrue("Waiting to receive all events has timed out.",
-                    latch.await((1 + MAX_LISTENERS * (MAX_ITEMS + 1) * reconnectDelay) * getAsyncTimeoutMultiplier(),
-                            TimeUnit.SECONDS));
+            assertTrue(latch.await((1 + MAX_LISTENERS * (MAX_ITEMS + 1) * reconnectDelay) * getAsyncTimeoutMultiplier(),
+                    TimeUnit.SECONDS), "Waiting to receive all events has timed out.");
 
             // need to force disconnect on server in order for EventSource.close(...) to succeed with HttpUrlConnection
             sendCommand(itemsTarget, "disconnect");
@@ -274,7 +274,7 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
 
     private static void postItem(final WebTarget itemsTarget, final String item) {
         final Response response = itemsTarget.request().post(Entity.form(new Form("name", item)));
-        assertEquals("Posting new item has failed.", 204, response.getStatus());
+        assertEquals(204, response.getStatus(), "Posting new item has failed.");
         LOGGER.info("[-i-] POSTed item: '" + item + "'");
     }
 
@@ -286,7 +286,7 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
         int i = 0;
         for (SseEventSource source : sources) {
             if (source.isOpen()) {
-                assertTrue("Waiting to close a source has timed out.", source.close(1, TimeUnit.SECONDS));
+                assertTrue(source.close(1, TimeUnit.SECONDS), "Waiting to close a source has timed out.");
 //                    source.close(100, TimeUnit.MILLISECONDS);
                 LOGGER.info("[<--] SOURCE " + i++ + " closed.");
             }
@@ -295,7 +295,7 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
 
     private static void sendCommand(final WebTarget itemsTarget, final String command) {
         final Response response = itemsTarget.path("commands").request().post(Entity.text(command));
-        assertEquals("'" + command + "' command has failed.", 200, response.getStatus());
+        assertEquals(200, response.getStatus(), "'" + command + "' command has failed.");
         LOGGER.info("[-!-] COMMAND '" + command + "' has been processed.");
     }
 }

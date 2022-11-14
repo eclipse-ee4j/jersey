@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,12 +28,13 @@ import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Basic {@link org.glassfish.jersey.test.util.client.LoopBackConnector} unit tests.
@@ -44,12 +45,12 @@ public class LoopBackConnectorTest {
 
     private Client client;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         client = ClientBuilder.newClient(LoopBackConnectorProvider.getClientConfig());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (client != null) {
             client.close();
@@ -83,10 +84,12 @@ public class LoopBackConnectorTest {
         assertThat("Invalid content-type received", response.getMediaType(), is(new MediaType("foo", "bar")));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testClose() throws Exception {
-        client.close();
-        client.target("baz").request().get();
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            client.close();
+            client.target("baz").request().get();
+        });
     }
 
     @Test
@@ -112,8 +115,9 @@ public class LoopBackConnectorTest {
         assertThat("Async request failed", throwable.get(), nullValue());
     }
 
-    @Test(expected = ProcessingException.class)
+    @Test
     public void testInvalidEntity() throws Exception {
-        client.target("baz").request().post(Entity.json(Arrays.asList("foo", "bar")));
+        Assertions.assertThrows(ProcessingException.class,
+                () -> client.target("baz").request().post(Entity.json(Arrays.asList("foo", "bar"))));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,11 @@ import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -31,11 +32,12 @@ import javax.ws.rs.core.Response;
 public class SingletonTest extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -47,6 +49,7 @@ public class SingletonTest extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         weld.shutdown();
@@ -62,11 +65,11 @@ public class SingletonTest extends JerseyTest {
     public void testSingleton() {
         try (Response response = target().request().get()) {
             String entity = response.readEntity(String.class);
-            Assert.assertEquals(SingletonResource.class.getSimpleName(), entity);
+            Assertions.assertEquals(SingletonResource.class.getSimpleName(), entity);
 
             final SingletonResource actualResource = SingletonTestApp.SINGLETON_RESOURCES[1];
-            Assert.assertEquals(actualResource, SingletonTestApp.SINGLETON_RESOURCES[0]);
-            Assert.assertEquals(actualResource, SingletonTestApp.SINGLETON_RESOURCES[2]);
+            Assertions.assertEquals(actualResource, SingletonTestApp.SINGLETON_RESOURCES[0]);
+            Assertions.assertEquals(actualResource, SingletonTestApp.SINGLETON_RESOURCES[2]);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +16,18 @@
 
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.glassfish.jersey.message.internal.AcceptableMediaType;
 import org.glassfish.jersey.message.internal.MediaTypeProvider;
 import org.glassfish.jersey.message.internal.Quality;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
 /**
@@ -36,38 +35,28 @@ import org.junit.runners.Parameterized;
  *
  * @author Adam Lindenthal
  */
-@RunWith(Parameterized.class)
 public class AcceptableMediaTypeStringRepresentationTest {
-    @Parameterized.Parameters
     // expected result, acceptable media type
-    public static List<Object[]> getParameters() {
+    public static Stream<Arguments> getParameters() {
         final Map<String, String> emptyParams = new HashMap<String, String>();
         final Map<String, String> params = new HashMap<String, String>();
         params.put("myParam", "myValue");
 
-        return Arrays.asList(new Object[][]{
-                {"*/*", new AcceptableMediaType("*", "*")},
-                {"*/*", new AcceptableMediaType("*", "*", Quality.DEFAULT, emptyParams)},
-                {"*/*;q=0.75", new AcceptableMediaType("*", "*", 750, emptyParams)},
-                {"text/html", new AcceptableMediaType("text", "html", Quality.DEFAULT, null)},
-                {"text/html;q=0.5", new AcceptableMediaType("text", "html", 500, emptyParams)},
-                {"image/*;myparam=myValue;q=0.8", new AcceptableMediaType("image", "*", 800, params)},
-        });
+        return Stream.of(
+                Arguments.of("*/*", new AcceptableMediaType("*", "*")),
+                Arguments.of("*/*", new AcceptableMediaType("*", "*", Quality.DEFAULT, emptyParams)),
+                Arguments.of("*/*;q=0.75", new AcceptableMediaType("*", "*", 750, emptyParams)),
+                Arguments.of("text/html", new AcceptableMediaType("text", "html", Quality.DEFAULT, null)),
+                Arguments.of("text/html;q=0.5", new AcceptableMediaType("text", "html", 500, emptyParams)),
+                Arguments.of("image/*;myparam=myValue;q=0.8", new AcceptableMediaType("image", "*", 800, params))
+        );
     }
 
-    private final String expectedValue;
-    private final AcceptableMediaType testedType;
-
-    public AcceptableMediaTypeStringRepresentationTest(final String expectedValue,
-                                                       final AcceptableMediaType testedType) {
-        this.expectedValue = expectedValue;
-        this.testedType = testedType;
-    }
-
-    @Test
-    public void testStringRepresentation() {
+    @ParameterizedTest
+    @MethodSource("getParameters")
+    public void testStringRepresentation(String expectedValue, AcceptableMediaType testedType) {
         final MediaTypeProvider provider = new MediaTypeProvider();
-        Assert.assertEquals(expectedValue, testedType.toString());
+        Assertions.assertEquals(expectedValue, testedType.toString());
         provider.fromString(testedType.toString());
     }
 }

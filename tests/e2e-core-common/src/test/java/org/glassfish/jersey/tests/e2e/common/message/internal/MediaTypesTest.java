@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,10 +27,10 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.message.internal.MediaTypes;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * MediaTypes utility method tests.
@@ -43,16 +43,16 @@ public class MediaTypesTest {
     @Test
     public void testConvertToString() {
         final List<MediaType> emptyList = Collections.emptyList();
-        Assert.assertEquals("", MediaTypes.convertToString(emptyList));
+        Assertions.assertEquals("", MediaTypes.convertToString(emptyList));
 
 
-        Assert.assertEquals("\"text/plain\"", MediaTypes.convertToString(Collections.singleton(MediaType.TEXT_PLAIN_TYPE)));
+        Assertions.assertEquals("\"text/plain\"", MediaTypes.convertToString(Collections.singleton(MediaType.TEXT_PLAIN_TYPE)));
 
-        Assert.assertEquals("\"text/plain\", \"application/json\"",
+        Assertions.assertEquals("\"text/plain\", \"application/json\"",
                 MediaTypes.convertToString(Arrays.asList(MediaType.TEXT_PLAIN_TYPE,
                                                          MediaType.APPLICATION_JSON_TYPE)));
 
-        Assert.assertEquals("\"text/plain\", \"application/json\", \"text/html\"",
+        Assertions.assertEquals("\"text/plain\", \"application/json\", \"text/html\"",
                             MediaTypes.convertToString(Arrays.asList(MediaType.TEXT_PLAIN_TYPE,
                                                                      MediaType.APPLICATION_JSON_TYPE,
                                                                      MediaType.TEXT_HTML_TYPE)));

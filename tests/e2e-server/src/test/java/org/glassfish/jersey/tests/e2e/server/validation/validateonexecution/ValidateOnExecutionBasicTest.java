@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,16 +35,17 @@ import javax.validation.executable.ValidateOnExecution;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.RunSeparately;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-// @RunWith(ConcurrentRunner.class)
 public class ValidateOnExecutionBasicTest extends ValidateOnExecutionAbstractTest {
 
     /**
@@ -319,7 +320,6 @@ public class ValidateOnExecutionBasicTest extends ValidateOnExecutionAbstractTes
     }
 
     @Test
-    @RunSeparately
     public void testOnTypeValidateResultFailValidateExecutableDefault() throws Exception {
         _testOnType("default", -15, 500);
     }

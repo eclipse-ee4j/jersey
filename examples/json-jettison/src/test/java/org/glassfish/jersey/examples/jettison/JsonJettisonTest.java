@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -21,10 +21,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Jakub Podlesak
@@ -44,7 +44,7 @@ public class JsonJettisonTest extends JerseyTest {
         config.register(new JettisonFeature()).register(JaxbContextResolver.class);
     }
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -60,7 +60,7 @@ public class JsonJettisonTest extends JerseyTest {
     @Test
     public void testApplicationWadl() {
         String applicationWadl = target().path("application.wadl").request().get(String.class);
-        assertTrue("Something wrong. Returned wadl length is not > 0", applicationWadl.length() > 0);
+        assertTrue(applicationWadl.length() > 0, "Something wrong. Returned wadl length is not > 0");
     }
 
     /**
@@ -71,7 +71,7 @@ public class JsonJettisonTest extends JerseyTest {
         // get the initial representation
         Flights flights = target().path("flights").request("application/json").get(Flights.class);
         // check that there are two flight entries
-        assertEquals("Expected number of initial entries not found", 2, flights.getFlight().size());
+        assertEquals(2, flights.getFlight().size(), "Expected number of initial entries not found");
     }
 
     /**
@@ -83,7 +83,7 @@ public class JsonJettisonTest extends JerseyTest {
         Flights flights = target().path("flights")
                 .request("application/json").get(Flights.class);
         // check that there are two flight entries
-        assertEquals("Expected number of initial entries not found", 2, flights.getFlight().size());
+        assertEquals(2, flights.getFlight().size(), "Expected number of initial entries not found");
 
         // remove the second flight entry
         if (flights.getFlight().size() > 1) {
@@ -100,10 +100,10 @@ public class JsonJettisonTest extends JerseyTest {
         // get the updated list out from the server:
         Flights updatedFlights = target().path("flights").request("application/json").get(Flights.class);
         //check that there is only one flight entry
-        assertEquals("Remaining number of flight entries do not match the expected value", 1, updatedFlights.getFlight().size());
+        assertEquals(1, updatedFlights.getFlight().size(), "Remaining number of flight entries do not match the expected value");
         // check that the flight entry in retrieved list has FlightID OK!@%
-        assertEquals("Retrieved flight ID doesn't match the expected value", "OK125",
-                updatedFlights.getFlight().get(0).getFlightId());
+        assertEquals("OK125", updatedFlights.getFlight().get(0).getFlightId(),
+                "Retrieved flight ID doesn't match the expected value");
     }
 
     /**
@@ -114,7 +114,7 @@ public class JsonJettisonTest extends JerseyTest {
         // get the initial representation
         Flights flights = target().path("flights").request("application/xml").get(Flights.class);
         // check that there are two flight entries
-        assertEquals("Expected number of initial entries not found", 2, flights.getFlight().size());
+        assertEquals(2, flights.getFlight().size(), "Expected number of initial entries not found");
     }
 
     /**
@@ -125,7 +125,7 @@ public class JsonJettisonTest extends JerseyTest {
         // get the initial representation
         Flights flights = target().path("flights").request("application/XML").get(Flights.class);
         // check that there are two flight entries
-        assertEquals("Expected number of initial entries not found", 2, flights.getFlight().size());
+        assertEquals(2, flights.getFlight().size(), "Expected number of initial entries not found");
 
         // remove the second flight entry
         if (flights.getFlight().size() > 1) {
@@ -142,10 +142,10 @@ public class JsonJettisonTest extends JerseyTest {
         // get the updated list out from the server:
         Flights updatedFlights = target().path("flights").request("application/XML").get(Flights.class);
         //check that there is only one flight entry
-        assertEquals("Remaining number of flight entries do not match the expected value", 1, updatedFlights.getFlight().size());
+        assertEquals(1, updatedFlights.getFlight().size(), "Remaining number of flight entries do not match the expected value");
         // check that the flight entry in retrieved list has FlightID OK!@%
-        assertEquals("Retrieved flight ID doesn't match the expected value", "OK125",
-                updatedFlights.getFlight().get(0).getFlightId());
+        assertEquals("OK125", updatedFlights.getFlight().get(0).getFlightId(),
+                "Retrieved flight ID doesn't match the expected value");
     }
 
     /**
@@ -158,6 +158,6 @@ public class JsonJettisonTest extends JerseyTest {
         // get the initial representation
         List<AircraftType> aircraftTypes = target().path("aircrafts").request("application/json").get(listOfAircrafts);
         // check that there are two aircraft type entries
-        assertEquals("Expected number of initial aircraft types not found", 2, aircraftTypes.size());
+        assertEquals(2, aircraftTypes.size(), "Expected number of initial aircraft types not found");
     }
 }

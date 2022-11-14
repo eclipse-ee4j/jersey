@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,19 +32,21 @@ import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.message.filtering.EntityFilteringFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ManyFilteringsOnClassEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.OneFilteringOnClassEntity;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EntityFilteringClientTest extends EntityFilteringTest {
 
     public static final MediaType ENTITY_FILTERING = new MediaType("entity", "filtering");
@@ -76,6 +78,7 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEntityAnnotationsPrimaryView() throws Exception {
         final ClientConfig config = new ClientConfig()
                 .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, PrimaryDetailedView.Factory.get());
@@ -95,6 +98,7 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEntityAnnotationsDefaultView() throws Exception {
         final String fields = target()
                 .request()
@@ -107,6 +111,7 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEntityAnnotationsInvalidView() throws Exception {
         final String fields = target()
                 .request()
@@ -120,17 +125,20 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testConfigurationPrimaryView() throws Exception {
         testConfiguration("field,accessor,property,subEntities.field2,subEntities.property2,subEntities.property1,"
                 + "subEntities.field1,defaultEntities.field,defaultEntities.property", PrimaryDetailedView.Factory.get());
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testConfigurationDefaultView() throws Exception {
         testConfiguration("", new DefaultFilteringScope());
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testConfigurationMultipleViews() throws Exception {
         testConfiguration("field,accessor,property,subEntities.field2,subEntities.property2,subEntities.property1,"
                         + "subEntities.field1,defaultEntities.field,defaultEntities.property", PrimaryDetailedView.Factory.get(),
@@ -151,6 +159,7 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testInvalidConfiguration() throws Exception {
         final ClientConfig config = new ClientConfig()
                 .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, "invalid_value");
@@ -166,6 +175,7 @@ public class EntityFilteringClientTest extends EntityFilteringTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEntityAnnotationsOverConfiguration() throws Exception {
         final ClientConfig config = new ClientConfig()
                 .property(EntityFilteringFeature.ENTITY_FILTERING_SCOPE, SecondaryDetailedView.Factory.get());

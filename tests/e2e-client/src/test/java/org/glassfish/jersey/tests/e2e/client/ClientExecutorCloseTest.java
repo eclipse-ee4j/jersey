@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,11 +29,11 @@ import javax.ws.rs.sse.SseEventSource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Petr Janouch
@@ -46,7 +46,7 @@ public class ClientExecutorCloseTest extends JerseyTest {
      * Tests that closing a client shuts down a corresponding client async executor service.
      */
     @Test
-    @Ignore("Jersey uses ForkJoin common pool by default, which shouldn't be closed when client closes.")
+    @Disabled("Jersey uses ForkJoin common pool by default, which shouldn't be closed when client closes.")
     public void testCloseAsyncExecutor() throws InterruptedException {
         assertFalse(clientExecutorThreadPresent());
         target("resource").request().async().get();
@@ -56,14 +56,14 @@ public class ClientExecutorCloseTest extends JerseyTest {
                 .build();
         eventSource.register(System.out::println);
         eventSource.open();
-        assertTrue("Waiting for eventSource to open time-outed", cdl.await(5000, TimeUnit.MILLISECONDS));
-        assertTrue("Client async executor thread not found.", clientExecutorThreadPresent());
-        assertTrue("Scheduler thread not found.", schedulerFound);
+        assertTrue(cdl.await(5000, TimeUnit.MILLISECONDS), "Waiting for eventSource to open time-outed");
+        assertTrue(clientExecutorThreadPresent(), "Client async executor thread not found.");
+        assertTrue(schedulerFound, "Scheduler thread not found.");
         client().close();
-        assertFalse("Client async executor thread should have been already removed.",
-                clientExecutorThreadPresent());
-        assertFalse("Client background scheduler thread should have been already removed.",
-                clientSchedulerThreadPresent());
+        assertFalse(clientExecutorThreadPresent(),
+                "Client async executor thread should have been already removed.");
+        assertFalse(clientSchedulerThreadPresent(),
+                "Client background scheduler thread should have been already removed.");
     }
 
     private boolean clientExecutorThreadPresent() {

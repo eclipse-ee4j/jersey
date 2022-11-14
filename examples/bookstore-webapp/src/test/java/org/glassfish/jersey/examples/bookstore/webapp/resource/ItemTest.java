@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,9 +28,9 @@ package org.glassfish.jersey.examples.bookstore.webapp.resource;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author James Strachan
@@ -51,8 +51,8 @@ public class ItemTest extends TestSupport {
         System.out.println("Item XML is: " + text);
 
         final Book response = item1resource().request("application/xml").get(Book.class);
-        assertNotNull("Should have returned an item!", response);
-        assertEquals("item title", "Svejk", response.getTitle());
+        assertNotNull(response, "Should have returned an item!");
+        assertEquals("Svejk", response.getTitle(), "item title");
     }
 
     @Test

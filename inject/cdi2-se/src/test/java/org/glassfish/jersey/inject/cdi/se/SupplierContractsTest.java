@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,13 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import org.jboss.weld.exceptions.DeploymentException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests that {@link java.util.function.Supplier} can contain multiple contracts.
@@ -39,12 +40,12 @@ public class SupplierContractsTest {
 
     private InjectionManager injectionManager;
 
-    @Before
+    @BeforeEach
     public void setup() {
         injectionManager = BindingTestHelper.createInjectionManager();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         injectionManager.shutdown();
     }
@@ -195,33 +196,39 @@ public class SupplierContractsTest {
         assertSame(conversation.greetingSupplier, conversation.printableSupplier);
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test
     public void testClassFactoryFailedWrongImplementation() {
-        BindingTestHelper.bind(injectionManager, binder -> {
-            binder.bindFactory(SupplierGreeting.class).to(EnglishGreeting.class);
-            binder.bindAsContract(Conversation.class);
-        });
+        assertThrows(DeploymentException.class, () -> {
+            BindingTestHelper.bind(injectionManager, binder -> {
+                binder.bindFactory(SupplierGreeting.class).to(EnglishGreeting.class);
+                binder.bindAsContract(Conversation.class);
+            });
 
-        injectionManager.getInstance(Conversation.class);
+            injectionManager.getInstance(Conversation.class);
+        });
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test
     public void testInstanceFactoryFailsWrongImplementation() {
-        BindingTestHelper.bind(injectionManager, binder -> {
-            binder.bindFactory(new SupplierGreeting()).to(EnglishGreeting.class);
-            binder.bindAsContract(Conversation.class);
-        });
+        assertThrows(DeploymentException.class, () -> {
+            BindingTestHelper.bind(injectionManager, binder -> {
+                binder.bindFactory(new SupplierGreeting()).to(EnglishGreeting.class);
+                binder.bindAsContract(Conversation.class);
+            });
 
-        injectionManager.getInstance(Conversation.class);
+            injectionManager.getInstance(Conversation.class);
+        });
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test
     public void testFailsImplementationButInterfaceExpected() {
-        BindingTestHelper.bind(injectionManager, binder -> {
-            binder.bindFactory(new SupplierGreeting()).to(CzechGreeting.class);
-            binder.bindAsContract(Conversation.class);
-        });
+        assertThrows(DeploymentException.class, () -> {
+            BindingTestHelper.bind(injectionManager, binder -> {
+                binder.bindFactory(new SupplierGreeting()).to(CzechGreeting.class);
+                binder.bindAsContract(Conversation.class);
+            });
 
-        injectionManager.getInstance(Conversation.class);
+            injectionManager.getInstance(Conversation.class);
+        });
     }
 }

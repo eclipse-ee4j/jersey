@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,12 +60,12 @@ import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.internal.process.MappableException;
 import org.glassfish.jersey.server.model.ModelValidationException;
 import org.glassfish.jersey.server.spi.ResponseErrorMapper;
-
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test basic application behavior.
@@ -558,12 +558,14 @@ public class ApplicationHandlerTest {
     /**
      * Test that un-mapped response errors are tried to be processed only once (MBW).
      */
-    @Test(expected = ExecutionException.class)
+    @Test
     public void testMapCyclicResponseErrorForMbw() throws Exception {
-        final ApplicationHandler handler = new ApplicationHandler(MapResponseErrorApplication.class);
+        Assertions.assertThrows(ExecutionException.class, () -> {
+            final ApplicationHandler handler = new ApplicationHandler(MapResponseErrorApplication.class);
 
-        final ContainerRequest context = RequestContextBuilder.from("/foobar", "GET").build();
+            final ContainerRequest context = RequestContextBuilder.from("/foobar", "GET").build();
 
-        handler.apply(context).get();
+            handler.apply(context).get();
+        });
     }
 }

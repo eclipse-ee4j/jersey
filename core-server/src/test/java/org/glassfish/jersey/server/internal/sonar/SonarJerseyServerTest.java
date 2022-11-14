@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server.internal.sonar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stepan Vavra
@@ -26,6 +26,6 @@ public class SonarJerseyServerTest {
 
     @Test
     public void testUnitTest() {
-        Assert.assertEquals("server unit test", new SonarJerseyServer().unitTest());
+        Assertions.assertEquals("server unit test", new SonarJerseyServer().unitTest());
     }
 }

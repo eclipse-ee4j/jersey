@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,19 +34,19 @@ import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * Tests custom response status reason phrase with jersey containers and connectors.
  *
  * @author Miroslav Fuksa
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ResponseStatusTypeTest.InMemoryTest.class,
+@Suite
+@SelectClasses({ResponseStatusTypeTest.InMemoryTest.class,
         ResponseStatusTypeTest.GrizzlyContainerGrizzlyConnectorTest.class,
         ResponseStatusTypeTest.GrizzlyContainerApacheConnectorTest.class,
         ResponseStatusTypeTest.SimpleContainerHttpUrlConnectorTest.class})
@@ -80,8 +80,8 @@ public class ResponseStatusTypeTest {
         public void testCustomBadRequest() {
             // with InMemory container and connector status info should be transferred as it is produced.
             final Response response = target().path("resource/custom-bad-request").request().get();
-            Assert.assertEquals(400, response.getStatus());
-            Assert.assertNull(response.getStatusInfo().getReasonPhrase());
+            Assertions.assertEquals(400, response.getStatus());
+            Assertions.assertNull(response.getStatusInfo().getReasonPhrase());
 
         }
 
@@ -191,7 +191,7 @@ public class ResponseStatusTypeTest {
         }
 
         @Test
-        @Ignore("Jdk http container does not support custom response reason phrases.")
+        @Disabled("Jdk http container does not support custom response reason phrases.")
         public void testCustom() {
             _testCustom(target());
         }
@@ -266,19 +266,19 @@ public class ResponseStatusTypeTest {
 
     public static void _testCustom(WebTarget target) {
         final Response response = target.path("resource/custom").request().get();
-        Assert.assertEquals(428, response.getStatus());
-        Assert.assertEquals(REASON_PHRASE, response.getStatusInfo().getReasonPhrase());
+        Assertions.assertEquals(428, response.getStatus());
+        Assertions.assertEquals(REASON_PHRASE, response.getStatusInfo().getReasonPhrase());
     }
 
     public static void _testBadRequest(WebTarget target) {
         final Response response = target.path("resource/bad-request").request().get();
-        Assert.assertEquals(400, response.getStatus());
-        Assert.assertEquals(Response.Status.BAD_REQUEST.getReasonPhrase(), response.getStatusInfo().getReasonPhrase());
+        Assertions.assertEquals(400, response.getStatus());
+        Assertions.assertEquals(Response.Status.BAD_REQUEST.getReasonPhrase(), response.getStatusInfo().getReasonPhrase());
     }
 
     public static void _testCustomBadRequest(WebTarget target) {
         final Response response = target.path("resource/custom-bad-request").request().get();
-        Assert.assertEquals(400, response.getStatus());
-        Assert.assertEquals(Response.Status.BAD_REQUEST.getReasonPhrase(), response.getStatusInfo().getReasonPhrase());
+        Assertions.assertEquals(400, response.getStatus());
+        Assertions.assertEquals(Response.Status.BAD_REQUEST.getReasonPhrase(), response.getStatusInfo().getReasonPhrase());
     }
 }

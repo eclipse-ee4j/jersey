@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,17 +29,17 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 
 import org.hamcrest.core.StringStartsWith;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProviderInjectionTest extends TestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         SeContainerInitializer containerInitializer = SeContainerInitializer.newInstance();
         containerInitializer.addExtensions(new ProviderInjectionTestExtension());
@@ -55,7 +55,7 @@ public class ProviderInjectionTest extends TestParent {
 //        });
 
         Greeting greeting = injectionManager.getInstance(Greeting.class);
-        Assert.assertNotNull(greeting);
+        Assertions.assertNotNull(greeting);
 
         ProviderInject instance = injectionManager.getInstance(ProviderInject.class);
         assertThat(instance.greeting.get().getGreeting(), StringStartsWith.startsWith(CzechGreeting.GREETING));

@@ -41,9 +41,9 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.JerseyCompletionStageRxInvoker;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class LostResponseTest {
@@ -54,7 +54,7 @@ public class LostResponseTest {
     private Client client;
     private Entity<?> bodyEntity;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         HttpUrlConnectorProvider.ConnectionFactory connectionFactory =
                 Mockito.mock(HttpUrlConnectorProvider.ConnectionFactory.class);
@@ -85,10 +85,10 @@ public class LostResponseTest {
     public void putEntityFailure() {
         try {
             client.target(DUMMY_URL).request().put(bodyEntity);
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ResponseProcessingException rpe) {
             try (Response response = rpe.getResponse()) {
-                Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
             }
         }
     }
@@ -97,10 +97,10 @@ public class LostResponseTest {
     public void putEntityAndClassTypeFailure() {
         try {
             client.target(DUMMY_URL).request().put(bodyEntity, String.class);
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ResponseProcessingException rpe) {
             try (Response response = rpe.getResponse()) {
-                Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
             }
         }
     }
@@ -109,10 +109,10 @@ public class LostResponseTest {
     public void putEntityAndGenericTypeTypeFailure() {
         try {
             client.target(DUMMY_URL).request().put(bodyEntity, new GenericType<String>(){});
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ResponseProcessingException rpe) {
             try (Response response = rpe.getResponse()) {
-                Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
             }
         }
     }
@@ -122,13 +122,13 @@ public class LostResponseTest {
         try {
             Future<Response> future = client.target(DUMMY_URL).request().async().put(bodyEntity);
             future.get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
         }
@@ -139,13 +139,13 @@ public class LostResponseTest {
         try {
             Future<String> future = client.target(DUMMY_URL).request().async().put(bodyEntity, String.class);
             future.get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
         }
@@ -156,13 +156,13 @@ public class LostResponseTest {
         try {
             Future<String> future = client.target(DUMMY_URL).request().async().put(bodyEntity, new GenericType<String>(){});
             future.get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
         }
@@ -177,7 +177,7 @@ public class LostResponseTest {
                     client.target(DUMMY_URL).request().async().put(bodyEntity, new InvocationCallback<Response>() {
                 @Override
                 public void completed(Response response) {
-                    Assert.fail("Expected ResponseProcessing exception has not been thrown");
+                    Assertions.fail("Expected ResponseProcessing exception has not been thrown");
                 }
 
                 @Override
@@ -187,20 +187,20 @@ public class LostResponseTest {
                 }
             });
             future.get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
             failedLatch.await(5000, TimeUnit.MILLISECONDS);
             Throwable ct = callbackThrowable.get();
-            Assert.assertTrue("Callback has not been hit", ct != null);
-            Assert.assertTrue("The exception is " + ct.getClass().getName(),
-                    ResponseProcessingException.class.isInstance(ct));
+            Assertions.assertTrue(ct != null, "Callback has not been hit");
+            Assertions.assertTrue(ResponseProcessingException.class.isInstance(ct),
+                    "The exception is " + ct.getClass().getName());
         }
     }
 
@@ -209,13 +209,13 @@ public class LostResponseTest {
         try {
             CompletionStage<Response> future = client.target(DUMMY_URL).request().rx().put(bodyEntity);
             future.toCompletableFuture().get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
         }
@@ -231,7 +231,7 @@ public class LostResponseTest {
                             .put(bodyEntity, new InvocationCallback<Response>() {
                         @Override
                         public void completed(Response response) {
-                            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+                            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
                         }
 
                         @Override
@@ -241,20 +241,20 @@ public class LostResponseTest {
                         }
                     });
             future.get();
-            Assert.fail("Expected ResponseProcessing exception has not been thrown");
+            Assertions.fail("Expected ResponseProcessing exception has not been thrown");
         } catch (ExecutionException ee) {
             try {
                 throw (RuntimeException) ee.getCause();
             } catch (ResponseProcessingException rpe) {
                 try (Response response = rpe.getResponse()) {
-                    Assert.assertEquals(RESPONSE_CODE, response.getStatus());
+                    Assertions.assertEquals(RESPONSE_CODE, response.getStatus());
                 }
             }
             failedLatch.await(5000, TimeUnit.MILLISECONDS);
             Throwable ct = callbackThrowable.get();
-            Assert.assertTrue("Callback has not been hit", ct != null);
-            Assert.assertTrue("The exception is " + ct.getClass().getName(),
-                    ResponseProcessingException.class.isInstance(ct));
+            Assertions.assertTrue(ct != null, "Callback has not been hit");
+            Assertions.assertTrue(ResponseProcessingException.class.isInstance(ct),
+                    "The exception is " + ct.getClass().getName());
         }
     }
 }
