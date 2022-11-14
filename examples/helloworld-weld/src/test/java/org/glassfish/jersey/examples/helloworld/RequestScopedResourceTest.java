@@ -22,6 +22,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
@@ -98,9 +99,13 @@ public class RequestScopedResourceTest extends JerseyTest {
     }
 
     @Override
-    @AfterAll
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
+    }
+
+    @AfterAll
+    public void report() {
         System.out.printf("SYNC: %d, ASYNC: %d, STRAIGHT: %d%n",
                 parameterizedCounter.intValue(), parameterizedAsyncCounter.intValue(), straightCounter.intValue());
     }
