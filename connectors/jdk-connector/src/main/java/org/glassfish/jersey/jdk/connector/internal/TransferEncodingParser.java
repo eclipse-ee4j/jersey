@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -218,7 +218,8 @@ abstract class TransferEncodingParser {
 
                         while (offset < limit) {
                             final byte b = input.get(offset);
-                            if (isSpaceOrTab(b) || /*trailing spaces are not allowed by the spec, but some server put it there*/
+                            if (isSpaceOrTab(b)
+                                    || /*trailing spaces are not allowed by the spec, but some server put it there*/
                                     b == HttpParserUtils.CR || b == HttpParserUtils.SEMI_COLON) {
                                 headerParsingState.checkpoint = offset;
                             } else if (b == HttpParserUtils.LF) {

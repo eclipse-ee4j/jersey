@@ -27,6 +27,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,8 +110,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.google.common.collect.ImmutableMap;
 
 import com.sun.research.ws.wadl.Method;
 import com.sun.research.ws.wadl.Param;
@@ -1276,7 +1275,7 @@ public class WadlResourceTest {
                     nodeAsString(
                             xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
                                     XPathConstants.NODE))
-            ).withNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02")).build();
+            ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02")).build();
             Assertions.assertFalse(diff.hasDifferences());
 
         }

@@ -22,6 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collections;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.CookieParam;
@@ -60,8 +61,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests whether WADL for a {@link BeanParam} annotated resource method parameter is generated properly.
@@ -138,7 +137,7 @@ public class WadlBeanParamTest extends JerseyTest {
                 nodeAsString(
                         xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
                                 XPathConstants.NODE))
-        ).withNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02"))
+        ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02"))
             /**
              * For nodes, the comparison is based on matching {@code name} attributes while ignoring
              * their order. For any other nodes, strict comparison (including ordering) is made.

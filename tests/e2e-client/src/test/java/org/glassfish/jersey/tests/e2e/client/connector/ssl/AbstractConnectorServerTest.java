@@ -34,7 +34,7 @@ import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.google.common.io.ByteStreams;
+import org.apache.commons.io.IOUtils;
 
 /**
  * SSL connector hostname verification tests.
@@ -92,9 +92,9 @@ public abstract class AbstractConnectorServerTest {
         final InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
         final InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);
         return SslConfigurator.newInstance()
-                .trustStoreBytes(ByteStreams.toByteArray(trustStore))
+                .trustStoreBytes(IOUtils.toByteArray(trustStore))
                 .trustStorePassword("asdfgh")
-                .keyStoreBytes(ByteStreams.toByteArray(keyStore))
+                .keyStoreBytes(IOUtils.toByteArray(keyStore))
                 .keyPassword("asdfgh")
                 .createSSLContext();
     }
