@@ -41,6 +41,12 @@
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <!--<scope>provided</scope>
+            <optional>true</optional>-->
+        </dependency>
+        <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <scope>test</scope>
@@ -48,7 +54,7 @@
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>smallrye-config</artifactId>
-            <version>1.3.6</version>
+            <version>${smallrye.config.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -60,7 +66,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>2.0</version>
+            <version>${microprofile.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -71,30 +77,37 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>${testng6.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.21.0</version>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
-            <version>1.4.1.Final</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-spi</artifactId>
-            <version>1.4.1.Final</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-embedded</artifactId>
-            <version>2.1.0.Final</version>
+            <version>${arquillian.weld.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -155,12 +168,12 @@
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit-platform</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-testng</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -173,7 +186,7 @@
                     <plugin>
                         <groupId>uk.co.deliverymind</groupId>
                         <artifactId>wiremock-maven-plugin</artifactId>
-                        <version>2.11.0</version>
+                        <version>${wiremock.mvn.plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>test-compile</phase>

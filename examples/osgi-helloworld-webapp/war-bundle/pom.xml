@@ -57,7 +57,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5</version><!-- the current project's ${servlet2.version} is 2.4 and that's not enough -->
+            <version>${servlet2.version}</version>
             <scope>provided</scope>
         </dependency>
 

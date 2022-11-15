@@ -28,6 +28,19 @@
          xml:id="migration">
     <title>Migration Guide</title>
 
+    <section xml:id="mig-2.38">
+        <title>Migrating from Jersey 2.37 to 2.38</title>
+        <section xml:id="mig-2.38-breaking-changes">
+            <title>Breaking Changes</title>
+            <para>
+                Versions 2.38 introduces non-compatible change for dependency of Open Tracing. As soon as Open Tracing
+                breaks compatibility between the 0.30.0 and the 0.33.0 versions in its API, and Jersey updates Open Tracing
+                to the 0.33.0 version in the 2.38, for everyone who uses Open Tracing framework it is required to upgrade
+                their dependencies to the 0.33.0 version of the Open Tracing respectively.
+            </para>
+        </section>
+    </section>
+
     <section xml:id="mig-2.30">
         <title>Migrating from Jersey 2.29 to 2.29.1 and 2.30+</title>
         <section xml:id="mig-2.30-breaking-changes">

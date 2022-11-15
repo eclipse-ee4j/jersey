@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -30,8 +31,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
-
-import com.google.common.io.ByteStreams;
 
 /**
  * A simple SSL-secured HTTP server for testing purposes.
@@ -87,9 +86,9 @@ final class Server {
         SSLContextConfigurator sslContext = new SSLContextConfigurator();
 
         // set up security context
-        sslContext.setKeyStoreBytes(ByteStreams.toByteArray(keyStore));  // contains server key pair
+        sslContext.setKeyStoreBytes(IOUtils.toByteArray(keyStore));  // contains server key pair
         sslContext.setKeyStorePass("asdfgh");
-        sslContext.setTrustStoreBytes(ByteStreams.toByteArray(trustStore)); // contains client certificate
+        sslContext.setTrustStoreBytes(IOUtils.toByteArray(trustStore)); // contains client certificate
         sslContext.setTrustStorePass("asdfgh");
 
         ResourceConfig rc = new ResourceConfig();

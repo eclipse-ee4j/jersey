@@ -57,6 +57,7 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/surefire.policy</surefire.security.argline>
+        <surefire.mvn.plugin.version>3.0.0-M5</surefire.mvn.plugin.version>
     </properties>
 
     <build>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -113,7 +113,7 @@ public class App {
         public void filter(ContainerRequestContext requestContext) throws IOException {
             Span span = OpenTracingUtils
                     .getRequestSpan(requestContext)
-                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-reqA").startManual());
+                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-reqA").start());
             span.log("ReqFilterA.filter() invoked");
         }
     }
@@ -128,7 +128,7 @@ public class App {
         public void filter(ContainerRequestContext requestContext) throws IOException {
             Span span = OpenTracingUtils
                     .getRequestSpan(requestContext)
-                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-reqB").startManual());
+                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-reqB").start());
             span.log("ReqFilterB.filter() invoked");
         }
     }
@@ -141,7 +141,7 @@ public class App {
         public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
             Span span = OpenTracingUtils
                     .getRequestSpan(requestContext)
-                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-respA").startManual());
+                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-respA").start());
             span.log("RespFilterA.filter() invoked");
         }
     }
@@ -154,7 +154,7 @@ public class App {
         public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
             Span span = OpenTracingUtils
                     .getRequestSpan(requestContext)
-                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-respB").startManual());
+                    .orElse(GlobalTracer.get().buildSpan("ad-hoc-span-respB").start());
             span.log("RespFilterB.filter() invoked");
         }
     }
