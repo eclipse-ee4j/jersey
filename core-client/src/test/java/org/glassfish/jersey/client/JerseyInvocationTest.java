@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,14 +43,14 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Martin Matula
@@ -271,10 +271,10 @@ public class JerseyInvocationTest {
                 fail("future.get() should have failed.");
             } catch (final ExecutionException e) {
                 final Throwable pe = e.getCause();
-                assertTrue("Execution exception cause is not a ProcessingException: " + pe.toString(),
-                        pe instanceof ProcessingException);
+                assertTrue(pe instanceof ProcessingException,
+                        "Execution exception cause is not a ProcessingException: " + pe.toString());
                 final Throwable ioe = pe.getCause();
-                assertTrue("Execution exception cause is not an IOException: " + ioe.toString(), ioe instanceof IOException);
+                assertTrue(ioe instanceof IOException, "Execution exception cause is not an IOException: " + ioe.toString());
             } catch (final InterruptedException e) {
                 throw new RuntimeException(e);
             }

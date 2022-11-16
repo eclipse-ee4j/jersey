@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,57 +16,60 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for exception mapper injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class ExceptionMappersTest extends CdiTest {
+public class ExceptionMappersTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected"},
-                {"app-ctor-injected"},
-                {"request-field-injected"},
-                {"request-ctor-injected"}
-        });
+    public static Collection<String> testData() {
+        return Arrays.asList("app-field-injected", "app-ctor-injected", "request-field-injected", "request-ctor-injected");
     }
 
-    final String resource;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param resource query parameter.
-     */
-    public ExceptionMappersTest(final String resource) {
-        this.resource = resource;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        for (String resource : testData()) {
+            ExceptionMappersTemplateTest test = new ExceptionMappersTemplateTest(resource) {};
+            tests.add(TestHelper.toTestContainer(test,
+                    String.format("%s (%s)", ExceptionMappersTemplateTest.class.getSimpleName(), resource)));
+        }
+        return tests;
     }
 
-    /**
-     * Check that for one no NPE happens on the server side, and for two
-     * the injected mappers remains the same across requests.
-     */
-    @Test
-    public void testMappersNotNull() {
-        final WebTarget target = target().path(resource).path("mappers");
-        final Response firstResponse = target.request().get();
-        assertThat(firstResponse.getStatus(), equalTo(200));
-        final String firstValue = firstResponse.readEntity(String.class);
-        assertThat(target.request().get(String.class), equalTo(firstValue));
+    public abstract static class ExceptionMappersTemplateTest extends CdiTest {
+        String resource;
+
+        public ExceptionMappersTemplateTest(String resource) {
+            this.resource = resource;
+        }
+
+        /**
+         * Check that for one no NPE happens on the server side, and for two
+         * the injected mappers remains the same across requests.
+         */
+        @Test
+        public void testMappersNotNull() {
+            final WebTarget target = target().path(resource).path("mappers");
+            final Response firstResponse = target.request().get();
+            assertThat(firstResponse.getStatus(), equalTo(200));
+            final String firstValue = firstResponse.readEntity(String.class);
+            assertThat(target.request().get(String.class), equalTo(firstValue));
+        }
     }
 }

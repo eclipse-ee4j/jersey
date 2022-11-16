@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,12 +30,13 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import rx.Subscriber;
 
@@ -49,7 +50,7 @@ public class RxObservableTest {
     private Client clientWithExecutor;
     private ExecutorService executor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         client = ClientBuilder.newClient().register(TerminalClientRequestFilter.class);
         client.register(RxObservableInvokerProvider.class);
@@ -63,7 +64,7 @@ public class RxObservableTest {
         clientWithExecutor.register(RxObservableInvokerProvider.class);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         executor.shutdown();
 
@@ -91,47 +92,51 @@ public class RxObservableTest {
         testInvoker(invoker, 404, true);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundReadEntityViaClass() throws Throwable {
-        try {
-            client.target("http://jersey.java.net")
-                  .request()
-                  .header("Response-Status", 404)
-                  .rx(RxObservableInvoker.class)
-                  .get(String.class)
-                  .toBlocking()
-                  .toFuture()
-                  .get();
-        } catch (final Exception expected) {
-            // java.util.concurrent.ExecutionException
-            throw expected
-                    // javax.ws.rs.ProcessingException
-                    // .getCause()
-                    // javax.ws.rs.NotFoundException
-                    .getCause();
-        }
+        assertThrows(NotFoundException.class, () -> {
+            try {
+                client.target("http://jersey.java.net")
+                      .request()
+                      .header("Response-Status", 404)
+                      .rx(RxObservableInvoker.class)
+                      .get(String.class)
+                      .toBlocking()
+                      .toFuture()
+                      .get();
+            } catch (final Exception expected) {
+                // java.util.concurrent.ExecutionException
+                throw expected
+                        // javax.ws.rs.ProcessingException
+                        // .getCause()
+                        // javax.ws.rs.NotFoundException
+                        .getCause();
+            }
+        });
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundReadEntityViaGenericType() throws Throwable {
-        try {
-            client.target("http://jersey.java.net")
-                  .request()
-                  .header("Response-Status", 404)
-                  .rx(RxObservableInvoker.class)
-                  .get(new GenericType<String>() { })
-                  .toBlocking()
-                  .toFuture()
-                  .get();
-        } catch (final Exception expected) {
+        assertThrows(NotFoundException.class, () -> {
+            try {
+                client.target("http://jersey.java.net")
+                      .request()
+                      .header("Response-Status", 404)
+                      .rx(RxObservableInvoker.class)
+                      .get(new GenericType<String>() { })
+                      .toBlocking()
+                      .toFuture()
+                      .get();
+            } catch (final Exception expected) {
 
-            expected.printStackTrace();
+                expected.printStackTrace();
 
-            // java.util.concurrent.ExecutionException
-            throw expected
-                    // javax.ws.rs.NotFoundException
-                    .getCause();
-        }
+                // java.util.concurrent.ExecutionException
+                throw expected
+                        // javax.ws.rs.NotFoundException
+                        .getCause();
+            }
+        });
     }
 
     @Test

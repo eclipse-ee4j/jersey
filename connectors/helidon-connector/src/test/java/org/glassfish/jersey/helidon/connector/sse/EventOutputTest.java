@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,8 @@ import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,10 +48,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Event output tests.
@@ -179,12 +179,12 @@ public class EventOutputTest extends JerseyTest {
             closeTimedOut = es.close(5, TimeUnit.SECONDS);
         }
 
-        assertEquals("Unexpected event count", 2, eventComments.size());
+        assertEquals(2, eventComments.size(), "Unexpected event count");
         for (int i = 1; i <= 2; i++) {
-            assertEquals("Unexpected comment data on event #" + i, "No comment #" + i, eventComments.poll());
+            assertEquals("No comment #" + i, eventComments.poll(), "Unexpected comment data on event #" + i);
         }
-        assertTrue("Event latch has timed out", latchTimedOut);
-        assertTrue("EventSource.close() has timed out", closeTimedOut);
+        assertTrue(latchTimedOut, "Event latch has timed out");
+        assertTrue(closeTimedOut, "EventSource.close() has timed out");
     }
 
     @Test
@@ -265,8 +265,8 @@ public class EventOutputTest extends JerseyTest {
         }
 
         // 2.0.0.-M3 assertEquals("Unexpected event count", 1, counter.get());
-        assertEquals("Unexpected event data", "single", eventData.get());
-        assertTrue("Event latch has timed out", latchTimedOut);
-        assertTrue("EventSource.close() has timed out", closeTimedOut);
+        assertEquals("single", eventData.get(), "Unexpected event data");
+        assertTrue(latchTimedOut, "Event latch has timed out");
+        assertTrue(closeTimedOut, "EventSource.close() has timed out");
     }
 }

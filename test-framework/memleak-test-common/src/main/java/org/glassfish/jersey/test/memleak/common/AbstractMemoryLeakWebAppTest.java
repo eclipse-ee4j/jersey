@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 /**
  * Adds support for web application testing and memory leak detection in target JVM.
@@ -42,7 +42,7 @@ public class AbstractMemoryLeakWebAppTest extends JerseyTest {
      *
      * @throws IOException
      */
-    @After
+    @AfterEach
     public void verifyNoOutOfMemoryOccurred() throws IOException {
         MemoryLeakUtils.verifyNoOutOfMemoryOccurred();
     }

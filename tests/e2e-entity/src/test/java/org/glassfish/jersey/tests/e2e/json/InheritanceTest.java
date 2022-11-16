@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,41 +16,38 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.Animal;
 import org.glassfish.jersey.tests.e2e.json.entity.AnimalList;
 import org.glassfish.jersey.tests.e2e.json.entity.Cat;
 import org.glassfish.jersey.tests.e2e.json.entity.Dog;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class InheritanceTest extends AbstractJsonTest {
+public class InheritanceTest {
 
-    @Parameterized.Parameters()
-    public static Collection<JsonTestSetup[]> generateTestCases() throws Exception {
-        final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<JsonTestSetup[]>();
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() throws Exception {
+        List<DynamicContainer> tests = new ArrayList<>();
         final Class<?>[] classes = {AnimalList.class, Animal.class, Dog.class, Cat.class};
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
             // TODO - remove the condition after jsonb polymorphic adapter is implemented
             if (!(jsonProvider instanceof JsonTestProvider.JsonbTestProvider)) {
-                jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(classes, jsonProvider)});
+                JsonTestSetup setupTest = new JsonTestSetup(classes, jsonProvider);
+                JsonTest jsonTest = new JsonTest(setupTest) {};
+                tests.add(TestHelper.toTestContainer(jsonTest,
+                        String.format("inheritanceTest (%s)", jsonProvider.getClass().getSimpleName())));
             }
         }
-
-        return jsonTestSetups;
+        return tests;
     }
-
-    public InheritanceTest(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
-    }
-
 }

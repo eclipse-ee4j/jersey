@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,9 +42,9 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Asynchronous servlet-deployed resource test.
@@ -144,8 +144,8 @@ public class AsyncServletResourceTest extends JerseyTest {
             if (debugMode) {
                 getRequestLatch.await();
             } else {
-                assertTrue("Waiting for all GET requests to complete has timed out.",
-                        getRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS));
+                assertTrue(getRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS),
+                        "Waiting for all GET requests to complete has timed out.");
             }
         } finally {
             executor.shutdownNow();
@@ -160,9 +160,9 @@ public class AsyncServletResourceTest extends JerseyTest {
 
         assertEquals(MAX_MESSAGES, getResponses.size());
         for (final Map.Entry<Integer, ResponseRecord> entry : getResponses.entrySet()) {
-            assertEquals("Unexpected GET response status for request " + entry.getKey(), 200, entry.getValue().status);
-            assertEquals("Unexpected GET response message for request " + entry.getKey(), expectedResponse,
-                    entry.getValue().message);
+            assertEquals(200, entry.getValue().status, "Unexpected GET response status for request " + entry.getKey());
+            assertEquals(expectedResponse, entry.getValue().message,
+                    "Unexpected GET response message for request " + entry.getKey());
         }
     }
 
@@ -254,11 +254,10 @@ public class AsyncServletResourceTest extends JerseyTest {
                 postRequestLatch.await();
                 getRequestLatch.await();
             } else {
-                assertTrue("Waiting for all POST requests to complete has timed out.",
-                        postRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS));
-                assertTrue("Waiting for all GET requests to complete has timed out.",
-                        getRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(),
-                                TimeUnit.SECONDS));
+                assertTrue(postRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS),
+                        "Waiting for all POST requests to complete has timed out.");
+                assertTrue(getRequestLatch.await(LATCH_WAIT_TIMEOUT * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS),
+                        "Waiting for all GET requests to complete has timed out.");
             }
         } finally {
             executor.shutdownNow();
@@ -278,16 +277,16 @@ public class AsyncServletResourceTest extends JerseyTest {
 
         assertEquals(MAX_MESSAGES, postResponses.size());
         for (final Map.Entry<Integer, String> postResponseEntry : postResponses.entrySet()) {
-            assertTrue("Unexpected POST notification response for message " + postResponseEntry.getKey(),
-                    postResponseEntry.getValue().startsWith(AsyncServletResource.CANCELED));
+            assertTrue(postResponseEntry.getValue().startsWith(AsyncServletResource.CANCELED),
+                    "Unexpected POST notification response for message " + postResponseEntry.getKey());
         }
 
         assertEquals(MAX_MESSAGES, getResponses.size());
         final Collection<Integer> getResponseKeys = getResponses.keySet();
         for (int i = 0; i < MAX_MESSAGES; i++) {
-            assertTrue("Detected a GET message response loss: " + i, getResponseKeys.contains(i));
+            assertTrue(getResponseKeys.contains(i), "Detected a GET message response loss: " + i);
             final String getResponseEntry = getResponses.get(i);
-            assertTrue("Unexpected canceled GET response status for request " + i, getResponseEntry.startsWith("503: "));
+            assertTrue(getResponseEntry.startsWith("503: "), "Unexpected canceled GET response status for request " + i);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,13 @@ import java.lang.annotation.Target;
  * by any of Jersey provided parallel test runner {@link ConcurrentRunner}.
  *
  * @author Jakub Podlesak
+ *
+ * @deprecated in connection with transition to JUnit 5 usage of this class is obsolete. Alternatively can be used
+ * specific junit 5
+ * <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parallel-execution">executions tools</a>.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Deprecated
 public @interface RunSeparately {
 }

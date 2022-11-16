@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,9 +42,9 @@ import javax.ws.rs.ext.Providers;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test to verify the proper constructor is selected.
@@ -211,8 +211,8 @@ public class ConstructorSelectionTest extends JerseyTest {
     public void testResourceConstructorSelection() {
         final Response response = target("resource-test").request().get();
 
-        assertNotNull("Returned response must not be null.", response);
-        assertEquals("Resource constructor with most arguments has not been selected.", 200, response.getStatus());
+        assertNotNull(response, "Returned response must not be null.");
+        assertEquals(200, response.getStatus(), "Resource constructor with most arguments has not been selected.");
     }
 
     /**
@@ -222,7 +222,7 @@ public class ConstructorSelectionTest extends JerseyTest {
     public void testProviderConstructorSelection() {
         final Response response = target("provider-test").request().post(Entity.text("echo"));
 
-        assertNotNull("Returned response must not be null.", response);
+        assertNotNull(response, "Returned response must not be null.");
         assertEquals(200, response.getStatus());
         assertEquals("pass", response.readEntity(String.class));
     }

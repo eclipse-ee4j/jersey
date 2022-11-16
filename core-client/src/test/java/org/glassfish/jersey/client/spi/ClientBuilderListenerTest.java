@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 package org.glassfish.jersey.client.spi;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -55,7 +55,7 @@ public class ClientBuilderListenerTest {
     @Test
     public void testClientBuilderListener() {
         Client client = ClientBuilder.newClient();
-        Assert.assertEquals(70, client.getConfiguration().getProperty(PROPERTY_NAME));
+        Assertions.assertEquals(70, client.getConfiguration().getProperty(PROPERTY_NAME));
     }
 
 }

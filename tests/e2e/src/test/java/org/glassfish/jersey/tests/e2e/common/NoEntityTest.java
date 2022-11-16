@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,10 +37,10 @@ import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests that no content type is sent when an entity is not present.
@@ -143,7 +143,7 @@ public class NoEntityTest extends JerseyTest {
      * https://java.net/jira/browse/JERSEY-1994
      */
     @Test
-    @Ignore("see https://java.net/jira/browse/JERSEY-1994")
+    @Disabled("see https://java.net/jira/browse/JERSEY-1994")
     public void testNoEntityString() {
         Response response = target().path("resource/string").request().get();
         MyEntity myEntity = response.readEntity(MyEntity.class);

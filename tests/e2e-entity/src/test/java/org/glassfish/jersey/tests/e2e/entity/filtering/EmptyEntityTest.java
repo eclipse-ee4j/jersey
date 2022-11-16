@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.EmptyEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.NonEmptyEntity;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Use-cases to check whether empty class causes problems (JERSEY-2824 reproducer).

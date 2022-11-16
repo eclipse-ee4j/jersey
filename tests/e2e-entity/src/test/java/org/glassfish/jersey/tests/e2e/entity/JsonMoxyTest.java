@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,17 +50,19 @@ import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Pavel Bucek
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JsonMoxyTest extends AbstractTypeTester {
 
     @Path("JAXBElementListResource")
@@ -97,14 +99,15 @@ public class JsonMoxyTest extends AbstractTypeTester {
                 isList ? ((List<JAXBElement<String>>) in) : Arrays.asList((JAXBElement<String>[]) in);
         final List<JAXBElement<String>> outList = isList ? ((List<JAXBElement<String>>) out) : Arrays
                 .asList((JAXBElement<String>[]) out);
-        assertEquals("Lengths differ", inList.size(), outList.size());
+        assertEquals(inList.size(), outList.size(), "Lengths differ");
         for (int i = 0; i < inList.size(); i++) {
-            assertEquals("Names of elements at index " + i + " differ", inList.get(i).getName(), outList.get(i).getName());
-            assertEquals("Values of elements at index " + i + " differ", inList.get(i).getValue(), outList.get(i).getValue());
+            assertEquals(inList.get(i).getName(), outList.get(i).getName(), "Names of elements at index " + i + " differ");
+            assertEquals(inList.get(i).getValue(), outList.get(i).getValue(), "Values of elements at index " + i + " differ");
         }
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementListJSONRepresentation() {
         _testListOrArray(true, MediaType.APPLICATION_JSON_TYPE);
     }
@@ -124,6 +127,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementArrayJSONRepresentation() {
         _testListOrArray(false, MediaType.APPLICATION_JSON_TYPE);
     }
@@ -152,6 +156,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanJSONRepresentation() {
         final WebTarget target = target("JAXBElementBeanJSONResource");
 
@@ -167,10 +172,10 @@ public class JsonMoxyTest extends AbstractTypeTester {
         final byte[] inBytes = getRequestEntity();
         final byte[] outBytes = getEntityAsByteArray(rib);
 
-        assertEquals(new String(outBytes), inBytes.length, outBytes.length);
+        assertEquals(inBytes.length, outBytes.length, new String(outBytes));
         for (int i = 0; i < inBytes.length; i++) {
             if (inBytes[i] != outBytes[i]) {
-                assertEquals("Index: " + i, inBytes[i], outBytes[i]);
+                assertEquals(inBytes[i], outBytes[i], "Index: " + i);
             }
         }
     }
@@ -182,6 +187,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationJSON() {
         final WebTarget target = target("JaxbBeanResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -196,6 +202,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationJSONMediaType() {
         final WebTarget target = target("JaxbBeanResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -210,6 +217,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationJSON() {
         final WebTarget target = target("JAXBElementBeanResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -224,6 +232,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationJSONMediaType() {
         final WebTarget target = target("JAXBElementBeanResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -243,6 +252,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationJSON() {
         final WebTarget target = target("JAXBTypeResourceJSON");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -262,6 +272,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationJSONMediaType() {
         final WebTarget target = target("JAXBTypeResourceJSONMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -336,6 +347,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONCollection() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -355,6 +367,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONLinkedList() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -371,6 +384,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONSet() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -397,6 +411,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONStack() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -414,7 +429,8 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
-    @Ignore("Until JERSEY-2825 is fixed.")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("Until JERSEY-2825 is fixed.")
     public void testJAXBListRepresentationJSONArrayList() throws Exception {
         final WebTarget target = target("JAXBListResourceJSON");
 
@@ -435,6 +451,7 @@ public class JsonMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationJSONMediaType() throws Exception {
         final WebTarget target = target("JAXBListResourceJSONMediaType");
 

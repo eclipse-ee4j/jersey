@@ -49,6 +49,11 @@
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A base class for test cases which boots up a GlassFish server for in container testing of RESTful resources.
@@ -45,13 +45,13 @@ public abstract class TestSupport extends JerseyTest {
     }
 
     protected void assertHtmlResponse(String response) {
-        assertNotNull("No text returned!", response);
+        assertNotNull(response, "No text returned!");
 
         assertResponseContains(response, "<html>");
         assertResponseContains(response, "</html>");
     }
 
     protected void assertResponseContains(String response, String text) {
-        assertTrue("Response should contain " + text + " but was: " + response, response.contains(text));
+        assertTrue(response.contains(text), "Response should contain " + text + " but was: " + response);
     }
 }

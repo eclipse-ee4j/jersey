@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,15 +22,22 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Michal Gajdos
  */
-public class QueryParamTest extends JerseyContainerTest {
+public class QueryParamTest {
 
     @Path("/")
     public static class Resource {
@@ -40,16 +47,33 @@ public class QueryParamTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(Resource.class);
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        JerseyContainerTest.parameters().forEach(testContainerFactory -> {
+            QueryParamTemplteTest test = new QueryParamTemplteTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testQueryParam() {
-        assertThat(target().queryParam("y", "1 %2B 2").request().get(String.class), is("1 + 2"));
-        assertThat(target().queryParam("x", "1").queryParam("y", "1 + 2").request().get(String.class), is("1 + 2"));
-        assertThat(target().queryParam("x", "1").queryParam("y", "1 %26 2").request().get(String.class), is("1 & 2"));
-        assertThat(target().queryParam("x", "1").queryParam("y", "1 %7C%7C 2").request().get(String.class), is("1 || 2"));
+    public abstract static class QueryParamTemplteTest extends JerseyContainerTest {
+
+        public QueryParamTemplteTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
+        }
+
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(Resource.class);
+        }
+
+        @Test
+        public void testQueryParam() {
+            assertThat(target().queryParam("y", "1 %2B 2").request().get(String.class), is("1 + 2"));
+            assertThat(target().queryParam("x", "1").queryParam("y", "1 + 2").request().get(String.class), is("1 + 2"));
+            assertThat(target().queryParam("x", "1").queryParam("y", "1 %26 2").request().get(String.class), is("1 & 2"));
+            assertThat(target().queryParam("x", "1").queryParam("y", "1 %7C%7C 2").request().get(String.class), is("1 || 2"));
+        }
     }
 }

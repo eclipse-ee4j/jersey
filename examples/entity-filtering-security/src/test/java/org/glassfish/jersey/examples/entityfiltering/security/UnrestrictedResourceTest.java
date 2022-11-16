@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -9,8 +9,6 @@
  */
 
 package org.glassfish.jersey.examples.entityfiltering.security;
-
-import java.util.Arrays;
 
 import javax.ws.rs.core.Feature;
 
@@ -22,10 +20,15 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,36 +38,46 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class UnrestrictedResourceTest extends JerseyTest {
+public class UnrestrictedResourceTest {
 
-    @Parameterized.Parameters(name = "Provider: {0}")
-    public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}});
+    public static Iterable<Class<? extends Feature>> providers() {
+        return Arrays.asList(MoxyJsonFeature.class, JacksonFeature.class);
     }
 
-    public UnrestrictedResourceTest(final Class<Feature> filteringProvider) {
-        super(new ResourceConfig(SecurityEntityFilteringFeature.class)
-                .packages("org.glassfish.jersey.examples.entityfiltering.security")
-                .register(filteringProvider));
-
-        enable(TestProperties.DUMP_ENTITY);
-        enable(TestProperties.LOG_TRAFFIC);
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        providers().forEach(feature -> {
+            UnrestrictedResourceTemplateTest test = new UnrestrictedResourceTemplateTest(feature) {};
+            tests.add(TestHelper.toTestContainer(test, feature.getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testRestrictedEntity() throws Exception {
-        final RestrictedEntity entity = target("unrestricted-resource").request().get(RestrictedEntity.class);
-        final RestrictedSubEntity mixedField = entity.getMixedField();
+    public static class UnrestrictedResourceTemplateTest extends JerseyTest {
+        public UnrestrictedResourceTemplateTest(final Class<? extends Feature> filteringProvider) {
+            super(new ResourceConfig(SecurityEntityFilteringFeature.class)
+                    .packages("org.glassfish.jersey.examples.entityfiltering.security")
+                    .register(filteringProvider));
 
-        // Not null values.
-        assertThat(entity.getSimpleField(), notNullValue());
-        assertThat(entity.getPermitAll(), notNullValue());
-        assertThat(mixedField, notNullValue());
-        assertThat(mixedField.getManagerField(), notNullValue());
+            enable(TestProperties.DUMP_ENTITY);
+            enable(TestProperties.LOG_TRAFFIC);
+        }
 
-        // Null values.
-        assertThat(entity.getDenyAll(), nullValue());
-        assertThat(mixedField.getUserField(), nullValue());
+        @Test
+        public void testRestrictedEntity() throws Exception {
+            final RestrictedEntity entity = target("unrestricted-resource").request().get(RestrictedEntity.class);
+            final RestrictedSubEntity mixedField = entity.getMixedField();
+
+            // Not null values.
+            assertThat(entity.getSimpleField(), notNullValue());
+            assertThat(entity.getPermitAll(), notNullValue());
+            assertThat(mixedField, notNullValue());
+            assertThat(mixedField.getManagerField(), notNullValue());
+
+            // Null values.
+            assertThat(entity.getDenyAll(), nullValue());
+            assertThat(mixedField.getUserField(), nullValue());
+        }
     }
 }

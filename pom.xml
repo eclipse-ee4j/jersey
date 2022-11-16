@@ -236,7 +236,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.1.0</version>
                     <executions>
                         <execution>
                             <id>enforce-versions</id>
@@ -248,6 +248,7 @@
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                         </execution>
@@ -420,6 +421,14 @@
                             -Xmx${surefire.maxmem.argline}m -Dfile.encoding=UTF8 ${surefire.security.argline} ${surefire.coverage.argline}
                         </argLine>
                         <skipTests>${skip.tests}</skipTests>
+                        <properties>
+                            <configurationParameters>
+                                junit.jupiter.execution.parallel.enabled=true
+                                junit.jupiter.execution.parallel.mode.classes.default=same_thread
+                                junit.jupiter.execution.parallel.mode.default=same_thread
+                            </configurationParameters>
+                        </properties>
+                        <threadCount>124</threadCount>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -448,7 +457,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -2014,12 +2023,6 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit5.version}</version>
@@ -2057,8 +2060,8 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>xmlunit</groupId>
-                <artifactId>xmlunit</artifactId>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
                 <version>${xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -2148,7 +2151,7 @@
         <jersey.version>${project.version}</jersey.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.3</asm.version>
+        <asm.version>9.4</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
@@ -2164,7 +2167,7 @@
         <hamcrest.version>2.2</hamcrest.version>
         <testng.version>6.14.3</testng.version>
         <helidon.version>1.0.3</helidon.version>
-        <xmlunit.version>1.6</xmlunit.version>
+        <xmlunit.version>2.9.0</xmlunit.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpclient5.version>5.1.2</httpclient5.version>
         <jackson.version>2.13.3</jackson.version>
@@ -2175,10 +2178,12 @@
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jmh.version>1.10.2</jmh.version>
-        <jmockit.version>1.44</jmockit.version>
-        <junit5.version>5.6.0</junit5.version>
+        <jmockit.version>1.49</jmockit.version>
+        <junit5.version>5.9.1</junit5.version>
+        <junit-platform-suite.version>1.9.1</junit-platform-suite.version>
+        <junit4.version>4.13.2</junit4.version>
         <kryo.version>4.0.1</kryo.version>
-        <mockito.version>3.9.0</mockito.version> <!-- CQ 17673 -->
+        <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.10</mustache.version>
         <netty.version>4.1.75.Final</netty.version>
         <nexus-staging.mvn.plugin.version>1.6.7</nexus-staging.mvn.plugin.version>
@@ -2186,17 +2191,17 @@
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <pax.exam.version>4.13.4</pax.exam.version>
+        <pax.exam.version>4.13.4</pax.exam.version> <!-- with 4.13.5 tests not working -->
         <pax.web.version>0.7.4</pax.web.version><!-- TODO: UPGRADE! -->
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <rxjava.version>1.2.5</rxjava.version>
         <rxjava2.version>2.0.4</rxjava2.version>
         <simple.version>6.0.1</simple.version>
         <skip.e2e>false</skip.e2e>
-        <slf4j.version>1.7.21</slf4j.version>
+        <slf4j.version>2.0.3</slf4j.version>
         <spring4.version>4.3.20.RELEASE</spring4.version>
         <spring5.version>5.3.18</spring5.version>
-        <surefire.version>3.0.0-M5</surefire.version>
+        <surefire.version>3.0.0-M7</surefire.version>
         <validation.impl.version>6.2.0.Final</validation.impl.version>
         <weld.version>2.2.14.Final</weld.version> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.1.7.SP1</weld3.version>
@@ -2217,7 +2222,7 @@
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <hk2.config.version>5.1.0</hk2.config.version>
-        <istack.commons.runtime.version>3.0.8</istack.commons.runtime.version>
+        <istack.commons.runtime.version>3.0.12</istack.commons.runtime.version>
         <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <javax.el.version>3.0.3</javax.el.version>
         <javax.el.impl.version>3.0.4</javax.el.impl.version>
@@ -2232,7 +2237,7 @@
         <jaxrs.api.impl.version>2.1.6</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[9.4,11)"</jetty.osgi.version>
-        <jetty.version>9.4.46.v20220331</jetty.version>
+        <jetty.version>9.4.49.v20220914</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
         <jsonp.ri.version>1.1.6</jsonp.ri.version>

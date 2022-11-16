@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Martin Matula
@@ -171,7 +171,7 @@ public class MediaTypeSelectionTest extends AbstractTypeTester {
     }
 
     @Test
-    @Ignore("JSONB breaks this test.")
+    @Disabled("JSONB breaks this test.")
     public void testApplicationWildCard() {
         Response r = target("wildcard").request("application/*").post(Entity.text("test"));
         assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, r.getMediaType());

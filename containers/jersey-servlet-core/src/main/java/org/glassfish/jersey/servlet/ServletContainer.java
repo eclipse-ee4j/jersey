@@ -640,7 +640,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
 
     @Override
     public void reload() {
-        reload(getConfiguration());
+        reload(new ResourceConfig(getConfiguration()));
     }
 
     @Override

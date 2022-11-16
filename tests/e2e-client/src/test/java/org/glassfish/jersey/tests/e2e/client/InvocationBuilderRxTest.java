@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,9 @@ import org.glassfish.jersey.client.JerseyCompletionStageRxInvoker;
 import org.glassfish.jersey.client.JerseyInvocation;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,7 +46,7 @@ public class InvocationBuilderRxTest extends JerseyTest {
     private static final String ECHO = "ECHO";
     private CountDownLatch latch;
 
-    @Before
+    @BeforeEach
     public void beforeEach() {
         latch = new CountDownLatch(1);
     }
@@ -95,8 +95,8 @@ public class InvocationBuilderRxTest extends JerseyTest {
                 .method("GET", new TestCallback(latch));
         latch.await(AWAIT_TIME, TimeUnit.MILLISECONDS);
 
-        Assert.assertEquals(ECHO, future.get());
-        Assert.assertEquals(0, latch.getCount());
+        Assertions.assertEquals(ECHO, future.get());
+        Assertions.assertEquals(0, latch.getCount());
     }
 
     @Test
@@ -105,8 +105,8 @@ public class InvocationBuilderRxTest extends JerseyTest {
                 .method("POST", Entity.entity(ECHO, MediaType.TEXT_PLAIN), new TestCallback(latch));
         latch.await(AWAIT_TIME, TimeUnit.MILLISECONDS);
 
-        Assert.assertEquals(ECHO + ECHO, future.get());
-        Assert.assertEquals(0, latch.getCount());
+        Assertions.assertEquals(ECHO + ECHO, future.get());
+        Assertions.assertEquals(0, latch.getCount());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class InvocationBuilderRxTest extends JerseyTest {
                 .method("POST", Entity.entity(ECHO, MediaType.TEXT_PLAIN), Response.class);
 
         try (Response response = stage.toCompletableFuture().get()) {
-            Assert.assertEquals(ECHO + ECHO, response.readEntity(String.class));
+            Assertions.assertEquals(ECHO + ECHO, response.readEntity(String.class));
         }
     }
 
@@ -125,7 +125,7 @@ public class InvocationBuilderRxTest extends JerseyTest {
                 .method("POST", Entity.entity(ECHO, MediaType.TEXT_PLAIN), new GenericType<Response>(){});
 
         try (Response response = stage.toCompletableFuture().get()) {
-            Assert.assertEquals(ECHO + ECHO, response.readEntity(String.class));
+            Assertions.assertEquals(ECHO + ECHO, response.readEntity(String.class));
         }
     }
 }

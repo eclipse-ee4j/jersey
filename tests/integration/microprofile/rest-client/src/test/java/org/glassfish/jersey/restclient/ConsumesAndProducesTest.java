@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,11 +33,12 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by David Kral.
@@ -98,7 +99,7 @@ public class ConsumesAndProducesTest extends JerseyTest {
             .baseUri(new URI("http://localhost:9998"))
             .build(ApplicationResource.class);
 
-        assertEquals(app.regex("bar"), "bar");
+        assertEquals("bar", app.regex("bar"));
     }
 
     @Test
@@ -110,13 +111,15 @@ public class ConsumesAndProducesTest extends JerseyTest {
         assertEquals(app.regex0("foo", "1234"), "foo_1234");
     }
 
-    @Test(expected = WebApplicationException.class)
+    @Test
     public void testMethodWithRegexPathParam0Failure() throws URISyntaxException {
-        ApplicationResource app = RestClientBuilder.newBuilder()
-            .baseUri(new URI("http://localhost:9998"))
-            .build(ApplicationResource.class);
+        assertThrows(WebApplicationException.class, () -> {
+            ApplicationResource app = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:9998"))
+                .build(ApplicationResource.class);
 
-        app.regex0("foo", "12345");
+            app.regex0("foo", "12345");
+        });
     }
 
     private static class TestClientRequestFilter implements ClientRequestFilter {

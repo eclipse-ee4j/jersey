@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -34,11 +36,15 @@ import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
-import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,7 +52,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Michal Gajdos
  */
-public class ResponseWriterMetadataTest extends JerseyContainerTest {
+public class ResponseWriterMetadataTest {
 
     public static class ValueHolder {
 
@@ -101,23 +107,42 @@ public class ResponseWriterMetadataTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(Resource.class, ValueHolderWriter.class)
-                .property(ServerProperties.OUTBOUND_CONTENT_LENGTH_BUFFER, 1);
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        JerseyContainerTest.parameters().forEach(testContainerFactory -> {
+            ResponseWriterMetadataTemplateTest test = new ResponseWriterMetadataTemplateTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testResponse() {
-        final Response response = target().request().get();
+    public abstract static class ResponseWriterMetadataTemplateTest extends JerseyContainerTest {
+        public ResponseWriterMetadataTemplateTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
+        }
 
-        assertThat(response.readEntity(String.class), is("one"));
-        assertThat(response.getHeaderString("X-BEFORE-WRITE"), is("foo"));
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(Resource.class, ValueHolderWriter.class)
+                    .property(ServerProperties.OUTBOUND_CONTENT_LENGTH_BUFFER, 1);
+        }
 
-        if (factory instanceof InMemoryTestContainerFactory) {
-            assertThat(response.getHeaderString("X-AFTER-WRITE"), is("bar"));
-        } else {
-            assertThat(response.getHeaderString("X-AFTER-WRITE"), nullValue());
+        @Test
+        @ParameterizedTest
+        @MethodSource("parameters")
+        public void testResponse() {
+            final Response response = target().request().get();
+
+            assertThat(response.readEntity(String.class), is("one"));
+            assertThat(response.getHeaderString("X-BEFORE-WRITE"), is("foo"));
+
+            TestContainerFactory factory = getTestContainerFactory();
+            if (factory instanceof InMemoryTestContainerFactory) {
+                assertThat(response.getHeaderString("X-AFTER-WRITE"), is("bar"));
+            } else {
+                assertThat(response.getHeaderString("X-AFTER-WRITE"), nullValue());
+            }
         }
     }
 }

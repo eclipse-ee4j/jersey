@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.http.Expect100ContinueFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -33,7 +33,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Expect100ContinueTest extends JerseyTest {
 
@@ -72,7 +72,7 @@ public class Expect100ContinueTest extends JerseyTest {
     @Test
     public void testExpect100Continue() {
        final Response response =  target(RESOURCE_PATH).request().post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 200", 200, response.getStatus()); //no Expect header sent - responce OK
+       assertEquals(200, response.getStatus(), "Expected 200"); //no Expect header sent - responce OK
     }
 
     @Test
@@ -80,7 +80,7 @@ public class Expect100ContinueTest extends JerseyTest {
        final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.basic())
                .property(ClientProperties.REQUEST_ENTITY_PROCESSING,
                RequestEntityProcessing.CHUNKED).request().post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
@@ -89,7 +89,7 @@ public class Expect100ContinueTest extends JerseyTest {
                .property(ClientProperties.REQUEST_ENTITY_PROCESSING,
                RequestEntityProcessing.BUFFERED).request().header(HttpHeaders.CONTENT_LENGTH, 67000L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
@@ -97,7 +97,7 @@ public class Expect100ContinueTest extends JerseyTest {
        final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L))
                .request().header(HttpHeaders.CONTENT_LENGTH, 101L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
@@ -105,7 +105,7 @@ public class Expect100ContinueTest extends JerseyTest {
        final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L))
                .request().header(HttpHeaders.CONTENT_LENGTH, 99L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 200", 200, response.getStatus()); //Expect header NOT sent - low request size
+       assertEquals(200, response.getStatus(), "Expected 200"); //Expect header NOT sent - low request size
     }
 
     @Test
@@ -115,7 +115,7 @@ public class Expect100ContinueTest extends JerseyTest {
                .register(Expect100ContinueFeature.basic())
                .request().header(HttpHeaders.CONTENT_LENGTH, 666L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
@@ -125,6 +125,6 @@ public class Expect100ContinueTest extends JerseyTest {
                .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
                .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals("Expected 204", 204, response.getStatus()); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 }

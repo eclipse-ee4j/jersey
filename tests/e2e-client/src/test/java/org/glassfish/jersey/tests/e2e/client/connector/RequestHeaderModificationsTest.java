@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Future;
@@ -62,23 +64,23 @@ import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * JERSEY-2206 reproducer
  *
  * @author Libor Kramolis
  */
-@RunWith(Parameterized.class)
-public class RequestHeaderModificationsTest extends JerseyTest {
+public class RequestHeaderModificationsTest {
 
     private static final Logger LOGGER = Logger.getLogger(RequestHeaderModificationsTest.class.getName());
     private static final boolean GZIP = false; // change to true when JERSEY-2341 fixed
@@ -97,103 +99,117 @@ public class RequestHeaderModificationsTest extends JerseyTest {
     private static final String REQUEST_HEADER_MODIFICATION_SUPPORTED = "modificationSupported";
     private static final String PATH = "/resource";
 
-    @Parameterized.Parameters(name = "{index}: {0} / modificationSupported= {1} / addHeader= {2}")
     public static List<Object[]> testData() {
         return Arrays.asList(new Object[][] {
-                {HttpUrlConnectorProvider.class, true, false},
-                {GrizzlyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
-                {JettyConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
-                {ApacheConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
-                {Apache5ConnectorProvider.class, false, false}, // change to true when JERSEY-2341 fixed
-                {HttpUrlConnectorProvider.class, true, true},
-                {GrizzlyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
-                {JettyConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
-                {ApacheConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
-                {Apache5ConnectorProvider.class, false, true}, // change to true when JERSEY-2341 fixed
+                {new HttpUrlConnectorProvider(), true, false},
+                {new GrizzlyConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
+                {new JettyConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
+                {new ApacheConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
+                {new Apache5ConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
+                {new HttpUrlConnectorProvider(), true, true},
+                {new GrizzlyConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
+                {new JettyConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
+                {new ApacheConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
+                {new Apache5ConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
         });
     }
 
-    private final ConnectorProvider connectorProvider;
-    private final boolean modificationSupported; // remove when JERSEY-2341 fixed
-    private final boolean addHeader;
-
-    public RequestHeaderModificationsTest(Class<? extends ConnectorProvider> connectorProviderClass,
-                                          boolean modificationSupported, boolean addHeader)
-            throws IllegalAccessException, InstantiationException {
-        this.connectorProvider = connectorProviderClass.newInstance();
-        this.modificationSupported = modificationSupported;
-        this.addHeader = addHeader;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        testData().forEach(arr -> {
+            RequestHeaderModificationsTemplateTest test = new RequestHeaderModificationsTemplateTest(
+                    (ConnectorProvider) arr[0], (boolean) arr[1], (boolean) arr[2]) {};
+            tests.add(TestHelper.toTestContainer(test, String.format("%s (%s, %s, %s)",
+                    RequestHeaderModificationsTemplateTest.class.getSimpleName(),
+                    arr[0].getClass().getSimpleName(), arr[1], arr[2])));
+        });
+        return tests;
     }
 
-    @Override
-    protected Application configure() {
-        set(TestProperties.RECORD_LOG_LEVEL, Level.WARNING.intValue());
+    public abstract static class RequestHeaderModificationsTemplateTest extends JerseyTest {
+        private final ConnectorProvider connectorProvider;
+        private final boolean modificationSupported; // remove when JERSEY-2341 fixed
+        private final boolean addHeader;
 
-        enable(TestProperties.LOG_TRAFFIC);
-        if (DUMP_ENTITY) {
-            enable(TestProperties.DUMP_ENTITY);
+        public RequestHeaderModificationsTemplateTest(ConnectorProvider connectorProvider,
+                                              boolean modificationSupported, boolean addHeader) {
+            this.connectorProvider = connectorProvider;
+            this.modificationSupported = modificationSupported;
+            this.addHeader = addHeader;
         }
-        return new ResourceConfig(TestResource.class).register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.HEADERS_ONLY));
-    }
 
-    @Override
-    protected void configureClient(ClientConfig clientConfig) {
-        clientConfig.register(MyClientRequestFilter.class);
-        clientConfig.register(new MyWriterInterceptor(addHeader));
-        clientConfig.register(new MyMessageBodyWriter(addHeader));
-        clientConfig.connectorProvider(connectorProvider);
-    }
+        @Override
+        protected Application configure() {
+            set(TestProperties.RECORD_LOG_LEVEL, Level.WARNING.intValue());
 
-    @Test
-    public void testWarningLogged() throws Exception {
-        Response response = requestBuilder().post(requestEntity());
-        assertResponse(response);
-    }
-
-    @Test
-    public void testWarningLoggedAsync() throws Exception {
-        AsyncInvoker asyncInvoker = requestBuilder().async();
-        Future<Response> responseFuture = asyncInvoker.post(requestEntity());
-        Response response = responseFuture.get();
-        assertResponse(response);
-    }
-
-    private Invocation.Builder requestBuilder() {
-        return target(PATH)
-                .request()
-                .header(REQUEST_HEADER_NAME_CLIENT, REQUEST_HEADER_VALUE_CLIENT)
-                .header(REQUEST_HEADER_MODIFICATION_SUPPORTED, modificationSupported && addHeader)
-                .header("hello", "double").header("hello", "value");
-    }
-
-    private Entity<MyEntity> requestEntity() {
-        return Entity.text(new MyEntity(QUESTION));
-    }
-
-    private void assertResponse(Response response) {
-        if (!modificationSupported) {
-            final String UNSENT_HEADER_CHANGES = "Unsent header changes";
-            LogRecord logRecord = findLogRecord(UNSENT_HEADER_CHANGES);
-            if (addHeader) {
-                assertNotNull("Missing LogRecord for message '" + UNSENT_HEADER_CHANGES + "'.", logRecord);
-                assertThat(logRecord.getMessage(), containsString(REQUEST_HEADER_NAME_INTERCEPTOR));
-                assertThat(logRecord.getMessage(), containsString(REQUEST_HEADER_NAME_MBW));
-            } else {
-                assertNull("Unexpected LogRecord for message '" + UNSENT_HEADER_CHANGES + "'.", logRecord);
+            enable(TestProperties.LOG_TRAFFIC);
+            if (DUMP_ENTITY) {
+                enable(TestProperties.DUMP_ENTITY);
             }
+            return new ResourceConfig(TestResource.class)
+                    .register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.HEADERS_ONLY));
         }
 
-        assertEquals(200, response.getStatus());
-        assertEquals(ANSWER, response.readEntity(String.class));
-    }
+        @Override
+        protected void configureClient(ClientConfig clientConfig) {
+            clientConfig.register(MyClientRequestFilter.class);
+            clientConfig.register(new MyWriterInterceptor(addHeader));
+            clientConfig.register(new MyMessageBodyWriter(addHeader));
+            clientConfig.connectorProvider(connectorProvider);
+        }
 
-    private LogRecord findLogRecord(String messageContains) {
-        for (final LogRecord record : getLoggedRecords()) {
-            if (record.getMessage().contains(messageContains)) {
-                return record;
+        @Test
+        public void testWarningLogged() throws Exception {
+            Response response = requestBuilder().post(requestEntity());
+            assertResponse(response);
+        }
+
+        @Test
+        public void testWarningLoggedAsync() throws Exception {
+            AsyncInvoker asyncInvoker = requestBuilder().async();
+            Future<Response> responseFuture = asyncInvoker.post(requestEntity());
+            Response response = responseFuture.get();
+            assertResponse(response);
+        }
+
+        private Invocation.Builder requestBuilder() {
+            return target(PATH)
+                    .request()
+                    .header(REQUEST_HEADER_NAME_CLIENT, REQUEST_HEADER_VALUE_CLIENT)
+                    .header(REQUEST_HEADER_MODIFICATION_SUPPORTED, modificationSupported && addHeader)
+                    .header("hello", "double").header("hello", "value");
+        }
+
+        private Entity<MyEntity> requestEntity() {
+            return Entity.text(new MyEntity(QUESTION));
+        }
+
+        private void assertResponse(Response response) {
+            if (!modificationSupported) {
+                final String UNSENT_HEADER_CHANGES = "Unsent header changes";
+                LogRecord logRecord = findLogRecord(UNSENT_HEADER_CHANGES);
+                if (addHeader) {
+                    assertNotNull(logRecord, "Missing LogRecord for message '" + UNSENT_HEADER_CHANGES + "'.");
+                    assertThat(logRecord.getMessage(), containsString(REQUEST_HEADER_NAME_INTERCEPTOR));
+                    assertThat(logRecord.getMessage(), containsString(REQUEST_HEADER_NAME_MBW));
+                } else {
+                    assertNull(logRecord, "Unexpected LogRecord for message '" + UNSENT_HEADER_CHANGES + "'.");
+                }
             }
+
+            assertEquals(200, response.getStatus());
+            assertEquals(ANSWER, response.readEntity(String.class));
         }
-        return null;
+
+        private LogRecord findLogRecord(String messageContains) {
+            for (final LogRecord record : getLoggedRecords()) {
+                if (record.getMessage().contains(messageContains)) {
+                    return record;
+                }
+            }
+            return null;
+        }
     }
 
     @Path(PATH)

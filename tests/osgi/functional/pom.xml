@@ -76,6 +76,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${surefire.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <!-- use pax exam maven plugin -->
             <plugin>
@@ -382,6 +389,12 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- logging -->
         <dependency>
@@ -425,5 +438,9 @@
             </build>
         </profile>
     </profiles>
+
+    <properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
 
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,9 +19,9 @@ import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This is to test the reload feature without updating the resources text file.
@@ -65,7 +65,7 @@ public class ReloadTest extends JerseyTest {
         // check stats
         response = target().path("stats").request(MediaType.TEXT_PLAIN).get();
         assertEquals(200, response.getStatus());
-        assertTrue("1 expected as number of arrivals hits in stats", response.readEntity(String.class).contains("1"));
+        assertTrue(response.readEntity(String.class).contains("1"), "1 expected as number of arrivals hits in stats");
 
         // another arrivals hit
         response = target().path("arrivals").request(MediaType.TEXT_PLAIN).get();
@@ -74,7 +74,7 @@ public class ReloadTest extends JerseyTest {
         // check updated stats
         response = target().path("stats").request(MediaType.TEXT_PLAIN).get();
         assertEquals(200, response.getStatus());
-        assertTrue("2 expected as number of arrivals hits in stats", response.readEntity(String.class).contains("2"));
+        assertTrue(response.readEntity(String.class).contains("2"), "2 expected as number of arrivals hits in stats");
 
         // remove stats
         container.reload(new ResourceConfig(ArrivalsResource.class));

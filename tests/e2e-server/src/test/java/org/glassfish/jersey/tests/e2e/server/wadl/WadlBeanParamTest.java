@@ -22,7 +22,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +39,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -49,17 +49,18 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementNameAndTextQualifier;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.ComparisonResult;
+import org.xmlunit.diff.ComparisonType;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -75,35 +76,6 @@ import org.w3c.dom.Node;
  * @author Stepan Vavra
  */
 public class WadlBeanParamTest extends JerseyTest {
-
-    private final ElementNameAndTextQualifier elementQualifier = new ElementNameAndTextQualifier() {
-
-        /**
-         * For {@code <param ??? />} nodes, the comparison is based on matching {@code name} attributes while ignoring
-         * their order. For any other nodes, strict comparison (including ordering) is made.
-         *
-         * @param control The reference element to compare the {@code test} with.
-         * @param test The test element to compare against {@code control}.
-         * @return Whether given nodes qualify for comparison.
-         */
-        @Override
-        public boolean qualifyForComparison(final Element control, final Element test) {
-            if (test != null && !"param".equals(test.getNodeName())) {
-                return super.qualifyForComparison(control, test);
-            }
-            if (!(control != null && test != null
-                          && equalsNamespace(control, test)
-                          && getNonNamespacedNodeName(control).equals(getNonNamespacedNodeName(test)))) {
-                return false;
-            }
-            if (control.hasAttribute("name") && test.hasAttribute("name")) {
-                if (control.getAttribute("name").equals(test.getAttribute("name"))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
 
     @Override
     protected Application configure() {
@@ -158,20 +130,30 @@ public class WadlBeanParamTest extends JerseyTest {
         final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
         xp.setNamespaceContext(nsContext);
 
-        final Diff diff = XMLUnit.compareXML(
+        Map<String, String> map = new HashMap<>();
+        map.put("wadl", "http://wadl.dev.java.net/2009/02");
+        final Diff diff = DiffBuilder.compare(
                 nodeAsString(
                         xp.evaluate("//wadl:resource[@path='wadlBeanParamReference']/wadl:resource", d,
-                                XPathConstants.NODE)),
+                                XPathConstants.NODE)))
+            .withTest(
                 nodeAsString(
                         xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
                                 XPathConstants.NODE))
-        );
-        Map<String, String> map = new HashMap<>();
-        map.put("wadl", "http://wadl.dev.java.net/2009/02");
-        XMLUnit.setXpathNamespaceContext(
-                new SimpleNamespaceContext(Collections.unmodifiableMap(map)));
-        diff.overrideElementQualifier(elementQualifier);
-        XMLAssert.assertXMLEqual(diff, true);
+        ).withNamespaceContext(map)
+            /**
+             * For nodes, the comparison is based on matching {@code name} attributes while ignoring
+             * their order. For any other nodes, strict comparison (including ordering) is made.
+             * **/
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAttributes("name")))
+            .withDifferenceEvaluator(((comparison, outcome) -> {
+                if (outcome == ComparisonResult.DIFFERENT && comparison.getType() == ComparisonType.CHILD_NODELIST_SEQUENCE) {
+                   return ComparisonResult.EQUAL;
+                }
+                return outcome;
+            }))
+            .build();
+        Assertions.assertFalse(diff.hasDifferences());
     }
 
     @Path("wadlBeanParamReference")

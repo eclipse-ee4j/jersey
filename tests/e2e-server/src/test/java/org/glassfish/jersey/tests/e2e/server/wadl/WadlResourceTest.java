@@ -16,13 +16,6 @@
 
 package org.glassfish.jersey.tests.e2e.server.wadl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -34,14 +27,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -61,6 +52,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import javax.inject.Named;
 import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;
@@ -78,12 +71,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementQualifier;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.util.SaxHelper;
 import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
@@ -102,15 +89,26 @@ import org.glassfish.jersey.server.wadl.internal.WadlGeneratorImpl;
 import org.glassfish.jersey.server.wadl.internal.WadlUtils;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sun.research.ws.wadl.Method;
 import com.sun.research.ws.wadl.Param;
@@ -127,8 +125,8 @@ import com.sun.research.ws.wadl.Resources;
  * @author Libor Kramolis
  * @author Marek Potociar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
+@Suite
+@SelectClasses({
         WadlResourceTest.Wadl1Test.class,
         WadlResourceTest.Wadl2Test.class,
         WadlResourceTest.Wadl3Test.class,
@@ -1055,7 +1053,7 @@ public class WadlResourceTest {
         }
 
         @Test
-        @Ignore("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
+        @Disabled("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
         // TODO: fix
         public void testWadlForAmbiguousResourceTemplates()
                 throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
@@ -1072,7 +1070,7 @@ public class WadlResourceTest {
         }
 
         @Test
-        @Ignore("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
+        @Disabled("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
         // TODO: fix
         public void testWadlForAmbiguousChildResourceTemplates()
                 throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
@@ -1267,22 +1265,18 @@ public class WadlResourceTest {
             final XPath xp = XPathFactory.newInstance().newXPath();
             final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
             xp.setNamespaceContext(nsContext);
-
-            final Diff diff = XMLUnit.compareXML(
+            Map<String, String> map = new HashMap<>();
+            map.put("wadl", "http://wadl.dev.java.net/2009/02");
+            final Diff diff = DiffBuilder.compare(
                     nodeAsString(
                             xp.evaluate("//wadl:resource[@path='annotated']/wadl:resource", document,
-                                    XPathConstants.NODE)),
+                                    XPathConstants.NODE)))
+                .withTest(
                     nodeAsString(
                             xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
                                     XPathConstants.NODE))
-            );
-            Map<String, String> map = new HashMap<>();
-            map.put("wadl", "http://wadl.dev.java.net/2009/02");
-            XMLUnit.setXpathNamespaceContext(
-                    new SimpleNamespaceContext(Collections.unmodifiableMap(map)));
-            final ElementQualifier elementQualifier = new RecursiveElementNameAndTextQualifier();
-            diff.overrideElementQualifier(elementQualifier);
-            XMLAssert.assertXMLEqual(diff, true);
+            ).withNamespaceContext(map).build();
+            Assertions.assertFalse(diff.hasDifferences());
 
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,10 +37,10 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Injection E2E tests.
@@ -105,23 +105,23 @@ public class InjectionTest extends JerseyTest {
      * We would need to by-pass these issues in underlying layer to un-ignore the test.
      */
     @Test
-    @Ignore
+    @Disabled
     public void testInjectionIntoDeleteMethod() {
         Response response;
 
         response = target("injection").path("delete-path-param/test").request()
                 .property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
                 .method("DELETE", Entity.text("body"));
-        assertNotNull("Response is null.", response);
-        assertEquals("Unexpected response status.", 200, response.getStatus());
-        assertEquals("Unexpected response entity.", "deleted: test-body", response.readEntity(String.class));
+        assertNotNull(response, "Response is null.");
+        assertEquals(200, response.getStatus(), "Unexpected response status.");
+        assertEquals("deleted: test-body", response.readEntity(String.class), "Unexpected response entity.");
 
         response = target("injection").path("delete-path-param-async/test").request()
                 .property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
                 .method("DELETE", Entity.text("body"));
-        assertNotNull("Response is null.", response);
-        assertEquals("Unexpected response status.", 200, response.getStatus());
-        assertEquals("Unexpected response entity.", "deleted: test-body", response.readEntity(String.class));
+        assertNotNull(response, "Response is null.");
+        assertEquals(200, response.getStatus(), "Unexpected response status.");
+        assertEquals("deleted: test-body", response.readEntity(String.class), "Unexpected response entity.");
     }
 
     /**
@@ -133,7 +133,7 @@ public class InjectionTest extends JerseyTest {
     public void testAsyncMethodParamInjection() {
 
         Response response = target("injection").path("async").request().get();
-        assertEquals("Unexpected response status.", 200, response.getStatus());
-        assertNotNull("Response is null.", response);
+        assertEquals(200, response.getStatus(), "Unexpected response status.");
+        assertNotNull(response, "Response is null.");
     }
 }

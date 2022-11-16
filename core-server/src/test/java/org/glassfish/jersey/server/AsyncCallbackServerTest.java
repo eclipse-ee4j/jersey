@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,11 +35,11 @@ import javax.ws.rs.container.Suspended;
 
 import javax.inject.Singleton;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests {@link CompletionCallback}.
@@ -67,7 +67,7 @@ public class AsyncCallbackServerTest {
 
         final ContainerResponse response = app.apply(req).get();
         assertEquals(200, response.getStatus());
-        assertTrue("onComplete() was not called.", flags.onCompletionCalled);
+        assertTrue(flags.onCompletionCalled, "onComplete() was not called.");
     }
 
     @Test
@@ -85,7 +85,7 @@ public class AsyncCallbackServerTest {
         } catch (Exception e) {
             // ok - should throw an exception
         }
-        assertTrue("onError().", flags.onCompletionCalledWithError);
+        assertTrue(flags.onCompletionCalledWithError, "onError().");
     }
 
     @Test
@@ -117,8 +117,8 @@ public class AsyncCallbackServerTest {
 
         @Override
         public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-            assertFalse("onComplete() callback has already been called.",
-                    flags.onCompletionCalled);
+            assertFalse(flags.onCompletionCalled,
+                    "onComplete() callback has already been called.");
         }
     }
 
@@ -132,8 +132,8 @@ public class AsyncCallbackServerTest {
 
         @Override
         public void onComplete(Throwable throwable) {
-            assertFalse("onComplete() has already been called.", flags.onCompletionCalled);
-            assertFalse("onComplete() has already been called with error.", flags.onCompletionCalledWithError);
+            assertFalse(flags.onCompletionCalled, "onComplete() has already been called.");
+            assertFalse(flags.onCompletionCalledWithError, "onComplete() has already been called with error.");
             if (throwable == null) {
                 flags.onCompletionCalled = true;
             } else {

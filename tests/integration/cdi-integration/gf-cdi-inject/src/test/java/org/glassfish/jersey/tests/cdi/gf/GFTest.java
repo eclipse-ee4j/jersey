@@ -47,12 +47,27 @@ public class GFTest {
 
     @Test
     public void testUriInfo() {
-        int port = Integer.parseInt(System.getProperty("webServerPort"));
-        try (Response response = ClientBuilder.newClient().target("http://localhost:" + port).path("gf-test/test/info").request().get()) {
+        try (Response response = ClientBuilder.newClient().target("http://localhost:" + port())
+                .path("gf-test/test/info").request().get()) {
             String entity = response.readEntity(String.class);
             System.out.println(entity);
             Assertions.assertEquals(200, response.getStatus());
             Assertions.assertTrue(entity.contains("gf-test/test"));
         }
+    }
+
+    @Test
+    public void testReload() {
+        try (Response response = ClientBuilder.newClient().target("http://localhost:" + port())
+                .path("gf-test/test/reload").request().get()) {
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals(GFTestApp.RELOADER, response.readEntity(String.class));
+        }
+        testUriInfo();
+    }
+
+    private static int port() {
+        int port = Integer.parseInt(System.getProperty("webServerPort"));
+        return port;
     }
 }

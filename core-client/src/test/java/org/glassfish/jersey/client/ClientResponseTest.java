@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 package org.glassfish.jersey.client;
 
 import org.glassfish.jersey.message.internal.InboundMessageContext;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -37,27 +37,27 @@ public class ClientResponseTest {
             }
         };
 
-        Assert.assertFalse(inboundMessageContext.hasEntity());
+        Assertions.assertFalse(inboundMessageContext.hasEntity());
 
         inboundMessageContext.bufferEntity();
-        Assert.assertFalse(inboundMessageContext.hasEntity());
+        Assertions.assertFalse(inboundMessageContext.hasEntity());
     }
 
     @Test
     public void testHasEntity() {
         final ClientRequestFilter abortFilter = requestContext -> requestContext.abortWith(Response.ok("hello").build());
         try (Response r = ClientBuilder.newClient().register(abortFilter).target("http://localhost:8080").request().get()) {
-            Assert.assertTrue(r.hasEntity());
+            Assertions.assertTrue(r.hasEntity());
 
             r.bufferEntity();
-            Assert.assertTrue(r.hasEntity());
+            Assertions.assertTrue(r.hasEntity());
 
             final String s = r.readEntity(String.class);
-            Assert.assertTrue(r.hasEntity());
+            Assertions.assertTrue(r.hasEntity());
 
             final InputStream bufferedEntityStream = r.readEntity(InputStream.class);
-            Assert.assertNotNull(bufferedEntityStream);
-            Assert.assertTrue(r.hasEntity());
+            Assertions.assertNotNull(bufferedEntityStream);
+            Assertions.assertTrue(r.hasEntity());
         }
     }
 }

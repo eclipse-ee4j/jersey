@@ -68,7 +68,6 @@ import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -118,7 +117,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private final Set<Type> jaxrsInjectableTypes = new HashSet<>();
     private final Set<Type> hk2ProvidedTypes = Collections.synchronizedSet(new HashSet<Type>());
     private final Set<Type> jerseyVetoedTypes = Collections.synchronizedSet(new HashSet<Type>());
-    private final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
+    private static final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
     private final ThreadLocal<InjectionManager> threadInjectionManagers = new ThreadLocal<>();
 
     /**
@@ -554,7 +553,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      *
      * @return HK2 injection manager.
      */
-    /* package */ InjectionManager getEffectiveInjectionManager() {
+    public InjectionManager getEffectiveInjectionManager() {
         return injectionManagerStore.getEffectiveInjectionManager();
     }
 
@@ -671,7 +670,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public void inject(final Object t, final CreationalContext cc) {
             InjectionManager injectingManager = getEffectiveInjectionManager();
-            if (injectingManager == null) {
+            if (injectingManager == null || /* reload */ injectingManager.isShutdown()) {
                 injectingManager = effectiveInjectionManager;
                 threadInjectionManagers.set(injectingManager);
             }
@@ -737,7 +736,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public Object create(final CreationalContext creationalContext) {
             InjectionManager injectionManager = getEffectiveInjectionManager();
-            if (injectionManager == null) {
+            if (injectionManager == null || /* reload */ injectionManager.isShutdown()) {
                 injectionManager = threadInjectionManagers.get();
             }
 
@@ -870,11 +869,11 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      * Add a predicate to test HK2 dependency to create a CDI bridge bean to HK2 for it.
      * @param predicate to test whether given class is a HK2 dependency.
      */
-    public void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
+    public static void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
         jerseyOrDependencyTypes.add(new DependencyPredicate(predicate));
     }
 
-    private final class DependencyPredicate implements Predicate<Class<?>> {
+    private static final class DependencyPredicate implements Predicate<Class<?>> {
         private final Predicate<Class<?>> predicate;
 
         public DependencyPredicate(Predicate<Class<?>> predicate) {
@@ -891,7 +890,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DependencyPredicate that = (DependencyPredicate) o;
-            return predicate.getClass().equals(that.predicate);
+            return predicate.getClass().equals(that.predicate.getClass());
         }
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
@@ -47,7 +47,7 @@ public class TimerTest extends CdiTest {
         assertThat(secondResponse.getStatus(), is(200));
         long secondMillis = Long.decode(secondResponse.readEntity(String.class));
 
-        assertTrue("Second request should have greater millis!", secondMillis > firstMillis);
+        assertTrue(secondMillis > firstMillis, "Second request should have greater millis!");
     }
 
     private void sleep(long ms) {

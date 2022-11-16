@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -69,21 +69,21 @@ public class ResourceRoutingTest extends JerseyTest {
     @Test
     public void subWrongPath() throws Exception {
         Response response = target("a/b/d").request().get();
-        Assert.assertEquals(404, response.getStatus());
+        Assertions.assertEquals(404, response.getStatus());
     }
 
     @Test
     public void correctPath() throws Exception {
         Response response = target("a/b/c").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("a/b/c", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("a/b/c", response.readEntity(String.class));
     }
 
     @Test
     public void correctPath2() throws Exception {
         Response response = target("a/q").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("a/q", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("a/q", response.readEntity(String.class));
     }
 
 }

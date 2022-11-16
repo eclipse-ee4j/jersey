@@ -151,7 +151,7 @@ public class MyResourceTest {
     private HttpServer server;
     private WebTarget target;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         server = Main.startServer();
 
@@ -159,7 +159,7 @@ public class MyResourceTest {
         target = c.target(Main.BASE_URI);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         server.stop();
     }

@@ -20,7 +20,9 @@ import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.BeanManager;
@@ -30,11 +32,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 import java.util.Collections;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class CdiComponentProviderTest extends JerseyTest {
     Weld weld;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         weld = new Weld();
@@ -42,6 +45,7 @@ public class CdiComponentProviderTest extends JerseyTest {
         super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         weld.shutdown();

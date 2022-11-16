@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,9 +32,9 @@ import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.model.ResourceModelComponent;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Jakub Podlesak
@@ -44,7 +44,7 @@ public class ResourceMethodDispatcherFactoryTest {
     private ResourceMethodDispatcherFactory rmdf;
     private ResourceMethodInvocationHandlerFactory rmihf;
 
-    @Before
+    @BeforeEach
     public void setupApplication() {
         TestInjectionManagerFactory.BootstrapResult result = TestInjectionManagerFactory.createInjectionManager();
 
@@ -73,8 +73,8 @@ public class ResourceMethodDispatcherFactoryTest {
         for (ResourceModelComponent component : rb.build().getComponents()) {
             if (component instanceof ResourceMethod) {
                 Invocable invocable = ((ResourceMethod) component).getInvocable();
-                assertNotNull("No dispatcher found for invocable " + invocable.toString(),
-                        rmdf.create(invocable, rmihf.create(invocable), null));
+                assertNotNull(rmdf.create(invocable, rmihf.create(invocable), null),
+                        "No dispatcher found for invocable " + invocable.toString());
             }
         }
 

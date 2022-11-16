@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -21,10 +21,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Naresh (Srinivas Bhimisetty)
@@ -52,12 +52,12 @@ public class LinkWebAppTest extends JerseyTest {
                 .get(Response.class);
 
         final Response.StatusType statusInfo = response.getStatusInfo();
-        assertEquals("Should have succeeded", 200, statusInfo.getStatusCode());
+        assertEquals(200, statusInfo.getStatusCode(), "Should have succeeded");
 
         final String content = response.readEntity(String.class);
         final List<Object> linkHeaders = response.getHeaders().get("Link");
 
-        assertEquals("Should have two link headers", 2, linkHeaders.size());
+        assertEquals(2, linkHeaders.size(), "Should have two link headers");
         assertThat("Content should contain next link",
                 content,
                 containsString("http://localhost:" + getPort() + "/items?offset=20&amp;limit=10"));

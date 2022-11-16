@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.lang.reflect.Proxy;
 
 import javax.ws.rs.Path;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Constantino Cronemberger (ccronemberger at yahoo.com.br)
@@ -33,16 +33,16 @@ public class ModelHelperTest {
     @Test
     public void testClass() {
         final Class cls = ModelHelper.getAnnotatedResourceClass(MyAnnotatedClass.class);
-        Assert.assertSame(MyAnnotatedClass.class, cls);
+        Assertions.assertSame(MyAnnotatedClass.class, cls);
     }
 
     @Test
     public void testSubClass() {
         // Spring with CGLIB proxies creates sub-classes
         final Object obj = new MyAnnotatedClass() {};
-        Assert.assertNotSame(MyAnnotatedClass.class, obj.getClass());
+        Assertions.assertNotSame(MyAnnotatedClass.class, obj.getClass());
         final Class cls = ModelHelper.getAnnotatedResourceClass(obj.getClass());
-        Assert.assertSame(MyAnnotatedClass.class, cls);
+        Assertions.assertSame(MyAnnotatedClass.class, cls);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ModelHelperTest {
                     }
                 });
         final Class cls = ModelHelper.getAnnotatedResourceClass(obj.getClass());
-        Assert.assertSame(MyServiceInterface.class, cls);
+        Assertions.assertSame(MyServiceInterface.class, cls);
     }
 
     @Path("test")

@@ -19,11 +19,11 @@ package org.glassfish.jersey.jackson.internal;
 import org.glassfish.jersey.jackson.internal.model.ServiceTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultJsonJacksonProviderForBothModulesTest extends JerseyTest {
     @Override

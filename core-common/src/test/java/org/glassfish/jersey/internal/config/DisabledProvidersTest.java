@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.message.internal.RenderedImageProvider;
 import org.glassfish.jersey.message.internal.SourceProvider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.RuntimeType;
 import java.util.HashMap;
@@ -55,11 +55,11 @@ public class DisabledProvidersTest {
 
         DisabledProvidersChecker checker = new DisabledProvidersChecker(properties, RuntimeType.CLIENT);
         checker.configure();
-        Assert.assertFalse(checker.bindSet.contains(RenderedImageProvider.class));
-        Assert.assertFalse(checker.bindSet.contains(SourceProvider.SourceWriter.class));
-        Assert.assertTrue(checker.bindSet.contains(SourceProvider.StreamSourceReader.class));
-        Assert.assertTrue(checker.bindSet.contains(SourceProvider.SaxSourceReader.class));
-        Assert.assertTrue(checker.bindSet.contains(SourceProvider.DomSourceReader.class));
+        Assertions.assertFalse(checker.bindSet.contains(RenderedImageProvider.class));
+        Assertions.assertFalse(checker.bindSet.contains(SourceProvider.SourceWriter.class));
+        Assertions.assertTrue(checker.bindSet.contains(SourceProvider.StreamSourceReader.class));
+        Assertions.assertTrue(checker.bindSet.contains(SourceProvider.SaxSourceReader.class));
+        Assertions.assertTrue(checker.bindSet.contains(SourceProvider.DomSourceReader.class));
     }
 
     @Test
@@ -69,11 +69,11 @@ public class DisabledProvidersTest {
 
         DisabledProvidersChecker checker = new DisabledProvidersChecker(properties, RuntimeType.CLIENT);
         checker.configure();
-        Assert.assertFalse(checker.bindSet.contains(RenderedImageProvider.class));
-        Assert.assertFalse(checker.bindSet.contains(SourceProvider.StreamSourceReader.class));
-        Assert.assertFalse(checker.bindSet.contains(SourceProvider.SourceWriter.class));
-        Assert.assertFalse(checker.bindSet.contains(SourceProvider.SaxSourceReader.class));
-        Assert.assertFalse(checker.bindSet.contains(SourceProvider.DomSourceReader.class));
+        Assertions.assertFalse(checker.bindSet.contains(RenderedImageProvider.class));
+        Assertions.assertFalse(checker.bindSet.contains(SourceProvider.StreamSourceReader.class));
+        Assertions.assertFalse(checker.bindSet.contains(SourceProvider.SourceWriter.class));
+        Assertions.assertFalse(checker.bindSet.contains(SourceProvider.SaxSourceReader.class));
+        Assertions.assertFalse(checker.bindSet.contains(SourceProvider.DomSourceReader.class));
     }
 
 

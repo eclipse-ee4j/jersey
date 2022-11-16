@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,8 +35,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Chunked I/O integration tests.
@@ -83,11 +83,10 @@ public class ChunkedInputOutputITCase extends JerseyTest {
     public void testChunkedOutputToSingleString() throws Exception {
         final String response = target().path("test/from-string").request(MediaType.APPLICATION_JSON_TYPE).get(String.class);
 
-        assertEquals("Unexpected value of chunked response unmarshalled as a single string.",
-                "{\"id\":0,\"data\":\"test\"}\r\n"
+        assertEquals("{\"id\":0,\"data\":\"test\"}\r\n"
                         + "{\"id\":1,\"data\":\"test\"}\r\n"
                         + "{\"id\":2,\"data\":\"test\"}\r\n",
-                response);
+                response, "Unexpected value of chunked response unmarshalled as a single string.");
     }
 
     /**
@@ -104,11 +103,11 @@ public class ChunkedInputOutputITCase extends JerseyTest {
         int counter = 0;
         Message chunk;
         while ((chunk = input.read()) != null) {
-            assertEquals("Unexpected value of chunk " + counter, new Message(counter, "test"), chunk);
+            assertEquals(new Message(counter, "test"), chunk, "Unexpected value of chunk " + counter);
             counter++;
         }
 
-        assertEquals("Unexpected numbed of received chunks.", 3, counter);
+        assertEquals(3, counter, "Unexpected numbed of received chunks.");
     }
 
     /**
@@ -125,11 +124,11 @@ public class ChunkedInputOutputITCase extends JerseyTest {
         int counter = 0;
         Message chunk;
         while ((chunk = input.read()) != null) {
-            assertEquals("Unexpected value of chunk " + counter, new Message(counter, "test"), chunk);
+            assertEquals(new Message(counter, "test"), chunk, "Unexpected value of chunk " + counter);
             counter++;
         }
 
-        assertEquals("Unexpected numbed of received chunks.", 3, counter);
+        assertEquals(3, counter, "Unexpected numbed of received chunks.");
     }
 
     /**
@@ -144,11 +143,11 @@ public class ChunkedInputOutputITCase extends JerseyTest {
         int counter = 0;
         Message chunk;
         while ((chunk = input.read()) != null) {
-            assertEquals("Unexpected value of chunk " + counter, new Message(counter, "test"), chunk);
+            assertEquals(new Message(counter, "test"), chunk, "Unexpected value of chunk " + counter);
             counter++;
         }
 
-        assertEquals("Unexpected numbed of received chunks.", 3, counter);
+        assertEquals(3, counter, "Unexpected numbed of received chunks.");
     }
 
     /**
@@ -169,10 +168,10 @@ public class ChunkedInputOutputITCase extends JerseyTest {
         String line;
         int counter = 0;
         while ((line = reader.readLine()) != null) {
-            assertEquals("Unexpected value of chunk " + counter, new Message(counter, "test").toString(), line);
+            assertEquals(new Message(counter, "test").toString(), line, "Unexpected value of chunk " + counter);
             counter++;
         }
 
-        assertEquals("Unexpected numbed of received chunks.", 3, counter);
+        assertEquals(3, counter, "Unexpected numbed of received chunks.");
     }
 }

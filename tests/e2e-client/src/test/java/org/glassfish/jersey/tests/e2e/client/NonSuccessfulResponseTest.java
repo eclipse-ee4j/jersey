@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test no successful (3XX, 4XX, 5XX) responses with no empty body.
@@ -106,8 +106,8 @@ public class NonSuccessfulResponseTest extends JerseyTest {
         WebTarget target = target("resource").path(Integer.toString(status));
         SyncInvoker sync = target.request();
         Response response = sync.get(Response.class);
-        Assert.assertEquals(status, response.getStatus());
-        Assert.assertEquals("get", response.readEntity(String.class));
+        Assertions.assertEquals(status, response.getStatus());
+        Assertions.assertEquals("get", response.readEntity(String.class));
     }
 
     private void generalTestPost(int status) {
@@ -115,8 +115,8 @@ public class NonSuccessfulResponseTest extends JerseyTest {
         WebTarget target = target("resource").path(Integer.toString(status));
         SyncInvoker sync = target.request();
         Response response = sync.post(entity, Response.class);
-        Assert.assertEquals(status, response.getStatus());
-        Assert.assertEquals("entity", response.readEntity(String.class));
+        Assertions.assertEquals(status, response.getStatus());
+        Assertions.assertEquals("entity", response.readEntity(String.class));
     }
 
 }

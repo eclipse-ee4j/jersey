@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -21,20 +21,21 @@ import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Jakub Podlesak
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JacksonTest extends JerseyTest {
 
     @Override
@@ -51,6 +52,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEmptyArrayPresent() {
         WebTarget target = target();
         String responseMsg = target.path("emptyArrayResource").request(MediaType.APPLICATION_JSON).get(String.class);
@@ -58,6 +60,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONPPresent() {
         WebTarget target = target();
         String responseMsg = target.path("nonJaxbResource").request("application/javascript").get(String.class);
@@ -65,6 +68,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJSONDoesNotReflectJSONPWrapper() {
         WebTarget target = target();
         String responseMsg = target.path("nonJaxbResource").request("application/json").get(String.class);
@@ -72,6 +76,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testCombinedAnnotationResource() {
         WebTarget target = target();
         String responseMsg = target.path("combinedAnnotations").request("application/json").get(String.class);
@@ -79,6 +84,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testEmptyArrayBean() {
         WebTarget target = target();
         EmptyArrayBean responseMsg = target.path("emptyArrayResource").request(MediaType.APPLICATION_JSON)
@@ -87,6 +93,7 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testCombinedAnnotationBean() {
         WebTarget target = target();
         CombinedAnnotationBean responseMsg = target.path("combinedAnnotations").request("application/json")
@@ -95,7 +102,8 @@ public class JacksonTest extends JerseyTest {
     }
 
     @Test
-    @Ignore
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled
     // TODO un-ignore once a JSON reader for "application/javascript" is supported
     public void testJSONPBean() {
         WebTarget target = target();
@@ -109,6 +117,7 @@ public class JacksonTest extends JerseyTest {
      * <p/>
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testApplicationWadl() {
         WebTarget target = target();
         String serviceWadl = target.path("application.wadl").request(MediaTypes.WADL_TYPE).get(String.class);
@@ -121,6 +130,7 @@ public class JacksonTest extends JerseyTest {
      * 400 - bad request instead of 500 - server error
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testExceptionMapping() {
         enable(TestProperties.LOG_TRAFFIC);
         // create a request with invalid json string to cause an exception in Jackson

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,8 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests handling of SSEs with name defined in {@link EventSource}.
@@ -128,8 +128,8 @@ public class EventSourceWithNamedEventsTest extends JerseyTest {
                 try {
                     final Integer data = inboundEvent.readData(Integer.class);
                     System.out.println(inboundEvent.getName() + "; " + data);
-                    Assert.assertEquals(SSE_NAME, inboundEvent.getName());
-                    Assert.assertEquals(MSG_COUNT - count.getCount(), data.intValue());
+                    Assertions.assertEquals(SSE_NAME, inboundEvent.getName());
+                    Assertions.assertEquals(MSG_COUNT - count.getCount(), data.intValue());
                     count.countDown();
                 } catch (ProcessingException ex) {
                     throw new RuntimeException("Error when deserializing of data.", ex);
@@ -139,8 +139,8 @@ public class EventSourceWithNamedEventsTest extends JerseyTest {
         eventSource.register(listener, "message-to-client");
         eventSource.open();
         final boolean sent = latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-        Assert.assertTrue("Awaiting for SSE message has timeout. Not all message were sent.", sent);
+        Assertions.assertTrue(sent, "Awaiting for SSE message has timeout. Not all message were sent.");
         final boolean handled = count.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-        Assert.assertTrue("Awaiting for SSE message has timeout. Not all message were handled by the listener.", handled);
+        Assertions.assertTrue(handled, "Awaiting for SSE message has timeout. Not all message were handled by the listener.");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,9 @@ import javax.ws.rs.core.Context;
 
 import javax.enterprise.inject.InjectionException;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests {@link CachedConstructorAnalyzer}.
@@ -128,14 +129,16 @@ public class CachedConstructorAnalyzerTest {
         assertEquals(2, analyzer.getConstructor().getParameterCount());
     }
 
-    @Test(expected = InjectionException.class)
+    @Test
     public void testUnknownAnnotatedConstructor() {
-        new CachedConstructorAnalyzer<>(UnknownAnnotatedConstructor.class, ANNOTATIONS).getConstructor();
+        assertThrows(InjectionException.class,
+                () -> new CachedConstructorAnalyzer<>(UnknownAnnotatedConstructor.class, ANNOTATIONS).getConstructor());
     }
 
-    @Test(expected = InjectionException.class)
+    @Test
     public void testSingleNonAnnotatedConstructor() {
-        new CachedConstructorAnalyzer<>(SingleNonAnnotatedConstructor.class, ANNOTATIONS).getConstructor();
+        assertThrows(InjectionException.class,
+                () -> new CachedConstructorAnalyzer<>(SingleNonAnnotatedConstructor.class, ANNOTATIONS).getConstructor());
     }
 
     public static class DefaultConstructor {

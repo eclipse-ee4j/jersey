@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,8 +43,8 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test broadcaster behaviour when closing.
@@ -140,12 +140,12 @@ public class BroadcasterCloseTest extends JerseyTest {
                     .resolveTemplate("msg", "msg" + i)
                     .request()
                     .get();
-            Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         });
 
         // instruct broadcaster to close
         final Response response = target().path("events/close").request().get();
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
         // send one more message (should be rejected -> request will fail)
         final Response badResponse = target()
@@ -153,19 +153,19 @@ public class BroadcasterCloseTest extends JerseyTest {
                                         .resolveTemplate("msg", "too-late")
                                         .request()
                                         .get();
-        Assert.assertNotEquals(Response.Status.OK.getStatusCode(), badResponse.getStatus());
+        Assertions.assertNotEquals(Response.Status.OK.getStatusCode(), badResponse.getStatus());
 
         // wait up to latency * msgcount (+1 as reserve) before the server shuts down
-        Assert.assertTrue(onCompleteLatch.await(SLOW_SUBSCRIBER_LATENCY * (MSG_COUNT + 1), TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(onCompleteLatch.await(SLOW_SUBSCRIBER_LATENCY * (MSG_COUNT + 1), TimeUnit.MILLISECONDS));
 
         // get data gathered by the slow subsciber
         String result = target().path("events/result").request().get(String.class);
         final String[] resultArray = result.split(",");
 
         // check, that broadcaster sent all the buffered events to the subscriber before completely closing
-        Assert.assertEquals(MSG_COUNT, resultArray.length);
+        Assertions.assertEquals(MSG_COUNT, resultArray.length);
         for (int i = 0; i < MSG_COUNT; i++) {
-            Assert.assertEquals("msg" + i, resultArray[i]);
+            Assertions.assertEquals("msg" + i, resultArray[i]);
         }
     }
 }

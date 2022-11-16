@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.RunSeparately;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Michal Gajdos
@@ -156,7 +158,6 @@ public abstract class ValidateOnExecutionAbstractTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
     public void testOnTypeValidateResultFailValidateExecutableMatch() throws Exception {
         _testOnType("match", -15, 500);
     }
@@ -167,7 +168,6 @@ public abstract class ValidateOnExecutionAbstractTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
     public void testOnTypeValidateResultPassBiggerValidateExecutableMiss() throws Exception {
         _testOnType("miss", -15, 200);
     }
@@ -178,7 +178,6 @@ public abstract class ValidateOnExecutionAbstractTest extends JerseyTest {
     }
 
     @Test
-    @RunSeparately
     public void testOnTypeValidateResultPassBiggerValidateExecutableNone() throws Exception {
         _testOnType("none", -15, 200);
     }

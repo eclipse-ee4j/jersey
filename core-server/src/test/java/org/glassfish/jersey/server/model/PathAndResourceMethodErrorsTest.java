@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,10 +29,10 @@ import org.glassfish.jersey.Severity;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Taken from Jersey 1: jersey-tests: com.sun.jersey.impl.errors.PathAndResourceMethodErrorsTest
@@ -71,7 +71,7 @@ public class PathAndResourceMethodErrorsTest {
     }
 
     // FIXME
-    @Ignore
+    @Disabled
     @Test
     public void testPathErrors() {
         List<ResourceModelIssue> issues = initiateWebApplication(PathErrorsResource.class);
@@ -92,7 +92,7 @@ public class PathAndResourceMethodErrorsTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     // TODO add cross-resource validation & un-ignore the test
     public void testConflictingRootResourceErrors() {
         ResourceConfig resourceConfig = new ResourceConfig(
@@ -105,7 +105,7 @@ public class PathAndResourceMethodErrorsTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     // TODO add cross-resource validation & un-ignore the test
     public void testConflictingRootResourceErrors2() {
         ResourceConfig resourceConfig = new ResourceConfig();
@@ -397,7 +397,7 @@ public class PathAndResourceMethodErrorsTest {
     }
 
     // FIXME: trailing slashes should not matter
-    @Ignore
+    @Disabled
     @Test
     public void testAmbiguousSubResourceLocatorsWithSlashResource() {
         final List<ResourceModelIssue> issues = initiateWebApplication(AmbiguousSubResourceLocatorsWithSlashResource.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -34,10 +34,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AsyncResourceTest extends JerseyTest {
 
@@ -197,9 +197,8 @@ public class AsyncResourceTest extends JerseyTest {
         LOGGER.info(messageBuilder.toString());
 
         for (Map.Entry<Integer, String> postResponseEntry : postResponses.entrySet()) {
-            assertEquals(
-                    String.format("Unexpected POST notification response for message %02d", postResponseEntry.getKey()),
-                    expectedPostResponse, postResponseEntry.getValue());
+            assertEquals(expectedPostResponse, postResponseEntry.getValue(),
+                    String.format("Unexpected POST notification response for message %02d", postResponseEntry.getKey()));
         }
 
         final List<Integer> lost = new LinkedList<Integer>();
@@ -309,9 +308,8 @@ public class AsyncResourceTest extends JerseyTest {
         LOGGER.info(messageBuilder.toString());
 
         for (Map.Entry<Integer, String> entry : responseEntryList) {
-            assertEquals(
-                    String.format("Unexpected GET notification response for message %02d", entry.getKey()),
-                    expectedResponse, entry.getValue());
+            assertEquals(expectedResponse, entry.getValue(),
+                    String.format("Unexpected GET notification response for message %02d", entry.getKey()));
         }
         assertEquals(MAX_MESSAGES, getResponses.size());
     }

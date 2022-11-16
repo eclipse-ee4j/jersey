@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,8 +34,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests HeaderValueException.
@@ -54,21 +54,21 @@ public class HeaderValueExceptionTest extends JerseyTest {
         final Response response = target("resource/inbound").request()
                 .header(HttpHeaders.DATE, "foo")
                 .post(Entity.entity("inbound", MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
 
     @Test
     public void testOutboundHeaderThrowsException() throws ExecutionException, InterruptedException {
         final Response response = target("resource/outbound").request()
                 .post(Entity.entity("outbound", MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(500, response.getStatus());
+        Assertions.assertEquals(500, response.getStatus());
     }
 
     @Test
     public void testOutboundResponseHeaderThrowsException() throws ExecutionException, InterruptedException {
         final Response response = target("resource/outbound-Response").request()
                 .post(Entity.entity("outbound", MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(500, response.getStatus());
+        Assertions.assertEquals(500, response.getStatus());
     }
 
 

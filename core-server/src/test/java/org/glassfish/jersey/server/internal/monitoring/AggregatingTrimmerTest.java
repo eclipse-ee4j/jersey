@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,8 @@ package org.glassfish.jersey.server.internal.monitoring;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stepan Vavra
@@ -114,12 +114,10 @@ public class AggregatingTrimmerTest extends AbstractNanosReservoirTest {
                 for (int startTime = -50; startTime < 50; ++startTime) {
                     for (int i = -50; i < 50; ++i) {
                         long lowerBound = AggregatingTrimmer.lowerBound(i, startTime, chunkSize, power);
-                        Assert.assertTrue("Error occurred for: " + i + " .. lower bound: " + lowerBound + " .. power: " + power
-                                        + " .. startTime: " + startTime,
-                                lowerBound <= i);
-                        Assert.assertTrue("Error occurred for: " + i + " .. lower bound: " + lowerBound + " .. power: " + power
-                                        + " .. startTime: " + startTime,
-                                i < lowerBound + chunkSize);
+                        Assertions.assertTrue(lowerBound <= i, "Error occurred for: " + i + " .. lower bound: "
+                                + lowerBound + " .. power: " + power + " .. startTime: " + startTime);
+                        Assertions.assertTrue(i < lowerBound + chunkSize, "Error occurred for: " + i
+                                + " .. lower bound: " + lowerBound + " .. power: " + power + " .. startTime: " + startTime);
                     }
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Property {@link org.glassfish.jersey.server.ServerProperties#METAINF_SERVICES_LOOKUP_DISABLE} is NOT set.

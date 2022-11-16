@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,48 +16,36 @@
 
 package org.glassfish.jersey.internal.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 
-@RunWith(Parameterized.class)
 public class JdkVersionParseTest {
 
-  @Parameterized.Parameter
-  public String rawVersionString;
-  @Parameterized.Parameter(1)
-  public int expectedMajorVersion;
-  @Parameterized.Parameter(2)
-  public int expectedMinorVersion;
-  @Parameterized.Parameter(3)
-  public int expectedMaintenanceVersion;
-  @Parameterized.Parameter(4)
-  public int expectedUpdateVersion;
-
-  @Parameterized.Parameters
-  public static Collection<Object[]> provideVersions() {
-    return Arrays.asList(new Object[][]{
+  public static Stream<Arguments> provideVersions() {
+    return Stream.of(
         // Java 8
-        {"1.8.0_141-b15", 1, 8, 0, 141},
-        {"1.8.0_141", 1, 8, 0, 141},
+        Arguments.of("1.8.0_141-b15", 1, 8, 0, 141),
+        Arguments.of("1.8.0_141", 1, 8, 0, 141),
 
         // Java 9 and above
-        {"9", 9, 0, 0, 0},
-        {"9.0.3", 9, 0, 3, 0},
-        {"11", 11, 0, 0, 0},
+        Arguments.of("9", 9, 0, 0, 0),
+        Arguments.of("9.0.3", 9, 0, 3, 0),
+        Arguments.of("11", 11, 0, 0, 0),
 
         // malformed version
-        {"invalid version", -1, -1, -1, -1}
-    });
+        Arguments.of("invalid version", -1, -1, -1, -1)
+    );
   }
 
-  @Test
-  public void testParseVersion() {
+  @ParameterizedTest
+  @MethodSource("provideVersions")
+  public void testParseVersion(String rawVersionString, int expectedMajorVersion, int expectedMinorVersion,
+        int expectedMaintenanceVersion, int expectedUpdateVersion) {
     JdkVersion version = JdkVersion.parseVersion(rawVersionString);
 
     assertEquals(expectedMajorVersion, version.getMajor());

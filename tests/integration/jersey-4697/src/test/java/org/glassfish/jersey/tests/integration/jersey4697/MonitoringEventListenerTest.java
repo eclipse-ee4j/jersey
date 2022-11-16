@@ -46,15 +46,16 @@ import org.glassfish.jersey.server.monitoring.ExceptionMapperMXBean;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MonitoringEventListenerTest extends JerseyTest {
 
     private static final long TIMEOUT = 1000;
+    private static final String APPLICATION_NAME = "MonitoringEventListenerTest";
     private static final String MBEAN_EXCEPTION =
-            "org.glassfish.jersey:type=MonitoringEventListenerTest,subType=Global,exceptions=ExceptionMapper";
+            "org.glassfish.jersey:type=" + APPLICATION_NAME + ",subType=Global,exceptions=ExceptionMapper";
 
     @Path("/example")
     public static class ExampleResource {
@@ -118,7 +119,7 @@ public class MonitoringEventListenerTest extends JerseyTest {
         resourceConfig.property(ServerProperties.MONITORING_STATISTICS_MBEANS_ENABLED, true);
         // Scheduler will process 1000 events per second
         resourceConfig.property(ServerProperties.MONITORING_STATISTICS_REFRESH_INTERVAL, 1);
-        resourceConfig.setApplicationName("MonitoringEventListenerTest");
+        resourceConfig.setApplicationName(APPLICATION_NAME);
         return resourceConfig;
     }
 

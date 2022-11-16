@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,21 +52,21 @@ import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.model.internal.RankedComparator;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.lessThan;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test cases for {@link javax.ws.rs.core.Configuration}.
@@ -77,7 +77,7 @@ public class CommonConfigTest {
 
     private CommonConfig config;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = new CommonConfig(null, ComponentBag.INCLUDE_ALL);
     }
@@ -442,9 +442,9 @@ public class CommonConfigTest {
         final ContractProvider contractProvider = config.getComponentBag().getModel(ComplexEmptyProvider.class);
         final Set<Class<?>> contracts = contractProvider.getContracts();
         assertEquals(2, contracts.size());
-        assertTrue(ReaderInterceptor.class + " is not registered.", contracts.contains(ReaderInterceptor.class));
-        assertTrue(ContainerRequestFilter.class + " is not registered.", contracts.contains(ContainerRequestFilter.class));
-        assertFalse(WriterInterceptor.class + " should not be registered.", contracts.contains(WriterInterceptor.class));
+        assertTrue(contracts.contains(ReaderInterceptor.class), ReaderInterceptor.class + " is not registered.");
+        assertTrue(contracts.contains(ContainerRequestFilter.class), ContainerRequestFilter.class + " is not registered.");
+        assertFalse(contracts.contains(WriterInterceptor.class), WriterInterceptor.class + " should not be registered.");
 
         assertTrue(config.getInstances().isEmpty());
         assertTrue(config.getClasses().contains(ComplexEmptyProvider.class));
@@ -466,9 +466,9 @@ public class CommonConfigTest {
         final ContractProvider contractProvider = config.getComponentBag().getModel(ComplexEmptyProvider.class);
         final Set<Class<?>> contracts = contractProvider.getContracts();
         assertEquals(2, contracts.size());
-        assertTrue(ReaderInterceptor.class + " is not registered.", contracts.contains(ReaderInterceptor.class));
-        assertTrue(ContainerRequestFilter.class + " is not registered.", contracts.contains(ContainerRequestFilter.class));
-        assertFalse(WriterInterceptor.class + " should not be registered.", contracts.contains(WriterInterceptor.class));
+        assertTrue(contracts.contains(ReaderInterceptor.class), ReaderInterceptor.class + " is not registered.");
+        assertTrue(contracts.contains(ContainerRequestFilter.class), ContainerRequestFilter.class + " is not registered.");
+        assertFalse(contracts.contains(WriterInterceptor.class), WriterInterceptor.class + " should not be registered.");
 
         assertTrue(config.getInstances().contains(complexEmptyProvider));
         assertTrue(config.getClasses().isEmpty());
@@ -689,7 +689,7 @@ public class CommonConfigTest {
             throws Exception {
 
         // Not null.
-        assertNotNull(testName + " - returned collection is null.", collection);
+        assertNotNull(collection, testName + " - returned collection is null.");
 
         // Immutability.
         try {
@@ -965,7 +965,7 @@ public class CommonConfigTest {
 
     @Test
     public void testFeatureInjections() throws Exception {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
 
         config.register(InjectIntoFeatureClass.class)
                 .register(new InjectIntoFeatureInstance())
@@ -985,7 +985,7 @@ public class CommonConfigTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testFeatureInjectionsBindInFeature() throws Exception {
         config.register(new BindInjectMeInFeature());
         config.register(InjectIntoFeatureClass.class);
@@ -1078,9 +1078,9 @@ public class CommonConfigTest {
         config.configureMetaProviders(injectionManager, finalizer);
 
         Object[] classes = config.getComponentBag().getClasses(contractProvider -> true).toArray();
-        Assert.assertEquals(classes[0], ContractBinderOne.class);
-        Assert.assertEquals(classes[1], ContractBinderTwo.class);
-        Assert.assertEquals(classes[2], ContractBinder.class);
+        Assertions.assertEquals(classes[0], ContractBinderOne.class);
+        Assertions.assertEquals(classes[1], ContractBinderTwo.class);
+        Assertions.assertEquals(classes[2], ContractBinder.class);
     }
 
     @Test
@@ -1093,9 +1093,9 @@ public class CommonConfigTest {
         config.configureMetaProviders(injectionManager, finalizer);
 
         Object[] instances = config.getComponentBag().getInstances(contractProvider -> true).toArray();
-        Assert.assertEquals(instances[0], binders[2]);
-        Assert.assertEquals(instances[1], binders[1]);
-        Assert.assertEquals(instances[2], binders[0]);
+        Assertions.assertEquals(instances[0], binders[2]);
+        Assertions.assertEquals(instances[1], binders[1]);
+        Assertions.assertEquals(instances[2], binders[0]);
     }
 
     public static class ContractBinderOne extends ContractBinder {

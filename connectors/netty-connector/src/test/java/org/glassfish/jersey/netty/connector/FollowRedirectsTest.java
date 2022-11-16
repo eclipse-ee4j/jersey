@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.netty.connector;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URI;
 import java.util.logging.Logger;
@@ -37,7 +37,7 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.netty.connector.internal.RedirectException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FollowRedirectsTest extends JerseyTest {
 

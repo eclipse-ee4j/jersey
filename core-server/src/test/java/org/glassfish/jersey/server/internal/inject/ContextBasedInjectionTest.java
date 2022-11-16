@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +17,10 @@
 package org.glassfish.jersey.server.internal.inject;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
@@ -38,11 +37,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.AsyncContext;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for creating an application with asynchronously handled request processing
@@ -50,25 +49,15 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Marek Potociar
  */
-@RunWith(Parameterized.class)
 public class ContextBasedInjectionTest {
 
     private static final URI BASE_URI = URI.create("http://localhost:8080/base/");
 
-    @Parameterized.Parameters
-    public static List<String[]> testUriSuffixes() {
-        return Arrays.asList(new String[][]{
-                {"a/b/c", "A-B-C"},
-                {"a/b/d/", "A-B-D"}
-        });
-    }
-
-    private final String uriSuffix;
-    private final String expectedResponse;
-
-    public ContextBasedInjectionTest(String uriSuffix, String expectedResponse) {
-        this.uriSuffix = uriSuffix;
-        this.expectedResponse = expectedResponse;
+    public static Stream<Arguments> testUriSuffixes() {
+        return Stream.of(
+                Arguments.of("a/b/c", "A-B-C"),
+                Arguments.of("a/b/d/", "A-B-D")
+        );
     }
 
     private static class AsyncInflector implements Inflector<ContainerRequestContext, Response> {
@@ -112,7 +101,7 @@ public class ContextBasedInjectionTest {
 
     private ApplicationHandler app;
 
-    @Before
+    @BeforeEach
     public void setupApplication() {
         ResourceConfig rc = new ResourceConfig();
 
@@ -128,8 +117,9 @@ public class ContextBasedInjectionTest {
         app = new ApplicationHandler(rc);
     }
 
-    @Test
-    public void testAsyncApp() throws InterruptedException, ExecutionException {
+    @ParameterizedTest
+    @MethodSource("testUriSuffixes")
+    public void testAsyncApp(String uriSuffix, String expectedResponse) throws InterruptedException, ExecutionException {
         ContainerRequest req =
                 RequestContextBuilder.from(BASE_URI, URI.create(BASE_URI.getPath() + uriSuffix), "GET").build();
 

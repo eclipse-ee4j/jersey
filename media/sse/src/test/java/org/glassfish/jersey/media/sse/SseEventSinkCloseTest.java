@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,9 +39,9 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test, that {@code SseEventSink} and the connection is closed eventually after closing {@code SseEventSource} on client side.
@@ -99,9 +99,9 @@ public class SseEventSinkCloseTest extends JerseyTest {
         }
 
         // ... and wait for the events to be processed by the client side, then close the eventSource
-        assertTrue("EventLatch timed out.", eventLatch.await(5, TimeUnit.SECONDS));
+        assertTrue(eventLatch.await(5, TimeUnit.SECONDS), "EventLatch timed out.");
         eventSource.close();
-        assertEquals("SseEventSource should have been already closed", false, eventSource.isOpen());
+        assertEquals(false, eventSource.isOpen(), "SseEventSource should have been already closed");
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
@@ -121,7 +121,7 @@ public class SseEventSinkCloseTest extends JerseyTest {
 
         assertTrue(closeLatch.await(10000, TimeUnit.MILLISECONDS));
         executor.shutdown();
-        assertTrue("SseEventOutput should have been already closed.", output.isClosed());
+        assertTrue(output.isClosed(), "SseEventOutput should have been already closed.");
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,20 +17,18 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the request scoped resource.
@@ -38,32 +36,15 @@ import static org.junit.Assert.assertThat;
  * @author Jakub Podlesak
  * @author Patrik Dudits
  */
-@RunWith(Parameterized.class)
 public class PerRequestBeanTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha"},
-                {"AAA"},
-                {"$%^"},
-                {"a b"}
-        });
+    public static Stream<String> testData() {
+        return Stream.of("alpha", "AAA", "$%^", "a b");
     }
 
-    final String x;
-
-    /**
-     * Create x new test case based on the above defined parameters.
-     *
-     * @param x query parameter value
-     */
-    public PerRequestBeanTest(String x) {
-        this.x = x;
-    }
-
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String x) {
 
         final WebTarget target = target().path("jcdibean/per-request").queryParam("x", x);
 
@@ -73,8 +54,9 @@ public class PerRequestBeanTest extends CdiTest {
         assertThat(s, containsString(String.format("queryParam=%s", x)));
     }
 
-    @Test
-    public void testSingleResponseFilterInvocation() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testSingleResponseFilterInvocation(String x) {
 
         final WebTarget target = target().path("jcdibean/per-request").queryParam("x", x);
 
@@ -82,8 +64,8 @@ public class PerRequestBeanTest extends CdiTest {
 
         List<Object> invocationIds = response.getHeaders().get("Filter-Invoked");
 
-        assertNotNull("Filter-Invoked header should be set by ResponseFilter", invocationIds);
-        assertEquals("ResponseFilter should be invoked only once", 1, invocationIds.size());
+        assertNotNull(invocationIds, "Filter-Invoked header should be set by ResponseFilter");
+        assertEquals(1, invocationIds.size(), "ResponseFilter should be invoked only once");
     }
 
 }

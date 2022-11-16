@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,51 +16,36 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the application scoped resource.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class SingletonBeanTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha", "beta"},
-                {"1", "2"}
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("alpha", "beta"),
+                Arguments.of("1", "2")
+        );
     }
 
-    final String p, x;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param p path parameter.
-     * @param x query parameter.
-     */
-    public SingletonBeanTest(String p, String x) {
-        this.p = p;
-        this.x = x;
-    }
-
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String p, String x) {
         final WebTarget singleton = target().path("jcdibean/singleton").path(p).queryParam("x", x);
         String s = singleton.request().get(String.class);
         assertThat(s, containsString(singleton.getUri().toString()));
@@ -68,8 +53,9 @@ public class SingletonBeanTest extends CdiTest {
         assertThat(s, containsString(String.format("queryParam=%s", x)));
     }
 
-    @Test
-    public void testCounter() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testCounter(String p, String x) {
 
         final WebTarget counter = target().path("jcdibean/singleton").path(p).queryParam("x", x).path("counter");
 
@@ -92,8 +78,9 @@ public class SingletonBeanTest extends CdiTest {
         counter.request().put(Entity.text("10"));
     }
 
-    @Test
-    public void testException() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testException(String p, String x) {
         final WebTarget exception = target().path("jcdibean/singleton").path(p).queryParam("x", x).path("exception");
         assertThat(exception.request().get().readEntity(String.class), containsString("JDCIBeanException"));
     }

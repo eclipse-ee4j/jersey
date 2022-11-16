@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,8 +34,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests whether providers are correctly validated in the client runtime (for example if provider constrained to
@@ -69,11 +69,11 @@ public class ConstrainedToTest extends JerseyTest {
 
     private void _testFilters(Client client) {
         final Response response = client.target(getBaseUri()).path("resource").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("called", response.getHeaderString("ClientFilterConstrainedToClient"));
-        Assert.assertEquals("called", response.getHeaderString("ClientFilter"));
-        Assert.assertNull("The ClientFilterConstrainedToServer should not be called as it is constrained to server.",
-                response.getHeaderString("ClientFilterConstrainedToServer"));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("called", response.getHeaderString("ClientFilterConstrainedToClient"));
+        Assertions.assertEquals("called", response.getHeaderString("ClientFilter"));
+        Assertions.assertNull(response.getHeaderString("ClientFilterConstrainedToServer"),
+                "The ClientFilterConstrainedToServer should not be called as it is constrained to server.");
     }
 
     @ConstrainedTo(RuntimeType.CLIENT)
