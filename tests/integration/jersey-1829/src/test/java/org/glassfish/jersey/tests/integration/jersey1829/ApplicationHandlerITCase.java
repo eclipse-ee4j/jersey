@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests JERSEY issue 1744. Custom status reason phrase returned from the resource method was not propagated out of the
@@ -48,15 +48,15 @@ public class ApplicationHandlerITCase extends JerseyTest {
     @Test
     public void testCustomResponse428() {
         final Response response = target().path("resource/428").request().get();
-        Assert.assertEquals(428, response.getStatusInfo().getStatusCode());
-        Assert.assertEquals("my-phrase", response.getStatusInfo().getReasonPhrase());
+        Assertions.assertEquals(428, response.getStatusInfo().getStatusCode());
+        Assertions.assertEquals("my-phrase", response.getStatusInfo().getReasonPhrase());
     }
 
     @Test
     public void testCustomResponse428WithEntity() {
         final Response response = target().path("resource/428-entity").request().get();
-        Assert.assertEquals(428, response.getStatusInfo().getStatusCode());
-        Assert.assertEquals("my-phrase", response.getStatusInfo().getReasonPhrase());
+        Assertions.assertEquals(428, response.getStatusInfo().getStatusCode());
+        Assertions.assertEquals("my-phrase", response.getStatusInfo().getReasonPhrase());
 
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,7 @@ import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Abstract entity type tester base class.
@@ -166,7 +166,7 @@ public abstract class AbstractTypeTester extends JerseyTest {
         assertEquals(in.length, out.length);
         for (int i = 0; i < in.length; i++) {
             if (in[i] != out[i]) {
-                assertEquals("Index: " + i, in[i], out[i]);
+                assertEquals(in[i], out[i], "Index: " + i);
             }
         }
     }

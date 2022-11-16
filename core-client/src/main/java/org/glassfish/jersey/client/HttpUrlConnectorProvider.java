@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -267,6 +268,23 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * @throws java.io.IOException in case the connection cannot be provided.
          */
         public HttpURLConnection getConnection(URL url) throws IOException;
+
+        /**
+         * Get a {@link java.net.HttpURLConnection} for a given URL.
+         * <p>
+         * Implementation of the method MUST be thread-safe and MUST ensure that
+         * a dedicated {@link java.net.HttpURLConnection} instance is returned for concurrent
+         * requests.
+         * </p>
+         *
+         * @param url the endpoint URL.
+         * @param proxy the configured proxy or null.
+         * @return the {@link java.net.HttpURLConnection}.
+         * @throws java.io.IOException in case the connection cannot be provided.
+         */
+        default HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
+            return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+        }
     }
 
     private static class DefaultConnectionFactory implements ConnectionFactory {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@ import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -67,23 +67,23 @@ public class SpecialHeaderTest extends JerseyTest {
 
 
     @Test
-    @Ignore("Apache connector does not provide information about encoding for gzip and deflate encoding")
+    @Disabled("Apache connector does not provide information about encoding for gzip and deflate encoding")
     public void testEncoded() {
         final Response response = target().path("resource/encoded").request("text/plain").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("get", response.readEntity(String.class));
-        Assert.assertEquals("gzip", response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
-        Assert.assertEquals("text/plain", response.getHeaderString(HttpHeaders.CONTENT_TYPE));
-        Assert.assertEquals(3, response.getHeaderString(HttpHeaders.CONTENT_LENGTH));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("get", response.readEntity(String.class));
+        Assertions.assertEquals("gzip", response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
+        Assertions.assertEquals("text/plain", response.getHeaderString(HttpHeaders.CONTENT_TYPE));
+        Assertions.assertEquals(3, response.getHeaderString(HttpHeaders.CONTENT_LENGTH));
     }
 
     @Test
     public void testNonEncoded() {
         final Response response = target().path("resource/non-encoded").request("text/plain").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("get", response.readEntity(String.class));
-        Assert.assertNull(response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
-        Assert.assertEquals("text/plain", response.getHeaderString(HttpHeaders.CONTENT_TYPE));
-        Assert.assertEquals("3", response.getHeaderString(HttpHeaders.CONTENT_LENGTH));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("get", response.readEntity(String.class));
+        Assertions.assertNull(response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
+        Assertions.assertEquals("text/plain", response.getHeaderString(HttpHeaders.CONTENT_TYPE));
+        Assertions.assertEquals("3", response.getHeaderString(HttpHeaders.CONTENT_LENGTH));
     }
 }

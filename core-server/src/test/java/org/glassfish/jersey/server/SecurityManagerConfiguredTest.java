@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.server;
 
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test that verifies that security manager is setup to run the Jersey core server unit tests.
@@ -30,7 +30,7 @@ public class SecurityManagerConfiguredTest {
      */
     @Test
     public void testSecurityManagerIsConfigured() {
-        assertNotNull("Jersey core server unit tests should run with active security manager",
-                System.getSecurityManager());
+        assertNotNull(System.getSecurityManager(),
+                "Jersey core server unit tests should run with active security manager");
     }
 }

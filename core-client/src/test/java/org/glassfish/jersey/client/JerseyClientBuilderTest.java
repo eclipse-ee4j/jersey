@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,9 @@
 
 package org.glassfish.jersey.client;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
 import javax.net.ssl.SSLContext;
@@ -40,11 +39,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@link JerseyClient} unit test.
@@ -54,12 +54,9 @@ import static org.junit.Assert.fail;
  */
 public class JerseyClientBuilderTest {
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     private JerseyClientBuilder builder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         builder = new JerseyClientBuilder();
     }
@@ -128,10 +125,10 @@ public class JerseyClientBuilderTest {
         Client client;
 
         client = new JerseyClientBuilder().keyStore(ks, "qwerty").sslContext(ctx).build();
-        assertSame("SSL context not the same as set in the client builder.", ctx, client.getSslContext());
+        assertSame(ctx, client.getSslContext(), "SSL context not the same as set in the client builder.");
 
         client = new JerseyClientBuilder().sslContext(ctx).trustStore(ks).build();
-        assertNotSame("SSL context not overridden in the client builder.", ctx, client.getSslContext());
+        assertNotSame(ctx, client.getSslContext(), "SSL context not overridden in the client builder.");
     }
 
     @Priority(2)
@@ -234,7 +231,7 @@ public class JerseyClientBuilderTest {
         assertNull(contracts);
     }
 
-    @Test(expected = Test.None.class) //no exception shall be thrown
+    @Test
     public void testRegisterIrrelevantImmutableContractsMap() {
         final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         final Map<Class<?>, Integer> contracts = new HashMap<>();
@@ -251,17 +248,19 @@ public class JerseyClientBuilderTest {
 
     @Test
     public void testNegativeConnectTimeout() {
-        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
-        exception.expect(IllegalArgumentException.class);
-        clientBuilder.connectTimeout(-1, TimeUnit.SECONDS);
+            clientBuilder.connectTimeout(-1, TimeUnit.SECONDS);
+        });
     }
 
     @Test
     public void testNegativeReadTimeout() {
-        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
-        exception.expect(IllegalArgumentException.class);
-        clientBuilder.readTimeout(-1, TimeUnit.SECONDS);
+            clientBuilder.readTimeout(-1, TimeUnit.SECONDS);
+        });
     }
 }

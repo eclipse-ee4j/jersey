@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,10 +38,10 @@ import org.glassfish.jersey.internal.util.SaxHelper;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -137,14 +137,14 @@ public class EntityExpansionTest extends JerseyTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setXdkFlag() {
         // XDK SAXParser does not support this feature, so the test has to be skipped if XDK detected.
         if (SaxHelper.isXdkParserFactory(SAXParserFactory.newInstance())) {
             LOG.warning("XDK SAXParser detected, FEATURE_SECURE_PROCESSING is not supported. Tests will be skipped.");
             isXdk = true;
         }
-        Assume.assumeTrue(!isXdk);
+        Assumptions.assumeTrue(!isXdk);
     }
 
     @Test
@@ -158,9 +158,9 @@ public class EntityExpansionTest extends JerseyTest {
                 + "<testBean><input>&lol3;</input></testBean>";
 
         final Response response = target().path("resource").request().post(Entity.entity(str, MediaType.APPLICATION_XML));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         final String entity = response.readEntity(String.class);
-        Assert.assertTrue(entity.startsWith("PASSED"));
+        Assertions.assertTrue(entity.startsWith("PASSED"));
     }
 
     @Test
@@ -168,9 +168,9 @@ public class EntityExpansionTest extends JerseyTest {
         String str = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<testBean str=\"aaa\" str2=\"bbb\" str3=\"ccc\"><input>test</input></testBean>";
         final Response response = target().path("resource").request().post(Entity.entity(str, MediaType.APPLICATION_XML));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         final String entity = response.readEntity(String.class);
-        Assert.assertTrue(entity.startsWith("PASSED"));
+        Assertions.assertTrue(entity.startsWith("PASSED"));
     }
 
 }

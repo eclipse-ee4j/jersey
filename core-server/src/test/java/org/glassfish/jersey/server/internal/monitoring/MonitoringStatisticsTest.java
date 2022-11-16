@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +17,10 @@
 package org.glassfish.jersey.server.internal.monitoring;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,8 +39,8 @@ import org.glassfish.jersey.server.monitoring.ExecutionStatistics;
 import org.glassfish.jersey.server.monitoring.ResourceMethodStatistics;
 import org.glassfish.jersey.server.monitoring.ResourceStatistics;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miroslav Fuksa
@@ -108,10 +106,10 @@ public class MonitoringStatisticsTest {
         final MonitoringStatisticsImpl stats = getSimpleStats();
         final Set<String> keys = stats.getUriStatistics().keySet();
         final Iterator<String> iterator = keys.iterator();
-        Assert.assertEquals("/hello", iterator.next());
-        Assert.assertEquals("/hello/world", iterator.next());
-        Assert.assertEquals("/test-resource", iterator.next());
-        Assert.assertEquals("/test-resource/child", iterator.next());
+        Assertions.assertEquals("/hello", iterator.next());
+        Assertions.assertEquals("/hello/world", iterator.next());
+        Assertions.assertEquals("/test-resource", iterator.next());
+        Assertions.assertEquals("/test-resource/child", iterator.next());
     }
 
     private MonitoringStatisticsImpl getSimpleStats() {
@@ -145,8 +143,8 @@ public class MonitoringStatisticsTest {
         final Set<Class<?>> keys = stats.getResourceClassStatistics().keySet();
         final Iterator<Class<?>> it = keys.iterator();
 
-        Assert.assertEquals(HelloResource.class, it.next());
-        Assert.assertEquals(TestResource.class, it.next());
+        Assertions.assertEquals(HelloResource.class, it.next());
+        Assertions.assertEquals(TestResource.class, it.next());
     }
 
     @Test
@@ -155,9 +153,9 @@ public class MonitoringStatisticsTest {
         final Set<Class<?>> keys = stats.getResourceClassStatistics().keySet();
         final Iterator<Class<?>> it = keys.iterator();
 
-        Assert.assertEquals(HelloResource.class, it.next());
-        Assert.assertEquals(MyInflector.class, it.next());
-        Assert.assertEquals(TestResource.class, it.next());
+        Assertions.assertEquals(HelloResource.class, it.next());
+        Assertions.assertEquals(MyInflector.class, it.next());
+        Assertions.assertEquals(TestResource.class, it.next());
     }
 
     @Test
@@ -213,11 +211,11 @@ public class MonitoringStatisticsTest {
             final ResourceMethod method = methodStatistics.getResourceMethod();
             final ExecutionStatistics st = methodStatistics.getMethodStatistics();
             if (method.getHttpMethod().equals("GET")) {
-                Assert.assertEquals(20, st.getLastStartTime().getTime());
+                Assertions.assertEquals(20, st.getLastStartTime().getTime());
             } else if (method.getHttpMethod().equals("POST")) {
-                Assert.assertEquals(30, st.getLastStartTime().getTime());
+                Assertions.assertEquals(30, st.getLastStartTime().getTime());
             } else {
-                Assert.fail();
+                Assertions.fail();
             }
         }
     }
@@ -226,8 +224,8 @@ public class MonitoringStatisticsTest {
     private void check(Iterator<Map.Entry<String, ResourceStatistics>> it,
                        String expectedUri, int expectedMethods) {
         Map.Entry<String, ResourceStatistics> entry = it.next();
-        Assert.assertEquals(expectedUri, entry.getKey());
-        Assert.assertEquals(expectedMethods, entry.getValue().getResourceMethodStatistics().size());
+        Assertions.assertEquals(expectedUri, entry.getKey());
+        Assertions.assertEquals(expectedMethods, entry.getValue().getResourceMethodStatistics().size());
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -48,14 +48,14 @@ public class Jersey3796ITCase extends JerseyTest {
     public void testSameInstanceForProviders() {
         final Map response = target("/myresource").request(MediaType.APPLICATION_JSON_TYPE).get(Map.class);
         //Map shall not be null
-        Assert.assertNotNull(response);
+        Assertions.assertNotNull(response);
         //Map shall contain exactly three elements
-        Assert.assertEquals(3, response.size());
+        Assertions.assertEquals(3, response.size());
         //Map shall contain ony keys Feature, Request and Response
         //Values of that keys shall be equals.
         //Equality of all values indicates the class is only one per all tested providers
-        Assert.assertEquals(response.get("Feature"), response.get("Request"));
-        Assert.assertEquals(response.get("Feature"), response.get("Response"));
-        Assert.assertEquals(response.get("Response"), response.get("Request"));
+        Assertions.assertEquals(response.get("Feature"), response.get("Request"));
+        Assertions.assertEquals(response.get("Feature"), response.get("Response"));
+        Assertions.assertEquals(response.get("Response"), response.get("Request"));
     }
 }

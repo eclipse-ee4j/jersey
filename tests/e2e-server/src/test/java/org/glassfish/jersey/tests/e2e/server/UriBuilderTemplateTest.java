@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,9 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Testing URI template as an e2e test.
@@ -80,12 +81,14 @@ public class UriBuilderTemplateTest extends JerseyTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testResolveTemplate() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("a", "xyz");
-        map.put(null, "path");
-        UriBuilder builder = UriBuilder.fromPath("").path("{a}/{b}");
-        builder.resolveTemplates(map);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("a", "xyz");
+            map.put(null, "path");
+            UriBuilder builder = UriBuilder.fromPath("").path("{a}/{b}");
+            builder.resolveTemplates(map);
+        });
     }
 }

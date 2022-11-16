@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server.mvc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,23 +38,21 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * MVC encoding charset tests.
  *
  * @author Miroslav Fuksa
  */
-@RunWith(Parameterized.class)
-public class MvcEncodingTest extends JerseyTest {
+public class MvcEncodingTest {
 
     public static final String MESSAGE = "\\u0161\\u010d\\u0159\\u017e\\u00fd\\u00e1\\u00ed\\u00e9";
 
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {new FreemarkerMvcFeature(), "freemarker", "FreemarkerResource.ftl", "UTF-8"},
@@ -67,85 +66,105 @@ public class MvcEncodingTest extends JerseyTest {
         });
     }
 
-    private static String templateName;
-    private final String defaultEncoding;
-
-    public MvcEncodingTest(Feature feature, String propertySuffix, String templateName, String defaultEncoding) {
-        super(new ResourceConfig()
-                .register(feature)
-                .register(FreemarkerResource.class)
-                .property(MvcFeature.ENCODING + "." + propertySuffix, defaultEncoding));
-        MvcEncodingTest.templateName = templateName;
-        this.defaultEncoding = defaultEncoding;
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        data().forEach(arr -> {
+            MvcEncodingTemplateTest test = new MvcEncodingTemplateTest((Feature) arr[0], (String) arr[1],
+                    (String) arr[2], (String) arr[3]) {};
+            tests.add(TestHelper.toTestContainer(test, String.format("%s (%s, %s, %s, %s)",
+                    MvcEncodingTemplateTest.class.getSimpleName(),
+                    arr[0].getClass().getSimpleName(), arr[1], arr[2], arr[3])));
+        });
+        return tests;
     }
 
+    public abstract static class MvcEncodingTemplateTest extends JerseyTest {
+        private final String defaultEncoding;
 
-    @Path("resource")
-    public static class FreemarkerResource {
-        @GET
-        public Viewable get() {
-            final Map<String, String> map = new HashMap<String, String>();
-            map.put("user", MESSAGE);
+        public MvcEncodingTemplateTest(Feature feature, String propertySuffix, String templateName, String defaultEncoding) {
+            super(new ResourceConfig()
+                    .register(feature)
+                    .register(new FreemarkerResource(templateName))
+                    .property(MvcFeature.ENCODING + "." + propertySuffix, defaultEncoding));
 
-            return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+            this.defaultEncoding = defaultEncoding;
         }
 
-        @GET
-        @Path("textplain")
-        @Produces("text/plain")
-        public Viewable getTextPlain() {
-            final Map<String, String> map = new HashMap<String, String>();
-            map.put("user", MESSAGE);
+        @Path("resource")
+        public static class FreemarkerResource {
 
-            return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+            private String templateName;
+
+            public FreemarkerResource(String templateName) {
+                this.templateName = templateName;
+            }
+
+            @GET
+            public Viewable get() {
+                final Map<String, String> map = new HashMap<String, String>();
+                map.put("user", MESSAGE);
+
+                return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+            }
+
+            @GET
+            @Path("textplain")
+            @Produces("text/plain")
+            public Viewable getTextPlain() {
+                final Map<String, String> map = new HashMap<String, String>();
+                map.put("user", MESSAGE);
+
+                return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+            }
+
+            @GET
+            @Path("textplainUTF16")
+            @Produces("text/plain;charset=UTF-16")
+            public Viewable getTextPlainUTF16() {
+                final Map<String, String> map = new HashMap<String, String>();
+                map.put("user", MESSAGE);
+
+                return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+            }
         }
 
-        @GET
-        @Path("textplainUTF16")
-        @Produces("text/plain;charset=UTF-16")
-        public Viewable getTextPlainUTF16() {
-            final Map<String, String> map = new HashMap<String, String>();
-            map.put("user", MESSAGE);
-
-            return new Viewable("/org/glassfish/jersey/tests/e2e/server/mvc/MvcEncodingTest/" + templateName, map);
+        @Override
+        protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
+            return new GrizzlyTestContainerFactory();
         }
-    }
 
-    @Override
-    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-        return new GrizzlyTestContainerFactory();
-    }
+        @Test
+        public void testDefaultEncoding() {
+            final Response response = target().path("resource").request().get();
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
+            Assertions.assertEquals("*/*;charset=" + defaultEncoding, response.getMediaType().toString());
+            Assertions.assertEquals(defaultEncoding, response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
+        }
 
-    @Test
-    public void testDefaultEncoding() {
-        final Response response = target().path("resource").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
-        Assert.assertEquals("*/*;charset=" + defaultEncoding, response.getMediaType().toString());
-        Assert.assertEquals(defaultEncoding, response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
-    }
+        @Test
+        public void testTextPlainDefaultEncoding() {
+            final Response response = target().path("resource/textplain").request("*/*,text/plain,text/html").get();
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
+            Assertions.assertEquals("text/plain;charset=" + defaultEncoding, response.getMediaType().toString());
+            Assertions.assertEquals(defaultEncoding, response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
+        }
 
-    @Test
-    public void testTextPlainDefaultEncoding() {
-        final Response response = target().path("resource/textplain").request("*/*,text/plain,text/html").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
-        Assert.assertEquals("text/plain;charset=" + defaultEncoding, response.getMediaType().toString());
-        Assert.assertEquals(defaultEncoding, response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
-    }
+        @Test
+        public void testTextPlain406() {
+            final Response response = target().path("resource/textplain").request("text/html").get();
+            Assertions.assertEquals(406, response.getStatus());
+        }
 
-    @Test
-    public void testTextPlain406() {
-        final Response response = target().path("resource/textplain").request("text/html").get();
-        Assert.assertEquals(406, response.getStatus());
-    }
-
-    @Test
-    public void testTextPlainUTF16() {
-        final Response response = target().path("resource/textplainUTF16").request("*/*,text/plain,text/html").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
-        Assert.assertEquals("text/plain;charset=UTF-16", response.getMediaType().toString());
-        Assert.assertEquals("UTF-16", response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
+        @Test
+        public void testTextPlainUTF16() {
+            final Response response = target().path("resource/textplainUTF16").request("*/*,text/plain,text/html").get();
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals("Model:" + MESSAGE, response.readEntity(String.class));
+            Assertions.assertEquals("text/plain;charset=UTF-16", response.getMediaType().toString());
+            Assertions.assertEquals("UTF-16", response.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER));
+        }
     }
 }

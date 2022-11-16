@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Grizzly connector non blocking test.
@@ -82,9 +82,9 @@ public class NonBlockingTest extends JerseyTest {
 
         String response = future.get();
         assertNotNull(response);
-        assertTrue("Invocation callback was not invoked",
-                countDownLatch.await(5, TimeUnit.SECONDS));
-        assertTrue("Invocation callback is not executed on the NIO pool thread.",
-                   !invocationCallbackThreadName.contains("jersey-client-async-executor"));
+        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS),
+                "Invocation callback was not invoked");
+        assertTrue(!invocationCallbackThreadName.contains("jersey-client-async-executor"),
+                "Invocation callback is not executed on the NIO pool thread.");
     }
 }

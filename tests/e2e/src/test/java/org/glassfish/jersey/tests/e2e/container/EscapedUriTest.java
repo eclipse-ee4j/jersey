@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,16 +23,24 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-public class EscapedUriTest extends JerseyContainerTest {
+public class EscapedUriTest {
 
     private static final String RESPONSE = "CONTENT";
 
@@ -41,7 +49,6 @@ public class EscapedUriTest extends JerseyContainerTest {
 
         private final String context;
 
-        @SuppressWarnings("UnusedDeclaration")
         public EscapedUriResource() {
             this("");
         }
@@ -69,18 +76,35 @@ public class EscapedUriTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(EscapedUriResource.class, NonEscapedUriResource.class);
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        JerseyContainerTest.parameters().forEach(testContainerFactory -> {
+            EscapedUriTesmplateTest test = new EscapedUriTesmplateTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testEscaped() {
-        assertThat(target("x%20y").request().get(String.class), is(RESPONSE));
-    }
+    public abstract static class EscapedUriTesmplateTest extends JerseyContainerTest {
 
-    @Test
-    public void testNonEscaped() {
-        assertThat(target("non/x y").request().get(String.class), is(RESPONSE));
+        public EscapedUriTesmplateTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
+        }
+
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(EscapedUriResource.class, NonEscapedUriResource.class);
+        }
+
+        @Test
+        public void testEscaped() {
+            assertThat(target("x%20y").request().get(String.class), is(RESPONSE));
+        }
+
+        @Test
+        public void testNonEscaped() {
+            assertThat(target("non/x y").request().get(String.class), is(RESPONSE));
+        }
     }
 }

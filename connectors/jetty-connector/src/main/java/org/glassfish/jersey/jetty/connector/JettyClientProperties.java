@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -70,7 +70,7 @@ public final class JettyClientProperties {
      * that is stored in a truststore.
      * <p/>
      * The value MUST be an instance of {@link java.lang.Boolean}.
-     * If the property is absent the default value is {@code true}
+     * If the property is absent the default value is {@code true}.
      */
     public static final String ENABLE_SSL_HOSTNAME_VERIFICATION =
             "jersey.config.jetty.client.enableSslHostnameVerification";
@@ -84,6 +84,24 @@ public final class JettyClientProperties {
      */
     public static final String SYNC_LISTENER_RESPONSE_MAX_SIZE =
         "jersey.config.jetty.client.syncListenerResponseMaxSize";
+
+    /**
+     * Total timeout interval for request/response conversation, in milliseconds.
+     * Opposed to {@link org.glassfish.jersey.client.ClientProperties#READ_TIMEOUT}.
+     * <p>
+     * The value MUST be an instance convertible to {@link java.lang.Integer}. The
+     * value of zero (0) is equivalent to an interval of infinity.
+     * </p>
+     * <p>
+     * The default value is zero (infinity).
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @since 2.37
+     */
+    public static final String TOTAL_TIMEOUT = "jersey.config.jetty.client.totalTimeout";
 
     /**
      * Get the value of the specified property.

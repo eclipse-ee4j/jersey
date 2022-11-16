@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.ext.microprofile</groupId>
-        <version>2.35-SNAPSHOT</version>
+        <version>2.38-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -70,8 +70,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -83,5 +83,27 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.jersey.microprofile.config.*;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            org.eclipse.microprofile.config.*;version="!",
+                            *
+                        </Import-Package>
+                    </instructions>
+                    <unpackBundle>true</unpackBundle>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

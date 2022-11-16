@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Test resource.
@@ -34,19 +33,15 @@ public class Resource {
     @GET
     @Produces("text/plain")
     public String hello(@QueryParam("name") final Optional<String> name) {
-        return "Hello " + name.or("World") + "!";
+        return "Hello " + name.orElse("World") + "!";
     }
 
     @Path("square")
     @GET
     @Produces("text/plain")
     public int echo(@QueryParam("value") final Optional<Integer> value) {
-        return value.transform(new Function<Integer, Integer>() {
-            @Override
-            public Integer apply(final Integer integer) {
-                return integer * integer;
-            }
-        }).or(0);
+
+        return value.map(integer -> integer * integer).orElse(0);
     }
 
 }

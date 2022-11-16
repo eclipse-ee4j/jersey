@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,6 +51,7 @@ abstract class AbstractHk2InjectionManager implements InjectionManager {
     private static final ServiceLocatorFactory factory = ServiceLocatorFactory.getInstance();
 
     private ServiceLocator locator;
+    private Boolean isShutdown = Boolean.FALSE; // TODO replace by getServiceLocator().isShutDown() in 3.x
 
     /**
      * Private constructor.
@@ -182,6 +183,12 @@ abstract class AbstractHk2InjectionManager implements InjectionManager {
         } else {
             getServiceLocator().shutdown();
         }
+        isShutdown = Boolean.TRUE;
+    }
+
+    @Override
+    public boolean isShutdown() {
+        return isShutdown;
     }
 
     @Override

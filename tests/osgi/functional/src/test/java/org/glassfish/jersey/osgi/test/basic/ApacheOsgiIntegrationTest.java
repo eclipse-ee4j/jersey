@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,6 +55,7 @@ public class ApacheOsgiIntegrationTest {
         final List<Option> options = Helper.getCommonOsgiOptions();
         options.addAll(Helper.expandedList(
                 mavenBundle().groupId("org.ops4j.pax.logging").artifactId("pax-logging-api").versionAsInProject(),
+                mavenBundle().groupId("org.osgi").artifactId("org.osgi.service.cm").versionAsInProject(),
                 mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpcore-osgi").versionAsInProject(),
                 mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpclient-osgi").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.connectors").artifactId("jersey-apache-connector")

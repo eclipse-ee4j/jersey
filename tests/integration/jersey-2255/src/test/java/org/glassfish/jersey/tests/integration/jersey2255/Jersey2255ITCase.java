@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,10 +27,10 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.tests.integration.jersey2255.Issue2255Resource.A;
 import org.glassfish.jersey.tests.integration.jersey2255.Issue2255Resource.B;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Reproducer tests for JERSEY-2255.

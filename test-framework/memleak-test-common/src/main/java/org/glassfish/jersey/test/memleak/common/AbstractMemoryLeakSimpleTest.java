@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package org.glassfish.jersey.test.memleak.common;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * An abstract test class that adds support for dump heap at the beginning of the test execution.
@@ -28,7 +28,7 @@ import org.junit.Before;
  */
 public class AbstractMemoryLeakSimpleTest {
 
-    @Before
+    @BeforeEach
     public void dumpTheHeap() throws Exception {
         final String heapDumpPath = System.getProperty(MemoryLeakUtils.JERSEY_CONFIG_TEST_MEMLEAK_HEAP_DUMP_PATH);
         String heapDumpFile = "java_start_pid" + guessPid() + ".hprof";

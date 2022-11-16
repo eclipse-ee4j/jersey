@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -47,6 +47,7 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.vmOption;
 
 /**
  * @author Jakub Podlesak
@@ -85,6 +86,10 @@ public abstract class AbstractHttpServiceTest {
                 systemProperty(BundleLocationProperty).value(bundleLocation),
                 systemProperty("jersey.config.test.container.port").value(String.valueOf(port)),
                 systemProperty("org.osgi.framework.system.packages.extra").value("jakarta.annotation"),
+
+                JdkVersion.getJdkVersion().getMajor() > 16
+                    ? vmOption("--add-opens=java.base/java.net=ALL-UNNAMED")
+                    : null,
 
                 // do not remove the following line
                 // systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("FINEST"),

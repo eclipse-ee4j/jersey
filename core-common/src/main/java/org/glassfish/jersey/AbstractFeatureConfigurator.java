@@ -24,6 +24,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
 
 import javax.ws.rs.RuntimeType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public abstract class AbstractFeatureConfigurator<T> extends AbstractServiceFind
      * @param features list of features to be registered
      * @param bootstrapBag place where features are being registered
      */
-    protected void registerFeatures(List<Class<T>> features,
+    protected void registerFeatures(Collection<Class<T>> features,
                                     BootstrapBag bootstrapBag) {
         final List<AutoDiscoverable> autoDiscoverables = new ArrayList<>();
 

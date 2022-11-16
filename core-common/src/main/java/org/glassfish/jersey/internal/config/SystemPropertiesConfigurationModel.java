@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -39,36 +40,39 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
 
+/**
+ * The External Configuration Model that supports {@code System} properties. The properties are listed in a property class
+ * in a form of {@code public static final String} property name. The {@code String} value of the property name is searched
+ * among the {@code System} properties. The property scan is performed only when
+ * {@link CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER} is set to {@code true}.
+ */
+public class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<Void> {
 
-class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<Void> {
-
-    private static final Logger log = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
-    static final List<String> PROPERTY_CLASSES = Arrays.asList(
-            "org.glassfish.jersey.ExternalProperties",
-            "org.glassfish.jersey.server.ServerProperties",
-            "org.glassfish.jersey.client.ClientProperties",
-            "org.glassfish.jersey.servlet.ServletProperties",
-            "org.glassfish.jersey.message.MessageProperties",
-            "org.glassfish.jersey.apache.connector.ApacheClientProperties",
-            "org.glassfish.jersey.helidon.connector.HelidonClientProperties",
-            "org.glassfish.jersey.jdk.connector.JdkConnectorProperties",
-            "org.glassfish.jersey.jetty.connector.JettyClientProperties",
-            "org.glassfish.jersey.netty.connector.NettyClientProperties",
-            "org.glassfish.jersey.media.multipart.MultiPartProperties",
-            "org.glassfish.jersey.server.oauth1.OAuth1ServerProperties");
-
+    private static final Logger LOGGER = Logger.getLogger(SystemPropertiesConfigurationModel.class.getName());
 
     private static final Map<Class, Function> converters = new HashMap<>();
+    private final Map<String, Object> properties = new HashMap<>();
+    private final AtomicBoolean gotProperties = new AtomicBoolean(false);
+    private final List<String> propertyClassNames;
     static {
         converters.put(String.class, (Function<String, String>) s -> s);
         converters.put(Integer.class, (Function<String, Integer>) s -> Integer.valueOf(s));
+        converters.put(Long.class, (Function<String, Long>) s -> Long.parseLong(s));
         converters.put(Boolean.class, (Function<String, Boolean>) s -> s.equalsIgnoreCase("1")
                 ? true
                 : Boolean.parseBoolean(s));
     }
 
-    private String getSystemProperty(String name) {
-        return AccessController.doPrivileged(PropertiesHelper.getSystemProperty(name));
+    /**
+     * Create new {@link ExternalConfigurationModel} for properties defined by classes in {@code propertyClassNames} list.
+     * @param propertyClassNames List of property defining class names.
+     */
+    public SystemPropertiesConfigurationModel(List<String> propertyClassNames) {
+        this.propertyClassNames = propertyClassNames;
+    }
+
+    protected List<String> getPropertyClassNames() {
+        return propertyClassNames;
     }
 
     @Override
@@ -76,13 +80,10 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
         if (converters.get(clazz) == null) {
             throw new IllegalArgumentException("Unsupported class type");
         }
-        return (name != null && clazz != null && isProperty(name))
+        return (name != null && clazz != null && hasProperty(name))
                 ? clazz.cast(converters.get(clazz).apply(getSystemProperty(name)))
                 : null;
     }
-
-
-
     @Override
     public <T> Optional<T> getOptionalProperty(String name, Class<T> clazz) {
         return Optional.of(as(name, clazz));
@@ -90,6 +91,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     @Override
     public ExternalConfigurationModel mergeProperties(Map<String, Object> inputProperties) {
+        inputProperties.forEach((k, v) -> properties.put(k, v));
         return this;
     }
 
@@ -100,11 +102,11 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     @Override
     public boolean isProperty(String name) {
-        return Optional.ofNullable(
-                AccessController.doPrivileged(
-                        PropertiesHelper.getSystemProperty(name)
-                )
-        ).isPresent();
+        String property = getSystemProperty(name);
+        return property != null && (
+                "0".equals(property) || "1".equals(property)
+                        || "true".equalsIgnoreCase(property) || "false".equalsIgnoreCase(property)
+        );
     }
 
     @Override
@@ -114,30 +116,29 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     @Override
     public Map<String, Object> getProperties() {
-        final Map<String, Object> result = new HashMap<>();
-
         final Boolean allowSystemPropertiesProvider = as(
                 CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class
         );
         if (!Boolean.TRUE.equals(allowSystemPropertiesProvider)) {
-            log.finer(LocalizationMessages.WARNING_PROPERTIES());
-            return result;
+            LOGGER.finer(LocalizationMessages.WARNING_PROPERTIES());
+            return properties;
         }
 
-        try {
-            AccessController.doPrivileged(PropertiesHelper.getSystemProperties())
-                    .forEach((k, v) -> result.put(String.valueOf(k), v));
-        } catch (SecurityException se) {
-            log.warning(LocalizationMessages.SYSTEM_PROPERTIES_WARNING());
-            return getExpectedSystemProperties();
+        if (gotProperties.compareAndSet(false, true)) {
+            try {
+                AccessController.doPrivileged(PropertiesHelper.getSystemProperties())
+                        .forEach((k, v) -> properties.put(String.valueOf(k), v));
+            } catch (SecurityException se) {
+                LOGGER.warning(LocalizationMessages.SYSTEM_PROPERTIES_WARNING());
+                return getExpectedSystemProperties();
+            }
         }
-        return result;
+        return properties;
     }
 
     private Map<String, Object> getExpectedSystemProperties() {
         final Map<String, Object> result = new HashMap<>();
-        mapFieldsToProperties(result, CommonProperties.class);
-        for (String propertyClass : PROPERTY_CLASSES) {
+        for (String propertyClass : getPropertyClassNames()) {
             mapFieldsToProperties(result,
                     AccessController.doPrivileged(
                             ReflectionHelper.classForNamePA(propertyClass)
@@ -148,7 +149,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
         return  result;
     }
 
-    private <T> void mapFieldsToProperties(Map<String, Object> properties, Class<T> clazz) {
+    private static <T> void mapFieldsToProperties(Map<String, Object> properties, Class<T> clazz) {
         if (clazz == null) {
             return;
         }
@@ -170,15 +171,19 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
         }
     }
 
-    private String getPropertyNameByField(Field field) {
+    private static String getPropertyNameByField(Field field) {
         return  AccessController.doPrivileged((PrivilegedAction<String>) () -> {
             try {
                 return (String) field.get(null);
             } catch (IllegalAccessException e) {
-                log.warning(e.getLocalizedMessage());
+                LOGGER.warning(e.getLocalizedMessage());
             }
             return null;
         });
+    }
+
+    private static String getSystemProperty(String name) {
+        return AccessController.doPrivileged(PropertiesHelper.getSystemProperty(name));
     }
 
     @Override
@@ -188,7 +193,7 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
 
     @Override
     public Collection<String> getPropertyNames() {
-        return PropertiesHelper.getSystemProperties().run().stringPropertyNames();
+        return AccessController.doPrivileged(PropertiesHelper.getSystemProperties()).stringPropertyNames();
     }
 
     @Override
@@ -224,5 +229,10 @@ class SystemPropertiesConfigurationModel implements ExternalConfigurationModel<V
     @Override
     public Set<Object> getInstances() {
         return null;
+    }
+
+    // Jersey 2.x
+    private boolean hasProperty(String name) {
+        return getProperty(name) != null;
     }
 }

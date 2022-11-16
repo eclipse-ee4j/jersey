@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,9 @@ import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -99,8 +100,8 @@ public class SSETest extends JerseyTest {
                         }
                     });
 
-            Assert.assertTrue("Waiting for receiver thread to start has timed out.",
-                    startLatch.await(15000, TimeUnit.SECONDS));
+            Assertions.assertTrue(startLatch.await(15000, TimeUnit.SECONDS),
+                    "Waiting for receiver thread to start has timed out.");
 
             for (int i = 0; i < MAX_MESSAGES; i++) {
                 target(App.ROOT_PATH).request().post(Entity.text("message " + i));
@@ -108,7 +109,7 @@ public class SSETest extends JerseyTest {
 
             int i = 0;
             for (String message : futureMessages.get(50, TimeUnit.SECONDS)) {
-                Assert.assertThat("Unexpected SSE event data value.", message, equalTo("message " + i++));
+                MatcherAssert.assertThat("Unexpected SSE event data value.", message, equalTo("message " + i++));
             }
         } finally {
             executor.shutdownNow();
@@ -125,8 +126,8 @@ public class SSETest extends JerseyTest {
         closeLatch.await(15_000, TimeUnit.MILLISECONDS);
         // One ClientConfig is on the Client
         // + COUNT of them is created by .register(SseFeature.class)
-        Assert.assertEquals(COUNT + 1, atomicInteger.get());
-        Assert.assertEquals(0, closeLatch.getCount());
+        Assertions.assertEquals(COUNT + 1, atomicInteger.get());
+        Assertions.assertEquals(0, closeLatch.getCount());
     }
 
 

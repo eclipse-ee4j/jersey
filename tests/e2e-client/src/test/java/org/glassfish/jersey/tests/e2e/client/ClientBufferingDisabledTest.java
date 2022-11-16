@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,12 +36,12 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * Tests possibility of disabling buffering of outgoing entity in
@@ -50,7 +50,7 @@ import org.junit.runner.RunWith;
  * @author Miroslav Fuksa
  * @author Marek Potociar
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ClientBufferingDisabledTest extends JerseyTest {
 
     private static final long LENGTH = 200000000L;
@@ -92,6 +92,7 @@ public class ClientBufferingDisabledTest extends JerseyTest {
      * fix length streaming on {@code HttpURLConnection}.
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDisableBufferingWithFixedLengthViaProperty() {
         postLatch = new CountDownLatch(1);
 
@@ -107,9 +108,9 @@ public class ClientBufferingDisabledTest extends JerseyTest {
                 = client.target(getBaseUri()).path("resource")
                 .request().header(HttpHeaders.CONTENT_LENGTH, LENGTH).post(
                         Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         final long count = response.readEntity(long.class);
-        Assert.assertEquals("Unexpected content length received.", LENGTH, count);
+        Assertions.assertEquals(LENGTH, count, "Unexpected content length received.");
     }
 
     /**
@@ -121,6 +122,7 @@ public class ClientBufferingDisabledTest extends JerseyTest {
      * fix length streaming on {@code HttpURLConnection}.
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDisableBufferingWithFixedLengthViaMethod() {
         postLatch = new CountDownLatch(1);
 
@@ -136,9 +138,9 @@ public class ClientBufferingDisabledTest extends JerseyTest {
                 = client.target(getBaseUri()).path("resource")
                 .request().header(HttpHeaders.CONTENT_LENGTH, LENGTH).post(
                         Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         final long count = response.readEntity(long.class);
-        Assert.assertEquals("Unexpected content length received.", LENGTH, count);
+        Assertions.assertEquals(LENGTH, count, "Unexpected content length received.");
     }
 
     /**
@@ -152,7 +154,8 @@ public class ClientBufferingDisabledTest extends JerseyTest {
      * </p>
      */
     @Test
-    @Ignore("fails unpredictable (see javadoc)")
+    @Execution(ExecutionMode.CONCURRENT)
+    @Disabled("fails unpredictable (see javadoc)")
     public void testDisableBufferingWithChunkEncoding() {
         postLatch = new CountDownLatch(1);
 
@@ -168,9 +171,9 @@ public class ClientBufferingDisabledTest extends JerseyTest {
         final Response response
                 = client.target(getBaseUri()).path("resource")
                 .request().post(Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM));
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         final long count = response.readEntity(long.class);
-        Assert.assertEquals("Unexpected content length received.", LENGTH, count);
+        Assertions.assertEquals(LENGTH, count, "Unexpected content length received.");
     }
 
     private InputStream getInputStream() {
@@ -183,7 +186,7 @@ public class ClientBufferingDisabledTest extends JerseyTest {
                 if (cnt > CHUNK * 10) {
                     try {
                         postLatch.await(3 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS);
-                        Assert.assertEquals("waiting for chunk on the server side time-outed", 0, postLatch.getCount());
+                        Assertions.assertEquals(0, postLatch.getCount(), "waiting for chunk on the server side time-outed");
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

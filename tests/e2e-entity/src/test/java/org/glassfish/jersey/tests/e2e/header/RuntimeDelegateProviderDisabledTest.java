@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.header;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -39,11 +39,11 @@ public class RuntimeDelegateProviderDisabledTest extends JerseyTest {
     @Test
     public void testClientResponseHeaders() {
         try (Response response = target("/simple").request().get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     DISABLED_VALUE,
                     response.getHeaderString(HeaderDelegateProviderTest.HeaderContainerResponseFilter.class.getSimpleName())
             );
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     DISABLED_VALUE,
                     response.getStringHeaders().getFirst(HEADER_NAME)
             );
@@ -53,7 +53,7 @@ public class RuntimeDelegateProviderDisabledTest extends JerseyTest {
     @Test
     public void testContainerResponseFilter() {
         try (Response response = target("/simple").request().get()) {
-            Assert.assertEquals(DISABLED_VALUE, response.getHeaderString(HEADER_NAME));
+            Assertions.assertEquals(DISABLED_VALUE, response.getHeaderString(HEADER_NAME));
         }
     }
 
@@ -63,7 +63,7 @@ public class RuntimeDelegateProviderDisabledTest extends JerseyTest {
                 .property(CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE_CLIENT, true).request()
                 .header(HEADER_NAME, new HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest())
                 .get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     DISABLED_VALUE,
                     response.getHeaderString(HeaderDelegateProviderTest.HeaderSettingResource.class.getSimpleName())
             );
@@ -76,7 +76,7 @@ public class RuntimeDelegateProviderDisabledTest extends JerseyTest {
                 .property(CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE_CLIENT, true)
                 .register(HeaderDelegateProviderTest.HeaderClientRequestFilter.class)
                 .request().get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     DISABLED_VALUE,
                     response.readEntity(String.class)
             );

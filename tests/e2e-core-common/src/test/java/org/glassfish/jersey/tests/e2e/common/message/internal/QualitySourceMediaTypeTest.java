@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,57 +16,46 @@
 
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.message.internal.QualitySourceMediaType;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Quality source media type unit tests.
  *
  * @author Marek Potociar
  */
-@RunWith(Parameterized.class)
 public class QualitySourceMediaTypeTest {
-    @Parameterized.Parameters
     // expected result, media type, quality source media type
-    public static List<Object[]> testBeds() {
-        return Arrays.asList(new Object[][]{
-                {Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "json")},
-                {Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "json", 1000, null)},
-                {Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "json", 500, null)},
-                {Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "xml")}
-        });
+    public static Stream<Arguments> testBeds() {
+        return Stream.of(
+                Arguments.of(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "json")),
+                Arguments.of(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE,
+                        new QualitySourceMediaType("application", "json", 1000, null)),
+                Arguments.of(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE,
+                        new QualitySourceMediaType("application", "json", 500, null)),
+                Arguments.of(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE, new QualitySourceMediaType("application", "xml"))
+        );
     }
 
-    private final boolean expectEquality;
-    private final MediaType mediaType;
-    private final QualitySourceMediaType qsMediaType;
-
-    public QualitySourceMediaTypeTest(boolean expectEquality, MediaType mediaType, QualitySourceMediaType qsMediaType) {
-        this.expectEquality = expectEquality;
-        this.mediaType = mediaType;
-        this.qsMediaType = qsMediaType;
-    }
-
-    @Test
-    public void testEquals() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testBeds")
+    public void testEquals(boolean expectEquality, MediaType mediaType, QualitySourceMediaType qsMediaType) throws Exception {
         if (expectEquality) {
-            Assert.assertEquals("Types not equal.", mediaType, qsMediaType);
-            Assert.assertEquals("Types not equal.", qsMediaType, mediaType);
-            Assert.assertEquals(
-                    String.format("Hash codes not equal for %s and %s.", mediaType.toString(), qsMediaType.toString()),
-                    mediaType.hashCode(), qsMediaType.hashCode());
+            Assertions.assertEquals(mediaType, qsMediaType, "Types not equal.");
+            Assertions.assertEquals(qsMediaType, mediaType, "Types not equal.");
+            Assertions.assertEquals(mediaType.hashCode(), qsMediaType.hashCode(),
+                    String.format("Hash codes not equal for %s and %s.", mediaType.toString(), qsMediaType.toString()));
         } else {
-            Assert.assertFalse(String.format("False equality of %s and %s", mediaType.toString(), qsMediaType.toString()),
-                    qsMediaType.equals(mediaType));
+            Assertions.assertFalse(qsMediaType.equals(mediaType),
+                    String.format("False equality of %s and %s", mediaType.toString(), qsMediaType.toString()));
         }
     }
 }

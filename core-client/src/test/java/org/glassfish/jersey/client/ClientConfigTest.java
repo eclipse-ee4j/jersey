@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,18 +29,19 @@ import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@link ClientConfig} unit test.
@@ -52,19 +53,19 @@ public class ClientConfigTest {
     public ClientConfigTest() {
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() throws Exception {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
     }
 
@@ -180,16 +181,20 @@ public class ClientConfigTest {
         assertTrue(runtimeConfig.isEnabled(emptyFeature));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetProviderClasses() {
-        ClientConfig instance = new ClientConfig();
-        instance.getClasses().add(ClientConfigTest.class);
+        assertThrows(UnsupportedOperationException.class, () -> {
+            ClientConfig instance = new ClientConfig();
+            instance.getClasses().add(ClientConfigTest.class);
+        });
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetProviderInstances() {
-        ClientConfig instance = new ClientConfig();
-        instance.getInstances().add(this);
+        assertThrows(UnsupportedOperationException.class, () -> {
+            ClientConfig instance = new ClientConfig();
+            instance.getInstances().add(this);
+        });
     }
 
     @Test

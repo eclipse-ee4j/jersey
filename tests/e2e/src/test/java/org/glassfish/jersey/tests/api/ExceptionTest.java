@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,10 +56,10 @@ import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Exception throwing and handling related tests; such as
@@ -703,9 +703,8 @@ public class ExceptionTest extends JerseyTest {
 
     private void testSingle(String caseName, int expectedStatus, Invocation.Builder request) {
         final Response response = request.get();
-        assertEquals("Test of an exception thrown during field/parameter injection [" + caseName + "] failed.",
-                expectedStatus,
-                response.getStatus());
+        assertEquals(expectedStatus, response.getStatus(),
+                "Test of an exception thrown during field/parameter injection [" + caseName + "] failed.");
     }
     /**
      * END: JERSEY-1532 reproducer code.

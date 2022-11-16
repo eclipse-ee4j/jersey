@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,11 @@ import org.glassfish.jersey.jaxb.FeatureSupplier;
 import org.glassfish.jersey.jaxb.PropertySupplier;
 import org.glassfish.jersey.message.MessageProperties;
 import org.hamcrest.CoreMatchers;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -44,7 +45,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.Map;
@@ -56,13 +56,13 @@ public class FeatureAndPropertySupplierTest {
     private static PrintStream systemErrorStream;
     private static ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         systemErrorStream = System.err;
         System.setErr(new PrintStream(errorStream));
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         System.setErr(systemErrorStream);
     }
@@ -85,7 +85,7 @@ public class FeatureAndPropertySupplierTest {
         try {
             injectionManager.getInstance(SAXParserFactory.class).newSAXParser().getXMLReader()
                     .parse(new InputSource(new ByteArrayInputStream(content.getBytes("us-ascii"))));
-            Assert.fail("DOCTYPE is NOT disallowed when the feature \"disallow-doctype-decl\" is true");
+            Assertions.fail("DOCTYPE is NOT disallowed when the feature \"disallow-doctype-decl\" is true");
         } catch (SAXParseException saxe) {
             //expected
         }
@@ -105,7 +105,7 @@ public class FeatureAndPropertySupplierTest {
         injectionManager.getInstance(SAXParserFactory.class).newSAXParser();
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class FeatureAndPropertySupplierTest {
         injectionManager.getInstance(SAXParserFactory.class).newSAXParser();
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class FeatureAndPropertySupplierTest {
         LogManager.getLogManager().reset();
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class FeatureAndPropertySupplierTest {
         injectionManager.getInstance(TransformerFactory.class);
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set feature \"Unknown-Feature\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set feature \"Unknown-Feature\""));
     }
 
     @Test
@@ -187,7 +187,7 @@ public class FeatureAndPropertySupplierTest {
         injectionManager.getInstance(XMLInputFactory.class);
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class FeatureAndPropertySupplierTest {
         injectionManager.getInstance(DocumentBuilderFactory.class);
         String warning = new String(errorStream.toByteArray());
         errorStream.reset();
-        Assert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
+        MatcherAssert.assertThat(warning, CoreMatchers.containsString("Cannot set property \"Unknown-Property\""));
 
     }
 

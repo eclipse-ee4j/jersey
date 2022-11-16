@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,6 +64,7 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      *  separator      delimiter for particular log lines. Default is Linux new line delimiter
+     *  redactHeaders  a collection of HTTP headers to be redacted when logging.
      */
     public ServerLoggingFilter(final LoggingFeature.LoggingFeatureBuilder builder) {
         super(builder);
@@ -82,7 +83,7 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
         printRequestLine(b, "Server has received a request", id, context.getMethod(), context.getUriInfo().getRequestUri());
         printPrefixedHeaders(b, id, REQUEST_PREFIX, context.getHeaders());
 
-        if (context.hasEntity() && printEntity(verbosity, context.getMediaType())) {
+        if (printEntity(verbosity, context.getMediaType()) && context.hasEntity()) {
             context.setEntityStream(
                     logInboundEntity(b, context.getEntityStream(), MessageUtils.getCharset(context.getMediaType())));
         }
@@ -104,7 +105,7 @@ final class ServerLoggingFilter extends LoggingInterceptor implements ContainerR
         printResponseLine(b, "Server responded with a response", id, responseContext.getStatus());
         printPrefixedHeaders(b, id, RESPONSE_PREFIX, responseContext.getStringHeaders());
 
-        if (responseContext.hasEntity() && printEntity(verbosity, responseContext.getMediaType())) {
+        if (printEntity(verbosity, responseContext.getMediaType()) && responseContext.hasEntity()) {
             final OutputStream stream = new LoggingStream(b, responseContext.getEntityStream());
             responseContext.setEntityStream(stream);
             requestContext.setProperty(ENTITY_LOGGER_PROPERTY, stream);

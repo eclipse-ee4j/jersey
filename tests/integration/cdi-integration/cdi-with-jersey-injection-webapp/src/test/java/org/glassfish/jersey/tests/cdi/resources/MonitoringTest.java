@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,33 +16,24 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for monitoring statistics injection.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class MonitoringTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected"},
-                {"app-ctor-injected"},
-                {"request-field-injected"},
-                {"request-ctor-injected"}
-        });
+    public static Stream<String> testData() {
+        return Stream.of("app-field-injected", "app-ctor-injected", "request-field-injected", "request-ctor-injected");
     }
 
     final String resource;
@@ -61,8 +52,9 @@ public class MonitoringTest extends CdiTest {
      *
      * @throws Exception in case of unexpected test failure.
      */
-    @Test
-    public void testRequestCount() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testRequestCount(String resource) throws Exception {
         WebTarget target = target().path(resource).path("requestCount");
         Thread.sleep(1000); // this is to allow statistics on the server side to get updated
         int start = Integer.decode(target.request().get(String.class));

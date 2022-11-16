@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.InjectionTargetFactory;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Singleton;
 
@@ -49,7 +50,8 @@ public class RequestScopeBean implements Bean<CdiRequestScope> {
      */
     public RequestScopeBean(BeanManager beanManager) {
         AnnotatedType<CdiRequestScope> annotatedType = beanManager.createAnnotatedType(CdiRequestScope.class);
-        this.injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTargetFactory<CdiRequestScope> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        this.injectionTarget = injectionTargetFactory.createInjectionTarget(null);
     }
 
     @Override

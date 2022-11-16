@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miroslav Fuksa
@@ -69,8 +69,8 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
         final Response response = target().path("rest/resource")
                 .register(feature).request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
         final Response response = target().path("rest/resource")
                 .register(feature).request().get();
 
-        Assert.assertEquals(401, response.getStatus());
+        Assertions.assertEquals(401, response.getStatus());
     }
 
     @Test
@@ -97,8 +97,8 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
                 .register(feature).request()
                 .post(Entity.entity("helloworld", MediaType.TEXT_PLAIN_TYPE));
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("post-helloworld-homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("post-helloworld-homer/scheme:DIGEST", response.readEntity(String.class));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
         final Response response = target().path("rest/resource/sub")
                 .register(feature).request().get();
 
-        Assert.assertEquals(403, response.getStatus());
+        Assertions.assertEquals(403, response.getStatus());
     }
 
     @Test
@@ -124,8 +124,8 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
         final Response response = target().path("rest/resource/sub")
                 .register(feature).request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("subget-bart/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("subget-bart/scheme:DIGEST", response.readEntity(String.class));
     }
 
     @Test
@@ -139,8 +139,8 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
         final Response response = target().path("rest/resource/locator")
                 .register(feature).request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("locator-bart/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("locator-bart/scheme:DIGEST", response.readEntity(String.class));
     }
 
     @Test
@@ -154,23 +154,23 @@ public class SecurityDigestAuthenticationITCase extends JerseyTest {
                 .register(haf);
         Response response = target.request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
 
         response = target.request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
 
         response = target.path("sub").request().get();
-        Assert.assertEquals(403, response.getStatus());
+        Assertions.assertEquals(403, response.getStatus());
 
         response = target.request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("homer/scheme:DIGEST", response.readEntity(String.class));
 
         response = target.path("locator").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("locator-homer/scheme:DIGEST", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("locator-homer/scheme:DIGEST", response.readEntity(String.class));
     }
 
 }

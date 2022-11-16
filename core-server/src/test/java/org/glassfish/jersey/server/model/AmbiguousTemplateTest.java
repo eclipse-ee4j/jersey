@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,11 +33,11 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test matching of resources with ambiguous templates.
@@ -95,8 +95,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceABC.class,
                 ResourceXYZ.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/uuu/a", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("a-abc:uuu", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("a-abc:uuu", response.getEntity());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceABC.class,
                 ResourceXYZ.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/test/x", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("x-xyz:test", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("x-xyz:test", response.getEntity());
     }
 
     @Test
@@ -113,8 +113,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceABC.class,
                 ResourceXYZ.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/uuu", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("abc:uuu", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("abc:uuu", response.getEntity());
     }
 
     @Test
@@ -123,8 +123,8 @@ public class AmbiguousTemplateTest {
                 ResourceXYZ.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/post", "POST")
                 .entity("entity").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("xyz:post", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("xyz:post", response.getEntity());
     }
 
     @Test
@@ -132,8 +132,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceABC.class,
                 ResourceXYZ.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/xxx/foo", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("subx-xyz:xxx:foo", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("subx-xyz:xxx:foo", response.getEntity());
     }
 
     @Path("locator")
@@ -155,7 +155,7 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(SimpleLocator.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/locator/abc/uuu/a", "GET")
                 .build()).get();
-        Assert.assertEquals(404, response.getStatus());
+        Assertions.assertEquals(404, response.getStatus());
     }
 
     @Test
@@ -163,8 +163,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(SimpleLocator.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/locator/abc/a", "GET")
                 .build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("a-abc:null", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("a-abc:null", response.getEntity());
     }
 
     @Test
@@ -172,8 +172,8 @@ public class AmbiguousTemplateTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(SimpleLocator.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/locator/xyz/subxfoo", "GET")
                 .build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("subx-xyz:null:subxfoo", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("subx-xyz:null:subxfoo", response.getEntity());
     }
 
     @Path("{xyz}")
@@ -211,16 +211,16 @@ public class AmbiguousTemplateTest {
     public void testSubResourceLocatorWithPathParams() throws ExecutionException, InterruptedException {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceWithLocator.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/uuu", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("uuu", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("uuu", response.getEntity());
     }
 
     @Test
     public void testSubResourceLocatorWithPathParams2() throws ExecutionException, InterruptedException {
         final ApplicationHandler applicationHandler = new ApplicationHandler(new ResourceConfig(ResourceWithLocator.class));
         final ContainerResponse response = applicationHandler.apply(RequestContextBuilder.from("/uuu/test", "GET").build()).get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("uuu:test", response.getEntity());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("uuu:test", response.getEntity());
     }
 
     @Path("{templateA}")
@@ -263,7 +263,7 @@ public class AmbiguousTemplateTest {
         ApplicationHandler app = new ApplicationHandler(resourceConfig);
         final ContainerResponse containerResponse = app.apply(RequestContextBuilder.from("/aaa", "OPTIONS")
                 .accept(MediaType.TEXT_PLAIN).build()).get();
-        Assert.assertEquals(200, containerResponse.getStatus());
+        Assertions.assertEquals(200, containerResponse.getStatus());
 
         final List<String> methods = Arrays.asList(containerResponse.getEntity().toString().split(", "));
         assertThat(methods, hasItems("POST", "GET", "OPTIONS", "HEAD"));
@@ -277,8 +277,8 @@ public class AmbiguousTemplateTest {
         ApplicationHandler app = new ApplicationHandler(resourceConfig);
         final ContainerResponse containerResponse = app.apply(RequestContextBuilder.from("/aaa", "GET")
                 .accept(MediaType.TEXT_PLAIN).build()).get();
-        Assert.assertEquals(200, containerResponse.getStatus());
-        Assert.assertEquals("getA", containerResponse.getEntity());
+        Assertions.assertEquals(200, containerResponse.getStatus());
+        Assertions.assertEquals("getA", containerResponse.getEntity());
     }
 
     @Test
@@ -287,7 +287,7 @@ public class AmbiguousTemplateTest {
         ApplicationHandler app = new ApplicationHandler(resourceConfig);
         final ContainerResponse containerResponse = app.apply(RequestContextBuilder.from("/resq/c", "OPTIONS")
                 .accept(MediaType.TEXT_PLAIN).build()).get();
-        Assert.assertEquals(200, containerResponse.getStatus());
+        Assertions.assertEquals(200, containerResponse.getStatus());
 
         final List<String> methods = Arrays.asList(containerResponse.getEntity().toString().split(", "));
         assertThat(methods, hasItems("PUT", "GET", "OPTIONS", "HEAD"));
@@ -300,7 +300,7 @@ public class AmbiguousTemplateTest {
         ResourceConfig resourceConfig = new ResourceConfig(ResourceA.class, ResourceB.class, ResourceQ.class);
         ApplicationHandler app = new ApplicationHandler(resourceConfig);
         final ContainerResponse containerResponse = app.apply(RequestContextBuilder.from("/resq/a", "GET").build()).get();
-        Assert.assertEquals(200, containerResponse.getStatus());
-        Assert.assertEquals("getA", containerResponse.getEntity());
+        Assertions.assertEquals(200, containerResponse.getStatus());
+        Assertions.assertEquals("getA", containerResponse.getEntity());
     }
 }

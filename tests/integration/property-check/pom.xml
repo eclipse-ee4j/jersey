@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
         <artifactId>project</artifactId>
-        <version>2.35-SNAPSHOT</version>
+        <version>2.38-SNAPSHOT</version>
     </parent>
 
     <artifactId>property-check</artifactId>
@@ -58,9 +58,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -93,6 +92,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <scope>test</scope>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 
@@ -108,4 +108,28 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>jdk19+</id>
+            <activation>
+                <jdk>[19,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <excludes>
+                                    <exclude>**/SystemPropertiesConfigurationModelTest.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>

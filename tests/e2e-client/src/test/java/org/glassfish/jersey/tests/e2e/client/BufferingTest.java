@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -37,8 +38,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests chunk encoding and possibility of buffering the entity.
@@ -74,6 +75,15 @@ public class BufferingTest extends JerseyTest {
     }
 
     @Test
+    public void testApache5Connector() {
+        testWithBuffering(getApache5ConnectorConfig());
+        testWithChunkEncodingWithoutPropertyDefinition(getApache5ConnectorConfig());
+        testWithChunkEncodingWithPropertyDefinition(getApache5ConnectorConfig());
+        testWithChunkEncodingPerRequest(getApache5ConnectorConfig());
+        testDefaultOption(getApache5ConnectorConfig(), RequestEntityProcessing.CHUNKED);
+    }
+
+    @Test
     public void testGrizzlyConnector() {
         testWithBuffering(getGrizzlyConnectorConfig());
         testWithChunkEncodingWithoutPropertyDefinition(getGrizzlyConnectorConfig());
@@ -93,6 +103,10 @@ public class BufferingTest extends JerseyTest {
 
     private ClientConfig getApacheConnectorConfig() {
         return new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+    }
+
+    private ClientConfig getApache5ConnectorConfig() {
+        return new ClientConfig().connectorProvider(new Apache5ConnectorProvider());
     }
 
     private ClientConfig getGrizzlyConnectorConfig() {
@@ -121,8 +135,8 @@ public class BufferingTest extends JerseyTest {
         WebTarget target = client.target(UriBuilder.fromUri(getBaseUri()).path("resource").build());
 
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(expected, response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(expected, response.readEntity(String.class));
     }
 
     private void testWithChunkEncodingWithPropertyDefinition(ClientConfig cc) {
@@ -154,13 +168,13 @@ public class BufferingTest extends JerseyTest {
 
         String entity = getVeryLongString();
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("chunked", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("chunked", response.readEntity(String.class));
 
         response = target.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
                 .request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
     }
 
     public String getVeryLongString() {

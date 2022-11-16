@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -16,9 +16,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.jboss.weld.environment.se.Weld;
-
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for the {@link HelloWorldResource} JAX-RS resource class.
@@ -29,6 +30,7 @@ public class HelloWorldTest extends JerseyTest {
 
     private Weld weld;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         weld = new Weld();
@@ -36,6 +38,7 @@ public class HelloWorldTest extends JerseyTest {
         super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         weld.shutdown();
@@ -55,8 +58,9 @@ public class HelloWorldTest extends JerseyTest {
 
     @Test
     public void testHelloWorld() {
-        Response response = target().path("helloworld").queryParam("name", "Josef").request("text/plain").get();
+        String name = "Josef";
+        Response response = target().path("helloworld").queryParam("name", name).request("text/plain").get();
         assertEquals(200, response.getStatus());
-        assertEquals(String.format("Hello %s", "Josef"), response.readEntity(String.class));
+        assertEquals(String.format("Hello %s", name), response.readEntity(String.class));
     }
 }

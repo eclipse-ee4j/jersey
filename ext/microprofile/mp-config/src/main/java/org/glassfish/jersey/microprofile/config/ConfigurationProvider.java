@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,35 +16,12 @@
 
 package org.glassfish.jersey.microprofile.config;
 
-import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.glassfish.jersey.spi.ExternalConfigurationModel;
-import org.glassfish.jersey.spi.ExternalConfigurationProvider;
+import org.glassfish.jersey.internal.config.ExternalConfigurationProviderImpl;
 
-import java.util.Map;
-
-public class ConfigurationProvider implements ExternalConfigurationProvider {
-
-
-    private ConfigurationModel<Config> configModel;
+public class ConfigurationProvider extends ExternalConfigurationProviderImpl {
 
     public ConfigurationProvider() {
-
-        configModel = new ConfigurationModel(ConfigProvider.getConfig());
-    }
-
-    @Override
-    public Map<String, Object> getProperties() {
-        return configModel.getProperties();
-    }
-
-    @Override
-    public ExternalConfigurationModel getConfiguration() {
-        return configModel;
-    }
-
-    @Override
-    public ExternalConfigurationModel merge(ExternalConfigurationModel input) {
-        return input == null ? this.configModel : this.configModel.mergeProperties(input.getProperties());
+        super(new ConfigurationModel(ConfigProvider.getConfig()));
     }
 }

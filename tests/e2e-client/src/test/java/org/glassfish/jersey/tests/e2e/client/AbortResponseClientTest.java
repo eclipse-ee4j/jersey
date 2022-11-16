@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,11 +42,11 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests aborting the request on the client side.
@@ -106,7 +106,7 @@ public class AbortResponseClientTest extends JerseyTest {
         assertEquals("123465", r.getEntityTag().getValue());
         assertEquals("language", r.getLanguage().toString());
         assertEquals(date.getTime(), r.getLastModified().getTime());
-        // Assert.assertEquals("uri", r.getLink("link")); TODO: not supported yet
+        // Assertions.assertEquals("uri", r.getLink("link")); TODO: not supported yet
         assertEquals("www.oracle.com", r.getLocation().toString());
         assertEquals(MediaType.TEXT_HTML_TYPE, r.getMediaType());
         assertEquals(99, r.getLength());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,9 +38,9 @@ import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Jakub Podlesak
@@ -132,38 +132,38 @@ public class IntrospectionModellerTest {
 
         result = Resource.builder(resourceClass).build();
         resourceMethods = result.getResourceMethods();
-        assertEquals("Unexpected number of resource methods in the resource model.", 2, resourceMethods.size());
+        assertEquals(2, resourceMethods.size(), "Unexpected number of resource methods in the resource model.");
 
         resourceMethod = find(resourceMethods, "postA");
-        assertEquals("Unexpected number of produced media types in the resource method model",
-                3, resourceMethod.getProducedTypes().size());
-        assertEquals("Unexpected number of consumed media types in the resource method model",
-                2, resourceMethod.getConsumedTypes().size());
-        assertEquals("Unexpected number of handler parameters",
-                0, resourceMethod.getInvocable().getHandler().getParameters().size());
+        assertEquals(3, resourceMethod.getProducedTypes().size(),
+                "Unexpected number of produced media types in the resource method model");
+        assertEquals(2, resourceMethod.getConsumedTypes().size(),
+                "Unexpected number of consumed media types in the resource method model");
+        assertEquals(0, resourceMethod.getInvocable().getHandler().getParameters().size(),
+                "Unexpected number of handler parameters");
 
         resourceMethod = find(resourceMethods, "postB");
-        assertEquals("Unexpected number of inherited produced media types in the resource method model",
-                2, resourceMethod.getProducedTypes().size());
-        assertEquals("Unexpected number of inherited consumed media types in the resource method model",
-                3, resourceMethod.getConsumedTypes().size());
-        assertEquals("Unexpected number of handler parameters",
-                0, resourceMethod.getInvocable().getHandler().getParameters().size());
+        assertEquals(2, resourceMethod.getProducedTypes().size(),
+                "Unexpected number of inherited produced media types in the resource method model");
+        assertEquals(3, resourceMethod.getConsumedTypes().size(),
+                "Unexpected number of inherited consumed media types in the resource method model");
+        assertEquals(0, resourceMethod.getInvocable().getHandler().getParameters().size(),
+                "Unexpected number of handler parameters");
 
         // OtherResource
         resourceClass = OtherResource.class;
 
         result = Resource.builder(resourceClass).build();
         resourceMethods = result.getResourceMethods();
-        assertEquals("Unexpected number of resource methods in the resource model.", 2, resourceMethods.size());
+        assertEquals(2, resourceMethods.size(), "Unexpected number of resource methods in the resource model.");
 
         resourceMethod = find(resourceMethods, "get");
-        assertEquals("Unexpected number of produced media types in the resource method model",
-                0, resourceMethod.getProducedTypes().size());
-        assertEquals("Unexpected number of consumed media types in the resource method model",
-                0, resourceMethod.getConsumedTypes().size());
-        assertEquals("Unexpected number of handler parameters",
-                5, resourceMethod.getInvocable().getHandler().getParameters().size());
+        assertEquals(0, resourceMethod.getProducedTypes().size(),
+                "Unexpected number of produced media types in the resource method model");
+        assertEquals(0, resourceMethod.getConsumedTypes().size(),
+                "Unexpected number of consumed media types in the resource method model");
+        assertEquals(5, resourceMethod.getInvocable().getHandler().getParameters().size(),
+                "Unexpected number of handler parameters");
         assertSources(resourceMethod.getInvocable().getHandler().getParameters(),
                 Parameter.Source.CONTEXT,
                 Parameter.Source.PATH,
@@ -172,12 +172,12 @@ public class IntrospectionModellerTest {
                 Parameter.Source.UNKNOWN);  // @Inject on setter
 
         resourceMethod = find(resourceMethods, "post");
-        assertEquals("Unexpected number of inherited produced media types in the resource method model",
-                0, resourceMethod.getProducedTypes().size());
-        assertEquals("Unexpected number of inherited consumed media types in the resource method model",
-                0, resourceMethod.getConsumedTypes().size());
-        assertEquals("Unexpected number of handler parameters",
-                5, resourceMethod.getInvocable().getHandler().getParameters().size());
+        assertEquals(0, resourceMethod.getProducedTypes().size(),
+                "Unexpected number of inherited produced media types in the resource method model");
+        assertEquals(0, resourceMethod.getConsumedTypes().size(),
+                "Unexpected number of inherited consumed media types in the resource method model");
+        assertEquals(5, resourceMethod.getInvocable().getHandler().getParameters().size(),
+                "Unexpected number of handler parameters");
         assertSources(resourceMethod.getInvocable().getHandler().getParameters(),
                 Parameter.Source.CONTEXT,
                 Parameter.Source.PATH,

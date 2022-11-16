@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,11 +33,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.tests.integration.async.AbstractAsyncJerseyTest;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JERSEY-2812 reproducer.
@@ -56,7 +56,7 @@ public class Jersey2812ITCase extends AbstractAsyncJerseyTest {
     private ExecutorService executorService = Executors
             .newSingleThreadExecutor(new ThreadFactoryBuilder().setDaemon(true).build());
 
-    @Before
+    @BeforeEach
     public void triggerTheWaitRequestInSeparateThread() throws Exception {
         executorService.execute(new Runnable() {
             @Override
@@ -92,17 +92,17 @@ public class Jersey2812ITCase extends AbstractAsyncJerseyTest {
         // [1] wait for the /async/wait request to be processed
         final Response startResponse = target("/asyncTest/async/await").path(uuid).path("started")
                 .queryParam("millis", WAIT_TIMEOUT).request().get();
-        assertTrue("The server-side thread handling the request to /async/wait didn't start in timely fashion. "
+        assertTrue(startResponse.readEntity(Boolean.class),
+                "The server-side thread handling the request to /async/wait didn't start in timely fashion. "
                         + "This error indicates this test is not executed / designed properly rather than a regression in "
-                        + "JERSEY-2812 fix.",
-                startResponse.readEntity(Boolean.class));
+                        + "JERSEY-2812 fix.");
 
         // [2] wait for the /async/wait request to finish
         final Response finishResponse = target("/asyncTest/async/await").path(uuid).path("finished")
                 .queryParam("millis", WAIT_TIMEOUT).request().get();
-        assertTrue("The thread processing the /async/wait request did not respond in timely fashion. "
-                        + "Memory leak / thread got stuck detected!",
-                finishResponse.readEntity(Boolean.class));
+        assertTrue(finishResponse.readEntity(Boolean.class),
+                "The thread processing the /async/wait request did not respond in timely fashion. "
+                        + "Memory leak / thread got stuck detected!");
 
         // [3] release the blocked http call to /async/wait
         final String releaseResponse = target("/asyncTest/async/release").path(uuid).request().post(null, String.class);
@@ -110,18 +110,18 @@ public class Jersey2812ITCase extends AbstractAsyncJerseyTest {
 
         // [4] test whether everything ended as expected
         executorService.shutdown();
-        assertTrue("The test thread did not finish in timely fashion!",
-                executorService.awaitTermination(WAIT_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertTrue(executorService.awaitTermination(WAIT_TIMEOUT, TimeUnit.MILLISECONDS),
+                "The test thread did not finish in timely fashion!");
         assertEquals("async-OK-" + uuid, asyncResult.get());
     }
 
-    @After
+    @AfterEach
     public void releaseResources() {
         // release the server-side thread regardless of whether left un-attended
         target("/asyncTest/async/release").path(uuid).request().post(null);
     }
 
-    @After
+    @AfterEach
     public void terminateThread() {
         // forcibly terminate the test client thread
         executorService.shutdownNow();

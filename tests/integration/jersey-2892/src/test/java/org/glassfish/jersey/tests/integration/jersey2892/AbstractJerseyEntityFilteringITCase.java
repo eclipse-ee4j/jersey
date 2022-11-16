@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,8 +25,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests whether classes repeating in the object graph are filtered out correctly.
@@ -57,8 +57,8 @@ public abstract class AbstractJerseyEntityFilteringITCase extends JerseyTest {
 
         final TestResource.Persons persons = response.readEntity(TestResource.Persons.class);
 
-        Assert.assertEquals("Amphitheatre Pkwy", persons.first.address.street.name);
-        Assert.assertEquals("Microsoft Way", persons.second.address.street.name);
+        Assertions.assertEquals("Amphitheatre Pkwy", persons.first.address.street.name);
+        Assertions.assertEquals("Microsoft Way", persons.second.address.street.name);
     }
 
     /**
@@ -71,8 +71,8 @@ public abstract class AbstractJerseyEntityFilteringITCase extends JerseyTest {
 
         final TestResource.Pointer pointer = response.readEntity(TestResource.Pointer.class);
 
-        Assert.assertEquals("Amphitheatre Pkwy", pointer.persons.first.address.street.name);
-        Assert.assertEquals("Microsoft Way", pointer.persons.second.address.street.name);
+        Assertions.assertEquals("Amphitheatre Pkwy", pointer.persons.first.address.street.name);
+        Assertions.assertEquals("Microsoft Way", pointer.persons.second.address.street.name);
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class AbstractJerseyEntityFilteringITCase extends JerseyTest {
 
         final TestResource.Recursive recursive = response.readEntity(TestResource.Recursive.class);
 
-        Assert.assertEquals("c", recursive.subField.subSubField.idSubSubField);
+        Assertions.assertEquals("c", recursive.subField.subSubField.idSubSubField);
     }
 
     /**

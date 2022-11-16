@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,22 +41,23 @@ import org.glassfish.jersey.server.ManagedAsync;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test if the location relativer URI is correctly resolved within asynchronous processing cases.
  *
  * @author Adam Lindenthal
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LocationHeaderAsyncTest extends JerseyTest {
 
     private static final Logger LOGGER = Logger.getLogger(LocationHeaderAsyncTest.class.getName());
@@ -77,6 +78,7 @@ public class LocationHeaderAsyncTest extends JerseyTest {
      * In this case it prepares executor thread pool of size one and initializes the thread.
      * @throws Exception
      */
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -212,6 +214,7 @@ public class LocationHeaderAsyncTest extends JerseyTest {
      * Basic asynchronous testcase; checks if the URI is correctly absolutized also within a separate thread during
      * async processing
      */
+    @Execution(ExecutionMode.CONCURRENT)
     @Test
     public void testAsync() {
         final String expectedUri = getBaseUri() + "ResponseTest/locationAsync";
@@ -219,7 +222,7 @@ public class LocationHeaderAsyncTest extends JerseyTest {
 
         final String msg = String.format("Comparison failed in the resource method. \nExpected: %1$s\nActual: %2$s",
                 expectedUri, response.readEntity(String.class));
-        assertNotEquals(msg, response.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        assertNotEquals(response.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), msg);
 
         final String location = response.getHeaderString(HttpHeaders.LOCATION);
         LOGGER.info("Location resolved from response > " + location);
@@ -229,23 +232,25 @@ public class LocationHeaderAsyncTest extends JerseyTest {
     /**
      * Test with a thread from thread-pool (created out of request scope)
      */
+    @Execution(ExecutionMode.CONCURRENT)
     @Test
     public void testExecutorAsync() {
         final Response response = target().path("ResponseTest/executorAsync").request().get(Response.class);
         final String location = response.getHeaderString(HttpHeaders.LOCATION);
         LOGGER.info("Location resolved from response > " + location);
-        assertFalse("The comparison failed in the resource method.", executorComparisonFailed.get());
+        assertFalse(executorComparisonFailed.get(), "The comparison failed in the resource method.");
         assertEquals(getBaseUri() + "ResponseTest/executorAsync", location);
     }
 
     /**
      * Asynchronous testcase split over two distinct requests
      */
+    @Execution(ExecutionMode.CONCURRENT)
     @Test
     public void testSeparatedAsync() throws ExecutionException, InterruptedException {
         final Future<Response> futureResponse = target().path("ResponseTest/locationAsyncStart").request().async().get();
         final Boolean result = target().path("ResponseTest/locationAsyncFinish").request().get(Boolean.class);
-        assertFalse("Thread was interrupted on inserting into blocking queue.", interrupted.get());
+        assertFalse(interrupted.get(), "Thread was interrupted on inserting into blocking queue.");
         assertTrue(result);
 
         final Response response = futureResponse.get();

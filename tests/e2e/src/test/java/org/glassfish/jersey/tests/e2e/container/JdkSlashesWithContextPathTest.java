@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,9 +25,9 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Ignore;
-import org.junit.Test;
-import static junit.framework.TestCase.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test Jersey container implementation of URL resolving.
@@ -83,7 +83,7 @@ public class JdkSlashesWithContextPathTest extends AbstractSlashesWithContextPat
     }
 
     @Test
-    @Ignore("failing with JDK container.")
+    @Disabled("failing with JDK container.")
     public void testEncodedQueryParams() {
         URI hostPort = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
         WebTarget target = client().target(hostPort).path("//" + CONTEXT_PATH + "///encoded")

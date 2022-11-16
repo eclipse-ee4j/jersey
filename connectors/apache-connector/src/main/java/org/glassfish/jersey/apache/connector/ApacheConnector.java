@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +52,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -110,18 +112,22 @@ import org.apache.http.util.VersionInfo;
  * <p/>
  * The following properties are only supported at construction of this class:
  * <ul>
+ * <li>{@link ApacheClientProperties#CONNECTION_CLOSING_STRATEGY}</li>
  * <li>{@link ApacheClientProperties#CONNECTION_MANAGER}</li>
- * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
+ * <li>{@link ApacheClientProperties#CONNECTION_MANAGER_SHARED}</li>
+ * <li>{@link ApacheClientProperties#CONNECTION_CLOSING_STRATEGY}</li>
  * <li>{@link ApacheClientProperties#CREDENTIALS_PROVIDER}</li>
  * <li>{@link ApacheClientProperties#DISABLE_COOKIES}</li>
  * <li>{@link ApacheClientProperties#KEEPALIVE_STRATEGY}</li>
+ * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_URI}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_USERNAME}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#PROXY_PASSWORD}</li>
  * <li>{@link org.glassfish.jersey.client.ClientProperties#REQUEST_ENTITY_PROCESSING} - default value is {@link org.glassfish.jersey.client.RequestEntityProcessing#CHUNKED}</li>
- * <li>{@link ApacheClientProperties#PREEMPTIVE_BASIC_AUTHENTICATION}</li>
+ * <li>{@link ApacheClientProperties#REQUEST_CONFIG}</li>
  * <li>{@link ApacheClientProperties#RETRY_HANDLER}</li>
  * <li>{@link ApacheClientProperties#REUSE_STRATEGY}</li>
+ * <li>{@link ApacheClientProperties#USE_SYSTEM_PROPERTIES}</li>
  * </ul>
  * <p>
  * This connector uses {@link RequestEntityProcessing#CHUNKED chunked encoding} as a default setting. This can
@@ -275,28 +281,20 @@ class ApacheConnector implements Connector {
             clientBuilder.setRetryHandler((HttpRequestRetryHandler) retryHandler);
         }
 
-        final Object proxyUri;
-        proxyUri = config.getProperty(ClientProperties.PROXY_URI);
-        if (proxyUri != null) {
-            final URI u = getProxyUri(proxyUri);
-            final HttpHost proxy = new HttpHost(u.getHost(), u.getPort(), u.getScheme());
-            final String userName;
-            userName = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_USERNAME, String.class);
-            if (userName != null) {
-                final String password;
-                password = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
-
-                if (password != null) {
-                    final CredentialsProvider credsProvider = new BasicCredentialsProvider();
-                    credsProvider.setCredentials(
-                            new AuthScope(u.getHost(), u.getPort()),
-                            new UsernamePasswordCredentials(userName, password)
-                    );
-                    clientBuilder.setDefaultCredentialsProvider(credsProvider);
-                }
+        final Optional<ClientProxy> proxy = ClientProxy.proxyFromConfiguration(config);
+        proxy.ifPresent(clientProxy -> {
+            final URI u = clientProxy.uri();
+            final HttpHost proxyHost = new HttpHost(u.getHost(), u.getPort(), u.getScheme());
+            if (clientProxy.userName() != null && clientProxy.password() != null) {
+                final CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                credsProvider.setCredentials(
+                        new AuthScope(u.getHost(), u.getPort()),
+                        new UsernamePasswordCredentials(clientProxy.userName(), clientProxy.password())
+                );
+                clientBuilder.setDefaultCredentialsProvider(credsProvider);
             }
-            clientBuilder.setProxy(proxy);
-        }
+            clientBuilder.setProxy(proxyHost);
+        });
 
         final Boolean preemptiveBasicAuthProperty = (Boolean) config.getProperties()
                 .get(ApacheClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION);
@@ -448,16 +446,6 @@ class ApacheConnector implements Connector {
         return cookieStore;
     }
 
-    private static URI getProxyUri(final Object proxy) {
-        if (proxy instanceof URI) {
-            return (URI) proxy;
-        } else if (proxy instanceof String) {
-            return URI.create((String) proxy);
-        } else {
-            throw new ProcessingException(LocalizationMessages.WRONG_PROXY_URI_TYPE(ClientProperties.PROXY_URI));
-        }
-    }
-
     @Override
     public ClientResponse apply(final ClientRequest clientRequest) throws ProcessingException {
         final HttpUriRequest request = getUriHttpRequest(clientRequest);
@@ -509,7 +497,7 @@ class ApacheConnector implements Connector {
             final HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null) {
+                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null && entity.getContentLength() >= 0) {
                     headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(entity.getContentLength()));
                 }
 

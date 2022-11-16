@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,20 +52,22 @@ import javax.xml.namespace.QName;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Pavel Bucek
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class XmlMoxyTest extends AbstractTypeTester {
 
     @Path("JaxbBeanResource")
@@ -75,6 +77,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentation() {
         _test(new JaxbBean("CONTENT"), JaxbBeanResource.class, MediaType.APPLICATION_XML_TYPE);
     }
@@ -86,11 +89,13 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationMediaType() {
         _test(new JaxbBean("CONTENT"), JaxbBeanResourceMediaType.class, MediaType.valueOf("application/foo+xml"));
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanRepresentationError() {
         final WebTarget target = target("JaxbBeanResource");
 
@@ -106,6 +111,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJaxbBeanTextRepresentation() {
         _test(new JaxbBean("CONTENT"), JaxbBeanTextResource.class, MediaType.TEXT_XML_TYPE);
     }
@@ -117,6 +123,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentation() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanResource.class, MediaType.APPLICATION_XML_TYPE);
     }
@@ -132,6 +139,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementListXMLRepresentation() {
         _testListOrArray(true, MediaType.APPLICATION_XML_TYPE);
     }
@@ -150,10 +158,10 @@ public class XmlMoxyTest extends AbstractTypeTester {
                 isList ? ((List<JAXBElement<String>>) in) : Arrays.asList((JAXBElement<String>[]) in);
         final List<JAXBElement<String>> outList = isList ? ((List<JAXBElement<String>>) out) : Arrays
                 .asList((JAXBElement<String>[]) out);
-        assertEquals("Lengths differ", inList.size(), outList.size());
+        assertEquals(inList.size(), outList.size(), "Lengths differ");
         for (int i = 0; i < inList.size(); i++) {
-            assertEquals("Names of elements at index " + i + " differ", inList.get(i).getName(), outList.get(i).getName());
-            assertEquals("Values of elements at index " + i + " differ", inList.get(i).getValue(), outList.get(i).getValue());
+            assertEquals(inList.get(i).getName(), outList.get(i).getName(), "Names of elements at index " + i + " differ");
+            assertEquals(inList.get(i).getValue(), outList.get(i).getValue(), "Values of elements at index " + i + " differ");
         }
     }
 
@@ -172,6 +180,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementArrayXMLRepresentation() {
         _testListOrArray(false, MediaType.APPLICATION_XML_TYPE);
     }
@@ -183,11 +192,13 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationMediaType() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanResourceMediaType.class, MediaType.valueOf("application/foo+xml"));
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanRepresentationError() {
         final WebTarget target = target("JAXBElementBeanResource");
 
@@ -203,6 +214,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBElementBeanTextRepresentation() {
         _test(new JaxbBean("CONTENT"), JAXBElementBeanTextResource.class, MediaType.TEXT_XML_TYPE);
     }
@@ -230,6 +242,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentation() {
         final WebTarget target = target("JAXBTypeResource");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -244,6 +257,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBTypeRepresentationMediaType() {
         final WebTarget target = target("JAXBTypeResourceMediaType");
         final JaxbBean in = new JaxbBean("CONTENT");
@@ -278,6 +292,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentation() {
         final WebTarget target = target("JAXBObjectResource");
         final Object in = new JaxbBean("CONTENT");
@@ -292,6 +307,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentationMediaType() {
         final WebTarget target = target("JAXBObjectResourceMediaType");
         final Object in = new JaxbBean("CONTENT");
@@ -300,6 +316,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBObjectRepresentationError() {
         final WebTarget target = target("JAXBObjectResource");
 
@@ -393,6 +410,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBArrayRepresentation() {
         final WebTarget target = target("JAXBArrayResource");
 
@@ -417,6 +435,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationMediaType() {
         final WebTarget target = target("JAXBListResourceMediaType");
 
@@ -472,6 +491,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testJAXBListRepresentationError() {
         final WebTarget target = target("JAXBListResource");
 
@@ -535,6 +555,7 @@ public class XmlMoxyTest extends AbstractTypeTester {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testAdditionalClasses() throws Exception {
         final ComplexJaxbBean nonJaxbBean = target("AdditionalClassesResource").request().get(ComplexJaxbBean.class);
         final Object simpleBean = nonJaxbBean.getSimpleBean();

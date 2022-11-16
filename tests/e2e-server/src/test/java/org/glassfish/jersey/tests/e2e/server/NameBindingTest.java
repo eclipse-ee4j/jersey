@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,14 +41,15 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test-suite ensuring the correct functionality of name binding.
@@ -56,7 +57,7 @@ import static org.junit.Assert.assertThat;
  * @author Miroslav Fuksa
  * @author Michal Gajdos
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class NameBindingTest extends JerseyTest {
 
     @Override
@@ -171,11 +172,11 @@ public class NameBindingTest extends JerseyTest {
         final Set<Class<?>> positiveFilters = Arrays.stream(filtersThatShouldBeCalled).collect(Collectors.toSet());
         for (final Class<?> filter : FILTERS) {
             if (positiveFilters.contains(filter)) {
-                assertEquals("Filter '" + filter.getSimpleName() + "' should be called.", "called", response.getHeaders()
-                        .getFirst(filter.getSimpleName()));
+                assertEquals("called", response.getHeaders().getFirst(filter.getSimpleName()),
+                        "Filter '" + filter.getSimpleName() + "' should be called.");
             } else {
-                assertNull("Filter '" + filter.getSimpleName() + "' should not be called.", response.getHeaders().get(filter
-                        .getSimpleName()));
+                assertNull(response.getHeaders().get(filter.getSimpleName()),
+                        "Filter '" + filter.getSimpleName() + "' should not be called.");
             }
         }
     }
@@ -187,11 +188,13 @@ public class NameBindingTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceNoBinding() {
         checkCalled(_getResponse("resource"));
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceFooBinding() {
         checkCalled(_getResponse("resource/foo"), FooFilter.class);
     }
@@ -201,6 +204,7 @@ public class NameBindingTest extends JerseyTest {
      * invoked for each resource method (globally).
      */
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void preMatchingNameBinding() {
         final Response response = _getResponse("resource/preMatchingNameBinding");
 
@@ -209,11 +213,13 @@ public class NameBindingTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceBarBinding() {
         checkCalled(_getResponse("resource/bar"), BarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testResourceFooBarBinding() {
         checkCalled(_getResponse("resource/foobar"), FooFilter.class, BarFilter.class, FooBarFilter.class);
     }
@@ -225,21 +231,25 @@ public class NameBindingTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooResourceNoBinding() {
         checkCalled(_getResponse("foo-resource"), FooFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooResourceFooBinding() {
         checkCalled(_getResponse("foo-resource/foo"), FooFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooResourceBarBinding() {
         checkCalled(_getResponse("foo-resource/bar"), FooFilter.class, BarFilter.class, FooBarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooResourceFooBarBinding() {
         checkCalled(_getResponse("foo-resource/foobar"), FooFilter.class, BarFilter.class, FooBarFilter.class);
     }
@@ -251,21 +261,25 @@ public class NameBindingTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBarResourceNoBinding() {
         checkCalled(_getResponse("bar-resource"), BarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBarResourceFooBinding() {
         checkCalled(_getResponse("bar-resource/foo"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBarResourceBarBinding() {
         checkCalled(_getResponse("bar-resource/bar"), BarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBarResourceFooBarBinding() {
         checkCalled(_getResponse("bar-resource/foobar"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }
@@ -278,21 +292,25 @@ public class NameBindingTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooBarResourceNoBinding() {
         checkCalled(_getResponse("foobar-resource"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooBarResourceFooBinding() {
         checkCalled(_getResponse("foobar-resource/foo"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooBarResourceBarBinding() {
         checkCalled(_getResponse("foobar-resource/bar"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFooBarResourceFooBarBinding() {
         checkCalled(_getResponse("foobar-resource/foobar"), BarFilter.class, FooFilter.class, FooBarFilter.class);
     }

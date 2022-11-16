@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,15 +22,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Michal Gajdos
  */
-public class MatrixParamTest extends JerseyContainerTest {
+public class MatrixParamTest {
 
     @Path("/")
     public static class Resource {
@@ -41,16 +48,34 @@ public class MatrixParamTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(Resource.class);
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        JerseyContainerTest.parameters().forEach(testContainerFactory -> {
+            MatrixParamTemplateTest test = new MatrixParamTemplateTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testMatrixParam() {
-        assertThat(target().matrixParam("y", "1").request().get(String.class), is("1"));
-        assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%2B%202").request().get(String.class), is("1 + 2"));
-        assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%26%202").request().get(String.class), is("1 & 2"));
-        assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%7C%7C%202").request().get(String.class), is("1 || 2"));
+    public abstract static class MatrixParamTemplateTest extends JerseyContainerTest {
+
+        public MatrixParamTemplateTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
+        }
+
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(Resource.class);
+        }
+
+        @Test
+        public void testMatrixParam() {
+            assertThat(target().matrixParam("y", "1").request().get(String.class), is("1"));
+            assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%2B%202").request().get(String.class), is("1 + 2"));
+            assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%26%202").request().get(String.class), is("1 & 2"));
+            assertThat(target().matrixParam("x", "1").matrixParam("y", "1%20%7C%7C%202").request().get(String.class),
+                    is("1 || 2"));
+        }
     }
 }

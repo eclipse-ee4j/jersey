@@ -36,6 +36,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.Priority;
 import javax.net.ssl.HostnameVerifier;
@@ -445,8 +447,40 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (proxyPort <= 0 || proxyPort > 65535) {
             throw new IllegalArgumentException("Invalid proxy port");
         }
-        property(ClientProperties.PROXY_URI, proxyHost + ":" + proxyPort);
+
+        // If proxyString is something like "localhost:8765" we need to add a scheme since the connectors expect one
+        String proxyString = createProxyString(proxyHost, proxyPort);
+
+        property(ClientProperties.PROXY_URI, proxyString);
         return this;
+    }
+
+    static String createProxyString(String proxyHost, int proxyPort) {
+        boolean prependScheme = false;
+        String proxyString = proxyHost + ":" + proxyPort;
+
+        if (proxyString.split(":").length == 2) {
+            // Check if first character is a number to account for if proxyHost is given as an IP rather than a name
+            // URI.create("127.0.0.1:8765") will lead to an IllegalArgumentException
+            if (proxyString.matches("\\d.*")) {
+                prependScheme = true;
+            } else {
+                // "localhost:8765" will set the scheme as "localhost" and the host as "null"
+                URI proxyURI = URI.create(proxyString);
+                if (proxyURI.getHost() == null && proxyURI.getScheme().equals(proxyHost)) {
+                    prependScheme = true;
+                }
+            }
+        }
+
+        if (prependScheme) {
+            proxyString = "http://" + proxyString;
+            Logger.getLogger(RestClientBuilderImpl.class.getName()).log(Level.FINE,
+                    "No scheme provided with proxyHost: " + proxyHost + ". Defaulting to HTTP, proxy address = "
+                            + proxyString);
+        }
+
+        return proxyString;
     }
 
     @Override

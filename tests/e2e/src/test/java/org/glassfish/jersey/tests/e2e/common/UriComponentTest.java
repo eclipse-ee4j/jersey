@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.uri.UriComponent;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Libor Kamolis
@@ -84,9 +84,9 @@ public class UriComponentTest extends JerseyTest {
         String encoded = UriComponent.encode(text, UriComponent.Type.QUERY_PARAM_SPACE_ENCODED);
         WebTarget target = target("test/text");
         Response response = target.queryParam("text", encoded).request().get();
-        Assert.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         String actual = response.readEntity(String.class);
-        Assert.assertEquals(message, VALUE_PREFIX + text + VALUE_SUFFIX, actual);
+        Assertions.assertEquals(VALUE_PREFIX + text + VALUE_SUFFIX, actual, message);
     }
 
 }

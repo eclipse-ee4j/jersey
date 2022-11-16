@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.message.internal.MessagingBinders;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test runtime delegate.
@@ -48,31 +48,31 @@ public class TestRuntimeDelegate extends AbstractRuntimeDelegate {
 
     public void testMediaType() {
         MediaType m = new MediaType("text", "plain");
-        Assert.assertNotNull(m);
+        Assertions.assertNotNull(m);
     }
 
     public void testUriBuilder() {
         UriBuilder ub = RuntimeDelegate.getInstance().createUriBuilder();
-        Assert.assertNotNull(ub);
+        Assertions.assertNotNull(ub);
     }
 
     public void testResponseBuilder() {
         Response.ResponseBuilder rb = RuntimeDelegate.getInstance().createResponseBuilder();
-        Assert.assertNotNull(rb);
+        Assertions.assertNotNull(rb);
     }
 
     public void testVariantListBuilder() {
         Variant.VariantListBuilder vlb = RuntimeDelegate.getInstance().createVariantListBuilder();
-        Assert.assertNotNull(vlb);
+        Assertions.assertNotNull(vlb);
     }
 
     public void testLinkBuilder() {
         final Link.Builder linkBuilder = RuntimeDelegate.getInstance().createLinkBuilder();
-        Assert.assertNotNull(linkBuilder);
+        Assertions.assertNotNull(linkBuilder);
     }
 
     public void testWebApplicationException() {
         WebApplicationException wae = new WebApplicationException();
-        Assert.assertNotNull(wae);
+        Assertions.assertNotNull(wae);
     }
 }

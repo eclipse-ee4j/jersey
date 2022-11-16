@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,19 +34,20 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests primitive types as entity.
  *
  * @author Miroslav Fuksa
  */
-@RunWith(ConcurrentRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PrimitiveTypesTest extends JerseyTest {
     @Override
     protected ResourceConfig configure() {
@@ -54,6 +55,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testInteger() {
         WebTarget web = target().path("test");
         Response response = web.path("Integer").request().post(Entity.entity(5, MediaType.TEXT_PLAIN_TYPE));
@@ -62,6 +64,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveInt() {
         WebTarget web = target().path("test");
         Response response = web.path("int").request().post(Entity.entity(5, MediaType.TEXT_PLAIN_TYPE));
@@ -70,6 +73,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveIntNull() {
         WebTarget web = target().path("test");
         Response response = web.path("int").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -78,6 +82,7 @@ public class PrimitiveTypesTest extends JerseyTest {
 
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testLong() {
         WebTarget web = target().path("test");
         Response response = web.path("Long").request().post(Entity.entity(5L, MediaType.TEXT_PLAIN_TYPE));
@@ -86,6 +91,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveLong() {
         WebTarget web = target().path("test");
         Response response = web.path("long").request().post(Entity.entity(5L, MediaType.TEXT_PLAIN_TYPE));
@@ -94,6 +100,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveLongNull() {
         WebTarget web = target().path("test");
         Response response = web.path("long").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -102,6 +109,7 @@ public class PrimitiveTypesTest extends JerseyTest {
 
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testShort() {
         WebTarget web = target().path("test");
         Response response = web.path("Short").request().post(Entity.entity((short) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -110,6 +118,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveShort() {
         WebTarget web = target().path("test");
         Response response = web.path("short").request().post(Entity.entity((short) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -118,6 +127,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveShortNull() {
         WebTarget web = target().path("test");
         Response response = web.path("short").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -125,6 +135,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testByte() {
         WebTarget web = target().path("test");
         Response response = web.path("Byte").request().post(Entity.entity((byte) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -133,6 +144,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveByte() {
         WebTarget web = target().path("test");
         Response response = web.path("byte").request().post(Entity.entity((byte) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -141,6 +153,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveByteNull() {
         WebTarget web = target().path("test");
         Response response = web.path("byte").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -148,6 +161,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testFloat() {
         WebTarget web = target().path("test");
         Response response = web.path("Float").request().post(Entity.entity((float) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -156,6 +170,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveFloat() {
         WebTarget web = target().path("test");
         Response response = web.path("float").request().post(Entity.entity(5f, MediaType.TEXT_PLAIN_TYPE));
@@ -164,6 +179,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveFloatNull() {
         WebTarget web = target().path("test");
         Response response = web.path("float").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -171,6 +187,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testDouble() {
         WebTarget web = target().path("test");
         Response response = web.path("Double").request().post(Entity.entity((double) 5, MediaType.TEXT_PLAIN_TYPE));
@@ -179,6 +196,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveDouble() {
         WebTarget web = target().path("test");
         Response response = web.path("double").request().post(Entity.entity(5d, MediaType.TEXT_PLAIN_TYPE));
@@ -187,6 +205,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveDoubleNull() {
         WebTarget web = target().path("test");
         Response response = web.path("double").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -194,6 +213,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testCharacter() {
         WebTarget web = target().path("test");
         Response response = web.path("Character").request().post(Entity.entity('a', MediaType.TEXT_PLAIN_TYPE));
@@ -202,6 +222,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveCharacter() {
         WebTarget web = target().path("test");
         Response response = web.path("char").request().post(Entity.entity('a', MediaType.TEXT_PLAIN_TYPE));
@@ -210,6 +231,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveCharacterNull() {
         WebTarget web = target().path("test");
         Response response = web.path("char").request().post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
@@ -217,6 +239,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testString() {
         WebTarget web = target().path("test");
         Response response = web.path("String").request().post(Entity.entity("String", MediaType.TEXT_PLAIN_TYPE));
@@ -225,6 +248,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBoolean() {
         WebTarget web = target().path("test");
         Response response = web.path("Boolean").request().post(Entity.entity(Boolean.TRUE, MediaType.TEXT_PLAIN_TYPE));
@@ -234,6 +258,7 @@ public class PrimitiveTypesTest extends JerseyTest {
 
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testPrimitiveBoolean() {
         WebTarget web = target().path("test");
         Response response = web.path("boolean").request().post(Entity.entity(true, MediaType.TEXT_PLAIN_TYPE));
@@ -242,6 +267,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBigDecimal() {
         WebTarget web = target().path("test");
         Response response = web.path("bigDecimal").request().post(Entity.entity(new BigDecimal("15"), MediaType.TEXT_PLAIN_TYPE));
@@ -250,6 +276,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testBigInteger() {
         WebTarget web = target().path("test");
         Response response = web.path("bigInteger").request().post(Entity.entity(new BigInteger("15"), MediaType.TEXT_PLAIN_TYPE));
@@ -258,6 +285,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testAtomicInteger() {
         WebTarget web = target().path("test");
         Response response = web.path("atomicInteger").request().post(Entity.entity(new AtomicInteger(15),
@@ -267,6 +295,7 @@ public class PrimitiveTypesTest extends JerseyTest {
     }
 
     @Test
+    @Execution(ExecutionMode.CONCURRENT)
     public void testAtomicLong() {
         WebTarget web = target().path("test");
         Response response = web.path("atomicLong").request().post(Entity.entity(new AtomicLong(15),

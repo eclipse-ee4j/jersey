@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,7 @@
 
 package org.glassfish.jersey.tests.integration.servlet_3_init_8;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
@@ -28,38 +27,27 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test unreachable resources.
  *
  * @author Libor Kramolis
  */
-@RunWith(Parameterized.class)
 public class HelloWorldResourceUnreachableITCase extends JerseyTest {
 
-    private final String appPath;
-    private final String resourcePath;
-
-    public HelloWorldResourceUnreachableITCase(String appPath,
-                                               String resourcePath) {
-        this.appPath = appPath;
-        this.resourcePath = resourcePath;
-    }
-
-    @Parameterized.Parameters(name = "{index}: {0}/{1}")
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"/app1", "unreachable"}, //unreachable - no explicitly mentioned resource
-                {"/app1ann", "helloworld1"}, //app1ann - overridden using a servlet-mapping element in the web.xml
-                {"/app2ann", "unreachable"}, //unreachable - no explicitly mentioned resource
-                {"/app3ann", "unreachable"}, //unreachable - no explicitly mentioned resource
-                {"/app4", "unreachable"}, //unreachable - no explicitly mentioned resource
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("/app1", "unreachable"), //unreachable - no explicitly mentioned resource
+                Arguments.of("/app1ann", "helloworld1"), //app1ann - overridden using a servlet-mapping element in the web.xml
+                Arguments.of("/app2ann", "unreachable"), //unreachable - no explicitly mentioned resource
+                Arguments.of("/app3ann", "unreachable"), //unreachable - no explicitly mentioned resource
+                Arguments.of("/app4", "unreachable") //unreachable - no explicitly mentioned resource
+        );
     }
 
     @Override
@@ -72,8 +60,9 @@ public class HelloWorldResourceUnreachableITCase extends JerseyTest {
         return new ExternalTestContainerFactory();
     }
 
-    @Test
-    public void testUnreachableResource() {
+    @ParameterizedTest(name = "{index}: {0}/{1}")
+    @MethodSource("testData")
+    public void testUnreachableResource(String appPath, String resourcePath) {
         WebTarget t = target(appPath);
         t.register(LoggingFeature.class);
         Response r = t.path(resourcePath).request().get();

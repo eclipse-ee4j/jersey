@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,10 +46,10 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.glassfish.jersey.client.internal.HttpUrlConnector;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Various tests for the default client connector.
@@ -69,7 +69,7 @@ public class HttpUrlConnectorTest {
      * TODO: fix and re-enable the test, it could give java.net.NoRouteToHostException in certain environments instead of timeout exception
      */
     @Test
-    @Ignore
+    @Disabled
     public void testConnectionTimeoutWithEntity() {
         _testInvocationTimeout(createNonRoutableTarget().request().buildPost(Entity.text("does not matter")));
     }
@@ -79,7 +79,7 @@ public class HttpUrlConnectorTest {
      * TODO: see above, rewrite server part, the "non-routable" target solution is fragile
      */
     @Test
-    @Ignore
+    @Disabled
     public void testConnectionTimeoutNoEntity() {
         _testInvocationTimeout(createNonRoutableTarget().request().buildGet());
     }
@@ -408,21 +408,19 @@ public class HttpUrlConnectorTest {
         try {
             invocation.invoke();
 
-            Assert.fail("Timeout expected!");
+            Assertions.fail("Timeout expected!");
 
         } catch (Exception ex) {
 
-            Assert.assertTrue(String.format("Bad exception, %s, caught! Timeout expected.", ex.getCause()),
-                    ex.getCause() instanceof SocketTimeoutException);
+            Assertions.assertTrue(ex.getCause() instanceof SocketTimeoutException,
+                    String.format("Bad exception, %s, caught! Timeout expected.", ex.getCause()));
 
             final long stop = System.currentTimeMillis();
             long time = stop - start;
 
-            Assert.assertTrue(
-               String.format(
-                    "Actual time, %d ms, should not be more than twice as longer as the original timeout, %d ms",
-                                 time,                                                              TimeoutBASE),
-               time < 2 * TimeoutBASE);
+            Assertions.assertTrue(time < 2 * TimeoutBASE,
+                    String.format("Actual time, %d ms, should not be more than twice as longer as the original timeout, %d ms",
+                        time, TimeoutBASE));
         }
     }
 

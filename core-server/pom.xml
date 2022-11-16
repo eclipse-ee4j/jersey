@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>2.35-SNAPSHOT</version>
+        <version>2.38-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.jersey.core</groupId>
@@ -56,7 +56,7 @@
         </license>
         <license>
             <name>Modified BSD</name>
-            <url>http://asm.objectweb.org/license.html</url>
+            <url>https://asm.ow2.io/license.html</url>
             <distribution>repo</distribution>
             <comments>ASM @ jersey.repackaged.org.objectweb.asm</comments>
         </license>
@@ -156,6 +156,7 @@
                     <threadCount>1</threadCount>
                     <forkCount>1C</forkCount>
                     <reuseForks>true</reuseForks>
+                    <systemPropertiesFile>${project.basedir}/etc/systemPropertiesFile</systemPropertiesFile>
                 </configuration>
             </plugin>
         </plugins>
@@ -213,13 +214,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
 

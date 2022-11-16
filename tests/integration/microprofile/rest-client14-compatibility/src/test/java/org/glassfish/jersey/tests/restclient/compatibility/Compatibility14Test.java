@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,10 +24,11 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -41,11 +42,12 @@ import java.util.logging.LogRecord;
 public class Compatibility14Test extends JerseyTest {
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -55,6 +57,7 @@ public class Compatibility14Test extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -104,7 +107,7 @@ public class Compatibility14Test extends JerseyTest {
 
         try (Response r = target("/resource").request().get()) {
             String entity = r.readEntity(String.class);
-            Assert.assertEquals(new InnerResource().get(), entity);
+            Assertions.assertEquals(new InnerResource().get(), entity);
         }
 
         int warningCounts = 0;
@@ -114,6 +117,6 @@ public class Compatibility14Test extends JerseyTest {
             }
         }
 
-        Assert.assertEquals(3, warningCounts);
+        Assertions.assertEquals(3, warningCounts);
     }
 }

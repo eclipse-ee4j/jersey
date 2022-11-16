@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,6 +64,7 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
      *                      logging filter will print (and buffer in memory) only the specified number of bytes
      *                      and print "...more..." string at the end. Negative values are interpreted as zero.
      *  separator      delimiter for particular log lines. Default is Linux new line delimiter
+     *  redactHeaders  a collection of HTTP headers to be redacted when logging.
      */
     public ClientLoggingFilter(LoggingFeature.LoggingFeatureBuilder builder) {
         super(builder);
@@ -82,7 +83,7 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
         printRequestLine(b, "Sending client request", id, context.getMethod(), context.getUri());
         printPrefixedHeaders(b, id, REQUEST_PREFIX, context.getStringHeaders());
 
-        if (context.hasEntity() && printEntity(verbosity, context.getMediaType())) {
+        if (printEntity(verbosity, context.getMediaType()) && context.hasEntity()) {
             final OutputStream stream = new LoggingStream(b, context.getEntityStream());
             context.setEntityStream(stream);
             context.setProperty(ENTITY_LOGGER_PROPERTY, stream);
@@ -106,7 +107,7 @@ final class ClientLoggingFilter extends LoggingInterceptor implements ClientRequ
         printResponseLine(b, "Client response received", id, responseContext.getStatus());
         printPrefixedHeaders(b, id, RESPONSE_PREFIX, responseContext.getHeaders());
 
-        if (responseContext.hasEntity() && printEntity(verbosity, responseContext.getMediaType())) {
+        if (printEntity(verbosity, responseContext.getMediaType()) && responseContext.hasEntity()) {
             responseContext.setEntityStream(logInboundEntity(b, responseContext.getEntityStream(),
                     MessageUtils.getCharset(responseContext.getMediaType())));
         }

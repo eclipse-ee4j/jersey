@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,9 +46,9 @@ import javax.inject.Provider;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test for creating an application with asynchronously handled request processing
@@ -252,7 +252,7 @@ public class AsyncApplicationBuildingTest {
         final ResourceConfig resourceConfig = new ResourceConfig(ErrornousResource.class);
         try {
             ApplicationHandler server = new ApplicationHandler(resourceConfig);
-            assertTrue("Jersey server initialization should have failed: " + server, false);
+            assertTrue(false, "Jersey server initialization should have failed: " + server);
         } catch (Exception e) {
         }
     }

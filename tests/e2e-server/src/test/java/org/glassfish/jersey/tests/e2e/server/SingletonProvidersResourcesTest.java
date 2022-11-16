@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,10 +33,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test resources which also acts as providers.
@@ -60,9 +60,9 @@ public class SingletonProvidersResourcesTest extends JerseyTest {
     @Test
     public void testResourceAsFilter() {
         String str = target().path("singleton").request().header("singleton", "singleton").get(String.class);
-        assertTrue(str, str.startsWith("true/"));
+        assertTrue(str.startsWith("true/"), str);
         String str2 = target().path("singleton").request().header("singleton", "singleton").get(String.class);
-        assertTrue(str2, str2.startsWith("true/"));
+        assertTrue(str2.startsWith("true/"), str2);
         assertEquals(str, str2);
     }
 

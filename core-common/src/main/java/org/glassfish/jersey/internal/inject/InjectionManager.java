@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,6 +49,12 @@ public interface InjectionManager {
      * Shutdown phase is dedicated to make some final cleaning steps regarding underlying DI provider.
      */
     void shutdown();
+
+    /**
+     * Returns {@code true} when the {@link InjectionManager} has been shutdown, {@code false} otherwise.
+     * @return Whether the {@code InjectionManager} has been shutdown.
+     */
+    boolean isShutdown();
 
     /**
      * Registers one bean represented using fields in the provided descriptor. The final bean can be direct bean or

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,13 +34,13 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Martin Matula
@@ -62,6 +62,7 @@ public class WebResourceFactoryTest extends JerseyTest {
         return new ResourceConfig(MyResource.class);
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -161,7 +162,7 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("See issue JERSEY-2441")
+    @Disabled("See issue JERSEY-2441")
     public void testHeaderCookieAsList() {
         final List<String> list = new ArrayList<>();
         list.add("a");
@@ -172,7 +173,7 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("See issue JERSEY-2441")
+    @Disabled("See issue JERSEY-2441")
     public void testHeaderCookieAsSet() {
         final Set<String> set = new HashSet<>();
         set.add("a");
@@ -184,7 +185,7 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("See issue JERSEY-2441")
+    @Disabled("See issue JERSEY-2441")
     public void testHeaderCookieAsSortedSet() {
         final SortedSet<String> set = new TreeSet<>();
         set.add("a");
@@ -200,7 +201,7 @@ public class WebResourceFactoryTest extends JerseyTest {
      * lines in the request. Jersey has currently no possibility to do so. See JERSEY-2263.
      */
     @Test
-    @Ignore("See issue JERSEY-2263")
+    @Disabled("See issue JERSEY-2263")
     public void testHeaderParamsAsList() {
         final List<String> list = new ArrayList<>();
         list.add("a");
@@ -211,7 +212,7 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("See issue JERSEY-2263")
+    @Disabled("See issue JERSEY-2263")
     public void testHeaderParamsAsSet() {
         final Set<String> set = new HashSet<>();
         set.add("a");
@@ -223,7 +224,7 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     @Test
-    @Ignore("See issue JERSEY-2263")
+    @Disabled("See issue JERSEY-2263")
     public void testHeaderParamsAsSortedSet() {
         final SortedSet<String> set = new TreeSet<>();
         set.add("a");
@@ -267,10 +268,10 @@ public class WebResourceFactoryTest extends JerseyTest {
     }
 
     private void checkSet(final String result) {
-        assertTrue("Set does not contain 3 items.", result.startsWith("3:["));
-        assertTrue("Set does not contain 'a' item.", result.contains("a"));
-        assertTrue("Set does not contain 'bb' item.", result.contains("bb"));
-        assertTrue("Set does not contain 'ccc' item.", result.contains("ccc"));
+        assertTrue(result.startsWith("3:["), "Set does not contain 3 items.");
+        assertTrue(result.contains("a"), "Set does not contain 'a' item.");
+        assertTrue(result.contains("bb"), "Set does not contain 'bb' item.");
+        assertTrue(result.contains("ccc"), "Set does not contain 'ccc' item.");
     }
 
     @Test
@@ -307,13 +308,13 @@ public class WebResourceFactoryTest extends JerseyTest {
 
     @Test
     public void testAcceptHeader() {
-        assertTrue("Accept HTTP header does not match @Produces annotation", resource.isAcceptHeaderValid(null));
+        assertTrue(resource.isAcceptHeaderValid(null), "Accept HTTP header does not match @Produces annotation");
     }
 
     @Test
     public void testPutWithExplicitContentType() {
-        assertEquals("Content-Type HTTP header does not match explicitly provided type", resourceWithXML.putIt(new MyBean()),
-                MediaType.APPLICATION_XML);
+        assertEquals(resourceWithXML.putIt(new MyBean()), MediaType.APPLICATION_XML,
+                "Content-Type HTTP header does not match explicitly provided type");
     }
 
     @Test
@@ -328,11 +329,11 @@ public class WebResourceFactoryTest extends JerseyTest {
     public void testHashCode() throws Exception {
         int h1 = resource.hashCode();
         int h2 = resource2.hashCode();
-        assertNotEquals("The hash codes should not match", h1, h2);
+        assertNotEquals(h1, h2, "The hash codes should not match");
     }
 
     @Test
     public void testEquals() {
-        assertFalse("The two resource instances should not be considered equals as they are unique", resource.equals(resource2));
+        assertFalse(resource.equals(resource2), "The two resource instances should not be considered equals as they are unique");
     }
 }

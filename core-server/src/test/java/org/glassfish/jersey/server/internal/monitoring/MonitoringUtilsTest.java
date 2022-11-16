@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -61,13 +61,13 @@ public class MonitoringUtilsTest {
     @Test
     public void testGetMethodUniqueId() {
         final Resource resource = Resource.builder(MyResource.class).build();
-        Assert.assertEquals("[]|[]|GET|resource|get",
+        Assertions.assertEquals("[]|[]|GET|resource|get",
                 MonitoringUtils.getMethodUniqueId(getMethod(resource, "get")));
-        Assert.assertEquals("[text/html]|[]|GET|resource.sub|subGet",
+        Assertions.assertEquals("[text/html]|[]|GET|resource.sub|subGet",
                 MonitoringUtils.getMethodUniqueId(getMethod(resource, "subGet")));
-        Assert.assertEquals("[text/html]|[]|GET|resource.sub|subGet",
+        Assertions.assertEquals("[text/html]|[]|GET|resource.sub|subGet",
                 MonitoringUtils.getMethodUniqueId(getMethod(resource, "subGet")));
-        Assert.assertEquals("[text/xml]|[text/plain]|POST|resource|post",
+        Assertions.assertEquals("[text/xml]|[text/plain]|POST|resource|post",
                 MonitoringUtils.getMethodUniqueId(getMethod(resource, "post")));
 
     }

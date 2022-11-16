@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@ package org.glassfish.jersey.tests.cdi.resources;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test CDI timers injected into EJB beans.
@@ -54,7 +54,7 @@ public class CdiIntoEjbTest extends TestBase {
         sleep(2);
         long secondMillis = _getMillis(target);
 
-        assertTrue("Second request should have greater millis!", secondMillis > firstMillis);
+        assertTrue(secondMillis > firstMillis, "Second request should have greater millis!");
     }
 
     private void _testAppScoped(final String ejbType) {
@@ -64,6 +64,6 @@ public class CdiIntoEjbTest extends TestBase {
         sleep(2);
         long secondMillis = _getMillis(target);
 
-        assertTrue("Second request should have the same millis!", secondMillis == firstMillis);
+        assertTrue(secondMillis == firstMillis, "Second request should have the same millis!");
     }
 }

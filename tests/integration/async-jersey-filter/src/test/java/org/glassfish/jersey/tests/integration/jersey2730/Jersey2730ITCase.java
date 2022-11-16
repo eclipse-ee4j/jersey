@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,9 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.tests.integration.async.AbstractAsyncJerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * JERSEY-2730 reproducer.
@@ -36,9 +36,8 @@ public class Jersey2730ITCase extends AbstractAsyncJerseyTest {
     private void assertLastThreadNotStuck() {
         final boolean lastThreadGotStuck = target("/exceptionTest/exception/rpc/lastthreadstuck").request().get(boolean.class);
 
-        assertFalse("Thread processing last request got stuck while processing the request for "
-                        + TestExceptionResource.class.getCanonicalName(),
-                lastThreadGotStuck);
+        assertFalse(lastThreadGotStuck, "Thread processing last request got stuck while processing the request for "
+                        + TestExceptionResource.class.getCanonicalName());
     }
 
     @Test

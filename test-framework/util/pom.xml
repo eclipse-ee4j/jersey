@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.test-framework</groupId>
         <artifactId>project</artifactId>
-        <version>2.35-SNAPSHOT</version>
+        <version>2.38-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-test-framework-util</artifactId>
@@ -43,5 +43,32 @@
             <artifactId>jersey-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <dependencies>
+                    <!-- JUnit vintage engine to run JUnit 4 tests -->
+                    <dependency>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                        <version>${junit5.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

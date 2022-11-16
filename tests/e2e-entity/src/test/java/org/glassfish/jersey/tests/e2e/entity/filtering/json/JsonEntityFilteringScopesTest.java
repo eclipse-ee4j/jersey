@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,8 +15,6 @@
  */
 
 package org.glassfish.jersey.tests.e2e.entity.filtering.json;
-
-import java.util.Arrays;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -34,31 +32,68 @@ import org.glassfish.jersey.tests.e2e.entity.filtering.PrimaryDetailedView;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexSubEntity;
 import org.glassfish.jersey.tests.e2e.entity.filtering.domain.ComplexSubSubEntity;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class JsonEntityFilteringScopesTest extends JerseyTest {
+@Suite
+@SelectClasses({
+        JsonEntityFilteringScopesTest.JacksonFeatureJsonEntityFilteringScopesTest.class,
+        JsonEntityFilteringScopesTest.MoxyJsonFeatureJsonEntityFilteringScopesTest.class
+})
+public class JsonEntityFilteringScopesTest {
 
-    @Parameterized.Parameters(name = "Provider: {0}")
-    public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}});
+    public static class MoxyJsonFeatureJsonEntityFilteringScopesTest extends JsonEntityFilteringScopesTemplateTest {
+        public MoxyJsonFeatureJsonEntityFilteringScopesTest() {
+            super(MoxyJsonFeature.class);
+        }
     }
 
-    public JsonEntityFilteringScopesTest(final Class<Feature> filteringProvider) {
-        super(new ResourceConfig(Resource.class, EntityFilteringFeature.class).register(filteringProvider));
+    public static class JacksonFeatureJsonEntityFilteringScopesTest extends JsonEntityFilteringScopesTemplateTest {
+        public JacksonFeatureJsonEntityFilteringScopesTest() {
+            super(JacksonFeature.class);
+        }
+    }
 
-        enable(TestProperties.DUMP_ENTITY);
-        enable(TestProperties.LOG_TRAFFIC);
+    public abstract static class JsonEntityFilteringScopesTemplateTest extends JerseyTest {
+        public JsonEntityFilteringScopesTemplateTest(Class<? extends Feature> filteringProvider) {
+            super(new ResourceConfig(Resource.class, EntityFilteringFeature.class).register(filteringProvider));
+
+            enable(TestProperties.DUMP_ENTITY);
+            enable(TestProperties.LOG_TRAFFIC);
+        }
+
+        /**
+         * Primary -> Default -> Primary.
+         */
+        @Test
+        public void testEntityFilteringScopes() throws Exception {
+            final ComplexEntity entity = target().request().get(ComplexEntity.class);
+
+            // ComplexEntity
+            assertThat(entity.accessorTransient, is("propertyproperty"));
+            assertThat(entity.getProperty(), is("property"));
+
+            // ComplexSubEntity
+            final ComplexSubEntity subEntity = entity.field;
+            assertThat(subEntity, notNullValue());
+            assertThat(subEntity.accessorTransient, is("fieldfield"));
+            assertThat(subEntity.field, is("field"));
+
+            // ComplexSubSubEntity
+            final ComplexSubSubEntity subSubEntity = entity.field.getProperty();
+            assertThat(subSubEntity.accessorTransient, is("fieldfield"));
+            assertThat(subSubEntity.getProperty(), is("property"));
+            assertThat(subSubEntity.field, nullValue());
+        }
     }
 
     @Path("/")
@@ -71,29 +106,5 @@ public class JsonEntityFilteringScopesTest extends JerseyTest {
         public ComplexEntity get() {
             return ComplexEntity.INSTANCE;
         }
-    }
-
-    /**
-     * Primary -> Default -> Primary.
-     */
-    @Test
-    public void testEntityFilteringScopes() throws Exception {
-        final ComplexEntity entity = target().request().get(ComplexEntity.class);
-
-        // ComplexEntity
-        assertThat(entity.accessorTransient, is("propertyproperty"));
-        assertThat(entity.getProperty(), is("property"));
-
-        // ComplexSubEntity
-        final ComplexSubEntity subEntity = entity.field;
-        assertThat(subEntity, notNullValue());
-        assertThat(subEntity.accessorTransient, is("fieldfield"));
-        assertThat(subEntity.field, is("field"));
-
-        // ComplexSubSubEntity
-        final ComplexSubSubEntity subSubEntity = entity.field.getProperty();
-        assertThat(subSubEntity.accessorTransient, is("fieldfield"));
-        assertThat(subSubEntity.getProperty(), is("property"));
-        assertThat(subSubEntity.field, nullValue());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,51 +10,36 @@
 
 package org.glassfish.jersey.examples.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the request scoped managed bean resource.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class PerRequestBeanTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"gamma", "delta"},
-                {"CC C", "D DD"},
-                {"d", "c"},
-                {"@^&", "?!:"}
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("gamma", "delta"),
+                Arguments.of("CC C", "D DD"),
+                Arguments.of("d", "c"),
+                Arguments.of("@^&", "?!:")
+        );
     }
 
-    final String c, d;
-
-    /**
-     * Create a new test case based on the above defined parameters.
-     *
-     * @param c first path parameter value.
-     * @param d second path parameter value.
-     */
-    public PerRequestBeanTest(String c, String d) {
-        this.c = c;
-        this.d = d;
-    }
-
-    @Test
-    public void testTheOtherResource() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testTheOtherResource(String c, String d) {
         final WebTarget target = target().path("other").path(c).path(d);
 
         String s = target.request().get(String.class);

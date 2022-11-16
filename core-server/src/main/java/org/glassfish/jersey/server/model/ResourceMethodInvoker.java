@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -85,6 +85,7 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
     private final Type invocableResponseType;
     private final boolean canUseInvocableResponseType;
     private final boolean isCompletionStageResponseType;
+    private final boolean isCompletionStageResponseResponseType; // CompletionStage<Response>
     private final Type completionStageResponseType;
     private final ResourceMethodDispatcher dispatcher;
     private final Method resourceMethod;
@@ -313,6 +314,8 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
                 && CompletionStage.class.isAssignableFrom((Class<?>) ((ParameterizedType) invocableResponseType).getRawType());
         this.completionStageResponseType =
                 isCompletionStageResponseType ? ((ParameterizedType) invocableResponseType).getActualTypeArguments()[0] : null;
+        this.isCompletionStageResponseResponseType = Class.class.isInstance(completionStageResponseType)
+                && Response.class.isAssignableFrom((Class<?>) completionStageResponseType);
     }
 
     private <T> void addNameBoundProviders(
@@ -465,7 +468,7 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
             if (canUseInvocableResponseType
                     && response.hasEntity()
                     && !(response.getEntityType() instanceof ParameterizedType)) {
-                response.setEntityType(unwrapInvocableResponseType(context.request()));
+                response.setEntityType(unwrapInvocableResponseType(context.request(), response.getEntityType()));
             }
 
             return response;
@@ -484,10 +487,10 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
         return jaxrsResponse;
     }
 
-    private Type unwrapInvocableResponseType(ContainerRequest request) {
+    private Type unwrapInvocableResponseType(ContainerRequest request, Type entityType) {
         if (isCompletionStageResponseType
                 && request.resolveProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.FALSE)) {
-            return completionStageResponseType;
+            return isCompletionStageResponseResponseType ? entityType : completionStageResponseType;
         }
         return invocableResponseType;
     }

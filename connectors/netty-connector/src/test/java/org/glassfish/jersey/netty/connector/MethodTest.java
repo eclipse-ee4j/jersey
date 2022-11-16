@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests the Http methods.
@@ -97,5 +97,12 @@ public class MethodTest extends JerseyTest {
     public void testDelete() {
         Response response = target(PATH).request().delete();
         assertEquals("DELETE", response.readEntity(String.class));
+    }
+
+    @Test
+    public void testOptionsWithEntity() {
+        Response response = target(PATH).request().build("OPTIONS", Entity.text("OPTIONS")).invoke();
+        assertEquals(200, response.getStatus());
+        response.close();
     }
 }

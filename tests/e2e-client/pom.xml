@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests</groupId>
         <artifactId>project</artifactId>
-        <version>2.35-SNAPSHOT</version>
+        <version>2.38-SNAPSHOT</version>
     </parent>
 
     <artifactId>e2e-client</artifactId>
@@ -135,6 +135,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-apache5-connector</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-grizzly-connector</artifactId>
             <scope>test</scope>
         </dependency>
@@ -174,13 +179,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-util</artifactId>
             <scope>test</scope>
@@ -188,13 +186,13 @@
 
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>${junit-platform-suite.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

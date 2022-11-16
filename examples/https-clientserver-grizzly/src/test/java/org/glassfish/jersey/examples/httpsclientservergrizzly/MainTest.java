@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -24,11 +24,11 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This test class starts the grizzly server and then client performs several SSL (https)
@@ -48,7 +48,7 @@ public class MainTest {
     private final Object serverGuard = new Object();
     private Server server = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         synchronized (serverGuard) {
             if (server != null) {
@@ -59,7 +59,7 @@ public class MainTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         synchronized (serverGuard) {
             if (server == null) {

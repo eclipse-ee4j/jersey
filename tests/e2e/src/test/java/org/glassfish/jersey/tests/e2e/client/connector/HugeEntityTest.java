@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Future;
 
 import javax.ws.rs.POST;
@@ -43,10 +41,10 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -55,8 +53,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class HugeEntityTest extends JerseyTest {
+@Suite
+@SelectClasses({HugeEntityTest.GrizzlyConnectorProviderHugeEntityTest.class,
+        HugeEntityTest.JdkConnectorProviderHugeEntityTest.class})
+public class HugeEntityTest {
 
     private static final int BUFFER_LENGTH = 1024 * 1024; // 1M
     private static final long HUGE_DATA_LENGTH = 20L * 1024L * 1024L * 1024L; // 20G seems sufficient
@@ -98,27 +98,72 @@ public class HugeEntityTest extends JerseyTest {
         }
     }
 
-    private final ConnectorProvider connectorProvider;
-
-    public HugeEntityTest(ConnectorProvider connectorProvider) {
-        this.connectorProvider = connectorProvider;
+    public static class GrizzlyConnectorProviderHugeEntityTest extends HugeEntityTemplateTest {
+        public GrizzlyConnectorProviderHugeEntityTest() {
+            super(new GrizzlyConnectorProvider());
+        }
     }
 
-    @Parameterized.Parameters
-    public static List<? extends ConnectorProvider> testData() {
-        return Arrays.asList(new GrizzlyConnectorProvider(), new JdkConnectorProvider());
+    public static class JdkConnectorProviderHugeEntityTest extends HugeEntityTemplateTest {
+        public JdkConnectorProviderHugeEntityTest() {
+            super(new JdkConnectorProvider());
+        }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(ConsumerResource.class);
-    }
+    public abstract static class HugeEntityTemplateTest extends JerseyTest {
+        private final ConnectorProvider connectorProvider;
 
-    @Override
-    protected void configureClient(ClientConfig config) {
-        config.register(TestEntityWriter.class);
-        config.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.CHUNKED);
-        config.connectorProvider(connectorProvider);
+        public HugeEntityTemplateTest(ConnectorProvider connectorProvider) {
+            this.connectorProvider = connectorProvider;
+        }
+
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(ConsumerResource.class);
+        }
+
+        @Override
+        protected void configureClient(ClientConfig config) {
+            config.register(TestEntityWriter.class);
+            config.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.CHUNKED);
+            config.connectorProvider(connectorProvider);
+        }
+
+        /**
+         * JERSEY-2337 reproducer. We are going to send huge amount of data over the wire.
+         * Should not the data have been chunk-encoded, we would easily run out of memory.
+         *
+         * @throws Exception in case of a test error.
+         */
+        @Test
+        public void testPost() throws Exception {
+            Response response = target("/size").request()
+                    .post(Entity.entity(new TestEntity(HUGE_DATA_LENGTH), MediaType.APPLICATION_OCTET_STREAM_TYPE));
+            String content = response.readEntity(String.class);
+            assertThat(Long.parseLong(content), equalTo(HUGE_DATA_LENGTH));
+
+            // just to check the right data have been transfered.
+            response = target("/echo").request().post(Entity.text("Hey Sync!"));
+            assertThat(response.readEntity(String.class), equalTo("Hey Sync!"));
+        }
+
+        /**
+         * JERSEY-2337 reproducer. We are going to send huge amount of data over the wire. This time in an async fashion.
+         * Should not the data have been chunk-encoded, we would easily run out of memory.
+         *
+         * @throws Exception in case of a test error.
+         */
+        @Test
+        public void testAsyncPost() throws Exception {
+            Future<Response> response = target("/size").request().async()
+                    .post(Entity.entity(new TestEntity(HUGE_DATA_LENGTH), MediaType.APPLICATION_OCTET_STREAM_TYPE));
+            final String content = response.get().readEntity(String.class);
+            assertThat(Long.parseLong(content), equalTo(HUGE_DATA_LENGTH));
+
+            // just to check the right data have been transfered.
+            response = target("/echo").request().async().post(Entity.text("Hey Async!"));
+            assertThat(response.get().readEntity(String.class), equalTo("Hey Async!"));
+        }
     }
 
     public static class TestEntity {
@@ -166,41 +211,5 @@ public class HugeEntityTest extends JerseyTest {
                 entityStream.write(buffer, 0, remainder);
             }
         }
-    }
-
-    /**
-     * JERSEY-2337 reproducer. We are going to send huge amount of data over the wire.
-     * Should not the data have been chunk-encoded, we would easily run out of memory.
-     *
-     * @throws Exception in case of a test error.
-     */
-    @Test
-    public void testPost() throws Exception {
-        Response response = target("/size").request()
-                .post(Entity.entity(new TestEntity(HUGE_DATA_LENGTH), MediaType.APPLICATION_OCTET_STREAM_TYPE));
-        String content = response.readEntity(String.class);
-        assertThat(Long.parseLong(content), equalTo(HUGE_DATA_LENGTH));
-
-        // just to check the right data have been transfered.
-        response = target("/echo").request().post(Entity.text("Hey Sync!"));
-        assertThat(response.readEntity(String.class), equalTo("Hey Sync!"));
-    }
-
-    /**
-     * JERSEY-2337 reproducer. We are going to send huge amount of data over the wire. This time in an async fashion.
-     * Should not the data have been chunk-encoded, we would easily run out of memory.
-     *
-     * @throws Exception in case of a test error.
-     */
-    @Test
-    public void testAsyncPost() throws Exception {
-        Future<Response> response = target("/size").request().async()
-                .post(Entity.entity(new TestEntity(HUGE_DATA_LENGTH), MediaType.APPLICATION_OCTET_STREAM_TYPE));
-        final String content = response.get().readEntity(String.class);
-        assertThat(Long.parseLong(content), equalTo(HUGE_DATA_LENGTH));
-
-        // just to check the right data have been transfered.
-        response = target("/echo").request().async().post(Entity.text("Hey Async!"));
-        assertThat(response.get().readEntity(String.class), equalTo("Hey Async!"));
     }
 }

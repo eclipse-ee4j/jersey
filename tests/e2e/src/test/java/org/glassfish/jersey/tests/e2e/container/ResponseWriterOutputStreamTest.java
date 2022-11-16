@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,11 @@ package org.glassfish.jersey.tests.e2e.container;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.Test;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,20 +36,22 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * This is really weird approach and test.
  *
  * @author Michal Gajdos
  */
-public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
+public class ResponseWriterOutputStreamTest {
 
     private static final String CHECK_STRING = "RESOURCE";
 
@@ -80,40 +86,57 @@ public class ResponseWriterOutputStreamTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(Resource.class);
-    }
-
-    @Test
-    public void testGet() {
-        assertThat(target().request().get(String.class), is(CHECK_STRING));
-    }
-
-    @Test
-    public void testPost() throws InterruptedException, ExecutionException {
-        final CountDownLatch controlLatch = new CountDownLatch(1);
-        final Invocation invocation = target().request().buildPost(Entity.text(CHECK_STRING));
-        final Future<Response> resp = invocation.submit(new InvocationCallback<Response>() {
-            @Override
-            public void completed(Response response) {
-                controlLatch.countDown();
-            }
-
-            @Override
-            public void failed(Throwable throwable) {
-                controlLatch.countDown();
-
-            }
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        JerseyContainerTest.parameters().forEach(testContainerFactory -> {
+            ResponseWriterOutputStreamTemplateTest test = new ResponseWriterOutputStreamTemplateTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
         });
-        controlLatch.await();
-        final String response = resp.get().readEntity(String.class);
-        assertThat(response, is(CHECK_STRING));
+        return tests;
     }
 
-    @Test
-    public void testAll() throws InterruptedException, ExecutionException {
-        testGet();
-        testPost();
+    public abstract static class ResponseWriterOutputStreamTemplateTest extends JerseyContainerTest {
+
+        public ResponseWriterOutputStreamTemplateTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
+        }
+
+        @Override
+        protected Application configure() {
+            return new ResourceConfig(Resource.class);
+        }
+
+        @Test
+        public void testGet() {
+            assertThat(target().request().get(String.class), is(CHECK_STRING));
+        }
+
+        @Test
+        public void testPost() throws InterruptedException, ExecutionException {
+            final CountDownLatch controlLatch = new CountDownLatch(1);
+            final Invocation invocation = target().request().buildPost(Entity.text(CHECK_STRING));
+            final Future<Response> resp = invocation.submit(new InvocationCallback<Response>() {
+                @Override
+                public void completed(Response response) {
+                    controlLatch.countDown();
+                }
+
+                @Override
+                public void failed(Throwable throwable) {
+                    controlLatch.countDown();
+
+                }
+            });
+            controlLatch.await();
+            final String response = resp.get().readEntity(String.class);
+            assertThat(response, is(CHECK_STRING));
+        }
+
+        @Test
+        public void testAll() throws InterruptedException, ExecutionException {
+            testGet();
+            testPost();
+        }
     }
 }

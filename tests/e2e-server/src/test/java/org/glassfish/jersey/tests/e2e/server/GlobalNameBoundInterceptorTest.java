@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,8 +45,8 @@ import javax.annotation.Priority;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests name bound and global bound interceptors.
@@ -196,58 +196,59 @@ public class GlobalNameBoundInterceptorTest extends JerseyTest {
     @Test
     public void testPrematchingException() {
         final Response response = target("resource").request().header("pre-filter", "exception").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("mapped-(pre-matching-exception)-[global-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("mapped-(pre-matching-exception)-[global-bound]", response.readEntity(String.class));
     }
 
     @Test
     public void testPrematchingAbort() {
         final Response response = target("resource").request().header("pre-filter", "abort").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("(pre-matching-abort)-[global-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("(pre-matching-abort)-[global-bound]", response.readEntity(String.class));
     }
 
     @Test
     public void testRequestFilterException() {
         final Response response = target("resource").request().header("request-filter", "exception").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("mapped-(request-filter-exception)-[global-bound]-[test-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("mapped-(request-filter-exception)-[global-bound]-[test-bound]",
+                response.readEntity(String.class));
     }
 
     @Test
     public void testRequestFilterAbort() {
         final Response response = target("resource").request().header("request-filter", "abort").get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("(request-filter-abort)-[global-bound]-[test-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("(request-filter-abort)-[global-bound]-[test-bound]", response.readEntity(String.class));
     }
 
     @Test
     public void testStandardResource() {
         final Response response = target("resource/standard").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("ok-[global-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("ok-[global-bound]", response.readEntity(String.class));
     }
 
     @Test
     public void testTestResource() {
         final Response response = target("resource").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("get-[global-bound]-[test-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("get-[global-bound]-[test-bound]", response.readEntity(String.class));
     }
 
 
     @Test
     public void testPost() {
         final Response response = target("resource/postGlobal").request().post(Entity.entity("post", MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("post-[global-reader-interceptor]-[global-bound]", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("post-[global-reader-interceptor]-[global-bound]", response.readEntity(String.class));
     }
 
     @Test
     public void testPostBound() {
         final Response response = target("resource/postBound").request().post(Entity.entity("post", MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("post-[global-reader-interceptor]-[post-reader-interceptor]-[global-bound]",
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("post-[global-reader-interceptor]-[post-reader-interceptor]-[global-bound]",
                 response.readEntity(String.class));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -300,7 +300,7 @@ public class ExtendedWadlWebappOsgiTest {
         String val = (String) xp.evaluate("/wadl:application/wadl:resources/@base", document, XPathConstants.STRING);
         assertEquals(baseUri.toString(), val.endsWith("/") ? val.substring(0, val.length() - 1) : val);
         val = (String) xp.evaluate("count(//wadl:resource)", document, XPathConstants.STRING);
-        assertEquals("Unexpected number of resource elements.", val, "4");
+        assertEquals("Unexpected number of resource elements.", "4", val);
         val = (String) xp.evaluate("count(//wadl:resource[@path='items'])", document, XPathConstants.STRING);
         assertEquals("Unexpected number of resource elements with 'items' path.", "1", val);
         val = (String) xp.evaluate("count(//wadl:resource[@path='{id}'])", document, XPathConstants.STRING);

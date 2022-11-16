@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,21 +13,26 @@ package org.glassfish.jersey.examples.helloworld;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.util.runner.ConcurrentParameterizedRunner;
-
 import org.jboss.weld.environment.se.Weld;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test request scoped resource. Number of various requests will be made in parallel
@@ -36,7 +41,7 @@ import static org.junit.Assert.assertNotNull;
  *
  * @author Jakub Podlesak
  */
-@RunWith(ConcurrentParameterizedRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RequestScopedResourceTest extends JerseyTest {
 
     // Total number of requests to make
@@ -55,13 +60,11 @@ public class RequestScopedResourceTest extends JerseyTest {
      *
      * @return iterable test input data
      */
-    @Parameterized.Parameters
-    public static Iterable<Object[]> data() {
-        return new Iterable<Object[]>() {
-
+    public static Stream<Arguments> data() {
+        Iterable<Arguments> iterable = new Iterable<Arguments>() {
             @Override
-            public Iterator<Object[]> iterator() {
-                return new Iterator<Object[]>() {
+            public Iterator<Arguments> iterator() {
+                return new Iterator<Arguments>() {
 
                     @Override
                     public boolean hasNext() {
@@ -69,11 +72,9 @@ public class RequestScopedResourceTest extends JerseyTest {
                     }
 
                     @Override
-                    public Object[] next() {
-                        Object[] result = new Object[1];
+                    public Arguments next() {
                         int nextValue = dataFeed.getAndIncrement();
-                        result[0] = String.format("%02d", nextValue);
-                        return result;
+                        return Arguments.of(String.format("%02d", nextValue));
                     }
 
                     @Override
@@ -83,22 +84,28 @@ public class RequestScopedResourceTest extends JerseyTest {
                 };
             }
         };
+        return StreamSupport.stream(iterable.spliterator(), false);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void before() throws Exception {
         weld = new Weld();
         weld.initialize();
     }
 
-    @AfterClass
+    @AfterAll
     public static void after() throws Exception {
         weld.shutdown();
     }
 
     @Override
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
+    }
+
+    @AfterAll
+    public void report() {
         System.out.printf("SYNC: %d, ASYNC: %d, STRAIGHT: %d%n",
                 parameterizedCounter.intValue(), parameterizedAsyncCounter.intValue(), straightCounter.intValue());
     }
@@ -114,7 +121,9 @@ public class RequestScopedResourceTest extends JerseyTest {
     final AtomicInteger parameterizedAsyncCounter = new AtomicInteger(0);
     final AtomicInteger straightCounter = new AtomicInteger(0);
 
-    @Test
+    @Execution(ExecutionMode.CONCURRENT)
+    @ParameterizedTest
+    @MethodSource("data")
     public void testRequestScopedResource(final String param) {
 
         String path;
@@ -139,7 +148,7 @@ public class RequestScopedResourceTest extends JerseyTest {
 
         final Response response = target().path(path).queryParam("q", param).request("text/plain").get();
 
-        assertNotNull(String.format("Request failed for %s", path), response);
+        assertNotNull(response, String.format("Request failed for %s", path));
         assertEquals(200, response.getStatus());
         assertEquals(expected, response.readEntity(String.class));
     }

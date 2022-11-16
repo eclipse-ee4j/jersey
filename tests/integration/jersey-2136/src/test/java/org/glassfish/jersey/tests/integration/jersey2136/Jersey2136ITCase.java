@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -50,7 +50,7 @@ public class Jersey2136ITCase extends JerseyTest {
     // which was causing intermittent problems with hanging app engine process.
     // After un-ignoring this test, make sure to uncomment the app engine plugin
     // execution in the project's pom.xml
-    @Ignore
+    @Disabled
     @Test
     public void testGet() throws Exception {
         final Response response = target().request().get();

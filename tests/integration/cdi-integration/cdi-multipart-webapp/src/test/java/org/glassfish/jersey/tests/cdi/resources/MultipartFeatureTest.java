@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,7 @@
 package org.glassfish.jersey.tests.cdi.resources;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -32,11 +31,10 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Part of GF-21033 reproducer. Make sure form data processed by the Jersey multi-part
@@ -50,23 +48,10 @@ import static org.junit.Assert.assertThat;
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class MultipartFeatureTest extends JerseyTest {
 
-    final String TestFormDATA;
-
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"No matter what"},
-                {"You should never"},
-                {"ever"},
-                {"just give up"}
-        });
-    }
-
-    public MultipartFeatureTest(String TestFormDATA) {
-        this.TestFormDATA = TestFormDATA;
+    public static Stream<String> testData() {
+        return Stream.of("No matter what", "You should never", "ever", "just give up");
     }
 
     @Override
@@ -84,8 +69,9 @@ public class MultipartFeatureTest extends JerseyTest {
         config.register(MultiPartFeature.class);
     }
 
-    @Test
-    public void testPostFormData() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testPostFormData(String TestFormDATA) {
 
         final WebTarget target = target().path("echo");
 

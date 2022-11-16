@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import java.util.List;
 
 import javax.ws.rs.PathParam;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Checks that Parameters work fine with multiple annotations.
@@ -47,9 +47,9 @@ public class ParameterWithMultipleAnnotationsTest {
         assertEquals(1, parameters.size());
 
         final Parameter parameter = parameters.get(0);
-        assertEquals(methodName, String.class, parameter.getRawType());
-        assertEquals(methodName, String.class, parameter.getType());
-        assertEquals(methodName, "correct", parameter.getSourceName());
+        assertEquals(String.class, parameter.getRawType(), methodName);
+        assertEquals(String.class, parameter.getType(), methodName);
+        assertEquals("correct", parameter.getSourceName(), methodName);
     }
 
     @Target({java.lang.annotation.ElementType.PARAMETER, java.lang.annotation.ElementType.METHOD,

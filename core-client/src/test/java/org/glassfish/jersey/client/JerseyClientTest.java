@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,14 +42,15 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.Version;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@link JerseyClient} unit test.
@@ -63,12 +64,12 @@ public class JerseyClientTest {
     public JerseyClientTest() {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.client = (JerseyClient) ClientBuilder.newClient();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
     }
 
@@ -114,9 +115,9 @@ public class JerseyClientTest {
         assertEquals(client.getConfiguration(), target.getConfiguration());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testTargetIAE() {
-        final UriBuilder uriBuilder = UriBuilder.fromUri(":xxx:8080//yyy:90090//jaxrs ");
+        assertThrows(IllegalArgumentException.class, () -> UriBuilder.fromUri(":xxx:8080//yyy:90090//jaxrs "));
     }
 
     public static class TestProvider implements ReaderInterceptor {

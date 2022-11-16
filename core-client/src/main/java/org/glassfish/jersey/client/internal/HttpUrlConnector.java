@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -39,14 +40,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
@@ -54,6 +54,7 @@ import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -316,8 +317,9 @@ public class HttpUrlConnector implements Connector {
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
         final HttpURLConnection uc;
-
-        uc = this.connectionFactory.getConnection(request.getUri().toURL());
+        Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
+        proxy.ifPresent(clientProxy -> ClientProxy.setBasicAuthorizationHeader(request.getHeaders(), proxy.get()));
+        uc = this.connectionFactory.getConnection(request.getUri().toURL(), proxy.isPresent() ? proxy.get().proxy() : null);
         uc.setDoInput(true);
 
         final String httpMethod = request.getMethod();

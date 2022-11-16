@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,14 +19,14 @@ package org.glassfish.jersey.tests.api;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test that JAX-RS annotations are correctly inherited according to the specification.
@@ -117,11 +117,11 @@ public class AnnotationInheritanceTest extends JerseyTest {
     @Test
     public void testSuperClassPrecedence() {
         final String superClassResponse = target().path("foo/superFooHello").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("The path from the super-class annotation should be used instead of the path from interface",
-                "Hello!", superClassResponse);
+        assertEquals("Hello!", superClassResponse,
+                "The path from the super-class annotation should be used instead of the path from interface");
 
         final Response ifaceResponse = target().path("foo/fooableHello").request(MediaType.TEXT_PLAIN).get(Response.class);
-        assertEquals("The path defined in the interface annotation should not exist.", 404, ifaceResponse.getStatus());
+        assertEquals(404, ifaceResponse.getStatus(), "The path defined in the interface annotation should not exist.");
     }
 
     /**
@@ -130,8 +130,7 @@ public class AnnotationInheritanceTest extends JerseyTest {
     @Test
     public void testInterfaceAnnotationInheritance() {
         final String response = target().path("foo/fooableHi").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("The path from the super-class annotation should inherited.",
-                "Hi!", response);
+        assertEquals("Hi!", response, "The path from the super-class annotation should inherited.");
     }
 
     /**
@@ -143,8 +142,7 @@ public class AnnotationInheritanceTest extends JerseyTest {
     @Test
     public void testInheritenceFromSuperclassInterface() {
         final String response = target().path("foo/superFooableWhatsUp").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("The path from the interface of the superclass should inherited.",
-                "What's up?", response);
+        assertEquals("What's up?", response, "The path from the interface of the superclass should inherited.");
     }
 
     /**
@@ -157,11 +155,11 @@ public class AnnotationInheritanceTest extends JerseyTest {
     @Test
     public void testClassAnnotationInheritance() {
         final String superClassResponse = target().path("hyperBar/bar").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("The path from the superclass annotation should be used instead of the path from interface",
-                "bar", superClassResponse);
+        assertEquals("bar", superClassResponse,
+                "The path from the superclass annotation should be used instead of the path from interface");
 
         final Response ifaceResponse = target().path("barable/bar").request(MediaType.TEXT_PLAIN).get(Response.class);
-        assertEquals("The path defined in the interface annotation should not exist.", 404, ifaceResponse.getStatus());
+        assertEquals(404, ifaceResponse.getStatus(), "The path defined in the interface annotation should not exist.");
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,8 +31,8 @@ import javax.ws.rs.ext.WriterInterceptorContext;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that appropriate methods are called in the intercepted output stream.
@@ -99,9 +99,9 @@ public class StreamMethodCallTest extends JerseyTest {
     @Test
     public void testCalledMethods() {
         final Response response = target().path("resource").request().get();
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertTrue("close() has not been called.", TestOutputStream.closeCalled);
-        Assert.assertTrue("flush() has not been called before close().", TestOutputStream.flushCalledBeforeClose);
-        Assert.assertTrue("write() has not been called.", TestOutputStream.writeCalled);
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertTrue(TestOutputStream.closeCalled, "close() has not been called.");
+        Assertions.assertTrue(TestOutputStream.flushCalledBeforeClose, "flush() has not been called before close().");
+        Assertions.assertTrue(TestOutputStream.writeCalled, "write() has not been called.");
     }
 }

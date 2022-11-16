@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,10 +22,10 @@ import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -41,13 +41,13 @@ public class NoJAXBNoWadlTest extends JerseyTest {
     private static PrintStream errorStream;
     private static OutputStream readableStream = new ByteArrayOutputStream(800);
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         errorStream = System.err;
         System.setErr(new PrintStream(readableStream));
     }
 
-    @AfterClass
+    @AfterAll
     public static void after() {
         System.setErr(errorStream);
     }
@@ -70,13 +70,14 @@ public class NoJAXBNoWadlTest extends JerseyTest {
         final boolean shouldHaveJaxb = JdkVersion.getJdkVersion().getMajor() == 1;
 
         // Make sure the test does not have JAX-B on a classpath
-        Assert.assertFalse(ServiceFinder.find("javax.xml.bind.JAXBContext").iterator().hasNext());
+        Assertions.assertFalse(ServiceFinder.find("javax.xml.bind.JAXBContext").iterator().hasNext());
 
         try (Response r = target("dummy").request(MediaTypes.WADL_TYPE).options()) {
             String headers = r.getHeaderString(HttpHeaders.ALLOW);
-            Assert.assertEquals("OPTIONS,PUT", headers);
+            Assertions.assertEquals("OPTIONS,PUT", headers);
         }
         System.out.println(readableStream.toString());
-        Assert.assertEquals(!shouldHaveJaxb, readableStream.toString().contains(LocalizationMessages.WADL_FEATURE_DISABLED()));
+        Assertions.assertEquals(!shouldHaveJaxb,
+                readableStream.toString().contains(LocalizationMessages.WADL_FEATURE_DISABLED()));
     }
 }

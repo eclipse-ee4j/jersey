@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,11 +49,11 @@ import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Assert that pre destroy method on application, resources and providers is invoked.
@@ -68,7 +68,7 @@ public class ServerDestroyTest extends JerseyTest {
     private Reloader reloader;
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         destroyed.clear();
         destroyed.put("application", false);

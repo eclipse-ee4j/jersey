@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -62,6 +61,10 @@ public abstract class ProviderBase<
      * This header is useful on Windows, trying to deal with potential XSS attacks.
      */
     public final static String HEADER_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options";
+
+    protected final static String CLASS_NAME_NO_CONTENT_EXCEPTION = "javax.ws.rs.core.NoContentException";
+
+    private final static String NO_CONTENT_MESSAGE = "No content (empty input stream)";
 
     /**
      * Looks like we need to worry about accidental
@@ -192,9 +195,6 @@ public abstract class ProviderBase<
     protected final LRUMap<AnnotationBundleKey, EP_CONFIG> _writers
         = new LRUMap<AnnotationBundleKey, EP_CONFIG>(16, 120);
 
-    protected final AtomicReference<IOException> _noContentExceptionRef
-        = new AtomicReference<IOException>();
-
     /*
     /**********************************************************
     /* Life-cycle
@@ -207,9 +207,8 @@ public abstract class ProviderBase<
     }
 
     /**
-     * Constructor that is only added to resolve
-     * issue #10; problems with combination of
-     * RESTeasy and CDI.
+     * Constructor that is only added to resolve [jaxrs-providers#10]; problems
+     * with combination of RESTeasy and CDI.
      * Should NOT be used by any code explicitly; only exists
      * for proxy support.
      */
@@ -554,9 +553,8 @@ public abstract class ProviderBase<
             // negation: Boolean.TRUE means untouchable -> can not write
             return !customUntouchable.booleanValue();
         }
-        /* Ok: looks like we must weed out some core types here; ones that
-         * make no sense to try to bind from JSON:
-         */
+        // Ok: looks like we must weed out some core types here; ones that
+        // make no sense to try to bind from JSON:
         if (_isIgnorableForWriting(new ClassKey(type))) {
             return false;
         }
@@ -751,9 +749,8 @@ public abstract class ProviderBase<
             // negation: Boolean.TRUE means untouchable -> can not write
             return !customUntouchable.booleanValue();
         }
-        /* Ok: looks like we must weed out some core types here; ones that
-         * make no sense to try to bind from JSON:
-         */
+        // Ok: looks like we must weed out some core types here; ones that
+        // make no sense to try to bind from JSON:
         if (_isIgnorableForReading(new ClassKey(type))) {
             return false;
         }
@@ -797,14 +794,11 @@ public abstract class ProviderBase<
             if (JaxRSFeature.ALLOW_EMPTY_INPUT.enabledIn(_jaxRSFeatures)) {
                 return null;
             }
-            /* 05-Apr-2014, tatu: Trick-ee. NoContentFoundException only available in JAX-RS 2.0...
-             *   so need bit of obfuscated code to reach it.
-             */
-            IOException fail = _noContentExceptionRef.get();
-            if (fail == null) {
-                fail = _createNoContentException();
-            }
-            throw fail;
+            // 05-Apr-2014, tatu: Trick-ee. NoContentFoundException only available in JAX-RS 2.0...
+            //   so need bit of obfuscated code to reach it.
+
+            // 20-Jan-2021, tatu: as per [jaxrs-providers#134], simplify
+            throw _createNoContentException();
         }
         Class<?> rawType = type;
         if (rawType == JsonParser.class) {
@@ -990,13 +984,9 @@ public abstract class ProviderBase<
     {
         return _untouchables.contains(typeKey);
     }
-    
-    /**
-     * @since 2.4
-     */
-    protected IOException _createNoContentException()
-    {
-     return new NoContentException("No content (empty input stream)");
+
+    protected IOException _createNoContentException() {
+        return new NoContentException(NO_CONTENT_MESSAGE);
     }
 
     /*

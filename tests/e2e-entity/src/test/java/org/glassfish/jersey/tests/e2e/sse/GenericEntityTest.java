@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package org.glassfish.jersey.tests.e2e.sse;
 import java.util.Objects;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -49,8 +49,9 @@ import java.util.StringTokenizer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GenericEntityTest extends JerseyTest {
     private static final int BUFFER_SIZE = 20;
@@ -107,10 +108,12 @@ public class GenericEntityTest extends JerseyTest {
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterNull() {
-        final SseEventSource source = SseEventSource.target(target("genericentityresource/string")).build();
-        source.register(null);
+        assertThrows(IllegalArgumentException.class, () -> {
+            final SseEventSource source = SseEventSource.target(target("genericentityresource/string")).build();
+            source.register(null);
+        });
     }
 
     @Singleton

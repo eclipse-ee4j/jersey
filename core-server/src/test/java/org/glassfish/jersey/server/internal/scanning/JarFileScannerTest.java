@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,31 +24,23 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoint;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Martin Snyder
  */
-@RunWith(Theories.class)
 public class JarFileScannerTest {
-
-    @DataPoint
-    public static final boolean RECURSIVE = true;
-    @DataPoint
-    public static final boolean NON_RECURSIVE = false;
 
     private String jaxRsApiPath;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final String classPath = System.getProperty("java.class.path");
         final String[] entries = classPath.split(System.getProperty("path.separator"));
@@ -140,19 +132,21 @@ public class JarFileScannerTest {
         return scannedEntryCount;
     }
 
-    @Theory
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     public void testClassEnumerationWithNonexistentPackage(final boolean recursive) throws IOException {
         try (final InputStream jaxRsApi = new FileInputStream(this.jaxRsApiPath)) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "javax/ws/r", recursive);
-            assertFalse("Unexpectedly found package 'javax.ws.r' in javax.ws.rs-api", jarFileScanner.hasNext());
+            assertFalse(jarFileScanner.hasNext(), "Unexpectedly found package 'javax.ws.r' in javax.ws.rs-api");
         }
     }
 
-    @Theory
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     public void testClassEnumerationWithClassPrefix(final boolean recursive) throws IOException {
         try (final InputStream jaxRsApi = new FileInputStream(this.jaxRsApiPath)) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "javax/ws/rs/GE", recursive);
-            assertFalse("Unexpectedly found package 'javax.ws.rs.GE' in javax.ws.rs-api", jarFileScanner.hasNext());
+            assertFalse(jarFileScanner.hasNext(), "Unexpectedly found package 'javax.ws.rs.GE' in javax.ws.rs-api");
         }
     }
 }

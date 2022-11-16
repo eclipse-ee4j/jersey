@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +21,7 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.ws.rs.core.Context;
 import java.lang.annotation.Annotation;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,4 +61,9 @@ class CdiComponentProviderClientRuntimeSpecifics implements CdiComponentProvider
     public boolean isJaxRsResource(Class<?> resource) {
         return false;
     }
+
+    @Override
+    public void clearJaxRsResource(ClassLoader loader) {
+    }
+
 }

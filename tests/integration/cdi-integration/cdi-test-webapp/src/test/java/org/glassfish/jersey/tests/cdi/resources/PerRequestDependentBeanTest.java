@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,48 +16,29 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.ws.rs.client.WebTarget;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test for the request scoped managed bean resource.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class PerRequestDependentBeanTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"alpha"},
-                {"AAA"},
-                {"$%^"},
-                {"a b"}
-        });
+    public static Stream<String> testData() {
+        return Stream.of("alpha", "AAA", "$%^", "a b");
     }
 
-    final String x;
-
-    /**
-     * Create x new test case based on the above defined parameters.
-     *
-     * @param x query parameter value
-     */
-    public PerRequestDependentBeanTest(String x) {
-        this.x = x;
-    }
-
-    @Test
-    public void testGet() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testGet(String x) {
 
         final WebTarget target = target().path("jcdibean/dependent/per-request").queryParam("x", x);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,39 +16,38 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.json.bind.adapter.JsonbAdapter;
 
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.ColorHolder;
 import org.glassfish.jersey.tests.e2e.json.entity.Jersey1199List;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class Jersey1199Test extends AbstractJsonTest {
+public class Jersey1199Test {
 
-    @Parameterized.Parameters()
-    public static Collection<JsonTestSetup[]> generateTestCases() throws Exception {
-        final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<>();
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() throws Exception {
+        List<DynamicContainer> tests = new ArrayList<>();
         final Class<?>[] classes = {Jersey1199List.class, ColorHolder.class};
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
-            jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(classes, jsonProvider)});
+            JsonTestSetup setupTest = new JsonTestSetup(classes, jsonProvider);
+            JsonTest jsonTest = new JsonTest(setupTest) {};
+            tests.add(TestHelper.toTestContainer(jsonTest,
+                    String.format("jersey1199Test (%s)", jsonProvider.getClass().getSimpleName())));
         }
 
-        return jsonTestSetups;
-    }
-
-    public Jersey1199Test(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
+        return tests;
     }
 
     /**
