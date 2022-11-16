@@ -22,8 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.CookieParam;
@@ -130,8 +129,6 @@ public class WadlBeanParamTest extends JerseyTest {
         final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
         xp.setNamespaceContext(nsContext);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("wadl", "http://wadl.dev.java.net/2009/02");
         final Diff diff = DiffBuilder.compare(
                 nodeAsString(
                         xp.evaluate("//wadl:resource[@path='wadlBeanParamReference']/wadl:resource", d,
@@ -140,7 +137,7 @@ public class WadlBeanParamTest extends JerseyTest {
                 nodeAsString(
                         xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
                                 XPathConstants.NODE))
-        ).withNamespaceContext(map)
+        ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02"))
             /**
              * For nodes, the comparison is based on matching {@code name} attributes while ignoring
              * their order. For any other nodes, strict comparison (including ordering) is made.

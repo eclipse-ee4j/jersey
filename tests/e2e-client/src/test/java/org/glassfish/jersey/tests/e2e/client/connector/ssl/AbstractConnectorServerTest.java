@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
@@ -33,6 +33,8 @@ import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * SSL connector hostname verification tests.
@@ -90,21 +92,11 @@ public abstract class AbstractConnectorServerTest {
         final InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
         final InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);
         return SslConfigurator.newInstance()
-                    .trustStoreBytes(toBytes(trustStore))
+                .trustStoreBytes(IOUtils.toByteArray(trustStore))
                 .trustStorePassword("asdfgh")
-                    .keyStoreBytes(toBytes(keyStore))
+                .keyStoreBytes(IOUtils.toByteArray(keyStore))
                 .keyPassword("asdfgh")
                 .createSSLContext();
-    }
-
-    public static byte[] toBytes(InputStream is) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int nRead;
-        byte[] data = new byte[16384];
-        while ((nRead = is.read(data, 0, data.length)) != -1) {
-          buffer.write(data, 0, nRead);
-        }
-        return buffer.toByteArray();
     }
 
     protected String serverKeyStore() {

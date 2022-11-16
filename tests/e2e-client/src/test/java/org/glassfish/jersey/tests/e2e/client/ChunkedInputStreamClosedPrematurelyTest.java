@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +47,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
-import org.glassfish.jersey.internal.guava.SettableFuture;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -79,7 +79,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "JavaDoc"})
     public static class TestResource {
 
-        private static final ConcurrentMap<String, SettableFuture<Exception>> REQUEST_MAP = new ConcurrentHashMap<>();
+        private static final ConcurrentMap<String, CompletableFuture<Exception>> REQUEST_MAP = new ConcurrentHashMap<>();
 
         @QueryParam(REQ_ID_PARAM_NAME)
         private String reqId;
@@ -99,7 +99,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
                 thrown = ex;
             }
 
-            if (!getFutureFor(reqId).set(thrown)) {
+            if (!getFutureFor(reqId).complete(thrown)) {
                 LOGGER.log(Level.WARNING,
                         "Unable to set stream processing exception into the settable future instance for request id " + reqId,
                         thrown);
@@ -112,7 +112,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
         @GET
         public Boolean getRequestWasMade() {
             // add a new future for the request if not there yet to avoid race conditions with POST processing
-            final SettableFuture<Exception> esf = getFutureFor(reqId);
+            final CompletableFuture<Exception> esf = getFutureFor(reqId);
             try {
                 // wait for up to three second for a request to be made;
                 // there is always a value, if set...
@@ -125,7 +125,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
         @Path("/requestCausedException")
         @GET
         public Boolean getRequestCausedException() {
-            final SettableFuture<Exception> esf = getFutureFor(reqId);
+            final CompletableFuture<Exception> esf = getFutureFor(reqId);
             try {
                 return esf.get(3, TimeUnit.SECONDS) != NO_EXCEPTION;
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -133,9 +133,9 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
             }
         }
 
-        private SettableFuture<Exception> getFutureFor(String key) {
-            final SettableFuture<Exception> esf = SettableFuture.create();
-            final SettableFuture<Exception> oldEsf = REQUEST_MAP.putIfAbsent(key, esf);
+        private CompletableFuture<Exception> getFutureFor(String key) {
+            final CompletableFuture<Exception> esf = new CompletableFuture();
+            final CompletableFuture<Exception> oldEsf = REQUEST_MAP.putIfAbsent(key, esf);
             return (oldEsf != null) ? oldEsf : esf;
         }
     }

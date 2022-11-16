@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.tests.integration.jersey2176;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
@@ -44,6 +45,16 @@ public class TraceResponseWrapper extends HttpServletResponseWrapper {
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
         return new ServletOutputStream() {
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+
+            }
+
             @Override
             public void write(final int b) throws IOException {
                 localStream.write(b);

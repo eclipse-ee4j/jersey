@@ -80,7 +80,7 @@
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>
                         <artifactId>surefire-junit47</artifactId>
-                        <version>${surefire.version}</version>
+                        <version>${surefire.mvn.plugin.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -292,11 +292,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml</groupId>
             <artifactId>classmate</artifactId>
             <scope>test</scope>
@@ -396,13 +391,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <profiles>

@@ -27,6 +27,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1265,8 +1266,7 @@ public class WadlResourceTest {
             final XPath xp = XPathFactory.newInstance().newXPath();
             final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
             xp.setNamespaceContext(nsContext);
-            Map<String, String> map = new HashMap<>();
-            map.put("wadl", "http://wadl.dev.java.net/2009/02");
+
             final Diff diff = DiffBuilder.compare(
                     nodeAsString(
                             xp.evaluate("//wadl:resource[@path='annotated']/wadl:resource", document,
@@ -1275,7 +1275,7 @@ public class WadlResourceTest {
                     nodeAsString(
                             xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
                                     XPathConstants.NODE))
-            ).withNamespaceContext(map).build();
+            ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02")).build();
             Assertions.assertFalse(diff.hasDifferences());
 
         }

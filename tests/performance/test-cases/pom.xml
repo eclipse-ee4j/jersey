@@ -75,7 +75,7 @@
                             <phase>package</phase>
                             <!-- append to the packaging phase. -->
                             <goals>
-                                <goal>attached</goal>
+                                <goal>single</goal>
                                 <!-- goals == mojos -->
                             </goals>
                             <configuration>
