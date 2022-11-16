@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,10 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-
 package org.glassfish.jersey.tests.e2e.server;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,7 +25,7 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Issue4780Resource1Test extends JerseyTest {
 
@@ -34,8 +33,7 @@ public class Issue4780Resource1Test extends JerseyTest {
     @Test
     public void resource1() throws Exception {
         Response response = target().path("/resource1").request().get();
-        response.bufferEntity();
-        assertEquals(response.readEntity(String.class), 200, response.getStatus());
+        assertEquals(200, response.getStatus());
     }
 
     @Override
