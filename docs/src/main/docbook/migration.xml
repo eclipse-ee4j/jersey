@@ -36,7 +36,7 @@
                 <itemizedlist>
                     <listitem>
                         <para>
-                            The most fundamental change in Jersey &version; and later is namespace change.
+                            The most fundamental change in Jersey 3.0.0 and later is namespace change.
                             Since Jakarta EE 9 the <literal>jakarta.</literal> namespace is introduced as a replacement
                             for javax namespace from Java EE.
                         </para>
@@ -45,14 +45,14 @@
                             Or require higher JDK (11+).
                         </para>
                         <para>
-                            Spring for now is not supported.
-                        </para>
-                        <para>
-                            Helidon connector for now is not supported.
-                        </para>
-                        <para>
                             Examples and tests are reduced in quantity (so you probably will not find all those examples which were available
                             in the 2.32 version).
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            &jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE; is by default
+                            <literal>true</literal>.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -94,12 +94,6 @@
                             Jersey 3.1.0+ is the implementation of Jakarta RESTful WebServices 3.1, which is part of
                             Jakarta EE 10. Jakarta EE 10 defines the minimum JDK 11 requirement and hence Jersey no longer
                             supports JDK 8.
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>
-                            &jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE; is by default
-                            <literal>true</literal>.
                         </para>
                     </listitem>
                     <listitem>
