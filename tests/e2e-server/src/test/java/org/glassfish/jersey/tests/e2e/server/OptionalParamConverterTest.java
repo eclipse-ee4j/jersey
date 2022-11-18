@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -23,7 +26,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -32,19 +35,29 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
-
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 public class OptionalParamConverterTest extends JerseyTest {
 
     private static final String PARAM_NAME = "paramName";
+
+    @Path("/IntegerResource")
+    public static class IntegerResource {
+        @GET
+        @Path("/fromInteger")
+        public Response fromInteger(@QueryParam(PARAM_NAME) Integer data) {
+            return Response.ok(0).build();
+        }
+        @GET
+        @Path("/fromIntegerNotNull")
+        public Response fromIntegerNotNull(@NotNull @QueryParam(PARAM_NAME) Integer data) {
+            return Response.ok(0).build();
+        }
+    }
 
     @Path("/OptionalResource")
     public static class OptionalResource {
@@ -58,6 +71,12 @@ public class OptionalParamConverterTest extends JerseyTest {
         @GET
         @Path("/fromInteger")
         public Response fromInteger(@QueryParam(PARAM_NAME) Optional<Integer> data) {
+            return Response.ok(data.orElse(0)).build();
+        }
+
+        @GET
+        @Path("/fromIntegerNotNull")
+        public Response fromIntegerNotNull(@NotNull @QueryParam(PARAM_NAME) Optional<Integer> data) {
             return Response.ok(data.orElse(0)).build();
         }
 
@@ -118,7 +137,7 @@ public class OptionalParamConverterTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(OptionalResource.class, InstantParamConverterProvider.class);
+        return new ResourceConfig(OptionalResource.class, IntegerResource.class, InstantParamConverterProvider.class);
     }
 
     @Test
@@ -137,6 +156,7 @@ public class OptionalParamConverterTest extends JerseyTest {
         Response empty = target("/OptionalResource/fromInteger").queryParam(PARAM_NAME, "").request().get();
         Response notEmpty = target("/OptionalResource/fromInteger").queryParam(PARAM_NAME, 1).request().get();
         Response invalid = target("/OptionalResource/fromInteger").queryParam(PARAM_NAME, "invalid").request().get();
+        Response missingNotNull = target("/OptionalResource/fromIntegerNotNull").request().get();
         assertEquals(200, missing.getStatus());
         assertEquals(Integer.valueOf(0), missing.readEntity(Integer.class));
         assertEquals(200, empty.getStatus());
@@ -145,6 +165,17 @@ public class OptionalParamConverterTest extends JerseyTest {
         assertEquals(Integer.valueOf(1), notEmpty.readEntity(Integer.class));
         assertEquals(404, invalid.getStatus());
         assertFalse(invalid.hasEntity());
+        assertEquals(200, missingNotNull.getStatus());
+        assertEquals(Integer.valueOf(0), missingNotNull.readEntity(Integer.class));
+    }
+
+    @Test
+    public void fromInteger() {
+        Response missing = target("/IntegerResource/fromInteger").request().get();
+        Response missingNotNull = target("/IntegerResource/fromIntegerNotNull").request().get();
+        assertEquals(200, missing.getStatus());
+        assertEquals(Integer.valueOf(0), missing.readEntity(Integer.class));
+        assertEquals(400, missingNotNull.getStatus());
     }
 
     @Test
