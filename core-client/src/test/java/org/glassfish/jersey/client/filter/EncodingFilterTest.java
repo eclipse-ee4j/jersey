@@ -39,6 +39,7 @@ import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.message.BrotliEncoder;
 import org.glassfish.jersey.message.DeflateEncoder;
 import org.glassfish.jersey.message.GZipEncoder;
 
@@ -60,11 +61,12 @@ public class EncodingFilterTest {
         Client client = ClientBuilder.newClient(new ClientConfig(
                 EncodingFilter.class,
                 GZipEncoder.class,
+                BrotliEncoder.class,
                 DeflateEncoder.class
         ).connectorProvider(new TestConnector()));
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.get();
-        assertEquals("deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
+        assertEquals("br,deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
         assertNull(r.getHeaderString(CONTENT_ENCODING));
     }
 
@@ -73,11 +75,12 @@ public class EncodingFilterTest {
         Client client = ClientBuilder.newClient(new ClientConfig(
                 EncodingFilter.class,
                 GZipEncoder.class,
+                BrotliEncoder.class,
                 DeflateEncoder.class
         ).property(ClientProperties.USE_ENCODING, "gzip").connectorProvider(new TestConnector()));
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.post(Entity.entity("Hello world", MediaType.TEXT_PLAIN_TYPE));
-        assertEquals("deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
+        assertEquals("br,deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
         assertEquals("gzip", r.getHeaderString(CONTENT_ENCODING));
     }
 
@@ -85,10 +88,10 @@ public class EncodingFilterTest {
     public void testContentEncodingViaFeature() {
         Client client = ClientBuilder.newClient(new ClientConfig()
                 .connectorProvider(new TestConnector())
-                .register(new EncodingFeature("gzip", GZipEncoder.class, DeflateEncoder.class)));
+                .register(new EncodingFeature("gzip", GZipEncoder.class, BrotliEncoder.class, DeflateEncoder.class)));
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.post(Entity.entity("Hello world", MediaType.TEXT_PLAIN_TYPE));
-        assertEquals("deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
+        assertEquals("br,deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
         assertEquals("gzip", r.getHeaderString(CONTENT_ENCODING));
     }
 
@@ -97,11 +100,12 @@ public class EncodingFilterTest {
         Client client = ClientBuilder.newClient(new ClientConfig(
                 EncodingFilter.class,
                 GZipEncoder.class,
+                BrotliEncoder.class,
                 DeflateEncoder.class
         ).property(ClientProperties.USE_ENCODING, "gzip").connectorProvider(new TestConnector()));
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.get();
-        assertEquals("deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
+        assertEquals("br,deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
         assertNull(r.getHeaderString(CONTENT_ENCODING));
     }
 
@@ -110,11 +114,12 @@ public class EncodingFilterTest {
         Client client = ClientBuilder.newClient(new ClientConfig(
                 EncodingFilter.class,
                 GZipEncoder.class,
+                BrotliEncoder.class,
                 DeflateEncoder.class
         ).property(ClientProperties.USE_ENCODING, "non-gzip").connectorProvider(new TestConnector()));
         Invocation.Builder invBuilder = client.target(UriBuilder.fromUri("/").build()).request();
         Response r = invBuilder.get();
-        assertEquals("deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
+        assertEquals("br,deflate,gzip,x-gzip", r.getHeaderString(ACCEPT_ENCODING));
         assertNull(r.getHeaderString(CONTENT_ENCODING));
     }
 

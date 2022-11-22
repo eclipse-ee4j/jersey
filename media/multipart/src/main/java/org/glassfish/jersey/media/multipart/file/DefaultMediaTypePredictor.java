@@ -49,6 +49,7 @@ public class DefaultMediaTypePredictor implements MediaTypePredictor {
      *   <li>".tar" - application/x-tar</li>
      *   <li>".zip" - application/zip</li>
      *   <li>".gz" - application/x-gzip</li>
+     *   <li>".br" - application/br</li>
      *   <li>".rar" - application/x-rar</li>
      *   <li>".mp3" - audio/mpeg</li>
      *   <li>".wav" - audio/x-wave</li>
@@ -70,6 +71,7 @@ public class DefaultMediaTypePredictor implements MediaTypePredictor {
         TAR(".tar", new MediaType("application", "x-tar")),
         ZIP(".zip", new MediaType("application", "zip")),
         GZ(".gz", new MediaType("application", "x-gzip")),
+        BR("br", new MediaType("application", "br")),
         RAR(".rar", new MediaType("application", "x-rar")),
         MP3(".mp3", new MediaType("audio", "mpeg")),
         WAV(".wav", new MediaType("audio", "x-wave")),
