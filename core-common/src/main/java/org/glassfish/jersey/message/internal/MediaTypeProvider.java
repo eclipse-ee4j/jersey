@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.util.collection.LRU;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
 import static org.glassfish.jersey.message.internal.Utils.throwIllegalArgumentExceptionIfNull;
 
@@ -39,6 +40,8 @@ public class MediaTypeProvider implements HeaderDelegateProvider<MediaType> {
 
     private static final String MEDIA_TYPE_IS_NULL = LocalizationMessages.MEDIA_TYPE_IS_NULL();
 
+    private static final LRU<String, MediaType> FROM_STRING = LRU.create();
+    private static final LRU<MediaType, String> TO_STRING = LRU.create();
     @Override
     public boolean supports(Class<?> type) {
         return MediaType.class.isAssignableFrom(type);
@@ -49,13 +52,25 @@ public class MediaTypeProvider implements HeaderDelegateProvider<MediaType> {
 
         throwIllegalArgumentExceptionIfNull(header, MEDIA_TYPE_IS_NULL);
 
-        StringBuilder b = new StringBuilder();
-        b.append(header.getType()).append('/').append(header.getSubtype());
-        for (Map.Entry<String, String> e : header.getParameters().entrySet()) {
-            b.append(";").append(e.getKey()).append('=');
-            StringBuilderUtils.appendQuotedIfNonToken(b, e.getValue());
+        String cached = TO_STRING.getIfPresent(header);
+
+        if (cached == null) {
+            synchronized (TO_STRING) {
+                cached = TO_STRING.getIfPresent(header);
+                if (cached == null) {
+                    StringBuilder b = new StringBuilder();
+                    b.append(header.getType()).append('/').append(header.getSubtype());
+                    for (Map.Entry<String, String> e : header.getParameters().entrySet()) {
+                        b.append(";").append(e.getKey()).append('=');
+                        StringBuilderUtils.appendQuotedIfNonToken(b, e.getValue());
+                    }
+
+                    cached = b.toString();
+                    TO_STRING.put(header, cached);
+                }
+            }
         }
-        return b.toString();
+        return cached;
     }
 
     @Override
@@ -63,12 +78,23 @@ public class MediaTypeProvider implements HeaderDelegateProvider<MediaType> {
 
         throwIllegalArgumentExceptionIfNull(header, MEDIA_TYPE_IS_NULL);
 
-        try {
-            return valueOf(HttpHeaderReader.newInstance(header));
-        } catch (ParseException ex) {
-            throw new IllegalArgumentException(
-                    "Error parsing media type '" + header + "'", ex);
+        MediaType cached = FROM_STRING.getIfPresent(header);
+
+        if (cached == null) {
+            synchronized (FROM_STRING) {
+                cached = FROM_STRING.getIfPresent(header);
+                if (cached == null) {
+                    try {
+                        cached = valueOf(HttpHeaderReader.newInstance(header));
+                    } catch (ParseException ex) {
+                        throw new IllegalArgumentException("Error parsing media type '" + header + "'", ex);
+                    }
+                    FROM_STRING.put(header, cached);
+                }
+            }
         }
+
+        return cached;
     }
 
     /**
