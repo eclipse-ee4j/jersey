@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.core.AbstractMultivaluedMap;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.RuntimeDelegate;
@@ -101,19 +102,19 @@ public class HeaderUtilsTest {
 
     @Test
     public void testAsString() throws Exception {
-        assertNull(HeaderUtils.asString(null, null));
+        assertNull(HeaderUtils.asString(null, (Configuration) null));
 
         final String value = "value";
-        assertSame(value, HeaderUtils.asString(value, null));
+        assertSame(value, HeaderUtils.asString(value, (Configuration) null));
 
         final URI uri = new URI("test");
-        assertEquals(uri.toASCIIString(), HeaderUtils.asString(uri, null));
+        assertEquals(uri.toASCIIString(), HeaderUtils.asString(uri, (Configuration) null));
     }
 
     @Test
     public void testAsStringList() throws Exception {
-        assertNotNull(HeaderUtils.asStringList(null, null));
-        assertTrue(HeaderUtils.asStringList(null, null).isEmpty());
+        assertNotNull(HeaderUtils.asStringList(null, (Configuration) null));
+        assertTrue(HeaderUtils.asStringList(null, (Configuration) null).isEmpty());
 
         final URI uri = new URI("test");
         final List<Object> values = new LinkedList<Object>() {{
@@ -123,7 +124,7 @@ public class HeaderUtilsTest {
         }};
 
         // test string values
-        final List<String> stringList = HeaderUtils.asStringList(values, null);
+        final List<String> stringList = HeaderUtils.asStringList(values, (Configuration) null);
         assertEquals(Arrays.asList("value", "[null]", uri.toASCIIString()),
                      stringList);
 
@@ -138,7 +139,7 @@ public class HeaderUtilsTest {
 
     @Test
     public void testAsStringHeaders() throws Exception {
-        assertNull(HeaderUtils.asStringHeaders(null, null));
+        assertNull(HeaderUtils.asStringHeaders(null, (Configuration) null));
 
         final AbstractMultivaluedMap<String, Object> headers = HeaderUtils.createOutbound();
 
@@ -150,7 +151,7 @@ public class HeaderUtilsTest {
 
         headers.putSingle("k3", "value3");
 
-        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers, null);
+        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers, (Configuration) null);
 
         // test string values
         assertEquals(Arrays.asList("value", "value2"),

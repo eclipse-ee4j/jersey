@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -247,7 +248,7 @@ public class ResponseTest {
         }
 
         MultivaluedMap<String, String> mvp = HeaderUtils.asStringHeaders(
-                resp.getMetadata(), null);
+                resp.getMetadata(), (Configuration) null);
 
         for (String key : mvp.keySet()) {
             sb.append(indent + "Processing Key found in response: ").append(key).append(": ").append(mvp.get(key)).append("; ")
