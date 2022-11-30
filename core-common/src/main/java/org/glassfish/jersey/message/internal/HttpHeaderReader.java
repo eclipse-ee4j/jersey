@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Set;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
+import org.glassfish.jersey.internal.util.collection.LRU;
 
 /**
  * An abstract pull-based reader of HTTP headers.
@@ -371,61 +373,25 @@ public abstract class HttpHeaderReader {
         return l;
     }
 
-    private static final ListElementCreator<MediaType> MEDIA_TYPE_CREATOR =
-            new ListElementCreator<MediaType>() {
-
-                @Override
-                public MediaType create(HttpHeaderReader reader) throws ParseException {
-                    return MediaTypeProvider.valueOf(reader);
-                }
-            };
-
     /**
      * TODO javadoc.
      */
     public static List<MediaType> readMediaTypes(List<MediaType> l, String header) throws ParseException {
-        return HttpHeaderReader.readList(
-                l,
-                MEDIA_TYPE_CREATOR,
-                header);
+        return MEDIA_TYPE_LIST_READER.readList(l, header);
     }
-
-    private static final ListElementCreator<AcceptableMediaType> ACCEPTABLE_MEDIA_TYPE_CREATOR =
-            new ListElementCreator<AcceptableMediaType>() {
-
-                @Override
-                public AcceptableMediaType create(HttpHeaderReader reader) throws ParseException {
-                    return AcceptableMediaType.valueOf(reader);
-                }
-            };
 
     /**
      * TODO javadoc.
      */
     public static List<AcceptableMediaType> readAcceptMediaType(String header) throws ParseException {
-        return HttpHeaderReader.readQualifiedList(
-                AcceptableMediaType.COMPARATOR,
-                ACCEPTABLE_MEDIA_TYPE_CREATOR,
-                header);
+        return ACCEPTABLE_MEDIA_TYPE_LIST_READER.readList(header);
     }
-
-    private static final ListElementCreator<QualitySourceMediaType> QUALITY_SOURCE_MEDIA_TYPE_CREATOR =
-            new ListElementCreator<QualitySourceMediaType>() {
-
-                @Override
-                public QualitySourceMediaType create(HttpHeaderReader reader) throws ParseException {
-                    return QualitySourceMediaType.valueOf(reader);
-                }
-            };
 
     /**
      * FIXME use somewhere in production code or remove.
      */
     public static List<QualitySourceMediaType> readQualitySourceMediaType(String header) throws ParseException {
-        return HttpHeaderReader.readQualifiedList(
-                QualitySourceMediaType.COMPARATOR,
-                QUALITY_SOURCE_MEDIA_TYPE_CREATOR,
-                header);
+        return QUALITY_SOURCE_MEDIA_TYPE_LIST_READER.readList(header);
     }
 
     /**
@@ -454,121 +420,246 @@ public abstract class HttpHeaderReader {
     public static List<AcceptableMediaType> readAcceptMediaType(
             final String header, final List<QualitySourceMediaType> priorityMediaTypes) throws ParseException {
 
-        return HttpHeaderReader.readQualifiedList(
-                new Comparator<AcceptableMediaType>() {
-
-                    @Override
-                    public int compare(AcceptableMediaType o1, AcceptableMediaType o2) {
-                        // FIXME what is going on here?
-                        boolean q_o1_set = false;
-                        int q_o1 = 0;
-                        boolean q_o2_set = false;
-                        int q_o2 = 0;
-                        for (QualitySourceMediaType priorityType : priorityMediaTypes) {
-                            if (!q_o1_set && MediaTypes.typeEqual(o1, priorityType)) {
-                                q_o1 = o1.getQuality() * priorityType.getQuality();
-                                q_o1_set = true;
-                            } else if (!q_o2_set && MediaTypes.typeEqual(o2, priorityType)) {
-                                q_o2 = o2.getQuality() * priorityType.getQuality();
-                                q_o2_set = true;
-                            }
-                        }
-                        int i = q_o2 - q_o1;
-                        if (i != 0) {
-                            return i;
-                        }
-
-                        i = o2.getQuality() - o1.getQuality();
-                        if (i != 0) {
-                            return i;
-                        }
-
-                        return MediaTypes.PARTIAL_ORDER_COMPARATOR.compare(o1, o2);
-                    }
-                },
-                ACCEPTABLE_MEDIA_TYPE_CREATOR,
-                header);
+        return new AcceptMediaTypeListReader(priorityMediaTypes).readList(header);
     }
-    private static final ListElementCreator<AcceptableToken> ACCEPTABLE_TOKEN_CREATOR =
-            new ListElementCreator<AcceptableToken>() {
-
-                @Override
-                public AcceptableToken create(HttpHeaderReader reader) throws ParseException {
-                    return new AcceptableToken(reader);
-                }
-            };
 
     /**
      * TODO javadoc.
      */
     public static List<AcceptableToken> readAcceptToken(String header) throws ParseException {
-        return HttpHeaderReader.readQualifiedList(ACCEPTABLE_TOKEN_CREATOR, header);
+        return ACCEPTABLE_TOKEN_LIST_READER.readList(header);
     }
-
-    private static final ListElementCreator<AcceptableLanguageTag> LANGUAGE_CREATOR =
-            new ListElementCreator<AcceptableLanguageTag>() {
-
-                @Override
-                public AcceptableLanguageTag create(HttpHeaderReader reader) throws ParseException {
-                    return new AcceptableLanguageTag(reader);
-                }
-            };
 
     /**
      * TODO javadoc.
      */
     public static List<AcceptableLanguageTag> readAcceptLanguage(String header) throws ParseException {
-        return HttpHeaderReader.readQualifiedList(LANGUAGE_CREATOR, header);
-    }
-
-    private static <T extends Qualified> List<T> readQualifiedList(ListElementCreator<T> c, String header)
-            throws ParseException {
-
-        List<T> l = readList(c, header);
-        Collections.sort(l, Quality.QUALIFIED_COMPARATOR);
-        return l;
-    }
-
-    private static <T> List<T> readQualifiedList(final Comparator<T> comparator, ListElementCreator<T> c, String header)
-            throws ParseException {
-
-        List<T> l = readList(c, header);
-        Collections.sort(l, comparator);
-        return l;
+        return ACCEPTABLE_LANGUAGE_TAG_LIST_READER.readList(header);
     }
 
     /**
      * TODO javadoc.
      */
     public static List<String> readStringList(String header) throws ParseException {
-        return readList(new ListElementCreator<String>() {
+        return STRING_LIST_READER.readList(header);
+    }
 
+    private static final MediaTypeListReader MEDIA_TYPE_LIST_READER = new MediaTypeListReader();
+    private static final AcceptableMediaTypeListReader ACCEPTABLE_MEDIA_TYPE_LIST_READER = new AcceptableMediaTypeListReader();
+    private static final QualitySourceMediaTypeListReader QUALITY_SOURCE_MEDIA_TYPE_LIST_READER =
+            new QualitySourceMediaTypeListReader();
+    private static final AcceptableTokenListReader ACCEPTABLE_TOKEN_LIST_READER = new AcceptableTokenListReader();
+    private static final AcceptableLanguageTagListReader ACCEPTABLE_LANGUAGE_TAG_LIST_READER =
+            new AcceptableLanguageTagListReader();
+    private static final StringListReader STRING_LIST_READER = new StringListReader();
+
+    private static class MediaTypeListReader extends ListReader<MediaType> {
+        private static final ListElementCreator<MediaType> MEDIA_TYPE_CREATOR =
+                new ListElementCreator<MediaType>() {
+
+                    @Override
+                    public MediaType create(HttpHeaderReader reader) throws ParseException {
+                        return MediaTypeProvider.valueOf(reader);
+                    }
+                };
+
+        List<MediaType> readList(List<MediaType> l, final String header) throws ParseException {
+            return super.readList(l, header);
+        }
+
+        private MediaTypeListReader() {
+            super(MEDIA_TYPE_CREATOR);
+        }
+    }
+
+    private static class AcceptableMediaTypeListReader extends QualifiedListReader<AcceptableMediaType> {
+        private static final ListElementCreator<AcceptableMediaType> ACCEPTABLE_MEDIA_TYPE_CREATOR =
+                new ListElementCreator<AcceptableMediaType>() {
+
+                    @Override
+                    public AcceptableMediaType create(HttpHeaderReader reader) throws ParseException {
+                        return AcceptableMediaType.valueOf(reader);
+                    }
+                };
+        private AcceptableMediaTypeListReader() {
+            super(ACCEPTABLE_MEDIA_TYPE_CREATOR, AcceptableMediaType.COMPARATOR);
+        }
+    }
+    /*
+     * TODO not used in production?
+     */
+    private static class QualitySourceMediaTypeListReader extends QualifiedListReader<QualitySourceMediaType> {
+        private static final ListElementCreator<QualitySourceMediaType> QUALITY_SOURCE_MEDIA_TYPE_CREATOR =
+                new ListElementCreator<QualitySourceMediaType>() {
+
+                    @Override
+                    public QualitySourceMediaType create(HttpHeaderReader reader) throws ParseException {
+                        return QualitySourceMediaType.valueOf(reader);
+                    }
+                };
+        private QualitySourceMediaTypeListReader() {
+            super(QUALITY_SOURCE_MEDIA_TYPE_CREATOR, QualitySourceMediaType.COMPARATOR);
+        }
+    }
+
+    /*
+     * TODO this is used in tests only
+     */
+    private static class AcceptMediaTypeListReader extends QualifiedListReader<AcceptableMediaType> {
+        AcceptMediaTypeListReader(List<QualitySourceMediaType> priorityMediaTypes) {
+            super(ACCEPTABLE_MEDIA_TYPE_CREATOR, new AcceptableMediaTypeComparator(priorityMediaTypes));
+        }
+
+        private static final ListElementCreator<AcceptableMediaType> ACCEPTABLE_MEDIA_TYPE_CREATOR =
+                new ListElementCreator<AcceptableMediaType>() {
+
+                    @Override
+                    public AcceptableMediaType create(HttpHeaderReader reader) throws ParseException {
+                        return AcceptableMediaType.valueOf(reader);
+                    }
+                };
+
+        private static class AcceptableMediaTypeComparator implements Comparator<AcceptableMediaType> {
+            private final List<QualitySourceMediaType> priorityMediaTypes;
+
+            private AcceptableMediaTypeComparator(List<QualitySourceMediaType> priorityMediaTypes) {
+                this.priorityMediaTypes = priorityMediaTypes;
+            }
+
+            @Override
+            public int compare(AcceptableMediaType o1, AcceptableMediaType o2) {
+                // FIXME what is going on here?
+                boolean q_o1_set = false;
+                int q_o1 = 0;
+                boolean q_o2_set = false;
+                int q_o2 = 0;
+                for (QualitySourceMediaType priorityType : priorityMediaTypes) {
+                    if (!q_o1_set && MediaTypes.typeEqual(o1, priorityType)) {
+                        q_o1 = o1.getQuality() * priorityType.getQuality();
+                        q_o1_set = true;
+                    } else if (!q_o2_set && MediaTypes.typeEqual(o2, priorityType)) {
+                        q_o2 = o2.getQuality() * priorityType.getQuality();
+                        q_o2_set = true;
+                    }
+                }
+                int i = q_o2 - q_o1;
+                if (i != 0) {
+                    return i;
+                }
+
+                i = o2.getQuality() - o1.getQuality();
+                if (i != 0) {
+                    return i;
+                }
+
+                return MediaTypes.PARTIAL_ORDER_COMPARATOR.compare(o1, o2);
+            }
+        };
+
+
+    }
+
+    private static class AcceptableTokenListReader extends QualifiedListReader<AcceptableToken> {
+        private static final ListElementCreator<AcceptableToken> ACCEPTABLE_TOKEN_CREATOR =
+                new ListElementCreator<AcceptableToken>() {
+
+                    @Override
+                    public AcceptableToken create(HttpHeaderReader reader) throws ParseException {
+                        return new AcceptableToken(reader);
+                    }
+                };
+        private AcceptableTokenListReader() {
+            super(ACCEPTABLE_TOKEN_CREATOR);
+        }
+    }
+
+    private static class AcceptableLanguageTagListReader extends QualifiedListReader<AcceptableLanguageTag> {
+        private static final ListElementCreator<AcceptableLanguageTag> LANGUAGE_CREATOR =
+                new ListElementCreator<AcceptableLanguageTag>() {
+
+                    @Override
+                    public AcceptableLanguageTag create(HttpHeaderReader reader) throws ParseException {
+                        return new AcceptableLanguageTag(reader);
+                    }
+                };
+        private AcceptableLanguageTagListReader() {
+            super(LANGUAGE_CREATOR);
+        }
+    }
+
+    private abstract static class QualifiedListReader<T extends Qualified> extends ListReader<T> {
+        @Override
+        public List<T> readList(String header) throws ParseException {
+            List<T> l = super.readList(header);
+            Collections.sort(l, comparator);
+            return l;
+        }
+
+        private final Comparator<T> comparator;
+        private QualifiedListReader(ListElementCreator<T> creator) {
+            this(creator, (Comparator<T>) Quality.QUALIFIED_COMPARATOR);
+        }
+
+        protected QualifiedListReader(ListElementCreator<T> creator, Comparator<T> comparator) {
+            super(creator);
+            this.comparator = comparator;
+        }
+    }
+
+    private static class StringListReader extends ListReader<String> {
+        private static final ListElementCreator<String> listElementCreator = new ListElementCreator<String>() {
             @Override
             public String create(HttpHeaderReader reader) throws ParseException {
                 reader.hasNext();
                 return reader.nextToken().toString();
             }
-        }, header);
+        };
+
+        private StringListReader() {
+            super(listElementCreator);
+        }
     }
 
-    private static <T> List<T> readList(final ListElementCreator<T> c, final String header) throws ParseException {
-        return readList(new ArrayList<T>(), c, header);
-    }
+    private abstract static class ListReader<T> {
+        private final LRU<String, List<T>> LIST_CACHE = LRU.create();
+        protected final ListElementCreator<T> creator;
 
-    private static <T> List<T> readList(final List<T> l, final ListElementCreator<T> c, final String header)
-            throws ParseException {
-
-        HttpHeaderReader reader = new HttpHeaderReaderImpl(header);
-        HttpHeaderListAdapter adapter = new HttpHeaderListAdapter(reader);
-
-        while (reader.hasNext()) {
-            l.add(c.create(adapter));
-            adapter.reset();
-            if (reader.hasNext()) {
-                reader.next();
-            }
+        protected ListReader(ListElementCreator<T> creator) {
+            this.creator = creator;
         }
 
-        return l;
+        protected List<T> readList(final String header) throws ParseException {
+            return readList(new ArrayList<T>(), header);
+        }
+
+        private List<T> readList(final List<T> l, final String header)
+                throws ParseException {
+
+//            List<T> list = null;
+            List<T> list = LIST_CACHE.getIfPresent(header);
+
+            if (list == null) {
+                synchronized (LIST_CACHE) {
+                    list = LIST_CACHE.getIfPresent(header);
+                    if (list == null) {
+                        HttpHeaderReader reader = new HttpHeaderReaderImpl(header);
+                        HttpHeaderListAdapter adapter = new HttpHeaderListAdapter(reader);
+                        list = new LinkedList<>();
+
+                        while (reader.hasNext()) {
+                            list.add(creator.create(adapter));
+                            adapter.reset();
+                            if (reader.hasNext()) {
+                                reader.next();
+                            }
+                        }
+                        LIST_CACHE.put(header, list);
+                    }
+                }
+            }
+
+            l.addAll(list);
+            return l;
+        }
     }
 }

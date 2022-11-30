@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.header;
 
+
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -36,6 +37,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -155,7 +157,7 @@ public class HeaderDelegateProviderTest {
     public void testHeaderDelegateIsUsedWhenRuntimeDelegateDecoratorIsUsed() {
         MultivaluedHashMap headers = new MultivaluedHashMap();
         headers.put(HEADER_NAME, Arrays.asList(new BeanForHeaderDelegateProviderTest()));
-        MultivaluedMap<String, String> converted = HeaderUtils.asStringHeaders(headers, null);
+        MultivaluedMap<String, String> converted = HeaderUtils.asStringHeaders(headers, (Configuration) null);
         testMap(converted, BeanForHeaderDelegateProviderTest.getValue());
 
         Client client = ClientBuilder.newClient().property(CommonProperties.METAINF_SERVICES_LOOKUP_DISABLE, false);

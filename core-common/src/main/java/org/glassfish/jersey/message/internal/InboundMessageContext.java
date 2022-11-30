@@ -50,11 +50,16 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.ext.ReaderInterceptor;
 
+import javax.ws.rs.ext.RuntimeDelegate;
 import javax.xml.transform.Source;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
+import org.glassfish.jersey.internal.util.collection.GuardianStringKeyMultivaluedMap;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 /**
@@ -90,11 +95,14 @@ public abstract class InboundMessageContext {
     private static final List<AcceptableMediaType> WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST =
             Collections.singletonList(MediaTypes.WILDCARD_ACCEPTABLE_TYPE);
 
-    private final MultivaluedMap<String, String> headers;
+    private final GuardianStringKeyMultivaluedMap<String> headers;
     private final EntityContent entityContent;
     private final boolean translateNce;
     private MessageBodyWorkers workers;
     private final Configuration configuration;
+    private final RuntimeDelegate runtimeDelegateDecorator;
+    private LazyValue<MediaType> contentTypeCache;
+    private LazyValue<List<AcceptableMediaType>> acceptTypeCache;
 
     /**
      * Input stream and its state. State is represented by the {@link Type Type enum} and
@@ -158,10 +166,16 @@ public abstract class InboundMessageContext {
      *                      as required by JAX-RS specification on the server side.
      */
     public InboundMessageContext(Configuration configuration, boolean translateNce) {
-        this.headers = HeaderUtils.createInbound();
+        this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createInbound());
         this.entityContent = new EntityContent();
         this.translateNce = translateNce;
         this.configuration = configuration;
+        runtimeDelegateDecorator = RuntimeDelegateDecorator.configured(configuration);
+
+        contentTypeCache = contentTypeCache();
+        acceptTypeCache = acceptTypeCache();
+        headers.setGuard(HttpHeaders.CONTENT_TYPE);
+        headers.setGuard(HttpHeaders.ACCEPT);
     }
 
     /**
@@ -196,7 +210,7 @@ public abstract class InboundMessageContext {
      * @return updated context.
      */
     public InboundMessageContext header(String name, Object value) {
-        getHeaders().add(name, HeaderUtils.asString(value, configuration));
+        getHeaders().add(name, HeaderUtils.asString(value, runtimeDelegateDecorator));
         return this;
     }
 
@@ -208,7 +222,7 @@ public abstract class InboundMessageContext {
      * @return updated context.
      */
     public InboundMessageContext headers(String name, Object... values) {
-        this.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), configuration));
+        this.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), runtimeDelegateDecorator));
         return this;
     }
 
@@ -265,7 +279,7 @@ public abstract class InboundMessageContext {
         final LinkedList<String> linkedList = new LinkedList<String>();
 
         for (Object element : values) {
-            linkedList.add(HeaderUtils.asString(element, configuration));
+            linkedList.add(HeaderUtils.asString(element, runtimeDelegateDecorator));
         }
 
         return linkedList;
@@ -332,7 +346,7 @@ public abstract class InboundMessageContext {
         }
 
         try {
-            return converter.apply(HeaderUtils.asString(value, configuration));
+            return converter.apply(HeaderUtils.asString(value, runtimeDelegateDecorator));
         } catch (ProcessingException ex) {
             throw exception(name, value, ex);
         }
@@ -447,18 +461,26 @@ public abstract class InboundMessageContext {
      * message entity).
      */
     public MediaType getMediaType() {
-        return singleHeader(HttpHeaders.CONTENT_TYPE, new Function<String, MediaType>() {
-            @Override
-            public MediaType apply(String input) {
-                try {
-                    return RuntimeDelegateDecorator.configured(configuration)
-                            .createHeaderDelegate(MediaType.class)
-                            .fromString(input);
-                } catch (IllegalArgumentException iae) {
-                    throw new ProcessingException(iae);
-                }
-            }
-        }, false);
+        if (headers.isObservedAndReset(HttpHeaders.CONTENT_TYPE) && contentTypeCache.isInitialized()) {
+            contentTypeCache = contentTypeCache(); // headers changed -> drop cache
+        }
+        return contentTypeCache.get();
+    }
+
+    private LazyValue<MediaType> contentTypeCache() {
+        return Values.lazy((Value<MediaType>) () -> singleHeader(
+                HttpHeaders.CONTENT_TYPE, new Function<String, MediaType>() {
+                    @Override
+                    public MediaType apply(String input) {
+                        try {
+                            return runtimeDelegateDecorator
+                                    .createHeaderDelegate(MediaType.class)
+                                    .fromString(input);
+                        } catch (IllegalArgumentException iae) {
+                            throw new ProcessingException(iae);
+                        }
+                    }
+                }, false));
     }
 
     /**
@@ -468,17 +490,26 @@ public abstract class InboundMessageContext {
      * to their q-value, with highest preference first.
      */
     public List<AcceptableMediaType> getQualifiedAcceptableMediaTypes() {
-        final String value = getHeaderString(HttpHeaders.ACCEPT);
-
-        if (value == null || value.isEmpty()) {
-            return WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST;
+        if (headers.isObservedAndReset(HttpHeaders.ACCEPT) && acceptTypeCache.isInitialized()) {
+            acceptTypeCache = acceptTypeCache();
         }
+        return acceptTypeCache.get();
+    }
 
-        try {
-            return Collections.unmodifiableList(HttpHeaderReader.readAcceptMediaType(value));
-        } catch (ParseException e) {
-            throw exception(HttpHeaders.ACCEPT, value, e);
-        }
+    private LazyValue<List<AcceptableMediaType>> acceptTypeCache() {
+        return Values.lazy((Value<List<AcceptableMediaType>>) () -> {
+            final String value = getHeaderString(HttpHeaders.ACCEPT);
+
+            if (value == null || value.isEmpty()) {
+                return WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST;
+            }
+
+            try {
+                return Collections.unmodifiableList(HttpHeaderReader.readAcceptMediaType(value));
+            } catch (ParseException e) {
+                throw exception(HttpHeaders.ACCEPT, value, e);
+            }
+        });
     }
 
     /**
