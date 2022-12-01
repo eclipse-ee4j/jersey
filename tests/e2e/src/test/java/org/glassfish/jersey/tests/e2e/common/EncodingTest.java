@@ -31,9 +31,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import com.oracle.brotli.decoder.BrotliInputStream;
 import org.glassfish.jersey.client.filter.EncodingFilter;
-import org.glassfish.jersey.message.BrotliEncoder;
 import org.glassfish.jersey.message.DeflateEncoder;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -61,29 +59,8 @@ public class EncodingTest extends JerseyTest {
                 EchoResource.class,
                 org.glassfish.jersey.server.filter.EncodingFilter.class,
                 GZipEncoder.class,
-                BrotliEncoder.class,
                 DeflateEncoder.class
         );
-    }
-
-    @Test
-    public void testBrotli() throws IOException {
-        test(new TestSpec() {
-            @Override
-            public InputStream decode(InputStream stream) throws IOException {
-                return BrotliInputStream.builder().inputStream(stream).build();
-            }
-
-            @Override
-            public void checkHeadersAndStatus(Response response) {
-                assertEquals("br", response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
-            }
-
-            @Override
-            public Invocation.Builder setHeaders(Invocation.Builder invBuilder) {
-                return invBuilder.header(HttpHeaders.ACCEPT_ENCODING, "br");
-            }
-        });
     }
 
     @Test
@@ -180,29 +157,6 @@ public class EncodingTest extends JerseyTest {
             @Override
             public void checkHeadersAndStatus(Response response) {
                 assertEquals("deflate", response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
-            }
-        });
-    }
-
-    @Test
-    public void testBrotliPreferredClientServer() throws IOException {
-        test(new TestSpec() {
-            @Override
-            public Invocation.Builder setHeaders(Invocation.Builder invBuilder) {
-                return invBuilder.header(HttpHeaders.ACCEPT_ENCODING, "br,deflate,gzip");
-            }
-
-            @Override
-            public WebTarget configure(WebTarget target) {
-                target.register(DeflateEncoder.class)
-                        .register(BrotliEncoder.class)
-                        .register(EncodingFilter.class);
-                return target;
-            }
-
-            @Override
-            public void checkHeadersAndStatus(Response response) {
-                assertEquals("br", response.getHeaderString(HttpHeaders.CONTENT_ENCODING));
             }
         });
     }

@@ -42,6 +42,7 @@
         <module>html-json</module>
         <module>kryo</module>
         <module>open-tracing</module>
+        <module>brotli</module>
     </modules>
 
     <dependencies>

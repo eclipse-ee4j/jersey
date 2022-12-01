@@ -1532,11 +1532,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.oracle.brotli</groupId>
-                <artifactId>brotli</artifactId>
-                <version>${brotli.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.ws.rs</groupId>
                 <artifactId>jakarta.ws.rs-api</artifactId>
                 <version>${jaxrs.api.impl.version}</version>
@@ -2169,7 +2164,6 @@
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>9.4</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
-        <brotli.version>1.0.0-SNAPSHOT</brotli.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons.logging.version>1.2</commons.logging.version>
