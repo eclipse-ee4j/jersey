@@ -603,7 +603,7 @@ public class WebComponent {
                 final String name = (String) parameterNames.nextElement();
                 final List<String> values = Arrays.asList(servletRequest.getParameterValues(name));
 
-                List<String> filteredValues = keepQueryParams ? values : filterQueryParams(name, values, queryParams);
+                final List<String> filteredValues = keepQueryParams ? values : filterQueryParams(name, values, queryParams);
 
                 if (!filteredValues.isEmpty()) {
                     formMap.put(name, filteredValues);
