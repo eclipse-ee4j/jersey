@@ -51,10 +51,10 @@
                     configuration needs to be added to your Maven project pom:
 
                     <programlisting language="xml" linenumbering="unnumbered">&lt;snapshotRepository&gt;
-                        &lt;id&gt;ossrh&lt;/id&gt;
-                    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
-                &lt;url&gt;https://jakarta.oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
-            &lt;/snapshotRepository&gt;</programlisting>
+    &lt;id&gt;ossrh&lt;/id&gt;
+    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
+    &lt;url&gt;https://jakarta.oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
+&lt;/snapshotRepository&gt;</programlisting>
                 </para>
             </note>
         </para>
