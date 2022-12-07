@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -603,7 +603,11 @@ public class WebComponent {
                 final String name = (String) parameterNames.nextElement();
                 final List<String> values = Arrays.asList(servletRequest.getParameterValues(name));
 
-                formMap.put(name, keepQueryParams ? values : filterQueryParams(name, values, queryParams));
+                final List<String> filteredValues = keepQueryParams ? values : filterQueryParams(name, values, queryParams);
+
+                if (!filteredValues.isEmpty()) {
+                    formMap.put(name, filteredValues);
+                }
             }
 
             if (!formMap.isEmpty()) {
