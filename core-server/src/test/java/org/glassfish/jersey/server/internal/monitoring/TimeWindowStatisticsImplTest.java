@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,13 +18,11 @@ package org.glassfish.jersey.server.internal.monitoring;
 
 import java.util.concurrent.TimeUnit;
 
-import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeReservoir;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests of {@link TimeWindowStatisticsImpl}.
@@ -248,11 +246,11 @@ public class TimeWindowStatisticsImplTest {
                        final double requestsPerSecond) {
         final TimeWindowStatisticsImpl stat = builder.build(buildTime);
 
-        assertEquals("Total count does not match!", totalCount, stat.getRequestCount());
-        assertEquals("Min exec time does not match!", minimumExecTime, stat.getMinimumDuration());
-        assertEquals("Max exec time does not match!", maximumExecTime, stat.getMaximumDuration());
-        assertEquals("Average exec time does not match!", average, stat.getAverageDuration());
-        assertEquals("Requests per seconds does not match!", requestsPerSecond, stat.getRequestsPerSecond(), DELTA);
+        assertEquals(totalCount, stat.getRequestCount(), "Total count does not match!");
+        assertEquals(minimumExecTime, stat.getMinimumDuration(), "Min exec time does not match!");
+        assertEquals(maximumExecTime, stat.getMaximumDuration(), "Max exec time does not match!");
+        assertEquals(average, stat.getAverageDuration(), "Average exec time does not match!");
+        assertEquals(requestsPerSecond, stat.getRequestsPerSecond(), DELTA, "Requests per seconds does not match!");
     }
 
     @Test

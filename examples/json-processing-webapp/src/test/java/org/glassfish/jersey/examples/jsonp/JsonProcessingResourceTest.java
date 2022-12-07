@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -32,9 +32,9 @@ import jakarta.json.JsonObject;
 
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Michal Gajdos
@@ -86,7 +86,8 @@ public class JsonProcessingResourceTest extends JerseyTest {
         // Get.
         final String id = ids.get(0).toString();
         final WebTarget documentTarget = target("document").path(id);
-        final JsonObject storedDocument = documentTarget.request(MediaType.APPLICATION_JSON).get(JsonObject.class);
+        final JsonObject storedDocument = documentTarget.request(MediaType.APPLICATION_JSON)
+                .get(JsonObject.class);
         assertEquals(document, storedDocument);
 
         // Remove.

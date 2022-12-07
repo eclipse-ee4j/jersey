@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,10 +31,10 @@ import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 
 import org.glassfish.jersey.server.internal.monitoring.core.TimeReservoir;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeSnapshot;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Multi Threading concurrency test of Jersey monitoring internals.
@@ -148,10 +148,10 @@ public class MultiThreadingAggregatedReservoirTest {
         doShutdown = true;
         producerExecutorService.shutdown();
         consumerExecutorService.shutdown();
-        Assert.assertTrue("Consumer tasks didn't terminated peacefully, aborting this test.",
-                          consumerExecutorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
-        Assert.assertTrue("Producer tasks didn't terminated peacefully, aborting this test.",
-                          producerExecutorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+        Assertions.assertTrue(consumerExecutorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS),
+                          "Consumer tasks didn't terminated peacefully, aborting this test.");
+        Assertions.assertTrue(producerExecutorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS),
+                          "Producer tasks didn't terminated peacefully, aborting this test.");
 
         final long snapshotTime = System.nanoTime();
         final long sum = (long) incrementer.get() * (incrementer.get() + 1) / 2;
@@ -173,7 +173,7 @@ public class MultiThreadingAggregatedReservoirTest {
     /**
      * Shutdown the producer executor service.
      */
-    @After
+    @AfterEach
     public void shutdownProducers() {
         producerExecutorService.shutdownNow();
     }
@@ -181,7 +181,7 @@ public class MultiThreadingAggregatedReservoirTest {
     /**
      * Shutdown the consumer executor service.
      */
-    @After
+    @AfterEach
     public void shutdownConsumers() {
         consumerExecutorService.shutdownNow();
     }
@@ -205,10 +205,10 @@ public class MultiThreadingAggregatedReservoirTest {
                                      final double expectedMean, final long expectedInterval) {
         final UniformTimeSnapshot snapshot = reservoir.getSnapshot(snapshotTime, TimeUnit.NANOSECONDS);
 
-        assertEquals("Total count does not match!", expectedSize, snapshot.size());
-        assertEquals("Min exec time does not match!", expectedMin, snapshot.getMin());
-        assertEquals("Max exec time does not match!", expectedMax, snapshot.getMax());
-        assertEquals("Average exec time does not match!", expectedMean, snapshot.getMean(), DELTA);
-        assertEquals("Expected interval does not match!", expectedInterval, snapshot.getTimeInterval(TimeUnit.NANOSECONDS));
+        assertEquals(expectedSize, snapshot.size(), "Total count does not match!");
+        assertEquals(expectedMin, snapshot.getMin(), "Min exec time does not match!");
+        assertEquals(expectedMax, snapshot.getMax(), "Max exec time does not match!");
+        assertEquals(expectedMean, snapshot.getMean(), DELTA, "Average exec time does not match!");
+        assertEquals(expectedInterval, snapshot.getTimeInterval(TimeUnit.NANOSECONDS), "Expected interval does not match!");
     }
 }

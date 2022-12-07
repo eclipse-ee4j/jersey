@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,8 +18,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * System properties example unit test.
@@ -41,7 +41,6 @@ public class SysPropsTest extends JerseyTest {
     @Test
     public void testGetPropertyNames() {
         PropertyNamesResource propertyNamesResource = WebResourceFactory.newResource(PropertyNamesResource.class, target());
-
         Set<String> propertyNames = propertyNamesResource.getPropertyNames();
         assertEquals(System.getProperties().stringPropertyNames(), propertyNames);
     }

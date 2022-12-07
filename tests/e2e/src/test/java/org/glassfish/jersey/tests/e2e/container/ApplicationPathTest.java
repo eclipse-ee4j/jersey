@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,23 +22,28 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
+import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
+import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.netty.NettyTestContainerFactory;
+import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@RunWith(Parameterized.class)
-public class ApplicationPathTest extends JerseyContainerTest {
+import static org.glassfish.jersey.tests.e2e.container.JerseyContainerTest.listContainerFactories;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+public class ApplicationPathTest {
 
     private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
             new GrizzlyTestContainerFactory(),
@@ -46,9 +51,8 @@ public class ApplicationPathTest extends JerseyContainerTest {
             new NettyTestContainerFactory()
     );
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<TestContainerFactory[]> parameters() throws Exception {
-        return FACTORIES.stream().map(input -> new TestContainerFactory[]{input}).collect(Collectors.toList());
+    public static Stream<TestContainerFactory> parameters() {
+        return FACTORIES.stream();
     }
 
     @ApplicationPath("applicationpath")
@@ -67,21 +71,38 @@ public class ApplicationPathTest extends JerseyContainerTest {
         }
     }
 
-    @Override
-    protected Application configure() {
-        return new ApplicationPathTestApplication();
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        final Collection<DynamicContainer> tests = new ArrayList<>();
+        ApplicationPathTest.parameters().forEach(testContainerFactory -> {
+            final ApplicationPathTest.ApplicationPathTemplateTest test =
+                    new ApplicationPathTest.ApplicationPathTemplateTest(testContainerFactory) {};
+            tests.add(TestHelper.toTestContainer(test, testContainerFactory.getClass().getSimpleName()));
+        });
+        return tests;
     }
 
-    @Test
-    public void testApplicationPath() {
-        try (Response response = target("applicationpath").path("resource").request().get()) {
-            Assert.assertEquals(200, response.getStatus());
-            Assert.assertEquals(new ApplicationPathResourceTest().hello(), response.readEntity(String.class));
+    public abstract class ApplicationPathTemplateTest extends JerseyContainerTest {
+        public ApplicationPathTemplateTest(TestContainerFactory testContainerFactory) {
+            super(testContainerFactory);
         }
 
-        try (Response response = target("").path("resource").request().get()) {
-            Assert.assertEquals(404, response.getStatus());
+        @Override
+        protected Application configure() {
+            return new ApplicationPathTestApplication();
+        }
+
+
+        @Test
+        public void testApplicationPath() {
+            try (Response response = target("applicationpath").path("resource").request().get()) {
+                assertEquals(200, response.getStatus());
+                assertEquals(new ApplicationPathResourceTest().hello(), response.readEntity(String.class));
+            }
+
+            try (Response response = target("").path("resource").request().get()) {
+                assertEquals(404, response.getStatus());
+            }
         }
     }
-
 }

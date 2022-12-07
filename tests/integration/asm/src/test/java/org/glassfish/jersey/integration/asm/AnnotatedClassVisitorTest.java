@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,9 +19,10 @@ package org.glassfish.jersey.integration.asm;
 import jersey.repackaged.org.objectweb.asm.ClassVisitor;
 import jersey.repackaged.org.objectweb.asm.Opcodes;
 import org.glassfish.jersey.server.internal.scanning.AnnotationAcceptingListener;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -80,7 +81,7 @@ public class AnnotatedClassVisitorTest {
                         .println(" not implemented by AnnotationAcceptingListener.AnnotatedClassVisitor");
             }
         }
-        Assert.assertThat(containsAllMethods, Matchers.is(true));
+        MatcherAssert.assertThat(containsAllMethods, Matchers.is(true));
     }
 
     @Test
@@ -100,10 +101,8 @@ public class AnnotatedClassVisitorTest {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(
-                "You need to set: \nAnnotatedClassVisitor() {\n    super(Opcodes.ASM" + asmOpcode + ");\n}",
-                String.valueOf(asmOpcode), aalOpcode
-        );
+        Assertions.assertEquals(String.valueOf(asmOpcode), aalOpcode,
+                "You need to set: \nAnnotatedClassVisitor() {\n    super(Opcodes.ASM" + asmOpcode + ");\n}");
     }
 
     @Test
@@ -127,10 +126,8 @@ public class AnnotatedClassVisitorTest {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(
-                "You need to set ClassReaderWrapper.WARN_VERSION=Opcodes.V" + jdkVersion,
-                jdkVersion, warnFieldValue
-        );
+        Assertions.assertEquals(jdkVersion, warnFieldValue,
+                "You need to set ClassReaderWrapper.WARN_VERSION=Opcodes.V" + jdkVersion);
     }
 
     @Test
@@ -156,10 +153,8 @@ public class AnnotatedClassVisitorTest {
         }
 
         final String message = new String(log.toByteArray());
-        Assert.assertTrue(
-                "The WARNING `" + warningMsg + "` has not been printed for a class with byte code version " + array[7],
-                message.contains(warningMsg)
-        );
+        Assertions.assertTrue(message.contains(warningMsg),
+                "The WARNING `" + warningMsg + "` has not been printed for a class with byte code version " + array[7]);
     }
 
     private static int getMaxValueOfField(String fieldPrefix, int initialValue) {

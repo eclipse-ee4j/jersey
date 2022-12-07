@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,12 +28,12 @@ import java.util.regex.MatchResult;
 
 import org.glassfish.jersey.uri.internal.UriTemplateParser;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Taken from Jersey 1: jersey-tests: com.sun.jersey.impl.uri.UriTemplateTest
@@ -475,15 +475,15 @@ public class UriTemplateTest {
         tmpl.match("/test?query=x", result);
 
         assertEquals(
-                "incorrect size for match string",
                 1,
-                result.size()
+                result.size(),
+                "incorrect size for match string"
         );
 
         assertEquals(
-                "query parameter is not matched",
                 "x",
-                result.get("query")
+                result.get("query"),
+                "query parameter is not matched"
         );
     }
 
@@ -498,20 +498,20 @@ public class UriTemplateTest {
         tmpl.match("/test?query=x&secondQuery=y", result);
 
         assertEquals(
-                "incorrect size for match string",
                 2,
-                result.size()
+                result.size(),
+                "incorrect size for match string"
         );
 
         assertEquals(
-                "query parameter is not matched",
                 "x",
-                result.get("query")
+                result.get("query"),
+                "query parameter is not matched"
         );
         assertEquals(
-                "query parameter is not matched",
                 "y",
-                result.get("secondQuery")
+                result.get("secondQuery"),
+                "query parameter is not matched"
         );
     }
 
@@ -524,9 +524,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is not set",
                 "/test?query=example",
-                uri
+                uri,
+                "query string is not set"
         );
     }
 
@@ -540,9 +540,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is not set",
                 "/test?query=example&other=otherExample",
-                uri
+                uri,
+                "query string is not set"
         );
 
     }
@@ -555,9 +555,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is set",
                 "/test",
-                uri
+                uri,
+                "query string is set"
         );
 
     }
@@ -571,9 +571,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is not set",
                 "/test;matrix=example/other",
-                uri
+                uri,
+                "query string is not set"
         );
 
     }
@@ -588,9 +588,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is not set",
                 "/test;matrix=example;other=otherExample/other",
-                uri
+                uri,
+                "query string is not set"
         );
 
     }
@@ -605,9 +605,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is not set",
                 "/test;matrix=example/other;other=otherExample",
-                uri
+                uri,
+                "query string is not set"
         );
     }
 
@@ -619,9 +619,9 @@ public class UriTemplateTest {
 
         final String uri = tmpl.createURI(values);
         assertEquals(
-                "query string is set",
                 "/test/other",
-                uri
+                uri,
+                "query string is set"
         );
     }
 
@@ -700,17 +700,17 @@ public class UriTemplateTest {
     private void assertEncodedQueryTemplateExpansion(final String expectedExpansion,
                                                      final String queryTemplate,
                                                      final Object... values) {
-        assertEquals("Unexpected encoded query template expansion result.",
-                expectedExpansion,
-                UriTemplate.createURI(null, null, null, null, null, null, queryTemplate, null, values, true, false));
+        assertEquals(expectedExpansion,
+                UriTemplate.createURI(null, null, null, null, null, null, queryTemplate, null, values, true, false),
+                "Unexpected encoded query template expansion result.");
     }
 
     private void assertEncodedQueryTemplateExpansion(final String expectedExpansion,
                                                      final String queryTemplate,
                                                      final Map<String, ?> values) {
-        assertEquals("Unexpected encoded query template expansion result.",
-                expectedExpansion,
-                UriTemplate.createURI(null, null, null, null, null, null, queryTemplate, null, values, true, false));
+        assertEquals(expectedExpansion,
+                UriTemplate.createURI(null, null, null, null, null, null, queryTemplate, null, values, true, false),
+                "Unexpected encoded query template expansion result.");
     }
 
     @Test
@@ -753,16 +753,16 @@ public class UriTemplateTest {
     private void assertEncodedPathTemplateExpansion(final String expectedExpansion,
                                                     final String pathTemplate,
                                                     final Object... values) {
-        assertEquals("Unexpected encoded matrix parameter template expansion result.",
-                expectedExpansion,
-                UriTemplate.createURI(null, null, null, null, null, pathTemplate, null, null, values, true, false));
+        assertEquals(expectedExpansion,
+                UriTemplate.createURI(null, null, null, null, null, pathTemplate, null, null, values, true, false),
+                "Unexpected encoded matrix parameter template expansion result.");
     }
 
     private void assertEncodedPathTemplateExpansion(final String expectedExpansion,
                                                     final String pathTemplate,
                                                     final Map<String, ?> values) {
-        assertEquals("Unexpected encoded matrix parameter template expansion result.",
-                expectedExpansion,
-                UriTemplate.createURI(null, null, null, null, null, pathTemplate, null, null, values, true, false));
+        assertEquals(expectedExpansion,
+                UriTemplate.createURI(null, null, null, null, null, pathTemplate, null, null, values, true, false),
+                "Unexpected encoded matrix parameter template expansion result.");
     }
 }

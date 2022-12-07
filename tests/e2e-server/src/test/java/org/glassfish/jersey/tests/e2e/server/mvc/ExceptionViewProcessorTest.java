@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,9 +38,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.tests.e2e.server.mvc.provider.TestViewProcessor;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Paul Sandoz
@@ -123,7 +123,7 @@ public class ExceptionViewProcessorTest extends JerseyTest {
                 p.getProperty("path"));
         assertEquals("406", p.getProperty("model"));
 
-        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, cr.getMediaType());
+        Assertions.assertEquals(MediaType.TEXT_PLAIN_TYPE, cr.getMediaType());
         cr.close();
     }
 }

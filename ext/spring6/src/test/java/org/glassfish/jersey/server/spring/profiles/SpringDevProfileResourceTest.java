@@ -23,8 +23,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SpringDevProfileResourceTest extends JerseyTest {
@@ -44,6 +44,6 @@ public class SpringDevProfileResourceTest extends JerseyTest {
     @Test
     public void shouldUseDevProfileBean() {
         final String result = target("spring-resource").request().get(String.class);
-        Assert.assertEquals("dev", result);
+        Assertions.assertEquals("dev", result);
     }
 }

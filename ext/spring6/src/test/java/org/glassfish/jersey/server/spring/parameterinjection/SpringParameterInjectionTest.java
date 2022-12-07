@@ -19,13 +19,13 @@ package org.glassfish.jersey.server.spring.parameterinjection;
 import org.glassfish.jersey.server.spring.SpringTestConfiguration;
 import org.glassfish.jersey.server.spring.fieldinjection.SpringFieldInjectionJerseyTestConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import jakarta.ws.rs.core.Application;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpringParameterInjectionTest extends JerseyTest {
     @Override

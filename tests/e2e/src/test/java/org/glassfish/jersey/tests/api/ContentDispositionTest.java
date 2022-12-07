@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,11 +23,11 @@ import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,7 @@ import org.eclipse.jetty.http2.client.HTTP2Client;
 import org.eclipse.jetty.http2.client.http.HttpClientTransportOverHTTP2;
 import org.eclipse.jetty.io.ClientConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Jetty {@link HttpClient} supports both HTTP 1.1 and HTTP/2.

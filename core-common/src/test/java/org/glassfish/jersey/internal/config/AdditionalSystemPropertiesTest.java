@@ -17,10 +17,10 @@
 package org.glassfish.jersey.internal.config;
 
 import org.glassfish.jersey.CommonProperties;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -32,14 +32,14 @@ public class AdditionalSystemPropertiesTest {
         public static final String SECOND_PROPERTY = "second.property";
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
         System.getProperties().put(AdditionalSystemProperties.FIRST_PROPERTY, "first value");
         System.getProperties().put(AdditionalSystemProperties.SECOND_PROPERTY, "second value");
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         System.clearProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER);
         System.clearProperty(AdditionalSystemProperties.FIRST_PROPERTY);
@@ -57,10 +57,10 @@ public class AdditionalSystemPropertiesTest {
                 Collections.singletonList(new ExternalConfigurationProviderImpl(testModel))
         );
 
-        Assert.assertFalse(properties.isEmpty());
-        Assert.assertTrue(properties.containsKey(AdditionalSystemProperties.FIRST_PROPERTY));
-        Assert.assertTrue(properties.containsKey(AdditionalSystemProperties.SECOND_PROPERTY));
-        Assert.assertEquals("first value", properties.get(AdditionalSystemProperties.FIRST_PROPERTY));
-        Assert.assertEquals("second value", properties.get(AdditionalSystemProperties.SECOND_PROPERTY));
+        Assertions.assertFalse(properties.isEmpty());
+        Assertions.assertTrue(properties.containsKey(AdditionalSystemProperties.FIRST_PROPERTY));
+        Assertions.assertTrue(properties.containsKey(AdditionalSystemProperties.SECOND_PROPERTY));
+        Assertions.assertEquals("first value", properties.get(AdditionalSystemProperties.FIRST_PROPERTY));
+        Assertions.assertEquals("second value", properties.get(AdditionalSystemProperties.SECOND_PROPERTY));
     }
 }

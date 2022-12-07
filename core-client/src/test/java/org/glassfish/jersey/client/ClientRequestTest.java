@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,19 +32,20 @@ import org.glassfish.jersey.internal.util.ExceptionUtils;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import org.hamcrest.core.Is;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 
@@ -63,12 +64,12 @@ public class ClientRequestTest {
 
     private AutoCloseable mockito;
 
-    @Before
+    @BeforeEach
     public void initMocks() {
         mockito = MockitoAnnotations.openMocks(this);
     }
 
-    @After
+    @AfterEach
     public void closeMocks() throws Exception {
         mockito.close();
     }
@@ -178,7 +179,7 @@ public class ClientRequestTest {
             request.doWriteEntity(workers, entityType);
             fail("An IOException exception should be thrown.");
         } catch (IOException e) {
-            Assert.assertThat("Detected a un-expected exception! \n" + ExceptionUtils.exceptionStackTraceAsString(e),
+            MatcherAssert.assertThat("Detected a un-expected exception! \n" + ExceptionUtils.exceptionStackTraceAsString(e),
                     e, Is.is(ioException));
         }
     }
@@ -193,9 +194,9 @@ public class ClientRequestTest {
 
         try {
             request.doWriteEntity(workers, entityType);
-            Assert.fail("A RuntimeException exception should be thrown.");
+            Assertions.fail("A RuntimeException exception should be thrown.");
         } catch (RuntimeException e) {
-            Assert.assertThat("Detected a un-expected exception! \n" + ExceptionUtils.exceptionStackTraceAsString(e),
+            MatcherAssert.assertThat("Detected a un-expected exception! \n" + ExceptionUtils.exceptionStackTraceAsString(e),
                     e, Is.is(runtimeException));
         }
     }

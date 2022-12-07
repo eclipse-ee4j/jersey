@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.microprofile.config;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class ConfigurationProviderTest {
 
     private static final String EMPTY_PROPERTY_NAME = "EMPTY_PROPERTY";
 
-    @Before
+    @BeforeEach
     public void before() {
         System.setProperty(EMPTY_PROPERTY_NAME, "");
     }
@@ -36,7 +36,7 @@ public class ConfigurationProviderTest {
         final ConfigurationProvider provider = new ConfigurationProvider();
         final Map<String, Object> properties = provider.getProperties();
 
-        Assert.assertNull(properties.get(EMPTY_PROPERTY_NAME));
+        Assertions.assertNull(properties.get(EMPTY_PROPERTY_NAME));
     }
 
 }

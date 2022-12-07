@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,18 @@
 
 package org.glassfish.jersey.test.memleak.common;
 
-import org.junit.internal.runners.statements.FailOnTimeout;
-import org.junit.rules.Timeout;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import java.lang.reflect.Method;
+import java.time.Duration;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 /**
  * @author Stepan Vavra
  */
-public class MemoryLeakSucceedingTimeout extends Timeout {
+public class MemoryLeakSucceedingTimeout implements InvocationInterceptor {
 
     private static final int DEFAULT_TIMEOUT_MILLIS = 300_000;
     private int millis;
@@ -34,27 +37,21 @@ public class MemoryLeakSucceedingTimeout extends Timeout {
     }
 
     public MemoryLeakSucceedingTimeout(final int defaultMillisTimeout) {
-        super(defaultMillisTimeout);
-
         this.millis = Integer.getInteger(MemoryLeakUtils.JERSEY_CONFIG_TEST_MEMLEAK_TIMEOUT, defaultMillisTimeout);
     }
 
     @Override
-    public Statement apply(final Statement base, final Description description) {
-        return new FailOnTimeout(base, millis) {
-            @Override
-            public void evaluate() throws Throwable {
-                try {
-                    super.evaluate();
-                } catch (Throwable throwable) {
-                    if (throwable.getMessage().startsWith("test timed out after")) {
-                        MemoryLeakUtils.verifyNoOutOfMemoryOccurred();
-                        System.out.println("Test timed out after " + millis + " ms. Successfully ending.");
-                    } else {
-                        throw throwable;
-                    }
-                }
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+            ExtensionContext extensionContext) throws Throwable {
+        try {
+            Assertions.assertTimeoutPreemptively(Duration.ofMillis(millis), invocation::proceed);
+        } catch (Throwable throwable) {
+            if (throwable.getMessage().startsWith("execution timed out after")) {
+                MemoryLeakUtils.verifyNoOutOfMemoryOccurred();
+                System.out.println("Test timed out after " + millis + " ms. Successfully ending.");
+            } else {
+                throw throwable;
             }
-        };
+        }
     }
 }

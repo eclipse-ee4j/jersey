@@ -23,7 +23,7 @@ import org.glassfish.jersey.jackson.internal.model.JAXBServiceTest;
 import org.glassfish.jersey.jackson.internal.model.ServiceTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -31,8 +31,8 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class DefaultJsonJacksonProviderForDisabledModulesTest extends JerseyTest {
     @Override

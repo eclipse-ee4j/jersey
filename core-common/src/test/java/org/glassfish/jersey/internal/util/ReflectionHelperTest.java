@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,13 +21,14 @@ import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@code ReflectionHelper} unit tests.
@@ -64,29 +65,36 @@ public class ReflectionHelperTest {
         assertEquals(aClass, arguments[0]);
     }
 
-    @Test(expected = AccessControlException.class)
+    @Test
     public void securityManagerSetContextClassLoader() throws Exception {
-        final ClassLoader loader = ReflectionHelper.class.getClassLoader();
+        assertThrows(AccessControlException.class, () -> {
+            final ClassLoader loader = ReflectionHelper.class.getClassLoader();
 
-        Thread.currentThread().setContextClassLoader(loader);
-        fail("It should not be possible to set context class loader from unprivileged block");
+            Thread.currentThread().setContextClassLoader(loader);
+            fail("It should not be possible to set context class loader from unprivileged block");
+        });
     }
 
-    @Test(expected = AccessControlException.class)
+    @Test
     public void securityManagerSetContextClassLoaderPA() throws Exception {
-        final ClassLoader loader = ReflectionHelper.class.getClassLoader();
+        assertThrows(AccessControlException.class, () -> {
+            final ClassLoader loader = ReflectionHelper.class.getClassLoader();
 
-        ReflectionHelper.setContextClassLoaderPA(loader).run();
-        fail("It should not be possible to set context class loader from unprivileged block even via Jersey ReflectionHelper");
+            ReflectionHelper.setContextClassLoaderPA(loader).run();
+            fail("It should not be possible to set context class loader "
+                + "from unprivileged block even via Jersey ReflectionHelper");
+        });
     }
 
-    @Test(expected = AccessControlException.class)
+    @Test
     public void securityManagerSetContextClassLoaderInDoPrivileged() throws Exception {
-        final ClassLoader loader = ReflectionHelper.class.getClassLoader();
+        assertThrows(AccessControlException.class, () -> {
+            final ClassLoader loader = ReflectionHelper.class.getClassLoader();
 
-        AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(loader));
-        fail("It should not be possible to set context class loader even from privileged block via Jersey ReflectionHelper "
+            AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(loader));
+            fail("It should not be possible to set context class loader even from privileged block via Jersey ReflectionHelper "
                 + "utility");
+        });
     }
 
     public static class FromStringClass {

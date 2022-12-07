@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.tests.integration.servlet_request_wrapper_binding2.RequestResponseWrapperProvider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

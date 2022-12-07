@@ -245,7 +245,7 @@ public class MyDiResource {
             <programlisting language="java">import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.ServiceHandle;
@@ -393,8 +393,8 @@ public class PerSessionResource {
 
             <programlisting language="java">import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 ...
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;

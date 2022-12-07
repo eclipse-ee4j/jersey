@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Issue4097Test extends JerseyTest {
 

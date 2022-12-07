@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,13 +29,13 @@ import org.glassfish.jersey.internal.inject.PerThread;
 import org.glassfish.jersey.process.internal.RequestScope;
 
 import org.hamcrest.core.StringStartsWith;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Testing thread scope integration.
@@ -46,7 +46,7 @@ public class ThreadScopeTest extends TestParent {
 
     private static AtomicBoolean runOnlyOnceGuard = new AtomicBoolean(false);
 
-    @Before
+    @BeforeEach
     public void initOnce() {
         if (!runOnlyOnceGuard.getAndSet(true)) {
             BindingTestHelper.bind(injectionManager, binder -> {

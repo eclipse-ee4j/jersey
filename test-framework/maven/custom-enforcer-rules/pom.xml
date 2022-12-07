@@ -60,6 +60,26 @@
                     <groupId>org.eclipse.aether</groupId>
                     <artifactId>aether-util</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-classworlds</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.aether</groupId>
+                    <artifactId>aether-util</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -70,8 +90,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>compile</scope>
         </dependency>
 

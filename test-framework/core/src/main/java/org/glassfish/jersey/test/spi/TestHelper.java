@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,15 @@
 
 package org.glassfish.jersey.test.spi;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Helper class for Jersey Test Framework.
@@ -42,5 +50,32 @@ public final class TestHelper {
      * Prevent instantiation.
      */
     private TestHelper() {
+    }
+
+    public static DynamicContainer toTestContainer(Object test, String displayName) {
+        Class<?> klass = test.getClass();
+        List<Method> testMethods = ReflectionUtils.findMethods(klass,
+                method -> method.isAnnotationPresent(org.junit.jupiter.api.Test.class)
+                && !method.isAnnotationPresent(org.junit.jupiter.api.Disabled.class));
+        List<Method> beforeEachMethods = ReflectionUtils.findMethods(klass,
+                method -> method.isAnnotationPresent(org.junit.jupiter.api.BeforeEach.class));
+        List<Method> afterEachMethods = ReflectionUtils.findMethods(klass,
+                method -> method.isAnnotationPresent(org.junit.jupiter.api.AfterEach.class));
+        Collection<DynamicTest> children = new ArrayList<>();
+        for (Method method : testMethods) {
+            children.add(DynamicTest.dynamicTest(method.getName(), () -> {
+                try {
+                    for (Method beforeEachMethod : beforeEachMethods) {
+                        beforeEachMethod.invoke(test);
+                    }
+                    method.invoke(test);
+                } finally {
+                    for (Method afterEachMethod : afterEachMethods) {
+                        afterEachMethod.invoke(test);
+                    }
+                }
+            }));
+        }
+        return DynamicContainer.dynamicContainer(displayName, children);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,9 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Michal Gajdos
@@ -81,8 +81,7 @@ public class ResponseMediaTypeFromProvidersTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ContainerResponse response = applicationHandler.apply(
-                RequestContextBuilder.from("/resource/subresource/sub", "POST")
-                                .type("text/plain").header("Accept", "text/plain").build()).get();
+                RequestContextBuilder.from("/resource/subresource/sub", "POST").header("Accept", "text/plain").build()).get();
 
         assertThat(response.getStatus(), equalTo(200));
         assertThat(response.getHeaderString("Content-Type"), equalTo("text/plain"));

@@ -65,6 +65,9 @@
                     <mainClass>org.glassfish.jersey.examples.helloworld.App</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
