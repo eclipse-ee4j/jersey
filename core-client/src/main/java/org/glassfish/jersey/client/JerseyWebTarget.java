@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -368,7 +368,7 @@ public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializa
     }
 
     private static JerseyInvocation.Builder onBuilder(JerseyInvocation.Builder builder) {
-        new InvocationBuilderListenerStage(builder.request().getInjectionManager()).invokeListener(builder);
+        builder.request().getClientRuntime().getInvocationBuilderListenerStage().invokeListener(builder);
         return builder;
     }
 }
