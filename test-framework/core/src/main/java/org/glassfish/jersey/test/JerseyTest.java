@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.test;
 
+import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.security.AccessController;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -52,11 +54,11 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * Parent class for testing JAX-RS and Jersey-based applications using Jersey test framework.
@@ -122,7 +124,6 @@ import org.junit.jupiter.api.BeforeEach;
  * @author Michal Gajdos
  * @author Marek Potociar
  */
-@SuppressWarnings("UnusedDeclaration")
 public abstract class JerseyTest {
 
     private static final Logger LOGGER = Logger.getLogger(JerseyTest.class.getName());
@@ -169,6 +170,7 @@ public abstract class JerseyTest {
 
     private JerseyTestLogHandler logHandler;
     private final Map<Logger, Level> logLevelMap = new IdentityHashMap<>();
+    private final AtomicInteger activeThreadCount = new AtomicInteger(0);
 
     /**
      * Initialize JerseyTest instance.
@@ -187,7 +189,6 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = getTestContainerFactory();
-        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -209,7 +210,6 @@ public abstract class JerseyTest {
         // not be set soon enough
         this.context = configureDeployment();
         this.testContainerFactory = testContainerFactory;
-        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -234,7 +234,6 @@ public abstract class JerseyTest {
     public JerseyTest(final Application jaxrsApplication) {
         this.context = DeploymentContext.newInstance(jaxrsApplication);
         this.testContainerFactory = getTestContainerFactory();
-        registerLogHandlerIfEnabled();
     }
 
     /**
@@ -618,14 +617,37 @@ public abstract class JerseyTest {
     @Before
     @BeforeEach
     public void setUp() throws Exception {
-        final TestContainer testContainer = createTestContainer(context);
+        synchronized (this) {
+            if (!isConcurrent() || activeThreadCount.getAndIncrement() == 0) {
+                registerLogHandlerIfEnabled();
+                final TestContainer testContainer = createTestContainer(context);
 
-        // Set current instance of test container and start it.
-        setTestContainer(testContainer);
-        testContainer.start();
+                // Set current instance of test container and start it.
+                setTestContainer(testContainer);
+                testContainer.start();
 
-        // Create an set new client.
-        setClient(getClient(testContainer.getClientConfig()));
+                // Create an set new client.
+                setClient(getClient(testContainer.getClientConfig()));
+            }
+        }
+    }
+
+    /**
+     * Do not setup multiple containers for concurrent junit 5 environment not to hit Address already in use exception
+     * @return true when TestInstance.Lifecycle.PER_CLASS annotation is used and the test run in concurrent
+     */
+    private boolean isConcurrent() {
+        Annotation[] annotations = this.getClass().getAnnotations();
+        for (Annotation annotation : annotations) {
+            // check the name first for JUnit 4 only environment
+            if (annotation.annotationType().getName().equals("org.junit.jupiter.api.TestInstance")) {
+                TestInstance testInstance = (TestInstance) annotation;
+                if (testInstance != null && testInstance.value() == TestInstance.Lifecycle.PER_CLASS) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -639,17 +661,21 @@ public abstract class JerseyTest {
     @After
     @AfterEach
     public void tearDown() throws Exception {
-        if (isLogRecordingEnabled()) {
-            unregisterLogHandler();
-        }
+        synchronized (this) {
+            if (!isConcurrent() || activeThreadCount.decrementAndGet() == 0) {
+                if (isLogRecordingEnabled()) {
+                    unregisterLogHandler();
+                }
 
-        try {
-            TestContainer oldContainer = setTestContainer(null);
-            if (oldContainer != null) {
-                oldContainer.stop();
+                try {
+                    TestContainer oldContainer = setTestContainer(null);
+                    if (oldContainer != null) {
+                        oldContainer.stop();
+                    }
+                } finally {
+                    closeIfNotNull(setClient(null));
+                }
             }
-        } finally {
-            closeIfNotNull(setClient(null));
         }
     }
 

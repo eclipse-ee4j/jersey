@@ -230,7 +230,7 @@
             <jdk>1.8</jdk>
         </activation>
         <properties>
-            <jetty.version>9.4.28.v20200408</jetty.version>
+            <jetty.version>${jetty9.version}</jetty.version>
         </properties>
         <dependencies>
             <dependency>

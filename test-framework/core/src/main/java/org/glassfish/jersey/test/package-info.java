@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@
  *     WebTarget t = target("root");
  *
  *     String s = t.request().get(String.class);
- *     Assert.assertEquals("GET", s);
+ *     Assertions.assertEquals("GET", s);
  *   }
  * }
  * </pre>
@@ -86,7 +86,7 @@
  *     WebTarget t = target("root");
  *
  *     String s = t.request().get(String.class);
- *     Assert.assertEquals("GET", s);
+ *     Assertions.assertEquals("GET", s);
  *   }
  * }
  * </pre>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,11 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Adam Lindenthal
@@ -36,12 +35,12 @@ public class J376Test {
     final Client client = ClientBuilder.newClient();
     final WebTarget target = client.target(GrizzlyApp.getBaseUri());
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpTest() {
         GrizzlyApp.start();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownTest() {
         GrizzlyApp.stop();
     }

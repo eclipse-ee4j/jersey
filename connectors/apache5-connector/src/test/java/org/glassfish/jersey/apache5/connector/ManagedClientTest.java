@@ -46,8 +46,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.Uri;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Jersey programmatic managed client test

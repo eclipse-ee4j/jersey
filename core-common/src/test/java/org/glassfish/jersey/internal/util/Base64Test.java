@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,10 @@ package org.glassfish.jersey.internal.util;
 import java.util.Arrays;
 import java.util.Base64;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -64,21 +64,21 @@ public class Base64Test {
     public void testRoundtripLengthMod3Equals0() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8};
         byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
-        assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
+        assertTrue(Arrays.equals(data, result), "failed to roundtrip value to base64");
     }
 
     @Test
     public void testRoundtripLengthMod3Equals1() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
-        assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
+        assertTrue(Arrays.equals(data, result), "failed to roundtrip value to base64");
     }
 
     @Test
     public void testRoundtripLengthMod3Equals2() {
         byte[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         byte[] result = Base64.getDecoder().decode(Base64.getEncoder().encode(data));
-        assertTrue("failed to roundtrip value to base64", Arrays.equals(data, result));
+        assertTrue(Arrays.equals(data, result), "failed to roundtrip value to base64");
     }
 
     @Test
@@ -125,9 +125,9 @@ public class Base64Test {
                 + "/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==";
         byte[] result = Base64.getDecoder().decode(data.getBytes());
 
-        assertEquals("incorrect length", result.length, 256);
+        assertEquals(256, result.length, "incorrect length");
         for (int i = 0; i < 256; ++i) {
-            assertEquals("incorrect value", result[i], (byte) i);
+            assertEquals((byte) i, result[i], "incorrect value");
         }
     }
 }

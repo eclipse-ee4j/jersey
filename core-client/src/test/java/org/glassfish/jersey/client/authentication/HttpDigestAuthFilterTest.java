@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.glassfish.jersey.client.authentication.DigestAuthenticator.DigestScheme;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Raphael Jolivet (raphael.jolivet at gmail.com)
@@ -42,7 +42,7 @@ public class HttpDigestAuthFilterTest {
                         "basic toto=\"tutu\""
                 }));
 
-        Assert.assertNull(ds);
+        Assertions.assertNull(ds);
     }
 
     @Test
@@ -55,9 +55,9 @@ public class HttpDigestAuthFilterTest {
                         "Digest realm=\"tata\"",
                         "basic  toto=\"tutu\""
                 }));
-        Assert.assertNotNull(ds);
+        Assertions.assertNotNull(ds);
 
-        Assert.assertEquals("tata", ds.getRealm());
+        Assertions.assertEquals("tata", ds.getRealm());
     }
 
     @Test
@@ -70,9 +70,9 @@ public class HttpDigestAuthFilterTest {
                         "digest realm=\"tata\",nonce=\"foo, bar\""
                 }));
 
-        Assert.assertNotNull(ds);
-        Assert.assertEquals("tata", ds.getRealm());
-        Assert.assertEquals("foo, bar", ds.getNonce());
+        Assertions.assertNotNull(ds);
+        Assertions.assertEquals("tata", ds.getRealm());
+        Assertions.assertEquals("foo, bar", ds.getNonce());
     }
 
     @Test
@@ -85,10 +85,10 @@ public class HttpDigestAuthFilterTest {
                         "    digest realm =   \"tata\"  ,  opaque=\"bar\" ,nonce=\"foo, bar\""
                 }));
 
-        Assert.assertNotNull(ds);
-        Assert.assertEquals("tata", ds.getRealm());
-        Assert.assertEquals("foo, bar", ds.getNonce());
-        Assert.assertEquals("bar", ds.getOpaque());
+        Assertions.assertNotNull(ds);
+        Assertions.assertEquals("tata", ds.getRealm());
+        Assertions.assertEquals("foo, bar", ds.getNonce());
+        Assertions.assertEquals("bar", ds.getOpaque());
     }
 
     @Test
@@ -101,10 +101,10 @@ public class HttpDigestAuthFilterTest {
                         "    digest realm =   \"tata\"  ,  opaque =bar ,nonce=\"foo, bar\",   algorithm=md5"
                 }));
 
-        Assert.assertNotNull(ds);
-        Assert.assertEquals("tata", ds.getRealm());
-        Assert.assertEquals("foo, bar", ds.getNonce());
-        Assert.assertEquals("bar", ds.getOpaque());
-        Assert.assertEquals("MD5", ds.getAlgorithm().name());
+        Assertions.assertNotNull(ds);
+        Assertions.assertEquals("tata", ds.getRealm());
+        Assertions.assertEquals("foo, bar", ds.getNonce());
+        Assertions.assertEquals("bar", ds.getOpaque());
+        Assertions.assertEquals("MD5", ds.getAlgorithm().name());
     }
 }

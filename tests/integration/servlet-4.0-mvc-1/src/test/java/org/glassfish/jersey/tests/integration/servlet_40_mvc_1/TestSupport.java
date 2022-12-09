@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,8 +25,8 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.tests.integration.servlet_40_mvc_1.MyApplication;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class TestSupport extends JerseyTest {
 
@@ -43,13 +43,13 @@ public abstract class TestSupport extends JerseyTest {
     }
 
     protected void assertHtmlResponse(final String response) {
-        assertNotNull("No text returned!", response);
+        assertNotNull(response, "No text returned!");
 
         assertResponseContains(response, "<html>");
         assertResponseContains(response, "</html>");
     }
 
     protected void assertResponseContains(final String response, final String text) {
-        assertTrue("Response should contain " + text + " but was: " + response, response.contains(text));
+        assertTrue(response.contains(text), "Response should contain " + text + " but was: " + response);
     }
 }

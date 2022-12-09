@@ -60,12 +60,6 @@
             <artifactId>smallrye-config</artifactId>
             <version>${smallrye.config.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
@@ -180,6 +174,11 @@
             <artifactId>jersey-weld2-se</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -242,7 +241,7 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/server.policy</surefire.security.argline>
-        <jetty.version>9.4.27.v20200227</jetty.version>
+        <jetty.version>${jetty9.version}</jetty.version>
     </properties>
 
 

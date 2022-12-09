@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -32,7 +32,7 @@
             or pom:artifactId='jersey-media-multipart'
             or pom:artifactId='jersey-media-sse'
             or pom:groupId='com.sun.xml.bind'
-            or pom:groupId='javax.servlet']/pom:scope[text()!=test]">
+            or pom:groupId='jakarta.servlet']/pom:scope[text()!=test]">
         <scope>provided</scope>
     </xsl:template>
 
@@ -45,7 +45,7 @@
             or pom:artifactId='jersey-media-multipart'
             or pom:artifactId='jersey-media-sse'
             or pom:groupId='com.sun.xml.bind'
-            or pom:groupId='javax.servlet']">
+            or pom:groupId='jakarta.servlet']">
         <xsl:copy>
             <xsl:apply-templates />
             <xsl:if test="count(pom:scope)=0">

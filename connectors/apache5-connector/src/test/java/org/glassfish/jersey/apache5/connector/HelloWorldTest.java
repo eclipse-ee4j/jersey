@@ -52,11 +52,11 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Jakub Podlesak
@@ -149,11 +149,11 @@ public class HelloWorldTest extends JerseyTest {
         try {
             target.request().get();
             if (exceptionExpected) {
-                Assert.fail("Exception expected");
+                Assertions.fail("Exception expected");
             }
         } catch (Exception e) {
             if (!exceptionExpected) {
-                Assert.fail("Exception not expected");
+                Assertions.fail("Exception not expected");
             }
         } finally {
             clientTwo.close();
@@ -389,10 +389,10 @@ public class HelloWorldTest extends JerseyTest {
             final String response = rootTarget.path("error2").request().get(String.class);
             fail("Exception expected. Received: " + response);
         } catch (InternalServerErrorException isee) {
-            assertEquals("Received unexpected data.", "Error2.", isee.getResponse().readEntity(String.class));
+            assertEquals("Error2.", isee.getResponse().readEntity(String.class), "Received unexpected data.");
             // Test buffering:
             // second read would fail if entity was not buffered
-            assertEquals("Unexpected data in the entity buffer.", "Error2.", isee.getResponse().readEntity(String.class));
+            assertEquals("Error2.", isee.getResponse().readEntity(String.class), "Unexpected data in the entity buffer.");
         }
 
         assertEquals(0, connectionCounter.get());

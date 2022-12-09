@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import org.glassfish.jersey.server.internal.monitoring.MonitoringEventListener;
 import org.glassfish.jersey.server.internal.monitoring.MonitoringFeature;
 import org.glassfish.jersey.server.internal.monitoring.jmx.MBeanExposer;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of registration of {@link MonitoringFeature}.
@@ -41,9 +41,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -54,9 +54,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertFalse(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertFalse(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -67,9 +67,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -79,9 +79,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -92,9 +92,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -104,9 +104,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -116,9 +116,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertFalse(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertFalse(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
 
@@ -131,9 +131,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -146,9 +146,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -162,9 +162,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -177,9 +177,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -190,9 +190,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertFalse(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertFalse(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertFalse(config.isRegistered(MBeanExposer.class));
+        Assertions.assertFalse(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertFalse(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertFalse(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -203,9 +203,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -219,9 +219,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -231,9 +231,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -244,9 +244,9 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 
     @Test
@@ -258,8 +258,8 @@ public class MonitoringFeatureTest {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
 
         final ResourceConfig config = applicationHandler.getConfiguration();
-        Assert.assertTrue(config.isRegistered(ApplicationInfoListener.class));
-        Assert.assertTrue(config.isRegistered(MonitoringEventListener.class));
-        Assert.assertTrue(config.isRegistered(MBeanExposer.class));
+        Assertions.assertTrue(config.isRegistered(ApplicationInfoListener.class));
+        Assertions.assertTrue(config.isRegistered(MonitoringEventListener.class));
+        Assertions.assertTrue(config.isRegistered(MBeanExposer.class));
     }
 }

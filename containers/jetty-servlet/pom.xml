@@ -81,7 +81,7 @@
         <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
         <java11.build.outputDirectory>${project.basedir}/target11</java11.build.outputDirectory>
         <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
-        <jetty.javax.version>9.4.28.v20200408</jetty.javax.version>
+        <jetty.javax.version>${jetty9.version}</jetty.javax.version>
     </properties>
 
     <profiles>
@@ -106,6 +106,10 @@
                         <exclusion>
                             <groupId>org.eclipse.jetty</groupId>
                             <artifactId>jetty-server</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-api</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
@@ -162,6 +166,12 @@
                 <dependency>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-webapp</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-api</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.jersey.containers</groupId>

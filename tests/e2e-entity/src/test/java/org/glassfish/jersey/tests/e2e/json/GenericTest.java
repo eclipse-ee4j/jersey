@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,40 +16,30 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.ColorHolder;
 import org.glassfish.jersey.tests.e2e.json.entity.Jersey1199List;
 
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * Unignore when you need to run a specific test.
  *
  * @author Michal Gajdos
  */
-@Ignore("Unignore only when you need to run a specific test.")
-@RunWith(Parameterized.class)
-public class GenericTest extends AbstractJsonTest {
+@Disabled("Unignore only when you need to run a specific test.")
+public class GenericTest {
 
-    @Parameterized.Parameters()
-    public static Collection<JsonTestSetup[]> generateTestCases() throws Exception {
-        final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<JsonTestSetup[]>();
+    @TestFactory
+    public DynamicContainer generateTests() throws Exception {
         final Class<?>[] classes = {Jersey1199List.class, ColorHolder.class};
 
-        for (JsonTestProvider jsonProvider : new JsonTestProvider[]{new JsonTestProvider.MoxyJsonTestProvider()}) {
-            jsonTestSetups.add(new JsonTestSetup[]{new JsonTestSetup(classes, jsonProvider)});
-        }
-
-        return jsonTestSetups;
+        JsonTestProvider jsonProvider = new JsonTestProvider.MoxyJsonTestProvider();
+        JsonTestSetup setupTest = new JsonTestSetup(classes, jsonProvider);
+        JsonTest jsonTest = new JsonTest(setupTest) {};
+        return TestHelper.toTestContainer(jsonTest, String.format("genTest (%s)", jsonProvider.getClass().getSimpleName()));
     }
-
-    public GenericTest(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
-    }
-
 }

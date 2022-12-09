@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
@@ -28,13 +29,11 @@ import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 
-import org.glassfish.jersey.tests.e2e.client.connector.ProviderFiltering;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 import org.apache.commons.io.IOUtils;
 
@@ -43,7 +42,6 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Petr Bouda
  */
-@RunWith(Parameterized.class)
 public abstract class AbstractConnectorServerTest {
 
     // Default truststore and keystore
@@ -56,24 +54,23 @@ public abstract class AbstractConnectorServerTest {
      *
      * @return test parameters.
      */
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> testData() {
-        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][] {
-                {new HttpUrlConnectorProvider()},
-                {new GrizzlyConnectorProvider()},
-                {new JettyConnectorProvider()},
-                {new ApacheConnectorProvider()},
-                {new Apache5ConnectorProvider()}
-        }));
+    public static Stream<ConnectorProvider> testData() {
+        int size = JdkVersion.getJdkVersion().getMajor() < 11 ? 4 : 5;
+        final ConnectorProvider[] providers = new ConnectorProvider[size];
+        providers[0] = new HttpUrlConnectorProvider();
+        providers[1] = new GrizzlyConnectorProvider();
+        providers[2] = new ApacheConnectorProvider();
+        providers[3] = new Apache5ConnectorProvider();
+        if (size == 5) {
+            providers[4] = new JettyConnectorProvider();
+        }
+        return Stream.of(providers);
     }
-
-    @Parameterized.Parameter(0)
-    public ConnectorProvider connectorProvider;
 
     private final Object serverGuard = new Object();
     private Server server = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         synchronized (serverGuard) {
             if (server != null) {
@@ -84,7 +81,7 @@ public abstract class AbstractConnectorServerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         synchronized (serverGuard) {
             if (server == null) {

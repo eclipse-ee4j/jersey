@@ -35,8 +35,8 @@ import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -45,7 +45,8 @@ import com.sun.net.httpserver.HttpsServer;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Jdk Https Server tests.
@@ -95,9 +96,10 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
      * Test, that exception is thrown when attempting to start a {@link HttpsServer} with empty SSLContext.
      * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStartHttpServerNoSslContext() throws Exception {
-        server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, true);
+        assertThrows(IllegalArgumentException.class,
+            () -> JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, true));
     }
 
     /**
@@ -105,18 +107,20 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
      * not configured correctly.
      * @throws Exception
      */
-    @Test(expected = SSLHandshakeException.class)
+    @Test
     public void testCreateHttpsServerDefaultSslContext() throws Throwable {
-        server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, SSLContext.getDefault(), true);
-        assertThat(server, instanceOf(HttpsServer.class));
+        assertThrows(SSLHandshakeException.class, () -> {
+            server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, SSLContext.getDefault(), true);
+            assertThat(server, instanceOf(HttpsServer.class));
 
-        // access the https server with not configured client
-        final Client client = ClientBuilder.newBuilder().newClient();
-        try {
-            client.target(httpsUri).path("testHttps").request().get(String.class);
-        } catch (final ProcessingException e) {
-            throw e.getCause();
-        }
+            // access the https server with not configured client
+            final Client client = ClientBuilder.newBuilder().newClient();
+            try {
+                client.target(httpsUri).path("testHttps").request().get(String.class);
+            } catch (final ProcessingException e) {
+                throw e.getCause();
+            }
+        });
     }
 
     /**
@@ -124,30 +128,34 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
      * on request.
      * @throws Exception
      */
-    @Test(expected = IOException.class)
+    @Test
     public void testHttpsServerNoSslContextDelayedStart() throws Throwable {
-        server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, false);
-        assertThat(server, instanceOf(HttpsServer.class));
-        server.start();
+        assertThrows(IOException.class, () -> {
+            server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, false);
+            assertThat(server, instanceOf(HttpsServer.class));
+            server.start();
 
-        final Client client = ClientBuilder.newBuilder().newClient();
-        try {
-            client.target(httpsUri).path("testHttps").request().get(String.class);
-        } catch (final ProcessingException e) {
-            throw e.getCause();
-        }
+            final Client client = ClientBuilder.newBuilder().newClient();
+           try {
+                client.target(httpsUri).path("testHttps").request().get(String.class);
+            } catch (final ProcessingException e) {
+                throw e.getCause();
+            }
+        });
     }
 
     /**
      * Test, that {@link HttpsServer} cannot be configured with {@link HttpsConfigurator} after it has started.
      * @throws Exception
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testConfigureSslContextAfterStart() throws Throwable {
-        server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, false);
-        assertThat(server, instanceOf(HttpsServer.class));
-        server.start();
-        ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(getServerSslContext()));
+        assertThrows(IllegalStateException.class, () -> {
+            server = JdkHttpServerFactory.createHttpServer(httpsUri, rc, null, false);
+            assertThat(server, instanceOf(HttpsServer.class));
+            server.start();
+            ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(getServerSslContext()));
+        });
     }
 
     /**
@@ -208,7 +216,7 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
         return sslConfigServer.createSSLContext();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (server != null) {
             server.stop(0);

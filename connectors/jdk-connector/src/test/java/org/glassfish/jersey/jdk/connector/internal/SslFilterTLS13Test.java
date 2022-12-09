@@ -20,12 +20,12 @@ import java.util.Arrays;
 
 import javax.net.ssl.SSLContext;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 public class SslFilterTLS13Test extends SslFilterTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         final SSLContext context = SSLContext.getInstance("TLS");
         context.init(null, null, null);
@@ -36,7 +36,7 @@ public class SslFilterTLS13Test extends SslFilterTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         System.clearProperty("jdk.tls.server.protocols");
         System.clearProperty("jdk.tls.client.protocols");
