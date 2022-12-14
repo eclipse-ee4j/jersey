@@ -67,6 +67,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>${testng6.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
