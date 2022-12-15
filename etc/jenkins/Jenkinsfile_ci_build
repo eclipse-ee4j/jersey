@@ -48,8 +48,8 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1Gi"
-        cpu: "0.3"
+        memory: "1.5Gi"
+        cpu: "0.5"
       requests:
         memory: "1Gi"
         cpu: "0.3"
@@ -59,8 +59,8 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "7Gi"
-        cpu: "1.8"
+        memory: "8Gi"
+        cpu: "2"
       requests:
         memory: "7Gi"
         cpu: "1.8"
@@ -138,8 +138,8 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1Gi"
-        cpu: "0.3"
+        memory: "1.5Gi"
+        cpu: "0.5"
       requests:
         memory: "1Gi"
         cpu: "0.3"
@@ -149,8 +149,8 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "7Gi"
-        cpu: "1.8"
+        memory: "8Gi"
+        cpu: "2"
       requests:
         memory: "7Gi"
         cpu: "1.8"
@@ -228,8 +228,8 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1Gi"
-        cpu: "0.3"
+        memory: "1.5Gi"
+        cpu: "0.5"
       requests:
         memory: "1Gi"
         cpu: "0.3"
@@ -239,8 +239,8 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "7Gi"
-        cpu: "1.8"
+        memory: "8Gi"
+        cpu: "2"
       requests:
         memory: "7Gi"
         cpu: "1.8"
