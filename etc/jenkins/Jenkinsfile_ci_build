@@ -59,10 +59,10 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
       requests:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
@@ -149,10 +149,10 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
       requests:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
@@ -239,10 +239,10 @@ spec:
   - name: el-build
     resources:
       limits:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
       requests:
-        memory: "8Gi"
+        memory: "7Gi"
         cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
