@@ -48,22 +48,22 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "4Gi"
-        cpu: "2"
+        memory: "1Gi"
+        cpu: "0.5"
       requests:
-        memory: "4Gi"
-        cpu: "1"
+        memory: "1Gi"
+        cpu: "0.5"
     volumeMounts:
     - name: volume-known-hosts
       mountPath: /home/jenkins/.ssh    
   - name: el-build
     resources:
       limits:
-        memory: "12Gi"
-        cpu: "6"
+        memory: "8Gi"
+        cpu: "2"
       requests:
-        memory: "12Gi"
-        cpu: "5.5"
+        memory: "8Gi"
+        cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
     - name: tools
@@ -138,22 +138,22 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "4Gi"
-        cpu: "2"
+        memory: "1Gi"
+        cpu: "0.5"
       requests:
-        memory: "4Gi"
-        cpu: "1"
+        memory: "1Gi"
+        cpu: "0.5"
     volumeMounts:
     - name: volume-known-hosts
       mountPath: /home/jenkins/.ssh    
   - name: el-build
     resources:
       limits:
-        memory: "12Gi"
-        cpu: "6"
+        memory: "8Gi"
+        cpu: "2"
       requests:
-        memory: "12Gi"
-        cpu: "5.5"
+        memory: "8Gi"
+        cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
     - name: tools
@@ -228,22 +228,22 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "4Gi"
-        cpu: "2"
+        memory: "1Gi"
+        cpu: "0.5"
       requests:
-        memory: "4Gi"
-        cpu: "1"
+        memory: "1Gi"
+        cpu: "0.5"
     volumeMounts:
     - name: volume-known-hosts
       mountPath: /home/jenkins/.ssh    
   - name: el-build
     resources:
       limits:
-        memory: "12Gi"
-        cpu: "6"
+        memory: "8Gi"
+        cpu: "2"
       requests:
-        memory: "12Gi"
-        cpu: "5.5"
+        memory: "8Gi"
+        cpu: "2"
     image: tkraus/el-build:2.0.2
     volumeMounts:
     - name: tools
