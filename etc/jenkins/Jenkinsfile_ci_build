@@ -48,10 +48,10 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1.5Gi"
+        memory: "1Gi"
         cpu: "0.5"
       requests:
-        memory: "1Gi"
+        memory: "0.8Gi"
         cpu: "0.3"
     volumeMounts:
     - name: volume-known-hosts
@@ -138,10 +138,10 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1.5Gi"
+        memory: "1Gi"
         cpu: "0.5"
       requests:
-        memory: "1Gi"
+        memory: "0.8Gi"
         cpu: "0.3"
     volumeMounts:
     - name: volume-known-hosts
@@ -228,10 +228,10 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1.5Gi"
+        memory: "1Gi"
         cpu: "0.5"
       requests:
-        memory: "1Gi"
+        memory: "0.8Gi"
         cpu: "0.3"
     volumeMounts:
     - name: volume-known-hosts
