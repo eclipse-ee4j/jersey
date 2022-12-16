@@ -210,24 +210,15 @@ spec:
   - name: jnlp
     resources:
       limits:
-        memory: "1Gi"
-        cpu: "0.5"
+        memory: "4096Mi"
+        cpu: "2000m"
       requests:
-        memory: "0.8Gi"
-        cpu: "0.3"
-    volumeMounts:
-    - name: volume-known-hosts
-      mountPath: /home/jenkins/.ssh    
-  - name: el-build
-    resources:
-      limits:
-        memory: "7Gi"
-        cpu: "1.5"
-      requests:
-        memory: "6Gi"
-        cpu: "1"
+        memory: "4096Mi"
+        cpu: "1000m"
     image: tkraus/el-build:2.0.2
     volumeMounts:
+    - name: volume-known-hosts
+      mountPath: /home/jenkins/.ssh
     - name: tools
       mountPath: /opt/tools
     - name: settings-xml
