@@ -68,67 +68,67 @@ pipeline {
         command:
         - cat
       - name: jdk11
-              resources:
-                limits:
-                  memory: "1024Mi"
-                  cpu: "2000m"
-                requests:
-                  memory: "512Mi"
-                  cpu: "1000m"
-              image: tkraus/el-build:2.0.2
-              volumeMounts:
-              - name: volume-known-hosts
-                mountPath: /home/jenkins/.ssh
-              - name: tools
-                mountPath: /opt/tools
-              - name: settings-xml
-                mountPath: /home/jenkins/.m2/settings.xml
-                subPath: settings.xml
-                readOnly: true
-              - name: toolchains-xml
-                mountPath: /home/jenkins/.m2/toolchains.xml
-                subPath: toolchains.xml
-                readOnly: true
-              - name: settings-security-xml
-                mountPath: /home/jenkins/.m2/settings-security.xml
-                subPath: settings-security.xml
-                readOnly: true
-              - name: m2-repo
-                mountPath: /home/jenkins/.m2/repository
-              tty: true
-              command:
-              - cat
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+          requests:
+            memory: "512Mi"
+            cpu: "1000m"
+        image: tkraus/el-build:2.0.2
+        volumeMounts:
+          - name: volume-known-hosts
+            mountPath: /home/jenkins/.ssh
+          - name: tools
+            mountPath: /opt/tools
+          - name: settings-xml
+            mountPath: /home/jenkins/.m2/settings.xml
+            subPath: settings.xml
+            readOnly: true
+          - name: toolchains-xml
+            mountPath: /home/jenkins/.m2/toolchains.xml
+            subPath: toolchains.xml
+            readOnly: true
+          - name: settings-security-xml
+            mountPath: /home/jenkins/.m2/settings-security.xml
+            subPath: settings-security.xml
+            readOnly: true
+          - name: m2-repo
+            mountPath: /home/jenkins/.m2/repository
+          tty: true
+          command:
+          - cat
       - name: jdk19
-              resources:
-                limits:
-                  memory: "1024Mi"
-                  cpu: "2000m"
-                requests:
-                  memory: "512Mi"
-                  cpu: "1000m"
-              image: tkraus/el-build:2.0.2
-              volumeMounts:
-              - name: volume-known-hosts
-                mountPath: /home/jenkins/.ssh
-              - name: tools
-                mountPath: /opt/tools
-              - name: settings-xml
-                mountPath: /home/jenkins/.m2/settings.xml
-                subPath: settings.xml
-                readOnly: true
-              - name: toolchains-xml
-                mountPath: /home/jenkins/.m2/toolchains.xml
-                subPath: toolchains.xml
-                readOnly: true
-              - name: settings-security-xml
-                mountPath: /home/jenkins/.m2/settings-security.xml
-                subPath: settings-security.xml
-                readOnly: true
-              - name: m2-repo
-                mountPath: /home/jenkins/.m2/repository
-              tty: true
-              command:
-              - cat
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+          requests:
+            memory: "512Mi"
+            cpu: "1000m"
+        image: tkraus/el-build:2.0.2
+        volumeMounts:
+        - name: volume-known-hosts
+          mountPath: /home/jenkins/.ssh
+        - name: tools
+          mountPath: /opt/tools
+        - name: settings-xml
+          mountPath: /home/jenkins/.m2/settings.xml
+          subPath: settings.xml
+          readOnly: true
+        - name: toolchains-xml
+          mountPath: /home/jenkins/.m2/toolchains.xml
+          subPath: toolchains.xml
+          readOnly: true
+        - name: settings-security-xml
+          mountPath: /home/jenkins/.m2/settings-security.xml
+          subPath: settings-security.xml
+          readOnly: true
+        - name: m2-repo
+          mountPath: /home/jenkins/.m2/repository
+        tty: true
+        command:
+        - cat
     """
            }
     }
