@@ -141,12 +141,12 @@ pipeline {
         stage('Jersey build') {
             parallel {
                 stage('JDK 8 ') {
-                    container("jdk8") {
                     tools {
                         jdk 'oracle-jdk8-latest'
                         maven 'apache-maven-latest'
                     }
                     steps {
+                    container("jdk8") {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
                             '''
@@ -154,12 +154,12 @@ pipeline {
                     }
                 }
                 stage('JDK 11 ') {
-                    container("jdk11") {
                     tools {
                         jdk 'openjdk-jdk11-latest'
                         maven 'apache-maven-latest'
                     }
                     steps {
+                    container("jdk11") {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
                             '''
@@ -167,12 +167,12 @@ pipeline {
                     }
                 }
                 stage('JDK 19 ') {
-                    container("jdk19") {
                     tools {
                         jdk 'openjdk-jdk19-latest'
                         maven 'apache-maven-latest'
                     }
                     steps {
+                    container("jdk19") {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
                             '''
