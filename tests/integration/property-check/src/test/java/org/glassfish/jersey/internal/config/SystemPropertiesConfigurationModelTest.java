@@ -137,7 +137,7 @@ public class SystemPropertiesConfigurationModelTest {
                         return Void.class;
                     }
                 });
-        steam = steam.filter(Arrays.stream(predicates).reduce(x->true, Predicate::and));
+        steam = steam.filter(Arrays.stream(predicates).reduce(x -> true, Predicate::and));
         return steam.collect(Collectors.toList());
     }
 

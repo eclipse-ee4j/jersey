@@ -102,6 +102,10 @@ public class RequestScopedResourceTest extends JerseyTest {
     @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
+    }
+
+    @AfterAll
+    public void report() {
         System.out.printf("SYNC: %d, ASYNC: %d, STRAIGHT: %d%n",
                 parameterizedCounter.intValue(), parameterizedAsyncCounter.intValue(), straightCounter.intValue());
     }

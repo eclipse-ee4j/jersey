@@ -39,7 +39,7 @@ public class GFTest {
         );
     }
 
-    private static WebArchive createDeployment(String archiveName, Class<?>...classes) {
+    private static WebArchive createDeployment(String archiveName, Class<?>... classes) {
         WebArchive archive = ShrinkWrap.create(WebArchive.class, archiveName + ".war");
         archive.addClasses(classes);
         return archive;

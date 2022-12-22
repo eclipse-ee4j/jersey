@@ -50,11 +50,11 @@
             <artifactId>weld-se-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.smallrye.config</groupId>
             <artifactId>smallrye-config</artifactId>
@@ -70,12 +70,13 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>${testng6.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.27.2</version>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -103,7 +104,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>20.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -138,19 +139,19 @@
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
-            <version>1.7.0.Alpha10</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-spi</artifactId>
-            <version>1.7.0.Alpha10</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-embedded</artifactId>
-            <version>3.0.0.Final</version>
+            <version>${arquillian.weld.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -199,12 +200,12 @@
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit47</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-testng</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                         </dependencies>
                         <configuration>

@@ -111,7 +111,7 @@ public class JerseyCompletionStageRxInvokerTest {
 
     @Test
     public void testNotFoundReadEntityViaGenericType() throws Throwable {
-        Assertions.assertThrows(NotFoundException.class, () ->{
+        Assertions.assertThrows(NotFoundException.class, () -> {
             try {
                 client.target("http://jersey.java.net")
                       .request()

@@ -24,22 +24,29 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
-
 import org.glassfish.jersey.SslConfigurator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Petr Janouch
  */
+@ExtendWith(SslFilterTest.DeprecatedTLSCondition.class)
 public abstract class SslFilterTest {
 
     private static final int PORT = 8321;
@@ -530,5 +538,33 @@ public abstract class SslFilterTest {
         void rehandshake() throws IOException {
             socket.startHandshake();
         }
+    }
+
+    public static class DeprecatedTLSCondition implements ExecutionCondition {
+
+        @Override
+        public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+            Class<?> test = context.getTestClass().get();
+            String required = null;
+            if (test == SslFilterTLS1Test.class) {
+                required = "TLSv1";
+            } else if (test == SslFilterTLS11Test.class) {
+                required = "TLSv1.1";
+            }
+            if (required != null) {
+                try {
+                    SSLContext context1 = SSLContext.getInstance("TLS");
+                    context1.init(null, null, null);
+                    List<String> supportedProtocols = Arrays.asList(context1.getDefaultSSLParameters().getProtocols());
+                    if (!supportedProtocols.contains(required)) {
+                        return ConditionEvaluationResult.disabled("JDK does not support " + required);
+                    }
+                } catch (KeyManagementException | NoSuchAlgorithmException e) {
+                    return ConditionEvaluationResult.disabled("JDK does not support TLS: " + e.getMessage());
+                }
+            }
+            return ConditionEvaluationResult.enabled("JDK is valid to run " + test.getCanonicalName());
+        }
+
     }
 }
