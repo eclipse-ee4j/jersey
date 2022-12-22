@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.99-SNAPSHOT</version>
+        <version>3.0.9</version>
     </parent>
 
     <artifactId>server-async</artifactId>

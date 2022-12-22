@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.archetypes</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.99-SNAPSHOT</version>
+        <version>3.0.9</version>
     </parent>
 
     <artifactId>jersey-example-java8-webapp</artifactId>
