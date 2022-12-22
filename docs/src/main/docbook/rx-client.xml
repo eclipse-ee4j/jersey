@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -803,7 +803,7 @@ ListenableFuture&lt;Response&gt; response = client.target("http://jersey.java.ne
 
             <programlisting language="java" linenumbering="numbered">public static class CompletionStageRxInvokerProvider implements RxInvokerProvider&lt;CompletionStageRxInvoker&gt; {
     @Override
-    public boolean isProviderFor(Class&lt;?%gt; clazz) {
+    public boolean isProviderFor(Class&lt;?&gt; clazz) {
         return CompletionStage.class.equals(clazz);
     }
 
