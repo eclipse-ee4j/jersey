@@ -120,6 +120,10 @@
         <!-- need to explicitly include the servlet dependency here
               as it is scoped as provided in the jersey-servet modules -->
         <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.servlet</artifactId>
             <version>3.1</version>
@@ -304,6 +308,7 @@
                             <includeDependencySources>true</includeDependencySources>
                             <sourceFileExcludes>
                                 <fileExclude>META-INF/versions/12/org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
+                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                             </sourceFileExcludes>
                             <dependencySourceIncludes>
