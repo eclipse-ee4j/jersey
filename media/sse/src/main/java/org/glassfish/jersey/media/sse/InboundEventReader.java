@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,8 +49,12 @@ class InboundEventReader implements MessageBodyReader<InboundEvent> {
     private static final Logger LOGGER = Logger.getLogger(InboundEventReader.class.getName());
     private static final byte[] EOL_DATA = new byte[] {'\n'};
 
+    private final Provider<MessageBodyWorkers> messageBodyWorkers;
+
     @Inject
-    private Provider<MessageBodyWorkers> messageBodyWorkers;
+    InboundEventReader(Provider<MessageBodyWorkers> messageBodyWorkers) {
+        this.messageBodyWorkers = messageBodyWorkers;
+    }
 
     private enum State {
         SKIPPING_PREPENDED_EMPTY_EVENTS,

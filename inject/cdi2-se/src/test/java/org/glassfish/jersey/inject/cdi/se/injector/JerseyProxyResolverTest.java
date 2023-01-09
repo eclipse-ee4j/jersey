@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -97,7 +97,7 @@ public class JerseyProxyResolverTest {
 
     @Test
     public void testProxyCreated() {
-        MyInjectionResolver injectionResolver = new MyInjectionResolver(new JaxrsProviders());
+        MyInjectionResolver injectionResolver = new MyInjectionResolver(new JaxrsProviders(null, null, null));
         InjecteeImpl injectee = new InjecteeImpl();
         injectee.setRequiredType(Providers.class);
         injectee.setParent(FIELDS[0]);
@@ -109,7 +109,7 @@ public class JerseyProxyResolverTest {
 
     @Test
     public void testProxyCached() {
-        MyInjectionResolver injectionResolver = new MyInjectionResolver(new JaxrsProviders());
+        MyInjectionResolver injectionResolver = new MyInjectionResolver(new JaxrsProviders(null, null, null));
         InjecteeImpl injectee1 = new InjecteeImpl();
         injectee1.setRequiredType(Providers.class);
         injectee1.setParent(FIELDS[0]);
@@ -126,7 +126,7 @@ public class JerseyProxyResolverTest {
 
     @Test
     public void testProxyCacheNotMismatched() {
-        MyInjectionResolver injectionResolver1 = new MyInjectionResolver(new JaxrsProviders());
+        MyInjectionResolver injectionResolver1 = new MyInjectionResolver(new JaxrsProviders(null, null, null));
         InjecteeImpl injectee1 = new InjecteeImpl();
         injectee1.setRequiredType(Providers.class);
         injectee1.setParent(FIELDS[0]);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,8 +52,12 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
     private static final byte[] DATA_LEAD = "data: ".getBytes(UTF8);
     private static final byte[] EOL = {'\n'};
 
+    private final Provider<MessageBodyWorkers> workersProvider;
+
     @Inject
-    private Provider<MessageBodyWorkers> workersProvider;
+    public OutboundEventWriter(Provider<MessageBodyWorkers> workersProvider) {
+        this.workersProvider = workersProvider;
+    }
 
     @Override
     public boolean isWriteable(final Class<?> type, final Type genericType, final Annotation[] annotations,

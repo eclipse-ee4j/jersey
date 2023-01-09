@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -43,7 +44,6 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -74,9 +74,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
     }
 
     public static class HttpHeadersFilter implements ClientRequestFilter {
-
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public HttpHeadersFilter(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
@@ -85,9 +88,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
     }
 
     public static class HttpHeadersResponseFilter implements ClientResponseFilter {
-
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public HttpHeadersResponseFilter(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         private static int headerValue = 0;
 
@@ -103,8 +109,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
 
     @Produces(MediaType.TEXT_PLAIN)
     public static class StringWriter implements MessageBodyWriter<String> {
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public StringWriter(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -122,9 +132,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
 
     @Consumes({MediaType.TEXT_PLAIN})
     public static class StringReader implements MessageBodyReader<String> {
-
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public StringReader(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -140,9 +153,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
     }
 
     public static class HttpHeadersReaderInterceptor implements ReaderInterceptor {
-
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public HttpHeadersReaderInterceptor(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         @Override
         public Object aroundReadFrom(ReaderInterceptorContext context) throws IOException, WebApplicationException {
@@ -153,9 +169,12 @@ public class HttpHeadersInjectionTest extends JerseyTest {
     }
 
     public static class HttpHeadersWriterInterceptor implements WriterInterceptor {
-
-        @Context
         HttpHeaders headers;
+
+        @Inject
+        public HttpHeadersWriterInterceptor(HttpHeaders headers) {
+            this.headers = headers;
+        }
 
         @Override
         public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
@@ -177,7 +196,7 @@ public class HttpHeadersInjectionTest extends JerseyTest {
     @Test
     public void testHttpHeadersInjectionInResponseFilter() {
         final String value = "1";
-        final HttpHeadersResponseFilter filter = new HttpHeadersResponseFilter();
+        final HttpHeadersResponseFilter filter = new HttpHeadersResponseFilter(null);
         final String response = target().register(HttpHeadersResponseFilter.class).request().header(HEADER_NAME, value)
                 .buildPost(Entity.entity(value, MediaType.TEXT_PLAIN_TYPE)).invoke(String.class);
         assertThat(response, is(value));

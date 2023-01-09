@@ -46,6 +46,25 @@
                         <sun.net.http.allowRestrictedHeaders>true</sun.net.http.allowRestrictedHeaders>
                     </systemPropertyVariables>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>WithHK2</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/NonInjectionManagerTest.java</exclude>
+                            </excludes>
+                            <systemPropertyVariables>
+                                <jersey.injectionmanager.hk2>true</jersey.injectionmanager.hk2>
+                            </systemPropertyVariables>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>org.glassfish.jersey.incubator:jersey-injectless-client</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -174,6 +193,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth2-client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.incubator</groupId>
+            <artifactId>jersey-injectless-client</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

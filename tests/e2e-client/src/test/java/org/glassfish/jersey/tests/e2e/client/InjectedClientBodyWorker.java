@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,7 +31,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ContextResolver;
@@ -73,9 +73,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Provider
     @Produces(ProviderType)
     public static class ProvidersInjectedWriter implements MessageBodyWriter<String> {
-
-        @Context
         Providers providers;
+
+        @Inject
+        public ProvidersInjectedWriter(Providers providers) {
+            this.providers = providers;
+        }
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -105,8 +108,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Consumes(ProviderType)
     public static class ProvidersInjectedReader implements MessageBodyReader<String> {
 
-        @Context
         Providers providers;
+
+        @Inject
+        ProvidersInjectedReader(Providers providers) {
+            this.providers = providers;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -132,8 +139,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Produces(ConfigurationTYPE)
     public static class ConfigurationInjectedWriter implements MessageBodyWriter<String> {
 
-        @Context
         Configuration configuration;
+
+        @Inject
+        public ConfigurationInjectedWriter(Configuration configuration) {
+            this.configuration = configuration;
+        }
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -158,9 +169,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Provider
     @Consumes(ConfigurationTYPE)
     public static class ConfigurationInjectedReader implements MessageBodyReader<String> {
-
-        @Context
         Configuration configuration;
+
+        @Inject
+        public ConfigurationInjectedReader(Configuration configuration) {
+            this.configuration = configuration;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

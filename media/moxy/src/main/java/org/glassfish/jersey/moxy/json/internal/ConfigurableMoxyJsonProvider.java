@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ContextResolver;
@@ -77,11 +77,13 @@ public class ConfigurableMoxyJsonProvider extends MOXyJsonProvider {
         return propertyNames;
     }
 
-    @Context
-    private Providers providers;
+    private final Configuration config;
 
-    @Context
-    private Configuration config;
+    @Inject
+    public ConfigurableMoxyJsonProvider(Providers providers, Configuration config) {
+        this.providers = providers;
+        this.config = config;
+    }
 
     private MoxyJsonConfig globalConfig;
 

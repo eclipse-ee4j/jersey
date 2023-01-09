@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,8 +52,12 @@ public class FilteringMessageBodyProvider implements MessageBodyReader<Object>, 
 
     private static final Logger LOGGER = Logger.getLogger(FilteringMessageBodyProvider.class.getName());
 
+    private final javax.inject.Provider<ObjectProvider<ObjectGraph>> provider;
+
     @Inject
-    private javax.inject.Provider<ObjectProvider<ObjectGraph>> provider;
+    public FilteringMessageBodyProvider(javax.inject.Provider<ObjectProvider<ObjectGraph>> provider) {
+        this.provider = provider;
+    }
 
     @Override
     public boolean isReadable(final Class<?> type, final Type genericType, final Annotation[] annotations,

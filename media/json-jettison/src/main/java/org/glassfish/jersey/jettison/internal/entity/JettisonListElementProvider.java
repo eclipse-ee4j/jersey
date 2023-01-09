@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,10 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -54,12 +55,12 @@ import org.glassfish.jersey.jettison.internal.Stax2JettisonFactory;
  */
 public class JettisonListElementProvider extends AbstractCollectionJaxbProvider {
 
-    JettisonListElementProvider(Providers ps) {
-        super(ps);
+    JettisonListElementProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    JettisonListElementProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    JettisonListElementProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override
@@ -75,9 +76,9 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     @Produces("application/json")
     @Consumes("application/json")
     public static final class App extends JettisonListElementProvider {
-
-        public App(@Context Providers ps) {
-            super(ps, MediaType.APPLICATION_JSON_TYPE);
+        @Inject
+        public App(Providers ps, Configuration config) {
+            super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
 
@@ -85,8 +86,9 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     @Consumes("*/*")
     public static final class General extends JettisonListElementProvider {
 
-        public General(@Context Providers ps) {
-            super(ps);
+        @Inject
+        public General(Providers ps, Configuration config) {
+            super(ps, config);
         }
 
         @Override

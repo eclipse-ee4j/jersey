@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,10 +55,14 @@ import org.xml.sax.SAXException;
 @Singleton
 public final class DocumentProvider extends AbstractMessageReaderWriterProvider<Document> {
 
+    private final Provider<DocumentBuilderFactory> dbf;
+    private final Provider<TransformerFactory> tf;
+
     @Inject
-    private Provider<DocumentBuilderFactory> dbf;
-    @Inject
-    private Provider<TransformerFactory> tf;
+    public DocumentProvider(Provider<DocumentBuilderFactory> dbf, Provider<TransformerFactory> tf) {
+        this.dbf = dbf;
+        this.tf = tf;
+    }
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

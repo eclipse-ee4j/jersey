@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.lang.reflect.Type;
 
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -34,6 +33,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.server.CloseableService;
 
 import org.jvnet.mimepull.MIMEParsingException;
@@ -52,9 +52,10 @@ public class MultiPartReaderServerSide extends MultiPartReaderClientSide {
     private final Provider<CloseableService> closeableServiceProvider;
 
     @Inject
-    public MultiPartReaderServerSide(@Context final Providers providers,
-                                     final Provider<CloseableService> closeableServiceProvider) {
-        super(providers);
+    public MultiPartReaderServerSide(final Providers providers,
+                                     final Provider<CloseableService> closeableServiceProvider,
+                                     final Provider<MessageBodyWorkers> messageBodyWorkers) {
+        super(providers, messageBodyWorkers);
         this.closeableServiceProvider = closeableServiceProvider;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -213,11 +213,15 @@ public class ManagedClientExecutorTest extends JerseyTest {
      */
     public static class SchedulerThreadNameReader implements MessageBodyReader<SchedulerThreadName> {
 
-        @Inject
-        ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorService injectedService;
 
         @Inject
-        ScheduledExecutorService injectedService;
+        public SchedulerThreadNameReader(ScheduledExecutorService injectedService,
+                                         ScheduledExecutorServiceProvider injectedProvider) {
+            this.injectedProvider = injectedProvider;
+            this.injectedService = injectedService;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

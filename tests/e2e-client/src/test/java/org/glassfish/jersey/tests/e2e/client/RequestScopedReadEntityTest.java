@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,9 +71,12 @@ public class RequestScopedReadEntityTest extends JerseyTest {
 
     @Produces("text/plain")
     public static class ScopedMessageEntityProvider extends AbstractMessageReaderWriterProvider<Message> {
+        private final Provider<ClientRequest> clientRequestProvider;
 
         @Inject
-        private Provider<ClientRequest> clientRequestProvider;
+        public ScopedMessageEntityProvider(Provider<ClientRequest> clientRequestProvider) {
+            this.clientRequestProvider = clientRequestProvider;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
