@@ -40,7 +40,7 @@ public class Injections {
     /**
      * Creates an {@link InjectionManager} without parent and initial binder.
      *
-     * @return An injection manager with all the bindings.
+     * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager() {
         return lookupInjectionManagerFactory(RuntimeType.SERVER).create();
@@ -50,7 +50,7 @@ public class Injections {
      * Creates an {@link InjectionManager} without parent and initial binder.
      * @param type {@link RuntimeType} the {@link InjectionManagerFactory} must be {@link ConstrainedTo} if annotated.
      *
-     * @return An injection manager with all the bindings.
+     * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(RuntimeType type) {
         return lookupInjectionManagerFactory(type).create();
@@ -60,7 +60,7 @@ public class Injections {
      * Creates a {@link InjectionManager} with initial binder that is immediately registered.
      *
      * @param binder custom the {@link Binder binder}.
-     * @return a injection manager with all the bindings.
+     * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(Binder binder) {
         InjectionManagerFactory injectionManagerFactory = lookupInjectionManagerFactory(RuntimeType.SERVER);

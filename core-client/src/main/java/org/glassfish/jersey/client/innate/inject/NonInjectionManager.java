@@ -82,6 +82,12 @@ public final class NonInjectionManager implements InjectionManager {
     private final Instances instances = new Instances();
     private final Types types = new Types();
 
+    /**
+     * A class that holds singleton instances and thread-scope instances. Provides thread safe access to singletons
+     * and thread-scope instances. The instances are created for Type (ParametrizedType) and for a Class.
+     * @param <TYPE> the type for which the instance is created, either Class, or ParametrizedType (for instance
+     * Provider&lt;SomeClass&gt;).
+     */
     private class TypedInstances<TYPE> {
         private final MultivaluedMap<TYPE, InstanceContext<?>> singletonInstances = new MultivaluedHashMap<>();
         private final ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
@@ -534,6 +540,15 @@ public final class NonInjectionManager implements InjectionManager {
         return null;
     }
 
+    /**
+     * Some {@link Binding} requires the proxy to be created rather than just the instance,
+     * for instance a proxy of an instance supplied by a supplier that is not known at a time of the proxy creation.
+     * @param createProxy the nullable {@link Binding#isProxiable()} information
+     * @param iface the type of which the proxy is created
+     * @param supplier the reference to the supplier
+     * @param <T> the type the supplier should supply
+     * @return The proxy for the instance supplied by a supplier or the instance if not required to be proxied.
+     */
     @SuppressWarnings("unchecked")
     private <T> T createSupplierProxyIfNeeded(Boolean createProxy, Class<T> iface, Supplier<T> supplier) {
         if (createProxy != null && createProxy && iface.isInterface()) {
@@ -552,6 +567,11 @@ public final class NonInjectionManager implements InjectionManager {
         }
     }
 
+    /**
+     * A holder class making sure the Supplier (especially the {@link DisposableSupplier}) supplying the instance
+     * supplies (and is registered for being disposed at the end of the lifecycle) only once.
+     * @param <T>
+     */
     private class SingleRegisterSupplier<T> {
         private final LazyValue<T> once;
 
@@ -572,6 +592,13 @@ public final class NonInjectionManager implements InjectionManager {
         return instance;
     }
 
+    /**
+     * Create {@link ClassBindings} instance containing bindings and instances for the given Type.
+     * @param clazz the given class.
+     * @param instancesQualifiers The qualifiers the expected instances of the given class should have.
+     * @param <T> Expected return class type.
+     * @return the {@link ClassBindings}.
+     */
     @SuppressWarnings("unchecked")
     private <T> ClassBindings<T> classBindings(Class<T> clazz, Annotation... instancesQualifiers) {
         ClassBindings<T> classBindings = new ClassBindings<>(clazz, instancesQualifiers);
@@ -594,6 +621,12 @@ public final class NonInjectionManager implements InjectionManager {
         return classBindings;
     }
 
+    /**
+     * Create {@link TypeBindings} instance containing bindings and instances for the given Type.
+     * @param type the given type.
+     * @param <T> Expected return type.
+     * @return the {@link TypeBindings}.
+     */
     @SuppressWarnings("unchecked")
     private <T> TypeBindings<T> typeBindings(Type type) {
         TypeBindings<T> typeBindings = new TypeBindings<>(type);
@@ -616,6 +649,18 @@ public final class NonInjectionManager implements InjectionManager {
         return typeBindings;
     }
 
+    /**
+     * <p>
+     * A class that contains relevant bindings for a given TYPE, filtered from all registered bindings.
+     * The TYPE is either Type (ParametrizedType) or Class.
+     * </p>
+     * <p>
+     * The class also filters any bindings for which the singleton or thread-scoped instance already is created.
+     * The class either provides the existing instance, or all instances of the TYPE, or {@link ServiceHolder}s.
+     * </p>
+     * @param <X> The expected return type for the TYPE.
+     * @param <TYPE> The Type for which a {@link Binding} has been created.
+     */
     private abstract class XBindings<X, TYPE> {
 
         protected final List<InstanceBinding<X>> instanceBindings = new LinkedList<>();
@@ -915,6 +960,12 @@ public final class NonInjectionManager implements InjectionManager {
         }
     }
 
+    /**
+     * A triplet of created instance, the registered {@link Binding} that prescribed the creation of the instance
+     * and {@link Annotation qualifiers} the instance was created with.
+     * @param <T> type of the instance.
+     * @see NonInjectionManager#getInstance(Class, Annotation[])
+     */
     private static class InstanceContext<T> {
         private final T instance;
         private final Binding<?, ?> binding;
@@ -970,6 +1021,9 @@ public final class NonInjectionManager implements InjectionManager {
         }
     }
 
+    /**
+     * Singleton Binding this {@link NonInjectionManager} was supposed to be created based upon.
+     */
     private static final class InjectionManagerBinding extends Binding<InjectionManager, Binding<?, ?>> {
     }
 
