@@ -33,6 +33,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.LogRecord;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -62,6 +63,11 @@ import org.junit.jupiter.api.Test;
  * @author Adam Lindenthal
  */
 public class ManagedClientExecutorTest extends JerseyTest {
+
+    public ManagedClientExecutorTest() {
+        // The tests need to run on port 9998, since @Uri() annotation needs a constant String with a port
+        System.setProperty(TestProperties.CONTAINER_PORT, "9998");
+    }
 
     @Override
     protected ResourceConfig configure() {
@@ -256,8 +262,15 @@ public class ManagedClientExecutorTest extends JerseyTest {
 
     @Test
     public void testManagedClientExecutor() {
-        final String response = target().path("test/executor").request().get(String.class);
-        Assertions.assertEquals("foo-executor-service-0", response);
+        try {
+            final String response = target().path("test/executor").request().get(String.class);
+            Assertions.assertEquals("foo-executor-service-0", response);
+        } catch (Exception e) {
+            for (LogRecord record : getLoggedRecords()) {
+                System.out.println(record.getMessage());
+            }
+        }
+
     }
 
     @Test

@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,9 +35,12 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
 public class HttpProxyTest extends JerseyTest {
+    public HttpProxyTest() {
+        set(TestProperties.CONTAINER_PORT, 0);
+    }
 
     private static final String PROXY_HOST = "localhost";
-    private static final String PROXY_PORT = "9997";
+    private static final String PROXY_PORT = "0";
     private static boolean proxyHit = false;
 
     @Path("resource")
@@ -57,7 +61,6 @@ public class HttpProxyTest extends JerseyTest {
     @BeforeEach
     public void startFakeProxy() {
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         Server server = new Server(Integer.parseInt(PROXY_PORT));
         server.setHandler(new ProxyHandler(false));
         try {
@@ -65,6 +68,7 @@ public class HttpProxyTest extends JerseyTest {
         } catch (Exception e) {
 
         }
+        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, String.valueOf(server.getURI().getPort()));
     }
 
     @Test
