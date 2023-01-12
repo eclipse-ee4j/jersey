@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
 public final class AnnotationBundleKey
 {
     private final static Annotation[] NO_ANNOTATIONS = new Annotation[0];
-    
+
     private final Annotation[] _annotations;
 
     /**
@@ -23,7 +23,7 @@ public final class AnnotationBundleKey
      * not mapper or reader/writer).
      */
     private final Class<?> _type;
-    
+
     private final boolean _annotationsCopied;
 
     private final int _hashCode;
@@ -70,7 +70,7 @@ public final class AnnotationBundleKey
         }
         return hash;
     }
-    
+
     /**
      * Method called to create a safe immutable copy of the key; used when
      * adding entry with this key -- lookups are ok without calling the method.
@@ -95,7 +95,7 @@ public final class AnnotationBundleKey
     public int hashCode() {
         return _hashCode;
     }
-    
+
     @Override
     public String toString() {
         return "[Annotations: "+_annotations.length+", type: "
@@ -115,7 +115,7 @@ public final class AnnotationBundleKey
         }
         return _equals(other._annotations);
     }
-    
+
     private final boolean _equals(Annotation[] otherAnn)
     {
         final int len = _annotations.length;
@@ -128,32 +128,35 @@ public final class AnnotationBundleKey
         //   possible permutations but rather trying to ensure that caching of same
         //   method signature is likely to match. So false negatives are acceptable
         //   over having to do order-insensitive comparison.
-        
+
+        // 25-Oct-2021, tatu: But note that there is balance here; the goal is NOT
+        //   100% accuracy (every equal combination found as such) but finding
+        //   some matches, efficiently, while allowing no false matches.
         switch (len) {
-        default:
-            for (int i = 0; i < len; ++i) {
-                if (!_annotations[i].equals(otherAnn[i])) {
+            default:
+                for (int i = 0; i < len; ++i) {
+                    if (!_annotations[i].equals(otherAnn[i])) {
+                        return false;
+                    }
+                }
+                return true;
+
+            case 3:
+                if (!_annotations[2].equals(otherAnn[2])) {
                     return false;
                 }
-            }
-            return true;
-            
-        case 3:
-            if (!_annotations[2].equals(otherAnn[2])) {
-                return false;
-            }
-            // fall through
-        case 2:
-            if (!_annotations[1].equals(otherAnn[1])) {
-                return false;
-            }
-            // fall through
-        case 1:
-            if (!_annotations[0].equals(otherAnn[0])) {
-                return false;
-            }
-            // fall through
-        case 0:
+                // fall through
+            case 2:
+                if (!_annotations[1].equals(otherAnn[1])) {
+                    return false;
+                }
+                // fall through
+            case 1:
+                if (!_annotations[0].equals(otherAnn[0])) {
+                    return false;
+                }
+                // fall through
+            case 0:
         }
         return true;
     }
