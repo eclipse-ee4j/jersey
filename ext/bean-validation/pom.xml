@@ -101,7 +101,16 @@
                     <groupId>jakarta.el</groupId>
                     <artifactId>jakarta.el-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>

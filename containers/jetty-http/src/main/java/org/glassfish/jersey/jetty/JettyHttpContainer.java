@@ -237,13 +237,9 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     }
 
 
-    private URI getBaseUri(final Request request) {
-        try {
-            return new URI(request.getScheme(), null, request.getServerName(),
-                    request.getServerPort(), getBasePath(request), null, null);
-        } catch (final URISyntaxException ex) {
-            throw new IllegalArgumentException(ex);
-        }
+    private URI getBaseUri(final Request request) throws URISyntaxException {
+        return new URI(request.getScheme(), null, request.getServerName(),
+                request.getServerPort(), getBasePath(request), null, null);
     }
 
     private String getBasePath(final Request request) {

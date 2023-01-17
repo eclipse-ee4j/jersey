@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,16 +17,16 @@
 package org.glassfish.jersey.jnh.connector;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.junit.Test;
 
 import java.net.http.HttpClient;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class UnderlyingHttpClientAccessTest {
 
@@ -40,11 +40,11 @@ public class UnderlyingHttpClientAccessTest {
         final WebTarget target = client.target("http://localhost/");
         final HttpClient hcOnTarget = JavaNetHttpConnectorProvider.getHttpClient(target);
 
-        assertNotNull("HTTP client instance set on JerseyClient should not be null.", hcOnClient);
-        assertNotNull("HTTP client instance set on JerseyWebTarget should not be null.", hcOnTarget);
-        assertSame("HTTP client instance set on JerseyClient should be the same instance as the one set on JerseyWebTarget"
-                   + "(provided the target instance has not been further configured).",
-                   hcOnClient, hcOnTarget
+        assertNotNull(hcOnClient, "HTTP client instance set on JerseyClient should not be null.");
+        assertNotNull(hcOnTarget, "HTTP client instance set on JerseyWebTarget should not be null.");
+        assertSame(hcOnClient, hcOnTarget,
+                "HTTP client instance set on JerseyClient should be the same instance as the one set on JerseyWebTarget"
+                   + "(provided the target instance has not been further configured)."
         );
     }
 

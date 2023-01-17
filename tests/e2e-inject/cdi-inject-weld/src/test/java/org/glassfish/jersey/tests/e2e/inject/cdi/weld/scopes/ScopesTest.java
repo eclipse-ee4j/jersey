@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Tests CDI resources.
@@ -31,6 +33,7 @@ public class ScopesTest extends JerseyTest {
 
     private Weld weld;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         weld = new Weld();
@@ -38,6 +41,7 @@ public class ScopesTest extends JerseyTest {
         super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         weld.shutdown();

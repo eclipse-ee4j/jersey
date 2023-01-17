@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,11 @@ package org.glassfish.jersey.inject.hk2;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests that {@link java.util.function.Supplier} can contain proxies.
@@ -33,12 +33,12 @@ public class SupplierProxyTest {
 
     private InjectionManager injectionManager;
 
-    @Before
+    @BeforeEach
     public void setup() {
         injectionManager = BindingTestHelper.createInjectionManager();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         injectionManager.shutdown();
     }

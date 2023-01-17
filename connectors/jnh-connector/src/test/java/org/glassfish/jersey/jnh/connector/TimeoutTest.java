@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
 
 import java.net.URI;
 import java.net.http.HttpTimeoutException;
@@ -35,11 +34,12 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TimeoutTest extends JerseyTest {
     private static final Logger LOGGER = Logger.getLogger(TimeoutTest.class.getName());
@@ -93,8 +93,8 @@ public class TimeoutTest extends JerseyTest {
             t.path("test/timeout").request().get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
-            assertThat("Unexpected processing exception cause",
-                       e.getCause(), instanceOf(HttpTimeoutException.class));
+            assertInstanceOf(HttpTimeoutException.class, e.getCause(),
+                    "Unexpected processing exception cause");
         } finally {
             c.close();
         }
@@ -111,8 +111,8 @@ public class TimeoutTest extends JerseyTest {
             t.path("test/timeout").request().property(ClientProperties.READ_TIMEOUT, 1_000).get();
             fail("Timeout expected.");
         } catch (ProcessingException e) {
-            assertThat("Unexpected processing exception cause",
-                       e.getCause(), instanceOf(HttpTimeoutException.class));
+            assertInstanceOf(HttpTimeoutException.class, e.getCause(),
+                    "Unexpected processing exception cause");
         } finally {
             c.close();
         }

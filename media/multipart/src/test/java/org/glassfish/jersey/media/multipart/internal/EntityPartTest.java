@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,8 +38,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -52,6 +51,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EntityPartTest extends JerseyTest {
 
@@ -207,8 +208,8 @@ public class EntityPartTest extends JerseyTest {
     public void getEntityPartListTest() throws IOException {
         try (Response response = target().request().get()) {
             List<EntityPart> list = response.readEntity(LIST_ENTITY_PART_TYPE);
-            Assert.assertEquals("TEST1", list.get(0).getContent(String.class));
-            Assert.assertEquals("TEST2", list.get(1).getContent(String.class));
+            assertEquals("TEST1", list.get(0).getContent(String.class));
+            assertEquals("TEST2", list.get(1).getContent(String.class));
         }
     }
 
@@ -220,7 +221,7 @@ public class EntityPartTest extends JerseyTest {
         GenericEntity<List<EntityPart>> genericEntity = new GenericEntity<>(list) {};
         Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
         try (Response response = target("/postList").request().post(entity)) {
-            Assert.assertEquals("TEST1", response.readEntity(String.class));
+            assertEquals("TEST1", response.readEntity(String.class));
         }
     }
 
@@ -232,7 +233,7 @@ public class EntityPartTest extends JerseyTest {
         GenericEntity<List<EntityPart>> genericEntity = new GenericEntity<>(list) {};
         Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
         try (Response response = target("/postForm").request().post(entity)) {
-            Assert.assertEquals("TEST1", response.readEntity(String.class));
+            assertEquals("TEST1", response.readEntity(String.class));
         }
     }
 
@@ -244,7 +245,7 @@ public class EntityPartTest extends JerseyTest {
         GenericEntity<List<EntityPart>> genericEntity = new GenericEntity<>(list) {};
         Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
         try (Response response = target("/postListForm").request().post(entity)) {
-            Assert.assertEquals("TEST1", response.readEntity(String.class));
+            assertEquals("TEST1", response.readEntity(String.class));
         }
     }
 
@@ -266,20 +267,20 @@ public class EntityPartTest extends JerseyTest {
             List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
 
             EntityPart part1 = result.get(0);
-            Assert.assertEquals("name1", part1.getName());
-            Assert.assertEquals("file1.doc", part1.getFileName().get());
-            Assert.assertEquals("data1", part1.getContent(String.class));
+            assertEquals("name1", part1.getName());
+            assertEquals("file1.doc", part1.getFileName().get());
+            assertEquals("data1", part1.getContent(String.class));
 
             EntityPart part2 = result.get(1);
-            Assert.assertEquals("name2", part2.getName());
-            Assert.assertEquals("file2.doc", part2.getFileName().get());
-            Assert.assertEquals("data2", part2.getContent(String.class));
+            assertEquals("name2", part2.getName());
+            assertEquals("file2.doc", part2.getFileName().get());
+            assertEquals("data2", part2.getContent(String.class));
 
             EntityPart part3 = result.get(2);
-            Assert.assertEquals("name3", part3.getName());
-            Assert.assertEquals("file3.xml", part3.getFileName().get());
-            Assert.assertEquals("data3", part3.getContent(String.class));
-            Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, part3.getMediaType());
+            assertEquals("name3", part3.getName());
+            assertEquals("file3.xml", part3.getFileName().get());
+            assertEquals("data3", part3.getContent(String.class));
+            assertEquals(MediaType.TEXT_PLAIN_TYPE, part3.getMediaType());
         }
     }
 
@@ -292,8 +293,8 @@ public class EntityPartTest extends JerseyTest {
         Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
         try (Response response = target("/postHeaders").request().post(entity)) {
             List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
-            Assert.assertEquals("value-01", result.get(0).getHeaders().getFirst("header-01"));
-            Assert.assertEquals("data1", result.get(0).getContent(String.class));
+            assertEquals("value-01", result.get(0).getHeaders().getFirst("header-01"));
+            assertEquals("data1", result.get(0).getContent(String.class));
         }
     }
 
@@ -342,7 +343,7 @@ public class EntityPartTest extends JerseyTest {
         Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
         try (Response response = target("/postGeneric").request().post(entity)) {
             List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
-            Assert.assertEquals("data1", result.get(0).getContent(String.class));
+            assertEquals("data1", result.get(0).getContent(String.class));
         }
     }
 
@@ -358,7 +359,7 @@ public class EntityPartTest extends JerseyTest {
 
         try (Response response = target("/postFormVarious").request().post(entity)) {
             List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
-            Assert.assertEquals("Hello world!", result.get(0).getContent(String.class));
+            assertEquals("Hello world!", result.get(0).getContent(String.class));
         }
     }
 
@@ -366,7 +367,7 @@ public class EntityPartTest extends JerseyTest {
     public void getListTest() throws IOException {
         try (Response response = target("/getList").request().get()) {
             List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
-            Assert.assertEquals("data1", result.get(0).getContent(String.class));
+            assertEquals("data1", result.get(0).getContent(String.class));
         }
     }
 }

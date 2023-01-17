@@ -37,8 +37,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The LargeDataTest reproduces a problem when bytes of large data sent are incorrectly sent.
@@ -107,9 +107,8 @@ public class LargeDataTest extends JerseyTest {
                 throw exception;
             }
 
-            Assert.assertEquals("Unexpected error: " + response.getStatus(),
-                    Status.Family.SUCCESSFUL,
-                    response.getStatusInfo().getFamily());
+            Assertions.assertEquals(Status.Family.SUCCESSFUL, response.getStatusInfo().getFamily(),
+                    "Unexpected error: " + response.getStatus());
         } finally {
             response.close();
         }

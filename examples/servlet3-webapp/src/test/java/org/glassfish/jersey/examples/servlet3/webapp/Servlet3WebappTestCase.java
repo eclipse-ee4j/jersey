@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,18 +12,13 @@ package org.glassfish.jersey.examples.servlet3.webapp;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
-import org.glassfish.jersey.test.spi.TestContainerException;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.UriBuilder;
 
-import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests the servlet3-webapp example.

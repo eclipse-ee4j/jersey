@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.cdi.resources;
 
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 /**

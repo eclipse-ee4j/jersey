@@ -67,10 +67,6 @@
             <artifactId>jersey-weld2-se</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.jboss.weld.se</groupId>
                     <artifactId>weld-se-core</artifactId>
                 </exclusion>

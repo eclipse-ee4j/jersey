@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,12 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.server.ServerProperties;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletionStage;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WebServerProviderTest {
     @Test
@@ -31,7 +33,7 @@ public class WebServerProviderTest {
         SeBootstrap.Configuration config =
             SeBootstrap.Configuration.builder().property(ServerProperties.WEBSERVER_CLASS, WebServerTestImpl2.class).build();
 
-        Assert.assertNull(new WebServerProviderTestImpl().createServer(WebServerTestImpl.class, Application.class, config));
+        assertNull(new WebServerProviderTestImpl().createServer(WebServerTestImpl.class, Application.class, config));
     }
 
     @Test
@@ -39,7 +41,7 @@ public class WebServerProviderTest {
         SeBootstrap.Configuration config =
                 SeBootstrap.Configuration.builder().property(ServerProperties.WEBSERVER_CLASS, WebServerTestImpl.class).build();
 
-        Assert.assertTrue(
+        assertTrue(
                 WebServerTestImpl.class.isInstance(
                         new WebServerProviderTestImpl().createServer(WebServerTestImpl2.class, Application.class, config)
                 )
@@ -51,7 +53,7 @@ public class WebServerProviderTest {
         SeBootstrap.Configuration config =
                 SeBootstrap.Configuration.builder().build();
 
-        Assert.assertNull(new WebServerProviderTestImpl().createServer(WebServerTestImpl2.class, Application.class, config));
+        assertNull(new WebServerProviderTestImpl().createServer(WebServerTestImpl2.class, Application.class, config));
     }
 
     @Test
@@ -59,7 +61,7 @@ public class WebServerProviderTest {
         SeBootstrap.Configuration config =
                 SeBootstrap.Configuration.builder().build();
 
-        Assert.assertTrue(
+        assertTrue(
                 WebServerTestImpl.class.isInstance(
                         new WebServerProviderTestImpl().createServer(WebServerTestImpl.class, Application.class, config)
                 )
@@ -71,7 +73,7 @@ public class WebServerProviderTest {
         SeBootstrap.Configuration config =
                 SeBootstrap.Configuration.builder().build();
 
-        Assert.assertTrue(
+        assertTrue(
                 WebServerTestImpl.class.isInstance(
                         new WebServerProviderTestImpl().createServer(WebServer.class, Application.class, config)
                 )

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,12 +60,6 @@
             <artifactId>smallrye-config</artifactId>
             <version>${smallrye.config.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
@@ -76,12 +70,13 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>${testng6.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.27.2</version>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -109,7 +104,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>20.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -144,19 +139,19 @@
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
-            <version>1.7.0.Alpha10</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-spi</artifactId>
-            <version>1.7.0.Alpha10</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-embedded</artifactId>
-            <version>3.0.0.Final</version>
+            <version>${arquillian.weld.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -180,6 +175,11 @@
             <artifactId>jersey-weld2-se</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -200,12 +200,12 @@
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit47</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-testng</artifactId>
-                                <version>${surefire.version}</version>
+                                <version>${surefire.mvn.plugin.version}</version>
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -242,7 +242,7 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/server.policy</surefire.security.argline>
-        <jetty.version>9.4.27.v20200227</jetty.version>
+        <jetty.version>${jetty9.version}</jetty.version>
     </properties>
 
 

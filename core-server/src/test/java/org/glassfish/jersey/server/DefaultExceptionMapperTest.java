@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,13 +23,13 @@ import jakarta.ws.rs.container.CompletionCallback;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.internal.ExceptionMapperFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultExceptionMapperTest {
     public static final String MESSAGE = "DefaultExceptionMapperTest I/O Exception";
@@ -38,7 +38,7 @@ public class DefaultExceptionMapperTest {
         IOException ioe = new IOException(MESSAGE);
         DefaultExceptionMapper mapper = new DefaultExceptionMapper();
         Response response = mapper.toResponse(ioe);
-        Assert.assertFalse(response.getEntity().toString().contains(MESSAGE));
+        assertThat(response.getEntity().toString().contains(MESSAGE)).isFalse();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class DefaultExceptionMapperTest {
             // expected
         }
 
-        Assert.assertEquals(1, counter.get());
+        assertEquals(1, counter.get());
     }
 
     @Test

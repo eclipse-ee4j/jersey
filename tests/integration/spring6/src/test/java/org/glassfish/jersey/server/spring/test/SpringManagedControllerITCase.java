@@ -21,8 +21,8 @@ import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for Spring managed JAX-RS resources with @Controller archetype.

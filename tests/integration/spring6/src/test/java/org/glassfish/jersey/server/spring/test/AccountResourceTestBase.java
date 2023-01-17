@@ -22,10 +22,10 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Base class for JAX-RS resource tests.

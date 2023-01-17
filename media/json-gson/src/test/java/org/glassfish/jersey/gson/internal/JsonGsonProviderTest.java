@@ -32,16 +32,19 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Providers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JsonGsonProviderTest {
 
-    @Test(expected = NoContentException.class)
+    @Test
     public void shouldThrowNoContentException() throws IOException {
-        Providers providers = new EmptyProviders();
-        MessageBodyReader<Foo> mbr = (MessageBodyReader) new JsonGsonProvider(providers);
-        mbr.readFrom(Foo.class, Foo.class, new Annotation[0], APPLICATION_JSON_TYPE,
-                new MultivaluedHashMap<>(), new ByteArrayInputStream(new byte[0]));
+        assertThrows(NoContentException.class, () -> {
+            Providers providers = new EmptyProviders();
+            MessageBodyReader<Foo> mbr = (MessageBodyReader) new JsonGsonProvider(providers);
+            mbr.readFrom(Foo.class, Foo.class, new Annotation[0], APPLICATION_JSON_TYPE,
+                    new MultivaluedHashMap<>(), new ByteArrayInputStream(new byte[0]));
+        });
     }
 
     private static final class Foo {

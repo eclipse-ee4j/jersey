@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,13 +27,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@link ByteBufferInputStream} unit tests.
@@ -200,14 +200,14 @@ public class ByteBufferInputStreamTest {
                     Thread.yield(); // Give the other thread a chance to run.
                     continue;
                 }
-                assertEquals("At position: " + j, (byte) (i & 0xFF), (byte) (c & 0xFF));
+                assertEquals((byte) (i & 0xFF), (byte) (c & 0xFF), "At position: " + j);
                 if (++j % BUFFER_SIZE == 0) {
                     i++;
                     Thread.yield(); // Give the other thread a chance to run.
                 }
             }
 
-            assertEquals("Number of bytes produced and bytes read does not match.", ROUNDS * BUFFER_SIZE, j);
+            assertEquals(ROUNDS * BUFFER_SIZE, j, "Number of bytes produced and bytes read does not match.");
         } finally {
             executor.shutdownNow();
             bbis.close();
@@ -272,7 +272,7 @@ public class ByteBufferInputStreamTest {
                     continue;
                 }
                 for (int p = 0; p < c; p++) {
-                    assertEquals("At position: " + j, (byte) (i & 0xFF), (byte) buffer[p]);
+                    assertEquals((byte) (i & 0xFF), (byte) buffer[p], "At position: " + j);
                     if (++j % BUFFER_SIZE == 0) {
                         i++;
                         Thread.yield(); // Give the other thread a chance to run.
@@ -280,7 +280,7 @@ public class ByteBufferInputStreamTest {
                 }
             }
 
-            assertEquals("Number of bytes produced and bytes read does not match.", ROUNDS * BUFFER_SIZE, j);
+            assertEquals(ROUNDS * BUFFER_SIZE, j, "Number of bytes produced and bytes read does not match.");
         } finally {
             executor.shutdownNow();
             bbis.close();
@@ -338,16 +338,16 @@ public class ByteBufferInputStreamTest {
             int j = 0;
             int c;
             while ((c = bbis.read()) != -1) {
-                assertNotEquals("Should not read 'nothing' in blocking mode.", Integer.MIN_VALUE, c);
+                assertNotEquals(Integer.MIN_VALUE, c, "Should not read 'nothing' in blocking mode.");
 
-                assertEquals("At position: " + j, (byte) (i & 0xFF), (byte) c);
+                assertEquals((byte) (i & 0xFF), (byte) c, "At position: " + j);
                 if (++j % BUFFER_SIZE == 0) {
                     i++;
                     Thread.yield(); // Give the other thread a chance to run.
                 }
             }
 
-            assertEquals("Number of bytes produced and bytes read does not match.", ROUNDS * BUFFER_SIZE, j);
+            assertEquals(ROUNDS * BUFFER_SIZE, j, "Number of bytes produced and bytes read does not match.");
         } finally {
             executor.shutdownNow();
             bbis.close();
@@ -406,10 +406,10 @@ public class ByteBufferInputStreamTest {
             int c;
             byte[] buffer = new byte[443];
             while ((c = bbis.read(buffer)) != -1) {
-                assertNotEquals("Should not read 0 bytes in blocking mode.", 0, c);
+                assertNotEquals(0, c, "Should not read 0 bytes in blocking mode.");
 
                 for (int p = 0; p < c; p++) {
-                    assertEquals("At position: " + j, (byte) (i & 0xFF), buffer[p]);
+                    assertEquals((byte) (i & 0xFF), buffer[p], "At position: " + j);
                     if (++j % BUFFER_SIZE == 0) {
                         i++;
                         Thread.yield(); // Give the other thread a chance to run.
@@ -417,7 +417,7 @@ public class ByteBufferInputStreamTest {
                 }
             }
 
-            assertEquals("Number of bytes produced and bytes read does not match.", ROUNDS * BUFFER_SIZE, j);
+            assertEquals(ROUNDS * BUFFER_SIZE, j, "Number of bytes produced and bytes read does not match.");
         } finally {
             executor.shutdownNow();
             bbis.close();
@@ -446,7 +446,7 @@ public class ByteBufferInputStreamTest {
         data.flip();
         bbis.put(data);
 
-        assertEquals("Available bytes", BUFFER_SIZE, bbis.available());
+        assertEquals(BUFFER_SIZE, bbis.available(), "Available bytes");
 
         data = ByteBuffer.allocate(BUFFER_SIZE);
         data.clear();
@@ -456,27 +456,27 @@ public class ByteBufferInputStreamTest {
         data.flip();
         bbis.put(data);
 
-        assertEquals("Available bytes", 2 * BUFFER_SIZE, bbis.available());
+        assertEquals(2 * BUFFER_SIZE, bbis.available(), "Available bytes");
 
         int c = bbis.read();
-        assertEquals("Byte read", 'A', c);
-        assertEquals("Available bytes", 2 * BUFFER_SIZE - 1, bbis.available());
+        assertEquals('A', c, "Byte read");
+        assertEquals(2 * BUFFER_SIZE - 1, bbis.available(), "Available bytes");
 
         byte[] buff = new byte[199];
         int l = bbis.read(buff);
-        assertEquals("Number of bytes read", buff.length, l);
-        assertEquals("Available bytes", 2 * BUFFER_SIZE - 200, bbis.available());
+        assertEquals(buff.length, l, "Number of bytes read");
+        assertEquals(2 * BUFFER_SIZE - 200, bbis.available(), "Available bytes");
 
         buff = new byte[1000];
         l = bbis.read(buff);
-        assertEquals("Number of bytes read", buff.length, l);
-        assertEquals("Available bytes", 2 * BUFFER_SIZE - 1200, bbis.available());
+        assertEquals(buff.length, l, "Number of bytes read");
+        assertEquals(2 * BUFFER_SIZE - 1200, bbis.available(), "Available bytes");
 
         bbis.closeQueue();
 
         l = bbis.read(buff);
-        assertEquals("Number of bytes read", 2 * BUFFER_SIZE - 1200, l);
-        assertEquals("Available bytes", 0, bbis.available());
+        assertEquals(2 * BUFFER_SIZE - 1200, l, "Number of bytes read");
+        assertEquals(0, bbis.available(), "Available bytes");
 
         bbis.close();
     }
@@ -557,8 +557,8 @@ public class ByteBufferInputStreamTest {
             task.run();
             fail("IOException expected.");
         } catch (IOException ex) {
-            assertNotNull("Custom exception cause", ex.getCause());
-            assertEquals("Custom exception cause message", exMsg, ex.getCause().getMessage());
+            assertNotNull(ex.getCause(), "Custom exception cause");
+            assertEquals(exMsg, ex.getCause().getMessage(), "Custom exception cause message");
         }
 
         if (retryFailOnClosed) {
@@ -566,8 +566,8 @@ public class ByteBufferInputStreamTest {
                 task.run();
                 fail("IOException expected.");
             } catch (IOException ex) {
-                assertEquals("Closed IOException message", LocalizationMessages.INPUT_STREAM_CLOSED(), ex.getMessage());
-                assertNull("Closed IOException cause", ex.getCause());
+                assertEquals(LocalizationMessages.INPUT_STREAM_CLOSED(), ex.getMessage(), "Closed IOException message");
+                assertNull(ex.getCause(), "Closed IOException cause");
             }
         } else {
             task.run();

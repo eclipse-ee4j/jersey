@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,8 @@ import org.glassfish.jersey.server.oauth1.OAuth1ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test, that there are no properties with overlapping names in known Jersey {@code *Properties} and {@code *Feature}

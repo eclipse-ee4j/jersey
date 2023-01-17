@@ -41,6 +41,12 @@
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -87,6 +93,10 @@
             <artifactId>jersey-test-framework-provider-bundle</artifactId>
             <type>pom</type>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jdk-http</artifactId>
         </dependency>
     </dependencies>
 

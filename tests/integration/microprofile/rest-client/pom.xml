@@ -51,12 +51,6 @@
             <artifactId>smallrye-config</artifactId>
             <version>${smallrye.config.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>

@@ -43,11 +43,15 @@ import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test custom socket factory in HttpUrlConnection using SSL
@@ -94,8 +98,9 @@ public class SslHttpUrlConnectorTest extends AbstractConnectorServerTest {
      *
      * @author Kevin Conaway
      */
-    @Test
-    public void testConcurrentRequestsWithCustomSSLContext() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testConcurrentRequestsWithCustomSSLContext(ConnectorProvider connectorProvider) throws Exception {
         if (HttpUrlConnectorProvider.class.isInstance(connectorProvider)
                 || (ApacheConnectorProvider.class.isInstance(connectorProvider))
                 || (Apache5ConnectorProvider.class.isInstance(connectorProvider))) {
@@ -132,14 +137,9 @@ public class SslHttpUrlConnectorTest extends AbstractConnectorServerTest {
 
         service.shutdown();
 
-        assertTrue(
-            service.awaitTermination(1, TimeUnit.MINUTES)
-        );
+        assertTrue(service.awaitTermination(1, TimeUnit.MINUTES));
 
-        assertTrue(
-            toString(exceptions),
-            exceptions.isEmpty()
-        );
+        assertTrue(exceptions.isEmpty(), toString(exceptions));
     }
 
     private String toString(List<Exception> exceptions) {

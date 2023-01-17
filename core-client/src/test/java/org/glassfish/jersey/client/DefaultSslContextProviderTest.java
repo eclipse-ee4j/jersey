@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,10 +26,10 @@ import org.glassfish.jersey.client.spi.DefaultSslContextProvider;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Values;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Pavel Bucek

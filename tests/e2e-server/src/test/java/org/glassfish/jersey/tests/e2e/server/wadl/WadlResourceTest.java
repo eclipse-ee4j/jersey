@@ -91,27 +91,25 @@ import org.glassfish.jersey.server.wadl.internal.WadlUtils;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementQualifier;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sun.research.ws.wadl.Method;
 import com.sun.research.ws.wadl.Param;
@@ -128,8 +126,8 @@ import com.sun.research.ws.wadl.Resources;
  * @author Libor Kramolis
  * @author Marek Potociar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
+@Suite
+@SelectClasses({
         WadlResourceTest.Wadl1Test.class,
         WadlResourceTest.Wadl2Test.class,
         WadlResourceTest.Wadl3Test.class,
@@ -1061,7 +1059,7 @@ public class WadlResourceTest {
         }
 
         @Test
-        @Ignore("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
+        @Disabled("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
         // TODO: fix
         public void testWadlForAmbiguousResourceTemplates()
                 throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
@@ -1078,7 +1076,7 @@ public class WadlResourceTest {
         }
 
         @Test
-        @Ignore("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
+        @Disabled("JERSEY-1670: WADL Options invoked on resources with same template returns only methods from one of them.")
         // TODO: fix
         public void testWadlForAmbiguousChildResourceTemplates()
                 throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
@@ -1274,19 +1272,16 @@ public class WadlResourceTest {
             final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
             xp.setNamespaceContext(nsContext);
 
-            final Diff diff = XMLUnit.compareXML(
-                    nodeAsString(
-                            xp.evaluate("//wadl:resource[@path='annotated']/wadl:resource", document,
-                                    XPathConstants.NODE)),
-                    nodeAsString(
-                            xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
-                                    XPathConstants.NODE))
-            );
-            XMLUnit.setXpathNamespaceContext(
-                    new SimpleNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02")));
-            final ElementQualifier elementQualifier = new RecursiveElementNameAndTextQualifier();
-            diff.overrideElementQualifier(elementQualifier);
-            XMLAssert.assertXMLEqual(diff, true);
+            final Diff diff = DiffBuilder.compare(
+                            nodeAsString(
+                                    xp.evaluate("//wadl:resource[@path='annotated']/wadl:resource", document,
+                                            XPathConstants.NODE)))
+                    .withTest(
+                            nodeAsString(
+                                    xp.evaluate("//wadl:resource[@path='not-annotated']/wadl:resource", document,
+                                            XPathConstants.NODE))
+                    ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02")).build();
+            Assertions.assertFalse(diff.hasDifferences());
 
         }
 

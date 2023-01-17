@@ -16,12 +16,15 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
@@ -33,8 +36,10 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
@@ -43,122 +48,135 @@ import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Pavel Bucek
  */
-@RunWith(Parameterized.class)
-public class HttpPatchTest extends JerseyTest {
+public class HttpPatchTest {
 
     private static final Logger LOGGER = Logger.getLogger(RequestHeaderModificationsTest.class.getName());
 
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static List<Object[]> testData() {
-        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][]{
-                // {HttpUrlConnectorProvider.class}, // cannot process PATCH without additional configuration
-                {GrizzlyConnectorProvider.class},
-                {JettyConnectorProvider.class}, // unstable.
-                {ApacheConnectorProvider.class},
-                {Apache5ConnectorProvider.class},
-                {NettyConnectorProvider.class},
-                {JdkConnectorProvider.class},
-                {JavaNetHttpConnectorProvider.class}
-                }));
+    public static List<ConnectorProvider> testData() {
+        int size = 7;
+        final ConnectorProvider[] providers = new ConnectorProvider[size];
+        providers[0] = new JdkConnectorProvider();
+        providers[1] = new GrizzlyConnectorProvider();
+        providers[2] = new JettyConnectorProvider();
+        providers[3] = new ApacheConnectorProvider();
+        providers[4] = new Apache5ConnectorProvider();
+        providers[5] = new NettyConnectorProvider();
+        providers[6] = new JavaNetHttpConnectorProvider();
+
+        return Arrays.asList(providers);
     }
 
-    private final ConnectorProvider connectorProvider;
-
-    public HttpPatchTest(Class<? extends ConnectorProvider> connectorProviderClass)
-            throws IllegalAccessException, InstantiationException {
-        this.connectorProvider = connectorProviderClass.newInstance();
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        Collection<DynamicContainer> tests = new ArrayList<>();
+        for (ConnectorProvider provider : testData()) {
+            HttpPatchTemplateTest test = new HttpPatchTemplateTest(provider) {};
+            DynamicContainer container = TestHelper.toTestContainer(test,
+                    String.format("httpPatchTest (%s)", provider.getClass().getSimpleName()));
+            tests.add(container);
+        }
+        return tests;
     }
 
-    @Override
-    protected Application configure() {
-        set(TestProperties.RECORD_LOG_LEVEL, Level.WARNING.intValue());
-        enable(TestProperties.LOG_TRAFFIC);
-        return new ResourceConfig(PatchResource.class)
-                .register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.HEADERS_ONLY));
-    }
+    public abstract static class HttpPatchTemplateTest extends JerseyTest {
+        private final ConnectorProvider connectorProvider;
 
-    @Override
-    protected void configureClient(ClientConfig clientConfig) {
-        clientConfig.connectorProvider(connectorProvider);
-    }
+        public HttpPatchTemplateTest(ConnectorProvider connectorProvider) {
+            this.connectorProvider = connectorProvider;
+        }
 
-    @Test
-    public void testPatchResponse() throws Exception {
-        Response response = target().request().method("PATCH", Entity.text("patch"));
+        @Override
+        protected Application configure() {
+            set(TestProperties.RECORD_LOG_LEVEL, Level.WARNING.intValue());
+            enable(TestProperties.LOG_TRAFFIC);
+            return new ResourceConfig(PatchResource.class)
+                    .register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.HEADERS_ONLY));
+        }
 
-        assertEquals(200, response.getStatus());
-        assertEquals("patch", response.readEntity(String.class));
-    }
+        @Override
+        protected void configureClient(ClientConfig clientConfig) {
+            clientConfig.connectorProvider(connectorProvider);
+        }
 
-    @Test
-    public void testPatchEntity() throws Exception {
-        String response = target().request().method("PATCH", Entity.text("patch"), String.class);
+        @Test
+        public void testPatchResponse() throws Exception {
+            Response response = target().request().method("PATCH", Entity.text("patch"));
 
-        assertEquals("patch", response);
-    }
+            assertEquals(200, response.getStatus());
+            assertEquals("patch", response.readEntity(String.class));
+        }
 
-    @Test
-    public void testPatchGenericType() throws Exception {
-        String response = target().request().method("PATCH", Entity.text("patch"), new GenericType<String>() {
-        });
+        @Test
+        public void testPatchEntity() throws Exception {
+            String response = target().request().method("PATCH", Entity.text("patch"), String.class);
 
-        assertEquals("patch", response);
-    }
+            assertEquals("patch", response);
+        }
 
-    @Test
-    public void testAsyncPatchResponse() throws Exception {
-        Future<Response> response = target().request().async().method("PATCH", Entity.text("patch"));
+        @Test
+        public void testPatchGenericType() throws Exception {
+            String response = target().request().method("PATCH", Entity.text("patch"), new GenericType<String>() {
+            });
 
-        assertEquals(200, response.get().getStatus());
-        assertEquals("patch", response.get().readEntity(String.class));
-    }
+            assertEquals("patch", response);
+        }
 
-    @Test
-    public void testAsyncPatchEntity() throws Exception {
-        Future<String> response = target().request().async().method("PATCH", Entity.text("patch"), String.class);
+        @Test
+        public void testAsyncPatchResponse() throws Exception {
+            Future<Response> response = target().request().async().method("PATCH", Entity.text("patch"));
 
-        assertEquals("patch", response.get());
-    }
+            assertEquals(200, response.get().getStatus());
+            assertEquals("patch", response.get().readEntity(String.class));
+        }
 
-    @Test
-    public void testAsyncPatchGenericType() throws Exception {
-        Future<String> response = target().request().async().method("PATCH", Entity.text("patch"), new GenericType<String>() {
-        });
+        @Test
+        public void testAsyncPatchEntity() throws Exception {
+            Future<String> response = target().request().async().method("PATCH", Entity.text("patch"), String.class);
 
-        assertEquals("patch", response.get());
-    }
+            assertEquals("patch", response.get());
+        }
 
-    @Test
-    public void testRxPatchResponse() throws Exception {
-        CompletionStage<Response> response = target().request().rx().method("PATCH", Entity.text("patch"));
+        @Test
+        public void testAsyncPatchGenericType() throws Exception {
+            Future<String> response = target().request().async().method("PATCH", Entity.text("patch"), new GenericType<String>() {
+            });
 
-        assertEquals(200, response.toCompletableFuture().get().getStatus());
-        assertEquals("patch", response.toCompletableFuture().get().readEntity(String.class));
-    }
+            assertEquals("patch", response.get());
+        }
 
-    @Test
-    public void testRxPatchEntity() throws Exception {
-        CompletionStage<String> response = target().request().rx().method("PATCH", Entity.text("patch"), String.class);
+        @Test
+        public void testRxPatchResponse() throws Exception {
+            CompletionStage<Response> response = target().request().rx().method("PATCH", Entity.text("patch"));
 
-        assertEquals("patch", response.toCompletableFuture().get());
-    }
+            assertEquals(200, response.toCompletableFuture().get().getStatus());
+            assertEquals("patch", response.toCompletableFuture().get().readEntity(String.class));
+        }
 
-    @Test
-    public void testRxPatchGenericType() throws Exception {
-        CompletionStage<String> response = target().request().rx()
-                                                   .method("PATCH", Entity.text("patch"), new GenericType<String>() {
-                                                   });
+        @Test
+        public void testRxPatchEntity() throws Exception {
+            CompletionStage<String> response = target().request().rx().method("PATCH", Entity.text("patch"), String.class);
 
-        assertEquals("patch", response.toCompletableFuture().get());
+            assertEquals("patch", response.toCompletableFuture().get());
+        }
+
+        @Test
+        public void testRxPatchGenericType() throws Exception {
+            CompletionStage<String> response = target().request().rx()
+                                                       .method("PATCH", Entity.text("patch"), new GenericType<String>() {
+                                                       });
+
+            assertEquals("patch", response.toCompletableFuture().get());
+        }
     }
 
     @Path("/")

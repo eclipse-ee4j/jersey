@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -102,7 +102,7 @@ public final class HeaderUtils {
      *         if the supplied header value is {@code null}.
      */
     @SuppressWarnings("unchecked")
-    private static String asString(final Object headerValue, RuntimeDelegate rd) {
+    public static String asString(final Object headerValue, RuntimeDelegate rd) {
         if (headerValue == null) {
             return null;
         }
@@ -149,7 +149,7 @@ public final class HeaderUtils {
      *                     will be called for before element conversion.
      * @return String view of header values.
      */
-    private static List<String> asStringList(final List<Object> headerValues, final RuntimeDelegate rd) {
+    public static List<String> asStringList(final List<Object> headerValues, final RuntimeDelegate rd) {
         if (headerValues == null || headerValues.isEmpty()) {
             return Collections.emptyList();
         }
@@ -191,7 +191,24 @@ public final class HeaderUtils {
             return null;
         }
 
-        final RuntimeDelegate rd = RuntimeDelegateDecorator.configured(configuration);
+        return asStringHeaders(headers, RuntimeDelegateDecorator.configured(configuration));
+    }
+
+    /**
+     * Returns string view of passed headers. Any modifications to the headers are visible to the view, the view also
+     * supports removal of elements. Does not support other modifications.
+     *
+     * @param headers headers.
+     * @param rd     {@link RuntimeDelegate} instance or {@code null} (in that case {@link RuntimeDelegate#getInstance()}
+     *               will be called for before conversion of elements).
+     * @return String view of headers or {@code null} if {code headers} input parameter is {@code null}.
+     */
+    public static MultivaluedMap<String, String> asStringHeaders(
+            final MultivaluedMap<String, Object> headers, RuntimeDelegate rd) {
+        if (headers == null) {
+            return null;
+        }
+
         return new AbstractMultivaluedMap<String, String>(
                 Views.mapView(headers, input -> HeaderUtils.asStringList(input, rd))
         ) {

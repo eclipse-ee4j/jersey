@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.beans.IntrospectionException;
 import java.lang.annotation.Annotation;
@@ -42,7 +42,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * @author Richard Obersheimer

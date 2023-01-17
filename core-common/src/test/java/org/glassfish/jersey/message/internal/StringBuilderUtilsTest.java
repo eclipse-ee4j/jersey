@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,10 @@
 
 package org.glassfish.jersey.message.internal;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -30,11 +30,11 @@ public class StringBuilderUtilsTest {
     public StringBuilderUtilsTest() {
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() throws Exception {
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,6 +81,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
     private final InvocationInterceptorStages.PreInvocationInterceptorStage preInvocationInterceptorStage;
     private final InvocationInterceptorStages.PostInvocationInterceptorStage postInvocationInterceptorStage;
+    private final InvocationBuilderListenerStage invocationBuilderListenerStage;
 
     /**
      * Create new client request processing runtime.
@@ -93,6 +94,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
             final BootstrapBag bootstrapBag) {
         Provider<Ref<ClientRequest>> clientRequest =
                 () -> injectionManager.getInstance(new GenericType<Ref<ClientRequest>>() {}.getType());
+
+        invocationBuilderListenerStage = new InvocationBuilderListenerStage(injectionManager);
 
         RequestProcessingInitializationStage requestProcessingInitializationStage =
                 new RequestProcessingInitializationStage(clientRequest, bootstrapBag.getMessageBodyWorkers(), injectionManager);
@@ -398,5 +401,9 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
      */
     InjectionManager getInjectionManager() {
         return injectionManager;
+    }
+
+    InvocationBuilderListenerStage getInvocationBuilderListenerStage() {
+        return invocationBuilderListenerStage;
     }
 }

@@ -18,12 +18,13 @@ package org.glassfish.jersey.media.multipart;
 
 import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MediaTypeTest {
     @Test
@@ -33,7 +34,7 @@ public class MediaTypeTest {
                 .content(bais)
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
-        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
+        assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
     }
 
     @Test
@@ -42,7 +43,7 @@ public class MediaTypeTest {
                 .content(new File("anyname"), File.class)
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
-        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
+        assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
     }
 
     @Test
@@ -51,7 +52,7 @@ public class MediaTypeTest {
                 .content("Hello", String.class)
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
-        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
+        assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
     }
 
     @Test
@@ -60,7 +61,7 @@ public class MediaTypeTest {
         EntityPart entityPart = EntityPart.withName("textFile").fileName("test.txt")
                 .content(bais)
                 .build();
-        Assert.assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, entityPart.getMediaType());
+        assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE, entityPart.getMediaType());
     }
 
     @Test
@@ -68,6 +69,6 @@ public class MediaTypeTest {
         EntityPart entityPart = EntityPart.withName("textFile")
                 .content("Hello", String.class)
                 .build();
-        Assert.assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
+        assertEquals(MediaType.TEXT_PLAIN_TYPE, entityPart.getMediaType());
     }
 }

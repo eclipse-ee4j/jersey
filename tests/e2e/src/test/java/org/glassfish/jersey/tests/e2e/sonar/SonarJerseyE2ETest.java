@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.sonar;
 import org.glassfish.jersey.internal.sonar.SonarJerseyCommon;
 import org.glassfish.jersey.server.internal.sonar.SonarJerseyServer;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stepan Vavra
@@ -29,11 +29,11 @@ public class SonarJerseyE2ETest {
 
     @Test
     public void testJerseyCommonE2E() {
-        Assert.assertEquals("common e2e", new SonarJerseyCommon().e2e());
+        Assertions.assertEquals("common e2e", new SonarJerseyCommon().e2e());
     }
 
     @Test
     public void testJerseyCoreE2E() {
-        Assert.assertEquals("server e2e", new SonarJerseyServer().e2e());
+        Assertions.assertEquals("server e2e", new SonarJerseyServer().e2e());
     }
 }
