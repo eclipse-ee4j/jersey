@@ -2278,7 +2278,7 @@
         <graalvm.version>20.3.2</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>7.0.0-M2</gf.impl.version>
+        <gf.impl.version>7.0.0</gf.impl.version>
         <!-- Jakartified -->
         <cdi.api.version>4.0.1</cdi.api.version>
         <cdi.osgi.version>jakarta.enterprise.*;version="[3.0,5)"</cdi.osgi.version>
