@@ -70,7 +70,7 @@ Javassist Version 3.25.0-GA
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.13.3
+Jackson JAX-RS Providers Version 2.14.1
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2022 FasterXML, LLC. All rights reserved unless otherwise indicated.
