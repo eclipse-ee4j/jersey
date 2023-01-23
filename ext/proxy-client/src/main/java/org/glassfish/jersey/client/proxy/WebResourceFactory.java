@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,12 @@ package org.glassfish.jersey.client.proxy;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -118,10 +119,31 @@ public final class WebResourceFactory implements InvocationHandler {
                                     final List<Cookie> cookies,
                                     final Form form) {
 
-        return (C) Proxy.newProxyInstance(AccessController.doPrivileged(ReflectionHelper.getClassLoaderPA(resourceInterface)),
+        return (C) Proxy.newProxyInstance(getClassLoader(resourceInterface),
                 new Class[] {resourceInterface},
                 new WebResourceFactory(ignoreResourcePath ? target : addPathFromAnnotation(resourceInterface, target),
                         headers, cookies, form));
+    }
+
+    /**
+     * Gets the {@link ClassLoader} for the given resource class.
+     * This method tries to use a {@link PrivilegedAction} for obtaining the class loader, but this is deprecated since Java 17.
+     * As a fallback, obtain the {@link ClassLoader} directly via {@link Class#getClassLoader()}.
+     *
+     * @param clazz The class to get the {@link ClassLoader} for.
+     * @return The {@link ClassLoader} for the given class.
+     * @param <C> Type of the resource to be created.
+     */
+    private static <C> ClassLoader getClassLoader(final Class<C> clazz) {
+        try {
+            Class<?> accessControllerClass = Class.forName("java.security.AccessController");
+            PrivilegedAction<ClassLoader> classLoaderPrivilegedAction = ReflectionHelper.getClassLoaderPA(clazz);
+            Method doPrivilegedMethod = accessControllerClass.getMethod("doPrivileged", PrivilegedAction.class);
+            return (ClassLoader) doPrivilegedMethod.invoke(null, classLoaderPrivilegedAction);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
+                 | InvocationTargetException exception) {
+            return clazz.getClassLoader();
+        }
     }
 
     private WebResourceFactory(final WebTarget target, final MultivaluedMap<String, Object> headers,
