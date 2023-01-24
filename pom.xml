@@ -1621,6 +1621,12 @@
             </dependency>
 
             <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${bytebuddy.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-http-server</artifactId>
                 <version>${grizzly2.version}</version>
@@ -2015,6 +2021,12 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.core.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -2163,7 +2175,9 @@
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>9.4</asm.version>
+        <assertj.core.version>3.21.0</assertj.core.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
+        <bytebuddy.version>1.12.22</bytebuddy.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons.logging.version>1.2</commons.logging.version>

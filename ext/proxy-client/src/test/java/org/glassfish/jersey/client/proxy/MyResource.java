@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,14 +19,17 @@ package org.glassfish.jersey.client.proxy;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
 public class MyResource implements MyResourceIfc {
 
     @Context HttpHeaders headers;
+    @Context UriInfo uriInfo;
 
     @Override
     public String getIt() {
@@ -162,5 +165,10 @@ public class MyResource implements MyResourceIfc {
     @Override
     public String putIt(MyBean dummyBean) {
         return headers.getHeaderString(HttpHeaders.CONTENT_TYPE);
+    }
+
+    @Override
+    public Map<String, List<String>> instrumentQueryParams() {
+        return uriInfo.getQueryParameters();
     }
 }

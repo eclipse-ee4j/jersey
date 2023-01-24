@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -31,12 +32,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -59,14 +63,14 @@ public class WebResourceFactoryTest extends JerseyTest {
         // mvn test -Djersey.config.test.container.factory=org.glassfish.jersey.test.simple.SimpleTestContainerFactory
         enable(TestProperties.LOG_TRAFFIC);
         //        enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(MyResource.class);
+        return new ResourceConfig(MyResource.class).register(JacksonJaxbJsonProvider.class);
     }
 
     @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        resource = WebResourceFactory.newResource(MyResourceIfc.class, target());
+        resource = WebResourceFactory.newResource(MyResourceIfc.class, target().register(JacksonJaxbJsonProvider.class));
         resource2 = WebResourceFactory.newResource(MyResourceIfc.class, target());
 
         final MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>(1);
@@ -335,5 +339,14 @@ public class WebResourceFactoryTest extends JerseyTest {
     @Test
     public void testEquals() {
         assertFalse(resource.equals(resource2), "The two resource instances should not be considered equals as they are unique");
+    }
+
+    @Test
+    void testInstrumentingClientWorks() {
+        MultivaluedMap<String, String> expected = new MultivaluedHashMap<>();
+        expected.putSingle("key1", "value1");
+        expected.putSingle("key2", "value2");
+        Map<String, List<String>> result = resource.instrumentQueryParams();
+        assertThat(result).isNotNull().containsExactlyInAnyOrderEntriesOf(expected);
     }
 }

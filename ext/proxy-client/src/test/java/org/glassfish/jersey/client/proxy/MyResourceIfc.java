@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.client.proxy;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -37,7 +38,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 @Path("myresource")
-public interface MyResourceIfc {
+public interface MyResourceIfc extends MyResourceInstrumentation {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     String getIt();
@@ -171,4 +172,9 @@ public interface MyResourceIfc {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     String putIt(MyBean dummyBean);
+
+    @Path("instrumentation")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    Map<String, List<String>> instrumentQueryParams();
 }

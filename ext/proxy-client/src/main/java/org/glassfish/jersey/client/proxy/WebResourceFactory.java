@@ -18,11 +18,9 @@ package org.glassfish.jersey.client.proxy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -56,6 +54,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
+import net.bytebuddy.implementation.bind.annotation.This;
+import net.bytebuddy.matcher.ElementMatchers;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
@@ -65,7 +71,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  *
  * @author Martin Matula
  */
-public final class WebResourceFactory implements InvocationHandler {
+public final class WebResourceFactory {
 
     private static final String[] EMPTY = {};
 
@@ -84,11 +90,11 @@ public final class WebResourceFactory implements InvocationHandler {
      * the interface passed in the first argument.
      * <p/>
      * Calling this method has the same effect as calling {@code WebResourceFactory.newResource(resourceInterface, rootTarget,
-     *false)}.
+     * false)}.
      *
-     * @param <C> Type of the resource to be created.
+     * @param <C>               Type of the resource to be created.
      * @param resourceInterface Interface describing the resource to be created.
-     * @param target WebTarget pointing to the resource or the parent of the resource.
+     * @param target            WebTarget pointing to the resource or the parent of the resource.
      * @return Instance of a class implementing the resource interface that can
      * be used for making requests to the server.
      */
@@ -100,18 +106,17 @@ public final class WebResourceFactory implements InvocationHandler {
      * Creates a new client-side representation of a resource described by
      * the interface passed in the first argument.
      *
-     * @param <C> Type of the resource to be created.
-     * @param resourceInterface Interface describing the resource to be created.
-     * @param target WebTarget pointing to the resource or the parent of the resource.
+     * @param <C>                Type of the resource to be created.
+     * @param resourceInterface  Interface describing the resource to be created.
+     * @param target             WebTarget pointing to the resource or the parent of the resource.
      * @param ignoreResourcePath If set to true, ignores path annotation on the resource interface (this is used when creating
-     * sub-resources)
-     * @param headers Header params collected from parent resources (used when creating a sub-resource)
-     * @param cookies Cookie params collected from parent resources (used when creating a sub-resource)
-     * @param form Form params collected from parent resources (used when creating a sub-resource)
+     *                           sub-resources)
+     * @param headers            Header params collected from parent resources (used when creating a sub-resource)
+     * @param cookies            Cookie params collected from parent resources (used when creating a sub-resource)
+     * @param form               Form params collected from parent resources (used when creating a sub-resource)
      * @return Instance of a class implementing the resource interface that can
      * be used for making requests to the server.
      */
-    @SuppressWarnings("unchecked")
     public static <C> C newResource(final Class<C> resourceInterface,
                                     final WebTarget target,
                                     final boolean ignoreResourcePath,
@@ -119,10 +124,25 @@ public final class WebResourceFactory implements InvocationHandler {
                                     final List<Cookie> cookies,
                                     final Form form) {
 
-        return (C) Proxy.newProxyInstance(getClassLoader(resourceInterface),
-                new Class[] {resourceInterface},
-                new WebResourceFactory(ignoreResourcePath ? target : addPathFromAnnotation(resourceInterface, target),
-                        headers, cookies, form));
+        try {
+            return new ByteBuddy().subclass(resourceInterface)
+                    .method(ElementMatchers.any())
+                    .intercept(
+                            MethodDelegation
+                                    .to(
+                                            new WebResourceFactory(ignoreResourcePath
+                                                    ? target
+                                                    : addPathFromAnnotation(resourceInterface, target), headers, cookies, form))
+                    )
+                    .make()
+                    .load(getClassLoader(resourceInterface))
+                    .getLoaded()
+                    .getConstructor()
+                    .newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
+                 | InvocationTargetException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     /**
@@ -131,8 +151,8 @@ public final class WebResourceFactory implements InvocationHandler {
      * As a fallback, obtain the {@link ClassLoader} directly via {@link Class#getClassLoader()}.
      *
      * @param clazz The class to get the {@link ClassLoader} for.
+     * @param <C>   Type of the resource to be created.
      * @return The {@link ClassLoader} for the given class.
-     * @param <C> Type of the resource to be created.
      */
     private static <C> ClassLoader getClassLoader(final Class<C> clazz) {
         try {
@@ -154,8 +174,12 @@ public final class WebResourceFactory implements InvocationHandler {
         this.form = form;
     }
 
-    @Override
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+    @RuntimeType
+    public Object invoke(
+            @This final Object proxy,
+            @Origin final Method method,
+            @SuperMethod(nullIfImpossible = true) final Method superMethod,
+            @AllArguments final Object[] args) throws Throwable {
         if (args == null && method.getName().equals("toString")) {
             return toString();
         }
@@ -168,6 +192,10 @@ public final class WebResourceFactory implements InvocationHandler {
         if (args != null && args.length == 1 && method.getName().equals("equals")) {
             //unique instance in the JVM, and no need to override
             return equals(args[0]);
+        }
+
+        if (superMethod != null) {
+            return superMethod.invoke(proxy, args);
         }
 
         // get the interface describing the resource
@@ -316,12 +344,22 @@ public final class WebResourceFactory implements InvocationHandler {
             }
         }
 
+        boolean isInstrumentedProxyClient = proxy instanceof InstrumentedProxyClient;
+
+        if (isInstrumentedProxyClient) {
+            newTarget = ((InstrumentedProxyClient) proxy).instrumentWebTarget(newTarget, method, args);
+        }
+
         Invocation.Builder builder = newTarget.request()
                 .headers(headers) // this resets all headers so do this first
                 .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
 
         for (final Cookie c : cookies) {
             builder = builder.cookie(c);
+        }
+
+        if (isInstrumentedProxyClient) {
+            builder = ((InstrumentedProxyClient) proxy).instrumentInvocationBuilder(builder, method, args);
         }
 
         final Object result;
