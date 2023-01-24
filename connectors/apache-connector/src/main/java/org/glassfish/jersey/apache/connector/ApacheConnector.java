@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.net.ssl.SSLSocket;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
@@ -53,6 +55,7 @@ import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -103,6 +106,7 @@ import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.io.ChunkedOutputStream;
 import org.apache.http.io.SessionOutputBuffer;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.TextUtils;
 import org.apache.http.util.VersionInfo;
 
@@ -180,6 +184,7 @@ import org.apache.http.util.VersionInfo;
 class ApacheConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(ApacheConnector.class.getName());
+    private static final String JERSEY_REQUEST_ATTR_NAME = "JerseyRequestAttribute";
     private static final VersionInfo vi;
     private static final String release;
 
@@ -381,15 +386,15 @@ class ApacheConnector implements Connector {
 
         final LayeredConnectionSocketFactory sslSocketFactory;
         if (sslContext != null) {
-            sslSocketFactory = new SSLConnectionSocketFactory(
+            sslSocketFactory = new SniSSLConnectionSocketFactory(
                     sslContext, supportedProtocols, supportedCipherSuites, hostnameVerifier);
         } else {
             if (useSystemProperties) {
-                sslSocketFactory = new SSLConnectionSocketFactory(
+                sslSocketFactory = new SniSSLConnectionSocketFactory(
                         (SSLSocketFactory) SSLSocketFactory.getDefault(),
                         supportedProtocols, supportedCipherSuites, hostnameVerifier);
             } else {
-                sslSocketFactory = new SSLConnectionSocketFactory(
+                sslSocketFactory = new SniSSLConnectionSocketFactory(
                         SSLContexts.createDefault(),
                         hostnameVerifier);
             }
@@ -450,14 +455,16 @@ class ApacheConnector implements Connector {
     public ClientResponse apply(final ClientRequest clientRequest) throws ProcessingException {
         final HttpUriRequest request = getUriHttpRequest(clientRequest);
         final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(clientRequest, request);
+        final HttpHost httpHost = getHost(request);
 
         try {
             final CloseableHttpResponse response;
             final HttpClientContext context = HttpClientContext.create();
+
             if (preemptiveBasicAuth) {
                 final AuthCache authCache = new BasicAuthCache();
                 final BasicScheme basicScheme = new BasicScheme();
-                authCache.put(getHost(request), basicScheme);
+                authCache.put(httpHost, basicScheme);
                 context.setAuthCache(authCache);
             }
 
@@ -468,7 +475,8 @@ class ApacheConnector implements Connector {
                 context.setCredentialsProvider(credentialsProvider);
             }
 
-            response = client.execute(getHost(request), request, context);
+            context.setAttribute(JERSEY_REQUEST_ATTR_NAME, clientRequest);
+            response = client.execute(httpHost, request, context);
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, clientRequest.getHeaders(),
                     this.getClass().getName(), clientRequest.getConfiguration());
 
@@ -819,6 +827,58 @@ class ApacheConnector implements Connector {
                 return new ChunkedOutputStream(chunkSize, outbuffer);
             }
             return super.createOutputStream(len, outbuffer);
+        }
+    }
+
+    private static final class SniSSLConnectionSocketFactory extends SSLConnectionSocketFactory {
+
+        private final ThreadLocal<HttpContext> httpContexts = new ThreadLocal<>();
+
+        public SniSSLConnectionSocketFactory(final SSLContext sslContext,
+                                             final String[] supportedProtocols,
+                                             final String[] supportedCipherSuites,
+                                             final HostnameVerifier hostnameVerifier) {
+            super(sslContext, supportedProtocols, supportedCipherSuites, hostnameVerifier);
+        }
+
+        public SniSSLConnectionSocketFactory(final javax.net.ssl.SSLSocketFactory socketFactory,
+                                             final String[] supportedProtocols,
+                                             final String[] supportedCipherSuites,
+                                             final HostnameVerifier hostnameVerifier) {
+            super(socketFactory, supportedProtocols, supportedCipherSuites, hostnameVerifier);
+        }
+
+        public SniSSLConnectionSocketFactory(
+                final SSLContext sslContext, final HostnameVerifier hostnameVerifier) {
+            super(sslContext, hostnameVerifier);
+        }
+
+        @Override
+        public Socket createLayeredSocket(
+                final Socket socket,
+                final String target,
+                final int port,
+                final HttpContext context) throws IOException {
+            httpContexts.set(context);
+            try {
+                return super.createLayeredSocket(socket, target, port, context);
+            } finally {
+                httpContexts.remove();
+            }
+        }
+
+        @Override
+        protected void prepareSocket(SSLSocket socket) throws IOException {
+            HttpContext context = httpContexts.get();
+
+            if (context != null) {
+                Object objectRequest = context.getAttribute(JERSEY_REQUEST_ATTR_NAME);
+                if (objectRequest != null) {
+                    ClientRequest clientRequest = (ClientRequest) objectRequest;
+                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest).build();
+                    sniConfig.setSNIServerName(socket);
+                }
+            }
         }
     }
 }

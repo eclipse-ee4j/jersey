@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,9 +35,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -83,6 +80,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -278,16 +276,19 @@ class NettyConnector implements Connector {
                                  (String[]) null, /* enable default protocols */
                                  false /* true if the first write request shouldn't be encrypted */
                          );
-                         int port = requestUri.getPort();
-                         SslHandler sslHandler = jdkSslContext.newHandler(ch.alloc(), requestUri.getHost(),
-                                                                          port <= 0 ? 443 : port, executorService);
+
+                         final int port = requestUri.getPort();
+                         final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
+                                 .request(jerseyRequest).setSNIAlways(true).build();
+                         final SslHandler sslHandler = jdkSslContext.newHandler(
+                                 ch.alloc(), sslConfig.getSNIHostName(), port <= 0 ? 443 : port, executorService
+                         );
                          if (ClientProperties.getValue(config.getProperties(),
                                                        NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, true)) {
-                            SSLEngine sslEngine = sslHandler.engine();
-                            SSLParameters sslParameters = sslEngine.getSSLParameters();
-                            sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
-                            sslEngine.setSSLParameters(sslParameters);
+                             sslConfig.setEndpointIdentificationAlgorithm(sslHandler.engine());
                          }
+
+                         sslConfig.setSNIServerName(sslHandler.engine());
 
                          p.addLast(sslHandler);
                      }
@@ -374,7 +375,9 @@ class NettyConnector implements Connector {
             setHeaders(jerseyRequest, nettyRequest.headers());
 
             // host header - http 1.1
-            nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+            if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
+                nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+            }
 
             if (jerseyRequest.hasEntity()) {
                 // guard against prematurely closed channel

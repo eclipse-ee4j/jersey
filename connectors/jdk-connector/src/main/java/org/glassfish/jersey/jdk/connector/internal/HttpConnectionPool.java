@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,11 @@
 
 package org.glassfish.jersey.jdk.connector.internal;
 
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
+
 import java.net.CookieManager;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -45,9 +49,15 @@ class HttpConnectionPool {
     }
 
     void send(HttpRequest httpRequest, CompletionHandler<HttpResponse> completionHandler) {
+        final Map<String, List<Object>> headers = new HashMap<>();
+        httpRequest.getHeaders().forEach((k, v) -> headers.put(k, (List) v));
+        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().uri(httpRequest.getUri()).headers(headers).build();
+        connectorConfiguration.setSniConfig(sniConfig);
+
         final DestinationConnectionPool.DestinationKey destinationKey = new DestinationConnectionPool.DestinationKey(
-                httpRequest.getUri());
+                sniConfig.getSNIUri());
         DestinationConnectionPool destinationConnectionPool = destinationPools.get(destinationKey);
+
 
         if (destinationConnectionPool == null) {
             synchronized (this) {
