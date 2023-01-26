@@ -216,7 +216,9 @@ abstract class LoggingInterceptor implements WriterInterceptor {
         if (!stream.markSupported()) {
             stream = new BufferedInputStream(stream);
         }
-        stream.mark(maxEntitySize + 1);
+        if (!(stream instanceof ByteArrayInputStream)) {
+          stream.mark(maxEntitySize + 1);
+        }
         final byte[] entity = new byte[maxEntitySize + 1];
 
         int entitySize = 0;
