@@ -42,6 +42,8 @@ public final class PropertiesHelper {
     private static final Logger LOGGER = Logger.getLogger(PropertiesHelper.class.getName());
     private static final boolean METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT = false;
     private static final boolean JAXRS_SERVICE_LOADING_ENABLE_DEFAULT = true;
+    private static final String RUNTIME_SERVER_LOWER = RuntimeType.SERVER.name().toLowerCase(Locale.ROOT);
+    private static final String RUNTIME_CLIENT_LOWER = RuntimeType.CLIENT.name().toLowerCase(Locale.ROOT);
 
     /**
      * Get system properties.
@@ -221,7 +223,7 @@ public final class PropertiesHelper {
             String runtimeAwareKey = getPropertyNameForRuntime(key, runtimeType);
             if (key.equals(runtimeAwareKey)) {
                 // legacy behaviour
-                runtimeAwareKey = key + "." + runtimeType.name().toLowerCase(Locale.ROOT);
+                runtimeAwareKey = key + "." + toLowerCase(runtimeType);
             }
             value = properties.get(runtimeAwareKey);
         }
@@ -255,11 +257,11 @@ public final class PropertiesHelper {
         if (runtimeType != null && key.startsWith("jersey.config")) {
             RuntimeType[] types = RuntimeType.values();
             for (RuntimeType type : types) {
-                if (key.startsWith("jersey.config." + type.name().toLowerCase(Locale.ROOT))) {
+                if (key.startsWith("jersey.config." + toLowerCase(type))) {
                     return key;
                 }
             }
-            return key.replace("jersey.config", "jersey.config." + runtimeType.name().toLowerCase(Locale.ROOT));
+            return key.replace("jersey.config", "jersey.config." + toLowerCase(runtimeType));
         }
         return key;
     }
@@ -384,6 +386,20 @@ public final class PropertiesHelper {
             return Boolean.class.cast(value);
         } else {
             return value != null && Boolean.parseBoolean(value.toString());
+        }
+    }
+
+    /**
+     * Faster replacement of {@code RuntimeType#name().toLowerCase(Locale.ROOT)}
+     * @param runtimeType The runtime type to lower case
+     * @return the lower-cased variant of the {@link RuntimeType}.
+     */
+    private static String toLowerCase(RuntimeType runtimeType) {
+        switch (runtimeType) {
+            case CLIENT:
+                return RUNTIME_CLIENT_LOWER;
+            default:
+                return RUNTIME_SERVER_LOWER;
         }
     }
 

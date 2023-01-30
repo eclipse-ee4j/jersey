@@ -20,11 +20,11 @@ import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.spring.SpringTestConfiguration;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpringFieldInjectionTest extends JerseyTest {
 

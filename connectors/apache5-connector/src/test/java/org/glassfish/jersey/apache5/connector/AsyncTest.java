@@ -40,10 +40,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Asynchronous connector test.
@@ -210,7 +210,7 @@ public class AsyncTest extends JerseyTest {
             }
         });
 
-        assertTrue("Waiting for results has timed out.", latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS));
+        assertTrue(latch.await(5 * getAsyncTimeoutMultiplier(), TimeUnit.SECONDS), "Waiting for results has timed out.");
         final long toc = System.currentTimeMillis();
 
         assertEquals("DONE-1", r1.get());

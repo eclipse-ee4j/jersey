@@ -17,8 +17,9 @@
 package org.glassfish.jersey.helidon.connector;
 
 import io.helidon.jersey.connector.HelidonProperties;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HelidonPropertiesTest {
 
@@ -26,6 +27,6 @@ public class HelidonPropertiesTest {
     public void testHelidonStrings() {
         String jerseyValue = HelidonClientProperties.CONFIG;
         String helidonConfig = HelidonProperties.CONFIG;
-        Assert.assertEquals(jerseyValue, helidonConfig);
+        assertEquals(jerseyValue, helidonConfig);
     }
 }

@@ -1,0 +1,45 @@
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0,
+# or the Eclipse Distribution License v. 1.0 which is available at
+# http://www.eclipse.org/org/documents/edl-v10.php.
+#
+# SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
+#
+
+name: Jersey
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build on JDK ${{ matrix.java_version }} with ${{matrix.test_profiles}} profile
+    runs-on: ubuntu-latest
+    env:
+      script-directory: $GITHUB_WORKSPACE/etc/jenkins
+
+    strategy:
+      matrix:
+        java_version: [ 11 ]
+        verify_profiles: [ '-Plicense_check' ]
+    continue-on-error: false
+
+    steps:
+    - name: Checkout for build
+      uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: ${{ matrix.java_version }}
+    - name: configure JDK
+      run: |
+        secLoc=`find $JAVA_HOME -name java.security`
+        sed -i 's/jdk.tls.disabledAlgorithms/# jdk.tls.disabledAlgorithms/g' -i $secLoc
+    - name: Build
+      run: mvn -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout

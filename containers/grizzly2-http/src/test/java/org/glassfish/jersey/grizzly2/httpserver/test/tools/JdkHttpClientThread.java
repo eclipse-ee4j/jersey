@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,7 @@ import org.glassfish.grizzly.http.util.Header;
 
 import jakarta.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * JDK11+ has it's own {@link HttpClient} implementation supporting both HTTP 1.1 and HTTP/2.

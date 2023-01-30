@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,18 +34,16 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * SSL connector hostname verification tests.
  *
  * @author Petr Bouda
  */
-@RunWith(Parameterized.class)
 public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTest {
 
     private static final String CLIENT_TRUST_STORE = "truststore-example_com-client";
@@ -66,14 +64,15 @@ public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTes
      *
      * @throws Exception in case of a test failure.
      */
-    @Test
-    public void testHostnameVerifierApplied() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testHostnameVerifierApplied(ConnectorProvider connectorProvider) throws Exception {
         // Grizzly, JavaNetHttp, and Jetty connectors don't support Hostname Verification
         if (isExcluded(Arrays.asList(
                 GrizzlyConnectorProvider.class,
                 JettyConnectorProvider.class,
-                JavaNetHttpConnectorProvider.class)
-        )) {
+                JavaNetHttpConnectorProvider.class),
+                connectorProvider)) {
             return;
         }
 
@@ -98,7 +97,7 @@ public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTes
         }
     }
 
-    private boolean isExcluded(List<Class<? extends ConnectorProvider>> excluded) {
+    private boolean isExcluded(List<Class<? extends ConnectorProvider>> excluded, ConnectorProvider connectorProvider) {
         for (Class<?> clazz : excluded) {
             if (clazz.isAssignableFrom(connectorProvider.getClass())) {
                 return true;

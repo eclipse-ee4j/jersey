@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -29,9 +29,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Naresh (Srinivas Bhimisetty)
@@ -66,8 +66,8 @@ public class MainTest extends JerseyTest {
     @Test
     public void testGetOnForm() {
         Response response = target().path("form").request(MediaType.TEXT_HTML).get();
-        assertEquals("GET on the 'form' resource doesn't give expected response", Response.Status.OK.getStatusCode(),
-                response.getStatusInfo().getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode(),
+                "GET on the 'form' resource doesn't give expected response");
     }
 
     /**
@@ -105,17 +105,17 @@ public class MainTest extends JerseyTest {
     public void testGetColoursAsPlainText() {
         // without the query param "match"
         Response response = target().path("form").path("colours").request(MediaType.TEXT_PLAIN).get();
-        assertEquals("GET on path '/form/colours' with mime type 'text/html' doesn't give expected response",
-                Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode(),
+                "GET on path '/form/colours' with mime type 'text/html' doesn't give expected response");
 
         String responseMsg = target().path("form").path("colours").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("Response content doesn't match the expected value", "red\norange\nyellow\ngreen\nblue\nindigo\nviolet\n",
-                responseMsg);
+        assertEquals("red\norange\nyellow\ngreen\nblue\nindigo\nviolet\n", responseMsg,
+                "Response content doesn't match the expected value");
 
         // with the query param "match" value "re"
         responseMsg = target("form/colours").queryParam("match", "re").request(MediaType.TEXT_PLAIN).get(String.class);
-        assertEquals("Response content doesn't match the expected value with the query param 'match=re'", "red\ngreen\n",
-                responseMsg);
+        assertEquals("red\ngreen\n", responseMsg,
+                "Response content doesn't match the expected value with the query param 'match=re'");
     }
 
     /**
@@ -125,16 +125,17 @@ public class MainTest extends JerseyTest {
     @Test
     public void testGetColoursAsJson() {
         Response response = target().path("form").path("colours").request(MediaType.APPLICATION_JSON).get();
-        assertEquals("GET on path '/form/colours' with mime type 'application/json' doesn't give expected response",
-                Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode(),
+                "GET on path '/form/colours' with mime type 'application/json' doesn't give expected response");
 
         JSONArray jsonArray = target().path("form").path("colours").request(MediaType.APPLICATION_JSON).get(JSONArray.class);
-        assertEquals("Returned JSONArray doesn't have expected number of entries", 7, jsonArray.length());
+        assertEquals(7, jsonArray.length(),
+                "Returned JSONArray doesn't have expected number of entries");
 
         // with the query param "match" value "re"
         jsonArray = target("form/colours").queryParam("match", "re").request(MediaType.APPLICATION_JSON).get(JSONArray.class);
-        assertEquals("Returned JSONArray doesn't have expected number of entries with the query param 'match=re'", 2,
-                jsonArray.length());
+        assertEquals(2, jsonArray.length(),
+                "Returned JSONArray doesn't have expected number of entries with the query param 'match=re'");
     }
 
 }

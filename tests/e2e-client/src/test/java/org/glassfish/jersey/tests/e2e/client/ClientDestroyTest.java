@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,12 +42,12 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Assert that pre destroy method on providers is invoked.
@@ -59,7 +59,7 @@ public class ClientDestroyTest extends JerseyTest {
     private static final Map<String, Boolean> destroyed = new HashMap<>();
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         destroyed.clear();
         destroyed.put("filter", false);
@@ -228,22 +228,22 @@ public class ClientDestroyTest extends JerseyTest {
         client.register(filterOnTarget);                                                   // instance registered into client
         client.target(getBaseUri()).register(filterOnClient).request().get(String.class);   // instance registration into target
 
-        assertTrue("Filter registered on Client was expected to be already initialized.", filterOnClient.isInitialized());
-        assertTrue("Filter registered on Target was expected to be already initialized.", filterOnTarget.isInitialized());
+        assertTrue(filterOnClient.isInitialized(), "Filter registered on Client was expected to be already initialized.");
+        assertTrue(filterOnTarget.isInitialized(), "Filter registered on Target was expected to be already initialized.");
 
         client.target(getBaseUri()).register(FooListener.class).request().get(String.class); // class registration into target
 
-        assertTrue("Class-registered filter was expected to be already initialized", FooListener.isInitialized());
+        assertTrue(FooListener.isInitialized(), "Class-registered filter was expected to be already initialized");
 
-        assertFalse("Class-registered filter was expected to be still open.", FooListener.isClosed());
-        assertFalse("Filter registered on Client was expected to be still open.", filterOnClient.isClosedByClientClose());
-        assertFalse("Filter registered on Target was expected to be still open.", filterOnTarget.isClosedByClientClose());
+        assertFalse(FooListener.isClosed(), "Class-registered filter was expected to be still open.");
+        assertFalse(filterOnClient.isClosedByClientClose(), "Filter registered on Client was expected to be still open.");
+        assertFalse(filterOnTarget.isClosedByClientClose(), "Filter registered on Target was expected to be still open.");
 
         client.close();
 
-        assertTrue("Class-registered filter was expected to be closed.", FooListener.isClosed());
-        assertTrue("Filter registered on Client was expected to be closed.", filterOnClient.isClosed());
-        assertTrue("Filter registered on Target was expected to be closed.", filterOnTarget.isClosed());
+        assertTrue(FooListener.isClosed(), "Class-registered filter was expected to be closed.");
+        assertTrue(filterOnClient.isClosed(), "Filter registered on Client was expected to be closed.");
+        assertTrue(filterOnTarget.isClosed(), "Filter registered on Target was expected to be closed.");
     }
 
     private static boolean isCalledFromFinalizer() {

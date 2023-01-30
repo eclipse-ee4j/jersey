@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,10 @@ package org.glassfish.jersey.uri;
 
 import java.util.regex.MatchResult;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests {@link PathTemplate}.
@@ -61,12 +60,12 @@ public class PathPatternTest {
 
         for (PathPattern pattern : patterns) {
             matchResult = pattern.match(rhp);
-            assertNotNull("No match of " + rhp + " for pattern " + pattern, matchResult);
+            assertNotNull(matchResult, "No match of " + rhp + " for pattern " + pattern);
             rhp = matchResult.group(matchResult.groupCount());
             rhp = (rhp == null) ? "" : rhp;
         }
 
-        Assert.assertEquals("", rhp);
+        assertEquals("", rhp);
 
         rhp = path2;
 
@@ -89,8 +88,8 @@ public class PathPatternTest {
     public void testSimplePatternWithRightHandSide() throws Exception {
 
         PathPattern pattern = new PathPattern(new PathTemplate("/test/{template: abc.*}"));
-        assertNull("Why matched?", pattern.match("/test/me"));
-        assertNotNull("Why not matched?", pattern.match("/test/abc-should_work"));
+        assertNull(pattern.match("/test/me"), "Why matched?");
+        assertNotNull(pattern.match("/test/abc-should_work"), "Why not matched?");
     }
 
     @Test
@@ -98,9 +97,9 @@ public class PathPatternTest {
         PathTemplate tmpl = new PathTemplate("/test");
         PathPattern pattern = new PathPattern(tmpl);
         assertEquals(
-                "We just injected the value, why it is different?",
                 tmpl,
-                pattern.getTemplate()
+                pattern.getTemplate(),
+                "We just injected the value, why it is different?"
         );
     }
 
@@ -113,9 +112,9 @@ public class PathPatternTest {
         String value = m.group(m.groupCount());
 
         assertEquals(
-                "Last value should match all of the trailing part",
                 "/d",
-                value
+                value,
+                "Last value should match all of the trailing part"
         );
     }
 }

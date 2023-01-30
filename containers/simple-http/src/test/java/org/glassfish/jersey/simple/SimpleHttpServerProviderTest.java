@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,9 +21,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 
 import java.security.AccessController;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,8 +49,8 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
 import org.glassfish.jersey.server.spi.WebServerProvider;
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Unit tests for {@link SimpleHttpServerProvider}.
@@ -59,14 +60,16 @@ import org.junit.Test;
  */
 public final class SimpleHttpServerProviderTest {
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public void shouldProvideServer2() throws InterruptedException, ExecutionException {
         // given
         final Resource resource = new Resource();
         shouldProvideServer(ShouldProvideServerApplication.class, resource);
     }
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public void shouldProvideServerWithClass() throws InterruptedException, ExecutionException {
         // given
         final Resource resource = new Resource();
@@ -147,7 +150,8 @@ public final class SimpleHttpServerProviderTest {
         return DEFAULT_PORT;
     }
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public final void shouldScanFreePort() throws InterruptedException, ExecutionException {
         // given
         final WebServerProvider webServerProvider = new SimpleHttpServerProvider();

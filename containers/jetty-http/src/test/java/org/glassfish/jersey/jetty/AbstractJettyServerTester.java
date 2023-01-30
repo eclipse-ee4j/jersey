@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 /**
  * Abstract Jetty Server unit tester.
@@ -109,7 +109,7 @@ public abstract class AbstractJettyServerTester {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (server != null) {
             stopServer();

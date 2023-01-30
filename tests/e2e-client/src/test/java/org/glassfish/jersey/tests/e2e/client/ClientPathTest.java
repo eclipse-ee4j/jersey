@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test definition of path in client invocation.
@@ -53,8 +53,7 @@ public class ClientPathTest extends JerseyTest {
 
         Response response = client().target("http://localhost:" + getPort() + "/test/{beginBy}")
                 .resolveTemplate("beginBy", "abc")
-                .request(MediaType.TEXT_PLAIN_TYPE)
-                .get();
+                .request(MediaType.TEXT_PLAIN_TYPE).get();
         assertEquals(200, response.getStatus());
         assertEquals("test-get,abc", response.readEntity(String.class));
     }
@@ -64,8 +63,7 @@ public class ClientPathTest extends JerseyTest {
      */
     @Test
     public void pathConcatenationTest1() {
-        Response response = client().target("http://localhost:" + getPort()).path("path")
-                .request(MediaType.TEXT_PLAIN_TYPE)
+        Response response = client().target("http://localhost:" + getPort()).path("path").request(MediaType.TEXT_PLAIN_TYPE)
                 .get();
         assertEquals(200, response.getStatus());
         assertEquals("test-path", response.readEntity(String.class));

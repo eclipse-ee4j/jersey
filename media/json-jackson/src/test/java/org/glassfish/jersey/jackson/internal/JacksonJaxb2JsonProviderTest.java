@@ -20,9 +20,9 @@ import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.jackson.internal.model.Jaxb2ServiceTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class JacksonJaxb2JsonProviderTest extends JerseyTest {
 

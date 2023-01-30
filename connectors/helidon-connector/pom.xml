@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>io.helidon.jersey</groupId>
             <artifactId>helidon-jersey-connector</artifactId>
-            <version>3.0.1</version>
+            <version>${helidon.jersey.connector.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

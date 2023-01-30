@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -43,7 +43,9 @@ import com.sun.net.httpserver.HttpsServer;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Jdk Https Server tests.
@@ -79,35 +81,38 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
     @Test
     public void testCreateHttpsServerNoSslContext() throws Exception {
         HttpServer server = startServer(getHttpsUri(), rc, null, false);
-        assertThat(server, instanceOf(HttpsServer.class));
+        assertInstanceOf(HttpsServer.class, server);
     }
 
     /**
      * Test, that exception is thrown when attempting to start a {@link HttpsServer} with empty SSLContext.
      * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStartHttpServerNoSslContext() throws Exception {
-        startServer(getHttpsUri(), rc, null, true);
+        assertThrows(IllegalArgumentException.class,
+            () -> startServer(getHttpsUri(), rc, null, true));
     }
 
     /**
-     * Test, that {@link javax.net.ssl.SSLHandshakeException} is thrown when attepmting to connect to server with client
+     * Test, that {@link javax.net.ssl.SSLHandshakeException} is thrown when attempting to connect to server with client
      * not configured correctly.
      * @throws Exception
      */
-    @Test(expected = SSLHandshakeException.class)
+    @Test
     public void testCreateHttpsServerDefaultSslContext() throws Throwable {
-        HttpServer server = startServer(getHttpsUri(), rc, SSLContext.getDefault(), true);
-        assertThat(server, instanceOf(HttpsServer.class));
+        assertThrows(SSLHandshakeException.class, () -> {
+            final HttpServer server = startServer(getHttpsUri(), rc, SSLContext.getDefault(), true);
+            assertInstanceOf(HttpsServer.class, server);
 
-        // access the https server with not configured client
-        final Client client = ClientBuilder.newBuilder().newClient();
-        try {
-            client.target(UriBuilder.fromUri("https://localhost/").port(getPort())).path("testHttps").request().get(String.class);
-        } catch (final ProcessingException e) {
-            throw e.getCause();
-        }
+            // access the https server with not configured client
+            final Client client = ClientBuilder.newBuilder().newClient();
+            try {
+                client.target(getHttpsUri()).path("testHttps").request().get(String.class);
+            } catch (final ProcessingException e) {
+                throw e.getCause();
+            }
+        });
     }
 
     /**
@@ -115,30 +120,34 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
      * on request.
      * @throws Exception
      */
-    @Test(expected = IOException.class)
+    @Test
     public void testHttpsServerNoSslContextDelayedStart() throws Throwable {
-        HttpServer server = startServer(getHttpsUri(), rc, null, false);
-        assertThat(server, instanceOf(HttpsServer.class));
-        server.start();
+        assertThrows(IOException.class, () -> {
+            final HttpServer server = startServer(getHttpsUri(), rc, null, false);
+            assertInstanceOf(HttpsServer.class, server);
+            server.start();
 
-        final Client client = ClientBuilder.newBuilder().newClient();
-        try {
-            client.target(getHttpsUri()).path("testHttps").request().get(String.class);
-        } catch (final ProcessingException e) {
-            throw e.getCause();
-        }
+            final Client client = ClientBuilder.newBuilder().newClient();
+           try {
+                client.target(getHttpsUri()).path("testHttps").request().get(String.class);
+            } catch (final ProcessingException e) {
+                throw e.getCause();
+            }
+        });
     }
 
     /**
      * Test, that {@link HttpsServer} cannot be configured with {@link HttpsConfigurator} after it has started.
      * @throws Exception
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testConfigureSslContextAfterStart() throws Throwable {
-        HttpServer server = startServer(getHttpsUri(), rc, null, false);
-        assertThat(server, instanceOf(HttpsServer.class));
-        server.start();
-        ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(getServerSslContext()));
+        assertThrows(IllegalStateException.class, () -> {
+            final HttpServer server = startServer(getHttpsUri(), rc, null, false);
+            assertInstanceOf(HttpsServer.class, server);
+            server.start();
+            ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(getServerSslContext()));
+        });
     }
 
     /**
@@ -168,7 +177,7 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
     @Test
     public void testHttpWithSsl() throws IOException {
         HttpServer server = startServer(getBaseUri(), rc, getServerSslContext(), true);
-        assertThat(server, instanceOf(HttpServer.class));
+        assertInstanceOf(HttpServer.class, server);
         assertThat(server, not(instanceOf(HttpsServer.class)));
     }
 

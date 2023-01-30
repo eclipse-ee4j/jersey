@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -35,7 +35,7 @@
             or pom:groupId='org.codehaus.jettison'
             or pom:groupId='jakarta.annotation'
             or pom:groupId='jakarta.enterprise'
-            or pom:groupId='javax.servlet'
+            or pom:groupId='jakarta.servlet'
             or pom:groupId='jakarta.ws.rs']/pom:scope[text()!=test]">
         <scope>provided</scope>
     </xsl:template>
@@ -53,7 +53,7 @@
             or pom:groupId='org.codehaus.jettison'
             or pom:groupId='jakarta.annotation'
             or pom:groupId='jakarta.enterprise'
-            or pom:groupId='javax.servlet'
+            or pom:groupId='jakarta.servlet'
             or pom:groupId='jakarta.ws.rs']">
         <xsl:copy>
             <xsl:apply-templates />
@@ -108,8 +108,8 @@
                 </exclusion>
 
                 <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>javax.servlet-api</artifactId>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </xsl:copy>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,23 +22,24 @@ import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.RuntimeDelegateImpl;
 import org.glassfish.jersey.server.spi.Container;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class SeBootstrapSystemPropertiesTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
         System.getProperties().put(SeBootstrap.Configuration.PORT, "9998");
         System.getProperties().put(ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS, Boolean.TRUE.toString());
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         System.clearProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER);
         System.clearProperty(SeBootstrap.Configuration.PORT);
@@ -52,7 +53,7 @@ public class SeBootstrapSystemPropertiesTest {
                 .port(SeBootstrap.Configuration.DEFAULT_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(Container.DEFAULT_HTTP_PORT, uri.getPort());
+        assertEquals(Container.DEFAULT_HTTP_PORT, uri.getPort());
     }
 
     @Test
@@ -62,6 +63,6 @@ public class SeBootstrapSystemPropertiesTest {
                 .build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(9998, uri.getPort());
+        assertEquals(9998, uri.getPort());
     }
 }

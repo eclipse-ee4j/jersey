@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import org.glassfish.jersey.server.internal.monitoring.core.ReservoirConstants;
 import org.glassfish.jersey.server.internal.monitoring.core.TimeReservoir;
 import org.glassfish.jersey.server.internal.monitoring.core.UniformTimeSnapshot;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Stepan Vavra
@@ -65,11 +65,11 @@ public class AbstractNanosReservoirTest {
                                 final double expectedMean, final long expectedInterval) {
         final UniformTimeSnapshot snapshot = reservoir.getSnapshot(snapshotTime, TimeUnit.NANOSECONDS);
 
-        assertEquals("Total count does not match!", expectedSize, snapshot.size());
-        assertEquals("Min exec time does not match!", expectedMin, snapshot.getMin());
-        assertEquals("Max exec time does not match!", expectedMax, snapshot.getMax());
-        assertEquals("Average exec time does not match!", expectedMean, snapshot.getMean(), DELTA);
-        assertEquals("Expected interval does not match!", expectedInterval, snapshot.getTimeInterval(TimeUnit.NANOSECONDS));
+        assertEquals(expectedSize, snapshot.size(), "Total count does not match!");
+        assertEquals(expectedMin, snapshot.getMin(), "Min exec time does not match!");
+        assertEquals(expectedMax, snapshot.getMax(), "Max exec time does not match!");
+        assertEquals(expectedMean, snapshot.getMean(), DELTA, "Average exec time does not match!");
+        assertEquals(expectedInterval, snapshot.getTimeInterval(TimeUnit.NANOSECONDS), "Expected interval does not match!");
     }
 
 }

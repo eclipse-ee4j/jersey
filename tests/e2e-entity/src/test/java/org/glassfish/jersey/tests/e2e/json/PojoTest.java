@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,40 +16,36 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.pojo.PojoAnimal;
 import org.glassfish.jersey.tests.e2e.json.entity.pojo.PojoAnimalList;
 import org.glassfish.jersey.tests.e2e.json.entity.pojo.PojoCat;
 import org.glassfish.jersey.tests.e2e.json.entity.pojo.PojoDog;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * @author Michal Gajdos
  */
-@RunWith(Parameterized.class)
-public class PojoTest extends AbstractJsonTest {
+public class PojoTest {
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<JsonTestSetup[]> generateTestCases() throws Exception {
-        final List<JsonTestSetup[]> jsonTestSetups = new LinkedList<>();
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() throws Exception {
+        List<DynamicContainer> tests = new ArrayList<>();
         final Class<?>[] classes = {PojoAnimalList.class, PojoAnimal.class, PojoDog.class, PojoCat.class};
 
         for (final JsonTestProvider jsonProvider : JsonTestProvider.POJO_PROVIDERS) {
-            jsonTestSetups.add(new JsonTestSetup[]{
-                    new JsonTestSetup(classes, jsonProvider)
-            });
+            JsonTestSetup setupTest = new JsonTestSetup(classes, jsonProvider);
+            JsonTest jsonTest = new JsonTest(setupTest) {};
+            tests.add(TestHelper.toTestContainer(jsonTest,
+                    String.format("pojoTest (%s)", jsonProvider.getClass().getSimpleName())));
         }
 
-        return jsonTestSetups;
+        return tests;
     }
-
-    public PojoTest(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
-    }
-
 }

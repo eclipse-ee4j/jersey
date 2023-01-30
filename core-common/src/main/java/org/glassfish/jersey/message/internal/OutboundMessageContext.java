@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,11 +47,16 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.internal.util.collection.GuardianStringKeyMultivaluedMap;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 
 /**
  * Base outbound message context implementation.
@@ -63,9 +68,11 @@ public class OutboundMessageContext {
     private static final List<MediaType> WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST =
             Collections.<MediaType>singletonList(MediaTypes.WILDCARD_ACCEPTABLE_TYPE);
 
-    private final MultivaluedMap<String, Object> headers;
+    private final GuardianStringKeyMultivaluedMap<Object> headers;
     private final CommittingOutputStream committingOutputStream;
     private Configuration configuration;
+    private RuntimeDelegate runtimeDelegateDecorator;
+    private LazyValue<MediaType> mediaTypeCache;
 
     private Object entity;
     private GenericType<?> entityType;
@@ -101,9 +108,13 @@ public class OutboundMessageContext {
      */
     public OutboundMessageContext(Configuration configuration) {
         this.configuration = configuration;
-        this.headers = HeaderUtils.createOutbound();
+        this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createOutbound());
         this.committingOutputStream = new CommittingOutputStream();
         this.entityStream = committingOutputStream;
+        this.runtimeDelegateDecorator = RuntimeDelegateDecorator.configured(configuration);
+        this.mediaTypeCache = mediaTypeCache();
+
+        headers.setGuard(HttpHeaders.CONTENT_LENGTH);
     }
 
     /**
@@ -113,7 +124,8 @@ public class OutboundMessageContext {
      * @param original the original outbound message context.
      */
     public OutboundMessageContext(OutboundMessageContext original) {
-        this.headers = HeaderUtils.createOutbound();
+        this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createOutbound());
+        this.headers.setGuard(HttpHeaders.CONTENT_LENGTH);
         this.headers.putAll(original.headers);
         this.committingOutputStream = new CommittingOutputStream();
         this.entityStream = committingOutputStream;
@@ -122,6 +134,8 @@ public class OutboundMessageContext {
         this.entityType = original.entityType;
         this.entityAnnotations = original.entityAnnotations;
         this.configuration = original.configuration;
+        this.runtimeDelegateDecorator = original.runtimeDelegateDecorator;
+        this.mediaTypeCache = original.mediaTypeCache();
     }
 
     /**
@@ -153,7 +167,7 @@ public class OutboundMessageContext {
      * @return multi-valued map of outbound message header names to their string-converted values.
      */
     public MultivaluedMap<String, String> getStringHeaders() {
-        return HeaderUtils.asStringHeaders(headers, configuration);
+        return HeaderUtils.asStringHeaders(headers, runtimeDelegateDecorator);
     }
 
     /**
@@ -173,7 +187,7 @@ public class OutboundMessageContext {
      * character.
      */
     public String getHeaderString(String name) {
-        return HeaderUtils.asHeaderString(headers.get(name), RuntimeDelegateDecorator.configured(configuration));
+        return HeaderUtils.asHeaderString(headers.get(name), runtimeDelegateDecorator);
     }
 
     /**
@@ -209,7 +223,7 @@ public class OutboundMessageContext {
             return valueType.cast(value);
         } else {
             try {
-                return converter.apply(HeaderUtils.asString(value, null));
+                return converter.apply(HeaderUtils.asString(value, runtimeDelegateDecorator));
             } catch (ProcessingException ex) {
                 throw exception(name, value, ex);
             }
@@ -267,8 +281,17 @@ public class OutboundMessageContext {
      * message entity).
      */
     public MediaType getMediaType() {
-        return singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, RuntimeDelegateDecorator.configured(configuration)
-                .createHeaderDelegate(MediaType.class)::fromString, false);
+        if (headers.isObservedAndReset(HttpHeaders.CONTENT_TYPE) && mediaTypeCache.isInitialized()) {
+            mediaTypeCache = mediaTypeCache(); // headers changed -> drop cache
+        }
+        return mediaTypeCache.get();
+    }
+
+    private LazyValue<MediaType> mediaTypeCache() {
+        return Values.lazy((Value<MediaType>) () ->
+                singleHeader(HttpHeaders.CONTENT_TYPE, MediaType.class, RuntimeDelegateDecorator.configured(configuration)
+                    .createHeaderDelegate(MediaType.class)::fromString, false)
+        );
     }
 
     /**
@@ -294,7 +317,7 @@ public class OutboundMessageContext {
                     result.add(_value);
                 } else {
                     conversionApplied = true;
-                    result.addAll(HttpHeaderReader.readAcceptMediaType(HeaderUtils.asString(value, configuration)));
+                    result.addAll(HttpHeaderReader.readAcceptMediaType(HeaderUtils.asString(value, runtimeDelegateDecorator)));
                 }
             } catch (java.text.ParseException e) {
                 throw exception(HttpHeaders.ACCEPT, value, e);
@@ -333,7 +356,7 @@ public class OutboundMessageContext {
             } else {
                 conversionApplied = true;
                 try {
-                    result.addAll(HttpHeaderReader.readAcceptLanguage(HeaderUtils.asString(value, configuration))
+                    result.addAll(HttpHeaderReader.readAcceptLanguage(HeaderUtils.asString(value, runtimeDelegateDecorator))
                                                   .stream()
                                                   .map(LanguageTag::getAsLocale)
                                                   .collect(Collectors.toList()));
@@ -366,7 +389,7 @@ public class OutboundMessageContext {
         }
 
         Map<String, Cookie> result = new HashMap<String, Cookie>();
-        for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
+        for (String cookie : HeaderUtils.asStringList(cookies, runtimeDelegateDecorator)) {
             if (cookie != null) {
                 result.putAll(HttpHeaderReader.readCookies(cookie));
             }
@@ -454,7 +477,7 @@ public class OutboundMessageContext {
         }
 
         Map<String, NewCookie> result = new HashMap<String, NewCookie>();
-        for (String cookie : HeaderUtils.asStringList(cookies, configuration)) {
+        for (String cookie : HeaderUtils.asStringList(cookies, runtimeDelegateDecorator)) {
             if (cookie != null) {
                 NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
                 String cookieName = newCookie.getName();
@@ -542,7 +565,7 @@ public class OutboundMessageContext {
             } else {
                 conversionApplied = true;
                 try {
-                    result.add(Link.valueOf(HeaderUtils.asString(value, configuration)));
+                    result.add(Link.valueOf(HeaderUtils.asString(value, runtimeDelegateDecorator)));
                 } catch (IllegalArgumentException e) {
                     throw exception(HttpHeaders.LINK, value, e);
                 }
@@ -863,6 +886,7 @@ public class OutboundMessageContext {
 
     void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+        this.runtimeDelegateDecorator = RuntimeDelegateDecorator.configured(configuration);
     }
 
     /**

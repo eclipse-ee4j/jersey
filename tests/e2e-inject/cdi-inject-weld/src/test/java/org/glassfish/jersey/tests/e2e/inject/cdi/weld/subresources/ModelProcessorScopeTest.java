@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,14 +21,13 @@ import java.util.concurrent.ExecutionException;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.tests.e2e.inject.cdi.weld.RequestContextBuilder;
 
 import org.jboss.weld.environment.se.Weld;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test scope of resources enhanced by model processors.
@@ -40,13 +39,13 @@ public class ModelProcessorScopeTest {
 
     private Weld weld;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         weld = new Weld();
         weld.initialize();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         weld.shutdown();
     }

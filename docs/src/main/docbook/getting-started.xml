@@ -51,10 +51,10 @@
                     configuration needs to be added to your Maven project pom:
 
                     <programlisting language="xml" linenumbering="unnumbered">&lt;snapshotRepository&gt;
-                        &lt;id&gt;ossrh&lt;/id&gt;
-                    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
-                &lt;url&gt;https://jakarta.oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
-            &lt;/snapshotRepository&gt;</programlisting>
+    &lt;id&gt;ossrh&lt;/id&gt;
+    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
+    &lt;url&gt;https://jakarta.oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
+&lt;/snapshotRepository&gt;</programlisting>
                 </para>
             </note>
         </para>
@@ -151,7 +151,7 @@ public class MyResourceTest {
     private HttpServer server;
     private WebTarget target;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         server = Main.startServer();
 
@@ -159,7 +159,7 @@ public class MyResourceTest {
         target = c.target(Main.BASE_URI);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         server.stop();
     }
@@ -590,7 +590,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
            [INFO] Copying jetty-util-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-util-9.0.6.v20130930.jar
            [INFO] Copying jetty-webapp-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-webapp-9.0.6.v20130930.jar
            [INFO] Copying jetty-xml-9.0.6.v20130930.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jetty-xml-9.0.6.v20130930.jar
-           [INFO] Copying javax.servlet-3.0.0.v201112011016.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/javax.servlet-3.0.0.v201112011016.jar
+           [INFO] Copying jakarta.servlet-3.0.0.v201112011016.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/jakarta.servlet-3.0.0.v201112011016.jar
            [INFO] Copying hk2-api-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/hk2-api-2.2.0-b21.jar
            [INFO] Copying hk2-locator-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/hk2-locator-2.2.0-b21.jar
            [INFO] Copying hk2-utils-2.2.0-b21.jar to /tmp/build_992cc747-26d6-4800-bdb1-add47b9583cd/target/dependency/hk2-utils-2.2.0-b21.jar

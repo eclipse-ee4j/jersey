@@ -20,8 +20,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.helidon.connector.HelidonConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Singleton;
@@ -119,8 +119,8 @@ public class SseTest extends JerseyTest {
             latch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
         }
 
-        Assert.assertEquals("AAAAAAAAAA", sb.toString());
-        Assert.assertEquals(0, latch.getCount());
+        Assertions.assertEquals("AAAAAAAAAA", sb.toString());
+        Assertions.assertEquals(0, latch.getCount());
     }
 
     @Test
@@ -137,11 +137,11 @@ public class SseTest extends JerseyTest {
         clientOne.messageLatch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
         clientTwo.messageLatch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
 
-        Assert.assertEquals(0, clientOne.messageLatch.getCount());
-        Assert.assertEquals(0, clientTwo.messageLatch.getCount());
+        Assertions.assertEquals(0, clientOne.messageLatch.getCount());
+        Assertions.assertEquals(0, clientTwo.messageLatch.getCount());
 
-        Assert.assertEquals(BroadcasterResource.WELCOME + PALINDROME + PALINDROME, clientOne.message.toString());
-        Assert.assertEquals(BroadcasterResource.WELCOME + PALINDROME + PALINDROME, clientTwo.message.toString());
+        Assertions.assertEquals(BroadcasterResource.WELCOME + PALINDROME + PALINDROME, clientOne.message.toString());
+        Assertions.assertEquals(BroadcasterResource.WELCOME + PALINDROME + PALINDROME, clientTwo.message.toString());
 
         clientOne.close();
         clientTwo.close();
@@ -168,13 +168,13 @@ public class SseTest extends JerseyTest {
             source.open();
 
             latch.await(WAIT_TIME, TimeUnit.MILLISECONDS);
-            Assert.assertEquals(0, latch.getCount());
+            Assertions.assertEquals(0, latch.getCount());
         }
 
         private void broadcast() {
             try (Response r = target.path("broadcast/broadcast")
                     .request().buildPost(Entity.entity(PALINDROME, MediaType.TEXT_PLAIN)).invoke()) {
-                Assert.assertEquals(204, r.getStatus());
+                Assertions.assertEquals(204, r.getStatus());
             }
         }
 

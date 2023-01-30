@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,8 +33,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationFeature;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test various combinations of enabling/disabling: auto-discovery, bean validation, validation feature.
@@ -180,7 +180,8 @@ public class PropertyValidationTest {
     private void assertApply(int responseStatus, ResourceConfig resourceConfig, URI uri)
             throws InterruptedException, ExecutionException {
         final ApplicationHandler applicationHandler = new ApplicationHandler(resourceConfig);
-        final ContainerRequest requestContext = new ContainerRequest(uri, uri, "POST", null, new MapPropertiesDelegate());
+        final ContainerRequest requestContext =
+                new ContainerRequest(uri, uri, "POST", null, new MapPropertiesDelegate(), resourceConfig);
         final ContainerResponse containerResponse = applicationHandler.apply(requestContext).get();
 
         assertEquals(responseStatus, containerResponse.getStatus());

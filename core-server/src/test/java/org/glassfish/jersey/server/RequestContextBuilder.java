@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
@@ -36,7 +37,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.SecurityContext;
-import jakarta.ws.rs.ext.RuntimeDelegate;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -162,7 +162,7 @@ public class RequestContextBuilder {
     }
 
     public RequestContextBuilder type(final MediaType contentType) {
-        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, null));
+        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, (Configuration) null));
         return this;
     }
 
@@ -186,7 +186,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.header(name, HeaderUtils.asString(value, null));
+        request.header(name, HeaderUtils.asString(value, (Configuration) null));
     }
 
     private void putHeaders(final String name, final Object... values) {
@@ -194,7 +194,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), null));
+        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), (Configuration) null));
     }
 
     private void putHeaders(final String name, final String... values) {

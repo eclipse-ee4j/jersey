@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,24 +17,21 @@
 package org.glassfish.jersey.media.sse.internal;
 
 import org.glassfish.jersey.media.sse.OutboundEvent;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pavel Bucek
  */
 public class JerseyEventSinkTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void test() throws Exception {
-        JerseyEventSink eventSink = new JerseyEventSink(null);
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            JerseyEventSink eventSink = new JerseyEventSink(null);
 
-        eventSink.close();
-        thrown.expect(IllegalStateException.class);
-        eventSink.send(null);
+            eventSink.close();
+            eventSink.send(null);
+        });
     }
 }

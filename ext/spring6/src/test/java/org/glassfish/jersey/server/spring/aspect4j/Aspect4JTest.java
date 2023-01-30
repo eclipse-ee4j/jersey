@@ -19,11 +19,11 @@ package org.glassfish.jersey.server.spring.aspect4j;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Aspect4JTest extends JerseyTest {
 
@@ -31,7 +31,7 @@ public class Aspect4JTest extends JerseyTest {
 
     private TestAspect testAspect;
 
-    @Before
+    @BeforeEach
     public void before() {
         testAspect.reset();
     }

@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.internal.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.reflect.ClassPath;
 
@@ -44,7 +44,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.oauth1.OAuth1ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SystemPropertiesConfigurationModelTest {
 
@@ -70,9 +70,9 @@ public class SystemPropertiesConfigurationModelTest {
                     containsAnnotation).stream().map(Class::getName).collect(Collectors.toList());
             assertFalse(propertyClasses.isEmpty());
             propertyClasses.removeAll(JerseySystemPropertiesConfigurationModel.PROPERTY_CLASSES);
-            assertEquals("New properties have been found. "
+            assertEquals(0, propertyClasses.size(), "New properties have been found. "
                     + "Make sure you add next classes in SystemPropertiesConfigurationModel.PROPERTY_CLASSES: "
-                    + propertyClasses, 0, propertyClasses.size());
+                    + propertyClasses);
         }
     }
 
@@ -137,7 +137,7 @@ public class SystemPropertiesConfigurationModelTest {
                         return Void.class;
                     }
                 });
-        steam = steam.filter(Arrays.stream(predicates).reduce(x->true, Predicate::and));
+        steam = steam.filter(Arrays.stream(predicates).reduce(x -> true, Predicate::and));
         return steam.collect(Collectors.toList());
     }
 

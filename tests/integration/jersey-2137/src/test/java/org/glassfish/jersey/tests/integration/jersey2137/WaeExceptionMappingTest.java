@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 /**
@@ -51,7 +51,7 @@ public class WaeExceptionMappingTest extends JerseyTest {
     }
 
     /**
-     * Test all {@jakarta.transaction.Transactional}
+     * Test all {@javax.transaction.Transactional}
      * annotated CDI beans. The test scenario is as follows.
      * Set two accounts via the CDI bean that avoids rollback.
      * Should any rollback happen there, we would not be able

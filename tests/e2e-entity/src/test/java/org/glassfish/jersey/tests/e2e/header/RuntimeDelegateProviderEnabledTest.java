@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,11 @@
 
 package org.glassfish.jersey.tests.e2e.header;
 
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
@@ -36,11 +37,11 @@ public class RuntimeDelegateProviderEnabledTest extends JerseyTest {
     @Test
     public void testClientResponseHeaders() {
         try (Response response = target("/simple").request().get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest.getValue(),
                     response.getHeaderString(HeaderDelegateProviderTest.HeaderContainerResponseFilter.class.getSimpleName())
             );
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest.getValue(),
                     response.getStringHeaders().getFirst(HEADER_NAME)
             );
@@ -50,7 +51,7 @@ public class RuntimeDelegateProviderEnabledTest extends JerseyTest {
     @Test
     public void testContainerResponseFilter() {
         try (Response response = target("/simple").request().get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest.getValue(),
                     response.getHeaderString(HEADER_NAME)
             );
@@ -61,7 +62,7 @@ public class RuntimeDelegateProviderEnabledTest extends JerseyTest {
     public void testProviderOnClient() {
         try (Response response = target("/headers").request()
                 .header(HEADER_NAME, new HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest()).get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest.getValue(),
                     response.getHeaderString(HeaderDelegateProviderTest.HeaderSettingResource.class.getSimpleName())
             );
@@ -73,7 +74,7 @@ public class RuntimeDelegateProviderEnabledTest extends JerseyTest {
         try (Response response = target("/clientfilter")
                 .register(HeaderDelegateProviderTest.HeaderClientRequestFilter.class)
                 .request().get()) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     HeaderDelegateProviderTest.BeanForHeaderDelegateProviderTest.getValue(),
                     response.readEntity(String.class)
             );

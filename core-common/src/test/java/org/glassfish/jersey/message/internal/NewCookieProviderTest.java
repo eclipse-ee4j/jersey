@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,12 @@
 package org.glassfish.jersey.message.internal;
 
 import jakarta.ws.rs.core.NewCookie;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NewCookieProviderTest {
 
@@ -42,8 +44,8 @@ public class NewCookieProviderTest {
     public void SameSiteTest() {
         final NewCookieProvider provider = new NewCookieProvider();
         final String newCookieString = provider.toString(newCookie);
-        Assert.assertTrue(newCookieString.contains("SameSite=STRICT"));
-        Assert.assertEquals(NewCookie.SameSite.STRICT, provider.fromString(newCookieString).getSameSite());
+        assertTrue(newCookieString.contains("SameSite=STRICT"));
+        assertEquals(NewCookie.SameSite.STRICT, provider.fromString(newCookieString).getSameSite());
     }
 
 }
