@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -127,7 +129,6 @@ public class LoggingInterceptorTest {
     public void testLogInboundEntityMockedStream() throws Exception {
         int maxEntitySize = 20;
         LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder().maxEntitySize(maxEntitySize)) {};
-
         StringBuilder buffer = new StringBuilder();
         InputStream stream = mock(InputStream.class);
         when(stream.markSupported()).thenReturn(true);
@@ -146,6 +147,33 @@ public class LoggingInterceptorTest {
         assertEquals("aaaabbbccccc\n", buffer.toString());
         verify(stream).mark(maxEntitySize + 1);
         verify(stream).reset();
+    }
+
+    @Test
+    public void testLogInBoundEntityByteArryInputStream() throws IOException {
+        int maxEntitySize = 2;
+        StringBuilder buffer = new StringBuilder();
+        String content = "abcdefg";
+        try (ByteArrayInputStream stream = new ByteArrayInputStream(content.getBytes())) {
+            // consume stream a little bit
+            stream.read();
+            LoggingInterceptor loggingInterceptor = new LoggingInterceptor(LoggingFeature.builder()
+                .maxEntitySize(maxEntitySize)) {};
+
+            loggingInterceptor.logInboundEntity(buffer, stream, StandardCharsets.UTF_8);
+            assertEquals("ab...more...\n", buffer.toString());
+
+            // consume it again
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = stream.read(data, 0, data.length)) != -1) {
+                out.write(data, 0, nRead);
+            }
+            out.flush();
+            byte[] byteArray = out.toByteArray();
+            assertEquals("abcdefg", new String(byteArray));
+        }
     }
 
     private Answer<?> chunk(int size, char filler) {
