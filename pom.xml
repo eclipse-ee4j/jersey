@@ -428,6 +428,12 @@
                                 junit.jupiter.execution.parallel.mode.default=same_thread
                             </configurationParameters>
                         </properties>
+                        <systemProperties>
+                            <property>
+                                <name>jersey.config.test.container.port</name>
+                                <value>${jersey.config.test.container.port}</value>
+                            </property>
+                        </systemProperties>
                         <threadCount>124</threadCount>
                     </configuration>
                     <dependencies>
@@ -630,6 +636,12 @@
                         <skipTests>${skip.tests}</skipTests>
                         <skipITs>${skip.tests}</skipITs>
                         <argLine>${failsafe.coverage.argline}</argLine>
+                        <systemProperties>
+                            <property>
+                                <name>jersey.config.test.container.port</name>
+                                <value>${jersey.config.test.container.port}</value>
+                            </property>
+                        </systemProperties>
                     </configuration>
                     <executions>
                         <execution>
@@ -837,6 +849,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${buildhelper.mvn.plugin.version}</version>
+                <configuration>
+                    <portNames>
+                        <portName>jersey.config.test.container.port</portName>
+                        <portName>jersey.config.test.container.stop.port</portName>
+                    </portNames>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>reserve-port</id>
+                        <phase>process-test-classes</phase> <!-- pre-integration-test -->
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <extensions>
@@ -1431,7 +1463,7 @@
                     <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                     <windowtitle>Jersey ${jersey.version} API</windowtitle>
                     <bottom>
-                        <![CDATA[Copyright &#169; 2007-2017,
+                        <![CDATA[Copyright &#169; 2007-2023,
                             <a href="http://www.oracle.com">Oracle</a>
                             and/or its affiliates.
                             All Rights Reserved. Use is subject to license terms.]]>

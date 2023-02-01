@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.AfterEach;
 public abstract class AbstractSimpleServerTester {
 
     public static final String CONTEXT = "";
-    private final int DEFAULT_PORT = 9998;
+    private final int DEFAULT_PORT = 0; // rather SimpleFramework server choose than 9998
 
     private static final Logger LOGGER = Logger.getLogger(AbstractSimpleServerTester.class.getName());
 
@@ -72,10 +73,20 @@ public abstract class AbstractSimpleServerTester {
         return DEFAULT_PORT;
     }
 
+    private final int getPort(RuntimeType runtimeType) {
+        switch (runtimeType) {
+            case SERVER:
+                return getPort();
+            case CLIENT:
+                return server.getPort();
+            default:
+                throw new IllegalStateException("Unexpected runtime type");
+        }
+    }
     private volatile SimpleServer server;
 
     public UriBuilder getUri() {
-        return UriBuilder.fromUri("http://localhost").port(getPort()).path(CONTEXT);
+        return UriBuilder.fromUri("http://localhost").port(getPort(RuntimeType.CLIENT)).path(CONTEXT);
     }
 
     public void startServer(Class... resources) {
@@ -83,21 +94,21 @@ public abstract class AbstractSimpleServerTester {
         config.register(LoggingFeature.class);
         final URI baseUri = getBaseUri();
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri.getHost() + ":" + server.getPort());
     }
 
     public void startServerNoLoggingFilter(Class... resources) {
         ResourceConfig config = new ResourceConfig(resources);
         final URI baseUri = getBaseUri();
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri.getHost() + ":" + server.getPort());
     }
 
     public void startServer(ResourceConfig config) {
         final URI baseUri = getBaseUri();
         config.register(LoggingFeature.class);
         server = SimpleContainerFactory.create(baseUri, config);
-        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "Simple-http server started on base uri: " + baseUri.getHost() + ":" + server.getPort());
     }
 
     public void startServer(ResourceConfig config, int count, int select) {
@@ -108,7 +119,7 @@ public abstract class AbstractSimpleServerTester {
     }
 
     public URI getBaseUri() {
-        return UriBuilder.fromUri("http://localhost/").port(getPort()).build();
+        return UriBuilder.fromUri("http://localhost/").port(getPort(RuntimeType.SERVER)).build();
     }
 
     public void setDebug(boolean enable) {
