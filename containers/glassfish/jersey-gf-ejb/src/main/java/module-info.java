@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,9 +21,9 @@ module org.glasfish.jersey.gf.ejb {
     requires jakarta.ws.rs;
     requires static jakarta.activation;
     requires jakarta.annotation;
-    requires jakarta.ejb.api;
+    requires jakarta.ejb;
     requires jakarta.inject;
-    requires jakarta.interceptor.api;
+    requires jakarta.interceptor;
 
     requires ejb.container;
     requires internal.api;

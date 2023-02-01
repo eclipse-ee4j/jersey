@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,6 @@ module org.glassfish.jersey.tests.framework.provider.grizzly {
     opens org.glassfish.jersey.test.grizzly.pckg;
     opens org.glassfish.jersey.test.grizzly.web;
 
-    requires junit;
-    requires hamcrest.core;
+    requires org.junit.jupiter.api;
+    requires org.hamcrest;
 }

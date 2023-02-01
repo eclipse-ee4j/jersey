@@ -55,9 +55,18 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <type>pom</type>
+            <artifactId>jersey-test-framework-provider-external</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
@@ -117,6 +126,7 @@
                                 <jersey.config.test.container.factory>${external.container.factory}</jersey.config.test.container.factory>
                                 <jersey.config.test.container.port>${external.container.port}</jersey.config.test.container.port>
                             </systemPropertyVariables>
+                            <argLine>--add-reads java.logging=ALL-UNNAMED --add-exports java.logging/java.util.logging=ALL-UNNAMED --add-modules=ALL-MODULE-PATH</argLine>
                         </configuration>
                     </plugin>
                 </plugins>

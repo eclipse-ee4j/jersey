@@ -76,6 +76,7 @@
 		            <detectJavaApiLink>false</detectJavaApiLink>
                     <detectLinks>false</detectLinks>
                     <detectOfflineLinks>false</detectOfflineLinks>
+                    <source>8</source>
                 </configuration>
             </plugin>
             <plugin>

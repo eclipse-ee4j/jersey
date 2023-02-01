@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,11 +21,20 @@ module org.glassfish.jersey.netty.connector {
     requires jakarta.inject;
 
     requires io.netty.all;
+    requires io.netty.buffer;
+    requires io.netty.handler;
+    requires io.netty.handler.proxy;
+    requires io.netty.codec;
+    requires io.netty.codec.http;
+    requires io.netty.codec.http2;
+    requires io.netty.common;
+    requires io.netty.resolver;
+    requires io.netty.transport;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
+    requires org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.netty.connector;
     exports org.glassfish.jersey.netty.connector.internal;
-//    opens org.glassfish.jersey.netty.connector;
 }

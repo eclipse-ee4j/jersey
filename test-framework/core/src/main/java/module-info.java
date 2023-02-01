@@ -28,7 +28,7 @@ module org.glassfish.jersey.tests.framework.core {
     requires org.glassfish.jersey.container.servlet.core;
 
 
-    requires junit;
+    requires static junit;
     requires static org.junit.jupiter.api;
 
     requires static testng;

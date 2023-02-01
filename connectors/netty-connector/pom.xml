@@ -49,6 +49,12 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${project.version}</version>
+<!--            <scope>test</scope>-->
+        </dependency>
     </dependencies>
 
     <build>

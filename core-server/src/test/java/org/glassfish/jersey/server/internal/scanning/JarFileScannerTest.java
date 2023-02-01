@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Martin Snyder
  */
-public class JarFileScannerTest {
+public class JarFileScannerTest extends AbstractFinderTest {
 
     private String jaxRsApiPath;
 
