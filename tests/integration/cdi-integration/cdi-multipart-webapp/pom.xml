@@ -53,9 +53,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <type>pom</type>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

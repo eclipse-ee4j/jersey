@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,9 @@ module org.glassfish.jersey.ext.mvc.mustache {
     requires jakarta.servlet;
     requires jakarta.ws.rs;
 
-    requires compiler;
+    requires jdk.compiler;
+
+    requires com.github.mustachejava;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;

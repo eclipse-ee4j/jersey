@@ -81,6 +81,27 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>--add-exports</arg>
+                                <arg>org.junit.platform.commons/org.junit.platform.commons.util=org.glassfish.jersey.tests.framework.core</arg>
+                            </compilerArgs>
+                            <release>11</release>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <properties>
         <surefire.coverage.argline>
             --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,9 @@ module org.glassfish.jersey.tests.integration.cdi.injection.hk2.banned {
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
+
+    requires org.junit.jupiter.api;
+    requires org.hamcrest;
 
     requires org.glassfish.jersey.tests.framework.core;
 }
