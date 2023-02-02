@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -103,7 +103,7 @@ public final class MavenUtil {
                 .filter(dep -> dep.getType().equals("jar"));
     }
 
-    private static Model getModelFromFile(String fileName) throws IOException, XmlPullParserException {
+    static Model getModelFromFile(String fileName) throws IOException, XmlPullParserException {
         File pomFile = new File(fileName);
         return getModelFromFile(pomFile);
     }

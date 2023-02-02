@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -53,24 +53,24 @@ class TestResult {
         }
 
         @Override
-        public MessageBuilder append(CharSequence csq) throws IOException {
+        public MessageBuilder append(CharSequence csq) {
             builder.append(csq);
             return this;
         }
 
-        public MessageBuilder append(int i) throws IOException {
+        public MessageBuilder append(int i) {
             builder.append(i);
             return this;
         }
 
         @Override
-        public MessageBuilder append(CharSequence csq, int start, int end) throws IOException {
+        public MessageBuilder append(CharSequence csq, int start, int end) {
             builder.append(csq, start, end);
             return this;
         }
 
         @Override
-        public MessageBuilder append(char c) throws IOException {
+        public MessageBuilder append(char c) {
             builder.append(c);
             return this;
         }
