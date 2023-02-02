@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -251,10 +251,17 @@ class Apache5Connector implements Connector {
             }
         }
 
+        final boolean useSystemProperties =
+                PropertiesHelper.isProperty(config.getProperties(), Apache5ClientProperties.USE_SYSTEM_PROPERTIES);
+
         final SSLContext sslContext = client.getSslContext();
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
-        clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext));
+        if (useSystemProperties) {
+            clientBuilder.useSystemProperties();
+        }
+
+        clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext, useSystemProperties));
         clientBuilder.setConnectionManagerShared(
                 PropertiesHelper.getValue(
                         config.getProperties(),
@@ -341,7 +348,8 @@ class Apache5Connector implements Connector {
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
                                                              final Configuration config,
-                                                             final SSLContext sslContext) {
+                                                             final SSLContext sslContext,
+                                                             final boolean useSystemProperties) {
         final Object cmObject = config.getProperties().get(Apache5ClientProperties.CONNECTION_MANAGER);
 
         // Connection manager from configuration.
@@ -358,9 +366,6 @@ class Apache5Connector implements Connector {
                 );
             }
         }
-
-        final boolean useSystemProperties =
-            PropertiesHelper.isProperty(config.getProperties(), Apache5ClientProperties.USE_SYSTEM_PROPERTIES);
 
         // Create custom connection manager.
         return createConnectionManager(
