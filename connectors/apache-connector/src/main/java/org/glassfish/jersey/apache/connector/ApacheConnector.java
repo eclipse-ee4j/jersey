@@ -260,10 +260,16 @@ class ApacheConnector implements Connector {
             }
         }
 
+        final boolean useSystemProperties =
+                PropertiesHelper.isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
+
         final SSLContext sslContext = client.getSslContext();
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
-        clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext));
+        if (useSystemProperties) {
+            clientBuilder.useSystemProperties();
+        }
+        clientBuilder.setConnectionManager(getConnectionManager(client, config, sslContext, useSystemProperties));
         clientBuilder.setConnectionManagerShared(
                 PropertiesHelper.getValue(config.getProperties(), ApacheClientProperties.CONNECTION_MANAGER_SHARED, false, null));
         clientBuilder.setSSLContext(sslContext);
@@ -342,7 +348,8 @@ class ApacheConnector implements Connector {
 
     private HttpClientConnectionManager getConnectionManager(final Client client,
                                                              final Configuration config,
-                                                             final SSLContext sslContext) {
+                                                             final SSLContext sslContext,
+                                                             final boolean useSystemProperties) {
         final Object cmObject = config.getProperties().get(ApacheClientProperties.CONNECTION_MANAGER);
 
         // Connection manager from configuration.
@@ -359,9 +366,6 @@ class ApacheConnector implements Connector {
                 );
             }
         }
-
-        final boolean useSystemProperties =
-            PropertiesHelper.isProperty(config.getProperties(), ApacheClientProperties.USE_SYSTEM_PROPERTIES);
 
         // Create custom connection manager.
         return createConnectionManager(
