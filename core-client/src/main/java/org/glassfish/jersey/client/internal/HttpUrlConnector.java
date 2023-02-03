@@ -308,11 +308,50 @@ public class HttpUrlConnector implements Connector {
                 suc.setHostnameVerifier(verifier);
             }
 
-            if (DEFAULT_SSL_SOCKET_FACTORY.get() == suc.getSSLSocketFactory()) {
+            if (isDefaultSSLSocketFactory(suc)) {
                 // indicates that the custom socket factory was not set
                 suc.setSSLSocketFactory(sslSocketFactory.get());
             }
         }
+    }
+
+    static boolean isDefaultSSLSocketFactory(final HttpsURLConnection httpsURLConnection) {
+        final boolean fastCheck = HttpsURLConnection.getDefaultSSLSocketFactory() == httpsURLConnection.getSSLSocketFactory();
+        if (fastCheck) {
+            return true;
+        }
+        final Object defaultContext = getContextObject(HttpsURLConnection.getDefaultSSLSocketFactory());
+        if (defaultContext == null) {
+            return false;
+        }
+        final Object sucContext = getContextObject(httpsURLConnection.getSSLSocketFactory());
+        return defaultContext == sucContext;
+    }
+
+    static Object getContextObject(final SSLSocketFactory sslSocketFactory) {
+        try {
+            final Field contextField = getContextField(sslSocketFactory);
+            if (contextField == null) {
+                return null;
+            }
+            contextField.setAccessible(true);
+            return contextField.get(sslSocketFactory);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * Search for the field named "context" instead of using "getDeclaredField" method which throws an exception if the field is not found
+     */
+    private static Field getContextField(final SSLSocketFactory sslSocketFactory) {
+        final Field[] declaredFields = sslSocketFactory.getClass().getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            if ("context".equals(declaredField.getName())) {
+                return declaredField;
+            }
+        }
+        return null;
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
