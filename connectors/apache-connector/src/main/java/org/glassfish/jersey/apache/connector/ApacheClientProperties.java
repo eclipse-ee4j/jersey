@@ -18,6 +18,7 @@ package org.glassfish.jersey.apache.connector;
 
 import java.util.Map;
 
+import org.apache.http.client.RedirectStrategy;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
@@ -156,7 +157,6 @@ public final class ApacheClientProperties {
      */
     public static final String KEEPALIVE_STRATEGY = "jersey.config.apache.client.keepAliveStrategy";
 
-
     /**
      * <p>
      *  Strategy that closes the Apache Connection. Accepts an instance of {@link ApacheConnectionClosingStrategy}.
@@ -168,6 +168,13 @@ public final class ApacheClientProperties {
     public static final String CONNECTION_CLOSING_STRATEGY = "jersey.config.apache.client.connectionClosingStrategy";
 
     /**
+     * RedirectStrategy which can customize how redirects are handled.
+     * <p/>
+     * The value MUST be a subclass of {@link RedirectStrategy}.
+     */
+    public static final String REDIRECT_STRATEGY = "jersey.config.apache.client.redirectStrategy";
+
+     /**
      * A value of {@code false} indicates the client will use default ApacheConnector params. A value
      * of {@code true} will cause the client to take into account the system properties
      * {@code https.protocols}, {@code https.cipherSuites}, {@code http.keepAlive},
