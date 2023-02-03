@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-    Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,10 +31,10 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jersey.version>3.1.0-M3</jersey.version> <!-- the public version that pass the tck -->
-        <glassfish.container.version>6.2.5</glassfish.container.version>
-        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
-        <jakarta.platform.version>10.0.0-RC1</jakarta.platform.version>
+        <jersey.version>3.1.1</jersey.version> <!-- the public version that pass the tck -->
+        <glassfish.container.version>7.0.1</glassfish.container.version>
+        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <jakarta.platform.version>10.0.0</jakarta.platform.version>
         <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <jakarta.rest.version>3.1.0</jakarta.rest.version>
         <tck.artifactId>jakarta-restful-ws-tck</tck.artifactId>
@@ -519,7 +519,7 @@
             </activation>
             <properties>
                 <asadmin.home>${basedir}</asadmin.home>
-                <asadmin>${project.build.directory}/glassfish6/glassfish/bin/asadmin</asadmin>
+                <asadmin>${glassfish.home}/glassfish/bin/asadmin</asadmin>
             </properties>
         </profile>
         <profile>
@@ -537,7 +537,7 @@
         <profile>
             <id>jersey-tck</id>
             <properties>
-                <jersey.version>3.1.0-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
+                <jersey.version>3.1.99-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
             </properties>
         </profile>
     </profiles>
