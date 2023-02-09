@@ -156,6 +156,19 @@ public final class ApacheClientProperties {
      */
     public static final String KEEPALIVE_STRATEGY = "jersey.config.apache.client.keepAliveStrategy";
 
+    /**
+     * RedirectStrategy which can customize how redirects are handled.
+     * <p/>
+     * The value MUST be a subclass of {@link RedirectStrategy}.
+     */
+    public static final String REDIRECT_STRATEGY = "jersey.config.apache.client.redirectStrategy";
+
+    /**
+     * DefaultAuthSchemeRegistry which can customize the auth scheme used.
+     * <p/>
+     * The value MUST be a subclass of {@link org.apache.http.config.Registry}.
+     */
+    public static final String DEFAULT_AUTH_SCHEME_REGISTRY = "jersey.config.apache.client.defaultAuthSchemeRegistry";
 
     /**
      * <p>

@@ -67,6 +67,7 @@ import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -74,6 +75,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -260,6 +262,34 @@ class ApacheConnector implements Connector {
             }
         }
 
+        Object redirectStrategy = config.getProperties().get(ApacheClientProperties.REDIRECT_STRATEGY);
+        if (redirectStrategy != null) {
+            if (!(redirectStrategy instanceof RedirectStrategy)) {
+                LOGGER.log(
+                    Level.WARNING,
+                    LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                        ApacheClientProperties.REDIRECT_STRATEGY,
+                        redirectStrategy.getClass().getName(),
+                        RedirectStrategy.class.getName())
+                );
+                redirectStrategy = null;
+            }
+        }
+
+        Object defaultAuthSchemeRegistry = config.getProperties().get(ApacheClientProperties.DEFAULT_AUTH_SCHEME_REGISTRY);
+        if (defaultAuthSchemeRegistry != null) {
+            if (!(defaultAuthSchemeRegistry instanceof Registry)) {
+                LOGGER.log(
+                    Level.WARNING,
+                    LocalizationMessages.IGNORING_VALUE_OF_PROPERTY(
+                        ApacheClientProperties.DEFAULT_AUTH_SCHEME_REGISTRY,
+                        defaultAuthSchemeRegistry.getClass().getName(),
+                        Registry.class.getName())
+                );
+                defaultAuthSchemeRegistry = null;
+            }
+        }
+
         final SSLContext sslContext = client.getSslContext();
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
@@ -318,6 +348,14 @@ class ApacheConnector implements Connector {
                 requestConfigBuilder.setCookieSpec(CookieSpecs.IGNORE_COOKIES);
             }
             requestConfig = requestConfigBuilder.build();
+        }
+
+        if (redirectStrategy != null) {
+            clientBuilder.setRedirectStrategy((RedirectStrategy) redirectStrategy);
+        }
+
+        if (defaultAuthSchemeRegistry != null) {
+            clientBuilder.setDefaultAuthSchemeRegistry((Registry<AuthSchemeProvider>) defaultAuthSchemeRegistry);
         }
 
         if (requestConfig.getCookieSpec() == null || !requestConfig.getCookieSpec().equals(CookieSpecs.IGNORE_COOKIES)) {
