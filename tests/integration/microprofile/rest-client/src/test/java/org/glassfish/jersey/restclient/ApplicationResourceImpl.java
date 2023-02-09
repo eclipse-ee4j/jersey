@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -70,5 +70,10 @@ public class ApplicationResourceImpl implements ApplicationResource {
     @Override
     public String regex0(String context0, String context1) {
         return context0 + "_" + context1;
+    }
+
+    @Override
+    public String formParam(String param) {
+        return param;
     }
 }

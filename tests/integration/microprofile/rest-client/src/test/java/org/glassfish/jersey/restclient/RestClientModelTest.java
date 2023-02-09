@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,5 +55,13 @@ public class RestClientModelTest extends JerseyTest {
         assertEquals("secondValue", map.get("secondKey"));
 
         assertEquals("Hi", app.sayHi());
+    }
+
+    @Test
+    public void testFormParam() throws URISyntaxException {
+        String response = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:9998"))
+                .build(ApplicationResource.class).formParam(null);
+        assertEquals("", response);
     }
 }
