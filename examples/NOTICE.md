@@ -43,6 +43,11 @@ Bean Validation API 2.0.2
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
+Hibernate Validator CDI, 6.2.4.Final
+* License: Apache License, 2.0
+* Project: https://beanvalidation.org/
+* Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
+
 Bootstrap v3.3.7
 * License: MIT license (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 * Project: http://getbootstrap.com
@@ -56,12 +61,12 @@ javax.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
-Javassist Version 3.25.0-GA
+Javassist Version 3.29.0-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.9.9
+Jackson JAX-RS Providers Version 2.14.1
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2011 FasterXML, LLC. All rights reserved unless otherwise indicated.
@@ -86,7 +91,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 7.2
+org.objectweb.asm Version 9.4
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

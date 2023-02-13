@@ -107,5 +107,14 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>JDK11+</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <modules>
+                <module>release-test</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
