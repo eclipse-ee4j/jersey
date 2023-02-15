@@ -63,6 +63,8 @@ import java.util.stream.Collectors;
 
 @ConstrainedTo(RuntimeType.CLIENT)
 public final class NonInjectionManager implements InjectionManager {
+    private static final Logger logger = Logger.getLogger(NonInjectionManager.class.getName());
+
     private final MultivaluedMap<Class<?>, InstanceBinding<?>> instanceBindings = new MultivaluedHashMap<>();
     private final MultivaluedMap<Class<?>, ClassBinding<?>> contractBindings = new MultivaluedHashMap<>();
     private final MultivaluedMap<Class<?>, SupplierInstanceBinding<?>> supplierInstanceBindings = new MultivaluedHashMap<>();
@@ -74,13 +76,11 @@ public final class NonInjectionManager implements InjectionManager {
 
     private final MultivaluedMap<DisposableSupplier, Object> disposableSupplierObjects = new MultivaluedHashMap<>();
 
-    private boolean isRequestScope = false;
-    private boolean shutdown = false;
-
-    private final Logger logger = Logger.getLogger(NonInjectionManager.class.getName());
-
     private final Instances instances = new Instances();
     private final Types types = new Types();
+
+    private volatile boolean isRequestScope = false;
+    private volatile boolean shutdown = false;
 
     /**
      * A class that holds singleton instances and thread-scope instances. Provides thread safe access to singletons
@@ -138,8 +138,7 @@ public final class NonInjectionManager implements InjectionManager {
             MultivaluedMap<TYPE, InstanceContext<?>> ti = threadInstances.get();
             List<InstanceContext<?>> list = ti == null ? null : new LinkedList<>();
             if (ti != null) {
-                List<InstanceContext<?>> i = ti.get(clazz);
-                return i;
+                return ti.get(clazz);
             }
             return list;
         }
@@ -466,15 +465,15 @@ public final class NonInjectionManager implements InjectionManager {
     }
 
     private Object[] getArguments(Executable executable, int argCount) {
-        if (executable != null) {
-            Object[] args = new Object[argCount];
-            for (int i = 0; i != argCount; i++) {
-                Type type = executable.getAnnotatedParameterTypes()[i].getType();
-                args[i] = isClass(type) ? getInstance((Class<?>) type) : getInstance(type);
-            }
-            return args;
+        if (executable == null) {
+            return null;
         }
-        return null;
+        Object[] args = new Object[argCount];
+        for (int i = 0; i != argCount; i++) {
+            Type type = executable.getAnnotatedParameterTypes()[i].getType();
+            args[i] = isClass(type) ? getInstance((Class<?>) type) : getInstance(type);
+        }
+        return args;
     }
 
     private static void ensureAccessible(Executable executable) {
@@ -736,11 +735,11 @@ public final class NonInjectionManager implements InjectionManager {
             return RequestScoped.class.equals(scope) || PerThread.class.equals(scope);
         }
 
-        protected X _getInstance(InstanceBinding<X> instanceBinding) {
+        private X _getInstance(InstanceBinding<X> instanceBinding) {
             return instanceBinding.getService();
         }
 
-        protected X _create(SupplierInstanceBinding<X> binding) {
+        private X _create(SupplierInstanceBinding<X> binding) {
             Supplier<X> supplier = binding.getSupplier();
             X t = registerDisposableSupplierAndGet(supplier);
             if (Singleton.class.equals(binding.getScope())) {
