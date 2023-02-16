@@ -219,11 +219,15 @@ public class ManagedClientExecutorTest extends JerseyTest {
      */
     public static class SchedulerThreadNameReader implements MessageBodyReader<SchedulerThreadName> {
 
-        @Inject
-        ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorService injectedService;
 
         @Inject
-        ScheduledExecutorService injectedService;
+        public SchedulerThreadNameReader(ScheduledExecutorService injectedService,
+                                         ScheduledExecutorServiceProvider injectedProvider) {
+            this.injectedProvider = injectedProvider;
+            this.injectedService = injectedService;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

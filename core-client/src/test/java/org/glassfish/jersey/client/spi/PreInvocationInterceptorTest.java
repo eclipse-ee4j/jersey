@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,13 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
+import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -263,8 +263,12 @@ public class PreInvocationInterceptorTest {
     }
 
     private static class InjectedPreInvocationInterceptor implements PreInvocationInterceptor {
-        @Context
-        Configuration configuration;
+        private final Configuration configuration;
+
+        @Inject
+        public InjectedPreInvocationInterceptor(Configuration configuration) {
+            this.configuration = configuration;
+        }
 
         @Override
         public void beforeRequest(ClientRequestContext requestContext) {

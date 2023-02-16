@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,11 +48,14 @@ import org.glassfish.jersey.oauth1.signature.OAuth1SignatureException;
 @Priority(Priorities.AUTHENTICATION)
 class OAuth1ClientFilter implements ClientRequestFilter {
 
-    @Inject
     private Provider<OAuth1Signature> oAuthSignature;
+    private Provider<MessageBodyWorkers> messageBodyWorkers;
 
     @Inject
-    private Provider<MessageBodyWorkers> messageBodyWorkers;
+    public OAuth1ClientFilter(Provider<OAuth1Signature> oAuthSignature, Provider<MessageBodyWorkers> messageBodyWorkers) {
+        this.oAuthSignature = oAuthSignature;
+        this.messageBodyWorkers = messageBodyWorkers;
+    }
 
     @Override
     public void filter(ClientRequestContext request) throws IOException {

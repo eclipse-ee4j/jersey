@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityInspector;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
 
 import org.eclipse.persistence.jaxb.JAXBContext;
@@ -30,6 +33,7 @@ import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.eclipse.persistence.jaxb.JAXBHelper;
 import org.eclipse.persistence.jaxb.Subgraph;
 import org.eclipse.persistence.jaxb.TypeMappingInfo;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
 
 /**
  * @author Michal Gajdos
@@ -45,6 +49,13 @@ final class MoxyObjectProvider extends AbstractObjectProvider<org.eclipse.persis
         } catch (final JAXBException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Inject
+    public MoxyObjectProvider(ScopeProvider scopeProvider,
+                              EntityInspector entityInspector,
+                              EntityGraphProvider graphProvider) {
+        super(scopeProvider, entityInspector, graphProvider);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -120,12 +121,12 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
         }
     };
 
-    public AbstractCollectionJaxbProvider(Providers ps) {
-        super(ps);
+    public AbstractCollectionJaxbProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    public AbstractCollectionJaxbProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    public AbstractCollectionJaxbProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override

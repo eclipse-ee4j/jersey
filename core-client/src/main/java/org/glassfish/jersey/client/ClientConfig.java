@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +35,7 @@ import javax.ws.rs.core.Feature;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.ExtendedConfig;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.innate.inject.NonInjectionManager;
 import org.glassfish.jersey.client.internal.inject.ParameterUpdaterConfigurator;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
@@ -410,7 +411,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             final State runtimeCfgState = this.copy();
             runtimeCfgState.markAsShared();
 
-            InjectionManager injectionManager = Injections.createInjectionManager();
+            final InjectionManager injectionManager = findInjectionManager();
             injectionManager.register(new ClientBinder(runtimeCfgState.getProperties()));
 
             final ClientBootstrapBag bootstrapBag = new ClientBootstrapBag();
@@ -469,6 +470,14 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             messageBodyWorkersConfigurator.setClientRuntime(crt);
 
             return crt;
+        }
+
+        private final InjectionManager findInjectionManager() {
+            try {
+                return Injections.createInjectionManager(RuntimeType.CLIENT);
+            } catch (IllegalStateException ise) {
+                return new NonInjectionManager(true);
+            }
         }
 
         @Override

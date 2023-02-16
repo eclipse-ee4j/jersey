@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,11 +22,11 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -95,7 +95,8 @@ public final class SourceProvider {
 
         private final Provider<SAXParserFactory> spf;
 
-        public SaxSourceReader(@Context Provider<SAXParserFactory> spf) {
+        @Inject
+        public SaxSourceReader(Provider<SAXParserFactory> spf) {
             this.spf = spf;
         }
 
@@ -135,7 +136,8 @@ public final class SourceProvider {
 
         private final Provider<DocumentBuilderFactory> dbf;
 
-        public DomSourceReader(@Context Provider<DocumentBuilderFactory> dbf) {
+        @Inject
+        public DomSourceReader(Provider<DocumentBuilderFactory> dbf) {
             this.dbf = dbf;
         }
 
@@ -176,8 +178,9 @@ public final class SourceProvider {
         private final Provider<SAXParserFactory> saxParserFactory;
         private final Provider<TransformerFactory> transformerFactory;
 
-        public SourceWriter(@Context Provider<SAXParserFactory> spf,
-                @Context Provider<TransformerFactory> tf) {
+        @Inject
+        public SourceWriter(Provider<SAXParserFactory> spf,
+                            Provider<TransformerFactory> tf) {
             this.saxParserFactory = spf;
             this.transformerFactory = tf;
         }

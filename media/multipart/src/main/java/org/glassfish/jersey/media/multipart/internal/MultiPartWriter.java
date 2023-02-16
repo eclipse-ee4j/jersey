@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,9 +27,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -64,7 +64,8 @@ public class MultiPartWriter implements MessageBodyWriter<MultiPart> {
      */
     private final Providers providers;
 
-    public MultiPartWriter(@Context final Providers providers) {
+    @Inject
+    public MultiPartWriter(final Providers providers) {
         this.providers = providers;
     }
 

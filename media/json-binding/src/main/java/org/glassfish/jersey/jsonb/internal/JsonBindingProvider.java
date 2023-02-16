@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,11 +22,11 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -55,9 +55,10 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
     private static final String JSON = "json";
     private static final String PLUS_JSON = "+json";
 
-    private Providers providers;
+    private final Providers providers;
 
-    public JsonBindingProvider(@Context Providers providers) {
+    @Inject
+    public JsonBindingProvider(Providers providers) {
         this.providers = providers;
     }
 

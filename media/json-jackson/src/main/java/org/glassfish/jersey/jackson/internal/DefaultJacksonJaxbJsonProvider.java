@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,25 +25,26 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonP
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.ext.Providers;
 
 /**
  * Entity Data provider based on Jackson JSON provider.
  */
 @Singleton
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
-
-    @Context
     private Configuration commonConfig;
+
+    @Inject
+    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config) {
+        this.commonConfig = config;
+        _providers = providers;
+    }
 
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String EXCLUDE_MODULE_NAME = "JaxbAnnotationModule";
-
-    public DefaultJacksonJaxbJsonProvider() {
-        super();
-    }
 
     public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
         super(annotationsToUse);

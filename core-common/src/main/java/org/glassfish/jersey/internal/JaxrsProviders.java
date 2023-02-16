@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,12 +62,18 @@ public class JaxrsProviders implements Providers {
         }
     }
 
+    private final Provider<MessageBodyWorkers> workers;
+    private final Provider<ContextResolvers> resolvers;
+    private final Provider<ExceptionMappers> mappers;
+
     @Inject
-    private Provider<MessageBodyWorkers> workers;
-    @Inject
-    private Provider<ContextResolvers> resolvers;
-    @Inject
-    private Provider<ExceptionMappers> mappers;
+    public JaxrsProviders(Provider<MessageBodyWorkers> workers,
+                          Provider<ContextResolvers> resolvers,
+                          Provider<ExceptionMappers> mappers) {
+        this.workers = workers;
+        this.resolvers = resolvers;
+        this.mappers = mappers;
+    }
 
     @Override
     public <T> MessageBodyReader<T> getMessageBodyReader(Class<T> type,

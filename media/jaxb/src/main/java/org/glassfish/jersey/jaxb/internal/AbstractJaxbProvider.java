@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Providers;
@@ -71,8 +70,8 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
      *
      * @param providers JAX-RS providers.
      */
-    public AbstractJaxbProvider(final Providers providers) {
-        this(providers, null);
+    public AbstractJaxbProvider(final Providers providers, final Configuration config) {
+        this(providers, null, config);
     }
 
     /**
@@ -81,7 +80,7 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
      * @param providers         JAX-RS providers.
      * @param resolverMediaType JAXB component context resolver media type to be used.
      */
-    public AbstractJaxbProvider(final Providers providers, final MediaType resolverMediaType) {
+    public AbstractJaxbProvider(final Providers providers, final MediaType resolverMediaType, final Configuration config) {
         this.jaxrsProviders = providers;
 
         fixedResolverMediaType = resolverMediaType != null;
@@ -112,10 +111,10 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
             this.mtUnmarshaller = null;
             this.mtMarshaller = null;
         }
+        setConfiguration(config);
     }
 
     // TODO This provider should be registered and configured via a feature.
-    @Context
     public void setConfiguration(final Configuration config) {
         formattedOutput = Values.lazy(new Value<Boolean>() {
 

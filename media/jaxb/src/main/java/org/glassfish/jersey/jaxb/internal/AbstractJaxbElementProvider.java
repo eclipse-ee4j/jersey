@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -67,8 +68,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
      *
      * @param providers JAX-RS providers.
      */
-    public AbstractJaxbElementProvider(Providers providers) {
-        super(providers);
+    public AbstractJaxbElementProvider(Providers providers, Configuration config) {
+        super(providers, config);
     }
 
     /**
@@ -77,8 +78,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
      * @param providers         JAX-RS providers.
      * @param resolverMediaType JAXB component context resolver media type to be used.
      */
-    public AbstractJaxbElementProvider(Providers providers, MediaType resolverMediaType) {
-        super(providers, resolverMediaType);
+    public AbstractJaxbElementProvider(Providers providers, MediaType resolverMediaType, Configuration config) {
+        super(providers, resolverMediaType, config);
     }
 
     @Override

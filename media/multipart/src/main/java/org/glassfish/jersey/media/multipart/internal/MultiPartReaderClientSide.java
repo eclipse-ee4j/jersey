@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,6 @@ import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -77,16 +76,15 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
      * Injectable helper to look up appropriate {@link MessageBodyReader}s
      * for our body parts.
      */
-    @Inject
     private Provider<MessageBodyWorkers> messageBodyWorkers;
-
     private final MIMEConfig mimeConfig;
 
     /**
      * Accepts constructor injection of the configuration parameters for this
      * application.
      */
-    public MultiPartReaderClientSide(@Context final Providers providers) {
+    @Inject
+    public MultiPartReaderClientSide(final Providers providers, Provider<MessageBodyWorkers> messageBodyWorkers) {
         final ContextResolver<MultiPartProperties> contextResolver =
                 providers.getContextResolver(MultiPartProperties.class, MediaType.WILDCARD_TYPE);
 
@@ -98,6 +96,7 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
             properties = new MultiPartProperties();
         }
 
+        this.messageBodyWorkers = messageBodyWorkers;
         mimeConfig = createMimeConfig(properties);
     }
 

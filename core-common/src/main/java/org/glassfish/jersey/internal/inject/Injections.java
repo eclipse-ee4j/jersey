@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.ws.rs.ConstrainedTo;
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.WebApplicationException;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
@@ -36,22 +38,32 @@ import org.glassfish.jersey.model.internal.RankedProvider;
 public class Injections {
 
     /**
-     * Creates a {@link InjectionManager} without parent and initial binder.
+     * Creates an {@link InjectionManager} without parent and initial binder.
      *
-     * @return a injection manager with all the bindings.
+     * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager() {
-        return lookupInjectionManagerFactory().create();
+        return lookupInjectionManagerFactory(RuntimeType.SERVER).create();
+    }
+
+    /**
+     * Creates an {@link InjectionManager} without parent and initial binder.
+     * @param type {@link RuntimeType} the {@link InjectionManagerFactory} must be {@link ConstrainedTo} if annotated.
+     *
+     * @return an injection manager with all the bindings.
+     */
+    public static InjectionManager createInjectionManager(RuntimeType type) {
+        return lookupInjectionManagerFactory(type).create();
     }
 
     /**
      * Creates a {@link InjectionManager} with initial binder that is immediately registered.
      *
      * @param binder custom the {@link Binder binder}.
-     * @return a injection manager with all the bindings.
+     * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(Binder binder) {
-        InjectionManagerFactory injectionManagerFactory = lookupInjectionManagerFactory();
+        InjectionManagerFactory injectionManagerFactory = lookupInjectionManagerFactory(RuntimeType.SERVER);
         InjectionManager injectionManager = injectionManagerFactory.create();
         injectionManager.register(binder);
         return injectionManager;
@@ -66,11 +78,11 @@ public class Injections {
      * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(Object parent) {
-        return lookupInjectionManagerFactory().create(parent);
+        return lookupInjectionManagerFactory(RuntimeType.SERVER).create(parent);
     }
 
-    private static InjectionManagerFactory lookupInjectionManagerFactory() {
-        return lookupService(InjectionManagerFactory.class)
+    private static InjectionManagerFactory lookupInjectionManagerFactory(RuntimeType type) {
+        return lookupService(InjectionManagerFactory.class, type)
                 .orElseThrow(() -> new IllegalStateException(LocalizationMessages.INJECTION_MANAGER_FACTORY_NOT_FOUND()));
     }
 
@@ -80,12 +92,17 @@ public class Injections {
      *
      * @param clazz type of service to look for.
      * @param <T>   type of service to look for.
+     * @param type {@link RuntimeType} the {@link InjectionManagerFactory} must be {@link ConstrainedTo} if annotated.
      * @return instance of service with highest priority or {@code null} if service of given type cannot be found.
      * @see javax.annotation.Priority
      */
-    private static <T> Optional<T> lookupService(final Class<T> clazz) {
+    private static <T> Optional<T> lookupService(final Class<T> clazz, RuntimeType type) {
         List<RankedProvider<T>> providers = new LinkedList<>();
         for (T provider : ServiceFinder.find(clazz)) {
+            ConstrainedTo constrain = provider.getClass().getAnnotation(ConstrainedTo.class);
+            if (constrain != null && type != constrain.value()) {
+                continue;
+            }
             providers.add(new RankedProvider<>(provider));
         }
         providers.sort(new RankedComparator<>(RankedComparator.Order.DESCENDING));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityInspector;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -35,11 +37,21 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.PropertyFilter;
 import com.fasterxml.jackson.databind.ser.PropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
+
+import javax.inject.Inject;
 
 /**
  * @author Michal Gajdos
  */
 final class JacksonObjectProvider extends AbstractObjectProvider<FilterProvider> {
+
+    @Inject
+    public JacksonObjectProvider(ScopeProvider scopeProvider,
+                                  EntityInspector entityInspector,
+                                  EntityGraphProvider graphProvider) {
+        super(scopeProvider, entityInspector, graphProvider);
+    }
 
     @Override
     public FilterProvider transform(final ObjectGraph graph) {

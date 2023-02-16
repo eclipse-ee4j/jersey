@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -48,12 +49,12 @@ import org.glassfish.jersey.jettison.JettisonMarshaller;
  */
 public class JettisonRootElementProvider extends AbstractRootElementJaxbProvider {
 
-    JettisonRootElementProvider(Providers ps) {
-        super(ps);
+    JettisonRootElementProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    JettisonRootElementProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    JettisonRootElementProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override
@@ -69,18 +70,18 @@ public class JettisonRootElementProvider extends AbstractRootElementJaxbProvider
     @Produces("application/json")
     @Consumes("application/json")
     public static final class App extends JettisonRootElementProvider {
-
-        public App(@Context Providers ps) {
-            super(ps, MediaType.APPLICATION_JSON_TYPE);
+        @Inject
+        public App(Providers ps, Configuration config) {
+            super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
 
     @Produces("*/*")
     @Consumes("*/*")
     public static final class General extends JettisonRootElementProvider {
-
-        public General(@Context Providers ps) {
-            super(ps);
+        @Inject
+        public General(Providers ps, Configuration config) {
+            super(ps, config);
         }
 
         @Override
