@@ -60,7 +60,7 @@ public class ParamConverters {
         @Override
         public T fromString(final String value) {
             if (value == null) {
-                throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                return null;
             }
             try {
                 return _fromString(value);
@@ -85,7 +85,7 @@ public class ParamConverters {
         @Override
         public String toString(final T value) throws IllegalArgumentException {
             if (value == null) {
-                throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                return null;
             }
             return value.toString();
         }
@@ -193,7 +193,6 @@ public class ParamConverters {
                     public T fromString(String value) {
                         if (value == null || value.isEmpty()) {
                             return null;
-                            // throw new IllegalStateException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
                         }
 
                         if (value.length() == 1) {
@@ -206,7 +205,7 @@ public class ParamConverters {
                     @Override
                     public String toString(T value) {
                         if (value == null) {
-                            throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                            return null;
                         }
                         return value.toString();
                     }
@@ -234,7 +233,7 @@ public class ParamConverters {
                 @Override
                 public T fromString(final String value) {
                     if (value == null) {
-                        throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                        return null;
                     }
                     try {
                         return rawType.cast(HttpDateFormat.readDate(value));
@@ -246,7 +245,7 @@ public class ParamConverters {
                 @Override
                 public String toString(final T value) throws IllegalArgumentException {
                     if (value == null) {
-                        throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                        return null;
                     }
                     return value.toString();
                 }
