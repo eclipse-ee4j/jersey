@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -116,7 +116,7 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
             // access the https server with not configured client
             final Client client = ClientBuilder.newBuilder().newClient();
             try {
-                client.target(httpsUri).path("testHttps").request().get(String.class);
+                client.target(updatePort(httpsUri)).path("testHttps").request().get(String.class);
             } catch (final ProcessingException e) {
                 throw e.getCause();
             }
@@ -136,8 +136,8 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
             server.start();
 
             final Client client = ClientBuilder.newBuilder().newClient();
-           try {
-                client.target(httpsUri).path("testHttps").request().get(String.class);
+            try {
+                client.target(updatePort(httpsUri)).path("testHttps").request().get(String.class);
             } catch (final ProcessingException e) {
                 throw e.getCause();
             }
@@ -173,7 +173,7 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
 
         final SSLContext clientSslContext = getClientSslContext();
         final Client client = ClientBuilder.newBuilder().sslContext(clientSslContext).build();
-        final String response = client.target(httpsUri).path("testHttps").request().get(String.class);
+        final String response = client.target(updatePort(httpsUri)).path("testHttps").request().get(String.class);
 
         assertEquals("test", response);
     }
@@ -214,6 +214,11 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
                 .trustStorePassword(TRUSTSTORE_SERVER_PWD);
 
         return sslConfigServer.createSSLContext();
+    }
+
+
+    private URI updatePort(URI uri) {
+        return UriBuilder.fromUri(httpsUri).port(server.getAddress().getPort()).build();
     }
 
     @AfterEach

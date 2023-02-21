@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -319,7 +319,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
         private void accept(final ClassVisitor classVisitor, final int parsingOptions) {
             final int originalVersion = getMajorVersion(b);
-            if (originalVersion == WARN_VERSION + 1) {
+            if (originalVersion > WARN_VERSION) {
                 // temporarily downgrade version to bypass check in ASM
                 setMajorVersion(WARN_VERSION, b);
                 LOGGER.warning("Unsupported class file major version " + originalVersion);

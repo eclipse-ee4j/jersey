@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.jdk.connector.internal;
 
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
+
 import java.nio.ByteBuffer;
 import java.nio.Buffer;
 import java.util.LinkedList;
@@ -26,7 +28,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLParameters;
 
 
 /**
@@ -87,7 +88,8 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
     SslFilter(Filter<ByteBuffer, ByteBuffer, ?, ?> downstreamFilter,
               SSLContext sslContext,
               String serverHost,
-              HostnameVerifier customHostnameVerifier) {
+              HostnameVerifier customHostnameVerifier,
+              SSLParamConfigurator sniConfig) {
         super(downstreamFilter);
         this.serverHost = serverHost;
         sslEngine = sslContext.createSSLEngine(serverHost, -1);
@@ -100,10 +102,10 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
          * when {@link SslEngineConfigurator} supports Java 7.
          */
         if (customHostnameVerifier == null) {
-            SSLParameters sslParameters = sslEngine.getSSLParameters();
-            sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
-            sslEngine.setSSLParameters(sslParameters);
+            sniConfig.setEndpointIdentificationAlgorithm(sslEngine);
         }
+
+        sniConfig.setSNIServerName(sslEngine);
 
         applicationInputBuffer = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
         networkOutputBuffer = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.ext.Providers;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase;
@@ -57,8 +59,15 @@ import com.fasterxml.jackson.databind.ser.PropertyFilter;
 @Singleton
 public final class FilteringJacksonJaxbJsonProvider extends DefaultJacksonJaxbJsonProvider {
 
+    private final Provider<ObjectProvider<FilterProvider>> provider;
+
     @Inject
-    private Provider<ObjectProvider<FilterProvider>> provider;
+    public FilteringJacksonJaxbJsonProvider(Provider<ObjectProvider<FilterProvider>> provider,
+                                            Providers providers, Configuration config) {
+        super(providers, config);
+        this.provider = provider;
+    }
+
 
     @Override
     protected JsonEndpointConfig _configForWriting(final ObjectMapper mapper, final Annotation[] annotations,

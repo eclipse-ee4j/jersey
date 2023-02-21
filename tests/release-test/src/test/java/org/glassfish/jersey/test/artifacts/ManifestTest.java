@@ -1,13 +1,17 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v. 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0,
- * or the Eclipse Distribution License v. 1.0 which is available at
- * http://www.eclipse.org/org/documents/edl-v10.php.
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 package org.glassfish.jersey.test.artifacts;
 
@@ -28,7 +32,7 @@ public class ManifestTest {
 
     private static final String BUNDLE_NAME_ATTRIBUTE = "Bundle-Name";
     private static final String BUNDLE_VERSION_ATTRIBUTE = "Bundle-Version";
-    private static final String [] EXCLUDED_JARS = {"test", "rx-client", "oauth", "weld2-se", "spring",
+    private static final String[] EXCLUDED_JARS = {"test", "rx-client", "oauth", "weld2-se", "spring",
             "servlet-portability", /* obsolete */
             "helidon-connector", /* Helidon does not contain OSGi headers */
             "grizzly-connector", /* Limited maintenance */

@@ -69,6 +69,7 @@ build.readme
 /tests/e2e/server/mvc/MvcEncodingTest/MustacheResource.mustache
 /test/resources/org/glassfish/jersey/server/config/jaxrs-components
 /tests/e2e-entity/src/test/resources/org/glassfish/jersey/tests/e2e/entity/xxe.txt
+/tests/e2e-tls/src/test/java/org/glassfish/jersey/tests/e2e/tls/explorer
 /core-server/src/main/java/com/sun/research/ws/wadl
 /core-common/src/main/java/org/glassfish/jersey/internal/jsr166
 /core-common/src/main/jsr166/org/glassfish/jersey/internal/jsr166
