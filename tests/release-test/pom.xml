@@ -29,7 +29,6 @@
 
     <groupId>org.glassfish.jersey.tests</groupId>
     <artifactId>release-test</artifactId>
-    <version>3.0.99-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>jersey-release-test</name>
 

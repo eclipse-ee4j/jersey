@@ -39,6 +39,7 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
     @Inject
     public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config) {
+        super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
         this.commonConfig = config;
         _providers = providers;
     }

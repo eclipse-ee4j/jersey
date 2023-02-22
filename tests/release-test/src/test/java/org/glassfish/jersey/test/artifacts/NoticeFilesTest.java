@@ -177,7 +177,7 @@ public class NoticeFilesTest {
         dependencyPairs.add(new NoticeDependencyVersionPair("Jackson JAX-RS Providers", "${jackson.version}"));
         dependencyPairs.add(new NoticeDependencyVersionPair("Javassist", "${javassist.version}"));
         dependencyPairs.add(new NoticeDependencyVersionPair("Hibernate Validator CDI", "${validation.impl.version}"));
-        dependencyPairs.add(new NoticeDependencyVersionPair("Bean Validation", "${javax.validation.api.version}"));
+        dependencyPairs.add(new NoticeDependencyVersionPair("Bean Validation", "${jakarta.validation.api.version}"));
         return dependencyPairs;
     }
 
