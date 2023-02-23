@@ -21,7 +21,10 @@ module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp.test {
     requires jakarta.ws.rs;
 
     requires weld.se.core;
+    requires weld.core.impl;
     requires grizzly.http.server;
+    requires org.hibernate.validator;
+    requires org.hibernate.validator.cdi;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;

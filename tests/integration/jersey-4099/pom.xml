@@ -42,9 +42,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <type>pom</type>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -92,4 +96,9 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads org.jboss.logging=java.logging --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 </project>

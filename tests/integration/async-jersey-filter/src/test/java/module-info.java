@@ -28,6 +28,7 @@ module org.glassfish.jersey.tests.integration.async.jersey.filter {
     requires org.glassfish.jersey.tests.framework.provider.external;
 
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
 
     exports org.glassfish.jersey.tests.integration.async;
     exports org.glassfish.jersey.tests.integration.jersey2730;

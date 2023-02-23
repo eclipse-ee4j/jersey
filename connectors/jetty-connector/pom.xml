@@ -38,6 +38,9 @@
         <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
         <java17.build.outputDirectory>${project.basedir}/target17</java17.build.outputDirectory>
         <java17.sourceDirectory>${project.basedir}/src/main/java17</java17.sourceDirectory>
+        <surefire.coverage.argline>
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
     </properties>
 
     <dependencies>
@@ -68,12 +71,24 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-jetty</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,6 +100,12 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-servlet-api</artifactId>
+            <version>${jetty.servlet.api.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

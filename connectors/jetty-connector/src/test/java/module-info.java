@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +14,30 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.manually.bound {
-    requires jakarta.ws.rs;
+module org.glassfish.jersey.jetty.connector {
+    requires java.logging;
+
     requires jakarta.inject;
-    requires jakarta.cdi;
+    requires jakarta.ws.rs;
+
+    requires org.eclipse.jetty.client;
+    requires org.eclipse.jetty.server;
+    requires org.eclipse.jetty.http;
+    requires org.eclipse.jetty.io;
+    requires org.eclipse.jetty.util;
+
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
+    requires org.hamcrest;
+
     requires jakarta.xml.bind;
 
-    requires weld.core.impl;
+    requires org.glassfish.jersey.tests.framework.core;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
-    requires org.glassfish.jersey.inject.hk2;
-    requires org.glassfish.jersey.ext.cdi1x;
 
-    opens org.glassfish.jersey.tests.cdi.manuallybound;
-    exports org.glassfish.jersey.tests.cdi.manuallybound;
+    exports org.glassfish.jersey.jetty.connector;
+    opens org.glassfish.jersey.jetty.connector;
 }

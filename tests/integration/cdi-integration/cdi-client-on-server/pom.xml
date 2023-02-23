@@ -31,6 +31,10 @@
 
     <description>CDI works on a client on a server resource</description>
 
+    <properties>
+        <surefire.coverage.argline>--add-reads org.jboss.logging=java.logging --add-modules=ALL-MODULE-PATH</surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>

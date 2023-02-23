@@ -158,7 +158,7 @@
                     <reuseForks>true</reuseForks>
                     <systemPropertiesFile>${project.basedir}/etc/systemPropertiesFile</systemPropertiesFile>
                     <argLine>
-                        --add-modules jakarta.xml.bind
+                        ${surefire.coverage.argline}
                         ${surefire.security.argline}
                     </argLine>
                 </configuration>
@@ -245,7 +245,8 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -305,6 +306,7 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/server.policy</surefire.security.argline>
+        <surefire.coverage.argline>--add-modules=ALL-MODULE-PATH</surefire.coverage.argline>
     </properties>
 
 </project>

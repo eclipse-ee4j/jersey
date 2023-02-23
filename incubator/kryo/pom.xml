@@ -34,6 +34,14 @@
         Jersey/JAX-RS Message Body Writer and Reader using Kryo serialization framework
     </description>
 
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads org.glassfish.jersey.incubator.media.kryo=org.glassfish.jersey.core.server
+            --add-reads org.glassfish.jersey.incubator.media.kryo=org.glassfish.jersey.core.client
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -103,7 +111,7 @@
                             <!-- compile everything to ensure module-info contains right entries -->
                             <release>11</release>
                             <compilerArgs>
-                                <arg>--add-reads</arg>
+                                <arg>--add-opens</arg>
                                 <arg>org.glassfish.jersey.incubator.media.kryo=ALL-UNNAMED</arg>
                                 <arg>-Xdiags:verbose</arg>
                             </compilerArgs>

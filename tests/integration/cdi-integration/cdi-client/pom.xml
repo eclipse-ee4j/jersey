@@ -49,6 +49,19 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -74,8 +87,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skipTests>${skip.tests}</skipTests>
+
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads org.jboss.logging=java.logging --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 </project>

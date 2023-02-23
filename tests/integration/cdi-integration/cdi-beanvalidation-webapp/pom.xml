@@ -76,6 +76,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
             <version>${project.version}</version>
@@ -144,6 +156,7 @@
             --add-reads jakarta.validation=weld.api
             --add-reads jakarta.validation=weld.core.impl
             --add-opens jakarta.validation/jakarta.validation=weld.core.impl
+            --add-reads org.jboss.logging=java.logging
             --add-modules=ALL-MODULE-PATH
         </surefire.coverage.argline>
     </properties>

@@ -34,4 +34,5 @@ module org.glassfish.jersey.tests.integration.cdi.client.on.server {
     requires org.junit.jupiter.engine;
 
     exports org.glassfish.jersey.tests.cdi.client;
+    opens org.glassfish.jersey.tests.cdi.client;
 }

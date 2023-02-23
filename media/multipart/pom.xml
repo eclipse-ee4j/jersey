@@ -34,6 +34,13 @@
         Jersey Multipart entity providers support module.
     </description>
 
+    <properties>
+        <surefire.coverage.argline>
+            --add-exports org.glassfish.jersey.core.client/org.glassfish.jersey.client.innate=ALL-UNNAMED
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
+
     <build>
         <plugins>
             <plugin>

@@ -21,6 +21,7 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp {
     requires jakarta.cdi;
 
     requires java.logging;
+    requires static weld.api;
 
     opens org.glassfish.jersey.tests.cdi.resources;
     exports org.glassfish.jersey.tests.cdi.resources;

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.log.check {
+module org.glassfish.jersey.tests.integration.cdi.log.check.test {
     requires java.logging;
 
     requires jakarta.cdi;
@@ -23,7 +23,10 @@ module org.glassfish.jersey.tests.integration.cdi.log.check {
     requires jakarta.ws.rs;
 
     requires weld.se.core;
+    requires weld.core.impl;
     requires org.jboss.logging;
+
+    requires org.glassfish.jersey.tests.integration.cdi.log.check;
 
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.inject.hk2;
@@ -35,5 +38,6 @@ module org.glassfish.jersey.tests.integration.cdi.log.check {
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
 
-    exports org.glassfish.jersey.tests.cdi.resources;
+    exports org.glassfish.jersey.tests.cdi.resources.test;
+    opens org.glassfish.jersey.tests.cdi.resources.test;
 }

@@ -32,6 +32,10 @@
 
     <description>CDI 4 SE InjectionManager implementation</description>
 
+    <properties>
+        <surefire.coverage.argline>--add-modules=ALL-MODULE-PATH</surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
