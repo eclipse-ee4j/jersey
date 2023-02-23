@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,9 @@ module org.glassfish.jersey.core.server {
 
     requires jdk.httpserver;
 
+    requires static org.glassfish.jersey.inject.hk2;
+    requires static org.glassfish.hk2.api;
+
     // jersey common modules
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
@@ -50,9 +53,14 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.internal;
     exports org.glassfish.jersey.server.internal.inject;
     exports org.glassfish.jersey.server.internal.monitoring;
+    exports org.glassfish.jersey.server.internal.monitoring.jmx;
     exports org.glassfish.jersey.server.internal.process;
+    exports org.glassfish.jersey.server.internal.routing;
     exports org.glassfish.jersey.server.internal.scanning;
-//    exports org.glassfish.jersey.server.internal.sonar;
+    exports org.glassfish.jersey.server.internal.sonar;
+
+    exports com.sun.research.ws.wadl; // to org.glassfish.jersey.core.server.test;
+    exports org.glassfish.jersey.server.internal.monitoring.core;
 
     uses org.glassfish.jersey.server.spi.ComponentProvider;
     uses org.glassfish.jersey.server.spi.ExternalRequestScope;

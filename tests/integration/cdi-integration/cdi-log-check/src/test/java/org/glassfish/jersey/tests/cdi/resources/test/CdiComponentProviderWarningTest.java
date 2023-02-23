@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,13 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.resources;
+package org.glassfish.jersey.tests.cdi.resources.test;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
+import org.glassfish.jersey.tests.cdi.resources.EchoResource;
+import org.glassfish.jersey.tests.cdi.resources.MyApplication;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -75,7 +77,7 @@ public class CdiComponentProviderWarningTest extends JerseyTest {
     @Test
     public void testWarning() {
         String echo = target("echo").request().get(String.class);
-        assertEquals(echo, EchoResource.OK);
+        Assertions.assertEquals(echo, EchoResource.OK);
 
         String resource = target("warning").request().get(String.class);
         assertEquals(resource, EchoResource.class.getName());

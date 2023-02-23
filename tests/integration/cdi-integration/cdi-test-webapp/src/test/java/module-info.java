@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.test.webapp {
+module org.glassfish.jersey.tests.integration.cdi.test.webapp.test {
     requires java.logging;
 
     requires jakarta.annotation;
@@ -24,6 +24,8 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp {
 
     requires weld.se.core;
     requires org.hamcrest;
+
+    requires org.glassfish.jersey.tests.integration.cdi.test.webapp;
 
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.inject.hk2;
@@ -37,7 +39,10 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp {
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
     requires org.junit.jupiter.params;
 
     exports org.glassfish.jersey.tests.cdi.resources.test;
+
+    opens org.glassfish.jersey.tests.cdi.resources.test;
 }

@@ -21,7 +21,7 @@ module org.glassfish.jersey.container.servlet.core {
     requires jakarta.ws.rs;
     requires jakarta.inject;
     requires static jakarta.persistence;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
 
     requires osgi.resource.locator;
 

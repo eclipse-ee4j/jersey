@@ -66,4 +66,7 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <failsafe.coverage.argline>--add-opens org.glassfish.jersey.core.client/org.glassfish.jersey.client.innate=ALL-UNNAMED --add-modules=ALL-MODULE-PATH</failsafe.coverage.argline>
+    </properties>
 </project>

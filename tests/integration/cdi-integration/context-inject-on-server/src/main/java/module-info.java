@@ -23,6 +23,8 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server {
     requires jakarta.servlet;
 //    requires jakarta.persistence;
 
+    requires static weld.api;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.container.servlet.core;

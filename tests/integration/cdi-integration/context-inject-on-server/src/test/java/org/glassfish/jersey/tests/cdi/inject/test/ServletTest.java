@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.inject;
+package org.glassfish.jersey.tests.cdi.inject.test;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.servlet.ServletProperties;
@@ -24,6 +24,8 @@ import org.glassfish.jersey.test.ServletDeploymentContext;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.tests.cdi.inject.InjectionChecker;
+import org.glassfish.jersey.tests.cdi.inject.ServletApplication;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

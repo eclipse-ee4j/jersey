@@ -51,6 +51,12 @@
             <artifactId>jersey-test-framework-provider-external</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-xjc</artifactId>
+            <version>${jaxb.ri.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -69,5 +75,7 @@
             </plugin>
         </plugins>
     </build>
-
+    <properties>
+        <failsafe.coverage.argline>--add-opens org.eclipse.persistence.moxy/org.eclipse.persistence.jaxb.rs=org.glassfish.hk2.utilities  --add-modules=ALL-MODULE-PATH</failsafe.coverage.argline>
+    </properties>
 </project>

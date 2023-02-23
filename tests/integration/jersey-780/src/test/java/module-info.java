@@ -23,4 +23,6 @@ module org.glassfish.jersey.tests.integration.jersey_780 {
     requires org.glassfish.jersey.tests.framework.provider.external;
 
     requires org.junit.jupiter.api;
+
+    exports org.glassfish.jersey.tests.integration.jersey780;
 }

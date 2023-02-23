@@ -24,4 +24,6 @@ module org.glassfish.jersey.incubator.media.kryo {
 
     exports org.glassfish.jersey.kryo;
     exports org.glassfish.jersey.kryo.internal;
+    opens org.glassfish.jersey.kryo;
+    opens org.glassfish.jersey.kryo.internal;
 }

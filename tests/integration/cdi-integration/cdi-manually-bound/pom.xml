@@ -29,6 +29,10 @@
 
     <artifactId>cdi-manually-bound</artifactId>
 
+    <properties>
+        <surefire.coverage.argline>--add-reads org.jboss.logging=java.logging --add-modules=ALL-MODULE-PATH</surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -45,6 +49,11 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core-impl</artifactId>
+            <version>${weld.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>

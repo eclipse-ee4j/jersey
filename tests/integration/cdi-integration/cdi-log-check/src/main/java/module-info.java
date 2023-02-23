@@ -22,8 +22,10 @@ module org.glassfish.jersey.tests.integration.cdi.log.check {
     requires jakarta.cdi;
 
     requires java.logging;
+    requires static weld.core.impl;
 
     requires org.glassfish.jersey.core.server;
 
     opens org.glassfish.jersey.tests.cdi.resources;
+    exports org.glassfish.jersey.tests.cdi.resources;
 }

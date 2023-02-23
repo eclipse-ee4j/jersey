@@ -39,8 +39,17 @@
     </description>
 
     <properties>
-        <net.java.html.version>1.5.1</net.java.html.version>
+        <net.java.html.version>1.8.1</net.java.html.version>
         <enforcer.skip>true</enforcer.skip>
+        <surefire.coverage.argline>
+            --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
+            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
+            --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.core.server
+            --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.tests.framework.core
+            --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.tests.framework.provider.grizzly
+            --add-reads org.glassfish.jersey.incubator.html.json=org.junit.jupiter.api
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
     </properties>
 
     <dependencies>
@@ -56,7 +65,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE110</version>
+            <version>RELEASE160</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -81,18 +90,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--<dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache-connector</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.netbeans.html</groupId>
             <artifactId>ko-ws-tyrus</artifactId>

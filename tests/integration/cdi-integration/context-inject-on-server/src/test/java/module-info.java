@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.inject.server {
+module org.glassfish.jersey.tests.integration.cdi.inject.server.test {
     requires jakarta.annotation;
     requires jakarta.cdi;
     requires jakarta.inject;
@@ -29,7 +29,12 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server {
     requires org.glassfish.jersey.ext.weld2.se;
     requires org.glassfish.jersey.ext.cdi.rs.inject;
 
+    requires org.glassfish.jersey.tests.integration.cdi.inject.server;
+
     requires weld.se.core;
+
+    requires org.glassfish.jersey.media.sse;
+    requires org.glassfish.jersey.ext.cdi1x;
 
     requires org.junit.jupiter.api;
     requires org.glassfish.jersey.tests.framework.core;

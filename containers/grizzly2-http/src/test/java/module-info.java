@@ -30,6 +30,7 @@ open module org.glassfish.jersey.container.grizzly2.http {
     requires org.eclipse.jetty.client;
     requires org.hamcrest;
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
 
     requires grizzly.http.server;
     requires grizzly.http2;

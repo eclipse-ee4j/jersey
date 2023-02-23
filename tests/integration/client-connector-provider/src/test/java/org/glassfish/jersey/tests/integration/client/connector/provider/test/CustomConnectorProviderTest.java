@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,16 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.integration.client.connector.provider;
+package org.glassfish.jersey.tests.integration.client.connector.provider.test;
 
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.glassfish.jersey.tests.integration.client.connector.provider.CustomConnectorProvider;
+import org.glassfish.jersey.tests.integration.client.connector.provider.TestResource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -38,7 +40,7 @@ public class CustomConnectorProviderTest extends JerseyTest {
 
     @Test
     public void testInvoked() {
-        assertFalse(CustomConnectorProvider.invoked);
+        Assertions.assertFalse(CustomConnectorProvider.invoked);
 
         Response response = target().path("test").request("text/plain").get();
         assertEquals(200, response.getStatus());

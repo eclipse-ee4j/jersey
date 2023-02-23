@@ -19,6 +19,7 @@ module org.glassfish.jersey.tests.integration.cdi.manually.bound.test {
     requires jakarta.ws.rs;
 
     requires weld.se.core;
+    requires org.jboss.logging;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
@@ -30,6 +31,7 @@ module org.glassfish.jersey.tests.integration.cdi.manually.bound.test {
     requires org.glassfish.jersey.tests.integration.cdi.manually.bound;
 
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
 
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.external;

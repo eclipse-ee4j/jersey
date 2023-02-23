@@ -14,19 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.manually.bound {
+open module org.glassfish.jersey.media.json.processing.test {
+    requires jakarta.annotation;
     requires jakarta.ws.rs;
-    requires jakarta.inject;
-    requires jakarta.cdi;
-    requires jakarta.xml.bind;
 
-    requires weld.core.impl;
+    requires org.eclipse.parsson.media;
 
+    requires org.junit.jupiter.api;
+
+    requires org.glassfish.jersey.media.json.processing;
+
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
-    requires org.glassfish.jersey.inject.hk2;
-    requires org.glassfish.jersey.ext.cdi1x;
 
-    opens org.glassfish.jersey.tests.cdi.manuallybound;
-    exports org.glassfish.jersey.tests.cdi.manuallybound;
+    exports org.glassfish.jersey.jsonp.test;
 }

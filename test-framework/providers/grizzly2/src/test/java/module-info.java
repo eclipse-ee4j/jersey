@@ -39,5 +39,6 @@ module org.glassfish.jersey.tests.framework.provider.grizzly {
     opens org.glassfish.jersey.test.grizzly.web;
 
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
     requires org.hamcrest;
 }

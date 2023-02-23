@@ -19,6 +19,7 @@ module org.glassfish.jersey.ext.mp.config {
     requires microprofile.config.api;
 
     requires org.glassfish.jersey.core.common;
+    requires static org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.microprofile.config;
 }

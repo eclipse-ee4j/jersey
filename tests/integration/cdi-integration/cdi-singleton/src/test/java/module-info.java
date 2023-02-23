@@ -29,6 +29,7 @@ module org.glassfish.jersey.tests.integration.cdi.singleton.test {
     requires org.glassfish.jersey.tests.framework.provider.external;
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
     requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
 
     exports org.glassfish.jersey.tests.cdi.singleton.test;
 }

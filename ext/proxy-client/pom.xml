@@ -32,6 +32,12 @@
         Jersey extension module providing support for (proxy-based) high-level client API.
     </description>
 
+    <properties>
+        <surefire.coverage.argline>
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -61,10 +67,15 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-bundle</artifactId>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

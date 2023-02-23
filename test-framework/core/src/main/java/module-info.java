@@ -17,7 +17,7 @@
 module org.glassfish.jersey.tests.framework.core {
     requires jakarta.ws.rs;
     requires jakarta.xml.bind;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
     requires static jakarta.persistence;
 
     requires java.logging;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -82,23 +82,23 @@ public class ExternalPropertiesConfigurationFactoryTest extends JerseyTest {
     @Test
     public void readConfigTest() {
 
-        final Boolean responce = target("getPropertyValue/{key}")
+        final Boolean response = target("getPropertyValue/{key}")
                 .resolveTemplate("key", "jersey.config.disableMetainfServicesLookup").request().get(Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, responce);
+        Assertions.assertEquals(Boolean.TRUE, response);
     }
 
     @Test
     public void smallRyeConfigTest() {
 
-        final String responce = target("readProperty/{key}")
+        final String response = target("readProperty/{key}")
                 .resolveTemplate("key", "jersey.config.disableAutoDiscovery").request().get(String.class);
-        Assertions.assertEquals("1", responce);
+        Assertions.assertEquals("1", response);
     }
 
     @Test
     public void defaultHeaderValueTest() {
-        final String responce = target("readProperty/{key}")
+        final String response = target("readProperty/{key}")
                 .resolveTemplate("key", "jersey.config.disableJsonProcessing").request().get(String.class);
-        Assertions.assertEquals("true", responce);
+        Assertions.assertEquals("true", response);
     }
 }

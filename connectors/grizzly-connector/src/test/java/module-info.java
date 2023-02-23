@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +14,28 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.manually.bound {
-    requires jakarta.ws.rs;
-    requires jakarta.inject;
-    requires jakarta.cdi;
-    requires jakarta.xml.bind;
+module org.glassfish.jersey.grizzly.connector {
+    requires java.logging;
+    requires org.slf4j;
 
-    requires weld.core.impl;
+    requires jakarta.ws.rs;
+
+    requires grizzly.framework;
+    requires grizzly.http.client;
+
+//    requires grizzly.http.server;
+    requires grizzly.http;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
-    requires org.glassfish.jersey.inject.hk2;
-    requires org.glassfish.jersey.ext.cdi1x;
 
-    opens org.glassfish.jersey.tests.cdi.manuallybound;
-    exports org.glassfish.jersey.tests.cdi.manuallybound;
+    requires org.glassfish.jersey.tests.framework.core;
+    requires org.glassfish.jersey.tests.framework.provider.grizzly;
+
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
+
+    exports org.glassfish.jersey.grizzly.connector;
+    opens org.glassfish.jersey.grizzly.connector;
 }
