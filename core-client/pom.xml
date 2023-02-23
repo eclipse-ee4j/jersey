@@ -43,7 +43,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-<!--                <inherited>false</inherited>-->
                 <executions>
                     <execution>
                         <id>default-compile</id>
@@ -57,8 +56,6 @@
                                 <!-- Do not warn about using sun.misc.Unsafe -->
                                 <XDignore.symbol.file/>
                             </compilerArguments>
-<!--                            <showWarnings>false</showWarnings>-->
-<!--                            <fork>false</fork>-->
                         </configuration>
                     </execution>
                 </executions>

@@ -109,7 +109,6 @@ public class RuntimeDelegateImplTest {
         // when
         final SeBootstrap.Configuration configuration = configurationBuilder.property("property", "value").build();
 
-        // then
         assertThat(configuration, is(notNullValue()));
         assertTrue(configuration.hasProperty("property"));
         assertThat(configuration.property("property"), is("value"));

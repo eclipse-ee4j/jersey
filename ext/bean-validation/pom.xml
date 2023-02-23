@@ -136,7 +136,7 @@
         </dependency>
 
 
-        <!-- java-el related dependencies are in scope "provided" in hibernate-validator -->
+        <!-- jakarta-el related dependencies are in scope "provided" in hibernate-validator -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
