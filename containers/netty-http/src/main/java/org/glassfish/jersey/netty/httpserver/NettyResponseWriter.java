@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -105,7 +105,7 @@ class NettyResponseWriter implements ContainerResponseWriter {
 
         if (contentLength == -1) {
             HttpUtil.setTransferEncodingChunked(response, true);
-        } else {
+        } else if (req.method() != HttpMethod.HEAD || !response.headers().contains(HttpHeaderNames.CONTENT_LENGTH)) {
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
         }
 
