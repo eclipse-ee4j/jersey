@@ -72,6 +72,12 @@
                     <mainClass>\${package}.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- Surefire support for JUnit-5 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.mvn.plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -79,5 +85,6 @@
         <jersey.version>${project.version}</jersey.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <surefire.mvn.plugin.version>3.0.0-M7</surefire.mvn.plugin.version>
     </properties>
 </project>
