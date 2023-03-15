@@ -83,7 +83,7 @@ public class BufferingTest extends JerseyTest {
         );
     }
 
-    private final static class TestArguments {
+    private static final class TestArguments {
         private final Supplier<ConnectorProvider> connectorProviderSupplier;
         private final RequestEntityProcessing defaultProcessing;
 
