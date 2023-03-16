@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -170,7 +170,9 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
      */
     public boolean isObservedAndReset(String key) {
         Boolean observed = guards.get(key);
-        guards.put(key, false);
+        if (observed != null) {
+            guards.put(key, false);
+        }
         return observed != null && observed;
     }
 
