@@ -180,6 +180,7 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
         for (Map.Entry<String, Boolean> guard : guards.entrySet()) {
             if (guard.getKey().equals(key)) {
                 guard.setValue(true);
+                break;
             }
         }
     }
