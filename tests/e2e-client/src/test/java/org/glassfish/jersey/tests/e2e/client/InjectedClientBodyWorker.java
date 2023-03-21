@@ -31,6 +31,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ContextResolver;
@@ -76,7 +77,7 @@ public class InjectedClientBodyWorker extends JerseyTest {
         Providers providers;
 
         @Inject
-        public ProvidersInjectedWriter(Providers providers) {
+        public ProvidersInjectedWriter(@Context Providers providers) {
             this.providers = providers;
         }
 
@@ -111,7 +112,7 @@ public class InjectedClientBodyWorker extends JerseyTest {
         Providers providers;
 
         @Inject
-        ProvidersInjectedReader(Providers providers) {
+        ProvidersInjectedReader(@Context Providers providers) {
             this.providers = providers;
         }
 
@@ -142,7 +143,7 @@ public class InjectedClientBodyWorker extends JerseyTest {
         Configuration configuration;
 
         @Inject
-        public ConfigurationInjectedWriter(Configuration configuration) {
+        public ConfigurationInjectedWriter(@Context Configuration configuration) {
             this.configuration = configuration;
         }
 
@@ -172,7 +173,7 @@ public class InjectedClientBodyWorker extends JerseyTest {
         Configuration configuration;
 
         @Inject
-        public ConfigurationInjectedReader(Configuration configuration) {
+        public ConfigurationInjectedReader(@Context Configuration configuration) {
             this.configuration = configuration;
         }
 

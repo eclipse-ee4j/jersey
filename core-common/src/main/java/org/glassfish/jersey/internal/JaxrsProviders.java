@@ -19,6 +19,7 @@ package org.glassfish.jersey.internal;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -67,9 +68,9 @@ public class JaxrsProviders implements Providers {
     private final Provider<ExceptionMappers> mappers;
 
     @Inject
-    public JaxrsProviders(Provider<MessageBodyWorkers> workers,
-                          Provider<ContextResolvers> resolvers,
-                          Provider<ExceptionMappers> mappers) {
+    public JaxrsProviders(@Context Provider<MessageBodyWorkers> workers,
+                          @Context Provider<ContextResolvers> resolvers,
+                          @Context Provider<ExceptionMappers> mappers) {
         this.workers = workers;
         this.resolvers = resolvers;
         this.mappers = mappers;

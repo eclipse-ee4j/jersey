@@ -29,6 +29,7 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -266,7 +267,7 @@ public class PreInvocationInterceptorTest {
         private final Configuration configuration;
 
         @Inject
-        public InjectedPreInvocationInterceptor(Configuration configuration) {
+        public InjectedPreInvocationInterceptor(@Context Configuration configuration) {
             this.configuration = configuration;
         }
 

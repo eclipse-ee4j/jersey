@@ -29,6 +29,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ContextResolver;
@@ -80,7 +81,7 @@ public class ConfigurableMoxyJsonProvider extends MOXyJsonProvider {
     private final Configuration config;
 
     @Inject
-    public ConfigurableMoxyJsonProvider(Providers providers, Configuration config) {
+    public ConfigurableMoxyJsonProvider(@Context Providers providers, @Context Configuration config) {
         this.providers = providers;
         this.config = config;
     }

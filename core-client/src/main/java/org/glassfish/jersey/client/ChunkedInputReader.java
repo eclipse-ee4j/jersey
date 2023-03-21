@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -47,8 +48,8 @@ class ChunkedInputReader implements MessageBodyReader<ChunkedInput> {
     private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
     @Inject
-    public ChunkedInputReader(Provider<MessageBodyWorkers> messageBodyWorkers,
-                              Provider<PropertiesDelegate> propertiesDelegateProvider) {
+    public ChunkedInputReader(@Context Provider<MessageBodyWorkers> messageBodyWorkers,
+                              @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
         this.messageBodyWorkers = messageBodyWorkers;
         this.propertiesDelegateProvider = propertiesDelegateProvider;
     }

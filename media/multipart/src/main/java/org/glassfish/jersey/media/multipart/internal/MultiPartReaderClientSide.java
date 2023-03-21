@@ -32,6 +32,7 @@ import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -84,7 +85,8 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
      * application.
      */
     @Inject
-    public MultiPartReaderClientSide(final Providers providers, Provider<MessageBodyWorkers> messageBodyWorkers) {
+    public MultiPartReaderClientSide(@Context final Providers providers,
+                                     @Context final Provider<MessageBodyWorkers> messageBodyWorkers) {
         final ContextResolver<MultiPartProperties> contextResolver =
                 providers.getContextResolver(MultiPartProperties.class, MediaType.WILDCARD_TYPE);
 

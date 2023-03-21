@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -71,7 +72,7 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     public static final class App extends JettisonJaxbElementProvider {
 
         @Inject
-        public App(Providers ps, Configuration config) {
+        public App(@Context Providers ps, @Context Configuration config) {
             super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
@@ -81,7 +82,7 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     public static final class General extends JettisonJaxbElementProvider {
 
         @Inject
-        public General(Providers ps, Configuration config) {
+        public General(@Context Providers ps, @Context Configuration config) {
             super(ps, config);
         }
 

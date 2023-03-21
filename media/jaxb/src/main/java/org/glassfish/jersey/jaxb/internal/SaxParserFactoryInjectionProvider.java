@@ -21,6 +21,7 @@ import org.glassfish.jersey.jaxb.FeatureSupplier;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.LinkedHashMap;
@@ -49,7 +50,8 @@ public class SaxParserFactoryInjectionProvider extends AbstractXmlFactory<SAXPar
      */
     // TODO This provider should be registered and configured via a feature.
     @Inject
-    public SaxParserFactoryInjectionProvider(final InjectionManager injectionManager, final Configuration config) {
+    public SaxParserFactoryInjectionProvider(@Context final InjectionManager injectionManager,
+                                             @Context final Configuration config) {
         super(config);
         this.injectionManager = injectionManager;
     }

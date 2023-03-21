@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -73,7 +74,7 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     public static final class App extends XmlCollectionJaxbProvider {
 
         @Inject
-        public App(Provider<XMLInputFactory> xif, Providers ps, Configuration config) {
+        public App(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
             super(xif, ps, MediaType.APPLICATION_XML_TYPE, config);
         }
     }
@@ -88,7 +89,7 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     public static final class Text extends XmlCollectionJaxbProvider {
 
         @Inject
-        public Text(Provider<XMLInputFactory> xif, Providers ps, Configuration config) {
+        public Text(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
             super(xif, ps, MediaType.TEXT_XML_TYPE, config);
         }
     }
@@ -103,7 +104,7 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     public static final class General extends XmlCollectionJaxbProvider {
 
         @Inject
-        public General(Provider<XMLInputFactory> xif, Providers ps, Configuration config) {
+        public General(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
             super(xif, ps, config);
         }
 

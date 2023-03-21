@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
 import javax.inject.Inject;
@@ -54,7 +55,7 @@ public final class EncodingFilter implements ClientRequestFilter {
     private volatile List<Object> supportedEncodings = null;
 
     @Inject
-    public EncodingFilter(InjectionManager injectionManager) {
+    public EncodingFilter(@Context InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
     }
 

@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Context;
 
 /**
  * @author Michal Gajdos
@@ -47,9 +48,9 @@ import javax.inject.Inject;
 final class JacksonObjectProvider extends AbstractObjectProvider<FilterProvider> {
 
     @Inject
-    public JacksonObjectProvider(ScopeProvider scopeProvider,
-                                  EntityInspector entityInspector,
-                                  EntityGraphProvider graphProvider) {
+    public JacksonObjectProvider(@Context ScopeProvider scopeProvider,
+                                 @Context EntityInspector entityInspector,
+                                 @Context EntityGraphProvider graphProvider) {
         super(scopeProvider, entityInspector, graphProvider);
     }
 

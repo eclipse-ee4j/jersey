@@ -32,6 +32,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
@@ -358,8 +359,8 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
         private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
         @Inject
-        public DefaultTokenMessageBodyReader(Provider<MessageBodyWorkers> workers,
-                                             Provider<PropertiesDelegate> propertiesDelegateProvider) {
+        public DefaultTokenMessageBodyReader(@Context Provider<MessageBodyWorkers> workers,
+                                             @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
             this.propertiesDelegateProvider = propertiesDelegateProvider;
             this.workers = workers;
         }
