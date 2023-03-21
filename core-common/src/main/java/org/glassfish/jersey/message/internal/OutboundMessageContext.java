@@ -135,7 +135,7 @@ public class OutboundMessageContext {
         this.entityAnnotations = original.entityAnnotations;
         this.configuration = original.configuration;
         this.runtimeDelegateDecorator = original.runtimeDelegateDecorator;
-        this.mediaTypeCache = original.mediaTypeCache();
+        this.mediaTypeCache = mediaTypeCache();
     }
 
     /**

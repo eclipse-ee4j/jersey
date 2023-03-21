@@ -228,11 +228,19 @@ public class OutboundMessageContextTest {
     }
 
     @Test
-    public void testGetContentType() {
+    public void testChangedContentType() {
         OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
         ctx.setMediaType(MediaType.APPLICATION_XML_TYPE);
         Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
         ctx.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, ctx.getMediaType());
+    }
+
+    @Test
+    public void testCopyConstructor() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        OutboundMessageContext newCtx = new OutboundMessageContext(ctx);
+        newCtx.setMediaType(MediaType.APPLICATION_XML_TYPE); // new value
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, newCtx.getMediaType());
     }
 }
