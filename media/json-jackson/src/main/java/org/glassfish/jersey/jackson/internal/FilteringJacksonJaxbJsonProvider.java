@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -62,8 +63,9 @@ public final class FilteringJacksonJaxbJsonProvider extends DefaultJacksonJaxbJs
     private final Provider<ObjectProvider<FilterProvider>> provider;
 
     @Inject
-    public FilteringJacksonJaxbJsonProvider(Provider<ObjectProvider<FilterProvider>> provider,
-                                            Providers providers, Configuration config) {
+    public FilteringJacksonJaxbJsonProvider(@Context Provider<ObjectProvider<FilterProvider>> provider,
+                                            @Context Providers providers,
+                                            @Context Configuration config) {
         super(providers, config);
         this.provider = provider;
     }

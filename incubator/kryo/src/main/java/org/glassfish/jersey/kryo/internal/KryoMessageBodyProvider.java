@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ContextResolver;
@@ -55,7 +56,7 @@ public class KryoMessageBodyProvider implements MessageBodyWriter<Object>, Messa
     private final Optional<KryoPool> kryoPool;
 
     @Inject
-    public KryoMessageBodyProvider(Providers providers) {
+    public KryoMessageBodyProvider(@Context Providers providers) {
         final MediaType mediaType = new MediaType("application", "x-kryo");
         contextResolver = providers.getContextResolver(Kryo.class, mediaType);
         kryoPool = getKryoPool();

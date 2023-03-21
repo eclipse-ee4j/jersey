@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -55,7 +56,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
     private final Provider<MessageBodyWorkers> workersProvider;
 
     @Inject
-    public OutboundEventWriter(Provider<MessageBodyWorkers> workersProvider) {
+    public OutboundEventWriter(@Context Provider<MessageBodyWorkers> workersProvider) {
         this.workersProvider = workersProvider;
     }
 

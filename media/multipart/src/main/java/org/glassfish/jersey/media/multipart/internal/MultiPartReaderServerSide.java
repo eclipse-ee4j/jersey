@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -52,9 +53,9 @@ public class MultiPartReaderServerSide extends MultiPartReaderClientSide {
     private final Provider<CloseableService> closeableServiceProvider;
 
     @Inject
-    public MultiPartReaderServerSide(final Providers providers,
-                                     final Provider<CloseableService> closeableServiceProvider,
-                                     final Provider<MessageBodyWorkers> messageBodyWorkers) {
+    public MultiPartReaderServerSide(@Context final Providers providers,
+                                     @Context final Provider<CloseableService> closeableServiceProvider,
+                                     @Context final Provider<MessageBodyWorkers> messageBodyWorkers) {
         super(providers, messageBodyWorkers);
         this.closeableServiceProvider = closeableServiceProvider;
     }

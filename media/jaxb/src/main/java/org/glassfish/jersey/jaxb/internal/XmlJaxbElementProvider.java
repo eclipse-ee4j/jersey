@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
@@ -67,7 +68,7 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     public static final class App extends XmlJaxbElementProvider {
 
         @Inject
-        public App(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public App(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, MediaType.APPLICATION_XML_TYPE, config);
         }
     }
@@ -82,7 +83,7 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     public static final class Text extends XmlJaxbElementProvider {
 
         @Inject
-        public Text(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public Text(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, MediaType.TEXT_XML_TYPE, config);
         }
     }
@@ -97,7 +98,7 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     public static final class General extends XmlJaxbElementProvider {
 
         @Inject
-        public General(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public General(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, config);
         }
 

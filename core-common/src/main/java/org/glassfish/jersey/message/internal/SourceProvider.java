@@ -27,6 +27,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -96,7 +97,7 @@ public final class SourceProvider {
         private final Provider<SAXParserFactory> spf;
 
         @Inject
-        public SaxSourceReader(Provider<SAXParserFactory> spf) {
+        public SaxSourceReader(@Context Provider<SAXParserFactory> spf) {
             this.spf = spf;
         }
 
@@ -137,7 +138,7 @@ public final class SourceProvider {
         private final Provider<DocumentBuilderFactory> dbf;
 
         @Inject
-        public DomSourceReader(Provider<DocumentBuilderFactory> dbf) {
+        public DomSourceReader(@Context Provider<DocumentBuilderFactory> dbf) {
             this.dbf = dbf;
         }
 
@@ -179,8 +180,8 @@ public final class SourceProvider {
         private final Provider<TransformerFactory> transformerFactory;
 
         @Inject
-        public SourceWriter(Provider<SAXParserFactory> spf,
-                            Provider<TransformerFactory> tf) {
+        public SourceWriter(@Context Provider<SAXParserFactory> spf,
+                            @Context Provider<TransformerFactory> tf) {
             this.saxParserFactory = spf;
             this.transformerFactory = tf;
         }

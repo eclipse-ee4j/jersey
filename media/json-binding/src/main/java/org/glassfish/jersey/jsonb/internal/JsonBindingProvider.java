@@ -27,6 +27,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -58,7 +59,7 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
     private final Providers providers;
 
     @Inject
-    public JsonBindingProvider(Providers providers) {
+    public JsonBindingProvider(@Context Providers providers) {
         this.providers = providers;
     }
 

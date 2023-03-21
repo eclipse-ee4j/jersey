@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -65,7 +66,7 @@ public class MultiPartWriter implements MessageBodyWriter<MultiPart> {
     private final Providers providers;
 
     @Inject
-    public MultiPartWriter(final Providers providers) {
+    public MultiPartWriter(@Context final Providers providers) {
         this.providers = providers;
     }
 

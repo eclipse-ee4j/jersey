@@ -28,6 +28,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Providers;
 
 /**
@@ -38,7 +39,7 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     private Configuration commonConfig;
 
     @Inject
-    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config) {
+    public DefaultJacksonJaxbJsonProvider(@Context Providers providers, @Context Configuration config) {
         this.commonConfig = config;
         _providers = providers;
     }
@@ -46,8 +47,10 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String EXCLUDE_MODULE_NAME = "JaxbAnnotationModule";
 
-    public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
+    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config, Annotations... annotationsToUse) {
         super(annotationsToUse);
+        this.commonConfig = config;
+        _providers = providers;
     }
 
     @PostConstruct

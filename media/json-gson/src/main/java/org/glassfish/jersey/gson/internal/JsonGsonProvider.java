@@ -28,6 +28,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -57,7 +58,7 @@ public class JsonGsonProvider extends AbstractMessageReaderWriterProvider<Object
     private Providers providers;
 
     @Inject
-    public JsonGsonProvider(Providers providers) {
+    public JsonGsonProvider(@Context Providers providers) {
         this.providers = providers;
     }
 

@@ -29,6 +29,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NoContentException;
@@ -81,7 +82,7 @@ public abstract class XmlRootObjectJaxbProvider extends AbstractJaxbProvider<Obj
     public static final class App extends XmlRootObjectJaxbProvider {
 
         @Inject
-        public App(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public App(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, MediaType.APPLICATION_XML_TYPE, config);
         }
     }
@@ -96,7 +97,7 @@ public abstract class XmlRootObjectJaxbProvider extends AbstractJaxbProvider<Obj
     public static final class Text extends XmlRootObjectJaxbProvider {
 
         @Inject
-        public Text(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public Text(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, MediaType.TEXT_XML_TYPE, config);
         }
     }
@@ -111,7 +112,7 @@ public abstract class XmlRootObjectJaxbProvider extends AbstractJaxbProvider<Obj
     public static final class General extends XmlRootObjectJaxbProvider {
 
         @Inject
-        public General(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        public General(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
             super(spf, ps, config);
         }
 
