@@ -1087,8 +1087,22 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
             <para>
                 See javadoc of the &jersey.client.HttpAuthenticationFeature; for more details.
             </para>
-    </section>
+        </section>
 
+        <section>
+            <title><anchor xml:id="SNI"/>Server Name Indication (SNI) Support</title>
+            <para>
+                When using SSL/TLS protocols for the connection, <literal>SNIHostName</literal> is set automatically
+                based on the host name in the HTTPS request.
+            </para>
+            <para>
+                There might be use-cases where the <literal>SNIHostName</literal> is required to be set for other host
+                than the host specified in the HTTPS request. For those cases, when the HTTP header <literal>Host</literal>
+                is set, the <literal>SNIHostName</literal> is set for the host specified in the <literal>Host</literal> header.
+                Note that only <literal>Apache Connector, JDK Connector, Netty connector</literal>, and the default
+                <literal>HttpUrlConnector</literal> do support this feature.
+            </para>
+        </section>
 
     </section>
 

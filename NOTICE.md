@@ -47,7 +47,7 @@ Bean Validation API 3.0.0
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
-Hibernate Validator CDI, 7.0.0.Final
+Hibernate Validator CDI, 7.0.5.Final
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
@@ -65,7 +65,7 @@ jakarta.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
-Javassist Version 3.25.0-GA
+Javassist Version 3.29.0-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
@@ -95,7 +95,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.3
+org.objectweb.asm Version 9.4
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

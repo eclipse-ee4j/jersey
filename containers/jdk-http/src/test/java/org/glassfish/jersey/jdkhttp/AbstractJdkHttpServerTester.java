@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.UriBuilder;
 
 import com.sun.net.httpserver.HttpServer;
@@ -37,7 +38,7 @@ import org.junit.jupiter.api.AfterEach;
 public abstract class AbstractJdkHttpServerTester {
 
     public static final String CONTEXT = "";
-    private final int DEFAULT_PORT = 9998;
+    private final int DEFAULT_PORT = 0; // rather JDK server choose than 9998
 
     private static final Logger LOGGER = Logger.getLogger(AbstractJdkHttpServerTester.class.getName());
 
@@ -47,6 +48,9 @@ public abstract class AbstractJdkHttpServerTester {
      * @return The HTTP port of the URI
      */
     protected final int getPort() {
+        if (server != null) {
+            return server.getAddress().getPort();
+        }
         final String value =
                 AccessController.doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
         if (value != null) {
@@ -68,10 +72,20 @@ public abstract class AbstractJdkHttpServerTester {
         return DEFAULT_PORT;
     }
 
+    private final int getPort(RuntimeType runtimeType) {
+        switch (runtimeType) {
+            case SERVER:
+                return getPort();
+            case CLIENT:
+                return server.getAddress().getPort();
+            default:
+                throw new IllegalStateException("Unexpected runtime type");
+        }
+    }
     private volatile HttpServer server;
 
     public UriBuilder getUri() {
-        return UriBuilder.fromUri("http://localhost").port(getPort()).path(CONTEXT);
+        return UriBuilder.fromUri("http://localhost").port(getPort(RuntimeType.CLIENT)).path(CONTEXT);
     }
 
     public void startServer(Class... resources) {
@@ -79,18 +93,18 @@ public abstract class AbstractJdkHttpServerTester {
         config.register(LoggingFeature.class);
         final URI baseUri = getBaseUri();
         server = JdkHttpServerFactory.createHttpServer(baseUri, config);
-        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + server.getAddress());
     }
 
     public void startServer(ResourceConfig config) {
         final URI baseUri = getBaseUri();
         config.register(LoggingFeature.class);
         server = JdkHttpServerFactory.createHttpServer(baseUri, config);
-        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + baseUri);
+        LOGGER.log(Level.INFO, "jdk-http server started on base uri: " + server.getAddress());
     }
 
     public URI getBaseUri() {
-        return UriBuilder.fromUri("http://localhost/").port(getPort()).build();
+        return UriBuilder.fromUri("http://localhost/").port(getPort(RuntimeType.SERVER)).build();
     }
 
     public void stopServer() {

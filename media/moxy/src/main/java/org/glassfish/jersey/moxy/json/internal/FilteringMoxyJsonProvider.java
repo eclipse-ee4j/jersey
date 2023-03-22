@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,12 +19,14 @@ package org.glassfish.jersey.moxy.json.internal;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.ext.Providers;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -41,9 +43,15 @@ import org.eclipse.persistence.jaxb.ObjectGraph;
  */
 @Singleton
 public class FilteringMoxyJsonProvider extends ConfigurableMoxyJsonProvider {
+    private final Provider<ObjectProvider<ObjectGraph>> provider;
 
     @Inject
-    private Provider<ObjectProvider<ObjectGraph>> provider;
+    public FilteringMoxyJsonProvider(Provider<ObjectProvider<ObjectGraph>> provider,
+                                     Providers providers,
+                                     Configuration config) {
+        super(providers, config);
+        this.provider = provider;
+    }
 
     @Override
     protected void preWriteTo(final Object object, final Class<?> type, final Type genericType, final Annotation[] annotations,

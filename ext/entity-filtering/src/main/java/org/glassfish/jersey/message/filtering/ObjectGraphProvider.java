@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,12 @@
 package org.glassfish.jersey.message.filtering;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityInspector;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
+
+import jakarta.inject.Inject;
 
 /**
  * {@link org.glassfish.jersey.message.filtering.spi.ObjectProvider Object provider} and
@@ -27,6 +32,13 @@ import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
  * @author Michal Gajdos
  */
 final class ObjectGraphProvider extends AbstractObjectProvider<ObjectGraph> {
+
+    @Inject
+    public ObjectGraphProvider(ScopeProvider scopeProvider,
+                                  EntityInspector entityInspector,
+                                  EntityGraphProvider graphProvider) {
+        super(scopeProvider, entityInspector, graphProvider);
+    }
 
     @Override
     public ObjectGraph transform(final ObjectGraph graph) {

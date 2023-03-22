@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,15 @@ import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
+
 import org.glassfish.jersey.jsonb.LocalizationMessages;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 import org.glassfish.jersey.message.internal.EntityInputStream;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
@@ -34,7 +39,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
@@ -55,9 +59,10 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
     private static final String JSON = "json";
     private static final String PLUS_JSON = "+json";
 
-    private Providers providers;
+    private final Providers providers;
 
-    public JsonBindingProvider(@Context Providers providers) {
+    @Inject
+    public JsonBindingProvider(Providers providers) {
         this.providers = providers;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,14 +46,17 @@ public abstract class AbstractObjectProvider<T> implements ObjectProvider<T>, Ob
 
     private final Cache<EntityContext, T> filteringObjects = CacheBuilder.newBuilder().maximumSize(PROVIDER_CACHE_SIZE).build();
 
-    @Inject
     private ScopeProvider scopeProvider;
-
-    @Inject
     private EntityInspector entityInspector;
-
-    @Inject
     private EntityGraphProvider graphProvider;
+
+    public AbstractObjectProvider(ScopeProvider scopeProvider,
+                                  EntityInspector entityInspector,
+                                  EntityGraphProvider graphProvider) {
+        this.scopeProvider = scopeProvider;
+        this.entityInspector = entityInspector;
+        this.graphProvider = graphProvider;
+    }
 
     @Override
     public final T getFilteringObject(final Type genericType, final boolean forWriter, final Annotation... annotations) {

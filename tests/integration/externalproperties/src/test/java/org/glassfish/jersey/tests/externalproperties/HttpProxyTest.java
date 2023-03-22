@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
@@ -37,9 +38,12 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
 public class HttpProxyTest extends JerseyTest {
+    public HttpProxyTest() {
+        set(TestProperties.CONTAINER_PORT, 0);
+    }
 
     private static final String PROXY_HOST = "localhost";
-    private static final String PROXY_PORT = "9997";
+    private static final String PROXY_PORT = "0";
     private static boolean proxyHit = false;
 
     @Path("resource")
@@ -60,7 +64,6 @@ public class HttpProxyTest extends JerseyTest {
     @BeforeEach
     public void startFakeProxy() {
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         Server server = new Server(Integer.parseInt(PROXY_PORT));
         server.setHandler(new ProxyHandler(false));
         try {
@@ -68,6 +71,7 @@ public class HttpProxyTest extends JerseyTest {
         } catch (Exception e) {
 
         }
+        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, String.valueOf(server.getURI().getPort()));
     }
 
     @Override

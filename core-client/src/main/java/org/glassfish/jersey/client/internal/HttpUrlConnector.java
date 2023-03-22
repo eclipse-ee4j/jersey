@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,10 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.ProtocolException;
+import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -42,6 +45,7 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
@@ -55,6 +59,7 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -315,11 +320,35 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
+    /**
+     * Secure connection if necessary.
+     * <p/>
+     * Provided implementation sets {@link HostnameVerifier} and {@link SSLSocketFactory} to give connection, if that
+     * is an instance of {@link HttpsURLConnection}.
+     *
+     * @param clientRequest the actual client request.
+     * @param uc     http connection to be secured.
+     */
+    private void secureConnection(
+            final ClientRequest clientRequest, final HttpURLConnection uc, final SSLParamConfigurator sniConfig) {
+        secureConnection(clientRequest.getClient(), uc); // keep this for compatibility
+
+        if (sniConfig.isSNIRequired() && uc instanceof HttpsURLConnection) { // set SNI
+            HttpsURLConnection suc = (HttpsURLConnection) uc;
+            SniSSLSocketFactory socketFactory = new SniSSLSocketFactory(suc.getSSLSocketFactory());
+            socketFactory.setSniConfig(sniConfig);
+            suc.setSSLSocketFactory(socketFactory);
+        }
+    }
+
     private ClientResponse _apply(final ClientRequest request) throws IOException {
         final HttpURLConnection uc;
-        Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
+        final Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
+        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(request).build();
+        final URI sniUri = sniConfig.isSNIRequired() ? sniConfig.toIPRequestUri() : request.getUri();
+
         proxy.ifPresent(clientProxy -> ClientProxy.setBasicAuthorizationHeader(request.getHeaders(), proxy.get()));
-        uc = this.connectionFactory.getConnection(request.getUri().toURL(), proxy.isPresent() ? proxy.get().proxy() : null);
+        uc = this.connectionFactory.getConnection(sniUri.toURL(), proxy.isPresent() ? proxy.get().proxy() : null);
         uc.setDoInput(true);
 
         final String httpMethod = request.getMethod();
@@ -335,7 +364,7 @@ public class HttpUrlConnector implements Connector {
 
         uc.setReadTimeout(request.resolveProperty(ClientProperties.READ_TIMEOUT, uc.getReadTimeout()));
 
-        secureConnection(request.getClient(), uc);
+        secureConnection(request, uc, sniConfig);
 
         final Object entity = request.getEntity();
         Exception storedException = null;
@@ -558,5 +587,85 @@ public class HttpUrlConnector implements Connector {
     @Override
     public String getName() {
         return "HttpUrlConnection " + AccessController.doPrivileged(PropertiesHelper.getSystemProperty("java.version"));
+    }
+
+    private static class SniSSLSocketFactory extends SSLSocketFactory {
+        private final SSLSocketFactory socketFactory;
+        private ThreadLocal<SSLParamConfigurator> sniConfigs = new ThreadLocal<>();
+
+        public void setSniConfig(SSLParamConfigurator sniConfigs) {
+            this.sniConfigs.set(sniConfigs);
+        }
+
+        private SniSSLSocketFactory(SSLSocketFactory socketFactory) {
+            this.socketFactory = socketFactory;
+        }
+
+        @Override
+        public String[] getDefaultCipherSuites() {
+            return socketFactory.getDefaultCipherSuites();
+        }
+
+        @Override
+        public String[] getSupportedCipherSuites() {
+            return socketFactory.getSupportedCipherSuites();
+        }
+
+        @Override
+        public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
+            Socket superSocket = socketFactory.createSocket(socket, s, i, b);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
+            Socket superSocket = socketFactory.createSocket(s, i);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
+            Socket superSocket = socketFactory.createSocket(s, i, inetAddress, i1);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
+            Socket superSocket = socketFactory.createSocket(inetAddress, i);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
+            Socket superSocket = socketFactory.createSocket(inetAddress, i, inetAddress1, i1);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket(Socket s, InputStream consumed, boolean autoClose) throws IOException {
+            Socket superSocket = socketFactory.createSocket(s, consumed, autoClose);
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        @Override
+        public Socket createSocket() throws IOException {
+            Socket superSocket = socketFactory.createSocket();
+            setSNIServerName(superSocket);
+            return superSocket;
+        }
+
+        private void setSNIServerName(Socket superSocket) {
+            SSLParamConfigurator sniConfig = this.sniConfigs.get();
+            if (null != sniConfig && SSLSocket.class.isInstance(superSocket)) {
+                sniConfig.setSNIServerName((SSLSocket) superSocket);
+            }
+            this.sniConfigs.remove();
+        }
     }
 }
