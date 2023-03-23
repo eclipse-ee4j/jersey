@@ -30,6 +30,7 @@ import java.util.stream.StreamSupport;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -59,7 +60,7 @@ final class EntityInspectorImpl implements EntityInspector {
      * @param injectionManager injection manager to be injected.
      */
     @Inject
-    public EntityInspectorImpl(final InjectionManager injectionManager, EntityGraphProvider graphProvider) {
+    public EntityInspectorImpl(@Context InjectionManager injectionManager, @Context EntityGraphProvider graphProvider) {
         Spliterator<EntityProcessor> entities =
                 Providers.getAllProviders(injectionManager, EntityProcessor.class, new RankedComparator<>()).spliterator();
         this.entityProcessors = StreamSupport.stream(entities, false).collect(Collectors.toList());

@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.core.Configuration;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 import javax.xml.XMLConstants;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -45,7 +46,8 @@ public class TransformerFactoryInjectionProvider extends AbstractXmlFactory<Tran
      */
     // TODO This provider should be registered and configured via a feature.
     @Inject
-    public TransformerFactoryInjectionProvider(final InjectionManager injectionManager, final Configuration config) {
+    public TransformerFactoryInjectionProvider(@Context final InjectionManager injectionManager,
+                                               @Context final Configuration config) {
         super(config);
         this.injectionManager = injectionManager;
     }

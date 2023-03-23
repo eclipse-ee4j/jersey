@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 import jakarta.xml.bind.JAXBException;
 
 import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
@@ -52,9 +53,9 @@ final class MoxyObjectProvider extends AbstractObjectProvider<org.eclipse.persis
     }
 
     @Inject
-    public MoxyObjectProvider(ScopeProvider scopeProvider,
-                              EntityInspector entityInspector,
-                              EntityGraphProvider graphProvider) {
+    public MoxyObjectProvider(@Context ScopeProvider scopeProvider,
+                              @Context EntityInspector entityInspector,
+                              @Context EntityGraphProvider graphProvider) {
         super(scopeProvider, entityInspector, graphProvider);
     }
 

@@ -21,6 +21,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import jakarta.ws.rs.core.Configuration;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
@@ -39,7 +40,8 @@ public class DocumentBuilderFactoryInjectionProvider extends AbstractXmlFactory<
      */
     // TODO This provider should be registered and configured via a feature.
     @Inject
-    public DocumentBuilderFactoryInjectionProvider(final InjectionManager injectionManager, final Configuration config) {
+    public DocumentBuilderFactoryInjectionProvider(@Context final InjectionManager injectionManager,
+                                                   @Context final Configuration config) {
         super(config);
         this.injectionManager = injectionManager;
     }

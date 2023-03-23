@@ -28,6 +28,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.ext.Providers;
 
 /**
@@ -38,7 +39,7 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     private Configuration commonConfig;
 
     @Inject
-    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config) {
+    public DefaultJacksonJaxbJsonProvider(@Context Providers providers, @Context Configuration config) {
         super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
         this.commonConfig = config;
         _providers = providers;
@@ -51,8 +52,10 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
     }
 
-    public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
+    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config, Annotations... annotationsToUse) {
         super(new JacksonMapperConfigurator(null, annotationsToUse));
+        this.commonConfig = config;
+        _providers = providers;
     }
 
     @PostConstruct

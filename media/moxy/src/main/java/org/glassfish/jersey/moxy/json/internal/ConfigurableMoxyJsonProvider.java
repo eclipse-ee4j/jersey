@@ -29,6 +29,7 @@ import java.util.Set;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.ContextResolver;
@@ -80,7 +81,7 @@ public class ConfigurableMoxyJsonProvider extends MOXyJsonProvider {
     private final Configuration config;
 
     @Inject
-    public ConfigurableMoxyJsonProvider(Providers providers, Configuration config) {
+    public ConfigurableMoxyJsonProvider(@Context Providers providers, @Context Configuration config) {
         this.providers = providers;
         this.config = config;
     }

@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -52,9 +53,9 @@ public class MultiPartReaderServerSide extends MultiPartReaderClientSide {
     private final Provider<CloseableService> closeableServiceProvider;
 
     @Inject
-    public MultiPartReaderServerSide(final Providers providers,
-                                     final Provider<CloseableService> closeableServiceProvider,
-                                     final Provider<MessageBodyWorkers> messageBodyWorkers) {
+    public MultiPartReaderServerSide(@Context final Providers providers,
+                                     @Context final Provider<CloseableService> closeableServiceProvider,
+                                     @Context final Provider<MessageBodyWorkers> messageBodyWorkers) {
         super(providers, messageBodyWorkers);
         this.closeableServiceProvider = closeableServiceProvider;
     }

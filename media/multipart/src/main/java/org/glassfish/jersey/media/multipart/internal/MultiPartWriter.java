@@ -30,6 +30,7 @@ import java.util.Map;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -65,7 +66,7 @@ public class MultiPartWriter implements MessageBodyWriter<MultiPart> {
     private final Providers providers;
 
     @Inject
-    public MultiPartWriter(final Providers providers) {
+    public MultiPartWriter(@Context final Providers providers) {
         this.providers = providers;
     }
 
