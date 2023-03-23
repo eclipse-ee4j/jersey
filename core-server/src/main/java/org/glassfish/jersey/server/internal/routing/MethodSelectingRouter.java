@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -213,8 +213,7 @@ final class MethodSelectingRouter extends ContentTypeDeterminer implements Route
          * @param requestContext The request to be tested.
          * @return True if the {@code request} can be processed by this router, false otherwise.
          */
-        boolean isConsumable(ContainerRequest requestContext) {
-            MediaType contentType = requestContext.getMediaType();
+        boolean isConsumable(ContainerRequest requestContext, MediaType contentType) {
             return contentType == null || consumes.getMediaType().isCompatible(contentType);
         }
 
@@ -411,8 +410,9 @@ final class MethodSelectingRouter extends ContentTypeDeterminer implements Route
 
         final List<ConsumesProducesAcceptor> satisfyingAcceptors = new LinkedList<>();
         final Set<ResourceMethod> differentInvokableMethods = Collections.newSetFromMap(new IdentityHashMap<>());
+        final MediaType requestContentType = request.getMediaType();
         for (ConsumesProducesAcceptor cpi : acceptors) {
-            if (cpi.isConsumable(request)) {
+            if (cpi.isConsumable(request, requestContentType)) {
                 satisfyingAcceptors.add(cpi);
                 differentInvokableMethods.add(cpi.methodRouting.method);
             }
@@ -423,7 +423,6 @@ final class MethodSelectingRouter extends ContentTypeDeterminer implements Route
 
         final List<AcceptableMediaType> acceptableMediaTypes = request.getQualifiedAcceptableMediaTypes();
 
-        final MediaType requestContentType = request.getMediaType();
         final MediaType effectiveContentType = requestContentType == null ? MediaType.WILDCARD_TYPE : requestContentType;
 
         final MethodSelector methodSelector = selectMethod(acceptableMediaTypes, satisfyingAcceptors, effectiveContentType,

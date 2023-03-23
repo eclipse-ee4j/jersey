@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,7 @@ import org.glassfish.jersey.message.internal.CookieProvider;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -224,5 +225,22 @@ public class OutboundMessageContextTest {
         }
 
         fail();
+    }
+
+    @Test
+    public void testChangedContentType() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setMediaType(MediaType.APPLICATION_XML_TYPE);
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
+        ctx.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, ctx.getMediaType());
+    }
+
+    @Test
+    public void testCopyConstructor() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        OutboundMessageContext newCtx = new OutboundMessageContext(ctx);
+        newCtx.setMediaType(MediaType.APPLICATION_XML_TYPE); // new value
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, newCtx.getMediaType());
     }
 }

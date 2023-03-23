@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -114,7 +114,7 @@ public class OutboundMessageContext {
         this.runtimeDelegateDecorator = RuntimeDelegateDecorator.configured(configuration);
         this.mediaTypeCache = mediaTypeCache();
 
-        headers.setGuard(HttpHeaders.CONTENT_LENGTH);
+        headers.setGuard(HttpHeaders.CONTENT_TYPE);
     }
 
     /**
@@ -125,7 +125,7 @@ public class OutboundMessageContext {
      */
     public OutboundMessageContext(OutboundMessageContext original) {
         this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createOutbound());
-        this.headers.setGuard(HttpHeaders.CONTENT_LENGTH);
+        this.headers.setGuard(HttpHeaders.CONTENT_TYPE);
         this.headers.putAll(original.headers);
         this.committingOutputStream = new CommittingOutputStream();
         this.entityStream = committingOutputStream;
@@ -135,7 +135,7 @@ public class OutboundMessageContext {
         this.entityAnnotations = original.entityAnnotations;
         this.configuration = original.configuration;
         this.runtimeDelegateDecorator = original.runtimeDelegateDecorator;
-        this.mediaTypeCache = original.mediaTypeCache();
+        this.mediaTypeCache = mediaTypeCache();
     }
 
     /**
