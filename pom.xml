@@ -2328,9 +2328,9 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.12</jetty.version>
+        <jetty.version>11.0.14</jetty.version>
         <jetty9.version>9.4.49.v20220914</jetty9.version>
-        <jetty.plugin.version>11.0.12</jetty.plugin.version>
+        <jetty.plugin.version>11.0.14</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>1.0.0</jsonp.ri.version>
