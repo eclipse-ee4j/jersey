@@ -106,6 +106,14 @@
                 </itemizedlist>
             </para>
         </section>
+        <section xml:id="mig-3.1.0-application-path">
+            <title>@ApplicationPath Annotation Support</title>
+            <para>
+                Jersey 3.1 supports <literal>@ApplicationPath</literal> annotation by every container, not only the
+                <literal>Servlet</literal> container. This can affect tests, as well as deployments to containers
+                where the annotation used to be ignored by previous versions of Jersey.
+            </para>
+        </section>
     </section>
 
 </chapter>
