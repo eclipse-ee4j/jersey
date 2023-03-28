@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,13 @@
 
 package org.glassfish.jersey.ext.cdi1x.internal;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
@@ -43,6 +46,8 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
  * @author Jakub Podlesak
  */
 public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T> {
+
+    private static final Logger LOGGER = Logger.getLogger(AbstractCdiBeanSupplier.class.getName());
 
     final Class<T> clazz;
     final InstanceManager<T> referenceProvider;
@@ -115,7 +120,16 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
         try {
             return target.produce(ctx);
         } catch (Exception e) {
-            return im.create(clazz);
+            LOGGER.fine(LocalizationMessages.CDI_FAILED_LOADING(clazz, e.getMessage()));
+            try {
+                return im.create(clazz);
+            } catch (RuntimeException re) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                LOGGER.warning(LocalizationMessages.CDI_FAILED_LOADING(clazz, sw.toString()));
+                throw re;
+            }
         }
     }
 
