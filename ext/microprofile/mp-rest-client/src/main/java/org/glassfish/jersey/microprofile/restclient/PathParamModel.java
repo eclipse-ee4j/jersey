@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ class PathParamModel extends ParamModel<WebTarget> {
     @Override
     public WebTarget handleParameter(WebTarget requestPart, Class<? extends Annotation> annotationClass, Object instance) {
         Object resolvedValue = interfaceModel.resolveParamValue(instance, parameter);
-        return requestPart.resolveTemplate(pathParamName, resolvedValue);
+        return requestPart.resolveTemplate(pathParamName, resolvedValue, false);
     }
 
     @Override
