@@ -38,6 +38,7 @@
         <module>grizzly2</module>
         <module>inmemory</module>
         <module>jetty</module>
+        <module>jetty-http2</module>
         <module>jdk-http</module>
         <module>netty</module>
         <module>simple</module>
