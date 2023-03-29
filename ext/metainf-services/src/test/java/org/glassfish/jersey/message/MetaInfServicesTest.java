@@ -29,6 +29,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
@@ -73,7 +74,7 @@ public class MetaInfServicesTest {
     public static class MessageProvider implements MessageBodyReader<MetaInf>, MessageBodyWriter<MetaInf> {
 
         @Inject
-        MessageProvider(Configuration configuration) {
+        MessageProvider(@Context Configuration configuration) {
             this.config = configuration;
         }
         private Configuration config;

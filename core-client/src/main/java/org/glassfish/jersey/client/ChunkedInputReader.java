@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -47,8 +48,8 @@ class ChunkedInputReader implements MessageBodyReader<ChunkedInput> {
     private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
     @Inject
-    public ChunkedInputReader(Provider<MessageBodyWorkers> messageBodyWorkers,
-                              Provider<PropertiesDelegate> propertiesDelegateProvider) {
+    public ChunkedInputReader(@Context Provider<MessageBodyWorkers> messageBodyWorkers,
+                              @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
         this.messageBodyWorkers = messageBodyWorkers;
         this.propertiesDelegateProvider = propertiesDelegateProvider;
     }

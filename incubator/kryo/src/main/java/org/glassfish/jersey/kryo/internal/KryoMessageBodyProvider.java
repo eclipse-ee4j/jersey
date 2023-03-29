@@ -27,6 +27,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.ContextResolver;
@@ -55,7 +56,7 @@ public class KryoMessageBodyProvider implements MessageBodyWriter<Object>, Messa
     private final Optional<KryoPool> kryoPool;
 
     @Inject
-    public KryoMessageBodyProvider(Providers providers) {
+    public KryoMessageBodyProvider(@Context Providers providers) {
         final MediaType mediaType = new MediaType("application", "x-kryo");
         contextResolver = providers.getContextResolver(Kryo.class, mediaType);
         kryoPool = getKryoPool();

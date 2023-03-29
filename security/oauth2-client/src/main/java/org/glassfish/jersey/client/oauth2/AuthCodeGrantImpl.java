@@ -32,6 +32,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.GenericType;
@@ -358,8 +359,8 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
         private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
         @Inject
-        public DefaultTokenMessageBodyReader(Provider<MessageBodyWorkers> workers,
-                                             Provider<PropertiesDelegate> propertiesDelegateProvider) {
+        public DefaultTokenMessageBodyReader(@Context Provider<MessageBodyWorkers> workers,
+                                             @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
             this.propertiesDelegateProvider = propertiesDelegateProvider;
             this.workers = workers;
         }

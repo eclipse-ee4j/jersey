@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
@@ -44,7 +45,8 @@ class EventInputReader implements MessageBodyReader<EventInput> {
     private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
     @Inject
-    EventInputReader(Provider<MessageBodyWorkers> messageBodyWorkers, Provider<PropertiesDelegate> propertiesDelegateProvider) {
+    EventInputReader(@Context Provider<MessageBodyWorkers> messageBodyWorkers,
+                     @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
         this.messageBodyWorkers = messageBodyWorkers;
         this.propertiesDelegateProvider = propertiesDelegateProvider;
     }

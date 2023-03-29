@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 
 import jakarta.inject.Inject;
@@ -54,7 +55,7 @@ public final class EncodingFilter implements ClientRequestFilter {
     private volatile List<Object> supportedEncodings = null;
 
     @Inject
-    public EncodingFilter(InjectionManager injectionManager) {
+    public EncodingFilter(@Context InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
     }
 

@@ -23,6 +23,7 @@ import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
 import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 
 /**
  * {@link org.glassfish.jersey.message.filtering.spi.ObjectProvider Object provider} and
@@ -34,9 +35,9 @@ import jakarta.inject.Inject;
 final class ObjectGraphProvider extends AbstractObjectProvider<ObjectGraph> {
 
     @Inject
-    public ObjectGraphProvider(ScopeProvider scopeProvider,
-                                  EntityInspector entityInspector,
-                                  EntityGraphProvider graphProvider) {
+    public ObjectGraphProvider(@Context ScopeProvider scopeProvider,
+                               @Context EntityInspector entityInspector,
+                               @Context EntityGraphProvider graphProvider) {
         super(scopeProvider, entityInspector, graphProvider);
     }
 

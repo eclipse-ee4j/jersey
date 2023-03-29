@@ -28,6 +28,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
 
@@ -71,7 +72,7 @@ public class JettisonRootElementProvider extends AbstractRootElementJaxbProvider
     @Consumes("application/json")
     public static final class App extends JettisonRootElementProvider {
         @Inject
-        public App(Providers ps, Configuration config) {
+        public App(@Context Providers ps, @Context Configuration config) {
             super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
@@ -80,7 +81,7 @@ public class JettisonRootElementProvider extends AbstractRootElementJaxbProvider
     @Consumes("*/*")
     public static final class General extends JettisonRootElementProvider {
         @Inject
-        public General(Providers ps, Configuration config) {
+        public General(@Context Providers ps, @Context Configuration config) {
             super(ps, config);
         }
 

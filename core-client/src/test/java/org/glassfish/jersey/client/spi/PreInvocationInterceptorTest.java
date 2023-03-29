@@ -29,6 +29,7 @@ import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -266,7 +267,7 @@ public class PreInvocationInterceptorTest {
         private final Configuration configuration;
 
         @Inject
-        public InjectedPreInvocationInterceptor(Configuration configuration) {
+        public InjectedPreInvocationInterceptor(@Context Configuration configuration) {
             this.configuration = configuration;
         }
 

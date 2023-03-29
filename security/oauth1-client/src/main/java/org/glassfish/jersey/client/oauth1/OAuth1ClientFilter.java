@@ -26,6 +26,7 @@ import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.client.oauth1.internal.LocalizationMessages;
 import org.glassfish.jersey.message.MessageBodyWorkers;
@@ -52,7 +53,8 @@ class OAuth1ClientFilter implements ClientRequestFilter {
     private Provider<MessageBodyWorkers> messageBodyWorkers;
 
     @Inject
-    public OAuth1ClientFilter(Provider<OAuth1Signature> oAuthSignature, Provider<MessageBodyWorkers> messageBodyWorkers) {
+    public OAuth1ClientFilter(@Context Provider<OAuth1Signature> oAuthSignature,
+                              @Context Provider<MessageBodyWorkers> messageBodyWorkers) {
         this.oAuthSignature = oAuthSignature;
         this.messageBodyWorkers = messageBodyWorkers;
     }

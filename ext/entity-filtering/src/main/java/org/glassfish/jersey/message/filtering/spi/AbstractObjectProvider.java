@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.guava.Cache;
 import org.glassfish.jersey.internal.guava.CacheBuilder;
@@ -50,9 +51,9 @@ public abstract class AbstractObjectProvider<T> implements ObjectProvider<T>, Ob
     private EntityInspector entityInspector;
     private EntityGraphProvider graphProvider;
 
-    public AbstractObjectProvider(ScopeProvider scopeProvider,
-                                  EntityInspector entityInspector,
-                                  EntityGraphProvider graphProvider) {
+    public AbstractObjectProvider(@Context ScopeProvider scopeProvider,
+                                  @Context EntityInspector entityInspector,
+                                  @Context EntityGraphProvider graphProvider) {
         this.scopeProvider = scopeProvider;
         this.entityInspector = entityInspector;
         this.graphProvider = graphProvider;

@@ -32,6 +32,7 @@ import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -84,7 +85,8 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
      * application.
      */
     @Inject
-    public MultiPartReaderClientSide(final Providers providers, Provider<MessageBodyWorkers> messageBodyWorkers) {
+    public MultiPartReaderClientSide(@Context final Providers providers,
+                                     @Context final Provider<MessageBodyWorkers> messageBodyWorkers) {
         final ContextResolver<MultiPartProperties> contextResolver =
                 providers.getContextResolver(MultiPartProperties.class, MediaType.WILDCARD_TYPE);
 

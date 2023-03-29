@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,8 +31,9 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jetty.connector.JettyClientProperties;
 
+import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,13 +67,14 @@ public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTes
     @ParameterizedTest
     @MethodSource("testData")
     public void testHostnameVerifierApplied(ConnectorProvider connectorProvider) throws Exception {
-        // Grizzly and Jetty connectors don't support Hostname Verification
-        if (isExcluded(Arrays.asList(GrizzlyConnectorProvider.class, JettyConnectorProvider.class), connectorProvider)) {
+        // Grizzly connector does not support Hostname Verification
+        if (isExcluded(Arrays.asList(GrizzlyConnectorProvider.class), connectorProvider)) {
             return;
         }
 
         final Client client = ClientBuilder.newBuilder()
-                .withConfig(new ClientConfig().connectorProvider(connectorProvider))
+                .withConfig(getClientConfig(JettyConnectorProvider.class.isAssignableFrom(connectorProvider.getClass()))
+                        .connectorProvider(connectorProvider))
                 .register(HttpAuthenticationFeature.basic("user", "password"))
                 .hostnameVerifier(new CustomHostnameVerifier())
                 .sslContext(getSslContext())
@@ -80,16 +82,23 @@ public class SslConnectorHostnameVerifierTest extends AbstractConnectorServerTes
 
         try {
             client.target(Server.BASE_URI).request().get(Response.class);
-            fail("HostnameVerifier was not applied.");
+            fail("HostnameVerifier was not applied by " + connectorProvider.getClass());
         } catch (ProcessingException pex) {
             CustomHostnameVerifier.HostnameVerifierException hve = getHVE(pex);
 
             if (hve != null) {
                 assertEquals(CustomHostnameVerifier.EX_VERIFIER_MESSAGE, hve.getMessage());
             } else {
-                fail("Invalid wrapped exception.");
+                fail("Invalid wrapped exception.", pex);
             }
         }
+    }
+
+    private static final ClientConfig getClientConfig(boolean enableSslHostnameVerification) {
+        final ClientConfig config = new ClientConfig();
+        return enableSslHostnameVerification ? config
+                .property(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, Boolean.FALSE)
+                : config;
     }
 
     private boolean isExcluded(List<Class<? extends ConnectorProvider>> excluded, ConnectorProvider connectorProvider) {

@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 
@@ -46,9 +47,9 @@ public class FilteringMoxyJsonProvider extends ConfigurableMoxyJsonProvider {
     private final Provider<ObjectProvider<ObjectGraph>> provider;
 
     @Inject
-    public FilteringMoxyJsonProvider(Provider<ObjectProvider<ObjectGraph>> provider,
-                                     Providers providers,
-                                     Configuration config) {
+    public FilteringMoxyJsonProvider(@Context Provider<ObjectProvider<ObjectGraph>> provider,
+                                     @Context Providers providers,
+                                     @Context Configuration config) {
         super(providers, config);
         this.provider = provider;
     }

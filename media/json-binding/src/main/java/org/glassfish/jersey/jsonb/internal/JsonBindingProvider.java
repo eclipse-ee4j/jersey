@@ -39,6 +39,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
@@ -62,7 +63,7 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
     private final Providers providers;
 
     @Inject
-    public JsonBindingProvider(Providers providers) {
+    public JsonBindingProvider(@Context Providers providers) {
         this.providers = providers;
     }
 

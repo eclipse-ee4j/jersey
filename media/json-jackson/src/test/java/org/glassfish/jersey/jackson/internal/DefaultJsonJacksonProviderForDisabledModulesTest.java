@@ -29,6 +29,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +56,7 @@ public class DefaultJsonJacksonProviderForDisabledModulesTest extends JerseyTest
     private static class TestJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
         @Inject
-        public TestJacksonJaxbJsonProvider(Configuration configuration) {
+        public TestJacksonJaxbJsonProvider(@Context Configuration configuration) {
             this.configuration = configuration;
         }
         private Configuration configuration;
