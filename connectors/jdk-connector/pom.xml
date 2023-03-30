@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.connectors</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.10</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-jdk-connector</artifactId>
