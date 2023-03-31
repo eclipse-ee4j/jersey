@@ -22,6 +22,7 @@ import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -44,7 +45,7 @@ public abstract class AbstractJettyServerTester {
     private static final Logger LOGGER = Logger.getLogger(AbstractJettyServerTester.class.getName());
 
     public static final String CONTEXT = "";
-    private static final int DEFAULT_PORT = 0;
+    private static final int DEFAULT_PORT = 0; // rather Jetty choose than 9998
 
     /**
      * Get the port to be used for test application deployments.
@@ -77,10 +78,21 @@ public abstract class AbstractJettyServerTester {
         return DEFAULT_PORT;
     }
 
+    private final int getPort(RuntimeType runtimeType) {
+        switch (runtimeType) {
+            case SERVER:
+                return getPort();
+            case CLIENT:
+                return server.getURI().getPort();
+            default:
+                throw new IllegalStateException("Unexpected runtime type");
+        }
+    }
+
     private volatile Server server;
 
     public UriBuilder getUri() {
-        return UriBuilder.fromUri("http://localhost").port(getPort()).path(CONTEXT);
+        return UriBuilder.fromUri("http://localhost").port(getPort(RuntimeType.CLIENT)).path(CONTEXT);
     }
 
     public void startServer(Class<?>... resources) {
@@ -96,7 +108,7 @@ public abstract class AbstractJettyServerTester {
     }
 
     public URI getBaseUri() {
-        return UriBuilder.fromUri("http://localhost/").port(getPort()).build();
+        return UriBuilder.fromUri("http://localhost/").port(getPort(RuntimeType.SERVER)).build();
     }
 
     public void stopServer() {

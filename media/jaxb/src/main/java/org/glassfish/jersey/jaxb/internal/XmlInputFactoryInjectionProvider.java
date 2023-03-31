@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import jakarta.ws.rs.core.Configuration;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 import javax.xml.stream.XMLInputFactory;
 
 /**
@@ -38,11 +39,12 @@ public class XmlInputFactoryInjectionProvider extends AbstractXmlFactory<XMLInpu
      */
     // TODO This provider should be registered and configured via a feature.
     @Inject
-    public XmlInputFactoryInjectionProvider(final Configuration config) {
+    public XmlInputFactoryInjectionProvider(@Context final InjectionManager injectionManager,
+                                            @Context final Configuration config) {
         super(config);
+        this.injectionManager = injectionManager;
     }
 
-    @Inject
     private InjectionManager injectionManager;
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
@@ -44,14 +46,14 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
 
     private final Provider<SAXParserFactory> spf;
 
-    public XmlJaxbElementProvider(Provider<SAXParserFactory> spf, Providers ps) {
-        super(ps);
+    public XmlJaxbElementProvider(Provider<SAXParserFactory> spf, Providers ps, Configuration config) {
+        super(ps, config);
 
         this.spf = spf;
     }
 
-    public XmlJaxbElementProvider(Provider<SAXParserFactory> spf, Providers ps, MediaType mt) {
-        super(ps, mt);
+    public XmlJaxbElementProvider(Provider<SAXParserFactory> spf, Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
 
         this.spf = spf;
     }
@@ -65,8 +67,9 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     @Singleton
     public static final class App extends XmlJaxbElementProvider {
 
-        public App(@Context Provider<SAXParserFactory> spf, @Context Providers ps) {
-            super(spf, ps, MediaType.APPLICATION_XML_TYPE);
+        @Inject
+        public App(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
+            super(spf, ps, MediaType.APPLICATION_XML_TYPE, config);
         }
     }
 
@@ -79,8 +82,9 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     @Singleton
     public static final class Text extends XmlJaxbElementProvider {
 
-        public Text(@Context Provider<SAXParserFactory> spf, @Context Providers ps) {
-            super(spf, ps, MediaType.TEXT_XML_TYPE);
+        @Inject
+        public Text(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
+            super(spf, ps, MediaType.TEXT_XML_TYPE, config);
         }
     }
 
@@ -93,8 +97,9 @@ public abstract class XmlJaxbElementProvider extends AbstractJaxbElementProvider
     @Singleton
     public static final class General extends XmlJaxbElementProvider {
 
-        public General(@Context Provider<SAXParserFactory> spf, @Context Providers ps) {
-            super(spf, ps);
+        @Inject
+        public General(@Context Provider<SAXParserFactory> spf, @Context Providers ps, @Context Configuration config) {
+            super(spf, ps, config);
         }
 
         @Override

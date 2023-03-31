@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.message.internal;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -183,11 +184,18 @@ public final class ReaderWriter {
                     Math.min(buf.length - nread, remaining))) > 0) {
                 nread += n;
                 remaining -= n;
+
+                if (nread == BUFFER_SIZE) { // This differs from JDK version
+                    break;                  // prevents a bug (See ReaderWriterTest)
+                }
             }
 
             if (nread > 0) {
                 if (MAX_BUFFER_SIZE - total < nread) {
                     throw new OutOfMemoryError("Required array size too large");
+                }
+                if (nread < buf.length) {
+                    buf = Arrays.copyOfRange(buf, 0, nread);
                 }
                 total += nread;
                 if (result == null) {

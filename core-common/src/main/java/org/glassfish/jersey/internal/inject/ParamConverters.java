@@ -24,7 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
@@ -40,7 +39,7 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
-
+import jakarta.ws.rs.core.Context;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -447,7 +446,7 @@ public class ParamConverters {
          * Create new aggregated {@link ParamConverterProvider param converter provider}.
          */
         @Inject
-        public AggregatedProvider(InjectionManager manager) {
+        public AggregatedProvider(@Context InjectionManager manager) {
             this.providers = new ParamConverterProvider[] {
                     // ordering is important (e.g. Date provider must be executed before String Constructor
                     // as Date has a deprecated String constructor

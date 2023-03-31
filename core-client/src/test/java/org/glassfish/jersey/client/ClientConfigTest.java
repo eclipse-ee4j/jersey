@@ -119,7 +119,7 @@ public class ClientConfigTest {
     }
 
     @Provider
-    public class MyProvider implements ContextResolver<String> {
+    public static class MyProvider implements ContextResolver<String> {
 
         @Override
         public String getContext(final Class<?> type) {

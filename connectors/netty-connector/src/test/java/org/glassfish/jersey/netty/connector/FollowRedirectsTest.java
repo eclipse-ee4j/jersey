@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.GET;
@@ -37,12 +38,20 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.netty.connector.internal.RedirectException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FollowRedirectsTest extends JerseyTest {
 
     private static final Logger LOGGER = Logger.getLogger(FollowRedirectsTest.class.getName());
-    private static final String TEST_URL = "http://localhost:9998/test";
+    private static final String TEST_URL = "http://localhost:%d/test";
+    private static final AtomicReference<String> TEST_URL_REF = new AtomicReference<>();
+
+    @BeforeEach
+    public void before() {
+        final String url = String.format(TEST_URL, getPort());
+        TEST_URL_REF.set(url);
+    }
 
     @Path("/test")
     public static class RedirectResource {
@@ -54,19 +63,19 @@ public class FollowRedirectsTest extends JerseyTest {
         @GET
         @Path("redirect")
         public Response redirect() {
-            return Response.seeOther(URI.create(TEST_URL)).build();
+            return Response.seeOther(URI.create(TEST_URL_REF.get())).build();
         }
 
         @GET
         @Path("loop")
         public Response loop() {
-            return Response.seeOther(URI.create(TEST_URL + "/loop")).build();
+            return Response.seeOther(URI.create(TEST_URL_REF.get() + "/loop")).build();
         }
 
         @GET
         @Path("redirect2")
         public Response redirect2() {
-            return Response.seeOther(URI.create(TEST_URL + "/redirect")).build();
+            return Response.seeOther(URI.create(TEST_URL_REF.get() + "/redirect")).build();
         }
     }
 

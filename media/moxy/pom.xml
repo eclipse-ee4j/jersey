@@ -113,6 +113,10 @@
                     <groupId>jakarta.json.bind</groupId>
                     <artifactId>jakarta.json.bind-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.angus</groupId>
+                    <artifactId>angus-activation</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

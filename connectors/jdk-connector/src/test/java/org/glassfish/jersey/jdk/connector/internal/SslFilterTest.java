@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,12 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +43,9 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
+
 import org.glassfish.jersey.SslConfigurator;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -391,7 +395,10 @@ public abstract class SslFilterTest {
                 .keyStorePassword("asdfgh");
 
         TransportFilter transportFilter = new TransportFilter(17_000, ThreadPoolConfig.defaultConfig(), 100_000);
-        final SslFilter sslFilter = new SslFilter(transportFilter, sslConfig.createSSLContext(), host, customHostnameVerifier);
+        final SSLParamConfigurator sslParamConfigurator = SSLParamConfigurator.builder()
+                .uri(URI.create("Https://" + host)).headers(Collections.emptyMap()).build();
+        final SslFilter sslFilter = new SslFilter(
+                transportFilter, sslConfig.createSSLContext(), host, customHostnameVerifier, sslParamConfigurator);
 
         // exceptions errors that occur before SSL handshake has finished are thrown from this method
         final AtomicReference<Throwable> exception = new AtomicReference<>();

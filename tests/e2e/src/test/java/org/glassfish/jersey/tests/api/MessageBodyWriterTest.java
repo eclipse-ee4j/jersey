@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -32,7 +33,6 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
@@ -75,9 +75,13 @@ public class MessageBodyWriterTest extends JerseyTest {
     @Provider
     @Produces("text/plain")
     public static class OverridingStringProvider implements MessageBodyWriter<String> {
+        private final Configuration config;
 
-        @Context
-        private Configuration config;
+        @Inject
+        public OverridingStringProvider(Configuration config) {
+            this.config = config;
+        }
+
 
         @Override
         public boolean isWriteable(
@@ -120,9 +124,12 @@ public class MessageBodyWriterTest extends JerseyTest {
     @Provider
     @Produces("text/html")
     public static class HtmlStringProvider implements MessageBodyWriter<String> {
-
-        @Context
         private Configuration config;
+
+        @Inject
+        public HtmlStringProvider(Configuration config) {
+            this.config = config;
+        }
 
         @Override
         public boolean isWriteable(

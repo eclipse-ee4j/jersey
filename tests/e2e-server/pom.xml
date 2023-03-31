@@ -43,6 +43,19 @@
                     <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>WithHK2</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>org.glassfish.jersey.incubator:jersey-injectless-client</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -178,6 +191,13 @@
             <artifactId>jaxb-osgi</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.incubator</groupId>
+            <artifactId>jersey-injectless-client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-util</artifactId>

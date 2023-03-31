@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -399,6 +399,7 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
 
         final List<ConsumesProducesAcceptor> satisfyingAcceptors = new LinkedList<>();
         final Set<ResourceMethod> differentInvokableMethods = Collections.newSetFromMap(new IdentityHashMap<>());
+        final MediaType requestContentType = request.getMediaType();
         for (ConsumesProducesAcceptor cpi : acceptors) {
             if (cpi.isConsumable(request)) {
                 satisfyingAcceptors.add(cpi);
@@ -411,7 +412,6 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
 
         final List<AcceptableMediaType> acceptableMediaTypes = request.getQualifiedAcceptableMediaTypes();
 
-        final MediaType requestContentType = request.getMediaType();
         final MediaType effectiveContentType = requestContentType == null ? MediaType.WILDCARD_TYPE : requestContentType;
 
         final MethodSelector methodSelector = selectMethod(acceptableMediaTypes, satisfyingAcceptors, effectiveContentType,

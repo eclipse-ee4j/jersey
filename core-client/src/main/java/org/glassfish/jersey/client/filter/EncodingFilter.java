@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 
 import jakarta.inject.Inject;
@@ -49,9 +50,14 @@ import org.glassfish.jersey.spi.ContentEncoder;
  * @author Martin Matula
  */
 public final class EncodingFilter implements ClientRequestFilter {
-    @Inject
-    private InjectionManager injectionManager;
+
+    private final InjectionManager injectionManager;
     private volatile List<Object> supportedEncodings = null;
+
+    @Inject
+    public EncodingFilter(@Context InjectionManager injectionManager) {
+        this.injectionManager = injectionManager;
+    }
 
     @Override
     public void filter(ClientRequestContext request) throws IOException {
