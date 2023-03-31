@@ -36,6 +36,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLParameters;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
@@ -246,58 +248,7 @@ class NettyConnector implements Connector {
 
                b.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                     ChannelPipeline p = ch.pipeline();
-
-                     Configuration config = jerseyRequest.getConfiguration();
-
-                     // http proxy
-                     handlerProxy.ifPresent(clientProxy -> {
-                         final URI u = clientProxy.uri();
-                         InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(),
-                                 u.getPort() == -1 ? 8080 : u.getPort());
-                         ProxyHandler proxy1 = createProxyHandler(jerseyRequest, proxyAddr,
-                                 clientProxy.userName(), clientProxy.password(), connectTimeout);
-                         p.addLast(proxy1);
-                     });
-
-                     // Enable HTTPS if necessary.
-                     if ("https".equals(requestUri.getScheme())) {
-                         // making client authentication optional for now; it could be extracted to configurable property
-                         JdkSslContext jdkSslContext = new JdkSslContext(
-                                 client.getSslContext(),
-                                 true,
-                                 (Iterable) null,
-                                 IdentityCipherSuiteFilter.INSTANCE,
-                                 (ApplicationProtocolConfig) null,
-                                 ClientAuth.NONE,
-                                 (String[]) null, /* enable default protocols */
-                                 false /* true if the first write request shouldn't be encrypted */
-                         );
-
-                         final int port = requestUri.getPort();
-                         final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
-                                 .request(jerseyRequest).setSNIAlways(true).build();
-                         final SslHandler sslHandler = jdkSslContext.newHandler(
-                                 ch.alloc(), sslConfig.getSNIHostName(), port <= 0 ? 443 : port, executorService
-                         );
-                         if (ClientProperties.getValue(config.getProperties(),
-                                                       NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, true)) {
-                             sslConfig.setEndpointIdentificationAlgorithm(sslHandler.engine());
-                         }
-
-                         sslConfig.setSNIServerName(sslHandler.engine());
-
-                         p.addLast(sslHandler);
-                     }
-
-                     p.addLast(new HttpClientCodec());
-                     p.addLast(new ChunkedWriteHandler());
-                     p.addLast(new HttpContentDecompressor());
-                    }
-                });
+                .handler(provideChannelInitializer(jerseyRequest, handlerProxy, connectTimeout, requestUri));
 
                // connect timeout
                if (connectTimeout > 0) {
@@ -439,6 +390,64 @@ class NettyConnector implements Connector {
         }
     }
 
+    ChannelInitializer provideChannelInitializer(ClientRequest jerseyRequest,
+                                                 Optional<ClientProxy> handlerProxy,
+                                                 long connectTimeout,
+                                                 URI requestUri) {
+        return new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+                ChannelPipeline p = ch.pipeline();
+
+                Configuration config = jerseyRequest.getConfiguration();
+
+                // http proxy
+                handlerProxy.ifPresent(clientProxy -> {
+                    final URI u = clientProxy.uri();
+                    InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(),
+                            u.getPort() == -1 ? 8080 : u.getPort());
+                    ProxyHandler proxy1 = createProxyHandler(jerseyRequest, proxyAddr,
+                            clientProxy.userName(), clientProxy.password(), connectTimeout);
+                    p.addLast(proxy1);
+                });
+
+                // Enable HTTPS if necessary.
+                if ("https".equals(requestUri.getScheme())) {
+                    // making client authentication optional for now; it could be extracted to configurable property
+                    final JdkSslContext jdkSslContext = new JdkSslContext(
+                            client.getSslContext(),
+                            true,
+                            null,
+                            IdentityCipherSuiteFilter.INSTANCE,
+                            null,
+                            ClientAuth.NONE,
+                            null, /* enable default protocols */
+                            false /* true if the first write request shouldn't be encrypted */
+                    );
+
+                    final int port = requestUri.getPort();
+                    final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
+                            .request(jerseyRequest).setSNIAlways(true).build();
+                    final SslHandler sslHandler = jdkSslContext.newHandler(
+                            ch.alloc(), sslConfig.getSNIHostName(), port <= 0 ? 443 : port, executorService
+                    );
+                    if (ClientProperties.getValue(config.getProperties(),
+                            NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, true)) {
+                        sslConfig.setEndpointIdentificationAlgorithm(sslHandler.engine());
+                    }
+
+                    sslConfig.setSNIServerName(sslHandler.engine());
+
+                    p.addLast(sslHandler);
+                }
+
+                p.addLast(new HttpClientCodec());
+                p.addLast(new ChunkedWriteHandler());
+                p.addLast(new HttpContentDecompressor());
+            }
+        };
+    }
+
     private String buildPathWithQueryParameters(URI requestUri) {
         if (requestUri.getRawQuery() != null) {
             return String.format("%s?%s", requestUri.getRawPath(), requestUri.getRawQuery());
@@ -489,7 +498,7 @@ class NettyConnector implements Connector {
        }
     }
 
-    private static ProxyHandler createProxyHandler(ClientRequest jerseyRequest, SocketAddress proxyAddr,
+    protected static ProxyHandler createProxyHandler(ClientRequest jerseyRequest, SocketAddress proxyAddr,
                                                    String userName, String password, long connectTimeout) {
         HttpHeaders httpHeaders = setHeaders(jerseyRequest, new DefaultHttpHeaders());
 
