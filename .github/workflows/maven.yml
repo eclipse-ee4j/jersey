@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         java_version: [ 11 ]
-        verify_profiles: [ '-Plicense_check' ]
+        verify_profiles: [ '-Plicense_check,staging' ]
     continue-on-error: false
 
     steps:
