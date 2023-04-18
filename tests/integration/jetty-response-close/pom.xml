@@ -45,7 +45,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <!-- Test Backward compatibility with this version -->
-            <version>9.4.17.v20190418</version>
+            <version>10.0.14</version>
         </dependency>
 
         <dependency>
