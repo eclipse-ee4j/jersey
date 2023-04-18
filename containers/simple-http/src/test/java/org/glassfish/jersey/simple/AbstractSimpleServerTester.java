@@ -21,6 +21,7 @@ import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.AfterEach;
 public abstract class AbstractSimpleServerTester {
 
     public static final String CONTEXT = "";
-    private final int DEFAULT_PORT = 0;
+    private final int DEFAULT_PORT = 0; // rather SimpleFramework server choose than 9998
 
     private static final Logger LOGGER = Logger.getLogger(AbstractSimpleServerTester.class.getName());
 
@@ -76,10 +77,20 @@ public abstract class AbstractSimpleServerTester {
         return DEFAULT_PORT;
     }
 
+    private final int getPort(RuntimeType runtimeType) {
+        switch (runtimeType) {
+            case SERVER:
+                return getPort();
+            case CLIENT:
+                return server.getPort();
+            default:
+                throw new IllegalStateException("Unexpected runtime type");
+        }
+    }
     private volatile SimpleServer server;
 
     public UriBuilder getUri() {
-        return UriBuilder.fromUri("http://localhost").port(getPort()).path(CONTEXT);
+        return UriBuilder.fromUri("http://localhost").port(getPort(RuntimeType.CLIENT)).path(CONTEXT);
     }
 
     public void startServer(Class... resources) {
@@ -112,7 +123,7 @@ public abstract class AbstractSimpleServerTester {
     }
 
     public URI getBaseUri() {
-        return UriBuilder.fromUri("http://localhost/").port(getPort()).build();
+        return UriBuilder.fromUri("http://localhost/").port(getPort(RuntimeType.SERVER)).build();
     }
 
     public void setDebug(boolean enable) {

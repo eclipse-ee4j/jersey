@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -159,7 +159,7 @@ class JettyConnector implements Connector {
         }
         if (httpClient == null) {
             final SSLContext sslContext = jaxrsClient.getSslContext();
-            final SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
+            final SslContextFactory.Client sslContextFactory = new SslContextFactory.Client(false);
             sslContextFactory.setSslContext(sslContext);
             final ClientConnector connector = new ClientConnector();
             connector.setSslContextFactory(sslContextFactory);
@@ -170,8 +170,12 @@ class JettyConnector implements Connector {
 
         Boolean enableHostnameVerification = (Boolean) config.getProperties()
                 .get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION);
-        if (enableHostnameVerification != null && enableHostnameVerification) {
-            client.getSslContextFactory().setEndpointIdentificationAlgorithm("https");
+        if (enableHostnameVerification != null) {
+            final String verificationAlgorithm = enableHostnameVerification ? "HTTPS" : null;
+            client.getSslContextFactory().setEndpointIdentificationAlgorithm(verificationAlgorithm);
+        }
+        if (jaxrsClient.getHostnameVerifier() != null) {
+            client.getSslContextFactory().setHostnameVerifier(jaxrsClient.getHostnameVerifier());
         }
 
         final Object connectTimeout = config.getProperties().get(ClientProperties.CONNECT_TIMEOUT);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.GenericType;
@@ -354,11 +355,15 @@ class AuthCodeGrantImpl implements OAuth2CodeGrantFlow {
     static class DefaultTokenMessageBodyReader implements MessageBodyReader<TokenResult> {
 
         // Provider here prevents circular dependency error from HK2 (workers inject providers and this provider inject workers)
-        @Inject
-        private Provider<MessageBodyWorkers> workers;
+        private final Provider<MessageBodyWorkers> workers;
+        private final Provider<PropertiesDelegate> propertiesDelegateProvider;
 
         @Inject
-        private Provider<PropertiesDelegate> propertiesDelegateProvider;
+        public DefaultTokenMessageBodyReader(@Context Provider<MessageBodyWorkers> workers,
+                                             @Context Provider<PropertiesDelegate> propertiesDelegateProvider) {
+            this.propertiesDelegateProvider = propertiesDelegateProvider;
+            this.workers = workers;
+        }
 
         private static Iterable<ReaderInterceptor> EMPTY_INTERCEPTORS = new ArrayList<>();
 

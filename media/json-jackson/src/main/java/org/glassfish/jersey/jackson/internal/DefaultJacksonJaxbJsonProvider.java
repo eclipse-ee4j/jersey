@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,18 +25,25 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonP
 import java.util.Arrays;
 import java.util.List;
 import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.ext.Providers;
 
 /**
  * Entity Data provider based on Jackson JSON provider.
  */
 @Singleton
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
-
-    @Context
     private Configuration commonConfig;
+
+    @Inject
+    public DefaultJacksonJaxbJsonProvider(@Context Providers providers, @Context Configuration config) {
+        super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
+        this.commonConfig = config;
+        _providers = providers;
+    }
 
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String[] EXCLUDE_MODULE_NAMES = {"JaxbAnnotationModule", "JakartaXmlBindAnnotationModule"};
@@ -45,8 +52,10 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
     }
 
-    public DefaultJacksonJaxbJsonProvider(final Annotations... annotationsToUse) {
+    public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config, Annotations... annotationsToUse) {
         super(new JacksonMapperConfigurator(null, annotationsToUse));
+        this.commonConfig = config;
+        _providers = providers;
     }
 
     @PostConstruct

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.Produces;
@@ -56,6 +57,7 @@ public class JsonGsonProvider extends AbstractMessageReaderWriterProvider<Object
 
     private Providers providers;
 
+    @Inject
     public JsonGsonProvider(@Context Providers providers) {
         this.providers = providers;
     }

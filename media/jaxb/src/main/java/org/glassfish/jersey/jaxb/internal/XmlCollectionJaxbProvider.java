@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,10 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
@@ -50,14 +52,14 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
 
     private final Provider<XMLInputFactory> xif;
 
-    XmlCollectionJaxbProvider(Provider<XMLInputFactory> xif, Providers ps) {
-        super(ps);
+    XmlCollectionJaxbProvider(Provider<XMLInputFactory> xif, Providers ps, Configuration config) {
+        super(ps, config);
 
         this.xif = xif;
     }
 
-    XmlCollectionJaxbProvider(Provider<XMLInputFactory> xif, Providers ps, MediaType mt) {
-        super(ps, mt);
+    XmlCollectionJaxbProvider(Provider<XMLInputFactory> xif, Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
 
         this.xif = xif;
     }
@@ -71,8 +73,9 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     @Singleton
     public static final class App extends XmlCollectionJaxbProvider {
 
-        public App(@Context Provider<XMLInputFactory> xif, @Context Providers ps) {
-            super(xif, ps, MediaType.APPLICATION_XML_TYPE);
+        @Inject
+        public App(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
+            super(xif, ps, MediaType.APPLICATION_XML_TYPE, config);
         }
     }
 
@@ -85,8 +88,9 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     @Singleton
     public static final class Text extends XmlCollectionJaxbProvider {
 
-        public Text(@Context Provider<XMLInputFactory> xif, @Context Providers ps) {
-            super(xif, ps, MediaType.TEXT_XML_TYPE);
+        @Inject
+        public Text(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
+            super(xif, ps, MediaType.TEXT_XML_TYPE, config);
         }
     }
 
@@ -99,8 +103,9 @@ public abstract class XmlCollectionJaxbProvider extends AbstractCollectionJaxbPr
     @Singleton
     public static final class General extends XmlCollectionJaxbProvider {
 
-        public General(@Context Provider<XMLInputFactory> xif, @Context Providers ps) {
-            super(xif, ps);
+        @Inject
+        public General(@Context Provider<XMLInputFactory> xif, @Context Providers ps, @Context Configuration config) {
+            super(xif, ps, config);
         }
 
         @Override
