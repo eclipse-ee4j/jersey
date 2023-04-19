@@ -201,10 +201,10 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
         /**
          * Determines whether this {@code ConsumesProducesAcceptor} router can process the {@code request}.
          *
-         * @param requestContext The request to be tested.
+         * @param contentType The media type of the {@code request} to be tested (can be NULL).
          * @return True if the {@code request} can be processed by this router, false otherwise.
          */
-        abstract boolean isConsumable(ContainerRequest requestContext);
+        abstract boolean isConsumable(MediaType contentType);
 
         @Override
         public String toString() {
@@ -400,8 +400,8 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
         final List<ConsumesProducesAcceptor> satisfyingAcceptors = new LinkedList<>();
         final Set<ResourceMethod> differentInvokableMethods = Collections.newSetFromMap(new IdentityHashMap<>());
         final MediaType requestContentType = request.getMediaType();
-        for (ConsumesProducesAcceptor cpi : acceptors) {
-            if (cpi.isConsumable(request)) {
+        for (final ConsumesProducesAcceptor cpi : acceptors) {
+            if (cpi.isConsumable(requestContentType)) {
                 satisfyingAcceptors.add(cpi);
                 differentInvokableMethods.add(cpi.methodRouting.method);
             }
