@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,11 +65,11 @@ final class OctetStreamMethodSelectingRouter extends AbstractMethodSelectingRout
         /**
          * Determines whether this {@code ConsumesProducesAcceptor} router can process the {@code request}.
          *
-         * @param requestContext The request to be tested.
+         * @param contentType The media type of the {@code request} to be tested (can be NULL).
          * @return True if the {@code request} can be processed by this router, false otherwise.
          */
-        boolean isConsumable(ContainerRequest requestContext) {
-            MediaType contentType = requestContext.getMediaType();
+        @Override
+        boolean isConsumable(MediaType contentType) {
             if (contentType == null && methodRouting.method.getType() != ResourceMethod.JaxrsType.SUB_RESOURCE_LOCATOR
                     && methodRouting.method.getInvocable().requiresEntity()) {
                 contentType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
