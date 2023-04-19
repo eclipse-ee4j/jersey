@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.OutboundJaxrsResponse;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.message.internal.TracingLogger;
@@ -68,10 +69,21 @@ abstract class AbstractJavaResourceMethodDispatcher implements ResourceMethodDis
     AbstractJavaResourceMethodDispatcher(final Invocable resourceMethod,
                                          final InvocationHandler methodHandler,
                                          final ConfiguredValidator validator) {
-        this.method = resourceMethod.getDefinitionMethod();
+        this.method = getPublic(resourceMethod.getHandlingMethod(), resourceMethod.getDefinitionMethod());
         this.methodHandler = methodHandler;
         this.resourceMethod = resourceMethod;
         this.validator = validator;
+    }
+
+    private Method getPublic(Method handlingMethod, Method definitionMethod) {
+        if (handlingMethod == definitionMethod) {
+            return handlingMethod;
+        }
+
+        boolean publicHandling = ReflectionHelper.isPublic(handlingMethod)
+                && ReflectionHelper.isPublic(handlingMethod.getDeclaringClass());
+
+        return publicHandling ? handlingMethod : definitionMethod;
     }
 
     @Override
