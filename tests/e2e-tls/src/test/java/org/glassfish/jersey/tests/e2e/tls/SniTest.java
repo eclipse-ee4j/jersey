@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.tests.e2e.tls;
 
+import jakarta.ws.rs.client.Invocation;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -23,9 +24,9 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.tests.e2e.tls.explorer.SSLCapabilities;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -39,21 +40,19 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.URI;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class SniTest {
     private static final int PORT = 8443;
     private static final String LOCALHOST = "127.0.0.1";
 
-
     static {
+// Debug
+//        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+//        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Host");
         // JDK specific settings
         System.setProperty("jdk.net.hosts.file", SniTest.class.getResource("/hosts").getPath());
     }
@@ -64,7 +63,8 @@ public class SniTest {
                 new ApacheConnectorProvider(),
                 new Apache5ConnectorProvider(),
                 new JdkConnectorProvider(),
-                new HttpUrlConnectorProvider()
+                new HttpUrlConnectorProvider(),
+                new JavaNetHttpConnectorProvider()
         };
     }
 
@@ -73,10 +73,11 @@ public class SniTest {
     public void server1Test(ConnectorProvider provider) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.connectorProvider(provider);
-        serverTest(clientConfig, "www.host1.com");
+        clientConfig.property(ClientProperties.SNI_HOST_NAME, "www.host1.com");
+        serverTest(clientConfig, provider, "www.host1.com");
     }
 
-    public void serverTest(ClientConfig clientConfig, String hostName) {
+    public void serverTest(ClientConfig clientConfig, ConnectorProvider provider, String hostName) {
         String newHostName = replaceWhenHostNotKnown(hostName);
         final List<SNIServerName> serverNames = new LinkedList<>();
         final String[] requestHostName = new String[1];
@@ -91,7 +92,7 @@ public class SniTest {
 
         clientConfig.property(ClientProperties.READ_TIMEOUT, 2000);
         clientConfig.property(ClientProperties.CONNECT_TIMEOUT, 2000);
-        try (Response r = ClientBuilder.newClient(clientConfig)
+        Invocation.Builder builder = ClientBuilder.newClient(clientConfig)
                 .register(new ClientRequestFilter() {
                     @Override
                     public void filter(ClientRequestContext requestContext) throws IOException {
@@ -100,9 +101,11 @@ public class SniTest {
                 })
                 .target("https://" + (newHostName.equals(LOCALHOST) ? LOCALHOST : "www.host0.com") + ":" + PORT)
                 .path("host")
-                .request()
-                .header(HttpHeaders.HOST, hostName + ":8080")
-                .get()) {
+                .request();
+        if (!JavaNetHttpConnectorProvider.class.isInstance(provider)) {
+            builder = builder.header(HttpHeaders.HOST, hostName + ":8080");
+        }
+        try (Response r = builder.get()) {
             // empty
         } catch (Exception e) {
             Throwable cause = e;
@@ -111,7 +114,7 @@ public class SniTest {
                     && TimeoutException.class.isInstance(cause)) {
                 cause = cause.getCause();
             }
-            if (cause == null && /*IOE*/ !e.getMessage().contains("Stream closed")) {
+            if ((!e.getMessage().contains("Stream closed")) && !e.getMessage().contains("timed out")) {
                 throw e;
             }
         }
