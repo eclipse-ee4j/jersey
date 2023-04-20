@@ -16,18 +16,25 @@
 
 package org.glassfish.jersey.client.innate.http;
 
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.HttpHeaders;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import jakarta.ws.rs.core.UriBuilder;
+import org.glassfish.jersey.internal.PropertiesResolver;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
+
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * A unified routines to configure {@link SSLParameters}.
@@ -35,27 +42,36 @@ import java.util.Optional;
  */
 public final class SSLParamConfigurator {
     private final URI uri;
-    private final Map<String, List<Object>> httpHeaders;
     private final Optional<SniConfigurator> sniConfigurator;
 
     /**
      * Builder of the {@link SSLParamConfigurator} instance.
      */
     public static final class Builder {
-        private ClientRequest clientRequest;
-        private URI uri;
-        private Map<String, List<Object>> httpHeaders;
+        private URI uri = null;
+        private String sniHostNameHeader = null;
+        private String sniHostNameProperty = null;
         private boolean setAlways = false;
 
         /**
-         * Sets the {@link ClientRequest} instance.
+         * Sets the SNIHostName and {@link URI} from the {@link ClientRequest} instance.
          * @param clientRequest the {@link ClientRequest}
          * @return the builder instance
          */
         public Builder request(ClientRequest clientRequest) {
-            this.clientRequest = clientRequest;
-            this.httpHeaders = null;
-            this.uri = null;
+            this.sniHostNameHeader = getSniHostNameHeader(clientRequest.getHeaders());
+            this.sniHostNameProperty = clientRequest.resolveProperty(ClientProperties.SNI_HOST_NAME, String.class);
+            this.uri = clientRequest.getUri();
+            return this;
+        }
+
+        /**
+         * Sets the SNIHostName from the {@link Configuration} instance.
+         * @param configuration the {@link Configuration}
+         * @return the builder instance
+         */
+        public Builder configuration(Configuration configuration) {
+            this.sniHostNameProperty = (String) configuration.getProperty(ClientProperties.SNI_HOST_NAME);
             return this;
         }
 
@@ -65,7 +81,6 @@ public final class SSLParamConfigurator {
          * @return the builder instance
          */
         public Builder uri(URI uri) {
-            this.clientRequest = null;
             this.uri = uri;
             return this;
         }
@@ -76,8 +91,7 @@ public final class SSLParamConfigurator {
          * @return the builder instance
          */
         public Builder headers(Map<String, List<Object>> httpHeaders) {
-            this.clientRequest = null;
-            this.httpHeaders = httpHeaders;
+            this.sniHostNameHeader = getSniHostNameHeader(httpHeaders);
             return this;
         }
 
@@ -99,12 +113,31 @@ public final class SSLParamConfigurator {
         public SSLParamConfigurator build() {
             return new SSLParamConfigurator(this);
         }
+
+        private static String getSniHostNameHeader(Map<String, List<Object>> httpHeaders) {
+            List<Object> hostHeaders = httpHeaders.get(HttpHeaders.HOST);
+            if (hostHeaders == null || hostHeaders.get(0) == null) {
+                return null;
+            }
+
+            final String hostHeader = hostHeaders.get(0).toString();
+            final String trimmedHeader;
+            if (hostHeader != null) {
+                int index = hostHeader.indexOf(':'); // RFC 7230  Host = uri-host [ ":" port ] ;
+                final String trimmedHeader0 = index != -1 ? hostHeader.substring(0, index).trim() : hostHeader.trim();
+                trimmedHeader = trimmedHeader0.isEmpty() ? hostHeader : trimmedHeader0;
+            } else {
+                trimmedHeader = null;
+            }
+
+            return trimmedHeader;
+        }
     }
 
     private SSLParamConfigurator(SSLParamConfigurator.Builder builder) {
-        this.uri = builder.clientRequest != null ? builder.clientRequest.getUri() : builder.uri;
-        this.httpHeaders = builder.clientRequest != null ? builder.clientRequest.getHeaders() : builder.httpHeaders;
-        sniConfigurator = SniConfigurator.createWhenHostHeader(uri, httpHeaders, builder.setAlways);
+        String sniHostName = builder.sniHostNameHeader == null ? builder.sniHostNameProperty : builder.sniHostNameHeader;
+        uri = builder.uri;
+        sniConfigurator = SniConfigurator.createWhenHostHeader(uri, sniHostName, builder.setAlways);
     }
 
     /**
@@ -175,6 +208,15 @@ public final class SSLParamConfigurator {
      */
     public void setSNIServerName(SSLSocket sslSocket) {
         sniConfigurator.ifPresent(sni -> sni.setServerNames(sslSocket));
+    }
+
+    /**
+     * Set {@link javax.net.ssl.SNIServerName} for the {@link SSLParameters} when SNI should be used
+     * (i.e. {@link jakarta.ws.rs.core.HttpHeaders#HOST} differs from HTTP request host name)
+     * @param parameters the {@link SSLParameters} to be set
+     */
+    public void setSNIServerName(SSLParameters parameters) {
+        sniConfigurator.ifPresent(sni -> sni.updateSSLParameters(parameters));
     }
 
     /**

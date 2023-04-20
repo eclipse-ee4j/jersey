@@ -25,7 +25,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,32 +48,24 @@ final class SniConfigurator {
     /**
      * Create ClientSNI when {@link HttpHeaders#HOST} is set different from the request URI host (or {@code whenDiffer}.is false).
      * @param hostUri the Uri of the HTTP request
-     * @param headers the HttpHeaders
+     * @param sniHostName the SniHostName either from HttpHeaders or the
+     *      {@link org.glassfish.jersey.client.ClientProperties#SNI_HOST_NAME} property from Configuration object.
      * @param whenDiffer create {@SniConfigurator only when different from the request URI host}
      * @return ClientSNI or empty when {@link HttpHeaders#HOST}
      */
-    static Optional<SniConfigurator> createWhenHostHeader(URI hostUri, Map<String, List<Object>> headers, boolean whenDiffer) {
-        List<Object> hostHeaders = headers.get(HttpHeaders.HOST);
-        if (hostHeaders == null || hostHeaders.get(0) == null) {
+    static Optional<SniConfigurator> createWhenHostHeader(URI hostUri, String sniHostName, boolean whenDiffer) {
+        if (sniHostName == null) {
             return Optional.empty();
         }
 
-        final String hostHeader = hostHeaders.get(0).toString();
-        final String trimmedHeader;
-        if (hostHeader != null) {
-            int index = hostHeader.indexOf(':'); // RFC 7230  Host = uri-host [ ":" port ] ;
-            final String trimmedHeader0 = index != -1 ? hostHeader.substring(0, index).trim() : hostHeader.trim();
-            trimmedHeader = trimmedHeader0.isEmpty() ? hostHeader : trimmedHeader0;
-        } else {
-            return Optional.empty();
+        if (hostUri != null) {
+            final String hostUriString = hostUri.getHost();
+            if (!whenDiffer && hostUriString.equals(sniHostName)) {
+                return Optional.empty();
+            }
         }
 
-        final String hostUriString = hostUri.getHost();
-        if (!whenDiffer && hostUriString.equals(trimmedHeader)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new SniConfigurator(trimmedHeader));
+        return Optional.of(new SniConfigurator(sniHostName));
     }
 
     /**
@@ -97,7 +88,7 @@ final class SniConfigurator {
         sslSocket.setSSLParameters(sslParameters);
     }
 
-    private SSLParameters updateSSLParameters(SSLParameters sslParameters) {
+    SSLParameters updateSSLParameters(SSLParameters sslParameters) {
         SNIHostName serverName = new SNIHostName(hostName);
         List<SNIServerName> serverNames = new LinkedList<>();
         serverNames.add(serverName);

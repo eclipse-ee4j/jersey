@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1153,9 +1153,26 @@
                             <para>
                                 Property for threshold size for content length after which Expect:100-Continue header would be applied
                                 before the main request.
-                                Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+                                Default threshold size (64kb) after which Expect:100-Continue header would be applied before
                                 the main request.
                                 <literal>Since 2.32</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.SNI_HOST_NAME;</entry>
+                        <entry><literal>jersey.config.client.sniHostName</literal></entry>
+                        <entry>
+                            <para>
+                                Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+                                <literal>HttpUrlConnector</literal> and <literal>JavaNetHttpConnector</literal> need
+                                an extra System Property set to allow HOST header.
+                                As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
+                                be set on each request.
+                                <literal>Since 3.1.2</literal>
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.String;
                             </para>
                         </entry>
                     </row>

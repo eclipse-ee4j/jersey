@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.innate.Expect100ContinueUsage;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.Version;
@@ -49,14 +50,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Provides a Jersey client {@link Connector}, which internally uses Java's {@link HttpClient}.
@@ -104,11 +103,14 @@ public class JavaNetHttpConnector implements Connector {
         } else {
             httpClientBuilder.followRedirects(HttpClient.Redirect.NORMAL);
         }
+
         SSLParameters sslParameters =
                 getPropertyOrNull(configuration, JavaNetHttpClientProperties.SSL_PARAMETERS, SSLParameters.class);
+        sslParameters = new SniSslParameters(sslParameters).getSslParameters(client);
         if (sslParameters != null) {
             httpClientBuilder.sslParameters(sslParameters);
         }
+
         final Authenticator preemptiveAuthenticator =
                 getPropertyOrNull(configuration,
                         JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION, Authenticator.class);
@@ -170,12 +172,18 @@ public class JavaNetHttpConnector implements Connector {
      * @return the {@link HttpRequest} instance for the {@link HttpClient} request
      */
     private HttpRequest getHttpRequest(ClientRequest request) {
+        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder()
+                .uri(request.getUri())
+                .configuration(request.getConfiguration())
+                .build();
+
+        final URI sniUri = sniConfig.isSNIRequired() ? sniConfig.toIPRequestUri() : request.getUri();
+
         HttpRequest.Builder builder = HttpRequest.newBuilder();
-        builder.uri(request.getUri());
+        builder.uri(sniUri);
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.noBody();
         if (request.hasEntity()) {
             try {
-                request.enableBuffering();
                 ByteArrayOutputStreamProvider byteBufferStreamProvider = new ByteArrayOutputStreamProvider();
                 request.setStreamProvider(byteBufferStreamProvider);
                 request.writeEntity();
@@ -295,5 +303,30 @@ public class JavaNetHttpConnector implements Connector {
             return cookieHandler.get();
         }
         return null;
+    }
+
+    private static class SniSslParameters {
+        private final SSLParameters sslParameters;
+
+        private SniSslParameters(SSLParameters sslParameters) {
+            this.sslParameters = sslParameters;
+        }
+
+        private SSLParameters getSslParameters(Client client) {
+            SSLParamConfigurator sniConfig = SSLParamConfigurator.builder()
+                    .configuration(client.getConfiguration())
+                    .build();
+
+            if (sniConfig.isSNIRequired()) {
+                SSLParameters sslParameters = this.sslParameters;
+                if (sslParameters == null) {
+                    sslParameters = new SSLParameters();
+                }
+                sniConfig.setSNIServerName(sslParameters);
+                return sslParameters;
+            } else {
+                return sslParameters;
+            }
+        }
     }
 }

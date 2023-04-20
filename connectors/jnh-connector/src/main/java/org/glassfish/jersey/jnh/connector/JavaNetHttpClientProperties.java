@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,24 +57,33 @@ public class JavaNetHttpClientProperties {
     public static final String SSL_PARAMETERS = "jersey.config.jnh.client.sslParameters";
 
     /**
-     * An instance of the {@link java.net.Authenticator} class that should be used to retrieve
-     * credentials from a user.
-     *
+     * <p>
+     *     An instance of the {@link java.net.Authenticator} class that should be used to retrieve
+     *     credentials from a user.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
      */
     public static final String PREEMPTIVE_BASIC_AUTHENTICATION =
             "jersey.config.jnh.client.preemptiveBasicAuthentication";
 
     /**
-     * A value of {@code false} indicates the client should handle cookies
-     * automatically using HttpClient's default cookie policy. A value
-     * of {@code false} will cause the client to ignore all cookies.
-     * <p/>
-     * The value MUST be an instance of {@link java.lang.Boolean}.
-     * If the property is absent the default value is {@code false}
+     * <p>
+     *     A value of {@code false} indicates the client should handle cookies
+     *     automatically using HttpClient's default cookie policy. A value
+     *     of {@code false} will cause the client to ignore all cookies.
+     * </p>
+     * <p>
+     *     The value MUST be an instance of {@link java.lang.Boolean}.
+     *     If the property is absent the default value is {@code false}
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
      */
     public static final String DISABLE_COOKIES =
             "jersey.config.jnh.client.disableCookies";
-
 
     /**
      * Prevent this class from instantiation.

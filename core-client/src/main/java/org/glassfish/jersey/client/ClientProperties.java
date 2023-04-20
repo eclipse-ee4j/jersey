@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -462,6 +462,24 @@ public final class ClientProperties {
      * </p>
      */
     public static final String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style";
+
+    /**
+     * <p>
+     *     Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+     *     {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
+     *     to have an extra System Property set to allow HOST header.
+     *     As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
+     *     be set on each request.
+     * </p>
+     * <p>
+     *     The value MUST be an instance of {@link java.lang.String}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.2
+     */
+    public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
 
     private ClientProperties() {
         // prevents instantiation
