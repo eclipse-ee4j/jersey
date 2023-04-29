@@ -16,13 +16,17 @@
 
 package org.glassfish.jersey.internal.util.collection;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * The {@link MultivaluedMap} wrapper that is able to set guards observing changes of values represented by a key.
@@ -34,6 +38,10 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
 
     private final MultivaluedMap<String, V> inner;
     private final Map<String, Boolean> guards = new HashMap<>();
+
+    private static boolean isMutable(Object mutable) {
+        return !String.class.isInstance(mutable) && !MediaType.class.isInstance(mutable);
+    }
 
     public GuardianStringKeyMultivaluedMap(MultivaluedMap<String, V> inner) {
         this.inner = inner;
@@ -53,7 +61,11 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
 
     @Override
     public V getFirst(String key) {
-        return inner.getFirst(key);
+        V first = inner.getFirst(key);
+        if (isMutable(key)) {
+            observe(key);
+        }
+        return first;
     }
 
     @Override
@@ -101,7 +113,15 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
 
     @Override
     public List<V> get(Object key) {
-        return inner.get(key);
+        final List<V> innerList = inner.get(key);
+        if (innerList != null) {
+            for (Map.Entry<String, Boolean> guard : guards.entrySet()) {
+                if (guard.getKey().equals(key)) {
+                    return new GuardianList(innerList, guard);
+                }
+            }
+        }
+        return innerList;
     }
 
     @Override
@@ -139,11 +159,13 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
 
     @Override
     public Collection<List<V>> values() {
+        observeAll();
         return inner.values();
     }
 
     @Override
     public Set<Entry<String, List<V>>> entrySet() {
+        observeAll();
         return inner.entrySet();
     }
 
@@ -207,5 +229,226 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
     @Override
     public int hashCode() {
         return Objects.hash(inner, guards);
+    }
+
+    private static class MutableGuardian<V> {
+        protected final Map.Entry<String, Boolean> guard;
+
+        private MutableGuardian(Entry<String, Boolean> guard) {
+            this.guard = guard;
+        }
+
+        protected V guardMutable(V mutable) {
+            if (isMutable(mutable)) {
+                guard.setValue(true);
+            }
+            return mutable;
+        }
+    }
+
+    private static class GuardianList<V> extends MutableGuardian<V> implements List<V>  {
+        private final List<V> guarded;
+
+        public GuardianList(List<V> guarded, Map.Entry<String, Boolean> guard) {
+            super(guard);
+            this.guarded = guarded;
+        }
+
+        @Override
+        public int size() {
+            return guarded.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return guarded.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return guarded.contains(o);
+        }
+
+        @Override
+        public Iterator<V> iterator() {
+            return new GuardianIterator<>(guarded.iterator(), guard);
+        }
+
+        @Override
+        public Object[] toArray() {
+            guard.setValue(true);
+            return guarded.toArray();
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            guard.setValue(true);
+            return guarded.toArray(a);
+        }
+
+        @Override
+        public boolean add(V e) {
+            guard.setValue(true);
+            return guarded.add(e);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            guard.setValue(true);
+            return guarded.remove(o);
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return guarded.containsAll(c);
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends V> c) {
+            guard.setValue(true);
+            return guarded.addAll(c);
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends V> c) {
+            guard.setValue(true);
+            return guarded.addAll(index, c);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            guard.setValue(true);
+            return guarded.removeAll(c);
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            guard.setValue(true);
+            return guarded.retainAll(c);
+        }
+
+        @Override
+        public void clear() {
+            guard.setValue(true);
+            guarded.clear();
+        }
+
+        @Override
+        public V get(int index) {
+            return guardMutable(guarded.get(index));
+        }
+
+        @Override
+        public V set(int index, V element) {
+            guard.setValue(true);
+            return guarded.set(index, element);
+        }
+
+        @Override
+        public void add(int index, V element) {
+            guard.setValue(true);
+            guarded.add(index, element);
+        }
+
+        @Override
+        public V remove(int index) {
+            guard.setValue(true);
+            return guarded.remove(index);
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return guarded.indexOf(o);
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return guarded.lastIndexOf(o);
+        }
+
+        @Override
+        public ListIterator<V> listIterator() {
+            return new GuardianListIterator<>(guarded.listIterator(), guard);
+        }
+
+        @Override
+        public ListIterator<V> listIterator(int index) {
+            return new GuardianListIterator<>(guarded.listIterator(index), guard);
+        }
+
+        @Override
+        public List<V> subList(int fromIndex, int toIndex) {
+            final List<V> sublist = guarded.subList(fromIndex, toIndex);
+            return sublist != null ? new GuardianList<>(sublist, guard) : sublist;
+        }
+    }
+
+    private static class GuardianIterator<V> extends MutableGuardian<V> implements Iterator<V> {
+        protected final Iterator<V> guarded;
+
+        public GuardianIterator(Iterator<V> guarded, Map.Entry<String, Boolean> guard) {
+            super(guard);
+            this.guarded = guarded;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return guarded.hasNext();
+        }
+
+        @Override
+        public V next() {
+            return guardMutable(guarded.next());
+        }
+
+        @Override
+        public void remove() {
+            guard.setValue(true);
+            guarded.remove();
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super V> action) {
+            guarded.forEachRemaining(action);
+        }
+    }
+
+    private static class GuardianListIterator<V> extends GuardianIterator<V> implements ListIterator<V> {
+
+        public GuardianListIterator(Iterator<V> guarded, Entry<String, Boolean> guard) {
+            super(guarded, guard);
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return ((ListIterator<V>) guarded).hasPrevious();
+        }
+
+        @Override
+        public V previous() {
+            return guardMutable(((ListIterator<V>) guarded).previous());
+        }
+
+        @Override
+        public int nextIndex() {
+            return ((ListIterator<V>) guarded).nextIndex();
+        }
+
+        @Override
+        public int previousIndex() {
+            return ((ListIterator<V>) guarded).previousIndex();
+        }
+
+        @Override
+        public void set(V v) {
+            ((ListIterator<V>) guarded).set(v);
+            guard.setValue(true);
+        }
+
+        @Override
+        public void add(V v) {
+            ((ListIterator<V>) guarded).add(v);
+            guard.setValue(true);
+        }
     }
 }
