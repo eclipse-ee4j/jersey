@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -47,8 +48,12 @@ public class EntityPartWriter implements MessageBodyWriter<List<EntityPart>> {
 
     private MultiPartWriter multiPartWriter;
 
+    private final Providers providers;
+
     @Inject
-    Providers providers;
+    public EntityPartWriter(@Context Providers providers) {
+        this.providers = providers;
+    }
 
     @Override
     public boolean isWriteable(Class<?> type, Type generic, Annotation[] annotations, MediaType mediaType) {
