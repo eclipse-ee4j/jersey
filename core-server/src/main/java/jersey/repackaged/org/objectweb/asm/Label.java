@@ -81,6 +81,9 @@ public class Label {
   /** A flag indicating that the basic block corresponding to a label is the end of a subroutine. */
   static final int FLAG_SUBROUTINE_END = 64;
 
+  /** A flag indicating that this label has at least one associated line number. */
+  static final int FLAG_LINE_NUMBER = 128;
+
   /**
    * The number of elements to add to the {@link #otherLineNumbers} array when it needs to be
    * resized to store a new source line number.
@@ -145,9 +148,9 @@ public class Label {
   short flags;
 
   /**
-   * The source line number corresponding to this label, or 0. If there are several source line
-   * numbers corresponding to this label, the first one is stored in this field, and the remaining
-   * ones are stored in {@link #otherLineNumbers}.
+   * The source line number corresponding to this label, if {@link #FLAG_LINE_NUMBER} is set. If
+   * there are several source line numbers corresponding to this label, the first one is stored in
+   * this field, and the remaining ones are stored in {@link #otherLineNumbers}.
    */
   private short lineNumber;
 
@@ -332,7 +335,8 @@ public class Label {
    * @param lineNumber a source line number (which should be strictly positive).
    */
   final void addLineNumber(final int lineNumber) {
-    if (this.lineNumber == 0) {
+    if ((flags & FLAG_LINE_NUMBER) == 0) {
+      flags |= FLAG_LINE_NUMBER;
       this.lineNumber = (short) lineNumber;
     } else {
       if (otherLineNumbers == null) {
@@ -356,7 +360,7 @@ public class Label {
    */
   final void accept(final MethodVisitor methodVisitor, final boolean visitLineNumbers) {
     methodVisitor.visitLabel(this);
-    if (visitLineNumbers && lineNumber != 0) {
+    if (visitLineNumbers && (flags & FLAG_LINE_NUMBER) != 0) {
       methodVisitor.visitLineNumber(lineNumber & 0xFFFF, this);
       if (otherLineNumbers != null) {
         for (int i = 1; i <= otherLineNumbers[0]; ++i) {
