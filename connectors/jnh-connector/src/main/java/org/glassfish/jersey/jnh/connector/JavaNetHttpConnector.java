@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 /**
@@ -253,7 +255,12 @@ public class JavaNetHttpConnector implements Connector {
                 headers.put(headerName, entry.getValue());
             }
         }
-        clientResponse.setEntityStream(response.body());
+        final InputStream body = response.body();
+        try {
+            clientResponse.setEntityStream(body.available() != 1 ? body : new FirstByteCachingStream(body));
+        } catch (IOException ioe) {
+            throw new ProcessingException(ioe);
+        }
         return clientResponse;
     }
 
@@ -329,4 +336,87 @@ public class JavaNetHttpConnector implements Connector {
             }
         }
     }
+
+    /*
+     * The JDK stream returns available() == 1 even when read() == -1
+     * This class is to prevent it.
+     * Otherwise, the MBR is not found for 204
+     * See https://github.com/eclipse-ee4j/jersey/issues/5307
+     */
+    private static class FirstByteCachingStream extends InputStream {
+        private final InputStream inner; //jdk.internal.net.http.ResponseSubscribers.HttpResponseInputStream
+        private volatile int zero = -1; // int on zero index
+        private final Lock lock = new ReentrantLock();
+
+        private FirstByteCachingStream(InputStream inner) {
+            this.inner = inner;
+        }
+
+        @Override
+        public int read() throws IOException {
+            lock.lock();
+            final int r = zero != -1 ? zero : inner.read();
+            zero = -1;
+            lock.unlock();
+            return r;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            lock.lock();
+            int r;
+            if (zero != -1) {
+                b[off] = (byte) (zero & 0xFF);
+                r = inner.read(b, off + 1, len - 1);
+            } else {
+                r = inner.read(b, off, len);
+            }
+            zero = -1;
+            lock.unlock();
+            return r;
+
+        }
+
+        @Override
+        public int available() throws IOException {
+            lock.lock();
+            if (zero != -1) {
+                lock.unlock();
+                return 1;
+            }
+
+            int available = inner.available();
+            if (available != 1) {
+                lock.unlock();
+                return available;
+            }
+
+            zero = inner.read();
+            if (zero == -1) {
+                available = 0;
+            }
+            lock.unlock();
+            return available;
+        }
+
+        @Override
+        public void close() throws IOException {
+            inner.close();
+            lock.lock();
+            zero = -1;
+            lock.unlock();
+        }
+
+        @Override
+        public boolean markSupported() {
+            return inner.markSupported();
+        }
+
+        @Override
+        public synchronized void mark(int readlimit) {
+            inner.mark(readlimit);
+        }
+
+    }
+
 }

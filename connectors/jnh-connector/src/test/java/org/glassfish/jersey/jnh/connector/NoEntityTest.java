@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.jnh.connector;
 
+import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -44,6 +45,13 @@ public class NoEntityTest extends JerseyTest {
         @POST
         public void post(String entity) {
         }
+
+        @GET
+        @Path("/success")
+        public Response getSuccessfully() {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+
     }
 
     @Override
@@ -74,6 +82,32 @@ public class NoEntityTest extends JerseyTest {
         for (int i = 0; i < 5; i++) {
             Response cr = r.request().get();
             cr.close();
+        }
+    }
+
+    @Test
+    public void testGetVoidWithClose() {
+        WebTarget r = target("test");
+        for (int i = 0; i < 5; i++) {
+            Response cr = r.request().get();
+            cr.close();
+        }
+    }
+
+    @Test
+    public void testGetVoid() {
+        WebTarget r = target("test/success");
+        for (int i = 0; i < 5; i++) {
+            r.request().get(void.class);
+        }
+    }
+
+    @Test
+    public void testGetGenericVoid() {
+        WebTarget r = target("test/success");
+        for (int i = 0; i < 5; i++) {
+            r.request().get(new GenericType<Void>() {
+            });
         }
     }
 
