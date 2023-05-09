@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.ws.rs.client.Client;
@@ -56,6 +57,18 @@ class ProxyInvocationHandler implements InvocationHandler {
         if (method.getName().equals("toString") && (args == null || args.length == 0)) {
             return restClientModel.toString();
         }
+
+        if (args == null && method.getName().equals("hashCode")) {
+            return hashCode();
+        }
+
+        if (args != null && args.length == 1 && method.getName().equals("equals")) {
+            if (!(args[0] instanceof Proxy)) {
+                return false;
+            }
+            return equals(Proxy.getInvocationHandler(args[0]));
+        }
+
         if (method.getName().equals("close") && (args == null || args.length == 0)) {
             closed.set(true);
             if (null != client) {
