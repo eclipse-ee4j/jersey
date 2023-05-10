@@ -139,8 +139,8 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>jakarta.activation</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-activation</artifactId>
         </dependency>
     </dependencies>
 
@@ -177,7 +177,7 @@
                     <dependency>
                         <groupId>jakarta.activation</groupId>
                         <artifactId>jakarta.activation-api</artifactId>
-                        <version>${jakarta.activation.version}</version>
+                        <version>${jakarta.activation-api.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>jakarta.xml.bind</groupId>
