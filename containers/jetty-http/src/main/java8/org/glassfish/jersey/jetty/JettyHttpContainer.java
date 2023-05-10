@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,10 @@ import org.glassfish.jersey.server.spi.Container;
 public final class JettyHttpContainer implements Container {
 
     public JettyHttpContainer(Application application) {
+        throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
+    }
+
+    public JettyHttpContainer(Application application, final Object parentContext) {
         throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
     }
 
