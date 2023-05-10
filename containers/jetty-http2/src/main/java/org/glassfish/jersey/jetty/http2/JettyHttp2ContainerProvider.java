@@ -25,6 +25,8 @@ import org.glassfish.jersey.server.spi.ContainerProvider;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Application;
 
+import static org.glassfish.jersey.jetty.JettyHttpContainerProvider.HANDLER_NAME;
+
 public final class JettyHttp2ContainerProvider implements ContainerProvider {
 
     @Override
@@ -32,12 +34,8 @@ public final class JettyHttp2ContainerProvider implements ContainerProvider {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        if (type != null
-                && ("org.eclipse.jetty.server.Handler".equalsIgnoreCase(type.getCanonicalName())
-                || JettyHttpContainer.class == type)
-        ) {
-            return type.cast(new JettyHttpContainerProvider().createContainer(JettyHttpContainer.class,
-                    application));
+        if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
+            return type.cast(new JettyHttpContainerProvider().createContainer(JettyHttpContainer.class, application));
         }
         return null;
     }
