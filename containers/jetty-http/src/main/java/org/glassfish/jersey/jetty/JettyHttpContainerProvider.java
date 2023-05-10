@@ -31,15 +31,13 @@ import org.glassfish.jersey.server.spi.ContainerProvider;
  */
 public final class JettyHttpContainerProvider implements ContainerProvider {
 
+    public static final String HANDLER_NAME = "org.eclipse.jetty.server.Handler";
     @Override
     public <T> T createContainer(final Class<T> type, final Application application) throws ProcessingException {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        if (type != null
-                && ("org.eclipse.jetty.server.Handler".equalsIgnoreCase(type.getCanonicalName())
-                        || JettyHttpContainer.class == type)
-        ) {
+        if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
             return type.cast(new JettyHttpContainer(application));
         }
         return null;
@@ -50,10 +48,7 @@ public final class JettyHttpContainerProvider implements ContainerProvider {
         if (JdkVersion.getJdkVersion().getMajor() < 11) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        if (type != null
-                && ("org.eclipse.jetty.server.Handler".equalsIgnoreCase(type.getCanonicalName())
-                || JettyHttpContainer.class == type)
-        ) {
+        if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
             return type.cast(new JettyHttpContainer(application, parentContext));
         }
         return null;
