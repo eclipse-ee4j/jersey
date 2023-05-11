@@ -87,7 +87,7 @@ import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
-import org.glassfish.jersey.netty.connector.internal.JerseyChunkedInput;
+import org.glassfish.jersey.netty.connector.internal.NettyEntityWriter;
 
 /**
  * Netty connector implementation.
@@ -394,27 +394,34 @@ class NettyConnector implements Connector {
                         }
                     };
                 ch.closeFuture().addListener(closeListener);
-                if (jerseyRequest.getLengthLong() == -1) {
-                    HttpUtil.setTransferEncodingChunked(nettyRequest, true);
-                } else {
-                    nettyRequest.headers().add(HttpHeaderNames.CONTENT_LENGTH, jerseyRequest.getLengthLong());
+
+                final NettyEntityWriter entityWriter = NettyEntityWriter.getInstance(jerseyRequest, ch);
+                switch (entityWriter.getType()) {
+                    case CHUNKED:
+                        HttpUtil.setTransferEncodingChunked(nettyRequest, true);
+                        break;
+                    case PRESET:
+                        nettyRequest.headers().set(HttpHeaderNames.CONTENT_LENGTH, jerseyRequest.getLengthLong());
+                        break;
+//                  case DELAYED:
+//                      // Set later after the entity is "written"
+//                      break;
                 }
 
                 // Send the HTTP request.
-                ch.writeAndFlush(nettyRequest);
+                entityWriter.writeAndFlush(nettyRequest);
 
-                final JerseyChunkedInput jerseyChunkedInput = new JerseyChunkedInput(ch);
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
                     public OutputStream getOutputStream(int contentLength) throws IOException {
-                        return jerseyChunkedInput;
+                        return entityWriter.getOutputStream();
                     }
                 });
 
                 if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
-                    ch.write(new HttpChunkedInput(jerseyChunkedInput));
+                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
                 } else {
-                    ch.write(jerseyChunkedInput);
+                    entityWriter.write(entityWriter.getChunkedInput());
                 }
 
                 executorService.execute(new Runnable() {
@@ -425,19 +432,28 @@ class NettyConnector implements Connector {
 
                         try {
                             jerseyRequest.writeEntity();
+
+                            if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
+                                replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
+                                nettyRequest.headers().set(HttpHeaderNames.CONTENT_LENGTH, entityWriter.getLength());
+                                entityWriter.flush();
+                            }
+
                         } catch (IOException e) {
                             responseDone.completeExceptionally(e);
                         }
                     }
                 });
 
-                ch.flush();
+                if (entityWriter.getType() != NettyEntityWriter.Type.DELAYED) {
+                    entityWriter.flush();
+                }
             } else {
                 // Send the HTTP request.
                 ch.writeAndFlush(nettyRequest);
             }
 
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             responseDone.completeExceptionally(e);
         }
     }
@@ -508,6 +524,13 @@ class NettyConnector implements Connector {
     private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers) {
         for (final Map.Entry<String, List<String>> e : jerseyRequest.getStringHeaders().entrySet()) {
             headers.add(e.getKey(), e.getValue());
+        }
+        return headers;
+    }
+
+    private static HttpHeaders replaceHeaders(ClientRequest jerseyRequest, HttpHeaders headers) {
+        for (final Map.Entry<String, List<String>> e : jerseyRequest.getStringHeaders().entrySet()) {
+            headers.set(e.getKey(), e.getValue());
         }
         return headers;
     }

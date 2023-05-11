@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -234,6 +235,33 @@ public class OutboundMessageContextTest {
         Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
         ctx.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, ctx.getMediaType());
+    }
+
+    @Test
+    public void testChangedContentTypeOnList() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setMediaType(MediaType.APPLICATION_XML_TYPE);
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
+        ctx.getHeaders().get(HttpHeaders.CONTENT_TYPE).set(0, MediaType.APPLICATION_JSON);
+        Assertions.assertEquals(MediaType.APPLICATION_JSON_TYPE, ctx.getMediaType());
+    }
+
+    @Test
+    public void testChangedContentTypeOnValues() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setMediaType(MediaType.APPLICATION_XML_TYPE);
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
+        ctx.getHeaders().values().clear();
+        Assertions.assertEquals(null, ctx.getMediaType());
+    }
+
+    @Test
+    public void testChangedContentTypeOnEntrySet() {
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setMediaType(MediaType.APPLICATION_XML_TYPE);
+        Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, ctx.getMediaType());
+        ctx.getHeaders().entrySet().clear();
+        Assertions.assertEquals(null, ctx.getMediaType());
     }
 
     @Test

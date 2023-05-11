@@ -121,6 +121,7 @@
             </activation>
             <modules>
                 <module>release-test</module>
+                <module>version-agnostic</module>
             </modules>
         </profile>
     </profiles>
