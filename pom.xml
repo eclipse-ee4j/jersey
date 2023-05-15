@@ -1749,6 +1749,16 @@
                 <artifactId>jetty-webapp</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.http2</groupId>
+                <artifactId>http2-server</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-alpn-conscrypt-server</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.simpleframework</groupId>
@@ -2228,7 +2238,7 @@
         <arquillian.weld.version>3.0.1.Final</arquillian.weld.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.4</asm.version>
+        <asm.version>9.5</asm.version>
         <bnd.plugin.version>2.3.6</bnd.plugin.version>
 
         <bouncycastle.version>1.68</bouncycastle.version>
@@ -2340,7 +2350,7 @@
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.14</jetty.version>
+        <jetty.version>11.0.15</jetty.version>
         <jetty9.version>9.4.51.v20230217</jetty9.version>
         <jetty.plugin.version>11.0.14</jetty.plugin.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>

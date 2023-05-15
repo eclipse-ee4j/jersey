@@ -46,6 +46,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 
 import javax.net.ssl.SSLContext;
 
+import jakarta.ws.rs.ext.RuntimeDelegate;
 import org.eclipse.jetty.client.HttpClientTransport;
 import org.eclipse.jetty.client.HttpRequest;
 import org.eclipse.jetty.client.http.HttpClientTransportOverHTTP;
@@ -254,7 +255,6 @@ class JettyConnector implements Connector {
 
     @Override
     public ClientResponse apply(final ClientRequest jerseyRequest) throws ProcessingException {
-        applyUserAgentHeader(jerseyRequest.getHeaders());
         final Request jettyRequest = translateRequest(jerseyRequest);
         final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest);
         final ContentProvider entity = getBytesProvider(jerseyRequest);
@@ -338,34 +338,17 @@ class JettyConnector implements Connector {
         return request;
     }
 
-    /**
-     * Re-write User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
-     * it shall be propagated to Jetty client before HttpRequest instance is created.
-     * HttpRequest takes User Agent header from client then.
-     *
-     * @param headers - map of Jersey headers
-     */
-    private void applyUserAgentHeader(final MultivaluedMap<String, Object> headers) {
-        if (headers.containsKey(HttpHeaders.USER_AGENT)) {
-            final Map<String, String> stringHeaders =
-                    HeaderUtils.asStringHeadersSingleValue(headers, configuration);
-            client.setUserAgentField(
-                    new HttpField(HttpHeader.USER_AGENT,
-                            HttpHeader.USER_AGENT.name(),
-                            stringHeaders.get(HttpHeaders.USER_AGENT))
-            );
-        }
-    }
-
     private Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final Request request) {
         final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers, configuration);
 
-         if (request instanceof HttpRequest) {
-             final HttpRequest httpRequest = (HttpRequest) request;
-             for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
-                 httpRequest.addHeader(new HttpField(e.getKey(), e.getValue()));
-             }
-         }
+        // remove User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
+        request.headers(httpFields -> httpFields.remove(HttpHeader.USER_AGENT));
+        if (request instanceof HttpRequest) {
+            final HttpRequest httpRequest = (HttpRequest) request;
+            for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
+                httpRequest.addHeader(new HttpField(e.getKey(), e.getValue()));
+            }
+        }
         return stringHeaders;
     }
 
@@ -422,7 +405,6 @@ class JettyConnector implements Connector {
 
     @Override
     public Future<?> apply(final ClientRequest jerseyRequest, final AsyncConnectorCallback callback) {
-        applyUserAgentHeader(jerseyRequest.getHeaders());
         final Request jettyRequest = translateRequest(jerseyRequest);
         final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest);
         final ContentProvider entity = getStreamProvider(jerseyRequest);
