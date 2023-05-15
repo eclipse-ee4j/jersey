@@ -41,7 +41,7 @@
         <module>jersey-servlet-core</module>
         <module>jersey-servlet</module>
         <module>jetty-http</module>
-        <module>jetty-http2</module>
+        <!-- module>jetty-http2</module -->
         <module>jetty-servlet</module>
         <module>netty-http</module>
         <module>simple-http</module>

@@ -40,7 +40,7 @@
         <module>inmemory</module>
         <module>jdk-http</module>
         <module>jetty</module>
-        <module>jetty-http2</module>
+        <!-- module>jetty-http2</module -->
         <module>netty</module>
         <module>simple</module>
     </modules>
