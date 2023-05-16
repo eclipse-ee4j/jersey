@@ -381,6 +381,24 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
             final List<V> sublist = guarded.subList(fromIndex, toIndex);
             return sublist != null ? new GuardianList<>(sublist, guard) : sublist;
         }
+
+        @Override
+        public String toString() {
+            return guarded.toString();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (GuardianList.class.isInstance(obj)) {
+                return guarded.equals(((GuardianList) obj).guarded);
+            }
+            return guarded.equals(obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return guarded.hashCode();
+        }
     }
 
     private static class GuardianIterator<V> extends MutableGuardian<V> implements Iterator<V> {
@@ -410,6 +428,11 @@ public class GuardianStringKeyMultivaluedMap<V> implements MultivaluedMap<String
         @Override
         public void forEachRemaining(Consumer<? super V> action) {
             guarded.forEachRemaining(action);
+        }
+
+        @Override
+        public String toString() {
+            return guarded.toString();
         }
     }
 
