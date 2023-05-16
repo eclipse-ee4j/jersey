@@ -21,6 +21,7 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
@@ -51,60 +52,97 @@ public class DownloadBomPomDependencies extends AbstractMojoTestCase {
 
     @Test
     public void testDownloadBomPomDependencies() throws Exception {
-//        RepositorySystem repositorySystem = (RepositorySystem) lookup(RepositorySystem.class.getName());
-        DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
-        locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
-        locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
-        RepositorySystem repositorySystem = locator.getService(RepositorySystem.class);
-
-        RepositorySystemSession repoSession = getRepoSession(repositorySystem);
-        List<RemoteRepository> remoteRepos = getRemoteRepositories(repoSession);
-
-        Properties properties = MavenUtil.getMavenProperties();
-        String jerseyVersion = MavenUtil.getJerseyVersion(properties);
+        MavenEnvironment mavenEnvironment = new MavenEnvironment();
         List<Dependency> memberDeps = MavenUtil.streamJerseyJars().collect(Collectors.toList());
         for (Dependency member : memberDeps) {
-            member.setVersion(jerseyVersion);
-            Artifact m = DependencyResolver.resolveArtifact(member, remoteRepos, repositorySystem, repoSession);
+            Artifact m = mavenEnvironment.resolveArtifact(member);
             System.out.append("Resolved ").append(member.getGroupId()).append(":").append(member.getArtifactId()).append(":")
                     .append(member.getVersion()).append(" to ").println(m.getFile().getName());
         }
     }
 
-    private List<RemoteRepository> getRemoteRepositories(RepositorySystemSession session) throws Exception {
-        File pom = lookupResourcesPom("/release-test-pom.xml");
-        MavenExecutionRequest request = new DefaultMavenExecutionRequest();
-        request.setPom(pom);
-        request.addActiveProfile("staging");
-        ProjectBuildingRequest buildingRequest = request
-                .getProjectBuildingRequest()
-                .setRepositorySession(session)
-                .setResolveDependencies(true);
+    @Test
+    public void testDownloadNonBomPomDependencies() throws Exception {
+        MavenEnvironment mavenEnvironment = new MavenEnvironment();
+        MavenProject project = mavenEnvironment.getMavenProjectForResourceFile("/non-bom-pom-deps.xml");
+        for (Dependency dependency : project.getDependencies()) {
+            if (dependency.getArtifactId().contains("jackson1") && mavenEnvironment.jerseyVersion.startsWith("3")) {
+                continue;
+            }
 
-        ProjectBuilder projectBuilder = lookup(ProjectBuilder.class);
-        ProjectBuildingResult projectBuildingResult = projectBuilder.build(pom, buildingRequest);
-        MavenProject project = projectBuildingResult.getProject();
-
-        List<RemoteRepository> remoteArtifactRepositories = project.getRemoteProjectRepositories();
-        return remoteArtifactRepositories;
+            Artifact m = mavenEnvironment.resolveArtifact(dependency);
+            System.out.append("Resolved ").append(dependency.getGroupId()).append(":")
+                    .append(dependency.getArtifactId()).append(":")
+                    .append(dependency.getVersion()).append(" to ").println(m.getFile().getName());
+        }
     }
 
-    private static RepositorySystemSession getRepoSession(RepositorySystem repositorySystem) {
-        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
-        LocalRepository localRepo = new LocalRepository(MavenUtil.getLocalMavenRepository().getAbsolutePath());
-        session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session, localRepo));
-        return session;
-    }
+    private class MavenEnvironment {
+        private final RepositorySystem repositorySystem;
+        private final RepositorySystemSession repoSession;
+        private final List<RemoteRepository> remoteRepos;
+        private final String jerseyVersion;
 
-    private static File lookupResourcesPom(String pomFile) throws URISyntaxException {
-        URL resource = DownloadBomPomDependencies.class.getResource(pomFile);
-        if (resource == null) {
-            throw new IllegalStateException("Pom file " + pomFile + " was not located on classpath!");
+        MavenEnvironment() throws Exception {
+            DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
+            locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
+            locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
+
+            repositorySystem = locator.getService(RepositorySystem.class);
+            repoSession = getRepoSession();
+
+            remoteRepos = getRemoteRepositories();
+
+            Properties properties = MavenUtil.getMavenProperties();
+            jerseyVersion = MavenUtil.getJerseyVersion(properties);
         }
-        File file = new File(resource.toURI());
-        if (!file.exists()) {
-            throw new IllegalStateException("Cannot locate test pom xml file!");
+
+        Artifact resolveArtifact(Dependency dependency) throws ArtifactResolutionException {
+            dependency.setVersion(jerseyVersion);
+            return DependencyResolver.resolveArtifact(dependency, remoteRepos, repositorySystem, repoSession);
         }
-        return file;
+
+        private List<RemoteRepository> getRemoteRepositories() throws Exception {
+            MavenProject project = getMavenProjectForResourceFile("/release-test-pom.xml");
+            List<RemoteRepository> remoteArtifactRepositories = project.getRemoteProjectRepositories();
+            return remoteArtifactRepositories;
+        }
+
+        private MavenProject getMavenProjectForResourceFile(String resourceFile)
+                throws Exception {
+            File pom = lookupResourcesPom(resourceFile);
+            MavenExecutionRequest request = new DefaultMavenExecutionRequest();
+            request.setPom(pom);
+            request.addActiveProfile("staging");
+            ProjectBuildingRequest buildingRequest = request
+                    .getProjectBuildingRequest()
+                    .setRepositorySession(repoSession)
+                    .setResolveDependencies(true);
+
+            ProjectBuilder projectBuilder = lookup(ProjectBuilder.class);
+            ProjectBuildingResult projectBuildingResult = projectBuilder.build(pom, buildingRequest);
+            MavenProject project = projectBuildingResult.getProject();
+
+            return project;
+        }
+
+        private RepositorySystemSession getRepoSession() {
+            DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+            LocalRepository localRepo = new LocalRepository(MavenUtil.getLocalMavenRepository().getAbsolutePath());
+            session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session, localRepo));
+            return session;
+        }
+
+        private File lookupResourcesPom(String pomFile) throws URISyntaxException {
+            URL resource = DownloadBomPomDependencies.class.getResource(pomFile);
+            if (resource == null) {
+                throw new IllegalStateException("Pom file " + pomFile + " was not located on classpath!");
+            }
+            File file = new File(resource.toURI());
+            if (!file.exists()) {
+                throw new IllegalStateException("Cannot locate test pom xml file!");
+            }
+            return file;
+        }
     }
 }
