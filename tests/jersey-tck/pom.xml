@@ -31,13 +31,14 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jersey.version>3.1.1</jersey.version> <!-- the public version that pass the tck -->
-        <glassfish.container.version>7.0.1</glassfish.container.version>
+        <jersey.version>3.1.2</jersey.version> <!-- the public version that pass the tck -->
+        <glassfish.container.version>7.0.4</glassfish.container.version>
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <jakarta.platform.version>10.0.0</jakarta.platform.version>
         <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <jakarta.rest.version>3.1.0</jakarta.rest.version>
         <tck.artifactId>jakarta-restful-ws-tck</tck.artifactId>
+        <tck.version>3.1.3</tck.version>
     </properties>
 
     <dependencyManagement>
@@ -95,7 +96,7 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>${tck.artifactId}</artifactId>
-            <version>${project.version}</version>
+            <version>${tck.version}</version>
             <scope>test</scope>
         </dependency>
 
