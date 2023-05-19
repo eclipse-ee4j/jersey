@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
@@ -145,7 +145,7 @@ public class App {
     private static void loadSettings() {
         InputStream st = null;
         try {
-            st = Files.newInputStream(Paths.get(PROPERTIES_FILE_NAME));
+            st = Files.newInputStream(Path.of(PROPERTIES_FILE_NAME));
             PROPERTIES.load(st);
         } catch (final IOException e) {
             // ignore
@@ -178,7 +178,7 @@ public class App {
     private static void storeSettings() {
         OutputStream st = null;
         try {
-            st = Files.newOutputStream(Paths.get(PROPERTIES_FILE_NAME));
+            st = Files.newOutputStream(Path.of(PROPERTIES_FILE_NAME));
             PROPERTIES.store(st, null);
         } catch (final IOException e) {
             // ignore

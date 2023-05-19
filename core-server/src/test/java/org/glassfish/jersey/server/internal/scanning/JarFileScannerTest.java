@@ -19,7 +19,7 @@ package org.glassfish.jersey.server.internal.scanning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -114,7 +114,7 @@ public class JarFileScannerTest {
     private int countJarEntriesUsingScanner(final String parent, final boolean recursive) throws IOException {
         int scannedEntryCount = 0;
 
-        try (final InputStream jaxRsApi = Files.newInputStream(Paths.get(this.jaxRsApiPath))) {
+        try (final InputStream jaxRsApi = Files.newInputStream(Path.of(this.jaxRsApiPath))) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, parent, recursive);
             while (jarFileScanner.hasNext()) {
                 // Fetch next entry.
@@ -136,7 +136,7 @@ public class JarFileScannerTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     public void testClassEnumerationWithNonexistentPackage(final boolean recursive) throws IOException {
-        try (final InputStream jaxRsApi = Files.newInputStream(Paths.get(this.jaxRsApiPath))) {
+        try (final InputStream jaxRsApi = Files.newInputStream(Path.of(this.jaxRsApiPath))) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "jakarta/ws/r", recursive);
             assertFalse(jarFileScanner.hasNext(), "Unexpectedly found package 'jakarta.ws.r' in jakarta.ws.rs-api");
         }
@@ -145,7 +145,7 @@ public class JarFileScannerTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     public void testClassEnumerationWithClassPrefix(final boolean recursive) throws IOException {
-        try (final InputStream jaxRsApi = Files.newInputStream(Paths.get(this.jaxRsApiPath))) {
+        try (final InputStream jaxRsApi = Files.newInputStream(Path.of(this.jaxRsApiPath))) {
             final JarFileScanner jarFileScanner = new JarFileScanner(jaxRsApi, "jakarta/ws/rs/GE", recursive);
             assertFalse(jarFileScanner.hasNext(), "Unexpectedly found package 'jakarta.ws.rs.GE' in jakarta.ws.rs-api");
         }

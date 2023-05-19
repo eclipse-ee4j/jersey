@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.codehaus.gmavenplus.mojo.AbstractGroovyMojo
 import org.glassfish.jersey.test.maven.runner.RunnerMojo
 
-import java.nio.file.Paths
+import java.nio.file.Path
 
 /**
  * Abstract class for all Weblogic related mojos.
@@ -52,8 +52,8 @@ abstract class AbstractWlsRunnerMojo extends AbstractGroovyMojo implements Runne
 
     @Override
     void execute() throws MojoExecutionException, MojoFailureException {
-        mwHome = Paths.get(mwHome).isAbsolute() ? mwHome : Paths.get(distDir, distSubdir, mwHome)
-        logFile = logFile ?: Paths.get(mwHome, domain, "wls.log").toString()
+        mwHome = Path.of(mwHome).isAbsolute() ? mwHome : Path.of(distDir, distSubdir, mwHome)
+        logFile = logFile ?: Path.of(mwHome, domain, "wls.log").toString()
         executeRunner()
     }
 
