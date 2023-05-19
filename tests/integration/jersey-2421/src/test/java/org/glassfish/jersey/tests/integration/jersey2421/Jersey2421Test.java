@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.message.internal.NullOutputStream;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ public class Jersey2421Test {
                 request.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
                     public OutputStream getOutputStream(final int contentLength) throws IOException {
-                        return new NullOutputStream();
+                        return OutputStream.nullOutputStream();
                     }
                 });
                 request.writeEntity();

@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -228,7 +228,7 @@ public abstract class AbstractWebAppTest {
 
         try {
 
-            final BufferedReader reader = Files.newBufferedReader(Paths.get(felixPolicy));
+            final BufferedReader reader = Files.newBufferedReader(Path.of(felixPolicy));
             String line;
             final Set<String> cpiNames = new HashSet<String>();
 

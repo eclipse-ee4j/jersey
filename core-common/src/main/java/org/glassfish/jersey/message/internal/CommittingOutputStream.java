@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,7 +62,7 @@ public final class CommittingOutputStream extends OutputStream {
      * Null stream provider.
      */
     private static final OutboundMessageContext.StreamProvider NULL_STREAM_PROVIDER =
-            contentLength -> new NullOutputStream();
+            contentLength -> OutputStream.nullOutputStream();
     /**
      * Default size of the buffer which will be used if no user defined size is specified.
      */
@@ -170,7 +170,7 @@ public final class CommittingOutputStream extends OutputStream {
             Preconditions.checkState(streamProvider != null, STREAM_PROVIDER_NULL);
             adaptedOutput = streamProvider.getOutputStream(currentSize);
             if (adaptedOutput == null) {
-                adaptedOutput = new NullOutputStream();
+                adaptedOutput = OutputStream.nullOutputStream();
             }
 
             directWrite = true;

@@ -90,11 +90,7 @@ public final class JarUtils {
 
             final InputStream f = new BufferedInputStream(
                     Files.newInputStream(new File(base, entry.getKey()).toPath()));
-            final byte[] buf = new byte[1024];
-            int read = 1024;
-            while ((read = f.read(buf, 0, read)) != -1) {
-                jos.write(buf, 0, read);
-            }
+            f.transferTo(jos);
             jos.closeEntry();
         }
 
