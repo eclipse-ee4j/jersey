@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -42,8 +43,11 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
 
     /**
      * The UTF-8 Charset.
+     *
+     * @deprecated use {@code StandardCharsets.UTF_8} instead.
      */
-    public static final Charset UTF8 = ReaderWriter.UTF8;
+    @Deprecated(forRemoval = true)
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
      * Reader bytes from an input stream and write then to an output stream.
@@ -51,7 +55,10 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      * @param in  the input stream to read from.
      * @param out the output stream to write to.
      * @throws IOException if there is an error reading or writing bytes.
+     *
+     * @deprecated use {@code ReaderWriter.writeTo(in, out)} instead.
      */
+    @Deprecated
     public static void writeTo(InputStream in, OutputStream out) throws IOException {
         ReaderWriter.writeTo(in, out);
     }
@@ -62,7 +69,10 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      * @param in  the reader to read from.
      * @param out the writer to write to.
      * @throws IOException if there is an error reading or writing characters.
+     *
+     * @deprecated use {@code ReaderWriter.writeTo(in, out)} instead.
      */
+    @Deprecated
     public static void writeTo(Reader in, Writer out) throws IOException {
         ReaderWriter.writeTo(in, out);
     }

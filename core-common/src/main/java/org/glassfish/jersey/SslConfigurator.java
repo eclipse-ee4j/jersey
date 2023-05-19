@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,11 @@
 package org.glassfish.jersey;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -635,7 +636,7 @@ public final class SslConfigurator {
                     if (keyStoreBytes != null) {
                         keyStoreInputStream = new ByteArrayInputStream(keyStoreBytes);
                     } else if (!keyStoreFile.equals("NONE")) {
-                        keyStoreInputStream = new FileInputStream(keyStoreFile);
+                        keyStoreInputStream = Files.newInputStream(Paths.get(keyStoreFile));
                     }
                     _keyStore.load(keyStoreInputStream, keyStorePass);
                 } finally {
@@ -710,7 +711,7 @@ public final class SslConfigurator {
                     if (trustStoreBytes != null) {
                         trustStoreInputStream = new ByteArrayInputStream(trustStoreBytes);
                     } else if (!trustStoreFile.equals("NONE")) {
-                        trustStoreInputStream = new FileInputStream(trustStoreFile);
+                        trustStoreInputStream = Files.newInputStream(Paths.get(trustStoreFile));
                     }
                     _trustStore.load(trustStoreInputStream, trustStorePass);
                 } finally {

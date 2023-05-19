@@ -19,12 +19,12 @@ package org.glassfish.jersey.message.internal;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +54,11 @@ public final class ReaderWriter {
     private static final Logger LOGGER = Logger.getLogger(ReaderWriter.class.getName());
     /**
      * The UTF-8 Charset.
+     *
+     * @deprecated use {@code StandardCharsets.UTF_8} instead
      */
-    public static final Charset UTF8 = Charset.forName("UTF-8");
+    @Deprecated(forRemoval = true)
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
     /**
      * The buffer size for arrays of byte and character.
      */
@@ -167,7 +170,7 @@ public final class ReaderWriter {
 
     /**
      * Java 9+ InputStream::readAllBytes
-     * TODO Replace when Java 8 not any longer supported (3.1+)
+     * TODO Replace in Jersey 4.0, as the sole difference to OpenJDK is working around a bug in the input stream.
      */
     private static byte[] readAllBytes(InputStream inputStream) throws IOException {
         List<byte[]> bufs = null;
@@ -242,9 +245,9 @@ public final class ReaderWriter {
      * @throws IOException in case of a write failure.
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
-        Writer osw = new OutputStreamWriter(out, getCharset(type));
-        osw.write(s, 0, s.length());
-        osw.flush();
+        try (final Writer osw = new OutputStreamWriter(out, getCharset(type))) {
+            osw.write(s);
+        }
     }
 
     /**

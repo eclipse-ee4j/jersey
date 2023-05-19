@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,10 +10,10 @@
 
 package org.glassfish.jersey.examples.aggregator;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -141,10 +141,10 @@ public class App {
     private static Properties loadSettings() {
         final Properties properties = new Properties();
 
-        FileInputStream st = null;
+        InputStream st = null;
         try {
             String homeDir = System.getProperty("user.home");
-            st = new FileInputStream(homeDir + File.separator + TWITTER_PROPERTIES_FILE_NAME);
+            st = Files.newInputStream(Paths.get(homeDir, TWITTER_PROPERTIES_FILE_NAME));
             properties.load(st);
         } catch (IOException e) {
             // ignore
@@ -230,7 +230,7 @@ public class App {
             try {
                 fileStream = webRootPath == null
                         ? App.class.getResourceAsStream(WEB_ROOT + uri)
-                        : new FileInputStream(webRootPath + uri);
+                        : Files.newInputStream(Paths.get(webRootPath, uri));
             } catch (IOException e) {
                 fileStream = null;
             }

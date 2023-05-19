@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,14 @@
 
 package org.glassfish.jersey.message.internal;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -62,13 +60,8 @@ public final class FileProvider extends AbstractMessageReaderWriterProvider<File
                          final MultivaluedMap<String, String> httpHeaders,
                          final InputStream entityStream) throws IOException {
         final File file = Utils.createTempFile();
-        final OutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
 
-        try {
-            writeTo(entityStream, stream);
-        } finally {
-            stream.close();
-        }
+        Files.copy(entityStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         return file;
     }
@@ -89,13 +82,7 @@ public final class FileProvider extends AbstractMessageReaderWriterProvider<File
                         final MediaType mediaType,
                         final MultivaluedMap<String, Object> httpHeaders,
                         final OutputStream entityStream) throws IOException {
-        final InputStream stream = new BufferedInputStream(new FileInputStream(t), ReaderWriter.BUFFER_SIZE);
-
-        try {
-            writeTo(stream, entityStream);
-        } finally {
-            stream.close();
-        }
+        Files.copy(t.toPath(), entityStream);
     }
 
     @Override

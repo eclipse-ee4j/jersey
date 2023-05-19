@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,10 @@ package org.glassfish.jersey.server;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -71,7 +71,7 @@ public final class JarUtils {
         tempJar.deleteOnExit();
         final JarOutputStream jos = new JarOutputStream(
                 new BufferedOutputStream(
-                        new FileOutputStream(tempJar)), new Manifest());
+                        Files.newOutputStream(tempJar.toPath())), new Manifest());
 
         final Set<String> usedSegments = new HashSet<String>();
         for (final Map.Entry<String, String> entry : entries.entrySet()) {
@@ -90,7 +90,7 @@ public final class JarUtils {
             jos.putNextEntry(e);
 
             final InputStream f = new BufferedInputStream(
-                    new FileInputStream(base + entry.getKey()));
+                    Files.newInputStream(Paths.get(base + entry.getKey())));
             final byte[] buf = new byte[1024];
             int read = 1024;
             while ((read = f.read(buf, 0, read)) != -1) {
