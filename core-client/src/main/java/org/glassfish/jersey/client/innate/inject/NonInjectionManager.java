@@ -418,10 +418,31 @@ public final class NonInjectionManager implements InjectionManager {
         }
 
         ClassBindings<T> classBindings = classBindings(createMe);
-        return classBindings.create();
+        return classBindings.create(true);
     }
 
-    private <T> T justCreate(Class<T> createMe) {
+    @Override
+    public <T> T createAndInitialize(Class<T> createMe) {
+        checkShutdown();
+
+        if (InjectionManager.class.equals(createMe)) {
+            return (T) this;
+        }
+        if (RequestScope.class.equals(createMe)) {
+            if (!isRequestScope) {
+                isRequestScope = true;
+                return (T) new NonInjectionRequestScope();
+            } else {
+                throw new IllegalStateException(LocalizationMessages.NONINJECT_REQUESTSCOPE_CREATED());
+            }
+        }
+
+        ClassBindings<T> classBindings = classBindings(createMe);
+        T t = classBindings.create(false);
+        return t != null ? t : justCreate(createMe);
+    }
+
+    public <T> T justCreate(Class<T> createMe) {
         T result = null;
         try {
             Constructor<T> mostArgConstructor = findConstructor(createMe);
@@ -490,11 +511,6 @@ public final class NonInjectionManager implements InjectionManager {
         if (list.size() != 1) {
             throw new IllegalStateException(LocalizationMessages.NONINJECT_AMBIGUOUS_SERVICES(list.get(0)));
         }
-    }
-
-    @Override
-    public <T> T createAndInitialize(Class<T> createMe) {
-        return justCreate(createMe);
     }
 
     @Override
@@ -750,7 +766,7 @@ public final class NonInjectionManager implements InjectionManager {
             return t;
         }
 
-        X create() {
+        X create(boolean throwWhenNoBinding) {
             _checkUnique();
             if (!instanceBindings.isEmpty()) {
                 return _getInstance(instanceBindings.get(0));
@@ -762,7 +778,11 @@ public final class NonInjectionManager implements InjectionManager {
                 return _create(supplierClassBindings.get(0));
             }
 
-            throw new IllegalStateException(LocalizationMessages.NONINJECT_NO_BINDING(type));
+            if (throwWhenNoBinding) {
+                throw new IllegalStateException(LocalizationMessages.NONINJECT_NO_BINDING(type));
+            } else {
+                return null;
+            }
         }
 
         protected X getInstance() {
@@ -770,7 +790,7 @@ public final class NonInjectionManager implements InjectionManager {
             if (instance != null) {
                 return instance;
             }
-            return create();
+            return create(true);
         }
 
         List<X> allInstances() {
@@ -931,7 +951,7 @@ public final class NonInjectionManager implements InjectionManager {
 
         @SuppressWarnings("unchecked")
         @Override
-        T create() {
+        T create(boolean throwWhenNoBinding) {
             if (ParameterizedType.class.isInstance(type)) {
                 ParameterizedType pt = (ParameterizedType) type;
                 if (Provider.class.equals(pt.getRawType())) {
@@ -955,7 +975,7 @@ public final class NonInjectionManager implements InjectionManager {
                     };
                 }
             }
-            return super.create();
+            return super.create(throwWhenNoBinding);
         }
     }
 

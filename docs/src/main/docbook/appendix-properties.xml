@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -878,6 +878,21 @@
                         <entry>
                             <para>
                                 Read timeout interval, in milliseconds. Default value is <literal>0</literal> (infinity).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.CONNECTOR_PROVIDER;(Jersey 2.40 or later)</entry>
+                        <entry><literal>jersey.config.client.connector.provider</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the &jersey.client.ConnectorProvider; class. Overrides the value from META-INF/services.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.String;.
+                            </para>
+                            <para>
+                                The property is recognized by &lit.jaxrs.client.ClientBuilder;.
                             </para>
                         </entry>
                     </row>
