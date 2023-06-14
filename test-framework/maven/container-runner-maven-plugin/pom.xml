@@ -36,11 +36,11 @@
     </description>
 
     <properties>
-        <groovy.version>3.0.2</groovy.version>
-        <groovy-eclipse-compiler.version>3.6.0-03</groovy-eclipse-compiler.version>
-        <groovy-eclipse-batch.version>3.0.2-02</groovy-eclipse-batch.version>
-        <maven.version>3.8.6</maven.version>
-        <maven-plugin.version>3.6.4</maven-plugin.version>
+        <groovy.version>3.0.17</groovy.version>
+        <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
+        <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+        <maven.version>3.9.2</maven.version>
+        <maven-plugin.version>3.9.0</maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>org.codehaus.gmavenplus</groupId>
             <artifactId>gmavenplus-plugin</artifactId>
-            <version>1.13.1</version>
+            <version>3.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.maven.shared</groupId>
@@ -154,6 +154,14 @@
                     <groupId>org.apache.maven</groupId>
                     <artifactId>maven-plugin-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -183,6 +191,10 @@
                 <exclusion>
                     <groupId>org.apache.ant</groupId>
                     <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
