@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -303,6 +303,22 @@ public final class CommonProperties {
      * @since 2.36
      */
     public static final String JSON_JACKSON_DISABLED_MODULES_SERVER = "jersey.config.server.json.jackson.disabled.modules";
+
+    /**
+     * <p>
+     *  Force the {@link javax.ws.rs.ext.ParamConverter} to throw {@link IllegalArgumentException} as mandated in javadoc.
+     *  Must be convertible to {@link Boolean} value.
+     * </p>
+     * <p>
+     *  Internally the {@code Exception} is caught by Jersey and usually converted to {@code null}.
+     *  Therefore, the default value is set to {@code false} to speed-up the conversion.
+     * </p>
+     * <p>
+     *  The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.40
+     */
+    public static final String PARAM_CONVERTERS_THROW_IAE = "jersey.config.paramconverters.throw.iae";
 
     /**
      * Prevent instantiation.
