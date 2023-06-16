@@ -455,10 +455,8 @@ public class ParamConverters {
          * Create new aggregated {@link ParamConverterProvider param converter provider}.
          */
         @Inject
-        public AggregatedProvider(@Context InjectionManager manager) {
-            Configuration configuration = manager.getInstance(Configuration.class);
-            boolean canThrowNull = !CommonProperties.getValue(
-                    configuration.getProperties(),
+        public AggregatedProvider(@Context InjectionManager manager, @Context Configuration configuration) {
+            boolean canThrowNull = !CommonProperties.getValue(configuration.getProperties(),
                     CommonProperties.PARAM_CONVERTERS_THROW_IAE,
                     Boolean.FALSE);
             this.providers = new ParamConverterProvider[] {
