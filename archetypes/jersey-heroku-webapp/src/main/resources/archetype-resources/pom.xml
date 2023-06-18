@@ -107,6 +107,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.mvn.plugin.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>\${war.mvn.plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -115,5 +120,6 @@
         <jetty.version>12.0.0.beta1</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.mvn.plugin.version>3.0.0-M7</surefire.mvn.plugin.version>
+        <war.mvn.plugin.version>3.3.2</war.mvn.plugin.version>
     </properties>
 </project>
