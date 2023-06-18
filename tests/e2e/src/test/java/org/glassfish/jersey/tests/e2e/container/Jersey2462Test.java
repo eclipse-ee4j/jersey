@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -174,13 +174,13 @@ public class Jersey2462Test {
             // let's also test some method calls
             int flags = 0;
 
-            if ("/echo".equals(jettyRequest.get().getPathInfo())) {
+            if ("/echo".equals(jettyRequest.get().getHttpURI().getPath())) {
                 flags += 1;
             }
             if (!jettyResponse.get().isCommitted()) {
                 flags += 10;
             }
-            final String header = jettyRequest.get().getHeader(REQUEST_NUMBER);
+            final String header = jettyRequest.get().getHeaders().get(REQUEST_NUMBER);
 
             ctx.setEntityStream(new ByteArrayInputStream(("filtered-" + flags + "-" + header).getBytes()));
         }

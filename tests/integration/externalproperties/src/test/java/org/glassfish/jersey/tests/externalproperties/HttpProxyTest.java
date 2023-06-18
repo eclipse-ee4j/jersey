@@ -16,9 +16,10 @@
 
 package org.glassfish.jersey.tests.externalproperties;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -30,8 +31,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Application;
@@ -99,15 +98,13 @@ public class HttpProxyTest extends JerseyTest {
         Assertions.assertFalse(proxyHit);
     }
 
-    class ProxyHandler extends AbstractHandler {
+    class ProxyHandler extends Handler.Abstract {
         @Override
-        public void handle(String target,
-                           Request baseRequest,
-                           HttpServletRequest request,
-                           HttpServletResponse response) {
+        public boolean handle(Request request, org.eclipse.jetty.server.Response response, Callback callback) throws Exception {
             proxyHit = true;
             response.setStatus(407);
-            baseRequest.setHandled(true);
+            callback.succeeded();
+            return true;
         }
 
         ProxyHandler(boolean pProxyHit) {

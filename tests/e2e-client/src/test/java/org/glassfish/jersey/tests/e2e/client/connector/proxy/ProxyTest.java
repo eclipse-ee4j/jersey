@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,12 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector.proxy;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpChannel;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.internal.HttpChannelState;
+import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -38,8 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -202,17 +202,14 @@ public class ProxyTest {
         }
     }
 
-    static class ProxyHandler extends AbstractHandler {
+    static class ProxyHandler extends Handler.Abstract {
         Set<HttpChannel> httpConnect = new HashSet<>();
         @Override
-        public void handle(String target,
-                           Request baseRequest,
-                           HttpServletRequest request,
-                           HttpServletResponse response) {
-            if (request.getHeader(NO_PASS) != null) {
-                response.setStatus(Integer.parseInt(request.getHeader(NO_PASS)));
-            } else if (request.getHeader("Proxy-Authorization") != null) {
-                String proxyAuthorization = request.getHeader("Proxy-Authorization");
+        public boolean handle(Request request, org.eclipse.jetty.server.Response response, Callback callback) throws Exception {
+            if (request.getHeaders().get(NO_PASS) != null) {
+                response.setStatus(Integer.parseInt(request.getHeaders().get(NO_PASS)));
+            } else if (request.getHeaders().get("Proxy-Authorization") != null) {
+                String proxyAuthorization = request.getHeaders().get("Proxy-Authorization");
                 String decoded = new String(Base64.getDecoder().decode(proxyAuthorization.substring(6).getBytes()),
                         CHARACTER_SET);
                 final String[] split = decoded.split(":");
@@ -231,21 +228,36 @@ public class ProxyTest {
 
                 if (response.getStatus() != 400) {
                     response.setStatus(200);
-                    if ("CONNECT".equalsIgnoreCase(baseRequest.getMethod())) { // NETTY way of doing proxy
-                        httpConnect.add(baseRequest.getHttpChannel());
+                    if ("CONNECT".equalsIgnoreCase(request.getMethod())) { // NETTY way of doing proxy
+                        if (!(request.getComponents() instanceof HttpChannelState)) {
+                            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                            callback.failed(new IllegalStateException(
+                                    "Expecting request.getComponents() to be an instance of HttpChannelState"));
+                            return true;
+                        }
+                        HttpChannel httpChannel = (HttpChannel) request.getComponents();
+                        httpConnect.add(httpChannel);
                     }
                 }
                 //TODO Add redirect to requestURI
             } else {
-                if (httpConnect.contains(baseRequest.getHttpChannel())) {
+                if (!(request.getComponents() instanceof HttpChannelState)) {
+                    response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                    callback.failed(new IllegalStateException(
+                            "Expecting request.getComponents() to be an instance of HttpChannelState"));
+                    return true;
+                }
+                HttpChannel httpChannel = (HttpChannel) request.getComponents();
+                if (httpConnect.contains(httpChannel)) {
                     response.setStatus(200);
                 } else {
                     response.setStatus(407);
-                    response.addHeader("Proxy-Authenticate", "Basic");
+                    response.getHeaders().add("Proxy-Authenticate", "Basic");
                 }
             }
 
-            baseRequest.setHandled(true);
+            callback.succeeded();
+            return true;
         }
     }
 }
