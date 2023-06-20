@@ -35,10 +35,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
@@ -55,12 +57,32 @@ import org.glassfish.jersey.message.internal.HttpDateFormat;
 @Singleton
 public class ParamConverters {
 
-    private abstract static class AbstractStringReader<T> implements ParamConverter<T> {
+    private static class ParamConverterCompliance {
+        protected final boolean canReturnNull;
+
+        private ParamConverterCompliance(boolean canReturnNull) {
+            this.canReturnNull = canReturnNull;
+        }
+
+        protected <T> T nullOrThrow() {
+            if (canReturnNull) {
+                return null;
+            } else {
+                throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+            }
+        }
+    }
+
+    private abstract static class AbstractStringReader<T> extends ParamConverterCompliance implements ParamConverter<T> {
+
+        private AbstractStringReader(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public T fromString(final String value) {
             if (value == null) {
-                return null;
+                return nullOrThrow();
             }
             try {
                 return _fromString(value);
@@ -85,7 +107,7 @@ public class ParamConverters {
         @Override
         public String toString(final T value) throws IllegalArgumentException {
             if (value == null) {
-                return null;
+                return nullOrThrow();
             }
             return value.toString();
         }
@@ -97,7 +119,11 @@ public class ParamConverters {
      * by invoking a single {@code String} parameter constructor on the target type.
      */
     @Singleton
-    public static class StringConstructor implements ParamConverterProvider {
+    public static class StringConstructor extends ParamConverterCompliance implements ParamConverterProvider {
+
+        private StringConstructor(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
@@ -106,7 +132,7 @@ public class ParamConverters {
 
             final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(rawType));
 
-            return (constructor == null) ? null : new AbstractStringReader<T>() {
+            return (constructor == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 
                 @Override
                 protected T _fromString(final String value) throws Exception {
@@ -122,7 +148,11 @@ public class ParamConverters {
      * by invoking a static {@code valueOf(String)} method on the target type.
      */
     @Singleton
-    public static class TypeValueOf implements ParamConverterProvider {
+    public static class TypeValueOf extends ParamConverterCompliance implements ParamConverterProvider {
+
+        private TypeValueOf(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
@@ -131,7 +161,7 @@ public class ParamConverters {
 
             final Method valueOf = AccessController.doPrivileged(ReflectionHelper.getValueOfStringMethodPA(rawType));
 
-            return (valueOf == null) ? null : new AbstractStringReader<T>() {
+            return (valueOf == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 
                 @Override
                 public T _fromString(final String value) throws Exception {
@@ -146,7 +176,11 @@ public class ParamConverters {
      * by invoking a static {@code fromString(String)} method on the target type.
      */
     @Singleton
-    public static class TypeFromString implements ParamConverterProvider {
+    public static class TypeFromString extends ParamConverterCompliance implements ParamConverterProvider {
+
+        private TypeFromString(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
@@ -155,7 +189,7 @@ public class ParamConverters {
 
             final Method fromStringMethod = AccessController.doPrivileged(ReflectionHelper.getFromStringStringMethodPA(rawType));
 
-            return (fromStringMethod == null) ? null : new AbstractStringReader<T>() {
+            return (fromStringMethod == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 
                 @Override
                 public T _fromString(final String value) throws Exception {
@@ -172,6 +206,10 @@ public class ParamConverters {
     @Singleton
     public static class TypeFromStringEnum extends TypeFromString {
 
+        private TypeFromStringEnum(boolean canReturnNull) {
+            super(canReturnNull);
+        }
+
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
                                                   final Type genericType,
@@ -181,7 +219,11 @@ public class ParamConverters {
     }
 
     @Singleton
-    public static class CharacterProvider implements ParamConverterProvider {
+    public static class CharacterProvider extends ParamConverterCompliance implements ParamConverterProvider {
+
+        private CharacterProvider(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
@@ -192,7 +234,7 @@ public class ParamConverters {
                     @Override
                     public T fromString(String value) {
                         if (value == null || value.isEmpty()) {
-                            return null;
+                            return CharacterProvider.this.nullOrThrow();
                         }
 
                         if (value.length() == 1) {
@@ -205,7 +247,7 @@ public class ParamConverters {
                     @Override
                     public String toString(T value) {
                         if (value == null) {
-                            return null;
+                            return CharacterProvider.this.nullOrThrow();
                         }
                         return value.toString();
                     }
@@ -222,7 +264,11 @@ public class ParamConverters {
      * {@link HttpDateFormat http date formatter} utility class.
      */
     @Singleton
-    public static class DateProvider implements ParamConverterProvider {
+    public static class DateProvider extends ParamConverterCompliance implements ParamConverterProvider {
+
+        private DateProvider(boolean canReturnNull) {
+            super(canReturnNull);
+        }
 
         @Override
         public <T> ParamConverter<T> getConverter(final Class<T> rawType,
@@ -233,7 +279,7 @@ public class ParamConverters {
                 @Override
                 public T fromString(final String value) {
                     if (value == null) {
-                        throw new IllegalArgumentException(LocalizationMessages.METHOD_PARAMETER_CANNOT_BE_NULL("value"));
+                        return DateProvider.this.nullOrThrow();
                     }
                     try {
                         return rawType.cast(HttpDateFormat.readDate(value));
@@ -245,7 +291,7 @@ public class ParamConverters {
                 @Override
                 public String toString(final T value) throws IllegalArgumentException {
                     if (value == null) {
-                        return null;
+                        return DateProvider.this.nullOrThrow();
                     }
                     return value.toString();
                 }
@@ -258,12 +304,13 @@ public class ParamConverters {
      * by invoking {@link ParamConverterProvider}.
      */
     @Singleton
-    public static class OptionalCustomProvider implements ParamConverterProvider {
+    public static class OptionalCustomProvider extends ParamConverterCompliance implements ParamConverterProvider {
 
         // Delegates to this provider when the type of Optional is extracted.
         private final InjectionManager manager;
 
-        public OptionalCustomProvider(InjectionManager manager) {
+        public OptionalCustomProvider(InjectionManager manager, boolean canReturnNull) {
+            super(canReturnNull);
             this.manager = manager;
         }
 
@@ -293,7 +340,7 @@ public class ParamConverters {
                          *  In this case we don't send Optional.empty() because 'value' is not null.
                          *  But we return null because the provider didn't find how to parse it.
                          */
-                        return null;
+                        return nullOrThrow();
                     }
                 }
 
@@ -408,17 +455,20 @@ public class ParamConverters {
          * Create new aggregated {@link ParamConverterProvider param converter provider}.
          */
         @Inject
-        public AggregatedProvider(@Context InjectionManager manager) {
+        public AggregatedProvider(@Context InjectionManager manager, @Context Configuration configuration) {
+            boolean canThrowNull = !CommonProperties.getValue(configuration.getProperties(),
+                    CommonProperties.PARAM_CONVERTERS_THROW_IAE,
+                    Boolean.FALSE);
             this.providers = new ParamConverterProvider[] {
                     // ordering is important (e.g. Date provider must be executed before String Constructor
                     // as Date has a deprecated String constructor
-                    new DateProvider(),
-                    new TypeFromStringEnum(),
-                    new TypeValueOf(),
-                    new CharacterProvider(),
-                    new TypeFromString(),
-                    new StringConstructor(),
-                    new OptionalCustomProvider(manager),
+                    new DateProvider(canThrowNull),
+                    new TypeFromStringEnum(canThrowNull),
+                    new TypeValueOf(canThrowNull),
+                    new CharacterProvider(canThrowNull),
+                    new TypeFromString(canThrowNull),
+                    new StringConstructor(canThrowNull),
+                    new OptionalCustomProvider(manager, canThrowNull),
                     new OptionalProvider()
             };
         }

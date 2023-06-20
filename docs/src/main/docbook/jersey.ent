@@ -239,6 +239,7 @@
 <!ENTITY jaxrs.ext.ExceptionMapper "<link xlink:href='&jaxrs.javadoc.uri;/ext/ExceptionMapper.html'>ExceptionMapper&lt;E extends Throwable&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyReader "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyReader.html'>MessageBodyReader&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyWriter "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyWriter.html'>MessageBodyWriter&lt;T&gt;</link>">
+<!ENTITY jaxrs.ext.ParamConverter "<link xlink:href='&jaxrs.javadoc.uri;/ext/ParamConverter.html'>ParamConverter&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.Provider "<link xlink:href='&jaxrs.javadoc.uri;/ext/Provider.html'>@Provider</link>">
 <!ENTITY jaxrs.ext.Providers "<link xlink:href='&jaxrs.javadoc.uri;/ext/Providers.html'>Providers</link>">
 <!ENTITY jaxrs.ext.RuntimeDelegate "<link xlink:href='&jaxrs.javadoc.uri;/ext/RuntimeDelegate.html'>RuntimeDelegate</link>">
@@ -401,6 +402,7 @@
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES</link>" >
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER</link>" >
+<!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
