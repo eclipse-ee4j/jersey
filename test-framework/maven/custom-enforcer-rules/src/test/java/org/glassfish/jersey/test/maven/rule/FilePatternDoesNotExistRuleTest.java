@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,7 @@ public class FilePatternDoesNotExistRuleTest {
             final String pattern = file.getAbsolutePath().replace("PatternDoes", "*");
             filePatternDoesNotExistRule.files = new File[] {new File(pattern)};
 
-            filePatternDoesNotExistRule.execute(null);
+            filePatternDoesNotExistRule.execute();
         });
     }
 
@@ -56,6 +56,6 @@ public class FilePatternDoesNotExistRuleTest {
         final String pattern = file.getAbsolutePath().replace("PatternDoes", "*").replace("Exist", "");
         filePatternDoesNotExistRule.files = new File[] {new File(pattern)};
 
-        filePatternDoesNotExistRule.execute(null);
+        filePatternDoesNotExistRule.execute();
     }
 }

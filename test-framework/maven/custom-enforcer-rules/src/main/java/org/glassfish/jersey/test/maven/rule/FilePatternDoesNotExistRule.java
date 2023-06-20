@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
-import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
-import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
+import org.apache.maven.enforcer.rules.AbstractStandardEnforcerRule;
 
 /**
  * Maven enforcer rule to enforce that given set of files does not exist.<br/>
@@ -33,11 +32,11 @@ import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
  *
  * @author Stepan Vavra
  */
-public class FilePatternDoesNotExistRule extends AbstractNonCacheableEnforcerRule {
+public class FilePatternDoesNotExistRule extends AbstractStandardEnforcerRule {
 
     File[] files;
 
-    public void execute(EnforcerRuleHelper helper)
+    public void execute()
             throws EnforcerRuleException {
 
         if (files == null) {
