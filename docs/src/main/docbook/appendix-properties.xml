@@ -190,12 +190,16 @@
                             <literal>jersey.config.paramconverters.throw.iae</literal>
                         </entry>
                         <entry>
-                            Force the &jaxrs.ext.ParamConverter; to throw <literal>IllegalArgumentException</literal> as mandated in javadoc.
-                            Must be convertible to &lit.jdk6.Boolean; value.
-                        </entry>
-                        <entry>
-                            Internally the <literal>Exception</literal> is caught by Jersey and usually converted to <literal>null</literal>
-                            Therefore, the default value is set to &lit.false; to speed up the conversion.
+                            <para>
+                                Force the &jaxrs.ext.ParamConverter; to throw <literal>IllegalArgumentException
+                            </literal> as mandated in javadoc.
+                                Must be convertible to &lit.jdk6.Boolean; value.
+                            </para>
+                            <para>
+                                Internally the <literal>Exception</literal> is caught by Jersey and usually converted to
+                                <literal>null</literal>
+                                Therefore, the default value is set to &lit.false; to speed up the conversion.
+                            </para>
                         </entry>
                     </row>
                     <row>
