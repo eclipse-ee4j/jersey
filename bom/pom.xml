@@ -85,11 +85,6 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
-                <artifactId>jersey-jetty-http2-connector</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-jdk-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
