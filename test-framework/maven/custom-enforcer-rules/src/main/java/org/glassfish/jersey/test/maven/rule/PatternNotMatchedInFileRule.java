@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
-import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
-import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
+import org.apache.maven.enforcer.rules.AbstractStandardEnforcerRule;
 
 /**
  * Maven enforcer rule to enforce that given file does not contain line matching given pattern. When matched, exception is
@@ -37,7 +36,7 @@ import org.apache.maven.plugins.enforcer.AbstractNonCacheableEnforcerRule;
  *
  * @author Stepan Vavra
  */
-public class PatternNotMatchedInFileRule extends AbstractNonCacheableEnforcerRule {
+public class PatternNotMatchedInFileRule extends AbstractStandardEnforcerRule {
 
     /**
      * The pattern to look for in the given file.
@@ -55,7 +54,7 @@ public class PatternNotMatchedInFileRule extends AbstractNonCacheableEnforcerRul
      */
     int maxMatchedLines = 0;
 
-    public void execute(EnforcerRuleHelper helper)
+    public void execute()
             throws EnforcerRuleException {
 
         if (file == null || !file.exists()) {
