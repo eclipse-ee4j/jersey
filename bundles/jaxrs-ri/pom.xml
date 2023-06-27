@@ -218,7 +218,7 @@
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                     <excludes>
-                        <exclude>module-info.java</exclude>
+                        <exclude>module-info.java</exclude><exclude>META-INF/versions/11/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
