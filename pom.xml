@@ -2258,7 +2258,7 @@
 
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <!--<helidon.version>1.4.9</helidon.version>-->
+        <helidon.version>1.4.13</helidon.version>
         <helidon.jersey.connector.version>3.0.2</helidon.jersey.connector.version>
         <xmlunit.version>2.9.0</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>

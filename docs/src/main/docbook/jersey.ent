@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -242,6 +242,7 @@
 <!ENTITY jaxrs.ext.ExceptionMapper "<link xlink:href='&jaxrs.javadoc.uri;/ext/ExceptionMapper.html'>ExceptionMapper&lt;E extends Throwable&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyReader "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyReader.html'>MessageBodyReader&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyWriter "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyWriter.html'>MessageBodyWriter&lt;T&gt;</link>">
+<!ENTITY jaxrs.ext.ParamConverter "<link xlink:href='&jaxrs.javadoc.uri;/ext/ParamConverter.html'>ParamConverter&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.Provider "<link xlink:href='&jaxrs.javadoc.uri;/ext/Provider.html'>@Provider</link>">
 <!ENTITY jaxrs.ext.Providers "<link xlink:href='&jaxrs.javadoc.uri;/ext/Providers.html'>Providers</link>">
 <!ENTITY jaxrs.ext.RuntimeDelegate "<link xlink:href='&jaxrs.javadoc.uri;/ext/RuntimeDelegate.html'>RuntimeDelegate</link>">
@@ -338,6 +339,7 @@
 <!ENTITY jersey.client.ClientProperties.BUFFER_RESPONSE_ENTITY_ON_EXCEPTION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#BUFFER_RESPONSE_ENTITY_ON_EXCEPTION'>ClientProperties.BUFFER_RESPONSE_ENTITY_ON_EXCEPTION</link>" >
 <!ENTITY jersey.client.ClientProperties.CHUNKED_ENCODING_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CHUNKED_ENCODING_SIZE'>ClientProperties.CHUNKED_ENCODING_SIZE</link>" >
 <!ENTITY jersey.client.ClientProperties.CONNECT_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CONNECT_TIMEOUT'>ClientProperties.CONNECT_TIMEOUT</link>" >
+<!ENTITY jersey.client.ClientProperties.CONNECTOR_PROVIDER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CONNECTOR_PROVIDER'>ClientProperties.CONNECTOR_PROVIDER</link>" >
 <!ENTITY jersey.client.ClientProperties.DEFAULT_CHUNK_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#DEFAULT_CHUNK_SIZE'>ClientProperties.DEFAULT_CHUNK_SIZE</link>" >
 <!ENTITY jersey.client.ClientProperties.FEATURE_AUTO_DISCOVERY_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#FEATURE_AUTO_DISCOVERY_DISABLE'>ClientProperties.FEATURE_AUTO_DISCOVERY_DISABLE</link>" >
 <!ENTITY jersey.client.ClientProperties.FOLLOW_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#FOLLOW_REDIRECTS'>ClientProperties.FOLLOW_REDIRECTS</link>" >
@@ -402,6 +404,7 @@
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES</link>" >
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER</link>" >
+<!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">

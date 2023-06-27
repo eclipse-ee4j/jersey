@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,10 @@
 
 package org.glassfish.jersey.tests.e2e;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -32,12 +34,14 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Variant;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -80,6 +84,30 @@ public class ClientTest extends JerseyTest {
 
             return sb.toString();
         }
+
+        @GET
+        @Path("/tostring")
+        public String headersGet(@Context HttpHeaders hs) {
+            StringBuilder sb = new StringBuilder();
+            List<String> myHeaders = Arrays.asList("Accept", "Content-Type");
+
+            try {
+                MultivaluedMap<String, String> rqhdrs = hs.getRequestHeaders();
+                Set<String> keys = rqhdrs.keySet();
+                sb.append("getRequestHeaders= ");
+                for (String header : myHeaders) {
+                    if (keys.contains(header)) {
+                        sb.append(
+                                "Found " + header + ": " + hs.getRequestHeader(header) + "; ");
+                    }
+                }
+            } catch (Throwable ex) {
+                sb.append("Unexpected exception thrown in getRequestHeaders: "
+                        + ex.getMessage());
+                ex.printStackTrace();
+            }
+            return sb.toString();
+        }
     }
 
     @Override
@@ -95,6 +123,26 @@ public class ClientTest extends JerseyTest {
 
         final String responseMessage = resource.request().get(String.class);
         assertEquals(HelloWorldResource.MESSAGE, responseMessage);
+    }
+
+    @Test
+    public void testHeadersToString() {
+        try (Response response = target("headers").path("tostring").request()
+                .header(HttpHeaders.ACCEPT, "text/*, text/html, text/html;level=1, */*")
+                .header(HttpHeaders.CONTENT_TYPE, "application/xml;charset=utf8")
+                .get()) {
+            String content = response.readEntity(String.class);
+            int index = -1;
+            Assertions.assertTrue((index = content.indexOf("getRequestHeaders=")) != -1);
+            Assertions.assertTrue((index = content.indexOf("Accept:")) != -1);
+            Assertions.assertTrue((index = content.indexOf("text/*")) != -1);
+            Assertions.assertTrue((index = content.indexOf("text/html")) != -1);
+            Assertions.assertTrue((index = content.indexOf("text/html")) != -1);
+            Assertions.assertTrue((index = content.indexOf("*/*")) != -1);
+            Assertions.assertTrue((index = content.indexOf("Content-Type:")) != -1);
+            Assertions.assertTrue((index = content.indexOf("application/xml")) != -1);
+            Assertions.assertTrue((index = content.indexOf("charset=utf8")) != -1);
+        }
     }
 
     @Test

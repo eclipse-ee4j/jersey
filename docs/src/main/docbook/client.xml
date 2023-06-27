@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -760,6 +760,16 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
             initialization from the connector instantiation. Starting with Jersey 2.5 it is therefore not possible to directly
             register &lit.jersey.client.Connector; instances in the Jersey &jersey.client.ClientConfig;. The new
             &lit.jersey.client.ConnectorProvider; SPI must be used instead to configure a custom client-side transport connector.
+        </para>
+        <para>
+            A &jersey.client.ConnectorProvider; can also be set by a property on a &lit.jaxrs.client.ClientBuilder; starting with
+            Jersey 2.40. The following example shows how to setup the custom Grizzly Asynchronous HTTP Client based
+            &lit.jersey.client.ConnectorProvider; in a Jersey client instance:
+            <programlisting language="java" linenumbering="numbered">Client client = ClientBuilder.newBuilder()
+    .property(ClientProperties.CONNECTOR_PROVIDER, "org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider")
+    .build();</programlisting>
+
+            For more information about the property see <xref linkend="appendix-properties"/>.
         </para>
         <section>
             <title>Client Connectors Properties</title>
