@@ -104,7 +104,7 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
                             <testExcludes>
-                                <testExclude>org/glassfish/jersey/microprofile/config/ExternalPropertiesConfigurationFactoryTest.java</testExclude>
+                                <testExclude>org/glassfish/jersey/microprofile/config/*Test.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>
@@ -128,7 +128,7 @@
         <profile>
             <id>smallrye-dependency</id>
             <activation>
-                <jdk>[1.8,17)</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <dependencies>
                 <dependency>

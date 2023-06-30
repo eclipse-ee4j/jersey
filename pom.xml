@@ -2189,97 +2189,103 @@
 
         <!-- Versions of Maven plugins -->
         <antrun.mvn.plugin.version>3.1.0</antrun.mvn.plugin.version>
-        <assembly.mvn.plugin.version>3.4.2</assembly.mvn.plugin.version>
-        <enforcer.mvn.plugin.version>3.1.0</enforcer.mvn.plugin.version>
+        <assembly.mvn.plugin.version>3.6.0</assembly.mvn.plugin.version>
+        <enforcer.mvn.plugin.version>3.3.0</enforcer.mvn.plugin.version>
         <exec.mvn.plugin.version>3.1.0</exec.mvn.plugin.version>
-        <buildhelper.mvn.plugin.version>3.3.0</buildhelper.mvn.plugin.version>
-        <buildnumber.mvn.plugin.version>3.0.0</buildnumber.mvn.plugin.version>
-        <checkstyle.mvn.plugin.version>3.1.2</checkstyle.mvn.plugin.version>
-        <checkstyle.version>10.3.2</checkstyle.version>
-        <compiler.mvn.plugin.version>3.8.0</compiler.mvn.plugin.version>
-        <dependency.mvn.plugin.version>3.3.0</dependency.mvn.plugin.version>
-        <deploy.mvn.plugin.version>3.0.0-M2</deploy.mvn.plugin.version>
-        <ear.mvn.plugin.version>3.2.0</ear.mvn.plugin.version>
-        <failsafe.mvn.plugin.version>3.0.0-M7</failsafe.mvn.plugin.version>
-        <felix.mvn.plugin.version>5.1.8</felix.mvn.plugin.version>
+        <buildhelper.mvn.plugin.version>3.4.0</buildhelper.mvn.plugin.version>
+        <buildnumber.mvn.plugin.version>3.2.0</buildnumber.mvn.plugin.version>
+        <checkstyle.mvn.plugin.version>3.3.0</checkstyle.mvn.plugin.version>
+        <checkstyle.version>10.9.3</checkstyle.version>
+        <compiler.mvn.plugin.version>3.11.0</compiler.mvn.plugin.version>
+        <!--
+        Special version of the compiler plugin just for the jersey-common. All versions above
+        generate too much for OSGi manifest.mf imports (awt etc). The version 3.11.0 however
+        introduces the fix for the excludeTests issue. Which makes it preferable for the whole project
+        but the jersey-common module which has to have the separate version for OSGi reasons.
+         -->
+        <compiler.common.mvn.plugin.version>3.9.0</compiler.common.mvn.plugin.version>
+        <dependency.mvn.plugin.version>3.6.0</dependency.mvn.plugin.version>
+        <deploy.mvn.plugin.version>3.1.1</deploy.mvn.plugin.version>
+        <ear.mvn.plugin.version>3.3.0</ear.mvn.plugin.version>
+        <failsafe.mvn.plugin.version>3.1.2</failsafe.mvn.plugin.version>
+        <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version>
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
-        <install.mvn.plugin.version>3.0.1</install.mvn.plugin.version>
-        <istack.mvn.plugin.version>4.1.1</istack.mvn.plugin.version>
-        <jar.mvn.plugin.version>3.2.2</jar.mvn.plugin.version>
-        <javadoc.mvn.plugin.version>3.4.0</javadoc.mvn.plugin.version>
-        <jxr.mvn.plugin.version>3.2.0</jxr.mvn.plugin.version>
+        <install.mvn.plugin.version>3.1.1</install.mvn.plugin.version>
+        <istack.mvn.plugin.version>4.2.0</istack.mvn.plugin.version>
+        <jar.mvn.plugin.version>3.3.0</jar.mvn.plugin.version>
+        <javadoc.mvn.plugin.version>3.5.0</javadoc.mvn.plugin.version>
+        <jxr.mvn.plugin.version>3.3.0</jxr.mvn.plugin.version>
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <proguard.mvn.plugin.version>2.6.0</proguard.mvn.plugin.version>
-        <resources.mvn.plugin.version>3.3.0</resources.mvn.plugin.version>
-        <shade.mvn.plugin.version>3.3.0</shade.mvn.plugin.version>
+        <resources.mvn.plugin.version>3.3.1</resources.mvn.plugin.version>
+        <shade.mvn.plugin.version>3.4.1</shade.mvn.plugin.version>
         <site.mvn.plugin.version>3.9.1</site.mvn.plugin.version>
-        <source.mvn.plugin.version>3.2.1</source.mvn.plugin.version>
-        <surefire.mvn.plugin.version>3.0.0-M7</surefire.mvn.plugin.version>
+        <source.mvn.plugin.version>3.3.0</source.mvn.plugin.version>
+        <surefire.mvn.plugin.version>3.1.2</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.3.2</war.mvn.plugin.version>
-        <wiremock.mvn.plugin.version>2.9.0</wiremock.mvn.plugin.version>
+        <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
         <xml.mvn.plugin.version>1.0.2</xml.mvn.plugin.version>
         <!-- END of Versions of Maven plugins -->
 
         <!-- Dependency versions -->
         <jersey.version>${project.version}</jersey.version>
-        <arquillian.version>1.7.0.Alpha13</arquillian.version>
-        <arquillian.weld.version>3.0.1.Final</arquillian.weld.version>
+        <arquillian.version>1.7.0.Final</arquillian.version>
+        <arquillian.weld.version>3.0.1.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>9.5</asm.version>
-        <bnd.plugin.version>2.3.6</bnd.plugin.version>
-
-        <bouncycastle.version>1.68</bouncycastle.version>
-        <commons.io.version>2.11.0</commons.io.version>
-        <commons-lang3.version>3.3.2</commons-lang3.version>
+<!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
+        <bouncycastle.version>1.70</bouncycastle.version>
+        <commons.io.version>2.13.0</commons.io.version>
+<!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
         <commons.logging.version>1.2</commons.logging.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
-        <felix.framework.security.version>2.8.3</felix.framework.security.version>
+        <felix.framework.security.version>2.8.4</felix.framework.security.version>
         <felix.framework.version>7.0.5</felix.framework.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
-        <freemarker.version>2.3.31</freemarker.version>
-        <gae.version>1.9.98</gae.version>
-        <groovy.version>4.0.6</groovy.version>
-        <gson.version>2.9.0</gson.version>
+        <freemarker.version>2.3.32</freemarker.version>
+        <gae.version>2.0.14</gae.version>
+        <groovy.version>4.0.12</groovy.version>
+        <gson.version>2.9.1</gson.version>
 
         <!--versions, extracted here due to maven-enforcer-plugin -->
-        <commons.codec.version>1.15</commons.codec.version>
+<!--        <commons.codec.version>1.15</commons.codec.version>-->
         <com.uber.jaeger.version>0.27.0</com.uber.jaeger.version>
-        <org.codehaus.gmavenplus.version>1.13.1</org.codehaus.gmavenplus.version>
+        <org.codehaus.gmavenplus.version>3.0.0</org.codehaus.gmavenplus.version>
         <!-- end of versions extracted here due to maven-enforcer-plugin -->
 
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
-        <microprofile.rest.client.version>3.0</microprofile.rest.client.version>
-        <helidon.config.version>3.0.0-M1</helidon.config.version>
-        <smallrye.config.version>3.0.0-RC1</smallrye.config.version>
+        <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
+        <helidon.config.version>3.0.2</helidon.config.version>
+        <smallrye.config.version>3.0.0</smallrye.config.version>
 
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <!--<helidon.version>1.4.9</helidon.version>-->
+        <helidon.version>1.4.13</helidon.version>
         <helidon.jersey.connector.version>3.0.2</helidon.jersey.connector.version>
-        <xmlunit.version>2.9.0</xmlunit.version>
+        <xmlunit.version>2.9.1</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
         <jackson.version>2.14.1</jackson.version>
-        <javassist.version>3.29.0-GA</javassist.version>
-        <jboss.logging.version>3.4.2.Final</jboss.logging.version>
+        <javassist.version>3.29.2-GA</javassist.version>
+        <jboss.logging.version>3.4.3.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
-        <jmh.version>1.35</jmh.version>
+        <jmh.version>1.36</jmh.version>
         <jmockit.version>1.49</jmockit.version>
         <junit4.version>4.13.2</junit4.version>
-        <junit5.version>5.9.1</junit5.version>
-        <junit-platform-suite.version>1.9.1</junit-platform-suite.version>
+        <junit5.version>5.9.3</junit5.version>
+        <junit-platform-suite.version>1.9.3</junit-platform-suite.version>
         <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.10</mustache.version>
-        <netty.version>4.1.79.Final</netty.version>
+        <netty.version>4.1.93.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2291,37 +2297,38 @@
         <rxjava.version>1.3.8</rxjava.version>
         <rxjava2.version>2.2.21</rxjava2.version>
         <simple.version>6.0.1</simple.version>
-        <slf4j.version>2.0.5</slf4j.version>
-        <spring6.version>6.0.0-M3</spring6.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <spring6.version>6.0.10</spring6.version>
         <testng.version>7.6.1</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>4.0.2.Final</weld.version>
-        <weld3.version>3.1.7.SP1</weld3.version>
+        <weld.version>4.0.3.Final</weld.version>
+        <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>7.0.5.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
         <wiremock.version>2.27.2</wiremock.version>
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.2</graalvm.version>
+        <graalvm.version>20.3.10</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>6.2.5</gf.impl.version>
         <hk2.config.version>6.2.5</hk2.config.version>
         <!-- Jakartified -->
-        <cdi.api.version>3.0.0</cdi.api.version>
+        <cdi.api.version>3.0.0</cdi.api.version> <!-- 3.0.1 contains incompatible changes
+                                                    which fails microprofile TCK -->
         <cdi.osgi.version>jakarta.enterprise.*;version="[3.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
         <grizzly2.version>3.0.1</grizzly2.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-        <hk2.version>3.0.3</hk2.version>
+        <hk2.version>3.0.3</hk2.version> <!-- 3.0.4 fails osgi tests -->
         <jsp.version>3.0.0</jsp.version>
         <jstl.version>2.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <servlet5.version>5.0.0</servlet5.version>
-        <istack.commons.runtime.version>4.0.0</istack.commons.runtime.version>
+        <istack.commons.runtime.version>4.0.1</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
         <jakarta.el.version>4.0.0</jakarta.el.version>
@@ -2332,7 +2339,7 @@
         <jakarta.interceptor.version>2.0.1</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.0.2</jakarta.jsonp.version>
         <jakarta.persistence.version>3.0.0</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.0</jakarta.validation.api.version> <!--Can't be updated to 3.0.1 /OSGi incompatibility with JDK 1.8 -->
+        <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version> <!--Can't be updated to 3.0.1 /OSGi incompatibility with JDK 1.8 -->
         <jakarta.jaxb.api.version>3.0.1</jakarta.jaxb.api.version>
         <jaxb.ri.version>3.0.2</jaxb.ri.version>
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
@@ -2340,16 +2347,16 @@
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>11.0.15</jetty.version>
         <jetty9.version>9.4.51.v20230217</jetty9.version>
-        <jetty.plugin.version>11.0.14</jetty.plugin.version>
+        <jetty.plugin.version>11.0.15</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
-        <jsonp.ri.version>1.0.0</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.0.0</jsonp.jaxrs.version>
-        <moxy.version>3.0.2</moxy.version>
+        <jsonp.ri.version>1.0.3</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.0.3</jsonp.jaxrs.version>
+        <moxy.version>3.0.3</moxy.version>
         <yasson.version>2.0.4</yasson.version>
         <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
-        <mimepull.version>1.9.13</mimepull.version>
+        <mimepull.version>1.9.15</mimepull.version>
     </properties>
 </project>

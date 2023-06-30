@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.client;
 
+import java.security.AccessController;
 import java.security.KeyStore;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -32,9 +33,13 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.SslConfigurator;
+import org.glassfish.jersey.client.innate.inject.NonInjectionManager;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.client.spi.ClientBuilderListener;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.ServiceFinder;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -186,6 +191,9 @@ public class JerseyClientBuilder extends ClientBuilder {
 
     @Override
     public JerseyClient build() {
+        ExternalPropertiesConfigurationFactory.configure(this.config);
+        setConnectorFromProperties();
+
         if (sslContext != null) {
             return new JerseyClient(config, sslContext, hostnameVerifier, null);
         } else if (sslConfigurator != null) {
@@ -201,6 +209,20 @@ public class JerseyClientBuilder extends ClientBuilder {
                     hostnameVerifier);
         } else {
             return new JerseyClient(config, (UnsafeValue<SSLContext, IllegalStateException>) null, hostnameVerifier);
+        }
+    }
+
+    private void setConnectorFromProperties() {
+        final Object connectorClass = config.getProperty(ClientProperties.CONNECTOR_PROVIDER);
+        if (connectorClass != null) {
+            if (String.class.isInstance(connectorClass)) {
+                Class<? extends ConnectorProvider> clazz
+                        = AccessController.doPrivileged(ReflectionHelper.classForNamePA((String) connectorClass));
+                final ConnectorProvider connectorProvider = new NonInjectionManager().justCreate(clazz);
+                config.connectorProvider(connectorProvider);
+            } else {
+                throw new IllegalArgumentException();
+            }
         }
     }
 

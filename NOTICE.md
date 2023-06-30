@@ -41,7 +41,7 @@ aopalliance Version 1
 * Project: http://aopalliance.sourceforge.net
 * Copyright: Material in the public domain is not protected by copyright
 
-Bean Validation API 3.0.0
+Bean Validation API 3.0.2
 * License: Apache License, 2.0
 * Project: http://beanvalidation.org/1.1/
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
@@ -65,7 +65,7 @@ jakarta.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
-Javassist Version 3.29.0-GA
+Javassist Version 3.29.2-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.

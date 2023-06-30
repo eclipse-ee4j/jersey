@@ -234,6 +234,16 @@
                             <artifactId>xercesImpl</artifactId>
                             <version>${xerces.version}</version>
                         </docletArtifact>
+                        <docletArtifact>
+                            <groupId>xml-apis</groupId>
+                            <artifactId>xml-apis</artifactId>
+                            <version>1.4.01</version>
+                        </docletArtifact>
+                        <docletArtifact>
+                            <groupId>jakarta.xml.bind</groupId>
+                            <artifactId>jakarta.xml.bind-api</artifactId>
+                            <version>${jakarta.jaxb.api.version}</version>
+                        </docletArtifact>
                     </docletArtifacts>
                     <!-- the following option is required as a work around for
                          version 2.5 of the javadoc plugin which will be used

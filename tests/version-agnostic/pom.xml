@@ -80,6 +80,17 @@
 
     <profiles>
         <profile>
+            <id>noTests</id>
+            <activation>
+                <property>
+                    <name>skipTests</name>
+                </property>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+        <profile>
             <id>version-agnostic</id>
             <activation>
                 <property>
