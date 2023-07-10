@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.test-framework.maven</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.99-SNAPSHOT</version>
+        <version>3.0.11</version>
     </parent>
 
     <artifactId>container-runner-maven-plugin</artifactId>
