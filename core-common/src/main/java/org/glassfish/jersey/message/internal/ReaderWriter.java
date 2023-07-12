@@ -245,9 +245,9 @@ public final class ReaderWriter {
      * @throws IOException in case of a write failure.
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
-        try (final Writer osw = new OutputStreamWriter(out, getCharset(type))) {
-            osw.write(s);
-        }
+        Writer osw = new OutputStreamWriter(out, getCharset(type));
+        osw.write(s);
+        osw.flush();
     }
 
     /**
