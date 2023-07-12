@@ -7,7 +7,7 @@ title: [Eclipse Jersey]
 description: [Eclipse Jersey is a REST framework that provides a JAX-RS (JSR-370) implementation and more]
 
 latestVersion: '2.40'
-latest30xVersion: '3.0.10'
+latest30xVersion: '3.0.11'
 latest30xFolder: 'latest30x'
 latest3xVersion: '3.1.2'
 latest3xFolder: 'latest31x'
