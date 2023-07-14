@@ -57,7 +57,7 @@ public final class ReaderWriter {
      *
      * @deprecated use {@code StandardCharsets.UTF_8} instead
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated
     public static final Charset UTF8 = StandardCharsets.UTF_8;
     /**
      * The buffer size for arrays of byte and character.

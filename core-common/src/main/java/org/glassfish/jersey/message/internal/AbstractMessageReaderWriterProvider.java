@@ -46,7 +46,7 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      *
      * @deprecated use {@code StandardCharsets.UTF_8} instead.
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated
     public static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
