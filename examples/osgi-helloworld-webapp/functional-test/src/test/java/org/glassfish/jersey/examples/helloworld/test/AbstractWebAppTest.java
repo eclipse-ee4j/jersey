@@ -13,7 +13,7 @@ package org.glassfish.jersey.examples.helloworld.test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.Files;
+import java.nio.file.Files;
 import java.nio.Paths;
 import java.security.AccessController;
 import java.util.ArrayList;
