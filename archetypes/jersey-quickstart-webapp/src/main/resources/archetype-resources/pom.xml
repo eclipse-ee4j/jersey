@@ -22,6 +22,11 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${war.mvn.plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -58,5 +63,6 @@
     <properties>
         <jersey.version>${project.version}</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>
 </project>
