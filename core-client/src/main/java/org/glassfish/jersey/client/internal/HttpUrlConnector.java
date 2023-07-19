@@ -345,7 +345,13 @@ public class HttpUrlConnector implements Connector {
         final HttpURLConnection uc;
         final Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
         final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(request).build();
-        final URI sniUri = sniConfig.isSNIRequired() ? sniConfig.toIPRequestUri() : request.getUri();
+        final URI sniUri;
+        if (sniConfig.isSNIRequired()) {
+            sniUri = sniConfig.toIPRequestUri();
+            LOGGER.fine(LocalizationMessages.SNI_URI_REPLACED(sniUri.getHost(), request.getUri().getHost()));
+        } else {
+            sniUri = request.getUri();
+        }
 
         proxy.ifPresent(clientProxy -> ClientProxy.setBasicAuthorizationHeader(request.getHeaders(), proxy.get()));
         uc = this.connectionFactory.getConnection(sniUri.toURL(), proxy.isPresent() ? proxy.get().proxy() : null);

@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
-            <version>1.7.0.Alpha12</version>
+            <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
 

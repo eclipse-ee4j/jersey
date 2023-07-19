@@ -66,7 +66,7 @@ jakarta.inject Version: 1
 * License: Apache License, 2.0
 * Copyright (C) 2009 The JSR-330 Expert Group
 
-Javassist Version 3.29.0-GA
+Javassist Version 3.29.2-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
