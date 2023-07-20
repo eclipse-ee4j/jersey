@@ -24,6 +24,8 @@ import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
 
+import jakarta.ws.rs.client.ClientBuilder;
+
 /**
  * Jersey client implementation configuration properties.
  *
@@ -444,7 +446,7 @@ public final class ClientProperties {
             EXPECT_100_CONTINUE_THRESHOLD_SIZE = "jersey.config.client.request.expect.100.continue.threshold.size";
 
     /**
-     * Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+     * Default threshold size (64kb) after which Expect:100-Continue header would be applied before
      * the main request.
      *
      * @since 2.32
@@ -480,6 +482,22 @@ public final class ClientProperties {
      * @since 3.1.2
      */
     public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
+
+    /**
+     * Sets the {@link org.glassfish.jersey.client.spi.ConnectorProvider} class. Overrides the value from META-INF/services.
+     *
+     * <p>
+     *     The value MUST be an instance of {@code String}.
+     * </p>
+     * <p>
+     *     The property is recognized by {@link ClientBuilder}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.40
+     */
+    public static final String CONNECTOR_PROVIDER = "jersey.config.client.connector.provider";
 
     private ClientProperties() {
         // prevents instantiation

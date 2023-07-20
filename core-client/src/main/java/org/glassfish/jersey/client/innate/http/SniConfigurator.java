@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.client.innate.http;
 
+import org.glassfish.jersey.client.internal.LocalizationMessages;
+
 import javax.net.ssl.SNIHostName;
 import javax.net.ssl.SNIServerName;
 import javax.net.ssl.SSLEngine;
@@ -26,12 +28,14 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * A unified routines to set {@link SNIHostName} for the {@link javax.net.ssl.SSLContext}.
  * To be reused in connectors.
  */
 final class SniConfigurator {
+    private static final Logger LOGGER = Logger.getLogger(SniConfigurator.class.getName());
     private final String hostName;
     private SniConfigurator(String hostName) {
         this.hostName = hostName;
@@ -76,6 +80,7 @@ final class SniConfigurator {
         SSLParameters sslParameters = sslEngine.getSSLParameters();
         updateSSLParameters(sslParameters);
         sslEngine.setSSLParameters(sslParameters);
+        LOGGER.fine(LocalizationMessages.SNI_ON_SSLENGINE());
     }
 
     /**
@@ -86,6 +91,7 @@ final class SniConfigurator {
         SSLParameters sslParameters = sslSocket.getSSLParameters();
         updateSSLParameters(sslParameters);
         sslSocket.setSSLParameters(sslParameters);
+        LOGGER.fine(LocalizationMessages.SNI_ON_SSLSOCKET());
     }
 
     SSLParameters updateSSLParameters(SSLParameters sslParameters) {
@@ -94,6 +100,7 @@ final class SniConfigurator {
         serverNames.add(serverName);
 
         sslParameters.setServerNames(serverNames);
+        LOGGER.finer(LocalizationMessages.SNI_UPDATE_SSLPARAMS(hostName));
 
         return sslParameters;
     }
