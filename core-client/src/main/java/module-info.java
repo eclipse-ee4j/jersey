@@ -37,13 +37,19 @@ module org.glassfish.jersey.core.client {
             org.glassfish.jersey.grizzly.connector,
             org.glassfish.jersey.jetty.connector;
 
+    exports org.glassfish.jersey.client.innate.http to
+            org.glassfish.jersey.apache.connector,
+            org.glassfish.jersey.netty.connector,
+            org.glassfish.jersey.grizzly.connector,
+            org.glassfish.jersey.jetty.connector,
+            org.glassfish.jersey.jdk.connector;
+
     opens org.glassfish.jersey.client;
     opens org.glassfish.jersey.client.spi;
     opens org.glassfish.jersey.client.filter;
 
     // for Localization messages
     opens org.glassfish.jersey.client.internal;
-    opens org.glassfish.jersey.client.internal.jdkconnector;
 
     uses org.glassfish.jersey.client.spi.AsyncConnectorCallback;
     uses org.glassfish.jersey.client.spi.ConnectorProvider;

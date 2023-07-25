@@ -32,7 +32,7 @@
     <description>
         A module containing archetypes for generating Jersey-based applications.
     </description>
-
+    <!-- List of available modules -->
     <modules>
         <module>jersey-heroku-webapp</module>
         <module>jersey-quickstart-grizzly2</module>
