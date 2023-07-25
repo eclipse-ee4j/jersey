@@ -16,6 +16,7 @@
 
 module org.glassfish.jersey.incubator.media.kryo {
     requires jakarta.annotation;
+    requires jakarta.inject;
     requires jakarta.ws.rs;
 
     requires kryo;

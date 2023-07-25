@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -76,6 +76,5 @@ module org.glassfish.jersey.core.common {
     provides jakarta.ws.rs.ext.RuntimeDelegate
             with org.glassfish.jersey.internal.RuntimeDelegateImpl;
     provides org.glassfish.jersey.internal.spi.AutoDiscoverable
-            with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable,
-                    org.glassfish.jersey.internal.config.ExternalPropertiesAutoDiscoverable;
+            with org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable;
 }

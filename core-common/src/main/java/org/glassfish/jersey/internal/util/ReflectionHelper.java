@@ -1344,6 +1344,7 @@ public final class ReflectionHelper {
      * @param m the method to find
      * @return privileged action to return public method found.
      * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     *
      */
     public static PrivilegedAction<Method> findMethodOnClassPA(final Class<?> c, final Method m) {
         return new PrivilegedAction<Method>() {
