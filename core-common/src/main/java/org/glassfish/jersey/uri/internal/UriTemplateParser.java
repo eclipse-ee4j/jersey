@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,13 +61,16 @@ public class UriTemplateParser {
      * Default URI template value regexp pattern.
      */
     public static final Pattern TEMPLATE_VALUE_PATTERN = Pattern.compile("[^/]+");
+    public static final Pattern TEMPLATE_VALUE_PATTERN_MULTI = Pattern.compile("[^,/]+");
+    public static final Pattern MATCH_NUMBER_OF_MAX_LENGTH_4 = Pattern.compile("[1-9][0-9]{0,3}");
 
     private final String template;
     private final StringBuffer regex = new StringBuffer();
     private final StringBuffer normalizedTemplate = new StringBuffer();
     private final StringBuffer literalCharactersBuffer = new StringBuffer();
     private final Pattern pattern;
-    private final List<String> names = new ArrayList<String>();
+    private final List<UriPart> names = new ArrayList<>();
+    private final List<UriPart> parts = new ArrayList<>();
     private final List<Integer> groupCounts = new ArrayList<Integer>();
     private final Map<String, Pattern> nameToPattern = new HashMap<String, Pattern>();
     private int numOfExplicitRegexes;
@@ -143,8 +146,19 @@ public class UriTemplateParser {
      *
      * @return the list of template names.
      */
-    public final List<String> getNames() {
+    public final List<UriPart> getNames() {
         return names;
+    }
+
+    /**
+     * Get a collection of uri parts (static strings and dynamic arguments) as parsed by the parser.
+     * Can be used to compose the uri. This collection is usually a superset of {@link #getNames() names}
+     * and other parts that do not have a template.
+     *
+     * @return List of parts of the uri.
+     */
+    public List<UriPart> getUriParts() {
+        return parts;
     }
 
     /**
@@ -248,6 +262,7 @@ public class UriTemplateParser {
             String s = encodeLiteralCharacters(literalCharactersBuffer.toString());
 
             normalizedTemplate.append(s);
+            parts.add(new UriPart(s));
 
             // Escape if reserved regex character
             for (int i = 0; i < s.length(); i++) {
@@ -289,90 +304,71 @@ public class UriTemplateParser {
     }
 
     private int parseName(final CharacterIterator ci, int skipGroup) {
-        char c = consumeWhiteSpace(ci);
+        Variables variables = new Variables();
+        variables.parse(ci, template);
 
-        char paramType = 'p'; // Normal path param unless otherwise stated
-        StringBuilder nameBuffer = new StringBuilder();
-
-        // Look for query or matrix types
-        if (c == '?' || c == ';') {
-            paramType = c;
-            c = ci.next();
-        }
-
-        if (Character.isLetterOrDigit(c) || c == '_') {
-            // Template name character
-            nameBuffer.append(c);
-        } else {
-            throw new IllegalArgumentException(LocalizationMessages.ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_START_NAME(c, ci.pos(),
-                    template));
-        }
-
-        String nameRegexString = "";
-        while (true) {
-            c = ci.next();
-            // "\\{(\\w[-\\w\\.]*)
-            if (Character.isLetterOrDigit(c) || c == '_' || c == '-' || c == '.') {
-                // Template name character
-                nameBuffer.append(c);
-            } else if (c == ',' && paramType != 'p') {
-                // separator allowed for non-path parameter names
-                nameBuffer.append(c);
-            } else if (c == ':' && paramType == 'p') {
-                nameRegexString = parseRegex(ci);
-                break;
-            } else if (c == '}') {
-                break;
-            } else if (c == ' ') {
-                c = consumeWhiteSpace(ci);
-
-                if (c == ':') {
-                    nameRegexString = parseRegex(ci);
-                    break;
-                } else if (c == '}') {
-                    break;
-                } else {
-                    // Error
-                    throw new IllegalArgumentException(
-                            LocalizationMessages.ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_AFTER_NAME(c, ci.pos(), template));
-                }
-            } else {
-                throw new IllegalArgumentException(
-                        LocalizationMessages.ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_PART_OF_NAME(c, ci.pos(), template));
-            }
-        }
-
-        String name = nameBuffer.toString();
         Pattern namePattern;
+        // Make sure we display something useful
+        String name = variables.getName();
+        int argIndex = 0;
         try {
-            if (paramType == '?' || paramType == ';') {
-                String[] subNames = name.split(",\\s?");
-
+            switch (variables.paramType) {
+            case '?':
+            case ';':
+            case '&':
                 // Build up the regex for each of these properties
-                StringBuilder regexBuilder = new StringBuilder(paramType == '?' ? "\\?" : ";");
-                String separator = paramType == '?' ? "\\&" : ";/\\?";
+                StringBuilder regexBuilder = new StringBuilder();
+                String separator = null;
+                switch (variables.paramType) {
+                    case '?':
+                        separator = "\\&";
+                        regexBuilder.append("\\?"); // first symbol
+                        break;
+                    case '&':
+                        separator = "\\&";
+                        regexBuilder.append("\\&"); // first symbol
+                        break;
+                    case ';':
+                        separator = ";/\\?";
+                        regexBuilder.append(";"); // first symbol
+                        break;
+                }
+
 
                 // Start a group because each parameter could repeat
                 //                names.add("__" + (paramType == '?' ? "query" : "matrix"));
 
-                boolean first = true;
+                regexBuilder.append('(');
+                for (String subName : variables.names) {
 
-                regexBuilder.append("(");
-                for (String subName : subNames) {
+                    TemplateVariable.Position position = determinePosition(variables.separatorCount, argIndex);
+                    TemplateVariable templateVariable =
+                            TemplateVariable.createTemplateVariable(variables.paramType, subName, position);
+                    templateVariable.setStar(variables.explodes(argIndex));
+
                     regexBuilder.append("(&?");
                     regexBuilder.append(subName);
                     regexBuilder.append("(=([^");
                     regexBuilder.append(separator);
-                    regexBuilder.append("]*))?");
-                    regexBuilder.append(")");
-                    if (!first) {
-                        regexBuilder.append("|");
+                    regexBuilder.append(']');
+                    if (variables.hasLength(argIndex)) {
+                        regexBuilder.append('{').append(variables.getLength(argIndex)).append('}');
+                        templateVariable.setLength(variables.getLength(argIndex));
+                    } else {
+                        regexBuilder.append('*');
+                    }
+                    regexBuilder.append("))?");
+                    regexBuilder.append(')');
+                    if (argIndex != 0) {
+                        regexBuilder.append('|');
                     }
 
-                    names.add(subName);
+                    names.add(templateVariable);
+                    parts.add(templateVariable);
+
                     groupCounts.add(
-                            first ? 5 : 3);
-                    first = false;
+                            argIndex == 0 ? 5 : 3);
+                    argIndex++;
                 }
 
                 //                groupCounts.add(1);
@@ -384,30 +380,96 @@ public class UriTemplateParser {
                 namePattern = Pattern.compile(regexBuilder.toString());
 
                 // Make sure we display something useful
-                name = paramType + name;
-            } else {
-                names.add(name);
-                //               groupCounts.add(1 + skipGroup);
-
-                if (!nameRegexString.isEmpty()) {
-                    numOfExplicitRegexes++;
-                }
-                namePattern = (nameRegexString.isEmpty())
-                        ? TEMPLATE_VALUE_PATTERN : Pattern.compile(nameRegexString);
-                if (nameToPattern.containsKey(name)) {
-                    if (!nameToPattern.get(name).equals(namePattern)) {
-                        throw new IllegalArgumentException(
-                                LocalizationMessages.ERROR_TEMPLATE_PARSER_NAME_MORE_THAN_ONCE(name, template));
+                break;
+            default:
+                if (variables.separatorCount == 0) {
+                    if (variables.hasRegexp(0)) {
+                        numOfExplicitRegexes++;
                     }
-                } else {
-                    nameToPattern.put(name, namePattern);
-                }
 
-                // Determine group count of pattern
-                Matcher m = namePattern.matcher("");
-                int g = m.groupCount();
-                groupCounts.add(1 + skipGroup);
-                skipGroup = g;
+                    TemplateVariable templateVariable = TemplateVariable
+                            .createTemplateVariable(variables.paramType, variables.getName(0), TemplateVariable.Position.SINGLE);
+                    templateVariable.setStar(variables.explodes(0));
+                    names.add(templateVariable);
+                    parts.add(templateVariable);
+                    //               groupCounts.add(1 + skipGroup);
+
+                    if (variables.hasLength(0)) {
+                        int len = TEMPLATE_VALUE_PATTERN.pattern().length() - 1;
+                        String pattern = TEMPLATE_VALUE_PATTERN.pattern().substring(0, len) + '{' + variables.getLength(0) + '}';
+                        namePattern = Pattern.compile(pattern);
+                        templateVariable.setLength(variables.getLength(0));
+                    } else {
+                        namePattern = (!variables.hasRegexp(0))
+                                ? TEMPLATE_VALUE_PATTERN : Pattern.compile(variables.regexp(0));
+                    }
+                    if (nameToPattern.containsKey(name)) {
+                        if (!nameToPattern.get(name).equals(namePattern)) {
+                            throw new IllegalArgumentException(
+                                   LocalizationMessages.ERROR_TEMPLATE_PARSER_NAME_MORE_THAN_ONCE(name, template));
+                        }
+                    } else {
+                        nameToPattern.put(name, namePattern);
+                    }
+
+                    // Determine group count of pattern
+                    Matcher m = namePattern.matcher("");
+                    int g = m.groupCount();
+                    groupCounts.add(1 + skipGroup);
+                    skipGroup = g;
+                } else {
+                    argIndex = 0;
+                    regexBuilder = new StringBuilder();
+
+                    for (String subName : variables.names) {
+                        if (argIndex != 0) {
+                            regexBuilder
+                                    .append('(')
+                                    .append(',');
+                        }
+                        TemplateVariable.Position position = determinePosition(variables.separatorCount, argIndex);
+                        TemplateVariable templateVariable
+                                = TemplateVariable.createTemplateVariable(variables.paramType, subName, position);
+                        templateVariable.setStar(variables.explodes(argIndex));
+                        names.add(templateVariable);
+                        parts.add(templateVariable);
+
+                        if (variables.hasLength(argIndex)) {
+                            int len = TEMPLATE_VALUE_PATTERN_MULTI.pattern().length() - 1;
+                            String pattern = TEMPLATE_VALUE_PATTERN_MULTI.pattern()
+                                    .substring(0, len) + '{' + variables.getLength(argIndex) + '}';
+                            namePattern = Pattern.compile(pattern);
+                            templateVariable.setLength(variables.getLength(argIndex));
+                        } else {
+                            namePattern = (!variables.hasRegexp(argIndex))
+                                    ? TEMPLATE_VALUE_PATTERN_MULTI : Pattern.compile(variables.regexp(argIndex));
+                        }
+//                      TODO breaks RFC 6570 --backward compatibility with default pattern
+                        if (nameToPattern.containsKey(subName) && variables.paramType == 'p') {
+                            if (!nameToPattern.get(subName).equals(namePattern)) {
+                                throw new IllegalArgumentException(
+                                        LocalizationMessages.ERROR_TEMPLATE_PARSER_NAME_MORE_THAN_ONCE(name, template));
+                            }
+                        } else {
+                            nameToPattern.put(subName, namePattern);
+                        }
+
+                        regexBuilder
+                                .append('(')
+                                .append(namePattern)
+                                .append(')');
+
+                        if (argIndex != 0) {
+                            regexBuilder.append(")");
+                        }
+                        regexBuilder.append("{0,1}");
+
+                        argIndex++;
+                        groupCounts.add(2);
+                    }
+                    namePattern = Pattern.compile(regexBuilder.toString());
+                }
+                break;
             }
 
             regex.append('(')
@@ -418,40 +480,312 @@ public class UriTemplateParser {
                     .append(name)
                     .append('}');
         } catch (PatternSyntaxException ex) {
-            throw new IllegalArgumentException(
-                    LocalizationMessages.ERROR_TEMPLATE_PARSER_INVALID_SYNTAX(nameRegexString, name, template), ex);
+            throw new IllegalArgumentException(LocalizationMessages
+                    .ERROR_TEMPLATE_PARSER_INVALID_SYNTAX(variables.regexp(argIndex), variables.name, template), ex);
         }
 
         // Tell the next time through the loop how many to skip
         return skipGroup;
     }
 
-    private String parseRegex(final CharacterIterator ci) {
-        StringBuilder regexBuffer = new StringBuilder();
-
-        int braceCount = 1;
-        while (true) {
-            char c = ci.next();
-            if (c == '{') {
-                braceCount++;
-            } else if (c == '}') {
-                braceCount--;
-                if (braceCount == 0) {
-                    break;
-                }
-            }
-            regexBuffer.append(c);
-        }
-
-        return regexBuffer.toString().trim();
+    private static TemplateVariable.Position determinePosition(int separatorCount, int argIndex) {
+        TemplateVariable.Position position = separatorCount == 0
+                ? TemplateVariable.Position.SINGLE
+                : argIndex == 0
+                    ? TemplateVariable.Position.FIRST
+                    : argIndex == separatorCount ? TemplateVariable.Position.LAST : TemplateVariable.Position.MIDDLE;
+        return position;
     }
 
-    private char consumeWhiteSpace(final CharacterIterator ci) {
-        char c;
-        do {
-            c = ci.next();
-        } while (Character.isWhitespace(c));
+    private static class Variables {
+        private char paramType = 'p';
+        private List<String> names = new ArrayList<>(); // names
+        private List<Boolean> explodes = new ArrayList<>(); // *
+        private List<String> regexps = new ArrayList<>();  // : regexp
+        private List<Integer> lengths = new ArrayList<>(); // :1-9999
+        private int separatorCount = 0;
+        private StringBuilder name = new StringBuilder();
 
-        return c;
+        private int getCount() {
+            return names.size();
+        }
+
+        private boolean explodes(int index) {
+            return !explodes.isEmpty() && explodes.get(index);
+        }
+
+        private boolean hasRegexp(int index) {
+            return !regexps.isEmpty() && regexps.get(index) != null;
+        }
+
+        private String regexp(int index) {
+            return regexps.get(index);
+        }
+
+        private boolean hasLength(int index) {
+            return !lengths.isEmpty() && lengths.get(index) != null;
+        }
+
+        private Integer getLength(int index) {
+            return lengths.get(index);
+        }
+
+        private char getParamType() {
+            return paramType;
+        }
+
+        private int getSeparatorCount() {
+            return separatorCount;
+        }
+
+        private String getName() {
+            return name.toString();
+        }
+
+        private String getName(int index) {
+            return names.get(index);
+        }
+
+        private void parse(CharacterIterator ci, String template) {
+            name.append('{');
+
+            char c = consumeWhiteSpace(ci);
+
+            StringBuilder nameBuilder = new StringBuilder();
+
+            // Look for query or matrix types
+            if (c == '?' || c == ';' || c == '.' || c == '+' || c == '#' || c == '/' || c == '&') {
+                paramType = c;
+                c = ci.next();
+                name.append(paramType);
+            }
+
+            if (Character.isLetterOrDigit(c) || c == '_') {
+                // Template name character
+                nameBuilder.append(c);
+                name.append(c);
+            } else {
+                throw new IllegalArgumentException(LocalizationMessages.ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_START_NAME(c, ci.pos(),
+                        template));
+            }
+
+            StringBuilder regexBuilder = new StringBuilder();
+            State state = State.TEMPLATE;
+            boolean star = false;
+            boolean whiteSpace = false;
+            boolean ignoredLastComma = false;
+            int bracketDepth = 1;  // {
+            int regExpBracket = 0; // [
+            int regExpRound = 0;   // (
+            boolean reqExpSlash = false; // \
+            while ((state.value & (State.ERROR.value | State.EXIT.value)) == 0) {
+                c = ci.next();
+                // "\\{(\\w[-\\w\\.]*)
+                if (Character.isLetterOrDigit(c)) {
+                    // Template name character
+                    append(c, state, nameBuilder, regexBuilder);
+                    state = state.transition(State.TEMPLATE.value | State.REGEXP.value);
+                } else switch (c) {
+                    case '_':
+                    case '-':
+                    case '.':
+                        // Template name character
+                        append(c, state, nameBuilder, regexBuilder);
+                        state = state.transition(State.TEMPLATE.value | State.REGEXP.value);
+                        break;
+                    case ',':
+                        switch (state) {
+                            case REGEXP:
+                                if (bracketDepth == 1 && !reqExpSlash && regExpBracket == 0 && regExpRound == 0) {
+                                    state = State.COMMA;
+                                } else {
+                                    regexBuilder.append(c);
+                                }
+                                break;
+                            case TEMPLATE:
+                            case STAR:
+                                state = State.COMMA;
+                                break;
+                        }
+                        separatorCount++;
+                        break;
+                    case ':':
+                        if (state == State.REGEXP) {
+                            regexBuilder.append(c);
+                        }
+                        state = state.transition(State.TEMPLATE.value | State.REGEXP.value | State.STAR.value, State.REGEXP);
+                        break;
+                    case '*':
+                        state = state.transition(State.TEMPLATE.value | State.REGEXP.value);
+                        if (state == State.TEMPLATE) {
+                            star = true;
+                            state = State.STAR;
+                        } else if (state == State.REGEXP){
+                            regexBuilder.append(c);
+                        }
+                        break;
+                    case '}':
+                        bracketDepth--;
+                        if (bracketDepth == 0) {
+                            state = State.BRACKET;
+                        } else {
+                            regexBuilder.append(c);
+                        }
+                        break;
+                    case '{':
+                        if (state == State.REGEXP) {
+                            bracketDepth++;
+                            regexBuilder.append(c);
+                        } else {
+                            state = State.ERROR; // Error multiple parenthesis
+                        }
+                        break;
+                    default:
+                        if (!Character.isWhitespace(c)) {
+                            if (state != State.REGEXP) {
+                                state = State.ERROR; // Error - unknown symbol
+                            } else {
+                                switch (c) {
+                                    case '(' :
+                                        regExpRound++;
+                                        break;
+                                    case ')':
+                                        regExpRound--;
+                                        break;
+                                    case '[':
+                                        regExpBracket++;
+                                        break;
+                                    case ']':
+                                        regExpBracket--;
+                                        break;
+                                }
+                                if (c == '\\') {
+                                    reqExpSlash = true;
+                                } else {
+                                    reqExpSlash = false;
+                                }
+                                regexBuilder.append(c);
+                            }
+                        }
+                        whiteSpace = true;
+                        break;
+                }
+
+                // Store parsed name, and associated star, regexp, and length
+                switch (state) {
+                    case COMMA:
+                    case BRACKET:
+                        if (nameBuilder.length() == 0 && regexBuilder.length() == 0 && !star
+                                && name.charAt(name.length() - 1) == ',' /* ignore last comma */) {
+                            if (ignoredLastComma) { // Do not ignore twice
+                                state = State.ERROR;
+                            } else {
+                                name.setLength(name.length() - 1);
+                                ignoredLastComma = true;
+                            }
+                            break;
+                        }
+                        if (regexBuilder.length() != 0) {
+                            String regex = regexBuilder.toString();
+                            Matcher matcher = MATCH_NUMBER_OF_MAX_LENGTH_4.matcher(regex);
+                            if (matcher.matches()) {
+                                lengths.add(Integer.parseInt(regex));
+                                regexps.add(null);
+                            } else {
+                                if (paramType != 'p') {
+                                    state = State.ERROR; // regular expressions allowed just on path by the REST spec
+                                    c = regex.charAt(0); // display proper error values
+                                    ci.setPosition(ci.pos() - regex.length());
+                                    break;
+                                }
+                                lengths.add(null);
+                                regexps.add(regex);
+                            }
+                        } else {
+                            regexps.add(null);
+                            lengths.add(null);
+                        }
+
+                        names.add(nameBuilder.toString());
+                        explodes.add(star);
+
+                        nameBuilder.setLength(0);
+                        regexBuilder.setLength(0);
+                        star = false;
+                        ignoredLastComma = false;
+                        break;
+                }
+
+                if (!whiteSpace) {
+                    name.append(c);
+                }
+                whiteSpace = false;
+
+                // switch state back or exit
+                switch (state) {
+                    case COMMA:
+                        state = State.TEMPLATE;
+                        break;
+                    case BRACKET:
+                        state = State.EXIT;
+                        break;
+                }
+            }
+
+            if (state == State.ERROR) {
+                throw new IllegalArgumentException(
+                        LocalizationMessages.ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_AFTER_NAME(c, ci.pos(), template));
+            }
+        }
+
+        private static void append(char c, State state, StringBuilder templateSb, StringBuilder regexpSb) {
+            if (state == State.TEMPLATE) {
+                templateSb.append(c);
+            } else { // REGEXP
+                regexpSb.append(c);
+            }
+        }
+
+        private static char consumeWhiteSpace(final CharacterIterator ci) {
+            char c;
+            do {
+                c = ci.next();
+            } while (Character.isWhitespace(c));
+
+            return c;
+        }
+
+        private enum State {
+            TEMPLATE/**/(0b000000001), // Template name, before '*', ':', ',' or '}'
+            REGEXP/*  */(0b000000010), // Regular expression inside template, after :
+            STAR/*    */(0b000000100), // *
+            COMMA/*   */(0b000001000), // ,
+            BRACKET/* */(0b000010000), // }
+            EXIT/*    */(0b001000000), // quit parsing
+            ERROR/*   */(0b100000000); // error when parsing
+            private final int value;
+            State(int value) {
+                this.value = value;
+            }
+
+            /**
+             * Return error state when in not any of allowed states represented by their combined values
+             * @param allowed The combined values of states (state1.value | state2.value) not to return error level
+             * @return this state if in allowed state or {@link State#ERROR} if not
+             */
+            State transition(int allowed) {
+                return ((value & allowed) != 0) ? this : State.ERROR;
+            }
+
+            /**
+             * Return error state when in not any of allowed states represented by their combined values
+             * @param allowed The combined values of states (state1.value | state2.value) not to return error level
+             * @param next the next state to transition
+             * @return next state if in allowed state or {@link State#ERROR} if not
+             */
+            State transition(int allowed, State next) {
+                return ((value & allowed) != 0) ? next : State.ERROR;
+            }
+        }
     }
 }
