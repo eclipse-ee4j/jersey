@@ -1,11 +1,5 @@
 [
   {
-    "name":"org.glassfish.jersey.internal.config.ExternalPropertiesAutoDiscoverable",
-    "allDeclaredFields":true,
-    "allDeclaredMethods":true,
-    "allDeclaredConstructors":true
-  },
-  {
     "name":"org.glassfish.jersey.internal.inject.Custom",
     "allDeclaredMethods":true
   },

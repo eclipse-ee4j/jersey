@@ -2262,7 +2262,7 @@
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.10</graalvm.version>
+        <graalvm.version>20.3.11</graalvm.version>
 
         <!-- do not need CQs -->
         <cdi.api.version>1.2</cdi.api.version>
