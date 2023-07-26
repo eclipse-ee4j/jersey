@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 
 import org.glassfish.jersey.linking.mapping.ResourceMappingContext;
+import org.glassfish.jersey.uri.internal.UriPart;
 import org.glassfish.jersey.uri.internal.UriTemplateParser;
 
 /**
@@ -97,7 +98,7 @@ final class ELLinkBuilder {
         // now process any embedded URI template parameters
         UriBuilder ub = applyLinkStyle(template, link.getLinkStyle(), uriInfo);
         UriTemplateParser parser = new UriTemplateParser(template);
-        List<String> parameterNames = parser.getNames();
+        List<UriPart> parameterNames = parser.getNames();
         Map<String, Object> valueMap = getParameterValues(parameterNames, link, context, uriInfo);
         return ub.buildFromMap(valueMap);
     }
@@ -119,12 +120,13 @@ final class ELLinkBuilder {
         return ub;
     }
 
-    private static Map<String, Object> getParameterValues(List<String> parameterNames,
+    private static Map<String, Object> getParameterValues(List<UriPart> parameterNames,
                                                           InjectLinkDescriptor linkField,
                                                           LinkELContext context,
                                                           UriInfo uriInfo) {
         Map<String, Object> values = new HashMap<>();
-        for (String name : parameterNames) {
+        for (UriPart param : parameterNames) {
+            String name = param.getPart();
             String elExpression = linkField.getBinding(name);
             if (elExpression == null) {
                 String value = uriInfo.getPathParameters().getFirst(name);
