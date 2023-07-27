@@ -190,7 +190,7 @@
                     <name>skipTests</name>
                     <value>!true</value>
                 </property>
-                <jdk>[11,)</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <build>
                 <plugins>

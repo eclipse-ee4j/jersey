@@ -16,40 +16,38 @@
 
 package org.glassfish.jersey.jetty;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.servlet.AsyncContext;
-import jakarta.servlet.AsyncEvent;
-import jakarta.servlet.AsyncListener;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.SecurityContext;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
+import org.eclipse.jetty.http.HttpField;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.io.Content;
+import org.eclipse.jetty.security.AuthenticationState;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
-import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerException;
@@ -61,10 +59,8 @@ import org.glassfish.jersey.server.internal.ContainerUtils;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerResponseWriter;
 
-import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 
 /**
  * Jersey {@code Container} implementation based on Jetty {@link org.eclipse.jetty.server.Handler}.
@@ -73,7 +69,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  * @author Libor Kramolis
  * @author Marek Potociar
  */
-public final class JettyHttpContainer extends AbstractHandler implements Container {
+public final class JettyHttpContainer extends Handler.Abstract implements Container {
 
     private static final ExtendedLogger LOGGER =
             new ExtendedLogger(Logger.getLogger(JettyHttpContainer.class.getName()), Level.FINEST);
@@ -87,7 +83,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     /**
      * Cached value of configuration property
      * {@link org.glassfish.jersey.server.ServerProperties#RESPONSE_SET_STATUS_OVER_SEND_ERROR}.
-     * If {@code true} method {@link HttpServletResponse#setStatus} is used over {@link HttpServletResponse#sendError}.
+     * If {@code true} method {@link Response#setStatus(int)} is used over {@link Response#writeError(Request, Response, Callback, int)}
      */
     private boolean configSetStatusOverSendError;
 
@@ -137,15 +133,9 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     private volatile ApplicationHandler appHandler;
 
     @Override
-    public void handle(final String target, final Request request, final HttpServletRequest httpServletRequest,
-                       final HttpServletResponse httpServletResponse) throws IOException, ServletException {
+    public boolean handle(Request request, Response response, Callback callback) throws Exception {
 
-        if (request.isHandled()) {
-            return;
-        }
-
-        final Response response = request.getResponse();
-        final ResponseWriter responseWriter = new ResponseWriter(request, response, configSetStatusOverSendError);
+        final ResponseWriter responseWriter = new ResponseWriter(request, response, callback, configSetStatusOverSendError);
         try {
             final URI baseUri = getBaseUri(request);
             final URI requestUri = getRequestUri(request, baseUri);
@@ -156,34 +146,31 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     getSecurityContext(request),
                     new MapPropertiesDelegate(),
                     appHandler.getConfiguration());
-            requestContext.setEntityStream(request.getInputStream());
-            final Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                final String headerName = headerNames.nextElement();
-                String headerValue = request.getHeader(headerName);
-                requestContext.headers(headerName, headerValue == null ? "" : headerValue);
-            }
+            requestContext.setEntityStream(Request.asInputStream(request));
+            request.getHeaders().forEach(httpField ->
+                    requestContext.headers(httpField.getName(), httpField.getValue() == null ? "" : httpField.getValue()));
             requestContext.setWriter(responseWriter);
             requestContext.setRequestScopedInitializer(injectionManager -> {
                 injectionManager.<Ref<Request>>getInstance(REQUEST_TYPE).set(request);
                 injectionManager.<Ref<Response>>getInstance(RESPONSE_TYPE).set(response);
             });
 
-            // Mark the request as handled before generating the body of the response
-            request.setHandled(true);
             appHandler.handle(requestContext);
+            return true;
         } catch (URISyntaxException e) {
-            setResponseForInvalidUri(response, e);
+            setResponseForInvalidUri(request, response, callback, e);
+            return true;
         } catch (final Exception ex) {
+            callback.failed(ex);
             throw new RuntimeException(ex);
         }
     }
 
     private URI getRequestUri(final Request request, final URI baseUri) throws URISyntaxException {
         final String serverAddress = getServerAddress(baseUri);
-        String uri = request.getRequestURI();
+        String uri = request.getHttpURI().getPath();
 
-        final String queryString = request.getQueryString();
+        final String queryString = request.getHttpURI().getQuery();
         if (queryString != null) {
             uri = uri + "?" + ContainerUtils.encodeUnsafeCharacters(queryString);
         }
@@ -191,15 +178,17 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         return new URI(serverAddress + uri);
     }
 
-    private void setResponseForInvalidUri(final HttpServletResponse response, final Throwable throwable) throws IOException {
+    private void setResponseForInvalidUri(final Request request, final Response response,
+                                          final Callback callback, final Throwable throwable) {
         LOGGER.log(Level.FINER, "Error while processing request.", throwable);
 
         if (configSetStatusOverSendError) {
             response.reset();
-            //noinspection deprecation
             response.setStatus(BAD_REQUEST_STATUS.getStatusCode());
+            callback.failed(throwable);
         } else {
-            response.sendError(BAD_REQUEST_STATUS.getStatusCode(), BAD_REQUEST_STATUS.getReasonPhrase());
+            Response.writeError(request, response, callback, BAD_REQUEST_STATUS.getStatusCode(),
+                    BAD_REQUEST_STATUS.getReasonPhrase(), throwable);
         }
     }
 
@@ -212,11 +201,14 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
     }
 
     private SecurityContext getSecurityContext(final Request request) {
+
+        AuthenticationState.Succeeded authenticationState = AuthenticationState.authenticate(request);
+
         return new SecurityContext() {
 
             @Override
             public boolean isUserInRole(final String role) {
-                return request.isUserInRole(role);
+                return authenticationState != null && authenticationState.isUserInRole(role);
             }
 
             @Override
@@ -226,24 +218,24 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
 
             @Override
             public Principal getUserPrincipal() {
-                return request.getUserPrincipal();
+                return authenticationState != null ? authenticationState.getUserIdentity().getUserPrincipal() : null;
             }
 
             @Override
             public String getAuthenticationScheme() {
-                return request.getAuthType();
+                return authenticationState != null ? authenticationState.getAuthenticationType() : null;
             }
         };
     }
 
 
     private URI getBaseUri(final Request request) throws URISyntaxException {
-        return new URI(request.getScheme(), null, request.getServerName(),
-                request.getServerPort(), getBasePath(request), null, null);
+        return new URI(request.getHttpURI().getScheme(), null, Request.getServerName(request),
+                Request.getServerPort(request), getBasePath(request), null, null);
     }
 
     private String getBasePath(final Request request) {
-        final String contextPath = request.getContextPath();
+        final String contextPath = Request.getContextPath(request);
 
         if (contextPath == null || contextPath.isEmpty()) {
             return "/";
@@ -256,14 +248,36 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
 
     private static final class ResponseWriter implements ContainerResponseWriter {
 
+        private final Request request;
         private final Response response;
-        private final AsyncContext context;
+        private final Callback callback;
         private final boolean configSetStatusOverSendError;
+        private final Timer timer = new Timer();
+        private final long asyncStartTimeMillis;
+        private final ConcurrentLinkedQueue<TimeoutHandler> timeoutHandlerQueue = new ConcurrentLinkedQueue<>();
+        private TimerTask currentTimerTask;
 
-        ResponseWriter(final Request request, final Response response, final boolean configSetStatusOverSendError) {
+        ResponseWriter(final Request request, final Response response, final Callback callback,
+                       final boolean configSetStatusOverSendError) {
+            this.request = request;
             this.response = response;
-            this.context = request.startAsync();
+            this.callback = callback;
+            this.asyncStartTimeMillis = System.currentTimeMillis();
             this.configSetStatusOverSendError = configSetStatusOverSendError;
+        }
+
+        private synchronized void setNewTimeout(long timeOut, TimeUnit timeUnit) {
+            long timeOutMillis = timeUnit.toMillis(timeOut);
+            if (currentTimerTask != null) {
+                currentTimerTask.cancel();
+            }
+            currentTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    timeoutHandlerQueue.forEach(timeoutHandler -> timeoutHandler.onTimeout(ResponseWriter.this));
+                }
+            };
+            timer.schedule(currentTimerTask, Math.max(0, timeOutMillis + asyncStartTimeMillis - System.currentTimeMillis()));
         }
 
         @Override
@@ -273,99 +287,43 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
             final jakarta.ws.rs.core.Response.StatusType statusInfo = context.getStatusInfo();
 
             final int code = statusInfo.getStatusCode();
-            final String reason = statusInfo.getReasonPhrase() == null
-                    ? HttpStatus.getMessage(code) : statusInfo.getReasonPhrase();
 
-            response.setStatusWithReason(code, reason);
+            response.setStatus(code);
 
-            if (contentLength != -1 && contentLength < Integer.MAX_VALUE) {
-                response.setContentLength((int) contentLength);
+            if (contentLength != -1 && contentLength < Integer.MAX_VALUE && !"HEAD".equals(request.getMethod())) {
+                response.getHeaders().add(new HttpField(HttpHeader.CONTENT_LENGTH, String.valueOf((int) contentLength)));
             }
             for (final Map.Entry<String, List<String>> e : context.getStringHeaders().entrySet()) {
                 for (final String value : e.getValue()) {
-                    response.addHeader(e.getKey(), value);
+                    response.getHeaders().add(new HttpField(e.getKey(), value));
                 }
             }
 
-            try {
-                return response.getOutputStream();
-            } catch (final IOException ioe) {
-                throw new ContainerException("Error during writing out the response headers.", ioe);
-            }
+            return Content.Sink.asOutputStream(response);
         }
 
         @Override
         public boolean suspend(final long timeOut, final TimeUnit timeUnit, final TimeoutHandler timeoutHandler) {
-            try {
-                if (timeOut > 0) {
-                    final long timeoutMillis = TimeUnit.MILLISECONDS.convert(timeOut, timeUnit);
-                    context.setTimeout(timeoutMillis);
-                }
-                context.addListener(new AsyncListener() {
-                    @Override
-                    public void onComplete(AsyncEvent asyncEvent) throws IOException {
-
-                    }
-
-                    @Override
-                    public void onTimeout(AsyncEvent asyncEvent) throws IOException {
-                        if (timeoutHandler != null) {
-                            timeoutHandler.onTimeout(ResponseWriter.this);
-                        }
-                    }
-
-                    @Override
-                    public void onError(AsyncEvent asyncEvent) throws IOException {
-
-                    }
-
-                    @Override
-                    public void onStartAsync(AsyncEvent asyncEvent) throws IOException {
-
-                    }
-                });
-                return true;
-            } catch (final Exception ex) {
-                return false;
+            if (timeOut > 0) {
+                setNewTimeout(timeOut, timeUnit);
             }
+            if (timeoutHandler != null) {
+                timeoutHandlerQueue.add(timeoutHandler);
+            }
+            return true;
         }
 
         @Override
         public void setSuspendTimeout(final long timeOut, final TimeUnit timeUnit) throws IllegalStateException {
             if (timeOut > 0) {
-                final long timeoutMillis = TimeUnit.MILLISECONDS.convert(timeOut, timeUnit);
-                context.setTimeout(timeoutMillis);
+                setNewTimeout(timeOut, timeUnit);
             }
         }
 
         @Override
         public void commit() {
-            try {
-                closeOutput(response);
-            } catch (final IOException e) {
-                LOGGER.log(Level.WARNING, LocalizationMessages.UNABLE_TO_CLOSE_RESPONSE(), e);
-            } finally {
-                if (context.getRequest().isAsyncStarted()) {
-                    context.complete();
-                }
-                LOGGER.log(Level.FINEST, "commit() called");
-            }
-        }
-
-        private void closeOutput(Response response) throws IOException {
-            try {
-                response.completeOutput();
-            } catch (final IOException e) {
-                throw e;
-            } catch (NoSuchMethodError e) {
-                // try older Jetty Response#closeOutput
-                try {
-                    Method method = response.getClass().getMethod("closeOutput");
-                    method.invoke(response);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
-                    throw new IOException(ex);
-                }
-            }
+            callback.succeeded();
+            LOGGER.log(Level.FINEST, "commit() called");
         }
 
         @Override
@@ -375,22 +333,18 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
                     try {
                         if (configSetStatusOverSendError) {
                             response.reset();
-                            //noinspection deprecation
-                            response.setStatus(INTERNAL_SERVER_ERROR, "Request failed.");
+                            response.setStatus(INTERNAL_SERVER_ERROR);
+                            callback.failed(error);
                         } else {
-                            response.sendError(INTERNAL_SERVER_ERROR, "Request failed.");
+                            Response.writeError(request, response, callback, INTERNAL_SERVER_ERROR, "Request failed.", error);
                         }
                     } catch (final IllegalStateException ex) {
                         // a race condition externally committing the response can still occur...
                         LOGGER.log(Level.FINER, "Unable to reset failed response.", ex);
-                    } catch (final IOException ex) {
-                        throw new ContainerException(LocalizationMessages.EXCEPTION_SENDING_ERROR_RESPONSE(INTERNAL_SERVER_ERROR,
-                                "Request failed."), ex);
                     }
                 }
             } finally {
                 LOGGER.log(Level.FINEST, "failure(...) called");
-                commit();
                 rethrow(error);
             }
         }

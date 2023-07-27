@@ -38,14 +38,14 @@
         </dependency> -->
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-servlet</artifactId>
             <version>\${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-webapp</artifactId>
             <version>\${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -89,8 +89,8 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-maven-plugin</artifactId>
                 <version>\${jetty.version}</version>
                 <configuration>
                     <contextPath>/</contextPath>
@@ -117,7 +117,7 @@
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
-        <jetty.version>11.0.15</jetty.version>
+        <jetty.version>12.0.0.beta4</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.mvn.plugin.version>3.1.2</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>

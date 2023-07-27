@@ -63,15 +63,17 @@ public class HttpPatchTest {
     private static final Logger LOGGER = Logger.getLogger(RequestHeaderModificationsTest.class.getName());
 
     public static List<ConnectorProvider> testData() {
-        int size = 7;
+        int size = JdkVersion.getJdkVersion().getMajor() < 17 ? 6 : 7;
         final ConnectorProvider[] providers = new ConnectorProvider[size];
         providers[0] = new JdkConnectorProvider();
         providers[1] = new GrizzlyConnectorProvider();
-        providers[2] = new JettyConnectorProvider();
-        providers[3] = new ApacheConnectorProvider();
-        providers[4] = new Apache5ConnectorProvider();
-        providers[5] = new NettyConnectorProvider();
-        providers[6] = new JavaNetHttpConnectorProvider();
+        providers[2] = new ApacheConnectorProvider();
+        providers[3] = new Apache5ConnectorProvider();
+        providers[4] = new NettyConnectorProvider();
+        providers[5] = new JavaNetHttpConnectorProvider();
+        if (size == 7) {
+            providers[6] = new JettyConnectorProvider();
+        }
 
         return Arrays.asList(providers);
     }

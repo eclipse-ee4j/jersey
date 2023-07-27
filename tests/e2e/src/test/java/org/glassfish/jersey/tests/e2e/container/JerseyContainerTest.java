@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,10 +54,10 @@ public abstract class JerseyContainerTest extends JerseyTest {
 
     protected static List<TestContainerFactory> listContainerFactories(TestContainerFactory... factories) {
         final JdkVersion version = JdkVersion.getJdkVersion();
-        boolean isJDK8 = version.getMajor() == 1;
+        boolean isJDKGreaterThanOrEqualTo17 = version.getMajor() >= 17;
         final List<TestContainerFactory> filtered = new LinkedList<>();
         for (TestContainerFactory factory : factories) {
-            if (!isJDK8 || !JettyTestContainerFactory.class.isInstance(factory)) {
+            if (isJDKGreaterThanOrEqualTo17 || !JettyTestContainerFactory.class.isInstance(factory)) {
                 filtered.add(factory);
             }
         }

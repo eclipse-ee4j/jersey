@@ -34,7 +34,7 @@ public final class JettyHttpContainerProvider implements ContainerProvider {
     public static final String HANDLER_NAME = "org.eclipse.jetty.server.Handler";
     @Override
     public <T> T createContainer(final Class<T> type, final Application application) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
+        if (JdkVersion.getJdkVersion().getMajor() < 17) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
         if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
@@ -45,7 +45,7 @@ public final class JettyHttpContainerProvider implements ContainerProvider {
 
     public <T> T createContainer(final Class<T> type, final Application application,
                                  Object parentContext) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
+        if (JdkVersion.getJdkVersion().getMajor() < 17) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
         if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
