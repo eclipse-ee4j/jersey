@@ -34,21 +34,35 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
 
-import javax.net.ssl.SSLContext;
-
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpProxy;
+import org.eclipse.jetty.client.ProxyConfiguration;
+import org.eclipse.jetty.client.api.AuthenticationStore;
+import org.eclipse.jetty.client.api.ContentProvider;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.client.api.Response;
+import org.eclipse.jetty.client.api.Result;
 import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.eclipse.jetty.client.util.FutureResponseListener;
 import org.eclipse.jetty.client.util.OutputStreamContentProvider;
+import org.eclipse.jetty.http.HttpField;
+import org.eclipse.jetty.http.HttpFields;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.util.HttpCookieStore;
+import org.eclipse.jetty.util.Jetty;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -60,23 +74,6 @@ import org.glassfish.jersey.internal.util.collection.NonBlockingInputStream;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.message.internal.Statuses;
-
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.HttpProxy;
-import org.eclipse.jetty.client.ProxyConfiguration;
-import org.eclipse.jetty.client.api.AuthenticationStore;
-import org.eclipse.jetty.client.api.ContentProvider;
-import org.eclipse.jetty.client.api.ContentResponse;
-import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.api.Response;
-import org.eclipse.jetty.client.api.Result;
-import org.eclipse.jetty.http.HttpField;
-import org.eclipse.jetty.http.HttpFields;
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.util.HttpCookieStore;
-import org.eclipse.jetty.util.Jetty;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 /**
  * A {@link Connector} that utilizes the Jetty HTTP Client to send and receive
@@ -412,7 +409,6 @@ class JettyConnector implements Connector {
                                 }
                             });
 
-            final AtomicReference<ClientResponse> jerseyResponse = new AtomicReference<>();
             final ByteBufferInputStream entityStream = new ByteBufferInputStream();
             jettyRequest.send(new Response.Listener.Adapter() {
 
@@ -427,7 +423,10 @@ class JettyConnector implements Connector {
                         }
                     }
                     final ClientResponse response = translateResponse(jerseyRequest, jettyResponse, entityStream);
-                    jerseyResponse.set(response);
+                    if (callbackInvoked.compareAndSet(false, true)) {
+                        callback.response(response);
+                    }
+                    responseFuture.complete(response);
                 }
 
                 @Override
@@ -457,10 +456,6 @@ class JettyConnector implements Connector {
                 @Override
                 public void onComplete(final Result result) {
                     entityStream.closeQueue();
-                    if (!callbackInvoked.get()) {
-                        callback.response(jerseyResponse.get());
-                    }
-                    responseFuture.complete(jerseyResponse.get());
                 }
 
                 @Override
