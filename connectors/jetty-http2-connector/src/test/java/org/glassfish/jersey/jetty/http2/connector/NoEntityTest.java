@@ -17,7 +17,6 @@
 package org.glassfish.jersey.jetty.http2.connector;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -55,7 +54,7 @@ public class NoEntityTest extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
     }
 
     @Test

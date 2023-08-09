@@ -18,7 +18,6 @@ package org.glassfish.jersey.jetty.http2.connector;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -62,7 +61,7 @@ public class GZIPContentEncodingTest extends JerseyTest {
     @Override
     protected void configureClient(ClientConfig config) {
         config.register(GZipEncoder.class);
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
     }
 
     @Test
@@ -81,7 +80,7 @@ public class GZIPContentEncodingTest extends JerseyTest {
     public void testPostChunked() {
         ClientConfig config = new ClientConfig();
         config.property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024);
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         config.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
 
         Client client = ClientBuilder.newClient(config);

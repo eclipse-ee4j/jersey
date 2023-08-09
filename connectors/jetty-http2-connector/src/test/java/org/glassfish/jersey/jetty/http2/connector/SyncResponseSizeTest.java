@@ -19,7 +19,6 @@ package org.glassfish.jersey.jetty.http2.connector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jetty.connector.JettyClientProperties;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -88,7 +87,7 @@ public class SyncResponseSizeTest extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
     }
 
     @Test
@@ -102,7 +101,7 @@ public class SyncResponseSizeTest extends JerseyTest {
     public void testDefaultTooBig() {
         final URI u = target().getUri();
         ClientConfig config = new ClientConfig().property(ClientProperties.READ_TIMEOUT, 1_000);
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
 
         Client c = ClientBuilder.newClient(config);
         WebTarget t = c.target(u);
@@ -122,7 +121,7 @@ public class SyncResponseSizeTest extends JerseyTest {
     public void testCustomBig() {
         final URI u = target().getUri();
         ClientConfig config = new ClientConfig().property(ClientProperties.READ_TIMEOUT, 1_000);
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         config.property(JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE, maxBufferSize);
 
         Client c = ClientBuilder.newClient(config);
@@ -143,7 +142,7 @@ public class SyncResponseSizeTest extends JerseyTest {
     public void testCustomTooBig() {
         final URI u = target().getUri();
         ClientConfig config = new ClientConfig().property(ClientProperties.READ_TIMEOUT, 1_000);
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         config.property(JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE, maxBufferSize);
 
         Client c = ClientBuilder.newClient(config);

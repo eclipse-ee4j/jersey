@@ -18,8 +18,6 @@ package org.glassfish.jersey.jetty.http2.connector;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
-import org.glassfish.jersey.jetty.connector.JettyHttpClientSupplier;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Client;
@@ -38,13 +36,13 @@ public class UnderlyingHttpClientAccessTest {
      */
     @Test
     public void testHttpClientInstanceAccess() {
-        final Client client = ClientBuilder.newClient(new ClientConfig().connectorProvider(new JettyConnectorProvider()));
-        final HttpClient hcOnClient = JettyConnectorProvider.getHttpClient(client);
+        final Client client = ClientBuilder.newClient(new ClientConfig().connectorProvider(new JettyHttp2ConnectorProvider()));
+        final HttpClient hcOnClient = JettyHttp2ConnectorProvider.getHttpClient(client);
         // important: the web target instance in this test must be only created AFTER the client has been pre-initialized
         // (see org.glassfish.jersey.client.Initializable.preInitialize method). This is here achieved by calling the
         // connector provider's static getHttpClient method above.
         final WebTarget target = client.target("http://localhost/");
-        final HttpClient hcOnTarget = JettyConnectorProvider.getHttpClient(target);
+        final HttpClient hcOnTarget = JettyHttp2ConnectorProvider.getHttpClient(target);
 
         assertNotNull(hcOnClient, "HTTP client instance set on JerseyClient should not be null.");
         assertNotNull(hcOnTarget, "HTTP client instance set on JerseyWebTarget should not be null.");
@@ -56,11 +54,11 @@ public class UnderlyingHttpClientAccessTest {
     public void testGetProvidedClientInstance() {
         final HttpClient httpClient = new HttpClient();
         final ClientConfig clientConfig = new ClientConfig()
-                .connectorProvider(new JettyConnectorProvider())
-                .register(new JettyHttpClientSupplier(httpClient));
+                .connectorProvider(new JettyHttp2ConnectorProvider())
+                .register(new JettyHttp2ClientSupplier(httpClient));
         final Client client = ClientBuilder.newClient(clientConfig);
         final WebTarget target = client.target("http://localhost/");
-        final HttpClient hcOnTarget = JettyConnectorProvider.getHttpClient(target);
+        final HttpClient hcOnTarget = JettyHttp2ConnectorProvider.getHttpClient(target);
 
         assertThat("Instance provided to a ClientConfig differs from instance provided by JettyProvider",
                 httpClient, is(hcOnTarget));

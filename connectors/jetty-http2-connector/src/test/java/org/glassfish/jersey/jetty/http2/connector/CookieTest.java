@@ -20,8 +20,6 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.jetty.connector.JettyClientProperties;
-import org.glassfish.jersey.jetty.connector.JettyConnector;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -70,7 +68,7 @@ public class CookieTest extends JerseyTest {
     @Test
     public void testCookieResource() {
         ClientConfig config = new ClientConfig();
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         Client client = ClientBuilder.newClient(config);
         WebTarget r = client.target(getBaseUri());
 
@@ -84,14 +82,14 @@ public class CookieTest extends JerseyTest {
     public void testDisabledCookies() {
         ClientConfig cc = new ClientConfig();
         cc.property(JettyClientProperties.DISABLE_COOKIES, true);
-        cc.connectorProvider(new JettyConnectorProvider());
+        cc.connectorProvider(new JettyHttp2ConnectorProvider());
         JerseyClient client = JerseyClientBuilder.createClient(cc);
         WebTarget r = client.target(getBaseUri());
 
         assertEquals("NO-COOKIE", r.request().get(String.class));
         assertEquals("NO-COOKIE", r.request().get(String.class));
 
-        final JettyConnector connector = (JettyConnector) client.getConfiguration().getConnector();
+        final JettyHttp2Connector connector = (JettyHttp2Connector) client.getConfiguration().getConnector();
         if (connector.getCookieStore() != null) {
             assertTrue(connector.getCookieStore().getCookies().isEmpty());
         } else {
@@ -103,14 +101,14 @@ public class CookieTest extends JerseyTest {
     @Test
     public void testCookies() {
         ClientConfig cc = new ClientConfig();
-        cc.connectorProvider(new JettyConnectorProvider());
+        cc.connectorProvider(new JettyHttp2ConnectorProvider());
         JerseyClient client = JerseyClientBuilder.createClient(cc);
         WebTarget r = client.target(getBaseUri());
 
         assertEquals("NO-COOKIE", r.request().get(String.class));
         assertEquals("value", r.request().get(String.class));
 
-        final JettyConnector connector = (JettyConnector) client.getConfiguration().getConnector();
+        final JettyHttp2Connector connector = (JettyHttp2Connector) client.getConfiguration().getConnector();
         assertNotNull(connector.getCookieStore().getCookies());
         assertEquals(1, connector.getCookieStore().getCookies().size());
         assertEquals("value", connector.getCookieStore().getCookies().get(0).getValue());

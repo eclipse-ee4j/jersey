@@ -19,7 +19,6 @@ package org.glassfish.jersey.jetty.http2.connector;
 import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jetty.connector.JettyClientProperties;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -156,7 +155,7 @@ public class AuthTest extends JerseyTest {
         ClientConfig config = new ClientConfig();
         config.property(JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION,
                 new BasicAuthentication(getBaseUri(), "WallyWorld", "name", "password"));
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         Client client = ClientBuilder.newClient(config);
 
         Response response = client.target(getBaseUri()).path(PATH).request().get();
@@ -169,7 +168,7 @@ public class AuthTest extends JerseyTest {
         ClientConfig config = new ClientConfig();
         config.property(JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION,
                 new BasicAuthentication(getBaseUri(), "WallyWorld", "name", "password"));
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         Client client = ClientBuilder.newClient(config);
 
         Response response = client.target(getBaseUri()).path(PATH).request().post(Entity.text("POST"));
@@ -182,7 +181,7 @@ public class AuthTest extends JerseyTest {
         ClientConfig config = new ClientConfig();
         config.property(JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION,
                 new BasicAuthentication(getBaseUri(), "WallyWorld", "name", "password"));
-        config.connectorProvider(new JettyConnectorProvider());
+        config.connectorProvider(new JettyHttp2ConnectorProvider());
         Client client = ClientBuilder.newClient(config);
 
         Response response = client.target(getBaseUri()).path(PATH).request().delete();

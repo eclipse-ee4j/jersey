@@ -17,7 +17,6 @@
 package org.glassfish.jersey.jetty.http2.connector;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -184,7 +183,7 @@ public class TraceSupportTest extends JerseyTest {
     }
 
     private Client getJettyClient() {
-        return ClientBuilder.newClient(new ClientConfig().connectorProvider(new JettyConnectorProvider()));
+        return ClientBuilder.newClient(new ClientConfig().connectorProvider(new JettyHttp2ConnectorProvider()));
     }
 
 
