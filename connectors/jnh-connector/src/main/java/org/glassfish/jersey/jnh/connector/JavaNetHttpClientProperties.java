@@ -86,6 +86,17 @@ public class JavaNetHttpClientProperties {
             "jersey.config.jnh.client.disableCookies";
 
     /**
+     * HTTP version - if null or instance of HttpClient.Version.HTTP_1_1 the version will be set to HTTP_1_1
+     * if version is HttpClient.Version.HTTP_2 the client will attempt to perform each request using HTTP_2 protocol
+     * but if not supported by server, the protocol will be still HTTP_1_1
+     *
+     * @since 3.1.4
+     */
+    public static final String HTTP_VERSION =
+            "jersey.config.jnh.client.httpVersion";
+
+
+    /**
      * Prevent this class from instantiation.
      */
     private JavaNetHttpClientProperties() {}
