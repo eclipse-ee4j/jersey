@@ -83,8 +83,10 @@ public class JavaNetHttpConnector implements Connector {
      * @param configuration the configuration properties for this connector
      */
     public JavaNetHttpConnector(final Client client, final Configuration configuration) {
-        HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
-        httpClientBuilder.version(HttpClient.Version.HTTP_1_1);
+        final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
+        final HttpClient.Version version =
+                getPropertyOrNull(configuration, JavaNetHttpClientProperties.HTTP_VERSION, HttpClient.Version.class);
+        httpClientBuilder.version(version == null ? HttpClient.Version.HTTP_1_1 : version);
         SSLContext sslContext = client.getSslContext();
         if (sslContext != null) {
             httpClientBuilder.sslContext(sslContext);
@@ -229,6 +231,9 @@ public class JavaNetHttpConnector implements Connector {
         Object propertyObject = configuration.getProperty(propertyKey);
         if (propertyObject == null) {
             return null;
+        }
+        if (resultClass.isEnum() && propertyObject instanceof String) {
+            return (T) Enum.valueOf(resultClass.asSubclass(Enum.class), (String) propertyObject);
         }
         if (!resultClass.isInstance(propertyObject)) {
             LOGGER.warning(LocalizationMessages.ERROR_INVALID_CLASS(propertyKey, resultClass.getName()));
