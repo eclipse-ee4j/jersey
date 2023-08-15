@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,13 @@
 
 package org.glassfish.jersey.server.mvc.spi;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -182,8 +182,8 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
             // File-system path.
             if (reader == null) {
                 try {
-                    reader = new InputStreamReader(new FileInputStream(template), encoding);
-                } catch (final FileNotFoundException fnfe) {
+                    reader = new InputStreamReader(Files.newInputStream(Paths.get(template)), encoding);
+                } catch (final IOException ioe) {
                     // NOOP.
                 }
             }

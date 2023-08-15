@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,10 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -314,7 +315,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
     }
 
     public String readFile(String fileName) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        BufferedReader reader = Files.newBufferedReader(Paths.get(fileName));
         String s;
         StringBuilder sb = new StringBuilder();
         while ((s = reader.readLine()) != null) {
