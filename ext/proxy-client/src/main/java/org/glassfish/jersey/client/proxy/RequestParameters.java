@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -77,13 +78,13 @@ class RequestParameters {
             newTarget = newTarget.resolveTemplate(((PathParam) ann).value(), value);
         } else if ((ann = anns.get((QueryParam.class))) != null) {
             if (value instanceof Collection) {
-                newTarget = newTarget.queryParam(((QueryParam) ann).value(), convert((Collection<?>) value));
+                newTarget = newTarget.queryParam(((QueryParam) ann).value(), convert((Collection<?>) value, true));
             } else {
-                newTarget = newTarget.queryParam(((QueryParam) ann).value(), value);
+                newTarget = newTarget.queryParam(((QueryParam) ann).value(), encodeTemplate(value));
             }
         } else if ((ann = anns.get((HeaderParam.class))) != null) {
             if (value instanceof Collection) {
-                headers.addAll(((HeaderParam) ann).value(), convert((Collection<?>) value));
+                headers.addAll(((HeaderParam) ann).value(), convert((Collection<?>) value, false));
             } else {
                 headers.addAll(((HeaderParam) ann).value(), value);
             }
@@ -117,9 +118,9 @@ class RequestParameters {
             }
         } else if ((ann = anns.get((MatrixParam.class))) != null) {
             if (value instanceof Collection) {
-                newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), convert((Collection<?>) value));
+                newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), convert((Collection<?>) value, true));
             } else {
-                newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), value);
+                newTarget = newTarget.matrixParam(((MatrixParam) ann).value(), encodeTemplate(value));
             }
         } else if ((ann = anns.get((FormParam.class))) != null) {
             if (value instanceof Collection) {
@@ -187,8 +188,23 @@ class RequestParameters {
         return fields;
     }
 
-    private Object[] convert(final Collection<?> value) {
-        return value.toArray();
+    private Object[] convert(Collection<?> value, boolean encode) {
+        Object[] array = new Object[value.size()];
+        int index = 0;
+        for (Iterator<?> it = value.iterator(); it.hasNext();) {
+            Object o = it.next();
+            array[index++] = o == null ? o : (encode ? encodeTemplate(o) : o.toString());
+        }
+        return array;
+    }
+
+    /**
+     * The Query and Matrix arguments are never templates
+     * @param notNull an Object that is not null
+     * @return encoded curly brackets within the string representation of the {@code notNull}
+     */
+    private String encodeTemplate(Object notNull) {
+        return notNull.toString().replace("{", "%7B").replace("}", "%7D");
     }
 
     public static boolean hasAnyParamAnnotation(final Map<Class<?>, Annotation> anns) {

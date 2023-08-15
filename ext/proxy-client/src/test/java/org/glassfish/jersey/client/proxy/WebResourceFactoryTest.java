@@ -39,6 +39,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -336,5 +337,28 @@ public class WebResourceFactoryTest extends JerseyTest {
     @Test
     public void testEquals() {
         assertFalse(resource.equals(resource2), "The two resource instances should not be considered equals as they are unique");
+    }
+
+    @Test
+    void testParamWithCurly() {
+        String param = "faulty {";
+
+        String result = resource.getByName(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameCookie(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameHeader(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameMatrix(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.postByNameFormParam(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getId(param);
+        Assertions.assertEquals(param, result);
     }
 }
