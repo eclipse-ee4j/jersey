@@ -127,6 +127,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <maven.version>3.6.2</maven.version>
+        <maven.version>3.8.1</maven.version>
     </properties>
 </project>
