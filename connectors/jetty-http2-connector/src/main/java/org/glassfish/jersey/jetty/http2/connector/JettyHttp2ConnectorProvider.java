@@ -28,7 +28,7 @@ import org.glassfish.jersey.jetty.connector.LocalizationMessages;
 /**
  * Provides HTTP2 enabled version of the {@link JettyConnectorProvider} for a client
  *
- * @since 2.40
+ * @since 2.41
  */
 public class JettyHttp2ConnectorProvider extends JettyConnectorProvider {
     @Override

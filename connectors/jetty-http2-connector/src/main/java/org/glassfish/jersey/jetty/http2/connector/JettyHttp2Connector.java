@@ -30,7 +30,7 @@ import java.util.Optional;
 /**
  * Extends {@link JettyConnector} with HTTP/2 transport support
  *
- * @since 2.40
+ * @since 2.41
  */
 class JettyHttp2Connector extends JettyConnector {
 
