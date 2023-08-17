@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -90,7 +89,7 @@ public final class JarUtils {
             jos.putNextEntry(e);
 
             final InputStream f = new BufferedInputStream(
-                    Files.newInputStream(Paths.get(base + entry.getKey())));
+                    Files.newInputStream(new File(base, entry.getKey()).toPath()));
             final byte[] buf = new byte[1024];
             int read = 1024;
             while ((read = f.read(buf, 0, read)) != -1) {

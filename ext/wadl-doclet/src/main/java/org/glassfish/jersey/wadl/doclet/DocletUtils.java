@@ -18,12 +18,12 @@ package org.glassfish.jersey.wadl.doclet;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +97,7 @@ class DocletUtils {
         Class<?>[] classes = getJAXBContextClasses(result, docProcessor);
         LOG.info("cdataElements " + Arrays.asList(cdataElements));
         LOG.info("classes " + Arrays.asList(classes));
-        try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(filePath)))) {
+        try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()))) {
             JAXBContext c = JAXBContext.newInstance(classes);
             Marshaller m = c.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
