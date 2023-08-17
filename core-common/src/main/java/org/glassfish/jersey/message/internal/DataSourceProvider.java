@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -162,7 +162,7 @@ public class DataSourceProvider extends AbstractMessageReaderWriterProvider<Data
             final OutputStream entityStream) throws IOException {
         final InputStream in = t.getInputStream();
         try {
-            writeTo(in, entityStream);
+            ReaderWriter.writeTo(in, entityStream);
         } finally {
             in.close();
         }

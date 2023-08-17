@@ -119,14 +119,14 @@ public final class ReaderWriter {
      * Get the character set from a media type.
      * <p>
      * The character set is obtained from the media type parameter "charset".
-     * If the parameter is not present the {@link #UTF8} charset is utilized.
+     * If the parameter is not present the {@link StandardCharsets#UTF_8} charset is utilized.
      *
      * @param m the media type.
      * @return the character set.
      */
     public static Charset getCharset(MediaType m) {
         String name = (m == null) ? null : m.getParameters().get(MediaType.CHARSET_PARAMETER);
-        return (name == null) ? UTF8 : Charset.forName(name);
+        return (name == null) ? StandardCharsets.UTF_8 : Charset.forName(name);
     }
 
     /**

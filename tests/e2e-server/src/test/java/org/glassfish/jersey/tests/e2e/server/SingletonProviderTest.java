@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,6 +40,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.spi.ContextResolvers;
 import org.glassfish.jersey.test.JerseyTest;
@@ -224,7 +225,7 @@ public class SingletonProviderTest extends JerseyTest {
                 MediaType mediaType,
                 MultivaluedMap<String, String> httpHeaders,
                 InputStream entityStream) throws IOException {
-            return readFromAsString(entityStream, mediaType) + this + ":" + readerCounter++;
+            return ReaderWriter.readFromAsString(entityStream, mediaType) + this + ":" + readerCounter++;
         }
 
         @Override
@@ -246,7 +247,7 @@ public class SingletonProviderTest extends JerseyTest {
                 MediaType mediaType,
                 MultivaluedMap<String, Object> httpHeaders,
                 OutputStream entityStream) throws IOException {
-            writeToAsString(t + this + ":" + counter++, entityStream, mediaType);
+            ReaderWriter.writeToAsString(t + this + ":" + counter++, entityStream, mediaType);
         }
     }
 }

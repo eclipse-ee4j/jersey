@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,7 +56,7 @@ final class StringMessageProvider extends AbstractMessageReaderWriterProvider<St
             MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders,
             InputStream entityStream) throws IOException {
-        return readFromAsString(entityStream, mediaType);
+        return ReaderWriter.readFromAsString(entityStream, mediaType);
     }
 
     @Override
@@ -78,6 +78,6 @@ final class StringMessageProvider extends AbstractMessageReaderWriterProvider<St
             MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException {
-        writeToAsString(t, entityStream, mediaType);
+        ReaderWriter.writeToAsString(t, entityStream, mediaType);
     }
 }
