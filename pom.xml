@@ -1394,6 +1394,13 @@
                     <id>dash-licenses-snapshots</id>
                     <url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
                     <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>dash-licenses-releases</id>
+                    <url>https://repo.eclipse.org/content/repositories/dash-licenses-releases/</url>
+                    <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
                 </pluginRepository>
@@ -1403,7 +1410,7 @@
                     <plugin>
                         <groupId>org.eclipse.dash</groupId>
                         <artifactId>license-tool-plugin</artifactId>
-                        <version>0.0.1-SNAPSHOT</version>
+                        <version>1.0.2</version>
                         <executions>
                             <execution>
                                 <id>license-check</id>
