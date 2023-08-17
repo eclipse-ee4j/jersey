@@ -42,6 +42,7 @@ import org.glassfish.jersey.message.internal.EntityInputStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * Entity provider (reader and writer) for Gson.
@@ -81,7 +82,7 @@ public class JsonGsonProvider extends AbstractMessageReaderWriterProvider<Object
         Gson gson = getGson(type);
         try {
             return gson.fromJson(new InputStreamReader(entityInputStream,
-                    AbstractMessageReaderWriterProvider.getCharset(mediaType)), genericType);
+                    ReaderWriter.getCharset(mediaType)), genericType);
         } catch (Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_GSON_DESERIALIZATION(), e);
         }
@@ -100,7 +101,7 @@ public class JsonGsonProvider extends AbstractMessageReaderWriterProvider<Object
                         OutputStream entityStream) throws IOException, WebApplicationException {
         Gson gson = getGson(type);
         try {
-            entityStream.write(gson.toJson(o).getBytes(AbstractMessageReaderWriterProvider.getCharset(mediaType)));
+            entityStream.write(gson.toJson(o).getBytes(ReaderWriter.getCharset(mediaType)));
             entityStream.flush();
         } catch (Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_GSON_SERIALIZATION(), e);

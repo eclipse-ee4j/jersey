@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import org.glassfish.jersey.jettison.internal.LocalizationMessages;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * Low-level JSON media type message entity provider (reader & writer) for
@@ -70,7 +71,7 @@ public class JettisonObjectProvider extends JettisonLowLevelProvider<JSONObject>
             MultivaluedMap<String, String> httpHeaders,
             InputStream entityStream) throws IOException {
         try {
-            return new JSONObject(readFromAsString(entityStream, mediaType));
+            return new JSONObject(ReaderWriter.readFromAsString(entityStream, mediaType));
         } catch (JSONException je) {
             throw new WebApplicationException(
                     new Exception(LocalizationMessages.ERROR_PARSING_JSON_OBJECT(), je),
@@ -89,7 +90,7 @@ public class JettisonObjectProvider extends JettisonLowLevelProvider<JSONObject>
             OutputStream entityStream) throws IOException {
         try {
             OutputStreamWriter writer = new OutputStreamWriter(entityStream,
-                    getCharset(mediaType));
+                    ReaderWriter.getCharset(mediaType));
             t.write(writer);
             writer.flush();
         } catch (JSONException je) {

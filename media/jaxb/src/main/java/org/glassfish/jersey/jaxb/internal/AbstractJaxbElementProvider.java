@@ -23,6 +23,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
@@ -41,6 +42,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * An abstract provider for {@link JAXBElement}.
@@ -145,8 +147,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
             OutputStream entityStream) throws IOException {
         try {
             final Marshaller m = getMarshaller(t.getDeclaredType(), mediaType);
-            final Charset c = getCharset(mediaType);
-            if (c != UTF8) {
+            final Charset c = ReaderWriter.getCharset(mediaType);
+            if (c != StandardCharsets.UTF_8) {
                 m.setProperty(Marshaller.JAXB_ENCODING, c.name());
             }
             setHeader(m, annotations);

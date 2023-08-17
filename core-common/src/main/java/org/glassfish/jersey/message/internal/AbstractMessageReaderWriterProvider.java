@@ -81,11 +81,14 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      * Get the character set from a media type.
      * <p>
      * The character set is obtained from the media type parameter "charset".
-     * If the parameter is not present the {@link #UTF8} charset is utilized.
+     * If the parameter is not present the {@link StandardCharsets#UTF_8} charset is utilized.
      *
      * @param m the media type.
      * @return the character set.
+     *
+     * @deprecated use {@code ReaderWriter.getCharset(m)} instead
      */
+    @Deprecated
     public static Charset getCharset(MediaType m) {
         return ReaderWriter.getCharset(m);
     }
@@ -99,7 +102,10 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      * @return the string.
      *
      * @throws IOException if there is an error reading from the input stream.
+     *
+     * @deprecated use {@code ReaderWriter.readFromAsString(in, type)} instead
      */
+    @Deprecated
     public static String readFromAsString(InputStream in, MediaType type) throws IOException {
         return ReaderWriter.readFromAsString(in, type);
     }
@@ -112,7 +118,10 @@ public abstract class AbstractMessageReaderWriterProvider<T> implements MessageB
      * @param type the media type that determines the character set defining
      *             how to decode bytes to characters.
      * @throws IOException in case of a write failure.
+     *
+     * @deprecated use {@code ReaderWriter.writeToAsString(s, out, type)} instead
      */
+    @Deprecated
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
         ReaderWriter.writeToAsString(s, out, type);
     }
