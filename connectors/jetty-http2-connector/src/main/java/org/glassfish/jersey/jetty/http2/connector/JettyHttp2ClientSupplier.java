@@ -27,7 +27,7 @@ import org.glassfish.jersey.jetty.connector.JettyHttpClientSupplier;
 /**
  * HTTP/2 enabled version of the {@link JettyHttpClientSupplier}
  *
- * @since 2.40
+ * @since 2.41
  */
 public class JettyHttp2ClientSupplier implements JettyHttpClientContract {
     private final HttpClient http2Client;

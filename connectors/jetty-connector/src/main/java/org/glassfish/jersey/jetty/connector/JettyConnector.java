@@ -144,7 +144,7 @@ public class JettyConnector implements Connector {
      * @param jaxrsClient JAX-RS client instance, for which the connector is created.
      * @param config client configuration.
      */
-    public JettyConnector(final Client jaxrsClient, final Configuration config) {
+    protected JettyConnector(final Client jaxrsClient, final Configuration config) {
         this.configuration = config;
         HttpClient httpClient = getRegisteredHttpClient(config);
 
@@ -226,9 +226,9 @@ public class JettyConnector implements Connector {
      * the default transport is {@link HttpClientTransportOverHTTP}
      *
      * @return instance of {@link HttpClientTransport}
-     * @since 2.40
+     * @since 2.41
      */
-    public HttpClientTransport initClientTransport() {
+    protected HttpClientTransport initClientTransport() {
         return new HttpClientTransportOverHTTP();
     }
 
@@ -238,9 +238,9 @@ public class JettyConnector implements Connector {
      * @param config configuration where {@link HttpClient} could be registered
      * @return {@link HttpClient} instance if any was previously registered or NULL
      *
-     * @since 2.40
+     * @since 2.41
      */
-    public HttpClient getRegisteredHttpClient(Configuration config) {
+    protected HttpClient getRegisteredHttpClient(Configuration config) {
         if (config.isRegistered(JettyHttpClientSupplier.class)) {
             Optional<Object> contract = config.getInstances().stream()
                     .filter(a-> JettyHttpClientSupplier.class.isInstance(a)).findFirst();

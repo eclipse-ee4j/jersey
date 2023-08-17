@@ -51,10 +51,10 @@ class JettyHttp2Connector extends JettyConnector {
      * The overriden method provides {@link HttpClientTransportOverHTTP2} with initialized {@link HTTP2Client}
      *
      * @return {@link HttpClientTransportOverHTTP2}
-     * @since 2.40
+     * @since 2.41
      */
     @Override
-    public HttpClientTransport initClientTransport() {
+    protected HttpClientTransport initClientTransport() {
         return new HttpClientTransportOverHTTP2(new HTTP2Client());
     }
 
@@ -64,10 +64,10 @@ class JettyHttp2Connector extends JettyConnector {
      * @param config configuration where {@link HttpClient} could be registered
      * @return {@link HttpClient} instance if any was previously registered or NULL
      *
-     * @since 2.40
+     * @since 2.41
      */
     @Override
-    public HttpClient getRegisteredHttpClient(Configuration config) {
+    protected HttpClient getRegisteredHttpClient(Configuration config) {
         if (config.isRegistered(JettyHttp2ClientSupplier.class)) {
             Optional<Object> contract = config.getInstances().stream()
                     .filter(a-> JettyHttp2ClientSupplier.class.isInstance(a)).findFirst();
