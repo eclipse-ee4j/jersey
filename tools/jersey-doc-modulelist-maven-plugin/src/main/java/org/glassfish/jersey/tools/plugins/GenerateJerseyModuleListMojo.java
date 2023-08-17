@@ -28,11 +28,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -315,7 +315,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
     }
 
     public String readFile(String fileName) throws IOException {
-        BufferedReader reader = Files.newBufferedReader(Paths.get(fileName));
+        BufferedReader reader = Files.newBufferedReader(new File(fileName).toPath());
         String s;
         StringBuilder sb = new StringBuilder();
         while ((s = reader.readLine()) != null) {

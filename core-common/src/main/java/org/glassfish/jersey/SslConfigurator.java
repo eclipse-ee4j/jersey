@@ -17,11 +17,11 @@
 package org.glassfish.jersey;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -636,7 +636,7 @@ public final class SslConfigurator {
                     if (keyStoreBytes != null) {
                         keyStoreInputStream = new ByteArrayInputStream(keyStoreBytes);
                     } else if (!keyStoreFile.equals("NONE")) {
-                        keyStoreInputStream = Files.newInputStream(Paths.get(keyStoreFile));
+                        keyStoreInputStream = Files.newInputStream(new File(keyStoreFile).toPath());
                     }
                     _keyStore.load(keyStoreInputStream, keyStorePass);
                 } finally {
@@ -711,7 +711,7 @@ public final class SslConfigurator {
                     if (trustStoreBytes != null) {
                         trustStoreInputStream = new ByteArrayInputStream(trustStoreBytes);
                     } else if (!trustStoreFile.equals("NONE")) {
-                        trustStoreInputStream = Files.newInputStream(Paths.get(trustStoreFile));
+                        trustStoreInputStream = Files.newInputStream(new File(trustStoreFile).toPath());
                     }
                     _trustStore.load(trustStoreInputStream, trustStorePass);
                 } finally {
