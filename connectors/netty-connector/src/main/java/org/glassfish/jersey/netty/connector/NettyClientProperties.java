@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,7 +72,7 @@ public class NettyClientProperties {
     /**
      * The maximal number of redirects during single request.
      * <p/>
-     * Value is expected to be positive {@link Integer}. Default value is {@value #DEFAULT_MAX_REDIRECTS}.
+     * Value is expected to be positive {@link Integer}. Default value is 5.
      * <p/>
      * HTTP redirection must be enabled by property {@link org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS},
      * otherwise {@code MAX_REDIRECTS} is not applied.

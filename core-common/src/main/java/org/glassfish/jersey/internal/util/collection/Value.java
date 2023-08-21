@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,15 @@
 
 package org.glassfish.jersey.internal.util.collection;
 
+import java.util.function.Supplier;
+
 /**
  * A generic value provider.
  *
  * @param <T> value type.
  * @author Marek Potociar
  */
-public interface Value<T> {
+public interface Value<T> extends Supplier<T> {
     /**
      * Get the stored value.
      *

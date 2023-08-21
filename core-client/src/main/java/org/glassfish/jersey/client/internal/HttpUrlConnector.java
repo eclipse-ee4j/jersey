@@ -39,12 +39,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.ws.rs.ProcessingException;
@@ -111,7 +113,7 @@ public class HttpUrlConnector implements Connector {
     private final boolean fixLengthStreaming;
     private final boolean setMethodWorkaround;
     private final boolean isRestrictedHeaderPropertySet;
-    private final LazyValue<SSLSocketFactory> sslSocketFactory;
+    private LazyValue<SSLSocketFactory> sslSocketFactory;
 
     private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
             = new HttpUrlExpect100ContinueConnectorExtension();
@@ -134,13 +136,6 @@ public class HttpUrlConnector implements Connector {
             final int chunkSize,
             final boolean fixLengthStreaming,
             final boolean setMethodWorkaround) {
-
-        sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() {
-            @Override
-            public SSLSocketFactory get() {
-                return client.getSslContext().getSocketFactory();
-            }
-        });
 
         this.connectionFactory = connectionFactory;
         this.chunkSize = chunkSize;
@@ -331,6 +326,7 @@ public class HttpUrlConnector implements Connector {
      */
     private void secureConnection(
             final ClientRequest clientRequest, final HttpURLConnection uc, final SSLParamConfigurator sniConfig) {
+        setSslContextFactory(clientRequest.getClient(), clientRequest);
         secureConnection(clientRequest.getClient(), uc); // keep this for compatibility
 
         if (sniConfig.isSNIRequired() && uc instanceof HttpsURLConnection) { // set SNI
@@ -339,6 +335,18 @@ public class HttpUrlConnector implements Connector {
             socketFactory.setSniConfig(sniConfig);
             suc.setSSLSocketFactory(socketFactory);
         }
+    }
+
+    private void setSslContextFactory(Client client, ClientRequest request) {
+        final Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+
+        sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() {
+            @Override
+            public SSLSocketFactory get() {
+                final SSLContext ctx = supplier == null ? client.getSslContext() : supplier.get();
+                return ctx.getSocketFactory();
+            }
+        });
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
