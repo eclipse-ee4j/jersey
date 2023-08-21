@@ -1077,6 +1077,21 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER;</entry>
+                        <entry><literal>jersey.config.client.ssl.context.supplier</literal></entry>
+                        <entry>
+                            <para>
+                                The <literal>javax.net.ssl.SSLContext java.util.function.Supplier</literal> to be used to set ssl
+                                context in the current HTTP request. Has precedence over the
+                                <literal>Client#getSslContext()</literal>.
+                            </para>
+                            <para>
+                                Currently supported by the default <literal>HttpUrlConnector</literal> and by
+                                <literal>NettyConnector</literal> only.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.USE_ENCODING;</entry>
                         <entry><literal>jersey.config.client.useEncoding</literal></entry>
                         <entry>
