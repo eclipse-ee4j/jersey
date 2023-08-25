@@ -298,6 +298,21 @@ public class EntityPartTest extends JerseyTest {
         }
     }
 
+    @Test
+    public void postHeaderNoListTest() throws IOException {
+        EntityPart entityPart = EntityPart.withName("name1").content("data1").header("header-01", "value-01").build();
+        Entity entity = Entity.entity(entityPart, MediaType.MULTIPART_FORM_DATA_TYPE);
+        try (Response response = target("/postHeaders").request().post(entity)) {
+            response.bufferEntity();
+            List<EntityPart> result = response.readEntity(LIST_ENTITY_PART_TYPE);
+            assertEquals("value-01", result.get(0).getHeaders().getFirst("header-01"));
+            assertEquals("data1", result.get(0).getContent(String.class));
+
+            EntityPart firstEntity = response.readEntity(EntityPart.class);
+            assertEquals("value-01", result.get(0).getHeaders().getFirst("header-01"));
+        }
+    }
+
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public static class AtomicReferenceProvider implements
