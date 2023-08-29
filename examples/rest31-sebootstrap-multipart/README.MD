@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved. "
 [//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
@@ -10,11 +10,10 @@ Multipart Web app Example
 =========================
 
 This example demonstrates how to develop RESTful web service with
-demonstrating Jakarta-REST Integration with MIME MultiPart Message Formats and
-a Jakarta EE 9 compliant Web container.
+demonstrating Jakarta REST Integration with MIME MultiPart Message Formats and
+Jakarta REST EE 10 SeBootstrap functionality.
 
-Please see also comparable example demonstrating usage of Jakarta REST 3.1 API for
-MIME MultiPart Message Formats (JERSEY_ROOT/examples/rest31-sebootstrap-multipart)
+Feel free to compare with pre-Jakarta REST 3.1 Jersey Multipart example (JERSEY_ROOT/examples/multipart-webapp).
 
 Contents
 --------
@@ -25,7 +24,7 @@ The mapping of the URI path space is presented in the following table:
 ----------------------------|----------------------------------------------| -----------------------------------------------------------------------------------------------
  **_/form/part_**           | POST message returning entire string         | `curl -X POST -F "part=part1"  http://localhost:8080/multipart-webapp/form/part`
  **_/form/part-file-name_** | POST message returning part filename string. | Be sure to execute this curl from project directory where pom.xml resides
-|                           |                                              | `curl -X POST -F "part=@pom.xml"  http://localhost:8080/multipart-webapp/form/part-file-name`
+|                            |                                              | `curl -X POST -F "part=@pom.xml"  http://localhost:8080/multipart-webapp/form/part-file-name`
  **_/form/xml-jaxb-part_**  | POST message returning xml jaxb part string. | No curl sample available, please check test sources.
 
 Running the Example
@@ -33,6 +32,6 @@ Running the Example
 
 You can run the example using Jetty as follows:
 
-> `mvn clean package jetty:run`
+> `mvn clean package exec:java`
 
 The sample requests are using [cURL](http://curl.haxx.se/) command line tool.
