@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,10 +40,13 @@
                             Since Jakarta EE 9 the <literal>jakarta.</literal> namespace is introduced as a replacement
                             for javax namespace from Java EE.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>
-                            Due to required jakartification several modules where omitted (because of not satisfied dependencies).
-                            Or require higher JDK (11+).
+                            Some Jersey modules require higher versions of Java SE. See <xref linkend="se_compatibility"/>.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>
                             Examples and tests are reduced in quantity (so you probably will not find all those examples which were available
                             in the 2.32 version).
@@ -95,6 +98,9 @@
                             Jakarta EE 10. Jakarta EE 10 defines the minimum JDK 11 requirement and hence Jersey no longer
                             supports JDK 8.
                         </para>
+                        <para>
+                            Some Jersey modules require higher versions of Java SE. See <xref linkend="se_compatibility"/>.
+                        </para>
                     </listitem>
                     <listitem>
                         <para>
@@ -113,6 +119,24 @@
                 <literal>Servlet</literal> container. This can affect tests, as well as deployments to containers
                 where the annotation used to be ignored by previous versions of Jersey.
             </para>
+        </section>
+        <section xml:id="mig-3.1.4-jetty-modules">
+            <title>Jetty Modules</title>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Jersey 3.0.x, and 3.1.0 - 3.1.3 Jetty modules (jersey-jetty-connector, jersey-container-jetty-http,
+                        jersey-container-jetty-servlet, jersey-test-framework-provider-jetty) are based on Jetty 11,
+                        which is Jakarta EE 9 related.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Jersey 3.1.4 modules use Jetty 12 which is Jakarta EE 10 related (as well as Jersey 3.1.x).
+                        Jetty 12 dependencies use modules names different from Jetty 11.
+                    </para>
+                </listitem>
+            </itemizedlist>
         </section>
     </section>
 
