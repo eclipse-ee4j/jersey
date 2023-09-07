@@ -121,6 +121,14 @@
             </activation>
             <modules>
                 <module>release-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>JDK17+</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
                 <module>version-agnostic</module>
             </modules>
         </profile>

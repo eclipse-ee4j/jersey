@@ -1121,7 +1121,8 @@
                                     &jersey.apache5.Apache5ConnectorProvider;,
                                     &jersey.grizzly.GrizzlyConnectorProvider;,
                                     &jersey.helidon.HelidonConnectorProvider;,
-                                    &jersey.netty.NettyConnectorProvider;, and
+                                    &jersey.netty.NettyConnectorProvider;,
+                                    &jersey.jetty11.Jetty11ConnectorProvider;, and
                                     &jersey.jetty.JettyConnectorProvider; only.</emphasis>
                             </para>
                         </entry>

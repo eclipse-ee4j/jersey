@@ -175,7 +175,12 @@
     &lt;artifactId&gt;jersey-apache-connector&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
-<!-- Requires JDK 11+ -->
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.connectory&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-jetty11-connector&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+<!-- Requires JDK 17+ -->
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
     &lt;artifactId&gt;jersey-jetty-connector&lt;/artifactId&gt;

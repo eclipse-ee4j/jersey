@@ -95,7 +95,7 @@
         <profile>
             <id>JettyExclude</id>
             <activation>
-                <jdk>1.8</jdk>
+                <jdk>[11,17)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -112,9 +112,9 @@
             </build>
         </profile>
         <profile>
-            <id>Jetty11</id>
+            <id>Jetty17</id>
             <activation>
-                <jdk>[11,)</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <dependencies>
                 <dependency>

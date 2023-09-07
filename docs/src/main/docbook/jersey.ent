@@ -487,6 +487,14 @@
 <!ENTITY jersey.jetty.JettyHttpContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerFactory.html'>JettyHttpContainerFactory</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerProvider.html'>JettyHttpContainerProvider</link>">
 <!ENTITY jersey.jetty.JettyWebContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/servlet/JettyWebContainerFactory.html'>JettyWebContainerFactory</link>">
+<!ENTITY jersey.jetty11.Jetty11ClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html'>Jetty11ClientProperties</link>" >
+<!ENTITY jersey.jetty11.Jetty11HttpClientSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11HttpClientSupplier.html'>Jetty11HttpClientSupplier</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#ENABLE_SSL_HOSTNAME_VERIFICATION'>Jetty11ClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#DISABLE_COOKIES'>Jetty11ClientProperties.DISABLE_COOKIES</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>Jetty11ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>Jetty11ClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#TOTAL_TIMEOUT'>Jetty11ClientProperties.TOTAL_TIMEOUT</link>" >
+<!ENTITY jersey.jetty11.Jetty11ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ConnectorProvider.html'>Jetty11ConnectorProvider</link>">
 <!ENTITY jersey.jnh.JavaNetHttpConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpConnectorProvider.html'>JavaNetHttpConnectorProvider</link>">
 <!ENTITY jersey.jnh.JavaNetHttpClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html'>JavaNetHttpClientProperties</link>">
 <!ENTITY jersey.jnh.JavaNetHttpClientProperties.COOKIE_HANDLER "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#COOKIE_HANDLER'>JavaNetHttpClientProperties.COOKIE_HANDLER</link>">
@@ -997,6 +1005,7 @@
 <!ENTITY lit.jersey.jetty.JettyHttpContainerFactory "<literal>JettyHttpContainerFactory</literal>">
 <!ENTITY lit.jersey.jetty.JettyHttpContainerProvider "<literal>JettyHttpContainerProvider</literal>">
 <!ENTITY lit.jersey.jetty.JettyWebContainerFactory "<literal>JettyWebContainerFactory</literal>">
+<!ENTITY lit.jersey.jetty11.Jetty11ConnectorProvider "<literal>Jetty11ConnectorProvider</literal>">
 <!ENTITY lit.jersey.linking.DeclarativeLinkingFeature "<literal>DeclarativeLinkingFeature</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature "<literal>LoggingFeature</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_LOGGER_NAME "<literal>LoggingFeature.DEFAULT_LOGGER_NAME</literal>">

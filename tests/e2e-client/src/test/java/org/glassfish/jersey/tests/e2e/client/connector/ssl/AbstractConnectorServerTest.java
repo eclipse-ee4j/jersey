@@ -55,14 +55,16 @@ public abstract class AbstractConnectorServerTest {
      * @return test parameters.
      */
     public static Stream<ConnectorProvider> testData() {
-        int size = 6;
+        int size = JdkVersion.getJdkVersion().getMajor() < 17 ? 5 : 6;
         final ConnectorProvider[] providers = new ConnectorProvider[size];
         providers[0] = new HttpUrlConnectorProvider();
         providers[1] = new GrizzlyConnectorProvider();
-        providers[2] = new JettyConnectorProvider();
-        providers[3] = new ApacheConnectorProvider();
-        providers[4] = new Apache5ConnectorProvider();
-        providers[5] = new JavaNetHttpConnectorProvider();
+        providers[2] = new ApacheConnectorProvider();
+        providers[3] = new Apache5ConnectorProvider();
+        providers[4] = new JavaNetHttpConnectorProvider();
+        if (size == 6) {
+            providers[5] = new JettyConnectorProvider();
+        }
 
         return Stream.of(providers);
     }

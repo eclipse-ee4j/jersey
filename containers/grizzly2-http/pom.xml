@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.http2</groupId>
-            <artifactId>http2-http-client-transport</artifactId>
+            <artifactId>jetty-http2-client-transport</artifactId>
             <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
@@ -150,7 +150,7 @@
         <profile>
             <id>jdk11</id>
             <activation>
-                <jdk>[11,)</jdk>
+                <jdk>[11,17)</jdk>
             </activation>
             <build>
                 <pluginManagement>
@@ -161,8 +161,7 @@
                                 <execution>
                                     <id>default-testCompile</id>
                                     <configuration>
-                                        <source>11</source>
-                                        <target>11</target>
+                                        <skip>true</skip>
                                     </configuration>
                                 </execution>
                             </executions>

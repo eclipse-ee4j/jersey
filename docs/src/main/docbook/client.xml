@@ -656,9 +656,14 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry><literal>org.glassfish.jersey.connectors:jersey-helidon-connector</literal></entry>
                         </row>
                         <row>
-                            <entry>Jetty HTTP client</entry>
+                            <entry>Jetty HTTP client (JDK 17+)</entry>
                             <entry>&jersey.jetty.JettyConnectorProvider;</entry>
                             <entry><literal>org.glassfish.jersey.connectors:jersey-jetty-connector</literal></entry>
+                        </row>
+                        <row>
+                            <entry>Jetty 11.x HTTP client</entry>
+                            <entry>&jersey.jetty11.Jetty11ConnectorProvider;</entry>
+                            <entry><literal>org.glassfish.jersey.connectors:jersey-jetty11-connector</literal></entry>
                         </row>
                         <row>
                             <entry>Netty NIO framework</entry>
@@ -858,6 +863,21 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
                     </programlisting>
                 </para>
             </section>
+            <section>
+                <title>Jetty 11.x HttpClient Configuration</title>
+                <para>
+                    For Jetty Connector, an &jersey.jetty11.Jetty11HttpClientSupplier; SPI allows for providing a configured instance
+                    of <literal>org.eclipse.jetty.client.HttpClient</literal>:
+                    <programlisting language="java" linenumbering="numbered">
+                        HttpClient httpClient = new HttpClient(...);
+                        ClientConfig clientConfig = new ClientConfig()
+                            .connectorProvider(new Jetty11ConnectorProvider())
+                            .register(new Jetty11HttpClientSupplier(httpClient));
+                        Client client = ClientBuilder.newClient(clientConfig);
+                        ...
+                    </programlisting>
+                </para>
+            </section>
         </section>
     </section>
 
@@ -1008,9 +1028,9 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 revalidate URL using a custom implementation of &lit.jdk6.HostnameVerifier; and go on in a handshake processing.
                 &lit.jersey.jetty.JettyConnectorProvider; and &lit.jersey.grizzly.GrizzlyConnectorProvider; provide only host URL verification
                 and throw a &lit.jdk6.CertificateException; without any possibility to use custom &lit.jdk6.HostnameVerifier;.
-                Moreover, in case of &lit.jersey.jetty.JettyConnectorProvider; there is a property
-                &jersey.jetty.JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION; to disable an entire host URL verification
-                mechanism in a handshake.
+                Moreover, in case of &lit.jersey.jetty.JettyConnectorProvider; and &lit.jersey.jetty11.Jetty11ConnectorProvider; there are the properties
+                &jersey.jetty.JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION; and &jersey.jetty11.Jetty11ClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION;
+                to disable an entire host URL verification mechanism in a handshake.
             </para>
         </important>
 

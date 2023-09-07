@@ -198,6 +198,26 @@
             </properties>
         </profile>
         <profile>
+            <id>JettyExclude</id>
+            <activation>
+                <jdk>[11,17)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/tests/e2e/container/Jersey2462Test.java</testExclude>
+                                <testExclude>org/glassfish/jersey/tests/e2e/container/JettyEmptyHeaderParamTest.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>sonar</id>
             <build>
                 <pluginManagement>

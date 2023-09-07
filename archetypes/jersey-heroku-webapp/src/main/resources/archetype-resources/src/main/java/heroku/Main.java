@@ -1,7 +1,7 @@
 package ${package}.heroku;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
 
 /**
  * This class launches the web application in an embedded Jetty container. This is the entry point to your application. The Java
@@ -30,7 +30,7 @@ public class Main {
 
         final String webappDirLocation = "src/main/webapp/";
         root.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
-        root.setResourceBase(webappDirLocation);
+        root.setBaseResourceAsString(webappDirLocation);
 
         server.setHandler(root);
 

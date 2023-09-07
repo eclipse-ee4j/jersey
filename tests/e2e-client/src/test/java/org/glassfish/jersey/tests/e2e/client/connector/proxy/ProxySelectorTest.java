@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,11 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector.proxy;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpChannel;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.jupiter.api.AfterAll;
@@ -29,8 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -112,21 +111,20 @@ public class ProxySelectorTest {
         return client().target("http://eclipse.org:9998").path(path);
     }
 
-    static class ProxyHandler extends AbstractHandler {
+    static class ProxyHandler extends Handler.Abstract {
         Set<HttpChannel> httpConnect = new HashSet<>();
+
         @Override
-        public void handle(String target,
-                           Request baseRequest,
-                           HttpServletRequest request,
-                           HttpServletResponse response) {
-            if (request.getHeader(NO_PASS) != null) {
-                response.setStatus(Integer.parseInt(request.getHeader(NO_PASS)));
+        public boolean handle(Request request, org.eclipse.jetty.server.Response response, Callback callback) throws Exception {
+            if (request.getHeaders().get(NO_PASS) != null) {
+                response.setStatus(Integer.parseInt(request.getHeaders().get(NO_PASS)));
             } else {
                 response.setStatus(407);
-                response.addHeader("Proxy-Authenticate", "Basic");
+                response.getHeaders().add("Proxy-Authenticate", "Basic");
             }
 
-            baseRequest.setHandled(true);
+            callback.succeeded();
+            return true;
         }
     }
 }
