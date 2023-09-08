@@ -16,14 +16,23 @@
 
 package org.glassfish.jersey.jackson.internal;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.jackson.LocalizationMessages;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig;
+import org.glassfish.jersey.message.MessageProperties;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +46,7 @@ import javax.ws.rs.ext.Providers;
 @Singleton
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     private Configuration commonConfig;
+    private static final Logger LOGGER = Logger.getLogger(DefaultJacksonJaxbJsonProvider.class.getName());
 
     @Inject
     public DefaultJacksonJaxbJsonProvider(@Context Providers providers, @Context Configuration config) {
@@ -51,6 +61,18 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         super(annotationsToUse);
         this.commonConfig = config;
         _providers = providers;
+    }
+
+    @Override
+    protected JsonEndpointConfig _configForReading(ObjectReader reader, Annotation[] annotations) {
+        try {
+            updateFactoryConstraints(reader.getFactory());
+        } catch (Throwable t) {
+            // A Jackson 14 would throw NoSuchMethodError, ClassNotFoundException, NoClassDefFoundError or similar
+            // that should have been ignored
+            LOGGER.warning(LocalizationMessages.ERROR_JACKSON_STREAMREADCONSTRAINTS(t.getMessage()));
+        }
+        return super._configForReading(reader, annotations);
     }
 
     @PostConstruct
@@ -89,5 +111,22 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         }
 
         return modules;
+    }
+
+    private void updateFactoryConstraints(JsonFactory jsonFactory) {
+        // Priorities 1. property, 2.JacksonFeature#maxStringLength, 3.jsonFactoryValue
+        final Object maxStringLengthObject = commonConfig.getProperty(MessageProperties.JSON_MAX_STRING_LENGTH);
+        final Integer maxStringLength = PropertiesHelper.convertValue(maxStringLengthObject, Integer.class);
+
+        if (maxStringLength != StreamReadConstraints.DEFAULT_MAX_STRING_LEN) {
+            final StreamReadConstraints constraints = jsonFactory.streamReadConstraints();
+            jsonFactory.setStreamReadConstraints(
+                    StreamReadConstraints.builder()
+                            .maxStringLength(maxStringLength)
+                            .maxNestingDepth(constraints.getMaxNestingDepth())
+                            .maxNumberLength(constraints.getMaxNumberLength())
+                            .build()
+            );
+        }
     }
 }

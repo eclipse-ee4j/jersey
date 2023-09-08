@@ -1175,6 +1175,118 @@
             </tgroup>
         </table>
     </section>
+    <section xml:id="appendix-properties-message">
+        <title>Jersey configuration properties for message &amp; entity processing</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.message.MessageProperties; class.
+        </para>
+
+        <table>
+            <title>List of Apache HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB;</entry>
+                        <entry><literal>jersey.config.deflate.nozlib</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true;, <literal>DeflateEncoder deflate encoding interceptor</literal> will use non-standard version
+                                of the deflate content encoding, skipping the zlib wrapper. Unfortunately, deflate encoding
+                                implementations in some products use this non-compliant version, hence the switch.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.IO_BUFFER_SIZE;</entry>
+                        <entry><literal>jersey.config.io.bufferSize</literal></entry>
+                        <entry>
+                            <para>
+                                Value of the property indicates the buffer size to be used for I/O operations
+                                on byte and character streams. The property value is expected to be a positive
+                                integer otherwise it will be ignored.
+                            </para>
+                            <para>
+                                The default value is value of &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT;</entry>
+                        <entry><literal>jersey.config.jaxb.collections.processXmlRootElement</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; then XML root element tag name for collections will
+                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                annotation value and won't be de-capitalized.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH;</entry>
+                        <entry><literal>jersey.config.json.string.length</literal></entry>
+                        <entry>
+                            <para>
+                                The default value is not set and the JSON provider default maximum value is used.
+                            </para>
+                            <para>
+                                If supported by Jackson provider, the default value can differ for each Jackson version. For instance,
+                                Jackson 14 does not support this setting and the default value is <literal>Integer#MAX_VALUE</literal>,
+                                Jackson 15.0 has the default value 5_000_000, Jackson 15.2 has the default value 20_000_000.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_SECURITY_DISABLE;</entry>
+                        <entry><literal>jersey.config.xml.security.disable</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; XML security features when parsing XML documents will be
+                                disabled.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_FORMAT_OUTPUT;</entry>
+                        <entry><literal>jersey.config.xml.formatOutput</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; indicates that produced XML output should be formatted
+                                if possible.
+                            </para>
+                            <para>
+                                A XML message entity written by a &jaxrs.ext.MessageBodyWriter;
+                                may be formatted for the purposes of human readability provided the respective
+                                &jaxrs.ext.MessageBodyWriter; supports XML output formatting. All JAXB-based message
+                                body writers support this property.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+
+    </section>
     <section xml:id="appendix-properties-client-apache">
         <title>Apache HTTP client configuration properties</title>
 
