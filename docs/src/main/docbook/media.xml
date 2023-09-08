@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!--
 
-    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1162,7 +1162,15 @@ public class JsonbContextResolver implements ContextResolver&lt;Jsonb&gt; {
                     </para>
                 </formalpara>
             </section>
+        </section>
+        <section xml:id="json.configuration">
+            <title>Properties for configuring JSON providers</title>
 
+            <para>
+                Apart from using &lit.jaxrs.ext.ContextResolver; for configuring directly the specific JSON provider classes,
+                Jersey supports additional configuration properties prefixed by <literal>JSON</literal> that are available in
+                <xref linkend="appendix-properties-message">the appendix.</xref>
+            </para>
         </section>
     </section>
 
@@ -1488,6 +1496,15 @@ final ResourceConfig config = new ResourceConfig()
         CustomClassA.class, CustomClassB.class  // Classes to be bound.
     ));</programlisting>
             </example>
+        </section>
+        <section xml:id="jaxb.configuration">
+            <title>Properties for configuring XML providers</title>
+
+            <para>
+                Apart from using &lit.jaxrs.ext.ContextResolver; for configuring directly the specific JSON provider classes,
+                Jersey supports additional configuration properties prefixed by <literal>JAXB</literal> and <literal>XML</literal>
+                that are available in <xref linkend="appendix-properties-message">the appendix.</xref>
+            </para>
         </section>
     </section>
 

@@ -531,6 +531,13 @@
 <!ENTITY jersey.media.multipart.StreamDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/StreamDataBodyPart.html'>StreamDataBodyPart</link>" >
 <!ENTITY jersey.message.MessageBodyWorkers "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageBodyWorkers.html'>MessageBodyWorkers</link>">
 <!ENTITY jersey.message.MessageProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html'>MessageProperties</link>">
+<!ENTITY jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#DEFLATE_WITHOUT_ZLIB'>MessageProperties.DEFLATE_WITHOUT_ZLIB</link>">
+<!ENTITY jersey.message.MessageProperties.IO_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_BUFFER_SIZE'>MessageProperties.IO_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_DEFAULT_BUFFER_SIZE'>MessageProperties.IO_DEFAULT_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JAXB_PROCESS_XML_ROOT_ELEMENT'>MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT</link>">
+<!ENTITY jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JSON_MAX_STRING_LENGTH'>MessageProperties.JSON_MAX_STRING_LENGTH</link>">
+<!ENTITY jersey.message.MessageProperties.XML_SECURITY_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_SECURITY_DISABLE'>MessageProperties.XML_SECURITY_DISABLE</link>">
+<!ENTITY jersey.message.MessageProperties.XML_FORMAT_OUTPUT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_FORMAT_OUTPUT'>MessageProperties.XML_FORMAT_OUTPUT</link>">
 <!ENTITY jersey.message.filtering.AbstractEntityProcessor "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractEntityProcessor.html'>AbstractEntityProcessor</link>">
 <!ENTITY jersey.message.filtering.AbstractObjectProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractObjectProvider.html'>AbstractObjectProvider</link>">
 <!ENTITY jersey.message.filtering.EntityFiltering "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/EntityFiltering.html'>@EntityFiltering</link>">

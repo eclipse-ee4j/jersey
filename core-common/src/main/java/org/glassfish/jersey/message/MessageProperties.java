@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,18 @@ import org.glassfish.jersey.internal.util.PropertiesClass;
  */
 @PropertiesClass
 public final class MessageProperties {
+
+    /**
+     * If set to {@code true}, {@code DeflateEncoder deflate encoding interceptor} will use non-standard version
+     * of the deflate content encoding, skipping the zlib wrapper. Unfortunately, deflate encoding
+     * implementations in some products use this non-compliant version, hence the switch.
+     * <p />
+     * The default value is {@code false}.
+     * <p />
+     * The name of the configuration property is <code>{@value}</code>.
+     */
+    public static final String DEFLATE_WITHOUT_ZLIB = "jersey.config.deflate.nozlib";
+
 
     /**
      * If set to {@code true} then XML root element tag name for collections will
@@ -80,15 +92,22 @@ public final class MessageProperties {
     public static final int IO_DEFAULT_BUFFER_SIZE = 8192;
 
     /**
-     * If set to {@code true}, {@code DeflateEncoder deflate encoding interceptor} will use non-standard version
-     * of the deflate content encoding, skipping the zlib wrapper. Unfortunately, deflate encoding
-     * implementations in some products use this non-compliant version, hence the switch.
-     * <p />
-     * The default value is {@code false}.
-     * <p />
-     * The name of the configuration property is <code>{@value}</code>.
+     * <p>
+     *     Integer value used to override maximum number of string length during the JSON processing the JSON provider accepts.
+     * </p>
+     * <p>
+     *     The default value is not set and the JSON provider default maximum value is used.
+     * </p>
+     * <p>
+     *     If supported by Jackson provider, the default value can differ for each Jackson version. For instance,
+     *     Jackson 14 does not support this setting and the default value is {@link Integer#MAX_VALUE}, Jackson 15.0
+     *     has the default value 5_000_000, Jackson 15.2 has the default value 20_000_000.
+     * </p>
+     *
+     * @since 2.41
      */
-    public static final String DEFLATE_WITHOUT_ZLIB = "jersey.config.deflate.nozlib";
+    public static String JSON_MAX_STRING_LENGTH = "jersey.config.json.string.length";
+
 
     /**
      * If set to {@code true}, {@link javax.ws.rs.ext.MessageBodyReader MessageBodyReaders} and
