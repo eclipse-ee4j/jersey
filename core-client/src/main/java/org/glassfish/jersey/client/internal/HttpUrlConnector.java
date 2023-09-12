@@ -405,7 +405,7 @@ public class HttpUrlConnector implements Connector {
                     }
                 }
 
-                processExtentions(request, uc);
+                processExtensions(request, uc);
 
                 request.setStreamProvider(contentLength -> {
                     setOutboundHeaders(request.getStringHeaders(), uc);
@@ -579,7 +579,7 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private void processExtentions(ClientRequest request, HttpURLConnection uc) {
+    private void processExtensions(ClientRequest request, HttpURLConnection uc) {
         connectorExtension.invoke(request, uc);
     }
 

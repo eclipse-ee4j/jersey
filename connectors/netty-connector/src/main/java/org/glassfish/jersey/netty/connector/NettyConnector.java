@@ -45,6 +45,7 @@ import javax.ws.rs.core.Configuration;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -384,14 +385,11 @@ class NettyConnector implements Connector {
             if (jerseyRequest.hasEntity()) {
                 // guard against prematurely closed channel
                 final GenericFutureListener<io.netty.util.concurrent.Future<? super Void>> closeListener =
-                    new GenericFutureListener<io.netty.util.concurrent.Future<? super Void>>() {
-                        @Override
-                        public void operationComplete(io.netty.util.concurrent.Future<? super Void> future) throws Exception {
+                        future -> {
                             if (!responseDone.isDone()) {
                                 responseDone.completeExceptionally(new IOException("Channel closed."));
                             }
-                        }
-                    };
+                        };
                 ch.closeFuture().addListener(closeListener);
 
                 final NettyEntityWriter entityWriter = NettyEntityWriter.getInstance(jerseyRequest, ch);
@@ -407,8 +405,24 @@ class NettyConnector implements Connector {
 //                      break;
                 }
 
-                // Send the HTTP request.
-                entityWriter.writeAndFlush(nettyRequest);
+                //check for 100-Continue presence/availability
+                final Expect100ContinueConnectorExtension expect100ContinueExtension
+                        = new Expect100ContinueConnectorExtension();
+
+                final DefaultFullHttpRequest rq = new DefaultFullHttpRequest(nettyRequest.protocolVersion(),
+                        nettyRequest.method(), nettyRequest.uri());
+                rq.headers().setAll(nettyRequest.headers());
+                expect100ContinueExtension.invoke(jerseyRequest, rq);
+
+                if (HttpUtil.is100ContinueExpected(rq)) {
+                    ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly().addListener(
+                            (ChannelFutureListener) channelFuture ->
+                                ch.pipeline().writeAndFlush(nettyRequest)
+                    );
+                } else {
+                    // Send the HTTP request.
+                    entityWriter.writeAndFlush(nettyRequest);
+                }
 
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
