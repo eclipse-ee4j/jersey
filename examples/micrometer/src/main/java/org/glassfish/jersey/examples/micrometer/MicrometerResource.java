@@ -14,7 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/**
- * Binders for Jersey. Code ported from <a href="https://github.com/micrometer-metrics/micrometer/tree/v1.10.9/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/jersey/server">Micrometer repository</a>.
- */
-package org.glassfish.jersey.micrometer.server;
+package org.glassfish.jersey.examples.micrometer;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+@Path("meter")
+public class MicrometerResource {
+    public static final String CLICHED_MESSAGE = "Hello World!";
+
+    @GET
+    @Produces("text/plain")
+    public String getHello() {
+        return CLICHED_MESSAGE;
+    }
+
+}

@@ -156,7 +156,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.6.11</version>
+            <version>${aspectj.weaver.version}</version>
             <scope>test</scope>
         </dependency>
 
