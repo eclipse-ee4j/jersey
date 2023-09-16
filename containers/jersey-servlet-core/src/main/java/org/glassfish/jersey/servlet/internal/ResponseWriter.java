@@ -125,7 +125,7 @@ public class ResponseWriter implements ContainerResponseWriter {
         // the invocation of sendError as on some Servlet implementations
         // modification of the response headers will have no effect
         // after the invocation of sendError.
-        final MultivaluedMap<String, String> headers = getResponseContext().getStringHeaders();
+        final MultivaluedMap<String, String> headers = responseContext.getStringHeaders();
         for (final Map.Entry<String, List<String>> e : headers.entrySet()) {
             final Iterator<String> it = e.getValue().iterator();
             if (!it.hasNext()) {
