@@ -473,7 +473,7 @@
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
                         <bottom>
-                            <![CDATA[Copyright &#169; 2007-2021,
+                            <![CDATA[Copyright &#169; 2007-2023,
                                 <a href="http://www.oracle.com">Oracle</a>
                                 and/or its affiliates.
                                 All Rights Reserved. Use is subject to license terms.]]>
@@ -481,10 +481,15 @@
                         <links>
                             <link>https://jakartaee.github.io/rest/apidocs/2.1.6/</link>
                             <link>https://javaee.github.io/hk2/apidocs/</link>
+                            <link>https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/</link>
                         </links>
                         <excludePackageNames>
-                            *.internal.*:*.tests.*
+                            *.internal.*:*.innate.*:*.tests.*
                         </excludePackageNames>
+                        <includeDependencySources>false</includeDependencySources>
+                        <dependencySourceIncludes>
+                            <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
+                        </dependencySourceIncludes>
                         <sourceFileExcludes>
                             <exclude>bundles/**</exclude>
                             <fileExclude>module-info.java</fileExclude>
