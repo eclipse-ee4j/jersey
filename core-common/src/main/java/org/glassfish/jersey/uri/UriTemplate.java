@@ -367,7 +367,7 @@ public class UriTemplate {
 
         final StringBuilder pathBuilder = new StringBuilder();
         for (final String segment : resolvedSegments) {
-            pathBuilder.append('/').append(segment);
+            pathBuilder.append('/').append(UriComponent.encode(segment, UriComponent.Type.PATH));
         }
 
         String resultString = createURIWithStringValues(uri.getScheme(),

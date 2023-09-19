@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
@@ -1659,10 +1660,17 @@ public class JerseyUriBuilderTest {
     }
 
     @Test
-    void testFragment2569() throws URISyntaxException {
+    void testFragment5269() throws URISyntaxException {
         final URI uri = new URI("http://www.example.org/foo.xml#xpointer(//Rube)").normalize();
         Assertions.assertEquals(uri, UriBuilder.fromUri(uri).build()); // prints "http://www.example.org/foo.xml#xpointer(//Rube)"
         Assertions.assertEquals(uri, UriBuilder.fromUri(uri).fragment("xpointer(//{type})").build("Rube"));
+    }
+
+    @Test
+    public void test5416() {
+        URI uri = UriBuilder.fromUri("http://host.com/path%20path/.test.jpg").build();
+        Link link = Link.fromUri(uri).build();
+        Assertions.assertEquals(uri, link.getUri());
     }
 
     private void checkQueryFormat(String fromUri, JerseyQueryParamStyle queryParamStyle, String expected) {
