@@ -30,12 +30,9 @@ import java.net.ProtocolException;
 
 class Expect100ContinueConnectorExtension
         implements ConnectorExtension<HttpRequest, IOException> {
-
     private static final String EXCEPTION_MESSAGE = "Server rejected operation";
-
     @Override
     public void invoke(ClientRequest request, HttpRequest extensionParam) {
-
 
         final long length = request.getLengthLong();
         final RequestEntityProcessing entityProcessing = request.resolveProperty(
@@ -52,18 +49,15 @@ class Expect100ContinueConnectorExtension
 
         if (!Boolean.TRUE.equals(expectContinueActivated)
                 || !(HttpMethod.POST.equals(request.getMethod()) || HttpMethod.PUT.equals(request.getMethod()))
-                || !allowStreaming
-        ) {
+                || !allowStreaming) {
             return;
         }
         extensionParam.headers().add(HttpHeaderNames.EXPECT, HttpHeaderValues.CONTINUE);
-
 
     }
 
     @Override
     public void postConnectionProcessing(HttpRequest extensionParam) {
-
     }
 
     @Override
@@ -74,5 +68,4 @@ class Expect100ContinueConnectorExtension
         return expectContinueActivated
                 && (ex instanceof ProtocolException && ex.getMessage().equals(EXCEPTION_MESSAGE));
     }
-
 }

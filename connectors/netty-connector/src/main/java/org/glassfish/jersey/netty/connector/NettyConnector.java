@@ -45,6 +45,7 @@ import javax.ws.rs.core.Configuration;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -385,11 +386,14 @@ class NettyConnector implements Connector {
             if (jerseyRequest.hasEntity()) {
                 // guard against prematurely closed channel
                 final GenericFutureListener<io.netty.util.concurrent.Future<? super Void>> closeListener =
-                        future -> {
+                    new GenericFutureListener<io.netty.util.concurrent.Future<? super Void>>() {
+                        @Override
+                        public void operationComplete(io.netty.util.concurrent.Future<? super Void> future) throws Exception {
                             if (!responseDone.isDone()) {
                                 responseDone.completeExceptionally(new IOException("Channel closed."));
                             }
-                        };
+                        }
+                    };
                 ch.closeFuture().addListener(closeListener);
 
                 final NettyEntityWriter entityWriter = NettyEntityWriter.getInstance(jerseyRequest, ch);
@@ -414,11 +418,14 @@ class NettyConnector implements Connector {
                 rq.headers().setAll(nettyRequest.headers());
                 expect100ContinueExtension.invoke(jerseyRequest, rq);
 
+                ChannelFutureListener expect100ContinueListener = null;
+                ChannelFuture expect100ContinueFuture = null;
+
                 if (HttpUtil.is100ContinueExpected(rq)) {
-                    ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly().addListener(
-                            (ChannelFutureListener) channelFuture ->
-                                ch.pipeline().writeAndFlush(nettyRequest)
-                    );
+                    expect100ContinueListener =
+                            future -> ch.pipeline().writeAndFlush(nettyRequest);
+                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).syncUninterruptibly();
+                    expect100ContinueFuture.addListener(expect100ContinueListener);
                 } else {
                     // Send the HTTP request.
                     entityWriter.writeAndFlush(nettyRequest);
@@ -435,6 +442,9 @@ class NettyConnector implements Connector {
                     entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
                 } else {
                     entityWriter.write(entityWriter.getChunkedInput());
+                }
+                if (expect100ContinueFuture != null && expect100ContinueListener != null) {
+                    expect100ContinueFuture.removeListener(expect100ContinueListener);
                 }
 
                 executorService.execute(new Runnable() {
