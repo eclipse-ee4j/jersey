@@ -424,8 +424,8 @@ class NettyConnector implements Connector {
                 if (HttpUtil.is100ContinueExpected(rq)) {
                     expect100ContinueListener =
                             future -> ch.pipeline().writeAndFlush(nettyRequest);
-                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).syncUninterruptibly();
-                    expect100ContinueFuture.addListener(expect100ContinueListener);
+                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly()
+                    .addListener(expect100ContinueListener);
                 } else {
                     // Send the HTTP request.
                     entityWriter.writeAndFlush(nettyRequest);
