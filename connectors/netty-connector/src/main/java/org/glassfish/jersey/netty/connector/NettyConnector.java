@@ -45,6 +45,8 @@ import javax.ws.rs.core.Configuration;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -407,8 +409,27 @@ class NettyConnector implements Connector {
 //                      break;
                 }
 
-                // Send the HTTP request.
-                entityWriter.writeAndFlush(nettyRequest);
+                //check for 100-Continue presence/availability
+                final Expect100ContinueConnectorExtension expect100ContinueExtension
+                        = new Expect100ContinueConnectorExtension();
+
+                final DefaultFullHttpRequest rq = new DefaultFullHttpRequest(nettyRequest.protocolVersion(),
+                        nettyRequest.method(), nettyRequest.uri());
+                rq.headers().setAll(nettyRequest.headers());
+                expect100ContinueExtension.invoke(jerseyRequest, rq);
+
+                ChannelFutureListener expect100ContinueListener = null;
+                ChannelFuture expect100ContinueFuture = null;
+
+                if (HttpUtil.is100ContinueExpected(rq)) {
+                    expect100ContinueListener =
+                            future -> ch.pipeline().writeAndFlush(nettyRequest);
+                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly()
+                    .addListener(expect100ContinueListener);
+                } else {
+                    // Send the HTTP request.
+                    entityWriter.writeAndFlush(nettyRequest);
+                }
 
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
@@ -421,6 +442,9 @@ class NettyConnector implements Connector {
                     entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
                 } else {
                     entityWriter.write(entityWriter.getChunkedInput());
+                }
+                if (expect100ContinueFuture != null && expect100ContinueListener != null) {
+                    expect100ContinueFuture.removeListener(expect100ContinueListener);
                 }
 
                 executorService.execute(new Runnable() {

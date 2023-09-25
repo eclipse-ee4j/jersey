@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpMessage;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
 import io.netty.handler.codec.http.HttpServerUpgradeHandler;
 import io.netty.handler.codec.http2.Http2CodecUtil;
 import io.netty.handler.codec.http2.Http2MultiplexCodecBuilder;
@@ -115,6 +116,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
         final HttpServerCodec sourceCodec = new HttpServerCodec();
 
         p.addLast(sourceCodec);
+        p.addLast("respondExpectContinue", new HttpServerExpectContinueHandler());
         p.addLast(new HttpServerUpgradeHandler(sourceCodec, new HttpServerUpgradeHandler.UpgradeCodecFactory() {
             @Override
             public HttpServerUpgradeHandler.UpgradeCodec newUpgradeCodec(CharSequence protocol) {
