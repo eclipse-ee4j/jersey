@@ -1244,8 +1244,8 @@
                             </para>
                             <para>
                                 If supported by Jackson provider, the default value can differ for each Jackson version. For instance,
-                                Jackson 14 does not support this setting and the default value is <literal>Integer#MAX_VALUE</literal>,
-                                Jackson 15.0 has the default value 5_000_000, Jackson 15.2 has the default value 20_000_000.
+                                Jackson 2.14 does not support this setting and the default value is <literal>Integer#MAX_VALUE</literal>,
+                                Jackson 2.15.0 has the default value 5_000_000, Jackson 2.15.2 has the default value 20_000_000.
                             </para>
                         </entry>
                     </row>
@@ -1991,6 +1991,19 @@
                 </thead>
                 <tbody>
                     <row>
+                        <entry>&jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY;</entry>
+                        <entry><literal>jersey.config.client.filter.headers.proxy</literal></entry>
+                        <entry>
+                            <para>
+                                Filter the HTTP headers for requests (CONNECT) towards the proxy except for
+                                <literal>PROXY</literal>-prefixed and <literal>HOST</literal> headers when &lit.true;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the headers are filtered out.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT;</entry>
                         <entry><literal>jersey.config.client.idleConnectionPruneTimeout</literal></entry>
                         <entry>
@@ -2033,6 +2046,19 @@
                                 positive number. Default value is 5.
                                 HTTP redirection must be enabled by property org.glassfish.jersey.client.ClientProperties.FOLLOW_REDIRECTS
                                 otherwise &jersey.netty.NettyClientProperties.MAX_REDIRECTS; is not applied.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT;</entry>
+                        <entry><literal>jersey.config.client.redirect.preserve.method</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the HTTP POST method to be preserved on HTTP status 301 (MOVED PERMANENTLY) or status 302 (FOUND)
+                                when &lit.true; or redirected as GET when &lit.false;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the HTTP POST request is not redirected as GET.
                             </para>
                         </entry>
                     </row>
