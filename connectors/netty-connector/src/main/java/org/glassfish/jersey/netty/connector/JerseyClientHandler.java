@@ -19,12 +19,18 @@ package org.glassfish.jersey.netty.connector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Predicate;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
@@ -125,6 +131,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                       } else {
                           ClientRequest newReq = new ClientRequest(jerseyRequest);
                           newReq.setUri(newUri);
+                          restrictRedirectRequest(newReq, cr);
                           connector.execute(newReq, redirectUriHistory, responseAvailable);
                       }
                   } catch (IllegalArgumentException e) {
@@ -216,5 +223,63 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
        } else {
            super.userEventTriggered(ctx, evt);
        }
+    }
+
+    /*
+     * RFC 9110 Section 15.4
+     * https://httpwg.org/specs/rfc9110.html#rfc.section.15.4
+     */
+    private void restrictRedirectRequest(ClientRequest newRequest, ClientResponse response) {
+        final MultivaluedMap<String, Object> headers = newRequest.getHeaders();
+        final Boolean keepMethod = newRequest.resolveProperty(NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT, Boolean.TRUE);
+
+        if (Boolean.FALSE.equals(keepMethod) && newRequest.getMethod().equals(HttpMethod.POST)) {
+            switch (response.getStatus()) {
+                case 301 /* MOVED PERMANENTLY */:
+                case 302 /* FOUND */:
+                    removeContentHeaders(headers);
+                    newRequest.setMethod(HttpMethod.GET);
+                    newRequest.setEntity(null);
+                    break;
+            }
+        }
+
+        for (final Iterator<Map.Entry<String, List<Object>>> it = headers.entrySet().iterator(); it.hasNext(); ) {
+            final Map.Entry<String, List<Object>> entry = it.next();
+            if (ProxyHeaders.INSTANCE.test(entry.getKey())) {
+                it.remove();
+            }
+        }
+
+        headers.remove(HttpHeaders.IF_MATCH);
+        headers.remove(HttpHeaders.IF_NONE_MATCH);
+        headers.remove(HttpHeaders.IF_MODIFIED_SINCE);
+        headers.remove(HttpHeaders.IF_UNMODIFIED_SINCE);
+        headers.remove(HttpHeaders.AUTHORIZATION);
+        headers.remove(HttpHeaderNames.REFERER.toString());
+        headers.remove(HttpHeaders.COOKIE);
+    }
+
+    private void removeContentHeaders(MultivaluedMap<String, Object> headers) {
+        for (final Iterator<Map.Entry<String, List<Object>>> it = headers.entrySet().iterator(); it.hasNext(); ) {
+            final Map.Entry<String, List<Object>> entry = it.next();
+            final String lowName = entry.getKey().toLowerCase(Locale.ROOT);
+            if (lowName.startsWith("content-")) {
+                it.remove();
+            }
+        }
+        headers.remove(HttpHeaders.LAST_MODIFIED);
+        headers.remove(HttpHeaderNames.TRANSFER_ENCODING.toString());
+    }
+
+    /* package */ static class ProxyHeaders implements Predicate<String> {
+        static final ProxyHeaders INSTANCE = new ProxyHeaders();
+        private static final String HOST = HttpHeaders.HOST.toLowerCase(Locale.ROOT);
+
+        @Override
+        public boolean test(String headerName) {
+            String lowName = headerName.toLowerCase(Locale.ROOT);
+            return lowName.startsWith("proxy-") || lowName.equals(HOST);
+        }
     }
 }

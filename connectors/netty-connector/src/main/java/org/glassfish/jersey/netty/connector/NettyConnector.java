@@ -376,7 +376,7 @@ class NettyConnector implements Connector {
             }
 
             // headers
-            setHeaders(jerseyRequest, nettyRequest.headers());
+            setHeaders(jerseyRequest, nettyRequest.headers(), false);
 
             // host header - http 1.1
             if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
@@ -538,7 +538,8 @@ class NettyConnector implements Connector {
 
     private static ProxyHandler createProxyHandler(ClientRequest jerseyRequest, SocketAddress proxyAddr,
                                                    String userName, String password, long connectTimeout) {
-        HttpHeaders httpHeaders = setHeaders(jerseyRequest, new DefaultHttpHeaders());
+        final Boolean filter = jerseyRequest.resolveProperty(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, Boolean.TRUE);
+        HttpHeaders httpHeaders = setHeaders(jerseyRequest, new DefaultHttpHeaders(), Boolean.TRUE.equals(filter));
 
         ProxyHandler proxy = userName == null ? new HttpProxyHandler(proxyAddr, httpHeaders)
                 : new HttpProxyHandler(proxyAddr, userName, password, httpHeaders);
@@ -549,9 +550,11 @@ class NettyConnector implements Connector {
         return proxy;
     }
 
-    private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers) {
+    private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers, boolean proxyOnly) {
         for (final Map.Entry<String, List<String>> e : jerseyRequest.getStringHeaders().entrySet()) {
-            headers.add(e.getKey(), e.getValue());
+            if (!proxyOnly || JerseyClientHandler.ProxyHeaders.INSTANCE.test(e.getKey())) {
+                headers.add(e.getKey(), e.getValue());
+            }
         }
         return headers;
     }
