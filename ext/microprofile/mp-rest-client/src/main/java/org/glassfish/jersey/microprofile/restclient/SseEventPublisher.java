@@ -66,7 +66,7 @@ public class SseEventPublisher extends EventInput implements Publisher<InboundEv
 
         this.executor = executor;
         this.genericType = genericType;
-        this.publisher = new JerseyPublisher<>(executor::submit, JerseyPublisher.PublisherStrategy.BEST_EFFORT);
+        this.publisher = new JerseyPublisher<>(executor::submit, JerseyPublisher.PublisherStrategy.BLOCKING);
     }
 
     private static final Logger LOG = Logger.getLogger(SseEventPublisher.class.getName());
