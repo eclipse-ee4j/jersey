@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.net.URI;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
 import io.netty.handler.codec.http2.Http2MultiplexCodecBuilder;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
@@ -55,6 +56,7 @@ class HttpVersionChooser extends ApplicationProtocolNegotiationHandler {
 
         if (ApplicationProtocolNames.HTTP_1_1.equals(protocol)) {
             ctx.pipeline().addLast(new HttpServerCodec(),
+                                   new HttpServerExpectContinueHandler(),
                                    new ChunkedWriteHandler(),
                                    new JerseyServerHandler(baseUri, container, resourceConfig));
             return;

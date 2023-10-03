@@ -96,6 +96,7 @@ class JerseyServerInitializer extends ChannelInitializer<SocketChannel> {
                 p.addLast(sslCtx.newHandler(ch.alloc()));
             }
             p.addLast(new HttpServerCodec());
+            p.addLast(new HttpServerExpectContinueHandler());
             p.addLast(new ChunkedWriteHandler());
             p.addLast(new JerseyServerHandler(baseUri, container, resourceConfig));
         }
