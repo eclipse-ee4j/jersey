@@ -112,4 +112,21 @@ public class NettyClientProperties {
      */
     public static final String PRESERVE_METHOD_ON_REDIRECT = "jersey.config.client.redirect.preserve.method";
 
+
+    /**
+     * This timeout is used for waiting for 100-Continue response when 100-Continue is sent by the client.
+     *
+     * @since 2.41
+     */
+    public static final String
+            EXPECT_100_CONTINUE_TIMEOUT = "jersey.config.client.request.expect.100.continue.timeout";
+
+    /**
+     * The default value of EXPECT_100_CONTINUE_TIMEOUT.
+     *
+     * @since 2.41
+     */
+    public static final Integer
+            DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE = 500;
+
 }

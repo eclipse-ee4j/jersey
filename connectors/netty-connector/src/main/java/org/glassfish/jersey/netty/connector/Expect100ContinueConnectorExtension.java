@@ -19,12 +19,12 @@ package org.glassfish.jersey.netty.connector;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpVersion;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.internal.ConnectorExtension;
 
-import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.net.ProtocolException;
 
@@ -47,8 +47,9 @@ class Expect100ContinueConnectorExtension
         final boolean allowStreaming = length > expectContinueSizeThreshold
                 || entityProcessing == RequestEntityProcessing.CHUNKED;
 
-        if (!Boolean.TRUE.equals(expectContinueActivated)
-                || !(HttpMethod.POST.equals(request.getMethod()) || HttpMethod.PUT.equals(request.getMethod()))
+        if (extensionParam.protocolVersion().equals(HttpVersion.HTTP_1_0)
+                || !Boolean.TRUE.equals(expectContinueActivated)
+                || !request.hasEntity()
                 || !allowStreaming) {
             return;
         }

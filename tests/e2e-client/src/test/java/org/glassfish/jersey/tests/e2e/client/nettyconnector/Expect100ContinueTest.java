@@ -16,52 +16,88 @@
 
 package org.glassfish.jersey.tests.e2e.client.nettyconnector;
 
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.http.Expect100ContinueFeature;
+import org.glassfish.jersey.netty.connector.NettyClientProperties;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class Expect100ContinueTest extends JerseyTest {
+public class Expect100ContinueTest /*extends JerseyTest*/ {
 
     private static final String RESOURCE_PATH = "expect";
+
+    private static final String RESOURCE_PATH_NOT_SUPPORTED = "fail417";
+
+    private static final String RESOURCE_PATH_UNAUTHORIZED = "fail401";
+
+    private static final String RESOURCE_PATH_PAYLOAD_TOO_LARGE = "fail413";
+
+    private static final String RESOURCE_PATH_METHOD_NOT_SUPPORTED = "fail405";
+
     private static final String ENTITY_STRING = "1234567890123456789012345678901234567890123456789012"
            + "3456789012345678901234567890";
 
+    private static final Integer portNumber = 9997;
 
-    @Path(RESOURCE_PATH)
-    public static class Expect100ContinueResource {
+    private static Server server;
+    @BeforeAll
+    public static void startExpect100ContinueTestServer() {
+        server = new Server(portNumber);
+        server.setHandler(new Expect100ContinueTestHandler());
+        try {
+            server.start();
+        } catch (Exception e) {
 
-        @POST
-        public Response publishResource(@HeaderParam("Expect") String expect) {
-            if ("100-Continue".equalsIgnoreCase(expect)) {
-                return Response.noContent().build();
-            }
-            return Response.ok("TEST").build();
         }
-
     }
 
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(Expect100ContinueResource.class);
+    @AfterAll
+    public static void stopExpect100ContinueTestServer() {
+        try {
+            server.stop();
+        } catch (Exception e) {
+        }
     }
 
-    @Override
+    private static Client client;
+    @BeforeEach
+    public void beforeEach() {
+        final ClientConfig config = new ClientConfig();
+        this.configureClient(config);
+        client = ClientBuilder.newClient(config);
+    }
+
+    private Client client() {
+        return client;
+    }
+
+    public WebTarget target(String path) {
+        return client().target(String.format("http://localhost:%d", portNumber)).path(path);
+    }
+
     protected void configureClient(ClientConfig config) {
         config.connectorProvider(new NettyConnectorProvider());
     }
@@ -86,15 +122,15 @@ public class Expect100ContinueTest extends JerseyTest {
                .property(ClientProperties.REQUEST_ENTITY_PROCESSING,
                RequestEntityProcessing.BUFFERED).request().header(HttpHeaders.CONTENT_LENGTH, 67000L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals(100, response.getStatus(), "Expected 100"); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
     public void testExpect100ContinueCustomLength() {
        final Response response =  target(RESOURCE_PATH).register(Expect100ContinueFeature.withCustomThreshold(100L))
-               .request().header(HttpHeaders.CONTENT_LENGTH, 101L)
+               .request().header(HttpHeaders.CONTENT_LENGTH, Integer.MAX_VALUE)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals(100, response.getStatus(), "Expected 100"); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
     }
 
     @Test
@@ -123,6 +159,82 @@ public class Expect100ContinueTest extends JerseyTest {
                .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
                .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
                .post(Entity.text(ENTITY_STRING));
-       assertEquals(100, response.getStatus(), "Expected 100"); //Expect header sent - No Content response
+       assertEquals(204, response.getStatus(), "Expected 204"); //Expect header sent - No Content response
+    }
+
+    @Test
+    public void testExpect100ContinueNotSupported() {
+       final Response response =  target(RESOURCE_PATH_NOT_SUPPORTED)
+               .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 43L)
+               .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
+               .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
+               .post(Entity.text(ENTITY_STRING));
+       assertEquals(417, response.getStatus(), "Expected 417"); //Expectations not supported
+    }
+
+    @Test
+    public void testExpect100ContinueUnauthorized() {
+       assertThrows(ProcessingException.class, () -> target(RESOURCE_PATH_UNAUTHORIZED)
+               .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 43L)
+               .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
+               .property(NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT, 10000)
+               .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
+               .post(Entity.text(ENTITY_STRING)));
+    }
+
+    @Test
+    public void testExpect100ContinuePayloadTooLarge() {
+        assertThrows(ProcessingException.class, () -> target(RESOURCE_PATH_PAYLOAD_TOO_LARGE)
+               .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 43L)
+               .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
+               .property(NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT, 10000)
+               .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
+               .post(Entity.text(ENTITY_STRING)));
+    }
+
+    @Test
+    public void testExpect100ContinueMethodNotSupported() {
+        assertThrows(ProcessingException.class, () -> target(RESOURCE_PATH_METHOD_NOT_SUPPORTED)
+               .property(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE, 43L)
+               .property(ClientProperties.EXPECT_100_CONTINUE, Boolean.TRUE)
+               .property(NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT, 10000)
+               .request().header(HttpHeaders.CONTENT_LENGTH, 44L)
+               .post(Entity.text(ENTITY_STRING)));
+    }
+
+    static class Expect100ContinueTestHandler extends AbstractHandler {
+        @Override
+        public void handle(String target,
+                           Request baseRequest,
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws IOException {
+            boolean expected = request.getHeader("Expect") != null;
+            boolean failed = false;
+            if (target.equals("/" + RESOURCE_PATH_NOT_SUPPORTED)) {
+                response.sendError(417);
+                failed = true;
+            }
+            if (target.equals("/" + RESOURCE_PATH_UNAUTHORIZED)) {
+                response.sendError(401);
+                failed = true;
+            }
+            if (target.equals("/" + RESOURCE_PATH_PAYLOAD_TOO_LARGE)) {
+                response.sendError(413);
+                failed = true;
+            }
+            if (target.equals("/" + RESOURCE_PATH_METHOD_NOT_SUPPORTED)) {
+                response.sendError(405);
+                failed = true;
+            }
+            if (expected && !failed) {
+                System.out.println("Expect:100-continue found, sending response header");
+                response.setStatus(204);
+            }
+            response.getWriter().println();
+            response.flushBuffer();
+            baseRequest.setHandled(true);
+
+            request.getReader().lines().forEach(System.out::println);
+        }
     }
 }

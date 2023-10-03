@@ -941,7 +941,7 @@
                             <para>
                                 Property for threshold size for content length after which Expect:100-Continue header would be applied
                                 before the main request.
-                                Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+                                Default threshold size (64kb) after which Expect:100-Continue header would be applied before
                                 the main request.
                                 <literal>Since 2.32</literal>
                             </para>
@@ -2059,6 +2059,18 @@
                             </para>
                             <para>
                                 The default value is &lit.true; and the HTTP POST request is not redirected as GET.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.timeout</literal></entry>
+                        <entry>
+                            <para>
+                                This timeout is used for waiting for 100-Continue response when 100-Continue
+                                is sent by the client.
+                                Default timeout value is 500 ms after which Expect:100-Continue feature is ignored.
+                                <literal>Since 2.41</literal>
                             </para>
                         </entry>
                     </row>

@@ -31,10 +31,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import javax.net.ssl.SSLContext;
@@ -46,7 +48,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -124,6 +125,7 @@ class NettyConnector implements Connector {
     private static final String PRUNE_INACTIVE_POOL = "prune_inactive_pool";
     private static final String READ_TIMEOUT_HANDLER = "read_timeout_handler";
     private static final String REQUEST_HANDLER = "request_handler";
+    private static final String EXPECT_100_CONTINUE_HANDLER = "expect_100_continue_handler";
 
     NettyConnector(Client client) {
 
@@ -190,6 +192,9 @@ class NettyConnector implements Connector {
     protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
             final CompletableFuture<ClientResponse> responseAvailable) {
         Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
+        final Integer expect100ContinueTimeout = jerseyRequest.resolveProperty(
+                NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT,
+                NettyClientProperties.DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE);
         if (timeout == null || timeout < 0) {
             throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(timeout));
         }
@@ -321,9 +326,11 @@ class NettyConnector implements Connector {
             final Channel ch = chan;
             JerseyClientHandler clientHandler =
                     new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone, redirectUriHistory, this);
+            final JerseyExpectContinueHandler expect100ContinueHandler = new JerseyExpectContinueHandler();
             // read timeout makes sense really as an inactivity timeout
             ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
                                   new IdleStateHandler(0, 0, timeout, TimeUnit.MILLISECONDS));
+            ch.pipeline().addLast(EXPECT_100_CONTINUE_HANDLER, expect100ContinueHandler);
             ch.pipeline().addLast(REQUEST_HANDLER, clientHandler);
 
             responseDone.whenComplete((_r, th) -> {
@@ -408,26 +415,22 @@ class NettyConnector implements Connector {
 //                      // Set later after the entity is "written"
 //                      break;
                 }
+                try {
+                    expect100ContinueHandler.processExpect100ContinueRequest(nettyRequest, jerseyRequest,
+                            ch, expect100ContinueTimeout);
+                } catch (ExecutionException e) {
+                    responseDone.completeExceptionally(e);
+                } catch (TimeoutException e) {
+                    //Expect:100-continue allows timeouts by the spec
+                    //just removing the pipeline from processing
+                    if (ch.pipeline().context(JerseyExpectContinueHandler.class) != null) {
+                        ch.pipeline().remove(EXPECT_100_CONTINUE_HANDLER);
+                    }
+                }
 
-                //check for 100-Continue presence/availability
-                final Expect100ContinueConnectorExtension expect100ContinueExtension
-                        = new Expect100ContinueConnectorExtension();
-
-                final DefaultFullHttpRequest rq = new DefaultFullHttpRequest(nettyRequest.protocolVersion(),
-                        nettyRequest.method(), nettyRequest.uri());
-                rq.headers().setAll(nettyRequest.headers());
-                expect100ContinueExtension.invoke(jerseyRequest, rq);
-
-                ChannelFutureListener expect100ContinueListener = null;
-                ChannelFuture expect100ContinueFuture = null;
-
-                if (HttpUtil.is100ContinueExpected(rq)) {
-                    expect100ContinueListener =
-                            future -> ch.pipeline().writeAndFlush(nettyRequest);
-                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly()
-                    .addListener(expect100ContinueListener);
-                } else {
-                    // Send the HTTP request.
+                if (!expect100ContinueHandler.isExpected()) {
+                    // Send the HTTP request. Expect:100-continue processing is not applicable
+                    // in this case.
                     entityWriter.writeAndFlush(nettyRequest);
                 }
 
@@ -442,9 +445,6 @@ class NettyConnector implements Connector {
                     entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
                 } else {
                     entityWriter.write(entityWriter.getChunkedInput());
-                }
-                if (expect100ContinueFuture != null && expect100ContinueListener != null) {
-                    expect100ContinueFuture.removeListener(expect100ContinueListener);
                 }
 
                 executorService.execute(new Runnable() {
