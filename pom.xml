@@ -1394,6 +1394,13 @@
                     <id>dash-licenses-snapshots</id>
                     <url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
                     <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>dash-licenses-releases</id>
+                    <url>https://repo.eclipse.org/content/repositories/dash-licenses-releases/</url>
+                    <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
                 </pluginRepository>
@@ -1403,7 +1410,7 @@
                     <plugin>
                         <groupId>org.eclipse.dash</groupId>
                         <artifactId>license-tool-plugin</artifactId>
-                        <version>0.0.1-SNAPSHOT</version>
+                        <version>1.0.2</version>
                         <executions>
                             <execution>
                                 <id>license-check</id>
@@ -1703,6 +1710,16 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.http2</groupId>
+                <artifactId>http2-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.http2</groupId>
+                <artifactId>http2-http-client-transport</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -2193,7 +2210,7 @@
         <site.mvn.plugin.version>3.9.1</site.mvn.plugin.version>
         <source.mvn.plugin.version>3.3.0</source.mvn.plugin.version>
         <surefire.mvn.plugin.version>3.1.2</surefire.mvn.plugin.version>
-        <war.mvn.plugin.version>3.3.2</war.mvn.plugin.version>
+        <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
         <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
         <xml.mvn.plugin.version>1.0.2</xml.mvn.plugin.version>
         <!-- END of Versions of Maven plugins -->
@@ -2205,6 +2222,8 @@
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>9.5</asm.version>
+        <!--required for spring (ext) modules integration -->
+        <aspectj.weaver.version>1.6.11</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <commons.io.version>2.13.0</commons.io.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
@@ -2224,7 +2243,7 @@
         <xmlunit.version>2.9.1</xmlunit.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <jersey1.version>1.19.3</jersey1.version>
@@ -2262,7 +2281,7 @@
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.10</graalvm.version>
+        <graalvm.version>20.3.11</graalvm.version>
 
         <!-- do not need CQs -->
         <cdi.api.version>1.2</cdi.api.version>
@@ -2299,6 +2318,8 @@
         <jsp.version>2.3.6</jsp.version>
         <jstl.version>1.2.7</jstl.version>
         <jta.api.version>1.3.3</jta.api.version>
+        <micrometer.version>1.10.10</micrometer.version>
+        <micrometer-tracing.version>1.0.9</micrometer-tracing.version>
         <microprofile.config.version>2.0.1</microprofile.config.version>
         <microprofile.rest.client.version>2.0</microprofile.rest.client.version>
         <mimepull.version>1.9.15</mimepull.version>

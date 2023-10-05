@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.uri;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,11 +25,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.uri.internal.UriPart;
 import org.glassfish.jersey.uri.internal.UriTemplateParser;
 
 /**
@@ -124,7 +126,7 @@ public class UriTemplate {
          * @throws java.lang.IllegalArgumentException in case no value has been found and the strategy
          *                                            does not support {@code null} values.
          */
-        public String valueFor(String templateVariable, String matchedGroup);
+        public String valueFor(UriPart templateVariable, String matchedGroup);
     }
 
     /**
@@ -156,7 +158,12 @@ public class UriTemplate {
     /**
      * The template variables in the URI template.
      */
-    private final List<String> templateVariables;
+    private final List<UriPart> templateVariables;
+
+    /**
+     * Get all UriParts, not only the variables
+     */
+    private final List<UriPart> uriParts;
     /**
      * The number of explicit regular expressions declared for template
      * variables.
@@ -182,6 +189,7 @@ public class UriTemplate {
         this.pattern = PatternWithGroups.EMPTY;
         this.endsWithSlash = false;
         this.templateVariables = Collections.emptyList();
+        this.uriParts = Collections.emptyList();
         this.numOfExplicitRegexes = this.numOfCharacters = this.numOfRegexGroups = 0;
     }
 
@@ -240,6 +248,8 @@ public class UriTemplate {
         this.endsWithSlash = template.charAt(template.length() - 1) == '/';
 
         this.templateVariables = Collections.unmodifiableList(templateParser.getNames());
+
+        this.uriParts = templateParser.getUriParts();
     }
 
     /**
@@ -426,7 +436,7 @@ public class UriTemplate {
      * @return the list of template variables.
      */
     public final List<String> getTemplateVariables() {
-        return templateVariables;
+        return templateVariables.stream().map(UriPart::getPart).collect(Collectors.toList());
     }
 
     /**
@@ -438,8 +448,8 @@ public class UriTemplate {
      */
     @SuppressWarnings("UnusedDeclaration")
     public final boolean isTemplateVariablePresent(String name) {
-        for (String s : templateVariables) {
-            if (s.equals(name)) {
+        for (UriPart tv : templateVariables) {
+            if (tv.getPart().equals(name)) {
                 return true;
             }
         }
@@ -507,7 +517,7 @@ public class UriTemplate {
             throw new IllegalArgumentException();
         }
 
-        return pattern.match(uri, templateVariables, templateVariableToValue);
+        return pattern.match(uri, getTemplateVariables(), templateVariableToValue);
     }
 
     /**
@@ -547,10 +557,14 @@ public class UriTemplate {
      */
     public final String createURI(final Map<String, String> values) {
         final StringBuilder sb = new StringBuilder();
-        resolveTemplate(normalizedTemplate, sb, new TemplateValueStrategy() {
+        resolveTemplate(sb, new TemplateValueStrategy() {
             @Override
-            public String valueFor(String templateVariable, String matchedGroup) {
-                return values.get(templateVariable);
+            public String valueFor(UriPart templateVariable, String matchedGroup) {
+                String value = values.get(templateVariable.getPart());
+                if (value == null) {
+                    return "";
+                }
+                return templateVariable.resolve(value, null, false);
             }
         });
         return sb.toString();
@@ -592,16 +606,16 @@ public class UriTemplate {
             private final Map<String, String> mapValues = new HashMap<String, String>();
 
             @Override
-            public String valueFor(String templateVariable, String matchedGroup) {
+            public String valueFor(UriPart templateVariable, String matchedGroup) {
                 // Check if a template variable has already occurred
                 // If so use the value to ensure that two or more declarations of
                 // a template variable have the same value
-                String tValue = mapValues.get(templateVariable);
+                String tValue = mapValues.get(templateVariable.getPart());
                 if (tValue == null) {
                     if (v < lengthPlusOffset) {
                         tValue = values[v++];
                         if (tValue != null) {
-                            mapValues.put(templateVariable, tValue);
+                            mapValues.put(templateVariable.getPart(), tValue);
                         }
                     }
                 }
@@ -611,84 +625,24 @@ public class UriTemplate {
         };
 
         final StringBuilder sb = new StringBuilder();
-        resolveTemplate(normalizedTemplate, sb, ns);
+        resolveTemplate(sb, ns);
         return sb.toString();
     }
 
     /**
      * Build a URI based on the parameters provided by the variable name strategy.
      *
-     * @param normalizedTemplate normalized URI template. A normalized template is a template without any explicit regular
-     *                           expressions.
      * @param builder            URI string builder to be used.
      * @param valueStrategy      The template value producer strategy to use.
      */
-    private static void resolveTemplate(
-            String normalizedTemplate,
-            StringBuilder builder,
-            TemplateValueStrategy valueStrategy) {
-        // Find all template variables
-        Matcher m = TEMPLATE_NAMES_PATTERN.matcher(normalizedTemplate);
-
-        int i = 0;
-        while (m.find()) {
-            builder.append(normalizedTemplate, i, m.start());
-            String variableName = m.group(1);
-            // TODO matrix
-            char firstChar = variableName.charAt(0);
-            if (firstChar == '?' || firstChar == ';') {
-                final char prefix;
-                final char separator;
-                final String emptyValueAssignment;
-                if (firstChar == '?') {
-                    // query
-                    prefix = '?';
-                    separator = '&';
-                    emptyValueAssignment = "=";
-                } else {
-                    // matrix
-                    prefix = ';';
-                    separator = ';';
-                    emptyValueAssignment = "";
-                }
-
-                int index = builder.length();
-                String[] variables = variableName.substring(1).split(", ?");
-                for (String variable : variables) {
-                    try {
-                        String value = valueStrategy.valueFor(variable, m.group());
-                        if (value != null) {
-                            if (index != builder.length()) {
-                                builder.append(separator);
-                            }
-
-                            builder.append(variable);
-                            if (value.isEmpty()) {
-                                builder.append(emptyValueAssignment);
-                            } else {
-                                builder.append('=');
-                                builder.append(value);
-                            }
-                        }
-                    } catch (IllegalArgumentException ex) {
-                        // no value found => ignore the variable
-                    }
-                }
-
-                if (index != builder.length() && (index == 0 || builder.charAt(index - 1) != prefix)) {
-                    builder.insert(index, prefix);
-                }
+    private void resolveTemplate(StringBuilder builder, TemplateValueStrategy valueStrategy) {
+        for (UriPart uriPart : uriParts) {
+            if (uriPart.isTemplate()) {
+                builder.append(valueStrategy.valueFor(uriPart, uriPart.getGroup()));
             } else {
-                String value = valueStrategy.valueFor(variableName, m.group());
-
-                if (value != null) {
-                    builder.append(value);
-                }
+                builder.append(uriPart.getPart());
             }
-
-            i = m.end();
         }
-        builder.append(normalizedTemplate, i, normalizedTemplate.length());
     }
 
     @Override
@@ -756,16 +710,9 @@ public class UriTemplate {
             final String path, final String query, final String fragment,
             final Map<String, ?> values, final boolean encode, final boolean encodeSlashInPath) {
 
-        Map<String, String> stringValues = new HashMap<String, String>();
-        for (Map.Entry<String, ?> e : values.entrySet()) {
-            if (e.getValue() != null) {
-                stringValues.put(e.getKey(), e.getValue().toString());
-            }
-        }
-
-        return createURIWithStringValues(scheme, authority,
+        return createURI(scheme, authority,
                 userInfo, host, port, path, query, fragment,
-                stringValues, encode, encodeSlashInPath);
+                new Object[] {}, encode, encodeSlashInPath, values);
     }
 
     /**
@@ -800,7 +747,7 @@ public class UriTemplate {
             final String path, final String query, final String fragment,
             final Map<String, ?> values, final boolean encode, final boolean encodeSlashInPath) {
 
-        return createURIWithStringValues(
+        return createURI(
                 scheme, authority, userInfo, host, port, path, query, fragment, EMPTY_VALUES, encode, encodeSlashInPath, values);
     }
 
@@ -837,17 +784,10 @@ public class UriTemplate {
             final String path, final String query, final String fragment,
             final Object[] values, final boolean encode, final boolean encodeSlashInPath) {
 
-        String[] stringValues = new String[values.length];
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                stringValues[i] = values[i].toString();
-            }
-        }
-
-        return createURIWithStringValues(
+        return createURI(
                 scheme, authority,
                 userInfo, host, port, path, query, fragment,
-                stringValues, encode, encodeSlashInPath);
+                values, encode, encodeSlashInPath, new HashMap<String, Object>());
     }
 
     /**
@@ -879,13 +819,13 @@ public class UriTemplate {
             final String[] values, final boolean encode, final boolean encodeSlashInPath) {
 
         final Map<String, Object> mapValues = new HashMap<String, Object>();
-        return createURIWithStringValues(
+        return createURI(
                 scheme, authority, userInfo, host, port, path, query, fragment, values, encode, encodeSlashInPath, mapValues);
     }
 
-    private static String createURIWithStringValues(
+    private static String createURI(
             final String scheme, final String authority, final String userInfo, final String host, final String port,
-            final String path, final String query, final String fragment, final String[] values, final boolean encode,
+            final String path, final String query, final String fragment, final Object[] values, final boolean encode,
             final boolean encodeSlashInPath, final Map<String, ?> mapValues) {
 
         final StringBuilder sb = new StringBuilder();
@@ -942,9 +882,15 @@ public class UriTemplate {
             }
 
             if (notEmpty(query)) {
-                sb.append('?');
+                int sbLength = sb.length();
                 offset = createUriComponent(UriComponent.Type.QUERY_PARAM, query, values,
                         offset, encode, mapValues, sb);
+                if (sb.length() > sbLength) {
+                    char firstQuery = sb.charAt(sbLength);
+                    if (firstQuery != '?' && firstQuery != '&') {
+                        sb.insert(sbLength, '?');
+                    }
+                }
             }
 
             if (notEmpty(fragment)) {
@@ -963,7 +909,7 @@ public class UriTemplate {
     @SuppressWarnings("unchecked")
     private static int createUriComponent(final UriComponent.Type componentType,
                                           String template,
-                                          final String[] values,
+                                          final Object[] values,
                                           final int valueOffset,
                                           final boolean encode,
                                           final Map<String, ?> _mapValues,
@@ -977,33 +923,28 @@ public class UriTemplate {
         }
 
         // Find all template variables
-        template = new UriTemplateParser(template).getNormalizedTemplate();
-
+        UriTemplateParser templateParser = new UriTemplateParser(template);
 
         class ValuesFromArrayStrategy implements TemplateValueStrategy {
             private int offset = valueOffset;
 
             @Override
-            public String valueFor(String templateVariable, String matchedGroup) {
+            public String valueFor(UriPart templateVariable, String matchedGroup) {
 
-                Object value = mapValues.get(templateVariable);
+                Object value = mapValues.get(templateVariable.getPart());
                 if (value == null && offset < values.length) {
                     value = values[offset++];
-                    mapValues.put(templateVariable, value);
+                    mapValues.put(templateVariable.getPart(), value);
                 }
-                if (value == null) {
+                if (value == null && templateVariable.throwWhenNoTemplateArg()) {
                     throw new IllegalArgumentException(
-                            String.format("The template variable '%s' has no value", templateVariable));
+                            String.format("The template variable '%s' has no value", templateVariable.getPart()));
                 }
-                if (encode) {
-                    return UriComponent.encode(value.toString(), componentType);
-                } else {
-                    return UriComponent.contextualEncode(value.toString(), componentType);
-                }
+                return templateVariable.resolve(value, componentType, encode);
             }
         }
         ValuesFromArrayStrategy cs = new ValuesFromArrayStrategy();
-        resolveTemplate(template, b, cs);
+        new UriTemplate(templateParser).resolveTemplate(b, cs);
 
         return cs.offset;
     }
@@ -1033,25 +974,18 @@ public class UriTemplate {
 
         final Map<String, Object> mapValues = (Map<String, Object>) _mapValues;
 
-        // Find all template variables
-        template = new UriTemplateParser(template).getNormalizedTemplate();
-
         StringBuilder sb = new StringBuilder();
-        resolveTemplate(template, sb, new TemplateValueStrategy() {
+        // Find all template variables
+        new UriTemplate(new UriTemplateParser(template)).resolveTemplate(sb, new TemplateValueStrategy() {
             @Override
-            public String valueFor(String templateVariable, String matchedGroup) {
+            public String valueFor(UriPart templateVariable, String matchedGroup) {
 
-                Object value = mapValues.get(templateVariable);
+                Object value = mapValues.get(templateVariable.getPart());
 
                 if (value != null) {
-                    if (encode) {
-                        value = UriComponent.encode(value.toString(), type);
-                    } else {
-                        value = UriComponent.contextualEncode(value.toString(), type);
-                    }
-                    return value.toString();
+                    return templateVariable.resolve(value.toString(), type, encode);
                 } else {
-                    if (mapValues.containsKey(templateVariable)) {
+                    if (mapValues.containsKey(templateVariable.getPart())) {
                         throw new IllegalArgumentException(
                                 String.format("The value associated of the template value map for key '%s' is 'null'.",
                                         templateVariable)

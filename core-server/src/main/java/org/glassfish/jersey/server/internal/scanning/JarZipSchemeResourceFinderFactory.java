@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,13 @@
 
 package org.glassfish.jersey.server.internal.scanning;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -140,7 +141,7 @@ final class JarZipSchemeResourceFinderFactory implements UriSchemeResourceFinder
      * if that fails with a {@link java.net.MalformedURLException} then the method will
      * attempt to create a {@link InputStream} instance as follows:
      * <pre>
-     *  return new new FileInputStream(
+     *  return Files.newInputStream(
      *      UriComponent.decode(jarUrlString, UriComponent.Type.PATH)));
      * </pre>
      *
@@ -153,8 +154,8 @@ final class JarZipSchemeResourceFinderFactory implements UriSchemeResourceFinder
         try {
             return new URL(jarUrlString).openStream();
         } catch (final MalformedURLException e) {
-            return new FileInputStream(
-                    UriComponent.decode(jarUrlString, UriComponent.Type.PATH));
+            return Files.newInputStream(
+                    new File(UriComponent.decode(jarUrlString, UriComponent.Type.PATH)).toPath());
         }
     }
 }

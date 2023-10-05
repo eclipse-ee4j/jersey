@@ -35,7 +35,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
@@ -43,6 +45,8 @@ import javax.ws.rs.core.Configuration;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -197,8 +201,10 @@ class NettyConnector implements Connector {
         int port = requestUri.getPort() != -1 ? requestUri.getPort() : "https".equals(requestUri.getScheme()) ? 443 : 80;
 
         try {
+            final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
+                    .request(jerseyRequest).setSNIAlways(true).build();
 
-            String key = requestUri.getScheme() + "://" + host + ":" + port;
+            String key = requestUri.getScheme() + "://" + sslConfig.getSNIHostName() + ":" + port;
             ArrayList<Channel> conns;
             synchronized (connections) {
                conns = connections.get(key);
@@ -228,9 +234,8 @@ class NettyConnector implements Connector {
                }
             }
 
-            Integer connectTimeout = jerseyRequest.resolveProperty(ClientProperties.CONNECT_TIMEOUT, 0);
-
             if (chan == null) {
+               Integer connectTimeout = jerseyRequest.resolveProperty(ClientProperties.CONNECT_TIMEOUT, 0);
                Bootstrap b = new Bootstrap();
 
                // http proxy
@@ -267,7 +272,7 @@ class NettyConnector implements Connector {
                      if ("https".equals(requestUri.getScheme())) {
                          // making client authentication optional for now; it could be extracted to configurable property
                          JdkSslContext jdkSslContext = new JdkSslContext(
-                                 client.getSslContext(),
+                                 getSslContext(client, jerseyRequest),
                                  true,
                                  (Iterable) null,
                                  IdentityCipherSuiteFilter.INSTANCE,
@@ -278,8 +283,7 @@ class NettyConnector implements Connector {
                          );
 
                          final int port = requestUri.getPort();
-                         final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
-                                 .request(jerseyRequest).setSNIAlways(true).build();
+
                          final SslHandler sslHandler = jdkSslContext.newHandler(
                                  ch.alloc(), sslConfig.getSNIHostName(), port <= 0 ? 443 : port, executorService
                          );
@@ -405,8 +409,27 @@ class NettyConnector implements Connector {
 //                      break;
                 }
 
-                // Send the HTTP request.
-                entityWriter.writeAndFlush(nettyRequest);
+                //check for 100-Continue presence/availability
+                final Expect100ContinueConnectorExtension expect100ContinueExtension
+                        = new Expect100ContinueConnectorExtension();
+
+                final DefaultFullHttpRequest rq = new DefaultFullHttpRequest(nettyRequest.protocolVersion(),
+                        nettyRequest.method(), nettyRequest.uri());
+                rq.headers().setAll(nettyRequest.headers());
+                expect100ContinueExtension.invoke(jerseyRequest, rq);
+
+                ChannelFutureListener expect100ContinueListener = null;
+                ChannelFuture expect100ContinueFuture = null;
+
+                if (HttpUtil.is100ContinueExpected(rq)) {
+                    expect100ContinueListener =
+                            future -> ch.pipeline().writeAndFlush(nettyRequest);
+                    expect100ContinueFuture = ch.pipeline().writeAndFlush(rq).sync().awaitUninterruptibly()
+                    .addListener(expect100ContinueListener);
+                } else {
+                    // Send the HTTP request.
+                    entityWriter.writeAndFlush(nettyRequest);
+                }
 
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
@@ -419,6 +442,9 @@ class NettyConnector implements Connector {
                     entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
                 } else {
                     entityWriter.write(entityWriter.getChunkedInput());
+                }
+                if (expect100ContinueFuture != null && expect100ContinueListener != null) {
+                    expect100ContinueFuture.removeListener(expect100ContinueListener);
                 }
 
                 executorService.execute(new Runnable() {
@@ -453,6 +479,11 @@ class NettyConnector implements Connector {
         } catch (IOException | InterruptedException e) {
             responseDone.completeExceptionally(e);
         }
+    }
+
+    private SSLContext getSslContext(Client client, ClientRequest request) {
+        Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+        return supplier == null ? client.getSslContext() : supplier.get();
     }
 
     private String buildPathWithQueryParameters(URI requestUri) {

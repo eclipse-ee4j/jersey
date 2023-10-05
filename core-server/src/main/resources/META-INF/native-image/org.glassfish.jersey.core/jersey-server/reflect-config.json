@@ -44,6 +44,30 @@
     "allDeclaredConstructors":true
   },
   {
+    "name": "org.glassfish.jersey.server.internal.inject.FormParamValueParamProvider",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name": "org.glassfish.jersey.server.internal.inject.FormParamValueParamProvider$MultipartFormParamValueProvider",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name": "org.glassfish.jersey.server.internal.inject.FormParamValueParamProvider$MultipartFormParamValueProvider$FormParamHolder",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
     "name":"org.glassfish.jersey.server.internal.monitoring.MonitoringAutodiscoverable",
     "allDeclaredFields":true,
     "allDeclaredMethods":true,

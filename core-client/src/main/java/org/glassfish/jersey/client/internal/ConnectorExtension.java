@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,7 @@ import org.glassfish.jersey.client.ClientRequest;
  *
  * @since 2.33
  */
-interface ConnectorExtension<T, E extends Exception> {
+public interface ConnectorExtension<T, E extends Exception> {
 
     /**
      * Main function which allows extension of connector's functionality

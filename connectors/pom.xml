@@ -39,6 +39,7 @@
         <module>grizzly-connector</module>
         <module>jdk-connector</module>
         <module>jetty-connector</module>
+        <module>jetty-http2-connector</module>
         <module>netty-connector</module>
     </modules>
 

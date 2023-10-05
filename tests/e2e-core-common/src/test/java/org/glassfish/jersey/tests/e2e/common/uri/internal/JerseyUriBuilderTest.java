@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1655,6 +1656,13 @@ public class JerseyUriBuilderTest {
         checkQueryFormat("http://localhost:8080/path",
                          JerseyQueryParamStyle.MULTI_PAIRS,
                          "key1=val1&key1=val2&key2=val1&key1=val3");
+    }
+
+    @Test
+    void testFragment2569() throws URISyntaxException {
+        final URI uri = new URI("http://www.example.org/foo.xml#xpointer(//Rube)").normalize();
+        Assertions.assertEquals(uri, UriBuilder.fromUri(uri).build()); // prints "http://www.example.org/foo.xml#xpointer(//Rube)"
+        Assertions.assertEquals(uri, UriBuilder.fromUri(uri).fragment("xpointer(//{type})").build("Rube"));
     }
 
     private void checkQueryFormat(String fromUri, JerseyQueryParamStyle queryParamStyle, String expected) {

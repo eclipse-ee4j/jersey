@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -78,7 +78,7 @@ public class UnsafeCharsInUriTest extends JerseyTest {
         // quotes are encoded by browsers, curly brackets are not, so the quotes will be sent pre-encoded
         // HTTP 1.0 is used for simplicity
         String response = sendGetRequestOverSocket(getBaseUri(), "GET /app/test?msg={%22foo%22:%22bar%22} HTTP/1.0");
-        assertArrayEquals("{\"foo\":\"bar\"}".getBytes(Charset.forName("ISO-8859-1")), response.getBytes());
+        assertArrayEquals("{\"foo\":\"bar\"}".getBytes(StandardCharsets.ISO_8859_1), response.getBytes());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class UnsafeCharsInUriTest extends JerseyTest {
         String response = sendGetRequestOverSocket(getBaseUri(),
                                             "GET /app/test?msg=Hello\\World+With+SpecChars+§*)$!±@-_=;`:\\,~| HTTP/1.0");
 
-        assertArrayEquals("Hello\\World With SpecChars §*)$!±@-_=;`:\\,~|".getBytes(Charset.forName("ISO-8859-1")),
+        assertArrayEquals("Hello\\World With SpecChars §*)$!±@-_=;`:\\,~|".getBytes(StandardCharsets.ISO_8859_1),
                      response.getBytes());
     }
 
@@ -99,14 +99,14 @@ public class UnsafeCharsInUriTest extends JerseyTest {
         final Socket socket = new Socket(baseUri.getHost(), baseUri.getPort());
         final PrintWriter pw =
                 new PrintWriter(
-                        new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("ISO-8859-1"))));
+                        new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.ISO_8859_1)));
 
         pw.println(requestLine);
         pw.println(); // http request should end with a blank line
         pw.flush();
 
         final BufferedReader br =
-                new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
+                new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 
         String lastLine = null;
         String line;

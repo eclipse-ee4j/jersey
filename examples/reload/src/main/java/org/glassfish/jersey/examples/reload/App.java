@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,11 +12,10 @@ package org.glassfish.jersey.examples.reload;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -168,7 +167,7 @@ public class App {
 
         final List<JavaFile> javaFiles = new LinkedList<>();
 
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), "UTF-8"))) {
+        try (BufferedReader r = Files.newBufferedReader(configFile.toPath())) {
             while (r.ready()) {
                 final String className = r.readLine();
                 if (!className.startsWith("#")) {
