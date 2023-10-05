@@ -283,7 +283,9 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * @throws java.io.IOException in case the connection cannot be provided.
          */
         default HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
-            return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+            synchronized (this){
+                return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+            }
         }
     }
 
