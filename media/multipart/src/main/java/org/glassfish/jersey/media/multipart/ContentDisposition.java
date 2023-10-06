@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,9 +23,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.uri.UriComponent;
+
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * A content disposition header.
@@ -43,6 +46,7 @@ public class ContentDisposition {
     private Date modificationDate;
     private Date readDate;
     private long size;
+    private boolean encoded; // received encoded by filename*=
 
     private static final String CHARSET_GROUP_NAME = "charset";
     private static final String CHARSET_REGEX = "(?<" + CHARSET_GROUP_NAME + ">[^']+)";
@@ -65,6 +69,7 @@ public class ContentDisposition {
         this.readDate = readDate;
         this.size = size;
         this.parameters = Collections.emptyMap();
+        this.encoded = false;
     }
 
     public ContentDisposition(final String header) throws ParseException {
@@ -110,12 +115,23 @@ public class ContentDisposition {
     }
 
     /**
-     * Get the filename parameter.
+     * Get the filename parameter. Automatically decodes RFC 5987 extended filename*= to be human-readable.
      *
-     * @return the size
+     * @return the file name
      */
     public String getFileName() {
-        return fileName;
+        return getFileName(true);
+    }
+
+    /**
+     * Get the filename parameter. If the RFC 5987 extended filename*= is received in Content-Disposition, its encoded
+     * value can be decoded to be human-readable.
+     *
+     * @param decodeExtended decode the filename* to be human-readable when {@code true}
+     * @return the filename or the RFC 5987 extended filename
+     */
+    public String getFileName(boolean decodeExtended) {
+        return encoded && decodeExtended ? decodeFromUriFormat(fileName) : fileName;
     }
 
     /**
@@ -196,7 +212,7 @@ public class ContentDisposition {
     }
 
     private void createParameters() throws ParseException {
-        fileName = defineFileName();
+        defineFileName();
 
         creationDate = createDate("creation-date");
 
@@ -207,46 +223,59 @@ public class ContentDisposition {
         size = createLong("size");
     }
 
-    private String defineFileName() throws ParseException {
-
+    private void defineFileName() throws ParseException {
+        encoded = false;
         final String fileName = parameters.get("filename");
         final String fileNameExt = parameters.get("filename*");
 
         if (fileNameExt == null) {
-            return fileName;
+            this.fileName = fileName;
+            return;
         }
 
         final Matcher matcher = FILENAME_EXT_VALUE_PATTERN.matcher(fileNameExt);
 
         if (matcher.matches()) {
+            encoded = true;
 
             final String fileNameValueChars = matcher.group(FILENAME_GROUP_NAME);
             if (isFilenameValueCharsEncoded(fileNameValueChars)) {
-                return fileNameExt;
-            }
-
-            final String charset = matcher.group(CHARSET_GROUP_NAME);
-            if (matcher.group(CHARSET_GROUP_NAME).equalsIgnoreCase("UTF-8")) {
-                final String language = matcher.group(LANG_GROUP_NAME);
-                return new StringBuilder(charset)
-                        .append("'")
-                        .append(language == null ? "" : language)
-                        .append("'")
-                        .append(encodeToUriFormat(fileNameValueChars))
-                        .toString();
+                this.fileName = fileNameExt;
             } else {
-                throw new ParseException(charset + " charset is not supported", 0);
-            }
-        }
 
-        throw new ParseException(fileNameExt + " - unsupported filename parameter", 0);
+                final String charset = matcher.group(CHARSET_GROUP_NAME);
+                if (charset.equalsIgnoreCase("UTF-8")) {
+                    final String language = matcher.group(LANG_GROUP_NAME);
+                    this.fileName = new StringBuilder(charset)
+                            .append("'")
+                            .append(language == null ? "" : language)
+                            .append("'")
+                            .append(encodeToUriFormat(fileNameValueChars))
+                            .toString();
+                } else {
+                    throw new ParseException(LocalizationMessages.ERROR_CHARSET_UNSUPPORTED(charset), 0);
+                }
+            }
+        } else {
+            throw new ParseException(LocalizationMessages.ERROR_FILENAME_UNSUPPORTED(fileNameExt), 0);
+        }
     }
 
-    private String encodeToUriFormat(final String parameter) {
+    private static String decodeFromUriFormat(String parameter) {
+        final Matcher matcher = FILENAME_EXT_VALUE_PATTERN.matcher(parameter);
+        if (matcher.matches()) {
+            final String fileNameValueChars = matcher.group(FILENAME_GROUP_NAME);
+            return UriComponent.decode(fileNameValueChars, UriComponent.Type.UNRESERVED);
+        } else {
+            return parameter;
+        }
+    }
+
+    private static String encodeToUriFormat(final String parameter) {
         return UriComponent.contextualEncode(parameter, UriComponent.Type.UNRESERVED);
     }
 
-    private boolean isFilenameValueCharsEncoded(final String parameter) {
+    private static boolean isFilenameValueCharsEncoded(final String parameter) {
         return FILENAME_VALUE_CHARS_PATTERN.matcher(parameter).matches();
     }
 
