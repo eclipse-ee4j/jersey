@@ -10,7 +10,6 @@
 
 package org.glassfish.jersey.examples.micrometer;
 
-import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.jersey.server.DefaultJerseyTagsProvider;
 import io.micrometer.core.instrument.binder.jersey.server.MetricsApplicationEventListener;
@@ -34,10 +33,5 @@ public class MetricsStore {
 
     public MeterRegistry getRegistry() {
         return registry;
-    }
-
-
-    public TimedAspect timedAspect() {
-        return new TimedAspect(registry);
     }
 }

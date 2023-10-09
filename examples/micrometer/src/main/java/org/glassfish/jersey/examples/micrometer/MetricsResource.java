@@ -54,7 +54,9 @@ public class MetricsResource {
                 result.append(String.format("Overall requests counts: %d, total time (millis): %f \n\r",
                         timer.count(), timer.totalTime(TimeUnit.MILLISECONDS)));
 
-                final Timer annotatedTimer = store.getRegistry().timer(MeasuredResource.TIMER_NAME);
+                final Timer annotatedTimer = store.getRegistry().timer(MeasuredResource.TIMER_NAME,
+                        "method", "GET", "status", "200", "exception", "None",
+                        "outcome", "SUCCESS", "uri", "/micro/measure/timed");
 
                 result.append(String.format("Requests to 'measure/timed' counts: %d, total time (millis): %f \n\r",
                         annotatedTimer.count(), annotatedTimer.totalTime(TimeUnit.MILLISECONDS)));

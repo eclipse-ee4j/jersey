@@ -20,10 +20,9 @@ public class MetricsResourceConfig extends ResourceConfig {
     private final MetricsStore store = new MetricsStore();
 
     public MetricsResourceConfig() {
-        store.timedAspect();
+        register(store.getMetricsApplicationEventListener());
         register(MeasuredResource.class);
         register(new MetricsResource(store));
-        register(store.getMetricsApplicationEventListener());
     }
 
     public MetricsStore getStore() {
