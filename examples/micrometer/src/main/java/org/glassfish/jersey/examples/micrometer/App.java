@@ -39,9 +39,9 @@ public class App {
             server.start();
 
             System.out.println(String.format("Application started.\nTry out                        %s%s\n"
-                            + "After several requests go to   %s%s\nAnd after that go to the       %s%s\n"
+                            + "And after that go to the       %s%s\n"
                             + "Stop the application using CTRL+C",
-                    BASE_URI, ROOT_PATH + "/timed", BASE_URI, ROOT_PATH + "/counted", BASE_URI, "metrics"));
+                    BASE_URI, ROOT_PATH + "/timed", BASE_URI, "metrics"));
             Thread.currentThread().join();
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);

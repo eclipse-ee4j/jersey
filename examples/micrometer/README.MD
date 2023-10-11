@@ -19,7 +19,6 @@ The mapping of the URI path space is presented in the following table:
 URI path                                   | Resource class            | HTTP methods
 ------------------------------------------ | ------------------------- | --------------
 **_/micro/measure/timed_**                            | JerseyResource            | GET
-**_/micro/measure/counted_**                            | JerseyResource            | GET
 **_/micro/metrics_**                            | JerseyResource            | GET
 
 Sample Response
@@ -28,8 +27,6 @@ Sample Response
 ```html
 --- (micro/measure/timed)
 Requests to this method are measured. Use /metrics to see more
---- (micro/measure/counted)
-Requests to this method are counted. Use /metrics to see more
 ---- (micro/metrics)   
 Listing available meters: http.shared.metrics;
 ----)
@@ -47,7 +44,6 @@ Run the example using [Grizzly](https://javaee.github.io/grizzly/) container as 
 - <http://localhost:8080/micro/metrics>
 - after few request to the main page go to the url
 - - <http://localhost:8080/micro/measure/timed>
-- - <http://localhost:8080/micro/measure/counted>
 - and see the responses from available resource pages 
 - then go to the 
 - - <http://localhost:8080/micro/metrics>

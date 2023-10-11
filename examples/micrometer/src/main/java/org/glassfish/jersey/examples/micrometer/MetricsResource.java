@@ -10,7 +10,6 @@
 
 package org.glassfish.jersey.examples.micrometer;
 
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Timer;
 
@@ -61,14 +60,6 @@ public class MetricsResource {
                 result.append(String.format("Requests to 'measure/timed' counts: %d, total time (millis): %f \n\r",
                         annotatedTimer.count(), annotatedTimer.totalTime(TimeUnit.MILLISECONDS)));
 
-                //unfortunately the @counted annotation is not supported for the Jersey Integration.
-                //so, it always shows 0.0 as count() result.
-                final Counter counter = store.getRegistry().counter(MeasuredCountedResource.COUNTER_NAME,
-                        "method", "GET", "status", "200", "exception", "None",
-                        "outcome", "SUCCESS", "uri", "/micro/measure/counted");
-
-                result.append(String.format("Requests to 'measure/counted' counts: %f \n\r",
-                        counter.count()));
             } catch (Exception ex) {
                 result.append("Exception occurred, see log for details...");
                 result.append(ex);
