@@ -51,12 +51,10 @@ public class BufferedTest extends JerseyTest {
     public static class BufferedTestResource {
         @POST
         public String post(@Context HttpHeaders headers, String entity) {
-            System.out.println("Remote");
             String ret = headers.getHeaderString(HEADER_1)
                     + headers.getHeaderString(HEADER_2)
                     + headers.getHeaderString(HEADER_3)
                     + entity;
-            System.out.println(ret);
             return ret;
         }
     }

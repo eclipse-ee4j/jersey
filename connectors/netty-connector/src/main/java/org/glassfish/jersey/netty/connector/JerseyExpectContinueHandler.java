@@ -21,6 +21,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -77,6 +78,11 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
         final DefaultFullHttpRequest nettyRequestHeaders =
                 new DefaultFullHttpRequest(nettyRequest.protocolVersion(), nettyRequest.method(), nettyRequest.uri());
         nettyRequestHeaders.headers().setAll(nettyRequest.headers());
+
+        if (!nettyRequestHeaders.headers().contains(HttpHeaderNames.HOST)) {
+            nettyRequestHeaders.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+        }
+
         //If Expect:100-continue feature is enabled and client supports it, the nettyRequestHeaders will be
         //enriched with the 'Expect:100-continue' header.
         expect100ContinueExtension.invoke(jerseyRequest, nettyRequestHeaders);

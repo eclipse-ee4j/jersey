@@ -26,11 +26,13 @@ import java.net.CookieStore;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -274,10 +276,13 @@ public class JettyConnector implements Connector {
     @Override
     public ClientResponse apply(final ClientRequest jerseyRequest) throws ProcessingException {
         final Request jettyRequest = translateRequest(jerseyRequest);
-        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest);
-        final ContentProvider entity = getBytesProvider(jerseyRequest);
+        final Map<String, String> clientHeadersSnapshot = new HashMap<>();
+        final ContentProvider entity =
+                getBytesProvider(jerseyRequest, jerseyRequest.getHeaders(), clientHeadersSnapshot, jettyRequest);
         if (entity != null) {
             jettyRequest.content(entity);
+        } else {
+            clientHeadersSnapshot.putAll(writeOutBoundHeaders(jerseyRequest.getHeaders(), jettyRequest));
         }
 
         try {
@@ -362,12 +367,15 @@ public class JettyConnector implements Connector {
         // remove User-agent header set by Jetty; Jersey already sets this in its request (incl. Jetty version)
         request.getHeaders().remove(HttpHeader.USER_AGENT);
         for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
-            request.getHeaders().add(e.getKey(), e.getValue());
+            request.getHeaders().put(e.getKey(), e.getValue());
         }
         return stringHeaders;
     }
 
-    private ContentProvider getBytesProvider(final ClientRequest clientRequest) {
+    private ContentProvider getBytesProvider(final ClientRequest clientRequest,
+                                             final MultivaluedMap<String, Object> headers,
+                                             final Map<String, String> snapshot,
+                                             final Request request) {
         final Object entity = clientRequest.getEntity();
 
         if (entity == null) {
@@ -378,6 +386,7 @@ public class JettyConnector implements Connector {
         clientRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
             @Override
             public OutputStream getOutputStream(final int contentLength) throws IOException {
+                snapshot.putAll(writeOutBoundHeaders(headers, request));
                 return outputStream;
             }
         });

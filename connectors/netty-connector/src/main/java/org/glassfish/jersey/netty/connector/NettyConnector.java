@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +40,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
@@ -383,11 +386,13 @@ class NettyConnector implements Connector {
             }
 
             // headers
-            setHeaders(jerseyRequest, nettyRequest.headers(), false);
+            if (!jerseyRequest.hasEntity()) {
+                setHeaders(jerseyRequest, nettyRequest.headers(), false);
 
-            // host header - http 1.1
-            if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
-                nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                // host header - http 1.1
+                if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
+                    nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                }
             }
 
             if (jerseyRequest.hasEntity()) {
@@ -428,24 +433,21 @@ class NettyConnector implements Connector {
                     }
                 }
 
-                if (!expect100ContinueHandler.isExpected()) {
-                    // Send the HTTP request. Expect:100-continue processing is not applicable
-                    // in this case.
-                    entityWriter.writeAndFlush(nettyRequest);
-                }
+                final CountDownLatch headersSet = new CountDownLatch(1);
+                final CountDownLatch contentLengthSet = new CountDownLatch(1);
 
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
                     public OutputStream getOutputStream(int contentLength) throws IOException {
+                        replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
+                        if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
+                            nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                        }
+                        headersSet.countDown();
+
                         return entityWriter.getOutputStream();
                     }
                 });
-
-                if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
-                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
-                } else {
-                    entityWriter.write(entityWriter.getChunkedInput());
-                }
 
                 executorService.execute(new Runnable() {
                     @Override
@@ -457,9 +459,8 @@ class NettyConnector implements Connector {
                             jerseyRequest.writeEntity();
 
                             if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
-                                replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
                                 nettyRequest.headers().set(HttpHeaderNames.CONTENT_LENGTH, entityWriter.getLength());
-                                entityWriter.flush();
+                                contentLengthSet.countDown();
                             }
 
                         } catch (IOException e) {
@@ -468,9 +469,23 @@ class NettyConnector implements Connector {
                     }
                 });
 
-                if (entityWriter.getType() != NettyEntityWriter.Type.DELAYED) {
-                    entityWriter.flush();
+                headersSet.await();
+                if (!expect100ContinueHandler.isExpected()) {
+                    // Send the HTTP request. Expect:100-continue processing is not applicable
+                    // in this case.
+                    entityWriter.writeAndFlush(nettyRequest);
                 }
+
+                if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
+                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
+                } else {
+                    entityWriter.write(entityWriter.getChunkedInput());
+                }
+
+                if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
+                    contentLengthSet.await();
+                }
+                entityWriter.flush();
             } else {
                 // Send the HTTP request.
                 ch.writeAndFlush(nettyRequest);
