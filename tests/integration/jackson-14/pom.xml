@@ -30,7 +30,7 @@
     <artifactId>jackson-14</artifactId>
     <name>jersey-compatibility-jackson14</name>
     <description>
-        Controls the backward compatibility with Jackson 14 environment 
+        Controls the backward compatibility with Jackson 2.14 environment
     </description>
 
     <properties>
