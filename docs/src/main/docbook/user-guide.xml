@@ -104,8 +104,8 @@ This line fits the page width.
     <xi:include href="uris-and-links.xml" />
     <xi:include href="declarative-linking.xml" />
     <xi:include href="resource-builder.xml" />
-    <xi:include href="micrometer.xml" />
     <xi:include href="mp-config.xml" />
+    <xi:include href="micrometer.xml" />
     <xi:include href="sse.xml" />
     <xi:include href="security.xml" />
     <xi:include href="wadl.xml" />

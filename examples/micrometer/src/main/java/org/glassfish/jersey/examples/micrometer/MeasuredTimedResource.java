@@ -19,7 +19,7 @@ import javax.ws.rs.Produces;
 @Path("measure")
 public class MeasuredTimedResource {
 
-    public static final String CLICHED_MESSAGE = "Requests to this method are measured. Use /metrics to see more";
+    public static final String MESSAGE = "Requests to this method are measured. Use /metrics to see more";
     public static final String TIMER_NAME = "http.timers";
     public static final String TIMER_DESCRIPTION = "resource measurement timer";
 
@@ -28,6 +28,6 @@ public class MeasuredTimedResource {
     @Timed(value = TIMER_NAME, description = TIMER_DESCRIPTION, histogram = true)
     @Path("timed")
     public String getTimedMessage() {
-        return CLICHED_MESSAGE;
+        return MESSAGE;
     }
 }

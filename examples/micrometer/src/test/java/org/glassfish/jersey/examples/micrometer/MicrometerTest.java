@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.core.Application;
 import java.util.concurrent.TimeUnit;
 
-import static org.glassfish.jersey.examples.micrometer.MeasuredTimedResource.CLICHED_MESSAGE;
+import static org.glassfish.jersey.examples.micrometer.MeasuredTimedResource.MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -37,7 +37,7 @@ public class MicrometerTest extends JerseyTest {
     @Test
     void meterResourceTest() throws InterruptedException {
         final String response = target("/measure/timed").request().get(String.class);
-        assertEquals(response, CLICHED_MESSAGE);
+        assertEquals(response, MESSAGE);
         for (int i = 0; i < REQUESTS_COUNT; i++) {
             target("/metrics").request().get(String.class);
         }

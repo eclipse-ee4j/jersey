@@ -30,32 +30,26 @@
     <title>Micrometer - application observability facade</title>
     <para>
         The chapter is about Micrometer integration into Jersey which comes since the version 2.41 as an extension module.
-        Before Jersey 2.41 it was possible to integrate Micrometer with Jersey using directly &micrometer.jersey.link;
-        There is also support for Jakarta EE 10 integration. Detailed documentation regarding metrics fine-tuning
-        can be found at the &micrometer.link;
+        Before Jersey 2.41, it was possible to integrate Micrometer with Jersey using directly &micrometer.jersey.link;.
+        There is also support for Jakarta EE 10 integration. The detailed documentation regarding metrics fine-tuning
+        can be found at the &micrometer.link;.
     </para>
     <section xml:id="micrometer-integration">
         <title>Integration into Jersey</title>
         <para>
             Since Jersey 2.41 it's possibly to use an extension module in order to use Micrometer instrumentation
             inside your projects. The module shall be added as a dependency:
-            <programlisting language="xml" linenumbering="unnumbered">
-                &lt;dependency>
-                &lt;groupId>org.glassfish.jersey.ext.micrometer&lt;/groupId>
-                &lt;artifactId>jersey-micrometer&lt;/artifactId>
-                &lt;version>&version;&lt;/scope>
-                &lt;/dependency>
-            </programlisting>
+            <programlisting language="xml" linenumbering="unnumbered">&lt;dependency>
+&lt;groupId>org.glassfish.jersey.ext.micrometer&lt;/groupId>
+&lt;artifactId>jersey-micrometer&lt;/artifactId>
+&lt;version>&version;&lt;/scope>
+&lt;/dependency></programlisting>
             After the dependency is added, the Micrometer can be configured as follows:
-            <programlisting language="java" linenumbering="unnumbered">
-                final ResourceConfig resourceConfig = new ResourceConfig();
-                resourceConfig.register(new MetricsApplicationEventListener(
+            <programlisting language="java" linenumbering="unnumbered">final ResourceConfig resourceConfig = new ResourceConfig();
+resourceConfig.register(new MetricsApplicationEventListener(
                 registry,
-                new DefaultJerseyTagsProvider(),
-                "http.shared.metrics",
-                true));
-                final ServletContainer servletContainer = new ServletContainer(resourceConfig);
-            </programlisting>
+new DefaultJerseyTagsProvider(), "http.shared.metrics", true));
+final ServletContainer servletContainer = new ServletContainer(resourceConfig);</programlisting>
             the registry instance is of type <literal>MeterRegistry</literal> which could be
             <literal>new SimpleMeterRegistry();</literal>. Then all metrics can be accessed like
             <literal>registry.get("http.shared.metrics")</literal>. The "http.shared.metrics" string
@@ -72,21 +66,20 @@
         </para>
         <para>
             Implementing resource methods, which should be measured, several annotations can be used. The basic example
-            demonstrates the <listeral>@Counted</listeral> annotation.
+            demonstrates the <literal>@Counted</literal> annotation.
             <example>
                 <title>Annotated Micrometer resource methods</title>
-                <programlisting language="java" linenumbering="unnumbered">
-                    @GET
-                    @Counted(value = COUNTER_NAME, description = COUNTER_DESCRIPTION)
-                    @Produces(MediaType.TEXT_PLAIN)
-                    @Path("counted")
-                    public String getCounterMessage() {
-                    return "Requests to this method are counted. Use /metrics to see more";
-                    }
+                <programlisting language="java" linenumbering="unnumbered">@GET
+@Counted(value = COUNTER_NAME, description = COUNTER_DESCRIPTION)
+@Produces(MediaType.TEXT_PLAIN)
+@Path("counted")
+public String getCounterMessage() {
+        return "Requests to this method are counted. Use /metrics to see more";
+}
                 </programlisting>
             </example>
             Metrics however can be introduced using another annotations <literal>@Timed</literal>, or
-            <literal>@TimedSet</literal> which is set of <literal>@Timed</literal>.
+            <literal>@TimedSet</literal> which is a set of <literal>@Timed</literal>.
         </para>
     </section>
 </chapter>
