@@ -18,6 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import java.util.concurrent.TimeUnit;
 
+import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
+
 @Path("metrics")
 public class MetricsResource {
 
@@ -29,8 +31,17 @@ public class MetricsResource {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/html")
     public String getMeters() {
+       return "<html><body>Static meters are initialized, try <a href=\""
+               + WEB_PATH + "extendedMeters\">extendedMeters</a></body></html>";
+    }
+
+
+    @GET
+    @Produces("text/plain")
+    @Path("extendedMeters")
+    public String getExtendedMeters() {
         final StringBuffer result = new StringBuffer();
         try {
             result.append("Listing available meters: ");

@@ -22,6 +22,7 @@ public class App {
 
     private static final URI BASE_URI = URI.create("http://localhost:8080/micro/");
     public static final String ROOT_PATH = "measure";
+    public static final String WEB_PATH = "/micro/metrics/";
 
     public static void main(String[] args) {
         try {

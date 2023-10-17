@@ -16,15 +16,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
+
 @Path("measure")
 public class MeasuredTimedResource {
 
-    public static final String MESSAGE = "Requests to this method are measured. Use /metrics to see more";
+    public static final String MESSAGE = "<html><body>Requests to this method are measured. "
+            + "Use <a href=\"" + WEB_PATH + "\">/metrics</a> to see more</body></html";
     public static final String TIMER_NAME = "http.timers";
     public static final String TIMER_DESCRIPTION = "resource measurement timer";
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/html")
     @Timed(value = TIMER_NAME, description = TIMER_DESCRIPTION, histogram = true)
     @Path("timed")
     public String getTimedMessage() {
