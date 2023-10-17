@@ -21,6 +21,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,12 +114,19 @@ public class RedirectHeadersTest extends JerseyTest {
         public Response redirect308(String whatever) {
             return Response.status(301).header(HttpHeaders.LOCATION, URI.create(TEST_URL_REF.get() + "/headers2")).build();
         }
+
+        @GET
+        @Path("relative")
+        public Response relative() {
+            return Response.status(301).header(HttpHeaders.LOCATION, URI.create("/test/headers2").toASCIIString()).build();
+        }
     }
 
     @Override
     protected Application configure() {
         ResourceConfig config = new ResourceConfig(RedirectResource.class);
         config.register(new LoggingFeature(LOGGER, LoggingFeature.Verbosity.PAYLOAD_ANY));
+        config.property(ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED, Boolean.TRUE);
         return config;
     }
 
@@ -155,7 +163,16 @@ public class RedirectHeadersTest extends JerseyTest {
             Assertions.assertEquals(200, response.getStatus());
             Assertions.assertEquals("null:null", response.readEntity(String.class));
         }
+    }
 
+    @Test
+    void testRelative() {
+        MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
+        try (Response response = target("test")
+                .path("relative").request().headers(headers).get()) {
+            Assertions.assertEquals(200, response.getStatus());
+            Assertions.assertEquals("null:null", response.readEntity(String.class));
+        }
     }
 
     void testPost(String status) {

@@ -29,13 +29,14 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.http.HttpHeaders;
+import org.glassfish.jersey.http.ResponseStatus;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 import org.glassfish.jersey.netty.connector.internal.RedirectException;
 
@@ -43,13 +44,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.timeout.IdleStateEvent;
+import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 /**
  * Jersey implementation of Netty channel handler.
@@ -108,17 +108,27 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
           jerseyResponse = null;
           int responseStatus = cr.getStatus();
           if (followRedirects
-                  && (responseStatus == HttpResponseStatus.MOVED_PERMANENTLY.code()
-                          || responseStatus == HttpResponseStatus.FOUND.code()
-                          || responseStatus == HttpResponseStatus.SEE_OTHER.code()
-                          || responseStatus == HttpResponseStatus.TEMPORARY_REDIRECT.code()
-                          || responseStatus == HttpResponseStatus.PERMANENT_REDIRECT.code())) {
+                  && (responseStatus == ResponseStatus.Redirect3xx.MOVED_PERMANENTLY_301.getStatusCode()
+                          || responseStatus == ResponseStatus.Redirect3xx.FOUND_302.getStatusCode()
+                          || responseStatus == ResponseStatus.Redirect3xx.SEE_OTHER_303.getStatusCode()
+                          || responseStatus == ResponseStatus.Redirect3xx.TEMPORARY_REDIRECT_307.getStatusCode()
+                          || responseStatus == ResponseStatus.Redirect3xx.PERMANENT_REDIRECT_308.getStatusCode())) {
               String location = cr.getHeaderString(HttpHeaders.LOCATION);
               if (location == null || location.isEmpty()) {
                   responseAvailable.completeExceptionally(new RedirectException(LocalizationMessages.REDIRECT_NO_LOCATION()));
               } else {
                   try {
                       URI newUri = URI.create(location);
+                      if (!newUri.isAbsolute()) {
+                          final URI originalUri = jerseyRequest.getUri();
+                          newUri = new JerseyUriBuilder()
+                                  .scheme(originalUri.getScheme())
+                                  .userInfo(originalUri.getUserInfo())
+                                  .host(originalUri.getHost())
+                                  .port(originalUri.getPort())
+                                  .uri(location)
+                                  .build();
+                      }
                       boolean alreadyRequested = !redirectUriHistory.add(newUri);
                       if (alreadyRequested) {
                           // infinite loop detection
@@ -171,7 +181,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             }
 
             // request entity handling.
-            if ((response.headers().contains(HttpHeaderNames.CONTENT_LENGTH) && HttpUtil.getContentLength(response) > 0)
+            if ((response.headers().contains(HttpHeaders.CONTENT_LENGTH) && HttpUtil.getContentLength(response) > 0)
                     || HttpUtil.isTransferEncodingChunked(response)) {
 
                 nis = new NettyInputStream();
@@ -256,7 +266,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
         headers.remove(HttpHeaders.IF_MODIFIED_SINCE);
         headers.remove(HttpHeaders.IF_UNMODIFIED_SINCE);
         headers.remove(HttpHeaders.AUTHORIZATION);
-        headers.remove(HttpHeaderNames.REFERER.toString());
+        headers.remove(HttpHeaders.REFERER);
         headers.remove(HttpHeaders.COOKIE);
     }
 
@@ -269,17 +279,18 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             }
         }
         headers.remove(HttpHeaders.LAST_MODIFIED);
-        headers.remove(HttpHeaderNames.TRANSFER_ENCODING.toString());
+        headers.remove(HttpHeaders.TRANSFER_ENCODING);
     }
 
     /* package */ static class ProxyHeaders implements Predicate<String> {
         static final ProxyHeaders INSTANCE = new ProxyHeaders();
         private static final String HOST = HttpHeaders.HOST.toLowerCase(Locale.ROOT);
+        private static final String FORWARDED = HttpHeaders.FORWARDED.toLowerCase(Locale.ROOT);
 
         @Override
         public boolean test(String headerName) {
             String lowName = headerName.toLowerCase(Locale.ROOT);
-            return lowName.startsWith("proxy-") || lowName.equals(HOST);
+            return lowName.startsWith("proxy-") || lowName.equals(HOST) || lowName.equals(FORWARDED);
         }
     }
 }
