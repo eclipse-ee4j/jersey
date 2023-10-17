@@ -40,15 +40,15 @@
             Since Jersey 2.41 it's possibly to use an extension module in order to use Micrometer instrumentation
             inside your projects. The module shall be added as a dependency:
             <programlisting language="xml" linenumbering="unnumbered">&lt;dependency>
-&lt;groupId>org.glassfish.jersey.ext.micrometer&lt;/groupId>
-&lt;artifactId>jersey-micrometer&lt;/artifactId>
-&lt;version>&version;&lt;/scope>
+   &lt;groupId>org.glassfish.jersey.ext.micrometer&lt;/groupId>
+   &lt;artifactId>jersey-micrometer&lt;/artifactId>
+   &lt;version>&version;&lt;/scope>
 &lt;/dependency></programlisting>
             After the dependency is added, the Micrometer can be configured as follows:
             <programlisting language="java" linenumbering="unnumbered">final ResourceConfig resourceConfig = new ResourceConfig();
 resourceConfig.register(new MetricsApplicationEventListener(
                 registry,
-new DefaultJerseyTagsProvider(), "http.shared.metrics", true));
+                new DefaultJerseyTagsProvider(), "http.shared.metrics", true));
 final ServletContainer servletContainer = new ServletContainer(resourceConfig);</programlisting>
             the registry instance is of type <literal>MeterRegistry</literal> which could be
             <literal>new SimpleMeterRegistry();</literal>. Then all metrics can be accessed like
