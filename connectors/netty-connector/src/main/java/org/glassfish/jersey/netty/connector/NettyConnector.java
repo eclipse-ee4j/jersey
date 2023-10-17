@@ -24,7 +24,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -40,7 +39,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
@@ -50,7 +48,6 @@ import javax.ws.rs.core.Configuration;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -567,8 +564,9 @@ class NettyConnector implements Connector {
 
     private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers, boolean proxyOnly) {
         for (final Map.Entry<String, List<String>> e : jerseyRequest.getStringHeaders().entrySet()) {
-            if (!proxyOnly || JerseyClientHandler.ProxyHeaders.INSTANCE.test(e.getKey())) {
-                headers.add(e.getKey(), e.getValue());
+            final String key = e.getKey();
+            if (!proxyOnly || JerseyClientHandler.ProxyHeaders.INSTANCE.test(key) || additionalProxyHeadersToKeep(key)) {
+                headers.add(key, e.getValue());
             }
         }
         return headers;
@@ -579,5 +577,12 @@ class NettyConnector implements Connector {
             headers.set(e.getKey(), e.getValue());
         }
         return headers;
+    }
+
+    /*
+     * Keep all X- headers (X-Forwarded-For,...) for proxy
+     */
+    private static boolean additionalProxyHeadersToKeep(String key) {
+        return key.length() > 2 && (key.charAt(0) == 'x' || key.charAt(0) == 'X') && (key.charAt(1) == '-');
     }
 }
