@@ -18,17 +18,17 @@ The mapping of the URI path space is presented in the following table:
 
 URI path                                   | Resource class            | HTTP methods
 ------------------------------------------ | ------------------------- | --------------
-**_/micro/measure/timed_**                            | MeasuredTimedResource            | GET
-**_/micro/init_**                            | MetricsResource            | GET
+**_/micro/timed_**                            | MeasuredTimedResource            | GET
+**_/micro/metrics_**                            | MetricsResource            | GET
 **_/micro/summary_**                            | SummaryResource            | GET
 
 Sample Response
 ---------------
 
 ```html
---- (micro/measure/timed)
+--- (micro/timed)
 Requests to this method are measured. Use /init to see more
----- (micro/init)
+---- (micro/metrics)
 Static meters are initialized, try summary. If you want more measurements just refresh this page several times.
 ---- (micro/summary)
 Listing available meters
@@ -47,9 +47,9 @@ Run the example using [Grizzly](https://javaee.github.io/grizzly/) container as 
 
 >     mvn clean compile exec:java
 
-- <http://localhost:8080/micro/init>
+- <http://localhost:8080/micro/metrics>
 - after few request to the main page go to the url
-- <http://localhost:8080/micro/measure/timed>
+- <http://localhost:8080/micro/timed>
 - and see the responses from available resource pages 
 - then go to the 
 - <http://localhost:8080/micro/summary>

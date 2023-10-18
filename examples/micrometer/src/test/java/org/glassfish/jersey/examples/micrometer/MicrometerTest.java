@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.core.Application;
 import java.util.concurrent.TimeUnit;
 
-import static org.glassfish.jersey.examples.micrometer.MeasuredTimedResource.MESSAGE;
+import static org.glassfish.jersey.examples.micrometer.TimedResource.MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,16 +36,16 @@ public class MicrometerTest extends JerseyTest {
 
     @Test
     void meterResourceTest() throws InterruptedException {
-        final String response = target("/measure/timed").request().get(String.class);
+        final String response = target("/timed").request().get(String.class);
         assertEquals(response, MESSAGE);
         for (int i = 0; i < REQUESTS_COUNT; i++) {
-            target("/init").request().get(String.class);
+            target("/metrics").request().get(String.class);
         }
         // Jersey metrics are recorded asynchronously to the request completing
         Thread.sleep(10);
         Timer timer = resourceConfig.getStore().getRegistry()
                 .get(MetricsStore.REGISTRY_NAME)
-                .tags("method", "GET", "uri", "/init", "status", "200", "exception", "None", "outcome", "SUCCESS")
+                .tags("method", "GET", "uri", "/metrics", "status", "200", "exception", "None", "outcome", "SUCCESS")
                 .timer();
         assertEquals(REQUESTS_COUNT, timer.count());
         assertNotNull(timer.totalTime(TimeUnit.NANOSECONDS));

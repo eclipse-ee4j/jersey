@@ -10,23 +10,19 @@
 
 package org.glassfish.jersey.examples.micrometer;
 
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Timer;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import java.util.concurrent.TimeUnit;
 
 import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
 
-@Path("init")
+@Path("metrics")
 public class MetricsResource {
 
     @GET
     @Produces("text/html")
     public String getMeters() {
-       return "<html><body>Static meters are initialized, try <a href=\""
+       return "<html><body>Gaining measurements for the summary page, try <a href=\""
                + WEB_PATH + "summary\">summary</a>. If you want more measurements just refresh this page several times."
                + "</body></html>";
     }

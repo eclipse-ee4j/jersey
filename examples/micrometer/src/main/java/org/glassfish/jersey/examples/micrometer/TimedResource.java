@@ -18,18 +18,18 @@ import javax.ws.rs.Produces;
 
 import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
 
-@Path("measure")
-public class MeasuredTimedResource {
+@Path("timed")
+public class TimedResource {
 
-    public static final String MESSAGE = "<html><body>Requests to this method are measured. "
-            + "Use <a href=\"" + WEB_PATH + "init\">/init</a> to see more</body></html";
+    public static final String MESSAGE = "<html><body>Gaining measures in the annotated way. "
+            + "<br/>Take a look at <a href=\"" + WEB_PATH + "metrics\">the standard way of measurements</a><br/> "
+            + "Or just go to <a href=\"" + WEB_PATH + "summary\">summary</a> to check what you've got</body></html>";
     public static final String TIMER_NAME = "http.timers";
     public static final String TIMER_DESCRIPTION = "resource measurement timer";
 
     @GET
     @Produces("text/html")
     @Timed(value = TIMER_NAME, description = TIMER_DESCRIPTION, histogram = true)
-    @Path("timed")
     public String getTimedMessage() {
         return MESSAGE;
     }

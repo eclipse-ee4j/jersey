@@ -16,16 +16,17 @@ import io.micrometer.core.instrument.Timer;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import java.util.concurrent.TimeUnit;
+
+import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
+import static org.glassfish.jersey.examples.micrometer.MetricsStore.REGISTRY_NAME;
 
 @Path("summary")
 public class SummaryResource {
 
-    private final MetricsStore store;
-
-    public SummaryResource(MetricsStore store) {
-        this.store = store;
-    }
+    @Context
+    private MetricsStore store;
 
     @GET
     @Produces("text/html")
@@ -33,41 +34,45 @@ public class SummaryResource {
         final StringBuffer result = new StringBuffer();
         try {
             result.append("<html><body>"
-                    + "Listing available meters<br/>Many occurrences of the same name means that there are more meters"
+                    + "Listing available meters<br/><br/>Many occurrences of the same name means that there are more meters"
                     + " which could be used with different tags,"
-                    + " but this is actually a challenge to handle all available metrics :<br/> ");
+                    + " but this is actually a challenge to handle all available metrics :<br/><br/> ");
             for (final Meter meter : store.getRegistry().getMeters()) {
                 result.append(meter.getId().getName());
                 result.append(";<br/>\n\r ");
             }
         } catch (Exception ex) {
-            result.append("Looks like there are no proper metrics.<br/>");
-            result.append("\n\r");
-            result.append("Please visit /measure/timed first <br/>");
-            result.append(ex);
+            result.append("Try clicking links below to gain more metrics.<br/>");
         }
-        if (store.getRegistry().getMeters().size() > 0) {
-            try {
-                final Timer timer = store.getRegistry().get("http.shared.metrics")
-                        .tags("method", "GET", "status", "200", "exception", "None", "outcome", "SUCCESS", "uri", "/micro/init")
-                        .timer();
+        result.append("<br/>\n\r ");
+        result.append("<br/>\n\r ");
+        try {
+            final Timer timer = store.getRegistry().get(REGISTRY_NAME)
+                    .tags("method", "GET", "status", "200", "exception", "None",
+                            "outcome", "SUCCESS", "uri", "/micro/metrics")
+                    .timer();
 
-                result.append(String.format("Counts to the init page: %d, time spent on requests to the init "
-                                + "page (millis): %f <br/>\n\r",
-                        timer.count(), timer.totalTime(TimeUnit.MILLISECONDS)));
+            result.append(
+                    String.format("Counts to the page with standard measurements: %d, time spent on requests to the init "
+                            + "page (millis): %f <br/>\n\r",
+                    timer.count(), timer.totalTime(TimeUnit.MILLISECONDS)));
 
-                final Timer annotatedTimer = store.getRegistry().timer(MeasuredTimedResource.TIMER_NAME,
-                        "method", "GET", "status", "200", "exception", "None",
-                        "outcome", "SUCCESS", "uri", "/micro/measure/timed");
+            final Timer annotatedTimer = store.getRegistry().timer(TimedResource.TIMER_NAME,
+                    "method", "GET", "status", "200", "exception", "None",
+                    "outcome", "SUCCESS", "uri", "/micro/timed");
 
-                result.append(String.format("Requests to 'measure/timed' counts: %d, total time (millis): %f <br/>\n\r",
-                        annotatedTimer.count(), annotatedTimer.totalTime(TimeUnit.MILLISECONDS)));
+            result.append(
+                    String.format("Counts to the page with annotated measurements: %d, total time (millis): %f <br/>\n\r",
+                    annotatedTimer.count(), annotatedTimer.totalTime(TimeUnit.MILLISECONDS)));
 
-            } catch (Exception ex) {
-                result.append("Exception occurred, more info is in console...<br/>");
-                result.append(ex);
-            }
+        } catch (Exception ex) {
+            result.append(String.format("Counts to the init page: %d, total time (millis): %d <br/>\n\r",
+                    0, 0));
+            result.append("Try clicking links below to gain more metrics.<br/>");
         }
+        result.append("<br/><br/>Available pages for measurements: <a href=\""
+                + WEB_PATH + "metrics\">measure requests in the standard way</a> &nbsp;, <a href=\""
+                + WEB_PATH + "timed\">measure requests in the annotated way</a>");
         return result.append("</body></html>").toString();
     }
 }

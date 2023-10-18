@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 public class App {
 
     private static final URI BASE_URI = URI.create("http://localhost:8080/micro/");
-    public static final String ROOT_PATH = "measure";
     public static final String WEB_PATH = "/micro/";
 
     public static void main(String[] args) {
@@ -42,7 +41,7 @@ public class App {
             System.out.println(String.format("Application started.\nTry out                        %s%s\n"
                             + "And after that go to the       %s%s\n"
                             + "Stop the application using CTRL+C",
-                    BASE_URI, ROOT_PATH + "/timed", BASE_URI, "init"));
+                    BASE_URI, "timed", BASE_URI, "metrics"));
             Thread.currentThread().join();
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);

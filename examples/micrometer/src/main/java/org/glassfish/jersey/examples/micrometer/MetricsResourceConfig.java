@@ -10,20 +10,27 @@
 
 package org.glassfish.jersey.examples.micrometer;
 
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.ws.rs.ApplicationPath;
 
-@ApplicationPath("/*")
+@ApplicationPath("/")
 public class MetricsResourceConfig extends ResourceConfig {
 
     private final MetricsStore store = new MetricsStore();
 
     public MetricsResourceConfig() {
+        register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(store).to(MetricsStore.class);
+            }
+        });
         register(store.getMetricsApplicationEventListener());
-        register(MeasuredTimedResource.class);
+        register(TimedResource.class);
         register(MetricsResource.class);
-        register(new SummaryResource(store));
+        register(SummaryResource.class);
     }
 
     public MetricsStore getStore() {
