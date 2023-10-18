@@ -22,7 +22,7 @@ import static org.glassfish.jersey.examples.micrometer.App.WEB_PATH;
 public class MeasuredTimedResource {
 
     public static final String MESSAGE = "<html><body>Requests to this method are measured. "
-            + "Use <a href=\"" + WEB_PATH + "\">/metrics</a> to see more</body></html";
+            + "Use <a href=\"" + WEB_PATH + "init\">/init</a> to see more</body></html";
     public static final String TIMER_NAME = "http.timers";
     public static final String TIMER_DESCRIPTION = "resource measurement timer";
 

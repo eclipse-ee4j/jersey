@@ -22,7 +22,8 @@ public class MetricsResourceConfig extends ResourceConfig {
     public MetricsResourceConfig() {
         register(store.getMetricsApplicationEventListener());
         register(MeasuredTimedResource.class);
-        register(new MetricsResource(store));
+        register(MetricsResource.class);
+        register(new SummaryResource(store));
     }
 
     public MetricsStore getStore() {

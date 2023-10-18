@@ -39,13 +39,13 @@ public class MicrometerTest extends JerseyTest {
         final String response = target("/measure/timed").request().get(String.class);
         assertEquals(response, MESSAGE);
         for (int i = 0; i < REQUESTS_COUNT; i++) {
-            target("/metrics").request().get(String.class);
+            target("/init").request().get(String.class);
         }
         // Jersey metrics are recorded asynchronously to the request completing
         Thread.sleep(10);
         Timer timer = resourceConfig.getStore().getRegistry()
                 .get(MetricsStore.REGISTRY_NAME)
-                .tags("method", "GET", "uri", "/metrics", "status", "200", "exception", "None", "outcome", "SUCCESS")
+                .tags("method", "GET", "uri", "/init", "status", "200", "exception", "None", "outcome", "SUCCESS")
                 .timer();
         assertEquals(REQUESTS_COUNT, timer.count());
         assertNotNull(timer.totalTime(TimeUnit.NANOSECONDS));
