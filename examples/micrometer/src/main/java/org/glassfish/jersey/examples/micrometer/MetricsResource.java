@@ -27,7 +27,7 @@ public class MetricsResource {
     @Produces("text/html")
     public String getMeters() {
        return "<html><body>Static meters are initialized, try <a href=\""
-               + WEB_PATH + "summary\">summary</a>. If you wan more measurements just refresh this page several times."
+               + WEB_PATH + "summary\">summary</a>. If you want more measurements just refresh this page several times."
                + "</body></html>";
     }
 }

@@ -18,19 +18,25 @@ The mapping of the URI path space is presented in the following table:
 
 URI path                                   | Resource class            | HTTP methods
 ------------------------------------------ | ------------------------- | --------------
-**_/micro/measure/timed_**                            | JerseyResource            | GET
-**_/micro/metrics_**                            | JerseyResource            | GET
+**_/micro/measure/timed_**                            | MeasuredTimedResource            | GET
+**_/micro/init_**                            | MetricsResource            | GET
+**_/micro/summary_**                            | SummaryResource            | GET
 
 Sample Response
 ---------------
 
 ```html
 --- (micro/measure/timed)
-Requests to this method are measured. Use /metrics to see more
----- (micro/metrics)   
-Listing available meters: http.shared.metrics;
-----)
-Overall requests counts: 9, total time (millis): 35.799483
+Requests to this method are measured. Use /init to see more
+---- (micro/init)
+Static meters are initialized, try summary. If you want more measurements just refresh this page several times.
+---- (micro/summary)
+Listing available meters
+Many occurrences of the same name means that there are more meters which could be used with different tags, but this is actually a challenge to handle all available metrics :
+http.timers;
+http.shared.metrics;
+Counts to the init page: 2, time spent on requests to the init page (millis): 2.759025
+Requests to 'measure/timed' counts: 2, total time (millis): 40.110161
 ```
 
 
@@ -41,10 +47,10 @@ Run the example using [Grizzly](https://javaee.github.io/grizzly/) container as 
 
 >     mvn clean compile exec:java
 
-- <http://localhost:8080/micro/metrics>
+- <http://localhost:8080/micro/init>
 - after few request to the main page go to the url
-- - <http://localhost:8080/micro/measure/timed>
+- <http://localhost:8080/micro/measure/timed>
 - and see the responses from available resource pages 
 - then go to the 
-- - <http://localhost:8080/micro/metrics>
+- <http://localhost:8080/micro/summary>
 - and see statistics for the micro/meter page
