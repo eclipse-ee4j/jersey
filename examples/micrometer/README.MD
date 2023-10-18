@@ -1,16 +1,10 @@
 [//]: # " Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved. "
-[//]: # "  "
+[//]: # " "
 [//]: # " This program and the accompanying materials are made available under the "
-[//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
-[//]: # " http://www.eclipse.org/legal/epl-2.0. "
-[//]: # "  "
-[//]: # " This Source Code may also be made available under the following Secondary "
-[//]: # " Licenses when the conditions for such availability set forth in the "
-[//]: # " Eclipse Public License v. 2.0 are satisfied: GNU General Public License, "
-[//]: # " version 2 with the GNU Classpath Exception, which is available at "
-[//]: # " https://www.gnu.org/software/classpath/license.html. "
-[//]: # "  "
-[//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
+[//]: # " terms of the Eclipse Distribution License v. 1.0, which is available at "
+[//]: # " http://www.eclipse.org/org/documents/edl-v10.php. "
+[//]: # " "
+[//]: # " SPDX-License-Identifier: BSD-3-Clause "
 
 jersey-micrometer-webapp
 ==========================================================
@@ -24,20 +18,25 @@ The mapping of the URI path space is presented in the following table:
 
 URI path                                   | Resource class            | HTTP methods
 ------------------------------------------ | ------------------------- | --------------
-**_/micro/meter_**                            | JerseyResource            | GET
-**_/micro/metrics_**                            | JerseyResource            | GET
-**_/micro/metrics/metrics_**                            | JerseyResource            | GET
+**_/micro/timed_**                            | MeasuredTimedResource            | GET
+**_/micro/metrics_**                            | MetricsResource            | GET
+**_/micro/summary_**                            | SummaryResource            | GET
 
 Sample Response
 ---------------
 
-```javascript
---- (micro/meter)
-Hello World!
----- (micro/metrics)   
-Listing available meters: http.shared.metrics;
----- (micro/metric/metrics)
-Overall requests counts: 9, total time (millis): 35.799483
+```html
+--- (micro/timed)
+Requests to this method are measured. Use /init to see more
+---- (micro/metrics)
+Static meters are initialized, try summary. If you want more measurements just refresh this page several times.
+---- (micro/summary)
+Listing available meters
+Many occurrences of the same name means that there are more meters which could be used with different tags, but this is actually a challenge to handle all available metrics :
+http.timers;
+http.shared.metrics;
+Counts to the init page: 2, time spent on requests to the init page (millis): 2.759025
+Requests to 'measure/timed' counts: 2, total time (millis): 40.110161
 ```
 
 
@@ -48,10 +47,10 @@ Run the example using [Grizzly](https://javaee.github.io/grizzly/) container as 
 
 >     mvn clean compile exec:java
 
-- <http://localhost:8080/micro/meter>
+- <http://localhost:8080/micro/metrics>
 - after few request to the main page go to the url
-- - <http://localhost:8080/micro/metrics>
-- and see the list of available meters
+- <http://localhost:8080/micro/timed>
+- and see the responses from available resource pages 
 - then go to the 
-- - <http://localhost:8080/micro/metrics/metrics>
+- <http://localhost:8080/micro/summary>
 - and see statistics for the micro/meter page

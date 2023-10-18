@@ -109,6 +109,8 @@
 <!ENTITY helidon.link "<link xlink:href='https://helidon.io/'>Helidon</link>">
 <!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
 <!ENTITY yasson.link "<link xlink:href='https://eclipse-ee4j.github.io/yasson/'>Yasson</link>">
+<!ENTITY micrometer.link "<link xlink:href='https://micrometer.io/'>Micrometer project</link>">
+<!ENTITY micrometer.jersey.link "<link xlink:href='https://micrometer.io/docs/ref/jetty'>Micrometer Jersey/Jetty support</link>">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv11.javadoc.uri;/javax/validation/Configuration.html'>Configuration</link>">
@@ -476,6 +478,7 @@
 <!ENTITY jersey.jetty.JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
 <!ENTITY jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#TOTAL_TIMEOUT'>JettyClientProperties.TOTAL_TIMEOUT</link>" >
 <!ENTITY jersey.jetty.JettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyConnectorProvider.html'>JettyConnectorProvider</link>">
+<!ENTITY jersey.jetty.JettyHttp2ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/http2/connector/JettyConnectorProvider.html'>JettyHttp2ConnectorProvider</link>">
 <!ENTITY jersey.jetty.JettyHttpContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainer.html'>JettyHttpContainer</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerFactory.html'>JettyHttpContainerFactory</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerProvider.html'>JettyHttpContainerProvider</link>">
