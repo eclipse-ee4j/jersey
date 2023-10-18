@@ -56,11 +56,11 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
             if (!HttpResponseStatus.CONTINUE.equals(response.status())) {
                 ctx.fireChannelRead(msg); //bypass the message to the next handler in line
             } else {
-                ctx.pipeline().remove(this);
+                ctx.pipeline().remove(JerseyExpectContinueHandler.class);
             }
         } else {
             if (!isExpected) {
-                ctx.pipeline().remove(this);
+                ctx.pipeline().remove(JerseyExpectContinueHandler.class);
             }
             ctx.fireChannelRead(msg); //bypass the message to the next handler in line
         }
@@ -94,7 +94,7 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
                 : null;
         isExpected = expect100ContinueFuture != null;
         if (!isExpected) {
-            ch.pipeline().remove(this);
+            ch.pipeline().remove(JerseyExpectContinueHandler.class);
         } else {
             final HttpResponseStatus status = expectedFuture
                     .get(timeout, TimeUnit.MILLISECONDS);
