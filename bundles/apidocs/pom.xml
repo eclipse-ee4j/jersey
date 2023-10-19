@@ -219,7 +219,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.ext.micrometer</groupId>
+            <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-micrometer</artifactId>
             <version>${project.version}</version>
         </dependency>
