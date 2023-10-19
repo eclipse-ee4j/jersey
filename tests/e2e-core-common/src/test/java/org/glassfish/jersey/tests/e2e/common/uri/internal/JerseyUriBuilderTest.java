@@ -1659,6 +1659,17 @@ public class JerseyUriBuilderTest {
                          "key1=val1&key1=val2&key2=val1&key1=val3");
     }
 
+
+    @Test
+    public void testQueryParam() {
+        URI uri = new JerseyUriBuilder().scheme("http").host("localhost").port(8080).uri("some")
+                    .replacePath("NewPath")
+                    .replaceQuery("&Second")
+                    .build();
+        Assertions.assertEquals("&Second", uri.getQuery());
+    }
+
+
     @Test
     void testFragment5269() throws URISyntaxException {
         final URI uri = new URI("http://www.example.org/foo.xml#xpointer(//Rube)").normalize();
