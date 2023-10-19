@@ -887,7 +887,7 @@ public class UriTemplate {
                         offset, encode, mapValues, sb);
                 if (sb.length() > sbLength) {
                     char firstQuery = sb.charAt(sbLength);
-                    if (firstQuery != '?' && firstQuery != '&') {
+                    if (firstQuery != '?' && (query.trim().charAt(0) != '{' || firstQuery != '&')) {
                         sb.insert(sbLength, '?');
                     }
                 }
