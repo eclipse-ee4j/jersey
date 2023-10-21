@@ -13,6 +13,9 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 
 ### Older Articles
+<h4> <a class="article" href="{{ site.links.honzablog }}/?p=307" target="_blank">Choosing Connector in Jersey</a></h4>
+Oct 2, 2023 | Jan Supol
+
 <h4> <a class="article" href="{{ site.links.honzablog }}/?p=301" target="_blank">Jersey 3.1.1 released – focused on performance</a></h4>
 Feb 3, 2023 | Jan Supol
 

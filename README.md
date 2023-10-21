@@ -132,13 +132,13 @@ Find out what our developers <a href="bloggers.html">blog</a> about.
 <h3>Latest Articles</h3>
 
 <table style="width:100%;border:none;">
+<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=307" target="_blank">Choosing Connector in Jersey</a>                       </td><td> Oct 2, 2023 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=301" target="_blank">Jersey 3.1.1 released – focused on performance</a>     </td><td> Feb 3, 2023 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=278" target="_blank">Jersey 3.1.0 is finally released</a>                   </td><td> Nov 15, 2022 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=266" target="_blank">Jersey 2.37, 3.0.8, and 3.1.0-M8</a>                   </td><td> Sep 8, 2022 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=258" target="_blank">Jersey 3.1.0 – Incompatibilities and changes</a>       </td><td> Jul 22, 2022 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=254" target="_blank">Jersey 3.1.0-M3 has been released!</a>                 </td><td> Jun 9, 2022 </td><td> Jan Supol </td> </tr>
 <tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=243" target="_blank">Jersey 2.35, and Jersey 3.0.3</a>                      </td><td> Oct 21, 2021 </td><td> Jan Supol </td> </tr>
-<tr> <td> <a class="article" href="{{ site.links.honzablog }}/?p=238" target="_blank">Very Merry Christmas with Jersey 2.33</a>              </td><td> Dec 24, 2020 </td><td> Jan Supol </td> </tr>
 </table>
 
 <br/>
