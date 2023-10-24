@@ -37,6 +37,7 @@ import jakarta.inject.Provider;
 
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -91,7 +92,7 @@ public class RequestScopedReadEntityTest extends JerseyTest {
                 MultivaluedMap<String, String> httpHeaders,
                 InputStream entityStream) throws IOException, WebApplicationException {
             return clientRequestProvider.get() != null
-                    ? new Message(readFromAsString(entityStream, mediaType)) : new Message("failed");
+                    ? new Message(ReaderWriter.readFromAsString(entityStream, mediaType)) : new Message("failed");
         }
 
         @Override
@@ -108,7 +109,8 @@ public class RequestScopedReadEntityTest extends JerseyTest {
                 MediaType mediaType,
                 MultivaluedMap<String, Object> httpHeaders,
                 OutputStream entityStream) throws IOException, WebApplicationException {
-            writeToAsString((clientRequestProvider.get() != null) ? message.text : "failed", entityStream, mediaType);
+            ReaderWriter
+                    .writeToAsString((clientRequestProvider.get() != null) ? message.text : "failed", entityStream, mediaType);
         }
     }
 

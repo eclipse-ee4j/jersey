@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.MatchResult;
 
 import org.glassfish.jersey.uri.internal.UriTemplateParser;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -284,7 +286,9 @@ public class UriTemplateTest {
         assertEquals(uri.length(), mr.end(0));
         for (int i = 0; i < mr.groupCount(); i++) {
             assertEquals(values[i], mr.group(i + 1));
-            assertEquals(values[i], uri.substring(mr.start(i + 1), mr.end(i + 1)));
+            int start = mr.start(i + 1);
+            int end = mr.end(i + 1);
+            assertEquals(values[i], start == -1 ? null : uri.substring(start, end));
         }
     }
 
@@ -432,8 +436,8 @@ public class UriTemplateTest {
         _testSubstitutionMap("http://example.com/order/{c}/{c}/{c}/",
                 "http://example.com/order/cheeseburger/cheeseburger/cheeseburger/",
                 "c", "cheeseburger");
-        _testSubstitutionMap("http://example.com/{q}",
-                "http://example.com/hullo#world",
+        _testSubstitutionMap("http://example.com/{q}/z",
+                "http://example.com/hullo%23world/z",
                 "q", "hullo#world");
         _testSubstitutionMap("http://example.com/{e}/",
                 "http://example.com//",
@@ -656,7 +660,7 @@ public class UriTemplateTest {
     private static final String base = "http://example.com/home/";
     private static final String path = "/foo/bar";
     private static final List<String> list = Arrays.asList("red", "green", "blue");
-    private static final Map<String, String> keys = new HashMap<String, String>() {{
+    private static final Map<String, String> keys = new LinkedHashMap<String, String>() {{
         put("semi", ";");
         put("dot", ".");
         put("comma", ",");
@@ -690,11 +694,42 @@ public class UriTemplateTest {
         assertEncodedQueryTemplateExpansion("?x=1024&y=768&empty=", "{?x,y,empty}", x, y, empty);
         assertEncodedQueryTemplateExpansion("?x=1024&y=768", "{?x,y,undef}", x, y);
 
-        // TODO assertEncodedQueryTemplateExpansion("?var=val", "{?var:3}", var);
-        // TODO assertEncodedQueryTemplateExpansion("?list=red,green,blue", "{?list}", list);
-        // TODO assertEncodedQueryTemplateExpansion("?list=red&list=green&list=blue", "{?list*}", list);
-        // TODO assertEncodedQueryTemplateExpansion("?keys=semi,%3B,dot,.,comma,%2C", "{?keys}", keys);
-        // TODO assertEncodedQueryTemplateExpansion("?semi=%3B&dot=.&comma=%2C", "{?keys*}", keys);
+        assertEncodedQueryTemplateExpansion("?var=val", "{?var:3}", var);
+        assertEncodedQueryTemplateExpansion("?list=red,green,blue", "{?list}", list);
+        assertEncodedQueryTemplateExpansion("?list=red&list=green&list=blue", "{?list*}", list);
+        assertEncodedQueryTemplateExpansion("?keys=semi,%3B,dot,.,comma,%2C", "{?keys}", new Object[]{keys});
+        assertEncodedQueryTemplateExpansion("?semi=%3B&dot=.&comma=%2C", "{?keys*}", new Object[]{keys});
+    }
+
+    @Test
+    public void testRfc6570QueryContinuationTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.9:
+
+           {&who}             &who=fred
+           {&half}            &half=50%25
+           ?fixed=yes{&x}     ?fixed=yes&x=1024
+           {&x,y,empty}       &x=1024&y=768&empty=
+           {&x,y,undef}       &x=1024&y=768
+
+           {&var:3}           &var=val
+           {&list}            &list=red,green,blue
+           {&list*}           &list=red&list=green&list=blue
+           {&keys}            &keys=semi,%3B,dot,.,comma,%2C
+           {&keys*}           &semi=%3B&dot=.&comma=%2C
+        */
+
+        assertEncodedQueryTemplateExpansion("&who=fred", "{ &who}", who);
+        assertEncodedQueryTemplateExpansion("&half=50%25", "{&half}", half);
+        assertEncodedQueryTemplateExpansion("?fixed=yes&x=1024", "?fixed=yes{&x}", x, y);
+        assertEncodedQueryTemplateExpansion("&x=1024&y=768&empty=", "{&x,y,empty}", x, y, empty);
+        assertEncodedQueryTemplateExpansion("&x=1024&y=768", "{&x,y,undef}", x, y);
+
+        assertEncodedQueryTemplateExpansion("&var=val", "{&var:3}", var);
+        assertEncodedQueryTemplateExpansion("&list=red,green,blue", "{&list}", list);
+        assertEncodedQueryTemplateExpansion("&list=red&list=green&list=blue", "{&list*}", list);
+        assertEncodedQueryTemplateExpansion("&keys=semi,%3B,dot,.,comma,%2C", "{&keys}", new Object[]{keys});
+        assertEncodedQueryTemplateExpansion("&semi=%3B&dot=.&comma=%2C", "{&keys*}", new Object[]{keys});
     }
 
     private void assertEncodedQueryTemplateExpansion(final String expectedExpansion,
@@ -743,11 +778,252 @@ public class UriTemplateTest {
         assertEncodedPathTemplateExpansion(";x=1024;y=768", "{;x,y}", x, y);
         assertEncodedPathTemplateExpansion(";x=1024;y=768;empty", "{;x,y,empty}", x, y, empty);
         assertEncodedPathTemplateExpansion(";x=1024;y=768", "{;x,y,undef}", x, y);
-        // TODO assertEncodedPathTemplateExpansion(";hello=Hello", "{;hello:5}", hello);
-        // TODO assertEncodedPathTemplateExpansion(";list=red,green,blue", "{;list}", list);
-        // TODO assertEncodedPathTemplateExpansion(";list=red;list=green;list=blue", "{;list*}", list);
-        // TODO assertEncodedPathTemplateExpansion(";keys=semi,%3B,dot,.,comma,%2C", "{;keys}", keys);
-        // TODO assertEncodedPathTemplateExpansion(";semi=%3B;dot=.;comma=%2C", "{;keys*}", keys);
+        assertEncodedPathTemplateExpansion(";hello=Hello", "{;hello:5}", hello);
+        assertEncodedPathTemplateExpansion(";list=red,green,blue", "{;list}", list);
+        assertEncodedPathTemplateExpansion(";list=red;list=green;list=blue", "{;list*}", list);
+        assertEncodedPathTemplateExpansion(";keys=semi,%3B,dot,.,comma,%2C", "{;keys}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion(";semi=%3B;dot=.;comma=%2C", "{;keys*}", new Object[]{keys});
+    }
+
+    @Test
+    void testRfc6570DefaultTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.2
+               {var}              value
+               {hello}            Hello%20World%21
+               {half}             50%25
+               O{empty}X          OX
+               O{undef}X          OX
+               {x,y}              1024,768
+               {x,hello,y}        1024,Hello%20World%21,768
+               ?{x,empty}         ?1024,
+               ?{x,undef}         ?1024
+               ?{undef,y}         ?768
+               {var:3}            val
+               {var:30}           value
+               {list}             red,green,blue
+               {list*}            red,green,blue
+               {keys}             semi,%3B,dot,.,comma,%2C
+               {keys*}            semi=%3B,dot=.,comma=%2C
+         */
+
+        // TODO assertEncodedPathTemplateExpansion("Hello%20World%21", "{hello}", hello); // conflicts with rfc3986 Path
+        assertEncodedPathTemplateExpansion("50%25", "{half}", half);
+        assertEncodedPathTemplateExpansion("0X", "0{empty}X", empty);
+        // TODO assertEncodedPathTemplateExpansion("0X", "0{undef}X"); // conflicts with UriBuilder
+        // TODO assertEncodedPathTemplateExpansion("1024,Hello%20World%21,768", "{x,hello,y}", x, hello, y); //Path is {+}
+        assertEncodedPathTemplateExpansion("?1024,", "?{x,empty}", x, empty);
+        // TODO assertEncodedPathTemplateExpansion("?1024", "?{x,undef}", x); // conflicts with UriBuilder
+        assertEncodedPathTemplateExpansion("val", "{var:3}", var);
+        assertEncodedPathTemplateExpansion("value", "{var:30}", var);
+        assertEncodedPathTemplateExpansion("red,green,blue", "{list}", list);
+        // TODO assertEncodedPathTemplateExpansion("semi,%3B,dot,.,comma,%2C", "{keys}", keys);
+        // TODO assertEncodedPathTemplateExpansion("semi=%3B,dot=.,comma=%2C", "{keys*}", keys);
+
+        // TODO Proprietary minus template
+//        assertEncodedPathTemplateExpansion("Hello%20World%21", "{-hello}", hello);
+//        assertEncodedPathTemplateExpansion("50%25", "{-half}", half);
+//        assertEncodedPathTemplateExpansion("0X", "0{-empty}X", empty);
+//        assertEncodedPathTemplateExpansion("0X", "0{-undef}X");
+//        assertEncodedPathTemplateExpansion("1024,Hello%20World%21,768", "{-x,hello,y}", x, hello, y);
+//        assertEncodedPathTemplateExpansion("?1024,", "?{-x,empty}", x, empty);
+//        assertEncodedPathTemplateExpansion("?1024", "?{-x,undef}", x);
+//        assertEncodedPathTemplateExpansion("val", "{-var:3}", var);
+//        assertEncodedPathTemplateExpansion("value", "{-var:30}", var);
+//        assertEncodedPathTemplateExpansion("red,green,blue", "{-list}", list);
+//        assertEncodedPathTemplateExpansion("semi,%3B,dot,.,comma,%2C", "{-keys}", new Object[]{keys});
+//        assertEncodedPathTemplateExpansion("semi=%3B,dot=.,comma=%2C", "{-keys*}", new Object[]{keys});
+    }
+
+    @Test
+    void testRfc6570PlusTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.3
+               {+var}                value
+               {+hello}              Hello%20World!
+               {+half}               50%25
+
+               {base}index           http%3A%2F%2Fexample.com%2Fhome%2Findex
+               {+base}index          http://example.com/home/index
+               O{+empty}X            OX
+               O{+undef}X            OX
+
+               {+path}/here          /foo/bar/here
+               here?ref={+path}      here?ref=/foo/bar
+               up{+path}{var}/here   up/foo/barvalue/here
+               {+x,hello,y}          1024,Hello%20World!,768
+               {+path,x}/here        /foo/bar,1024/here
+
+               {+path:6}/here        /foo/b/here
+               {+list}               red,green,blue
+               {+list*}              red,green,blue
+               {+keys}               semi,;,dot,.,comma,,
+               {+keys*}              semi=;,dot=.,comma=,
+         */
+        assertEncodedPathTemplateExpansion("Hello%20World!", "{+hello}", hello);
+        assertEncodedPathTemplateExpansion("50%25", "{+half}", half);
+        assertEncodedPathTemplateExpansion("50%25", "{+half}", half);
+//        assertEncodedPathTemplateExpansion("http%3A%2F%2Fexample.com%2Fhome%2Findex", "{-base}index", base);
+        assertEncodedPathTemplateExpansion("http://example.com/home/index", "{+base}index", base);
+        assertEncodedPathTemplateExpansion("/foo/bar/here", "{+path}/here", path);
+        assertEncodedPathTemplateExpansion("here?ref=/foo/bar", "here?ref={+path}", path);
+        assertEncodedPathTemplateExpansion("up/foo/barvalue/here", "up{+path}{var}/here", path, var);
+        assertEncodedPathTemplateExpansion("1024,Hello%20World!,768", "{+x,hello,y}", x, hello, y);
+        assertEncodedPathTemplateExpansion("/foo/bar,1024/here", "{+path,x}/here", path, x);
+        assertEncodedPathTemplateExpansion("/foo/b/here", "{+path:6}/here", path);
+        assertEncodedPathTemplateExpansion("red,green,blue", "{+list}", list);
+        assertEncodedPathTemplateExpansion("red,green,blue", "{+list*}", list);
+        assertEncodedPathTemplateExpansion("semi,;,dot,.,comma,,", "{+keys}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion("semi=;,dot=.,comma=,", "{+keys*}", new Object[]{keys});
+    }
+
+    @Test
+    void testRfc6570HashTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.4
+               {#var}             #value
+               {#hello}           #Hello%20World!
+               {#half}            #50%25
+               foo{#empty}        foo#
+               foo{#undef}        foo
+               {#x,hello,y}       #1024,Hello%20World!,768
+               {#path,x}/here     #/foo/bar,1024/here
+               {#path:6}/here     #/foo/b/here
+               {#list}            #red,green,blue
+               {#list*}           #red,green,blue
+               {#keys}            #semi,;,dot,.,comma,,
+               {#keys*}           #semi=;,dot=.,comma=,
+         */
+        assertEncodedPathTemplateExpansion("#Hello%20World!", "{#hello}", hello);
+        assertEncodedPathTemplateExpansion("#50%25", "{#half}", half);
+        assertEncodedPathTemplateExpansion("0#X", "0{#empty}X", empty);
+        assertEncodedPathTemplateExpansion("0X", "0{#undef}X");
+        assertEncodedPathTemplateExpansion("#1024,Hello%20World!,768", "{#x,hello,y}", x, hello, y);
+        assertEncodedPathTemplateExpansion("#/foo/bar,1024/here", "{#path,x}/here", path, x);
+        assertEncodedPathTemplateExpansion("#/foo/b/here", "{#path:6}/here", path);
+        assertEncodedPathTemplateExpansion("#red,green,blue", "{#list}", list);
+        assertEncodedPathTemplateExpansion("#red,green,blue", "{#list*}", list);
+        assertEncodedPathTemplateExpansion("#semi,;,dot,.,comma,,", "{#keys}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion("#semi=;,dot=.,comma=,", "{#keys*}", new Object[]{keys});
+    }
+
+    @Test
+    void testRfc6570DotTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.5
+               {.who}             .fred
+               {.who,who}         .fred.fred
+               {.half,who}        .50%25.fred
+               www{.dom*}         www.example.com
+               X{.var}            X.value
+               X{.empty}          X.
+               X{.undef}          X
+               X{.var:3}          X.val
+               X{.list}           X.red,green,blue
+               X{.list*}          X.red.green.blue
+               X{.keys}           X.semi,%3B,dot,.,comma,%2C
+               X{.keys*}          X.semi=%3B.dot=..comma=%2C
+               X{.empty_keys}     X
+               X{.empty_keys*}    X
+         */
+        assertEncodedPathTemplateExpansion(".fred", "{.who}", who);
+        assertEncodedPathTemplateExpansion(".fred.fred", "{.who,who}", who);
+        assertEncodedPathTemplateExpansion(".50%25.fred", "{.half,who}", half, who);
+        assertEncodedPathTemplateExpansion("www.example.com", "www{.dom*}", dom);
+        assertEncodedPathTemplateExpansion("X.value", "X{.var}", var);
+        assertEncodedPathTemplateExpansion("X.", "X{.empty}", empty);
+        assertEncodedPathTemplateExpansion("X", "X{.undef}");
+        assertEncodedPathTemplateExpansion("X.val", "X{.var:3}", var);
+        assertEncodedPathTemplateExpansion("X.red,green,blue", "X{.list}", list);
+        assertEncodedPathTemplateExpansion("X.red.green.blue", "X{.list*}", list);
+        assertEncodedPathTemplateExpansion("X.semi,%3B,dot,.,comma,%2C", "X{.keys}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion("X.semi=%3B.dot=..comma=%2C", "X{.keys*}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion("X", "X{.empty_keys}", emptyKeys);
+        assertEncodedPathTemplateExpansion("X", "X{.empty_keys*}", emptyKeys);
+    }
+
+    @Test
+    void testRfc6570SlashTemplateExamples() {
+        /*
+            RFC 6570, section 3.2.6
+
+                   {/who}             /fred
+                   {/who,who}         /fred/fred
+                   {/half,who}        /50%25/fred
+                   {/who,dub}         /fred/me%2Ftoo
+                   {/var}             /value
+                   {/var,empty}       /value/
+                   {/var,undef}       /value
+                   {/var,x}/here      /value/1024/here
+                   {/var:1,var}       /v/value
+                   {/list}            /red,green,blue
+                   {/list*}           /red/green/blue
+                   {/list*,path:4}    /red/green/blue/%2Ffoo
+                   {/keys}            /semi,%3B,dot,.,comma,%2C
+                   {/keys*}           /semi=%3B/dot=./comma=%2C
+         */
+        assertEncodedPathTemplateExpansion("/fred", "{/who}", who);
+        assertEncodedPathTemplateExpansion("/fred/fred", "{/who,who}", who);
+        assertEncodedPathTemplateExpansion("/50%25/fred", "{/half,who}", half, who);
+        assertEncodedPathTemplateExpansion("/fred/me%2Ftoo", "{/who,dub}", who, dub);
+        assertEncodedPathTemplateExpansion("/value", "{/var}", var);
+        assertEncodedPathTemplateExpansion("/value/", "{/var,empty}", var, empty);
+        assertEncodedPathTemplateExpansion("/value", "{/var,undef}", var);
+        assertEncodedPathTemplateExpansion("/v/value", "{/var:1,var}", var);
+        assertEncodedPathTemplateExpansion("/red,green,blue", "{/list}", list);
+        assertEncodedPathTemplateExpansion("/red/green/blue", "{/list*}", list);
+        assertEncodedPathTemplateExpansion("/red/green/blue/%2Ffoo", "{/list*,path:4}", list, path);
+        assertEncodedPathTemplateExpansion("/semi,%3B,dot,.,comma,%2C", "{/keys}", new Object[]{keys});
+        assertEncodedPathTemplateExpansion("/semi=%3B/dot=./comma=%2C", "{/keys*}", new Object[]{keys});
+    }
+
+    @Test
+    void testRfc6570MultiplePathArgs() {
+        _testTemplateNames("/{a,b,c}", "a", "b", "c");
+        _testMatching("/uri/{a}", "/uri/hello", "hello");
+        _testMatching("/uri/{a,b}", "/uri/hello,world", "hello", "world");
+        _testMatching("/uri{?a,b}", "/uri?a=hello&b=world", "hello", "world");
+        _testMatching("/uri/{a,b,c}", "/uri/hello,world,!", "hello", "world", "!");
+        _testMatching("/uri/{a,b,c}", "/uri/hello,world", "hello", "world", null);
+        _testMatching("/uri/{a,b,c}", "/uri/hello", "hello", null, null);
+        _testMatching("/uri/{a,b,c}", "/uri/", null, null, null);
+    }
+
+    @Test
+    void testRfc6570PathLength() {
+        _testMatching("/uri/{a:5}", "/uri/hello", "hello");
+        _testMatching("/uri/{a:5,b:6}", "/uri/hello,world!", "hello", "world!");
+        assertEncodedPathTemplateExpansion("102,7", "{x:3,y:1}", x, y);
+    }
+
+    @Test
+    void testInvalidRegexp() {
+        _assertMatchingThrowsIAE("/uri/{a**}");
+        _assertMatchingThrowsIAE("/uri/{a*a}");
+        _assertMatchingThrowsIAE("/uri/{a{");
+        _assertMatchingThrowsIAE("/uri/{*}");
+        _assertMatchingThrowsIAE("/uri/{}}");
+        _assertMatchingThrowsIAE("/uri/{?a:12345}"); //Query knows just length, but the length must be less than 10000
+        _assertMatchingThrowsIAE("/uri/{?a:0}");
+        _assertMatchingThrowsIAE("/uri/{?a:-1}");
+        _assertMatchingThrowsIAE("/uri/{??a}");
+        _assertMatchingThrowsIAE("/uri/{--a}");
+        _assertMatchingThrowsIAE("/uri/{++a}");
+    }
+
+    @Test
+    public void ignoreLastComma() {
+        UriTemplateParser parser = new UriTemplateParser("/{a,b,}");
+        Assertions.assertEquals(2, parser.getNames().size());
+    }
+
+    void _assertMatchingThrowsIAE(String uri) {
+        try {
+            _testMatching(uri, "/uri/hello", "hello");
+            throw new IllegalStateException("IllegalArgumentException checking incorrect uri " + uri + " has not been thrown");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
     }
 
     private void assertEncodedPathTemplateExpansion(final String expectedExpansion,

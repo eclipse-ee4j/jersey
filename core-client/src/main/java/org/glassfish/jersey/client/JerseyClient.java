@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,13 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,9 +40,7 @@ import javax.net.ssl.SSLContext;
 import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.client.spi.DefaultSslContextProvider;
-import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
-import org.glassfish.jersey.internal.util.collection.Values;
 
 import static org.glassfish.jersey.internal.guava.Preconditions.checkNotNull;
 import static org.glassfish.jersey.internal.guava.Preconditions.checkState;
@@ -67,7 +65,7 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
     private final boolean isDefaultSslContext;
     private final ClientConfig config;
     private final HostnameVerifier hostnameVerifier;
-    private final UnsafeValue<SSLContext, IllegalStateException> sslContext;
+    private final Supplier<SSLContext> sslContext;
     private final LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>> shutdownHooks =
                                         new LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>>();
     private final ReferenceQueue<JerseyClient.ShutdownHook> shReferenceQueue = new ReferenceQueue<JerseyClient.ShutdownHook>();
@@ -86,7 +84,7 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
      * Create a new Jersey client instance using a default configuration.
      */
     protected JerseyClient() {
-        this(null, (UnsafeValue<SSLContext, IllegalStateException>) null, null, null);
+        this(null, new SslContextClientBuilder(), null, null);
     }
 
     /**
@@ -115,7 +113,9 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
                            final SSLContext sslContext,
                            final HostnameVerifier verifier,
                            final DefaultSslContextProvider defaultSslContextProvider) {
-        this(config, sslContext == null ? null : Values.unsafe(sslContext), verifier,
+        this(config,
+             sslContext == null ? new SslContextClientBuilder() : new SslContextClientBuilder().sslContext(sslContext),
+             verifier,
              defaultSslContextProvider);
     }
 
@@ -145,32 +145,32 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
                            final UnsafeValue<SSLContext, IllegalStateException> sslContextProvider,
                            final HostnameVerifier verifier,
                            final DefaultSslContextProvider defaultSslContextProvider) {
-        this.config = config == null ? new ClientConfig(this) : new ClientConfig(this, config);
+        this(config,
+             sslContextProvider == null
+                     ? new SslContextClientBuilder()
+                     : new SslContextClientBuilder().sslContext(sslContextProvider.get()),
+             verifier,
+             defaultSslContextProvider
+        );
+    }
 
-        if (sslContextProvider == null) {
-            this.isDefaultSslContext = true;
-
-            if (defaultSslContextProvider != null) {
-                this.sslContext = createLazySslContext(defaultSslContextProvider);
-            } else {
-                final DefaultSslContextProvider lookedUpSslContextProvider;
-
-                final Iterator<DefaultSslContextProvider> iterator =
-                        ServiceFinder.find(DefaultSslContextProvider.class).iterator();
-
-                if (iterator.hasNext()) {
-                    lookedUpSslContextProvider = iterator.next();
-                } else {
-                    lookedUpSslContextProvider = DEFAULT_SSL_CONTEXT_PROVIDER;
-                }
-
-                this.sslContext = createLazySslContext(lookedUpSslContextProvider);
-            }
-        } else {
-            this.isDefaultSslContext = false;
-            this.sslContext = Values.lazy(sslContextProvider);
+    /**
+     * Create a new Jersey client instance.
+     *
+     * @param config                    jersey client configuration.
+     * @param sslContextClientBuilder          jersey client SSL context builder. The builder is expected to
+     *                                  return non-default value.
+     * @param verifier                  jersey client host name verifier.
+     * @param defaultSslContextProvider default SSL context provider.
+     */
+    JerseyClient(final Configuration config, final SslContextClientBuilder sslContextClientBuilder,
+                 final HostnameVerifier verifier, final DefaultSslContextProvider defaultSslContextProvider) {
+        if (defaultSslContextProvider != null) {
+            sslContextClientBuilder.defaultSslContextProvider(defaultSslContextProvider);
         }
-
+        this.config = config == null ? new ClientConfig(this) : new ClientConfig(this, config);
+        this.isDefaultSslContext = sslContextClientBuilder.isDefaultSslContext();
+        this.sslContext = sslContextClientBuilder;
         this.hostnameVerifier = verifier;
     }
 
@@ -193,15 +193,6 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
                 }
             }
         }
-    }
-
-    private UnsafeValue<SSLContext, IllegalStateException> createLazySslContext(final DefaultSslContextProvider provider) {
-        return Values.lazy(new UnsafeValue<SSLContext, IllegalStateException>() {
-            @Override
-            public SSLContext get() {
-                return provider.getDefaultSslContext();
-            }
-        });
     }
 
     /**

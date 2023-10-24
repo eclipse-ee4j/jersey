@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,7 +71,7 @@ public class ProxyTest {
     private static final String PROXY_URI = "http://127.0.0.1:9997";
     private static final String PROXY_USERNAME = "proxy-user";
     private static final String PROXY_PASSWORD = "proxy-password";
-    private static final String NO_PASS = "no-pass";
+    private static final String PROXY_NO_PASS = "proxy-no-pass";
 
     public static class ApacheConnectorProviderProxyTest extends ProxyTemplateTest {
         public ApacheConnectorProviderProxyTest()
@@ -137,7 +137,7 @@ public class ProxyTest {
         @Test
         public void testGetNoPass() {
             client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
-            try (Response response = target("proxyTest").request().header(NO_PASS, 200).get()) {
+            try (Response response = target("proxyTest").request().header(PROXY_NO_PASS, 200).get()) {
                 assertEquals(200, response.getStatus());
             }
         }
@@ -209,8 +209,8 @@ public class ProxyTest {
                            Request baseRequest,
                            HttpServletRequest request,
                            HttpServletResponse response) {
-            if (request.getHeader(NO_PASS) != null) {
-                response.setStatus(Integer.parseInt(request.getHeader(NO_PASS)));
+            if (request.getHeader(PROXY_NO_PASS) != null) {
+                response.setStatus(Integer.parseInt(request.getHeader(PROXY_NO_PASS)));
             } else if (request.getHeader("Proxy-Authorization") != null) {
                 String proxyAuthorization = request.getHeader("Proxy-Authorization");
                 String decoded = new String(Base64.getDecoder().decode(proxyAuthorization.substring(6).getBytes()),

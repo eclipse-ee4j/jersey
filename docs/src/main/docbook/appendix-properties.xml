@@ -976,7 +976,7 @@
                             <para>
                                 Property for threshold size for content length after which Expect:100-Continue header would be applied
                                 before the main request.
-                                Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+                                Default threshold size (64kb) after which Expect:100-Continue header would be applied before
                                 the main request.
                                 <literal>Since 2.32</literal>
                             </para>
@@ -1112,6 +1112,21 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER;</entry>
+                        <entry><literal>jersey.config.client.ssl.context.supplier</literal></entry>
+                        <entry>
+                            <para>
+                                The <literal>javax.net.ssl.SSLContext java.util.function.Supplier</literal> to be used to set ssl
+                                context in the current HTTP request. Has precedence over the
+                                <literal>Client#getSslContext()</literal>.
+                            </para>
+                            <para>
+                                Currently supported by the default <literal>HttpUrlConnector</literal> and by
+                                <literal>NettyConnector</literal> only.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.USE_ENCODING;</entry>
                         <entry><literal>jersey.config.client.useEncoding</literal></entry>
                         <entry>
@@ -1194,6 +1209,118 @@
                 </tbody>
             </tgroup>
         </table>
+    </section>
+    <section xml:id="appendix-properties-message">
+        <title>Jersey configuration properties for message &amp; entity processing</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.message.MessageProperties; class.
+        </para>
+
+        <table>
+            <title>List of Apache HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB;</entry>
+                        <entry><literal>jersey.config.deflate.nozlib</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true;, <literal>DeflateEncoder deflate encoding interceptor</literal> will use non-standard version
+                                of the deflate content encoding, skipping the zlib wrapper. Unfortunately, deflate encoding
+                                implementations in some products use this non-compliant version, hence the switch.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.IO_BUFFER_SIZE;</entry>
+                        <entry><literal>jersey.config.io.bufferSize</literal></entry>
+                        <entry>
+                            <para>
+                                Value of the property indicates the buffer size to be used for I/O operations
+                                on byte and character streams. The property value is expected to be a positive
+                                integer otherwise it will be ignored.
+                            </para>
+                            <para>
+                                The default value is value of &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT;</entry>
+                        <entry><literal>jersey.config.jaxb.collections.processXmlRootElement</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; then XML root element tag name for collections will
+                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                annotation value and won't be de-capitalized.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH;</entry>
+                        <entry><literal>jersey.config.json.string.length</literal></entry>
+                        <entry>
+                            <para>
+                                The default value is not set and the JSON provider default maximum value is used.
+                            </para>
+                            <para>
+                                If supported by Jackson provider, the default value can differ for each Jackson version. For instance,
+                                Jackson 2.14 does not support this setting and the default value is <literal>Integer#MAX_VALUE</literal>,
+                                Jackson 2.15.0 has the default value 5_000_000, Jackson 2.15.2 has the default value 20_000_000.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_SECURITY_DISABLE;</entry>
+                        <entry><literal>jersey.config.xml.security.disable</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; XML security features when parsing XML documents will be
+                                disabled.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_FORMAT_OUTPUT;</entry>
+                        <entry><literal>jersey.config.xml.formatOutput</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; indicates that produced XML output should be formatted
+                                if possible.
+                            </para>
+                            <para>
+                                A XML message entity written by a &jaxrs.ext.MessageBodyWriter;
+                                may be formatted for the purposes of human readability provided the respective
+                                &jaxrs.ext.MessageBodyWriter; supports XML output formatting. All JAXB-based message
+                                body writers support this property.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+
     </section>
     <section xml:id="appendix-properties-client-apache">
         <title>Apache HTTP client configuration properties</title>
@@ -1899,6 +2026,19 @@
                 </thead>
                 <tbody>
                     <row>
+                        <entry>&jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY;</entry>
+                        <entry><literal>jersey.config.client.filter.headers.proxy</literal></entry>
+                        <entry>
+                            <para>
+                                Filter the HTTP headers for requests (CONNECT) towards the proxy except for
+                                <literal>PROXY</literal>-prefixed and <literal>HOST</literal> headers when &lit.true;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the headers are filtered out.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT;</entry>
                         <entry><literal>jersey.config.client.idleConnectionPruneTimeout</literal></entry>
                         <entry>
@@ -1941,6 +2081,31 @@
                                 positive number. Default value is 5.
                                 HTTP redirection must be enabled by property org.glassfish.jersey.client.ClientProperties.FOLLOW_REDIRECTS
                                 otherwise &jersey.netty.NettyClientProperties.MAX_REDIRECTS; is not applied.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT;</entry>
+                        <entry><literal>jersey.config.client.redirect.preserve.method</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the HTTP POST method to be preserved on HTTP status 301 (MOVED PERMANENTLY) or status 302 (FOUND)
+                                when &lit.true; or redirected as GET when &lit.false;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the HTTP POST request is not redirected as GET.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.timeout</literal></entry>
+                        <entry>
+                            <para>
+                                This timeout is used for waiting for 100-Continue response when 100-Continue
+                                is sent by the client.
+                                Default timeout value is 500 ms after which Expect:100-Continue feature is ignored.
+                                <literal>Since 2.41</literal>
                             </para>
                         </entry>
                     </row>

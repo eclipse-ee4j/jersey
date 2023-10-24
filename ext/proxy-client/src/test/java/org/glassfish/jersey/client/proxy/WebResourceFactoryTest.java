@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,11 @@
  */
 
 package org.glassfish.jersey.client.proxy;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,13 +39,10 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Martin Matula
@@ -335,5 +337,28 @@ public class WebResourceFactoryTest extends JerseyTest {
     @Test
     public void testEquals() {
         assertFalse(resource.equals(resource2), "The two resource instances should not be considered equals as they are unique");
+    }
+
+    @Test
+    void testParamWithCurly() {
+        String param = "faulty {";
+
+        String result = resource.getByName(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameCookie(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameHeader(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getByNameMatrix(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.postByNameFormParam(param);
+        Assertions.assertEquals(param, result);
+
+        result = resource.getId(param);
+        Assertions.assertEquals(param, result);
     }
 }

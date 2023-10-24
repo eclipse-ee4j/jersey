@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -87,10 +87,6 @@ class JerseyServerHandler extends ChannelInboundHandlerAdapter {
 
         if (msg instanceof HttpRequest) {
             final HttpRequest req = (HttpRequest) msg;
-
-            if (HttpUtil.is100ContinueExpected(req)) {
-                ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
-            }
 
             nettyInputStream.clear(); // clearing the content - possible leftover from previous request processing.
             final ContainerRequest requestContext = createContainerRequest(ctx, req);

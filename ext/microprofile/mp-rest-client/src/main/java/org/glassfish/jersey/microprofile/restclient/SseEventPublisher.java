@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +66,7 @@ public class SseEventPublisher extends EventInput implements Publisher<InboundEv
 
         this.executor = executor;
         this.genericType = genericType;
-        this.publisher = new JerseyPublisher<>(executor::submit, JerseyPublisher.PublisherStrategy.BEST_EFFORT);
+        this.publisher = new JerseyPublisher<>(executor::submit, JerseyPublisher.PublisherStrategy.BLOCKING);
     }
 
     private static final Logger LOG = Logger.getLogger(SseEventPublisher.class.getName());

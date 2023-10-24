@@ -24,8 +24,8 @@ import org.junit.Test;
 
 import jakarta.ws.rs.core.MediaType;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -154,7 +154,7 @@ public class NoticeFilesTest {
     }
 
     private String getFile(File path) throws IOException {
-        return ReaderWriter.readFromAsString(new FileInputStream(path), MediaType.TEXT_PLAIN_TYPE);
+        return ReaderWriter.readFromAsString(Files.newInputStream(path.toPath()), MediaType.TEXT_PLAIN_TYPE);
     }
 
     private String removeUnnecessary(String dependency) {

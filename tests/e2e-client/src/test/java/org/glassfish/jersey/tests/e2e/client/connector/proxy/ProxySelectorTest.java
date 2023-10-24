@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.netty.connector.NettyClientProperties;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +50,7 @@ public class ProxySelectorTest {
     private static final String NO_PASS = "no-pass";
 
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new NettyConnectorProvider());
+        config.connectorProvider(new NettyConnectorProvider()).property(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, false);
     }
 
     @Test

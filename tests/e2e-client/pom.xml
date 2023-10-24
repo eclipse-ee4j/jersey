@@ -157,6 +157,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-netty-connector</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-signature</artifactId>
             <version>${project.version}</version>
@@ -233,6 +238,7 @@
                                 <configuration>
                                     <testExcludes>
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/connector/proxy/Proxy*Test.java</testExclude>
+                                        <testExclude>org/glassfish/jersey/tests/e2e/client/nettyconnector/Expect100ContinueTest.java</testExclude>
                                     </testExcludes>
                                 </configuration>
                                 <goals>

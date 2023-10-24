@@ -30,7 +30,6 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainer;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
-import org.glassfish.jersey.jetty.http2.LocalizationMessages;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 

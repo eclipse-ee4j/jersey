@@ -23,8 +23,9 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -115,7 +116,7 @@ public final class MavenUtil {
 
     private static Model getModelFromFile(File file) throws IOException, XmlPullParserException {
         MavenXpp3Reader mavenReader = new MavenXpp3Reader();
-        try (FileReader fileReader = new FileReader(file)) {
+        try (Reader fileReader = Files.newBufferedReader(file.toPath())) {
             Model model = mavenReader.read(fileReader);
             return model;
         }

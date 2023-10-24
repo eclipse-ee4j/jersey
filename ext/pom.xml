@@ -44,6 +44,7 @@
         <module>cdi</module>
         <module>entity-filtering</module>
         <module>metainf-services</module>
+        <module>micrometer</module>
         <module>mvc</module>
         <module>mvc-bean-validation</module>
         <module>mvc-freemarker</module>

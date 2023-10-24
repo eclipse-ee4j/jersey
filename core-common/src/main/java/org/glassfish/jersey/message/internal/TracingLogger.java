@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -118,8 +118,8 @@ public abstract class TracingLogger {
             //not server side
             return EMPTY;
         }
-        final TracingLogger tracingLogger = (TracingLogger) propertiesDelegate.getProperty(PROPERTY_NAME);
-        return (tracingLogger != null) ? tracingLogger : EMPTY;
+        final Object tracingLogger = propertiesDelegate.getProperty(PROPERTY_NAME);
+        return TracingLogger.class.isInstance(tracingLogger) ? (TracingLogger) tracingLogger : EMPTY;
     }
 
     /**
