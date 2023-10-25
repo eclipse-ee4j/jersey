@@ -30,6 +30,7 @@ import jakarta.json.bind.JsonbException;
 import org.glassfish.jersey.jsonb.LocalizationMessages;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
@@ -106,8 +107,9 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
                         OutputStream entityStream) throws IOException, WebApplicationException {
         Jsonb jsonb = getJsonb(type);
         try {
-            jsonb.toJson(o, genericType, new OutputStreamWriter(entityStream, getCharset(mediaType)));
-        } catch (JsonbException e) {
+            entityStream.write(jsonb.toJson(o).getBytes(ReaderWriter.getCharset(mediaType)));
+            entityStream.flush();
+        } catch (IOException e) {
             throw new ProcessingException(LocalizationMessages.ERROR_JSONB_SERIALIZATION(), e);
         }
     }

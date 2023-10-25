@@ -195,7 +195,7 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
                             <testExcludes>
-                                <testExclude>org/glassfish/jersey/jetty/*.java</testExclude>
+                                <testExclude>org/glassfish/jersey/jetty/http2/*.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>

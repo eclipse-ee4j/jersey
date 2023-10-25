@@ -112,6 +112,8 @@
 <!ENTITY helidon.link "<link xlink:href='https://helidon.io/'>Helidon</link>">
 <!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
 <!ENTITY yasson.link "<link xlink:href='https://eclipse-ee4j.github.io/yasson/'>Yasson</link>">
+<!ENTITY micrometer.link "<link xlink:href='https://micrometer.io/'>Micrometer project</link>">
+<!ENTITY micrometer.jersey.link "<link xlink:href='https://micrometer.io/docs/ref/jetty'>Micrometer Jersey/Jetty support</link>">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/configuration'>Configuration</link>">
@@ -353,6 +355,7 @@
 <!ENTITY jersey.client.ClientProperties.READ_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#READ_TIMEOUT'>ClientProperties.READ_TIMEOUT</link>" >
 <!ENTITY jersey.client.ClientProperties.REQUEST_ENTITY_PROCESSING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#REQUEST_ENTITY_PROCESSING'>ClientProperties.REQUEST_ENTITY_PROCESSING</link>" >
 <!ENTITY jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SUPPRESS_HTTP_COMPLIANCE_VALIDATION'>ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION</link>" >
+<!ENTITY jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SSL_CONTEXT_SUPPLIER'>ClientProperties.SSL_CONTEXT_SUPPLIER</link>" >
 <!ENTITY jersey.client.ClientProperties.USE_ENCODING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#USE_ENCODING'>ClientProperties.USE_ENCODING</link>" >
 <!ENTITY jersey.client.ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#DIGESTAUTH_URI_CACHE_SIZELIMIT'>ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT</link>" >
 <!ENTITY jersey.client.ClientProperties.EXPECT_100_CONTINUE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#EXPECT_100_CONTINUE'>ClientProperties.EXPECT_100_CONTINUE</link>" >
@@ -477,6 +480,7 @@
 <!ENTITY jersey.jetty.JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
 <!ENTITY jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#TOTAL_TIMEOUT'>JettyClientProperties.TOTAL_TIMEOUT</link>" >
 <!ENTITY jersey.jetty.JettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyConnectorProvider.html'>JettyConnectorProvider</link>">
+<!ENTITY jersey.jetty.JettyHttp2ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/http2/connector/JettyConnectorProvider.html'>JettyHttp2ConnectorProvider</link>">
 <!ENTITY jersey.jetty.JettyHttpContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainer.html'>JettyHttpContainer</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerFactory.html'>JettyHttpContainerFactory</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerProvider.html'>JettyHttpContainerProvider</link>">
@@ -531,6 +535,13 @@
 <!ENTITY jersey.media.multipart.StreamDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/StreamDataBodyPart.html'>StreamDataBodyPart</link>" >
 <!ENTITY jersey.message.MessageBodyWorkers "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageBodyWorkers.html'>MessageBodyWorkers</link>">
 <!ENTITY jersey.message.MessageProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html'>MessageProperties</link>">
+<!ENTITY jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#DEFLATE_WITHOUT_ZLIB'>MessageProperties.DEFLATE_WITHOUT_ZLIB</link>">
+<!ENTITY jersey.message.MessageProperties.IO_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_BUFFER_SIZE'>MessageProperties.IO_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_DEFAULT_BUFFER_SIZE'>MessageProperties.IO_DEFAULT_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JAXB_PROCESS_XML_ROOT_ELEMENT'>MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT</link>">
+<!ENTITY jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JSON_MAX_STRING_LENGTH'>MessageProperties.JSON_MAX_STRING_LENGTH</link>">
+<!ENTITY jersey.message.MessageProperties.XML_SECURITY_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_SECURITY_DISABLE'>MessageProperties.XML_SECURITY_DISABLE</link>">
+<!ENTITY jersey.message.MessageProperties.XML_FORMAT_OUTPUT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_FORMAT_OUTPUT'>MessageProperties.XML_FORMAT_OUTPUT</link>">
 <!ENTITY jersey.message.filtering.AbstractEntityProcessor "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractEntityProcessor.html'>AbstractEntityProcessor</link>">
 <!ENTITY jersey.message.filtering.AbstractObjectProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractObjectProvider.html'>AbstractObjectProvider</link>">
 <!ENTITY jersey.message.filtering.EntityFiltering "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/EntityFiltering.html'>@EntityFiltering</link>">
@@ -544,10 +555,13 @@
 <!ENTITY jersey.message.filtering.SecurityEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SecurityEntityFilteringFeature.html'>SecurityEntityFilteringFeature</link>">
 <!ENTITY jersey.message.filtering.SelectableEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SelectableEntityFilteringFeature.html'>SelectableEntityFilteringFeature</link>">
 <!ENTITY jersey.netty.NettyClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html'>NettyClientProperties</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#FILTER_HEADERS_FOR_PROXY'>NettyClientProperties.FILTER_HEADERS_FOR_PROXY</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#IDLE_CONNECTION_PRUNE_TIMEOUT'>NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS'>NettyClientProperties.MAX_CONNECTIONS</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS_TOTAL "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS_TOTAL'>NettyClientProperties.MAX_CONNECTIONS_TOTAL</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_REDIRECTS'>NettyClientProperties.MAX_REDIRECTS</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#PRESERVE_METHOD_ON_REDIRECT'>NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#EXPECT_100_CONTINUE_TIMEOUT'>NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">

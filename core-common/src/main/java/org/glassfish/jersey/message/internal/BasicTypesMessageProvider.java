@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -144,7 +144,7 @@ final class BasicTypesMessageProvider extends AbstractMessageReaderWriterProvide
             MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders,
             InputStream entityStream) throws IOException, WebApplicationException {
-        final String entityString = readFromAsString(entityStream, mediaType);
+        final String entityString = ReaderWriter.readFromAsString(entityStream, mediaType);
         if (entityString.isEmpty()) {
             throw new NoContentException(LocalizationMessages.ERROR_READING_ENTITY_MISSING());
         }
@@ -210,6 +210,6 @@ final class BasicTypesMessageProvider extends AbstractMessageReaderWriterProvide
             MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException, WebApplicationException {
-        writeToAsString(o.toString(), entityStream, mediaType);
+        ReaderWriter.writeToAsString(o.toString(), entityStream, mediaType);
     }
 }

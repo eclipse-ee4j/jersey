@@ -473,7 +473,7 @@
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
                         <bottom>
-                            <![CDATA[Copyright &#169; 2007-2021,
+                            <![CDATA[Copyright &#169; 2007-2023,
                                 <a href="http://www.oracle.com">Oracle</a>
                                 and/or its affiliates.
                                 All Rights Reserved. Use is subject to license terms.]]>
@@ -481,10 +481,15 @@
                         <links>
                             <link>https://jakartaee.github.io/rest/apidocs/3.0.0/</link>
                             <link>https://javaee.github.io/hk2/apidocs/</link>
+                            <link>https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/</link>
                         </links>
                         <excludePackageNames>
-                            *.internal.*:*.tests.*
+                            *.internal.*:*.innate.*:*.tests.*
                         </excludePackageNames>
+                        <includeDependencySources>false</includeDependencySources>
+                        <dependencySourceIncludes>
+                            <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
+                        </dependencySourceIncludes>
                         <sourceFileExcludes>
                             <exclude>bundles/**</exclude>
                             <fileExclude>module-info.java</fileExclude>
@@ -1170,7 +1175,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>3.4.5</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
@@ -1413,6 +1418,13 @@
                     <id>dash-licenses-snapshots</id>
                     <url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
                     <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>dash-licenses-releases</id>
+                    <url>https://repo.eclipse.org/content/repositories/dash-licenses-releases/</url>
+                    <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
                 </pluginRepository>
@@ -1422,7 +1434,7 @@
                     <plugin>
                         <groupId>org.eclipse.dash</groupId>
                         <artifactId>license-tool-plugin</artifactId>
-                        <version>0.0.1-SNAPSHOT</version>
+                        <version>1.0.2</version>
                         <executions>
                             <execution>
                                 <id>license-check</id>
@@ -1732,6 +1744,16 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.http2</groupId>
+                <artifactId>http2-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.http2</groupId>
+                <artifactId>http2-http-client-transport</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -2234,7 +2256,9 @@
         <arquillian.weld.version>3.0.1.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.5</asm.version>
+        <asm.version>9.6</asm.version>
+        <!--required for spring (ext) modules integration -->
+        <aspectj.weaver.version>1.6.11</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons.io.version>2.13.0</commons.io.version>
@@ -2256,6 +2280,10 @@
         <org.codehaus.gmavenplus.version>3.0.0</org.codehaus.gmavenplus.version>
         <!-- end of versions extracted here due to maven-enforcer-plugin -->
 
+        <!-- micrometer -->
+        <micrometer.version>1.10.12</micrometer.version>
+        <micrometer-tracing.version>1.0.9</micrometer-tracing.version>
+
         <!-- microprofile -->
         <microprofile.config.version>3.0</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
@@ -2271,7 +2299,7 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <jboss.logging.version>3.4.3.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
@@ -2310,7 +2338,7 @@
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.10</graalvm.version>
+        <graalvm.version>20.3.11</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>6.2.5</gf.impl.version>
@@ -2345,8 +2373,8 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.15</jetty.version>
-        <jetty9.version>9.4.51.v20230217</jetty9.version>
+        <jetty.version>11.0.17</jetty.version>
+        <jetty9.version>9.4.53.v20231009</jetty9.version>
         <jetty.plugin.version>11.0.15</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>

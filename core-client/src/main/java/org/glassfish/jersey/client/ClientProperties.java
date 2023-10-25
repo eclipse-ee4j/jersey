@@ -24,6 +24,7 @@ import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
 
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 
 /**
@@ -480,6 +481,16 @@ public final class ClientProperties {
      * @since 2.40
      */
     public static final String CONNECTOR_PROVIDER = "jersey.config.client.connector.provider";
+
+    /**
+     * <p>The {@link javax.net.ssl.SSLContext} {@link java.util.function.Supplier} to be used to set ssl context in the current
+     * HTTP request. Has precedence over the {@link Client#getSslContext()}.
+     * </p>
+     * <p>Currently supported by the default {@code HttpUrlConnector} and by {@code NettyConnector} only.</p>
+     * @since 2.41
+     * @see org.glassfish.jersey.client.SslContextClientBuilder
+     */
+    public static final String SSL_CONTEXT_SUPPLIER = "jersey.config.client.ssl.context.supplier";
 
     private ClientProperties() {
         // prevents instantiation

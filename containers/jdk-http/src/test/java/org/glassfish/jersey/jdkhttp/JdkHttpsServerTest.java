@@ -218,7 +218,7 @@ public class JdkHttpsServerTest extends AbstractJdkHttpServerTester {
 
 
     private URI updatePort(URI uri) {
-        return UriBuilder.fromUri(httpsUri).port(server.getAddress().getPort()).build();
+        return UriBuilder.fromUri(uri).port(server.getAddress().getPort()).build();
     }
 
     @AfterEach
