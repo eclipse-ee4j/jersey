@@ -2375,7 +2375,7 @@
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>11.0.17</jetty.version>
         <jetty9.version>9.4.53.v20231009</jetty9.version>
-        <jetty.plugin.version>11.0.17</jetty.plugin.version>
+        <jetty.plugin.version>11.0.15</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>1.0.5</jsonp.ri.version>
