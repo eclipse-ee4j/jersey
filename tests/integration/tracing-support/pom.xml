@@ -65,6 +65,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.tracing.version}</version>
                 <configuration>
                     <connectors>
                         <connector>
