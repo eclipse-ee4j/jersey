@@ -110,7 +110,6 @@
                 <dependency>
                     <groupId>jakarta.activation</groupId>
                     <artifactId>jakarta.activation-api</artifactId>
-                    <version>${jakarta.activation.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>jakarta.xml.bind</groupId>

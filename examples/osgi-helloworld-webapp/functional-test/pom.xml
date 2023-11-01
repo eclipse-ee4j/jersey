@@ -147,7 +147,6 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
-            <version>${jakarta.activation.version}</version>
         </dependency>
          <!-- uncomment the following dependency to get ability
               to run felix console in the test -->
