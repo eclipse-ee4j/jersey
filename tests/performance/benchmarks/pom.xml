@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.performance</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.12</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>performance-test-benchmarks</artifactId>
