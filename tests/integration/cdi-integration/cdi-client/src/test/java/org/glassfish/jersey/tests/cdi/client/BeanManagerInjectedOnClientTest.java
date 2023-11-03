@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.tests.cdi.client;
 
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.jboss.weld.environment.se.Weld;
 import org.junit.jupiter.api.AfterAll;
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-import java.security.AccessController;
 
 public class BeanManagerInjectedOnClientTest {
     private static Weld weld;
@@ -52,7 +52,7 @@ public class BeanManagerInjectedOnClientTest {
         // test that there is no server is available
 
         final String serverComponentProvider = "org.glassfish.jersey.server.spi.ComponentProvider";
-        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(serverComponentProvider));
+        final Class<?> aClass = ReflectionHelper.classForName(serverComponentProvider);
         Assertions.assertNull(aClass);
 
         // test CDI injection

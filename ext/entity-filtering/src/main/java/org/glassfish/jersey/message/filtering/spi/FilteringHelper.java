@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.security.AccessController;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -131,7 +130,7 @@ public final class FilteringHelper {
     public static Map<String, Method> getPropertyMethods(final Class<?> clazz, final boolean isGetter) {
         final Map<String, Method> methods = new HashMap<>();
 
-        for (final Method method : AccessController.doPrivileged(ReflectionHelper.getDeclaredMethodsPA(clazz))) {
+        for (final Method method : ReflectionHelper.getDeclaredMethods(clazz)) {
             if ((isGetter && ReflectionHelper.isGetter(method))
                     || (!isGetter && ReflectionHelper.isSetter(method))) {
 

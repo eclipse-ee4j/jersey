@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.server.model;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +41,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.Errors;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.Tokenizer;
@@ -200,7 +200,7 @@ final class IntrospectionModeller {
                                           boolean isInSingleton,
                                           Collection<Parameter> injectableParameters) {
 
-        for (Field field : AccessController.doPrivileged(ReflectionHelper.getDeclaredFieldsPA(handlerClass))) {
+        for (Field field : ReflectionHelper.getDeclaredFields(handlerClass)) {
             if (field.getDeclaredAnnotations().length > 0) {
                 Parameter p = Parameter.create(
                         handlerClass,
@@ -227,7 +227,7 @@ final class IntrospectionModeller {
     private List<Method> getAllDeclaredMethods(final Class<?> clazz) {
         final List<Method> result = new LinkedList<>();
 
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
+        ACDeprecator.doPrivileged(new PrivilegedAction<Object>() {
 
             @Override
             public Object run() {

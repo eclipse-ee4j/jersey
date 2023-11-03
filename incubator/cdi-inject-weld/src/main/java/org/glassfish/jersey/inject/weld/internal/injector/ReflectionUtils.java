@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +34,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.jersey.inject.weld.internal.type.GenericArrayTypeImpl;
 import org.glassfish.jersey.inject.weld.internal.type.ParameterizedTypeImpl;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.collection.ImmutableCollectors;
 
 /**
@@ -73,7 +73,7 @@ class ReflectionUtils {
     }
 
     private static Field[] secureGetDeclaredFields(final Class<?> clazz) {
-        return AccessController.doPrivileged((PrivilegedAction<Field[]>) clazz::getDeclaredFields);
+        return ACDeprecator.doPrivileged((PrivilegedAction<Field[]>) clazz::getDeclaredFields);
     }
 
     /**
@@ -420,7 +420,7 @@ class ReflectionUtils {
             return;
         }
 
-        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+        ACDeprecator.doPrivileged((PrivilegedAction<Object>) () -> {
             ao.setAccessible(true);
             return null;
         });

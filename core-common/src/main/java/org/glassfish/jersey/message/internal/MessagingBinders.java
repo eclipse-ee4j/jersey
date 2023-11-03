@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.message.internal;
 
-import java.security.AccessController;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -256,7 +255,7 @@ public final class MessagingBinders {
         }
 
         private static boolean isClass(String className) {
-            return null != AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+            return null != ReflectionHelper.classForName(className);
         }
 
         private interface ProviderBinder {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,13 +17,13 @@
 package org.glassfish.jersey.test.external;
 
 import java.net.URI;
-import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.ServletDeploymentContext;
@@ -61,7 +61,7 @@ public class ExternalTestContainerFactory implements TestContainerFactory {
     }
 
     private URI getBaseURI(final URI baseUri) {
-        String stagingHostName = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(JERSEY_TEST_HOST));
+        String stagingHostName = PropertiesHelper.getSystemPropertyNPA(JERSEY_TEST_HOST);
         if (stagingHostName != null) {
             return UriBuilder.fromUri(baseUri).host(stagingHostName).build();
         }

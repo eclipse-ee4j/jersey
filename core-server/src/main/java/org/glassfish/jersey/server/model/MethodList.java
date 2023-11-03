@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.server.model;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -76,7 +75,7 @@ public final class MethodList implements Iterable<AnnotatedMethod> {
     private static List<Method> getAllDeclaredMethods(Class<?> c) {
         List<Method> l = new ArrayList<>();
         while (c != null && c != Object.class) {
-            l.addAll(AccessController.doPrivileged(ReflectionHelper.getDeclaredMethodsPA(c)));
+            l.addAll(ReflectionHelper.getDeclaredMethods(c));
             c = c.getSuperclass();
         }
         return l;

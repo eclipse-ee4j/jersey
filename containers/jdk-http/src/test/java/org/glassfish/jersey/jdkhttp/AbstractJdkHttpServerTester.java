@@ -17,7 +17,6 @@
 package org.glassfish.jersey.jdkhttp;
 
 import java.net.URI;
-import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,8 +50,7 @@ public abstract class AbstractJdkHttpServerTester {
         if (server != null) {
             return server.getAddress().getPort();
         }
-        final String value =
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
+        final String value = PropertiesHelper.getSystemPropertyNPA("jersey.config.test.container.port");
         if (value != null) {
 
             try {

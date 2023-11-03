@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.model.Parameter;
 
 /**
@@ -202,7 +202,7 @@ class BeanClassModel {
     }
 
     private Object resolveValueFromField(Field field, Object instance) {
-        return AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+        return ACDeprecator.doPrivileged((PrivilegedAction<Object>) () -> {
             try {
                 Object toReturn;
                 if (field.isAccessible()) {

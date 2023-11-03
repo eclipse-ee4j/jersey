@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -188,7 +187,7 @@ public class Parameter extends org.glassfish.jersey.model.Parameter implements A
 
             final Collection<Parameter> parameters = new LinkedList<>();
 
-            for (Field field : AccessController.doPrivileged(ReflectionHelper.getDeclaredFieldsPA(rawType))) {
+            for (Field field : ReflectionHelper.getDeclaredFields(rawType)) {
                 if (field.getDeclaredAnnotations().length > 0) {
                     Parameter beanParamParameter = Parameter.create(
                             rawType,
@@ -200,8 +199,7 @@ public class Parameter extends org.glassfish.jersey.model.Parameter implements A
                     parameters.add(beanParamParameter);
                 }
             }
-            for (Constructor constructor : AccessController
-                    .doPrivileged(ReflectionHelper.getDeclaredConstructorsPA(rawType))) {
+            for (Constructor constructor : ReflectionHelper.getDeclaredConstructors(rawType)) {
                 for (org.glassfish.jersey.model.Parameter parameter : Parameter.create(rawType, rawType, constructor, false)) {
                     parameters.add((Parameter) parameter);
                 }

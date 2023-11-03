@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,7 @@ import javax.inject.Singleton;
 
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.collection.ImmutableCollectors;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
@@ -145,7 +145,7 @@ public final class JerseyClassAnalyzer implements ClassAnalyzer {
         }
 
         // At this point, we simply need to find the constructor with the largest number of parameters
-        final Constructor<?>[] constructors = AccessController.doPrivileged(
+        final Constructor<?>[] constructors = ACDeprecator.doPrivileged(
                 (PrivilegedAction<Constructor<?>[]>) clazz::getDeclaredConstructors);
         Constructor<?> selected = null;
         int selectedSize = 0;

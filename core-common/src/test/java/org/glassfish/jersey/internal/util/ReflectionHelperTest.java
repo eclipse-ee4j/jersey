@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.internal.util;
 
 import java.lang.reflect.Method;
 import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.junit.jupiter.api.Test;
@@ -91,7 +90,7 @@ public class ReflectionHelperTest {
         assertThrows(AccessControlException.class, () -> {
             final ClassLoader loader = ReflectionHelper.class.getClassLoader();
 
-            AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(loader));
+            ReflectionHelper.setContextClassLoader(loader);
             fail("It should not be possible to set context class loader even from privileged block via Jersey ReflectionHelper "
                 + "utility");
         });

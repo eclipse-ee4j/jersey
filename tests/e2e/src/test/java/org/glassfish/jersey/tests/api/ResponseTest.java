@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.tests.api;
 
-import java.security.AccessController;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -231,7 +230,7 @@ public class ResponseTest {
     }
 
     private static final String indent = "    ";
-    private static final String newline = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("line.separator"));
+    private static final String newline = PropertiesHelper.getSystemPropertyNPA("line.separator");
 
     private String verifyResponse(Response resp, String content, int status,
                                   List<String> encoding, List<String> language, List<String> type,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.server.validation.internal;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,8 +146,7 @@ class ValidateOnExecutionHandler {
         // Overridden methods.
         while (!hierarchy.isEmpty()) {
             final Class<?> overriddenClass = hierarchy.removeFirst();
-            final Method overriddenMethod =
-                    AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(overriddenClass, method));
+            final Method overriddenMethod = ReflectionHelper.findMethodOnClass(overriddenClass, method);
 
             if (overriddenMethod != null) {
                 // Method.

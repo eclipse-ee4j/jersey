@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -273,7 +272,7 @@ public class AnnotatedMethod implements AnnotatedElement {
             return null;
         }
 
-        m = AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(c, m));
+        m = ReflectionHelper.findMethodOnClass(c, m);
         if (m == null) {
             return null;
         }

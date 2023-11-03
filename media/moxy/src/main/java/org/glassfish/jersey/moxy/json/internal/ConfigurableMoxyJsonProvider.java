@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class ConfigurableMoxyJsonProvider extends MOXyJsonProvider {
     private static Set<String> getPropertyNames(final Class<?> propertiesClass) {
         final Set<String> propertyNames = new HashSet<>();
 
-        for (final Field field : AccessController.doPrivileged(ReflectionHelper.getDeclaredFieldsPA(propertiesClass))) {
+        for (final Field field : ReflectionHelper.getDeclaredFields(propertiesClass)) {
             if (String.class == field.getType() && Modifier.isStatic(field.getModifiers())) {
                 try {
                     propertyNames.add((String) field.get(null));

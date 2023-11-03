@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -136,7 +135,7 @@ class InterfaceUtil {
         int lastIndex = methodName.lastIndexOf(".");
         String className = methodName.substring(0, lastIndex);
         String staticMethodName = methodName.substring(lastIndex + 1);
-        Class<?> classWithStaticMethod = AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+        Class<?> classWithStaticMethod = ReflectionHelper.classForName(className);
         if (classWithStaticMethod == null) {
             throw new IllegalStateException("No class with following name found: " + className);
         }

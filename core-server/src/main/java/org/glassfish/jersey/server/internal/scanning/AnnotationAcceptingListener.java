@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -104,7 +103,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
      *        files.
      */
     public AnnotationAcceptingListener(final Class<? extends Annotation>... annotations) {
-        this(AccessController.doPrivileged(ReflectionHelper.getContextClassLoaderPA()), annotations);
+        this(ReflectionHelper.getContextClassLoader(), annotations);
     }
 
     /**
@@ -289,7 +288,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
                 if (osgiRegistry != null) {
                     return osgiRegistry.classForNameWithException(className);
                 } else {
-                    return AccessController.doPrivileged(ReflectionHelper.classForNameWithExceptionPEA(className, classloader));
+                    return ReflectionHelper.classForNameWithException(className, classloader);
                 }
             } catch (final ClassNotFoundException ex) {
                 throw new RuntimeException(LocalizationMessages.ERROR_SCANNING_CLASS_NOT_FOUND(className), ex);

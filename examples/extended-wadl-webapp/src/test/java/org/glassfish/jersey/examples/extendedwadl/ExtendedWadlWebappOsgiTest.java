@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,7 +13,6 @@ package org.glassfish.jersey.examples.extendedwadl;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -174,7 +173,7 @@ public class ExtendedWadlWebappOsgiTest {
                                 .set("DynamicImport-Package", "*")
                                 .set("Bundle-SymbolicName", "webapp").build())
         ));
-        final String localRepository = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("localRepository"));
+        final String localRepository = PropertiesHelper.getSystemPropertyNPA("localRepository");
         if (localRepository != null) {
             options = new ArrayList<>(options);
             options.add(systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepository));

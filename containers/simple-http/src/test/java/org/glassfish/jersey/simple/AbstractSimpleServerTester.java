@@ -17,7 +17,6 @@
 package org.glassfish.jersey.simple;
 
 import java.net.URI;
-import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,8 +49,7 @@ public abstract class AbstractSimpleServerTester {
      * @return The HTTP port of the URI
      */
     protected final int getPort() {
-        final String value = AccessController
-                .doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
+        final String value = PropertiesHelper.getSystemPropertyNPA("jersey.config.test.container.port");
         if (value != null) {
 
             try {

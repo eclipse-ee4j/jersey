@@ -22,7 +22,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -130,7 +129,7 @@ public class ParamConverters {
                                                   final Type genericType,
                                                   final Annotation[] annotations) {
 
-            final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(rawType));
+            final Constructor constructor = ReflectionHelper.getStringConstructor(rawType);
 
             return (constructor == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 
@@ -159,7 +158,7 @@ public class ParamConverters {
                                                   final Type genericType,
                                                   final Annotation[] annotations) {
 
-            final Method valueOf = AccessController.doPrivileged(ReflectionHelper.getValueOfStringMethodPA(rawType));
+            final Method valueOf = ReflectionHelper.getValueOfStringMethod(rawType);
 
             return (valueOf == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 
@@ -187,7 +186,7 @@ public class ParamConverters {
                                                   final Type genericType,
                                                   final Annotation[] annotations) {
 
-            final Method fromStringMethod = AccessController.doPrivileged(ReflectionHelper.getFromStringStringMethodPA(rawType));
+            final Method fromStringMethod = ReflectionHelper.getFromStringStringMethod(rawType);
 
             return (fromStringMethod == null) ? null : new AbstractStringReader<T>(canReturnNull) {
 

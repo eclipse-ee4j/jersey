@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.server.validation.internal;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -107,7 +106,7 @@ class ValidateOnExecutionTraversableResolver implements TraversableResolver {
     private Method getGetterMethod(final Class<?> clazz, final String propertyName) {
         // Property type.
         Class<?> propertyType = null;
-        for (final Field field : AccessController.doPrivileged(ReflectionHelper.getAllFieldsPA(clazz))) {
+        for (final Field field : ReflectionHelper.getAllFields(clazz)) {
             if (field.getName().equals(propertyName)) {
                 propertyType = field.getType();
             }
@@ -120,13 +119,13 @@ class ValidateOnExecutionTraversableResolver implements TraversableResolver {
         final String isGetter = "is" + getterPropertyName;
         final String getGetter = "get" + getterPropertyName;
 
-        for (final Method method : AccessController.doPrivileged(ReflectionHelper.getMethodsPA(clazz))) {
+        for (final Method method : ReflectionHelper.getMethods(clazz)) {
             final String methodName = method.getName();
 
             if ((methodName.equals(isGetter) || methodName.equals(getGetter))
                     && ReflectionHelper.isGetter(method)
                     && (propertyType == null || propertyType.isAssignableFrom(method.getReturnType()))) {
-                return AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(clazz, method));
+                return ReflectionHelper.findMethodOnClass(clazz, method);
             }
         }
 

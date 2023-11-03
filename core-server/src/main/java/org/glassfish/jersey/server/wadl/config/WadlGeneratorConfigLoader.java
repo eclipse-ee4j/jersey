@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.server.wadl.config;
 
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.util.Collections;
 import java.util.List;
@@ -75,8 +74,8 @@ public class WadlGeneratorConfigLoader {
                     configClazz = ((Class<?>) wadlGeneratorConfigProperty)
                             .asSubclass(WadlGeneratorConfig.class);
                 } else if (wadlGeneratorConfigProperty instanceof String) {
-                    configClazz = AccessController.doPrivileged(ReflectionHelper
-                            .classForNameWithExceptionPEA((String) wadlGeneratorConfigProperty))
+                    configClazz = ReflectionHelper
+                            .classForNameWithException((String) wadlGeneratorConfigProperty)
                             .asSubclass(WadlGeneratorConfig.class);
                 } else {
                     throw new ProcessingException(LocalizationMessages.ERROR_WADL_GENERATOR_CONFIG_LOADER_PROPERTY(

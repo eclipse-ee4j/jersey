@@ -19,7 +19,6 @@ package org.glassfish.jersey.message.filtering;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +130,7 @@ final class EntityInspectorImpl implements EntityInspector {
      */
     private Map<String, Method> inspectEntityProperties(final Class<?> entityClass, final EntityGraph graph,
                                                         final Set<Class<?>> inspect, final boolean forWriter) {
-        final Field[] fields = AccessController.doPrivileged(ReflectionHelper.getAllFieldsPA(entityClass));
+        final Field[] fields = ReflectionHelper.getAllFields(entityClass);
         final Map<String, Method> methods = FilteringHelper.getPropertyMethods(entityClass, forWriter);
 
         for (final Field field : fields) {

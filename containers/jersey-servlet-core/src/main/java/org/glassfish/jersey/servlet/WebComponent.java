@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.servlet;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
@@ -506,9 +505,8 @@ public class WebComponent {
         }
 
         try {
-            final Class<? extends javax.ws.rs.core.Application> jaxrsApplicationClass = AccessController.doPrivileged(
-                    ReflectionHelper.<javax.ws.rs.core.Application>classForNameWithExceptionPEA(jaxrsApplicationClassName)
-            );
+            final Class<? extends javax.ws.rs.core.Application> jaxrsApplicationClass =
+                    ReflectionHelper.<javax.ws.rs.core.Application>classForNameWithException(jaxrsApplicationClassName);
 
             if (javax.ws.rs.core.Application.class.isAssignableFrom(jaxrsApplicationClass)) {
                 return ResourceConfig.forApplicationClass(jaxrsApplicationClass)

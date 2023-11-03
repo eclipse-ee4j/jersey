@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.server.mvc.internal;
 
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -302,8 +301,7 @@ class TemplateModelProcessor implements ModelProcessor {
             // Names - if there are no handler classes / instances.
             if (resource.getHandlerClasses().isEmpty() && resource.getHandlerInstances().isEmpty()) {
                 for (String resourceName : resource.getNames()) {
-                    final Class<Object> resourceClass = AccessController
-                            .doPrivileged(ReflectionHelper.classForNamePA(resourceName));
+                    final Class<Object> resourceClass = ReflectionHelper.classForName(resourceName);
                     if (resourceClass != null) {
                         createEnhancingMethods(resourceClass, null, newMethods);
                     }

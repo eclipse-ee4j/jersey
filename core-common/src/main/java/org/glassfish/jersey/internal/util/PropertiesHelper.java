@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.internal.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Locale;
 import java.util.Map;
@@ -30,6 +29,7 @@ import javax.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 
 /**
  * Helper class containing convenience methods for reading
@@ -52,14 +52,25 @@ public final class PropertiesHelper {
      * code block.
      *
      * @return privileged action to obtain system properties.
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Properties> getSystemProperties() {
-        return new PrivilegedAction<Properties>() {
-            @Override
-            public Properties run() {
-                return System.getProperties();
-            }
-        };
+        return () -> System.getProperties();
+    }
+
+    /**
+     * Get system properties.
+     *
+     * This method delegates to {@link System#getProperties()} and is running it in a privileged
+     * code block when the SecurityManager is turned on.
+     *
+     * @return system properties.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static Properties getSystemPropertiesNPA() {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getSystemProperties()) : System.getProperties();
     }
 
     /**
@@ -71,14 +82,27 @@ public final class PropertiesHelper {
      * @param name system property name.
      * @return privileged action to obtain system property value that will return {@code null}
      *         if there's no such system property.
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<String> getSystemProperty(final String name) {
-        return new PrivilegedAction<String>() {
-            @Override
-            public String run() {
-                return System.getProperty(name);
-            }
-        };
+        return () -> System.getProperty(name);
+    }
+
+    /**
+     * Get system property.
+     *
+     * This method delegates to {@link System#getProperty(String)} and can be running it in a privileged
+     * code block when the SecurityManager is present.
+     *
+     * @param name system property name.
+     * @return the system property value or {@code null}
+     *         if there's no such system property.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static String getSystemPropertyNPA(final String name) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getSystemProperty(name)) : System.getProperty(name);
     }
 
     /**
@@ -91,14 +115,28 @@ public final class PropertiesHelper {
      * @param def  default property value.
      * @return privileged action to obtain system property value that will return the default value
      *         if there's no such system property.
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<String> getSystemProperty(final String name, final String def) {
-        return new PrivilegedAction<String>() {
-            @Override
-            public String run() {
-                return System.getProperty(name, def);
-            }
-        };
+        return () -> System.getProperty(name, def);
+    }
+
+    /**
+     * Get system property.
+     *
+     * This method delegates to {@link System#getProperty(String)} while running it in a privileged
+     * code block.
+     *
+     * @param name system property name.
+     * @param def  default property value.
+     * @return the system property value or the default value
+     *         if there's no such system property.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static String getSystemPropertyNPA(final String name, final String def) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getSystemProperty(name, def)) : System.getProperty(name, def);
     }
 
     /**
@@ -298,7 +336,7 @@ public final class PropertiesHelper {
 
         if (!type.isInstance(value)) {
             // TODO: Move string value readers from server to common and utilize them here
-            final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(type));
+            final Constructor constructor = ReflectionHelper.getStringConstructor(type);
             if (constructor != null) {
                 try {
                     return type.cast(constructor.newInstance(value));
@@ -307,7 +345,7 @@ public final class PropertiesHelper {
                 }
             }
 
-            final Method valueOf = AccessController.doPrivileged(ReflectionHelper.getValueOfStringMethodPA(type));
+            final Method valueOf = ReflectionHelper.getValueOfStringMethod(type);
             if (valueOf != null) {
                 try {
                     return type.cast(valueOf.invoke(null, value));

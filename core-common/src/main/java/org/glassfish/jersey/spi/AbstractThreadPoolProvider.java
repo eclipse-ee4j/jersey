@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.spi;
 
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
@@ -286,7 +286,7 @@ public abstract class AbstractThreadPoolProvider<E extends ThreadPoolExecutor> i
             onClose();
         } finally {
             if (lazyExecutorServiceProvider.isInitialized()) {
-                AccessController.doPrivileged(shutdownExecutor(
+                ACDeprecator.doPrivileged(shutdownExecutor(
                         name,
                         lazyExecutorServiceProvider.get(),
                         getTerminationTimeout(),

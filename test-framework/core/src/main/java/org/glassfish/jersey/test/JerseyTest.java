@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.test;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -352,7 +351,7 @@ public abstract class JerseyTest {
             return forcedPropertyMap.get(propertyName);
         }
 
-        final Properties systemProperties = AccessController.doPrivileged(PropertiesHelper.getSystemProperties());
+        final Properties systemProperties = PropertiesHelper.getSystemPropertiesNPA();
         if (systemProperties.containsKey(propertyName)) {
             return systemProperties.getProperty(propertyName);
         }
@@ -365,7 +364,7 @@ public abstract class JerseyTest {
     }
 
     private static String getSystemProperty(final String propertyName) {
-        final Properties systemProperties = AccessController.doPrivileged(PropertiesHelper.getSystemProperties());
+        final Properties systemProperties = PropertiesHelper.getSystemPropertiesNPA();
         return systemProperties.getProperty(propertyName);
     }
 
@@ -554,7 +553,7 @@ public abstract class JerseyTest {
 
     private static Class<? extends TestContainerFactory> loadFactoryClass(final String factoryClassName) {
         Class<? extends TestContainerFactory> factoryClass;
-        final Class<Object> loadedClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(factoryClassName, null));
+        final Class<Object> loadedClass = ReflectionHelper.classForName(factoryClassName, null);
         if (loadedClass == null) {
             throw new TestContainerException(String.format(
                     "Test container factory class '%s' cannot be loaded", factoryClassName));

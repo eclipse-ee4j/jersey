@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package org.glassfish.jersey.server.internal.inject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -165,7 +164,7 @@ final class MultivaluedParameterExtractorFactory implements MultivaluedParameter
             }
 
             // Check for static valueOf(String)
-            final Method valueOf = AccessController.doPrivileged(ReflectionHelper.getValueOfStringMethodPA(wrappedRaw));
+            final Method valueOf = ReflectionHelper.getValueOfStringMethod(wrappedRaw);
             if (valueOf != null) {
                 try {
                     return new PrimitiveValueOfExtractor(valueOf,

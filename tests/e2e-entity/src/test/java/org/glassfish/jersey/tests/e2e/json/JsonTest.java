@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.tests.e2e.json;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessController;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -211,14 +210,14 @@ public abstract class JsonTest extends JerseyTest {
     }
 
     private static boolean runningOnJdk7AndLater() {
-        final String javaVersion = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("java.version"));
+        final String javaVersion = PropertiesHelper.getSystemPropertyNPA("java.version");
         final JdkVersion jdkVersion = JdkVersion.parseVersion(javaVersion);
         return (jdkVersion.getMajor() == 1 && jdkVersion.getMinor() >= 7) || (jdkVersion.getMajor() > 8);
     }
 
     private static boolean moxyJaxbProvider() {
         return "org.eclipse.persistence.jaxb.JAXBContextFactory".equals(
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("javax.xml.bind.JAXBContext")));
+                PropertiesHelper.getSystemPropertyNPA("javax.xml.bind.JAXBContext"));
     }
 
     /**

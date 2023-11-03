@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package org.glassfish.jersey.ext.cdi1x.internal;
 
 import java.lang.annotation.Annotation;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -153,7 +152,7 @@ public final class CdiUtil {
 
     private static boolean isServerAvailable() {
         final String serverComponentProvider = "org.glassfish.jersey.server.spi.ComponentProvider";
-        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(serverComponentProvider));
+        final Class<?> aClass = ReflectionHelper.classForName(serverComponentProvider);
         return aClass != null;
     }
 }

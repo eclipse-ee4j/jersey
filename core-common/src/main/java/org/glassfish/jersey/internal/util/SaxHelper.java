@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,8 +15,6 @@
  */
 
 package org.glassfish.jersey.internal.util;
-
-import java.security.AccessController;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParserFactory;
@@ -52,7 +50,7 @@ public final class SaxHelper {
     }
 
     private static boolean isXdkFactory(final Object factory, final String className) {
-        final Class<?> xdkFactoryClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(className, null));
+        final Class<?> xdkFactoryClass = ReflectionHelper.classForName(className, null);
         if (xdkFactoryClass == null) {
             return false;
         }

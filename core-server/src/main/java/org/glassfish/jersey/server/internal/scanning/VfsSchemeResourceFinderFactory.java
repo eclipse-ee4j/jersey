@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.server.ResourceFinder;
 import org.glassfish.jersey.server.internal.AbstractResourceFinderAdapter;
 
@@ -89,8 +89,8 @@ final class VfsSchemeResourceFinderFactory implements UriSchemeResourceFinderFac
         }
 
         private Method bindMethod(final Object object, final String name) {
-            if (System.getSecurityManager() != null) {
-                AccessController.doPrivileged(new PrivilegedAction<Method>() {
+            if (ACDeprecator.isSM()) {
+                ACDeprecator.doPrivilegedSM(new PrivilegedAction<Method>() {
                     public Method run() {
                         return bindMethod0(object, name);
                     }

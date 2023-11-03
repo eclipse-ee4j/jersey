@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -46,6 +45,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.ProcessingException;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 import org.osgi.framework.Bundle;
@@ -92,8 +92,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
      */
     public static synchronized OsgiRegistry getInstance() {
         if (instance == null) {
-            final ClassLoader classLoader = AccessController
-                    .doPrivileged(ReflectionHelper.getClassLoaderPA(ReflectionHelper.class));
+            final ClassLoader classLoader = ReflectionHelper.getClassLoader(ReflectionHelper.class);
             if (classLoader instanceof BundleReference) {
                 final BundleContext context = FrameworkUtil.getBundle(OsgiRegistry.class).getBundleContext();
                 if (context != null) { // context could be still null if the current bundle has not been started
@@ -581,7 +580,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
 
     private static Class<?> loadClass(final Bundle bundle, final String className) throws ClassNotFoundException {
         try {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
+            return ACDeprecator.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
                 @Override
                 public Class<?> run() throws ClassNotFoundException {
                     return bundle.loadClass(className);
@@ -603,7 +602,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                                                 final String path,
                                                 final String fileNamePattern,
                                                 final boolean recursive) {
-        return AccessController.doPrivileged(new PrivilegedAction<Enumeration<URL>>() {
+        return ACDeprecator.doPrivileged(new PrivilegedAction<Enumeration<URL>>() {
             @SuppressWarnings("unchecked")
             @Override
             public Enumeration<URL> run() {

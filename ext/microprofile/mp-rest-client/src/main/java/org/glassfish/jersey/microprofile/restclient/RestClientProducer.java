@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.AccessController;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -215,7 +214,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
 
         String[] classNames = configOption.get();
         for (String className : classNames) {
-            Class<?> providerClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+            Class<?> providerClass = ReflectionHelper.classForName(className);
             Optional<Integer> priority = getConfigOption(Integer.class, CONFIG_PROVIDERS + "/"
                     + className
                     + "/priority");
@@ -362,8 +361,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         Optional<String> verifier = getConfigOption(String.class, CONFIG_SSL_HOSTNAME_VERIFIER);
 
         return verifier.map(className -> {
-            Class<? extends HostnameVerifier> theClass =
-                    AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+            Class<? extends HostnameVerifier> theClass = ReflectionHelper.classForName(className);
             if (theClass == null) {
                 throw new IllegalStateException("Invalid hostname verifier class: " + className);
             }
@@ -387,7 +385,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
                                            CONFIG_SCOPE);
 
         if (configuredScope != null) {
-            Class<Annotation> scope = AccessController.doPrivileged(ReflectionHelper.classForNamePA(configuredScope));
+            Class<Annotation> scope = ReflectionHelper.classForName(configuredScope);
             if (scope == null) {
                 throw new IllegalStateException("Invalid scope from config: " + configuredScope);
             }

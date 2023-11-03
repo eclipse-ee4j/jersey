@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.ReflectPermission;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -36,6 +35,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
@@ -172,7 +172,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
     }
 
     private static ClassLoader _getContextClassLoader() {
-        return AccessController.doPrivileged(ReflectionHelper.getContextClassLoaderPA());
+        return ReflectionHelper.getContextClassLoader();
     }
 
     /**
@@ -551,7 +551,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
                 nextName = pending.next();
                 if (ignoreOnClassNotFound) {
                     try {
-                        AccessController.doPrivileged(ReflectionHelper.classForNameWithExceptionPEA(nextName, loader));
+                        ReflectionHelper.classForNameWithException(nextName, loader);
                     } catch (final ClassNotFoundException ex) {
                         handleClassNotFoundException();
                     } catch (final PrivilegedActionException pae) {
@@ -621,8 +621,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
             nextName = null;
             try {
 
-                final Class<T> tClass = AccessController.doPrivileged(
-                        ReflectionHelper.<T>classForNameWithExceptionPEA(cn, loader));
+                final Class<T> tClass = ReflectionHelper.<T>classForNameWithException(cn, loader);
 
                 if (LOGGER.isLoggable(Level.FINEST)) {
                     LOGGER.log(Level.FINEST, "Loading next class: " + tClass.getName());
@@ -687,8 +686,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
                 }
                 nextName = pending.next();
                 try {
-                    t = service.cast(AccessController.doPrivileged(
-                            ReflectionHelper.classForNameWithExceptionPEA(nextName, loader)).newInstance());
+                    t = service.cast(ReflectionHelper.classForNameWithException(nextName, loader).newInstance());
 
                 } catch (final InstantiationException ex) {
                     if (ignoreOnClassNotFound) {
@@ -814,11 +812,9 @@ public final class ServiceFinder<T> implements Iterable<T> {
         }
 
         private static void setInstance(final ServiceIteratorProvider sip) throws SecurityException {
-            final SecurityManager security = System.getSecurityManager();
-            if (security != null) {
-                final ReflectPermission rp = new ReflectPermission("suppressAccessChecks");
-                security.checkPermission(rp);
-            }
+            final ReflectPermission rp = new ReflectPermission("suppressAccessChecks");
+            ACDeprecator.checkPermission(rp);
+
             synchronized (sipLock) {
                 ServiceIteratorProvider.sip = sip;
             }

@@ -28,7 +28,6 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashSet;
@@ -64,6 +63,7 @@ import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
@@ -145,9 +145,9 @@ public class HttpUrlConnector implements Connector {
         // check if sun.net.http.allowRestrictedHeaders system property has been set and log the result
         // the property is being cached in the HttpURLConnection, so this is only informative - there might
         // already be some connection(s), that existed before the property was set/changed.
-        isRestrictedHeaderPropertySet = Boolean.valueOf(AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY, "false")
-        ));
+        isRestrictedHeaderPropertySet = Boolean.valueOf(
+                PropertiesHelper.getSystemPropertyNPA(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY, "false")
+        );
 
         LOGGER.config(isRestrictedHeaderPropertySet
                         ? LocalizationMessages.RESTRICTED_HEADER_PROPERTY_SETTING_TRUE(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY)
@@ -522,7 +522,7 @@ public class HttpUrlConnector implements Connector {
             httpURLConnection.setRequestMethod(method); // Check whether we are running on a buggy JRE
         } catch (final ProtocolException pe) {
             try {
-                AccessController
+                ACDeprecator
                         .doPrivileged(new PrivilegedExceptionAction<Object>() {
                             @Override
                             public Object run() throws NoSuchFieldException,
@@ -600,7 +600,7 @@ public class HttpUrlConnector implements Connector {
 
     @Override
     public String getName() {
-        return "HttpUrlConnection " + AccessController.doPrivileged(PropertiesHelper.getSystemProperty("java.version"));
+        return "HttpUrlConnection " + PropertiesHelper.getSystemPropertyNPA("java.version");
     }
 
     private static class SniSSLSocketFactory extends SSLSocketFactory {

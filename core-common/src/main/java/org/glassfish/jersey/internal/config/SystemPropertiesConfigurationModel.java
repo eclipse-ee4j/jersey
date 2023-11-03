@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,7 @@ package org.glassfish.jersey.internal.config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +34,7 @@ import javax.ws.rs.core.Feature;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
@@ -126,7 +125,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
 
         if (gotProperties.compareAndSet(false, true)) {
             try {
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperties())
+                PropertiesHelper.getSystemPropertiesNPA()
                         .forEach((k, v) -> properties.put(String.valueOf(k), v));
             } catch (SecurityException se) {
                 LOGGER.warning(LocalizationMessages.SYSTEM_PROPERTIES_WARNING());
@@ -139,11 +138,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
     private Map<String, Object> getExpectedSystemProperties() {
         final Map<String, Object> result = new HashMap<>();
         for (String propertyClass : getPropertyClassNames()) {
-            mapFieldsToProperties(result,
-                    AccessController.doPrivileged(
-                            ReflectionHelper.classForNamePA(propertyClass)
-                    )
-            );
+            mapFieldsToProperties(result, ReflectionHelper.classForName(propertyClass));
         }
 
         return  result;
@@ -154,9 +149,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
             return;
         }
 
-        final Field[] fields = AccessController.doPrivileged(
-                ReflectionHelper.getDeclaredFieldsPA(clazz)
-        );
+        final Field[] fields = ReflectionHelper.getDeclaredFields(clazz);
 
         for (final Field field : fields) {
             if (Modifier.isStatic(field.getModifiers()) && field.getType().isAssignableFrom(String.class)) {
@@ -172,7 +165,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
     }
 
     private static String getPropertyNameByField(Field field) {
-        return  AccessController.doPrivileged((PrivilegedAction<String>) () -> {
+        return  ACDeprecator.doPrivileged((PrivilegedAction<String>) () -> {
             try {
                 return (String) field.get(null);
             } catch (IllegalAccessException e) {
@@ -183,7 +176,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
     }
 
     private static String getSystemProperty(String name) {
-        return AccessController.doPrivileged(PropertiesHelper.getSystemProperty(name));
+        return PropertiesHelper.getSystemPropertyNPA(name);
     }
 
     @Override
@@ -193,7 +186,7 @@ public class SystemPropertiesConfigurationModel implements ExternalConfiguration
 
     @Override
     public Collection<String> getPropertyNames() {
-        return AccessController.doPrivileged(PropertiesHelper.getSystemProperties()).stringPropertyNames();
+        return PropertiesHelper.getSystemPropertiesNPA().stringPropertyNames();
     }
 
     @Override

@@ -255,7 +255,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
                 Class<?> factoryClass = null;
 
                 if (objectFactoryProperty instanceof String) {
-                    factoryClass = ReflectionHelper.classForNamePA((String) objectFactoryProperty).run();
+                    factoryClass = ReflectionHelper.classForName((String) objectFactoryProperty);
                 } else if (objectFactoryProperty instanceof Class<?>) {
                     factoryClass = (Class<?>) objectFactoryProperty;
                 }

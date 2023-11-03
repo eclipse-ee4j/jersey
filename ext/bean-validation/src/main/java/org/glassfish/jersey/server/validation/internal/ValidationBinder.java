@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -277,11 +276,8 @@ public final class ValidationBinder extends AbstractBinder {
 
         private boolean isCDIAvailable() {
             // Both CDI & Jersey CDI modules must be available
-            return AccessController.doPrivileged(
-                        ReflectionHelper.classForNamePA("javax.enterprise.inject.spi.BeanManager")) != null
-                   &&
-                   AccessController.doPrivileged(
-                        ReflectionHelper.classForNamePA("org.glassfish.jersey.ext.cdi1x.internal.CdiUtil")) != null;
+            return ReflectionHelper.classForName("javax.enterprise.inject.spi.BeanManager") != null
+                    && ReflectionHelper.classForName("org.glassfish.jersey.ext.cdi1x.internal.CdiUtil") != null;
         }
 
         /**

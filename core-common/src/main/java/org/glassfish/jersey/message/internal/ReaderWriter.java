@@ -25,7 +25,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +65,7 @@ public final class ReaderWriter {
 
     private static int getBufferSize() {
         // TODO should we unify this buffer size and CommittingOutputStream buffer size (controlled by CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER)?
-        final String value = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(MessageProperties.IO_BUFFER_SIZE));
+        final String value = PropertiesHelper.getSystemPropertyNPA(MessageProperties.IO_BUFFER_SIZE);
         if (value != null) {
             try {
                 final int i = Integer.parseInt(value);

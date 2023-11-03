@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.security.AccessController;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -664,8 +663,8 @@ public final class SslConfigurator {
         if (_keyStore != null) {
             String kmfAlgorithm = keyManagerFactoryAlgorithm;
             if (kmfAlgorithm == null) {
-                kmfAlgorithm = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(
-                        KEY_MANAGER_FACTORY_ALGORITHM, KeyManagerFactory.getDefaultAlgorithm()));
+                kmfAlgorithm = PropertiesHelper.getSystemPropertyNPA(
+                        KEY_MANAGER_FACTORY_ALGORITHM, KeyManagerFactory.getDefaultAlgorithm());
             }
             try {
                 if (keyManagerFactoryProvider != null) {
@@ -739,8 +738,8 @@ public final class SslConfigurator {
         if (_trustStore != null) {
             String tmfAlgorithm = trustManagerFactoryAlgorithm;
             if (tmfAlgorithm == null) {
-                tmfAlgorithm = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(
-                        TRUST_MANAGER_FACTORY_ALGORITHM, TrustManagerFactory.getDefaultAlgorithm()));
+                tmfAlgorithm = PropertiesHelper.getSystemPropertyNPA(
+                        TRUST_MANAGER_FACTORY_ALGORITHM, TrustManagerFactory.getDefaultAlgorithm());
             }
 
             try {
@@ -825,37 +824,31 @@ public final class SslConfigurator {
      * @return updated SSL configurator instance.
      */
     public SslConfigurator retrieve() {
-        trustStoreProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_STORE_PROVIDER));
-        keyStoreProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_STORE_PROVIDER));
+        trustStoreProvider = PropertiesHelper.getSystemPropertyNPA(TRUST_STORE_PROVIDER);
+        keyStoreProvider = PropertiesHelper.getSystemPropertyNPA(KEY_STORE_PROVIDER);
 
-        trustManagerFactoryProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_MANAGER_FACTORY_PROVIDER));
-        keyManagerFactoryProvider = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_MANAGER_FACTORY_PROVIDER));
+        trustManagerFactoryProvider = PropertiesHelper.getSystemPropertyNPA(TRUST_MANAGER_FACTORY_PROVIDER);
+        keyManagerFactoryProvider = PropertiesHelper.getSystemPropertyNPA(KEY_MANAGER_FACTORY_PROVIDER);
 
-        trustStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_TYPE));
-        keyStoreType = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_TYPE));
+        trustStoreType = PropertiesHelper.getSystemPropertyNPA(TRUST_STORE_TYPE);
+        keyStoreType = PropertiesHelper.getSystemPropertyNPA(KEY_STORE_TYPE);
 
-        final String trustStorePassword = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(TRUST_STORE_PASSWORD));
+        final String trustStorePassword = PropertiesHelper.getSystemPropertyNPA(TRUST_STORE_PASSWORD);
         if (trustStorePassword != null) {
             trustStorePass = trustStorePassword.toCharArray();
         } else {
             trustStorePass = null;
         }
 
-        final String keyStorePassword = AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(KEY_STORE_PASSWORD));
+        final String keyStorePassword = PropertiesHelper.getSystemPropertyNPA(KEY_STORE_PASSWORD);
         if (keyStorePassword != null) {
             keyStorePass = keyStorePassword.toCharArray();
         } else {
             keyStorePass = null;
         }
 
-        trustStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TRUST_STORE_FILE));
-        keyStoreFile = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(KEY_STORE_FILE));
+        trustStoreFile = PropertiesHelper.getSystemPropertyNPA(TRUST_STORE_FILE);
+        keyStoreFile = PropertiesHelper.getSystemPropertyNPA(KEY_STORE_FILE);
 
         trustStoreBytes = null;
         keyStoreBytes = null;

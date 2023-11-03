@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -109,7 +109,7 @@ public class JaxbTest {
      * @return true if all tests can be run, false if some tests shall be excluded due to JRE bug
      */
     private static boolean isJavaVersionSupported() {
-        final String javaVersion = PropertiesHelper.getSystemProperty("java.version").run();
+        final String javaVersion = PropertiesHelper.getSystemPropertyNPA("java.version");
         if (javaVersion != null) {
             int pos =  javaVersion.lastIndexOf("_");
             if (pos > -1) {

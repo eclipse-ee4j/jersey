@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,7 +15,6 @@
  */
 package org.glassfish.jersey.server.model.internal;
 
-import java.security.AccessController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,8 +33,7 @@ public final class SseTypeResolver {
 
         set.add(org.glassfish.jersey.internal.jsr166.Flow.Subscriber.class);
         set.add(javax.ws.rs.sse.SseEventSink.class);
-        Class<?> clazz = AccessController
-                .doPrivileged(ReflectionHelper.classForNamePA("java.util.concurrent.Flow$Subscriber", null));
+        Class<?> clazz = ReflectionHelper.classForName("java.util.concurrent.Flow$Subscriber", null);
 
         if (clazz != null) {
             set.add(clazz);

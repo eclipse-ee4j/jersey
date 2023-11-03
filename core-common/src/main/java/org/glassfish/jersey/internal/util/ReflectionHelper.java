@@ -34,8 +34,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URL;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +56,7 @@ import javax.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.OsgiRegistry;
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
@@ -209,10 +210,29 @@ public final class ReflectionHelper {
      * @param name class name.
      * @return privileged action to obtain desired Class.
      * The action could return {@code null} if the class cannot be found.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static <T> PrivilegedAction<Class<T>> classForNamePA(final String name) {
         return classForNamePA(name, getContextClassLoader());
+    }
+
+    /**
+     * Get the Class from given class name.
+     * <p>
+     * The context class loader will be utilized if accessible and non-null.
+     * Otherwise the defining class loader of this class will
+     * be utilized.
+     * </p>
+     *
+     * @param <T>  class type.
+     * @param name class name.
+     * @return the desired class or {@code null} if the class cannot be found.
+     * @since 2.42
+     */
+    public static <T> Class<T> classForName(final String name) {
+        return classForName(name, getContextClassLoader());
     }
 
     /**
@@ -225,35 +245,56 @@ public final class ReflectionHelper {
      * @param cl   class loader to use, if {@code null} then the defining class loader
      *             of this class will be utilized.
      * @return privileged action to obtain desired Class. The action could return {@code null} if the class cannot be found.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> PrivilegedAction<Class<T>> classForNamePA(final String name, final ClassLoader cl) {
         return new PrivilegedAction<Class<T>>() {
             @Override
             public Class<T> run() {
-                if (cl != null) {
-                    try {
-                        return (Class<T>) Class.forName(name, false, cl);
-                    } catch (final ClassNotFoundException ex) {
-                        if (LOGGER.isLoggable(Level.FINER)) {
-                            LOGGER.log(Level.FINER,
-                                    "Unable to load class " + name + " using the supplied class loader "
-                                            + cl.getClass().getName() + ".", ex);
-                        }
-                    }
-                }
-                try {
-                    return (Class<T>) Class.forName(name);
-                } catch (final ClassNotFoundException ex) {
-                    if (LOGGER.isLoggable(Level.FINER)) {
-                        LOGGER.log(Level.FINER, "Unable to load class " + name + " using the current class loader.", ex);
-                    }
-                }
-
-                return null;
+                return classForNameNPA(name, cl);
             }
         };
+    }
+
+    /**
+     * Get the Class from given class name.
+     *
+     * @param <T>  class type.
+     * @param name class name.
+     * @param cl   class loader to use, if {@code null} then the defining class loader
+     *             of this class will be utilized.
+     * @return the desired class or {@code null} if the class cannot be found.
+     * @since 2.42
+     */
+    @SuppressWarnings({"unchecked", "deprecation"})
+    public static <T> Class<T> classForName(final String name, final ClassLoader cl) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(classForNamePA(name, cl)) : classForNameNPA(name, cl);
+    }
+
+    private static <T> Class<T> classForNameNPA(final String name, final ClassLoader cl) {
+        if (cl != null) {
+            try {
+                return (Class<T>) Class.forName(name, false, cl);
+            } catch (final ClassNotFoundException ex) {
+                if (LOGGER.isLoggable(Level.FINER)) {
+                    LOGGER.log(Level.FINER,
+                            "Unable to load class " + name + " using the supplied class loader "
+                                    + cl.getClass().getName() + ".", ex);
+                }
+            }
+        }
+        try {
+            return (Class<T>) Class.forName(name);
+        } catch (final ClassNotFoundException ex) {
+            if (LOGGER.isLoggable(Level.FINER)) {
+                LOGGER.log(Level.FINER, "Unable to load class " + name + " using the current class loader.", ex);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -263,13 +304,49 @@ public final class ReflectionHelper {
      *
      * @param clazz class for which to get class loader.
      * @return privileged action to obtain class loader for the {@code clazz} class.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<ClassLoader> getClassLoaderPA(final Class<?> clazz) {
         return new PrivilegedAction<ClassLoader>() {
             @Override
             public ClassLoader run() {
                 return clazz.getClassLoader();
+            }
+        };
+    }
+
+    /**
+     * Get class loader for given class.
+     * If run using security manager, the returned classloader is obtained
+     * within a doPrivileged block.
+     *
+     * @param clazz class for which to get class loader.
+     * @return the class loader for the {@code clazz} class.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static ClassLoader getClassLoader(final Class<?> clazz) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getClassLoaderPA(clazz)) : clazz.getClassLoader();
+    }
+
+    /**
+     * Get privileged action to obtain fields declared on given class.
+     * If run using security manager, the returned privileged action
+     * must be invoked within a doPrivileged block.
+     *
+     * @param clazz class for which to get the declared fields.
+     * @return privileged action to obtain fields declared on the {@code clazz} class.
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
+     */
+    @Deprecated
+    public static PrivilegedAction<Field[]> getDeclaredFieldsPA(final Class<?> clazz) {
+        return new PrivilegedAction<Field[]>() {
+            @Override
+            public Field[] run() {
+                return clazz.getDeclaredFields();
             }
         };
     }
@@ -281,15 +358,11 @@ public final class ReflectionHelper {
      *
      * @param clazz class for which to get the declared fields.
      * @return privileged action to obtain fields declared on the {@code clazz} class.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @since 2.42
      */
-    public static PrivilegedAction<Field[]> getDeclaredFieldsPA(final Class<?> clazz) {
-        return new PrivilegedAction<Field[]>() {
-            @Override
-            public Field[] run() {
-                return clazz.getDeclaredFields();
-            }
-        };
+    @SuppressWarnings("deprecation")
+    public static Field[] getDeclaredFields(final Class<?> clazz) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getDeclaredFieldsPA(clazz)) : clazz.getDeclaredFields();
     }
 
     /**
@@ -299,8 +372,10 @@ public final class ReflectionHelper {
      *
      * @param clazz class for which to get fields.
      * @return privileged action to obtain fields declared on the {@code clazz} class.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Field[]> getAllFieldsPA(final Class<?> clazz) {
         return new PrivilegedAction<Field[]>() {
             @Override
@@ -320,14 +395,29 @@ public final class ReflectionHelper {
     }
 
     /**
+     * Get the fields on given class, recursively through inheritance hierarchy.
+     * If run using security manager, the inheritance check is invoked within a doPrivileged block.
+     *
+     * @param clazz class for which to get fields.
+     * @return the fields declared on the {@code clazz} class.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static Field[] getAllFields(final Class<?> clazz) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getAllFieldsPA(clazz)) : getAllFieldsPA(clazz).run();
+    }
+
+    /**
      * Get privileged action to obtain methods declared on given class.
      * If run using security manager, the returned privileged action
      * must be invoked within a doPrivileged block.
      *
      * @param clazz class for which to get the declared methods.
      * @return privileged action to obtain methods declared on the {@code clazz} class.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Collection<? extends Method>> getDeclaredMethodsPA(final Class<?> clazz) {
         return new PrivilegedAction<Collection<? extends Method>>() {
             @Override
@@ -338,29 +428,68 @@ public final class ReflectionHelper {
     }
 
     /**
-     * Get privileged exception action to obtain Class from given class name.
-     * If run using security manager, the returned privileged exception action
-     * must be invoked within a doPrivileged block.
-     * <p/>
-     * The actual context class loader will be utilized if accessible and non-null.
-     * Otherwise the defining class loader of the calling class will be utilized.
+     * Get the methods declared on given class.
+     * If run using security manager, the returned methods are discovered within a doPrivileged block.
      *
-     * @param <T>  class type.
-     * @param name class name.
-     * @return privileged exception action to obtain the Class.
-     * The action could throw {@link ClassNotFoundException} or return {@code null} if the class cannot be found.
-     * @throws ClassNotFoundException in case the class cannot be loaded with the context class loader.
-     * @see AccessController#doPrivileged(java.security.PrivilegedExceptionAction)
+     * @param clazz class for which to get the declared methods.
+     * @return the methods declared on the {@code clazz} class.
+     * @since 2.42
      */
-    public static <T> PrivilegedExceptionAction<Class<T>> classForNameWithExceptionPEA(final String name)
-            throws ClassNotFoundException {
-        return classForNameWithExceptionPEA(name, getContextClassLoader());
+    @SuppressWarnings("deprecation")
+    public static Collection<? extends Method> getDeclaredMethods(final Class<?> clazz) {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(getDeclaredMethodsPA(clazz))
+                : Arrays.asList(clazz.getDeclaredMethods());
     }
 
     /**
      * Get privileged exception action to obtain Class from given class name.
      * If run using security manager, the returned privileged exception action
      * must be invoked within a doPrivileged block.
+     * <p/>
+     * The actual context class loader will be utilized if accessible and non-null.
+     * Otherwise, the defining class loader of the calling class will be utilized.
+     *
+     * @param <T>  class type.
+     * @param name class name.
+     * @return privileged exception action to obtain the Class.
+     * The action could throw {@link ClassNotFoundException} or return {@code null} if the class cannot be found.
+     * @throws ClassNotFoundException in case the class cannot be loaded with the context class loader.
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedExceptionAction)
+     * @deprecated
+     */
+    @Deprecated
+    public static <T> PrivilegedExceptionAction<Class<T>> classForNameWithExceptionPEA(final String name)
+            throws ClassNotFoundException {
+        return classForNameWithExceptionPEA(name, getContextClassLoader());
+    }
+
+    /**
+     * Get the Class from given class name.
+     * If run using security manager, the method is invoked within a doPrivileged block.
+     * <p/>
+     * The actual context class loader will be utilized if accessible and non-null.
+     * Otherwise, the defining class loader of the calling class will be utilized.
+     *
+     * @param <T>  class type.
+     * @param name class name.
+     * @return the Class. The action could throw {@link ClassNotFoundException} or return {@code null} if the class cannot be found.
+     * @throws ClassNotFoundException in case the class cannot be loaded with the context class loader.
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedExceptionAction)
+     * @since 2.42
+     */
+    public static <T> Class<T> classForNameWithException(final String name)
+            throws ClassNotFoundException, PrivilegedActionException {
+        return classForNameWithException(name, getContextClassLoader());
+    }
+
+    /**
+     * Get privileged exception action to obtain Class from given class name.
+     * If run using security manager, the returned privileged exception action
+     * must be invoked within a doPrivileged block.
+     * <p/>
+     * The actual context class loader will be utilized if accessible and non-null.
+     * Otherwise, the defining class loader of the calling class will be utilized.
      *
      * @param <T>  class type.
      * @param name class name.
@@ -369,24 +498,48 @@ public final class ReflectionHelper {
      * @return privileged exception action to obtain the Class. If the class cannot be found, the action returns {@code null},
      * or throws {@link ClassNotFoundException} in case the class loader has been specified.
      * @throws ClassNotFoundException in case the class cannot be loaded with the specified class loader.
-     * @see AccessController#doPrivileged(java.security.PrivilegedExceptionAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedExceptionAction)
+     * @deprecated
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> PrivilegedExceptionAction<Class<T>> classForNameWithExceptionPEA(final String name, final ClassLoader cl)
             throws ClassNotFoundException {
-        return new PrivilegedExceptionAction<Class<T>>() {
-            @Override
-            public Class<T> run() throws ClassNotFoundException {
-                if (cl != null) {
-                    try {
-                        return (Class<T>) Class.forName(name, false, cl);
-                    } catch (final ClassNotFoundException ex) {
-                        // ignored on purpose
-                    }
+        return () -> classForNameWithExceptionNPEA(name, cl);
+    }
+
+    /**
+     * Get the Class from given class name.
+     * If run using security manager, the returned privileged exception action
+     * must be invoked within a doPrivileged block.
+     *
+     * @param <T>  class type.
+     * @param name class name.
+     * @param cl   class loader to use, if {@code null} then the defining class loader
+     *             of the calling class will be utilized.
+     * @return the Class. If the class cannot be found, the action returns {@code null},
+     * or throws {@link ClassNotFoundException} in case the class loader has been specified.
+     * @throws ClassNotFoundException in case the class cannot be loaded with the specified class loader.
+     * @since 2.41
+     */
+    @SuppressWarnings({"unchecked", "deprecation"})
+    public static <T> Class<T> classForNameWithException(final String name, final ClassLoader cl)
+            throws ClassNotFoundException, PrivilegedActionException {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(classForNameWithExceptionPEA(name, cl))
+                : classForNameWithExceptionNPEA(name, cl);
+    }
+
+    private static <T> Class<T> classForNameWithExceptionNPEA(final String name, final ClassLoader cl)
+        throws ClassNotFoundException {
+            if (cl != null) {
+                try {
+                    return (Class<T>) Class.forName(name, false, cl);
+                } catch (final ClassNotFoundException ex) {
+                    // ignored on purpose
                 }
-                return (Class<T>) Class.forName(name);
             }
-        };
+            return (Class<T>) Class.forName(name);
     }
 
     /**
@@ -396,8 +549,10 @@ public final class ReflectionHelper {
      *
      * @return privileged action to obtain the actual context class loader. The action could return {@code null}
      * if the context class loader has not been set.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<ClassLoader> getContextClassLoaderPA() {
         return new PrivilegedAction<ClassLoader>() {
             @Override
@@ -412,8 +567,11 @@ public final class ReflectionHelper {
      *
      * @return the context class loader, otherwise {@code null} if not set.
      */
-    private static ClassLoader getContextClassLoader() {
-        return AccessController.doPrivileged(getContextClassLoaderPA());
+    @SuppressWarnings("deprecation")
+    public static ClassLoader getContextClassLoader() {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(getContextClassLoaderPA())
+                : Thread.currentThread().getContextClassLoader();
     }
 
     /**
@@ -423,8 +581,10 @@ public final class ReflectionHelper {
      *
      * @param classLoader context class loader to be set.
      * @return privileged action to set context class loader.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction setContextClassLoaderPA(final ClassLoader classLoader) {
         return new PrivilegedAction() {
             @Override
@@ -436,14 +596,31 @@ public final class ReflectionHelper {
     }
 
     /**
+     * Set the actual context class loader.
+     * If run using security manager, the classloader is set within a doPrivileged block.
+     *
+     * @param classLoader context class loader to be set.
+     */
+    @SuppressWarnings("deprecation")
+    public static void setContextClassLoader(final ClassLoader classLoader) {
+        if (ACDeprecator.isSM()) {
+            ACDeprecator.doPrivilegedSM(setContextClassLoaderPA(classLoader));
+        } else {
+            Thread.currentThread().setContextClassLoader(classLoader);
+        }
+    }
+
+    /**
      * Get privileged action to set a method to be accessible.
      * If run using security manager, the returned privileged action
      * must be invoked within a doPrivileged block.
      *
      * @param m method to be set as accessible.
      * @return privileged action to set the method to be accessible.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction setAccessibleMethodPA(final Method m) {
         if (isPublic(m)) {
             return NoOpPrivilegedACTION;
@@ -754,11 +931,28 @@ public final class ReflectionHelper {
      * @param clazz class to obtain the method.
      * @return privileged action to get the method.
      * The action could return {@code null} if the method is not present.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static PrivilegedAction<Method> getValueOfStringMethodPA(final Class<?> clazz) {
         return getStringToObjectMethodPA(clazz, "valueOf");
+    }
+
+    /**
+     * Get the static valueOf(String) method.
+     * If run using security manager, the method is obtained within a doPrivileged block.
+     *
+     * @param clazz class to obtain the method.
+     * @return the method or {@code null} if the method is not present.
+     * @since 2.42
+     */
+    @SuppressWarnings("unchecked")
+    public static Method getValueOfStringMethod(final Class<?> clazz) {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(getStringToObjectMethodPA(clazz, "valueOf"))
+                : getStringToObjectMethodNPA(clazz, "valueOf");
     }
 
     /**
@@ -769,11 +963,28 @@ public final class ReflectionHelper {
      * @param clazz class for which to get the method.
      * @return privileged action to obtain the method.
      * The action could return {@code null} if the method is not present.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static PrivilegedAction<Method> getFromStringStringMethodPA(final Class<?> clazz) {
         return getStringToObjectMethodPA(clazz, "fromString");
+    }
+
+    /**
+     * Get the static fromString(String) method.
+     * If run using security manager, the method is obtained within a doPrivileged block.
+     *
+     * @param clazz class for which to get the method.
+     * @return the method or {@code null} if the method is not present.
+     * @since 2.42
+     */
+    @SuppressWarnings("unchecked")
+    public static Method getFromStringStringMethod(final Class<?> clazz) {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(getStringToObjectMethodPA(clazz, "fromString"))
+                : getStringToObjectMethodNPA(clazz, "fromString");
     }
 
     /**
@@ -785,23 +996,22 @@ public final class ReflectionHelper {
      * @param methodName name of the method to be obtained.
      * @return privileged action to obtain the method.
      * The action could return {@code null} if the method is not present.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
      */
     private static PrivilegedAction<Method> getStringToObjectMethodPA(final Class<?> clazz, final String methodName) {
-        return new PrivilegedAction<Method>() {
-            @Override
-            public Method run() {
-                try {
-                    final Method method = clazz.getDeclaredMethod(methodName, String.class);
-                    if (Modifier.isStatic(method.getModifiers()) && method.getReturnType() == clazz) {
-                        return method;
-                    }
-                    return null;
-                } catch (final NoSuchMethodException nsme) {
-                    return null;
-                }
+        return () -> getStringToObjectMethodNPA(clazz, methodName);
+    }
+
+    private static Method getStringToObjectMethodNPA(final Class<?> clazz, final String methodName) {
+        try {
+            final Method method = clazz.getDeclaredMethod(methodName, String.class);
+            if (Modifier.isStatic(method.getModifiers()) && method.getReturnType() == clazz) {
+                return method;
             }
-        };
+            return null;
+        } catch (final NoSuchMethodException nsme) {
+            return null;
+        }
     }
 
     /**
@@ -812,21 +1022,35 @@ public final class ReflectionHelper {
      * @param clazz The class for which to obtain the constructor.
      * @return privileged action to obtain the constructor.
      * The action could return {@code null} if the constructor is not present.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Constructor> getStringConstructorPA(final Class<?> clazz) {
-        return new PrivilegedAction<Constructor>() {
-            @Override
-            public Constructor run() {
-                try {
-                    return clazz.getConstructor(String.class);
-                } catch (final SecurityException e) {
-                    throw e;
-                } catch (final Exception e) {
-                    return null;
-                }
-            }
-        };
+        return () -> getStringConstructorNPA(clazz);
+    }
+
+    /**
+     * Get the constructor that has a single parameter of String.
+     * If run using security manager, it is obtained within a doPrivileged block.
+     *
+     * @param clazz The class for which to obtain the constructor.
+     * @return the constructor or {@code null} if the constructor is not present.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static Constructor getStringConstructor(final Class<?> clazz) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getStringConstructorPA(clazz)) : getStringConstructorNPA(clazz);
+    }
+
+    private static Constructor getStringConstructorNPA(final Class<?> clazz) {
+        try {
+            return clazz.getConstructor(String.class);
+        } catch (final SecurityException e) {
+            throw e;
+        } catch (final Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -836,8 +1060,10 @@ public final class ReflectionHelper {
      *
      * @param clazz The class for which to obtain the constructors.
      * @return privileged action to obtain the array of constructors.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Constructor<?>[]> getDeclaredConstructorsPA(final Class<?> clazz) {
         return new PrivilegedAction<Constructor<?>[]>() {
             @Override
@@ -848,6 +1074,21 @@ public final class ReflectionHelper {
     }
 
     /**
+     * Get the declared constructors of given class.
+     * If run using security manager, the constructor is obtained within a doPrivileged block.
+     *
+     * @param clazz The class for which to obtain the constructors.
+     * @return privileged action to obtain the array of constructors.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static Constructor<?>[] getDeclaredConstructors(final Class<?> clazz) {
+        return ACDeprecator.isSM()
+                ? ACDeprecator.doPrivilegedSM(getDeclaredConstructorsPA(clazz))
+                : clazz.getDeclaredConstructors();
+    }
+
+    /**
      * Get privileged action to obtain declared constructor of given class with given parameters.
      * If run using security manager, the returned privileged action must be invoked within a doPrivileged block.
      *
@@ -855,8 +1096,10 @@ public final class ReflectionHelper {
      * @param params constructor parameters.
      * @return privileged action to obtain the constructor or {@code null}, when constructor with given parameters
      * is not found.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Constructor<?>> getDeclaredConstructorPA(final Class<?> clazz, final Class<?>... params) {
         return new PrivilegedAction<Constructor<?>>() {
             @Override
@@ -1343,28 +1586,55 @@ public final class ReflectionHelper {
      * @param c the class to search for a public method
      * @param m the method to find
      * @return privileged action to return public method found.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Method> findMethodOnClassPA(final Class<?> c, final Method m) {
-        return new PrivilegedAction<Method>() {
-            @Override
-            public Method run() {
-                try {
-                    return c.getMethod(m.getName(), m.getParameterTypes());
-                } catch (final NoSuchMethodException nsme) {
-                    for (final Method _m : c.getMethods()) {
-                        if (_m.getName().equals(m.getName())
-                                && _m.getParameterTypes().length == m.getParameterTypes().length) {
-                            if (compareParameterTypes(m.getGenericParameterTypes(),
-                                    _m.getGenericParameterTypes())) {
-                                return _m;
-                            }
-                        }
+        return () -> findMethodOnClassNPA(c, m);
+    }
+
+    /**
+     * Get a method on a class given an existing method.
+     * If run using security manager, the reflection used to find the method is
+     * invoked within a doPrivileged block.
+     * <p/>
+     * If there exists a public method on the class that has the same name
+     * and parameters as the existing method then that public method is
+     * returned from the action.
+     * <p/>
+     * Otherwise, if there exists a public method on the class that has
+     * the same name and the same number of parameters as the existing method,
+     * and each generic parameter type, in order, of the public method is equal
+     * to the generic parameter type, in the same order, of the existing method
+     * or is an instance of {@link TypeVariable} then that public method is
+     * returned from the action.
+     *
+     * @param c the class to search for a public method
+     * @param m the method to find
+     * @return public method found.
+     * @since 2.42
+     */
+    @SuppressWarnings("deprecation")
+    public static Method findMethodOnClass(final Class<?> c, final Method m) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(findMethodOnClassPA(c, m)) : findMethodOnClassNPA(c, m);
+    }
+
+    private static Method findMethodOnClassNPA(final Class<?> c, final Method m) {
+        try {
+            return c.getMethod(m.getName(), m.getParameterTypes());
+        } catch (final NoSuchMethodException nsme) {
+            for (final Method _m : c.getMethods()) {
+                if (_m.getName().equals(m.getName())
+                        && _m.getParameterTypes().length == m.getParameterTypes().length) {
+                    if (compareParameterTypes(m.getGenericParameterTypes(),
+                            _m.getGenericParameterTypes())) {
+                        return _m;
                     }
-                    return null;
                 }
             }
-        };
+            return null;
+        }
     }
 
     /**
@@ -1393,8 +1663,10 @@ public final class ReflectionHelper {
      * @param c class for which the methods should be returned.
      * @return privileged action to obtain an array of {@code Method} objects representing the
      * public methods of the class.
-     * @see AccessController#doPrivileged(java.security.PrivilegedAction)
+     * @see ACDeprecator#doPrivileged(java.security.PrivilegedAction)
+     * @deprecated
      */
+    @Deprecated
     public static PrivilegedAction<Method[]> getMethodsPA(final Class<?> c) {
         return new PrivilegedAction<Method[]>() {
             @Override
@@ -1404,8 +1676,36 @@ public final class ReflectionHelper {
         };
     }
 
-    private static Method[] _getMethods(final Class<?> clazz) {
-        return AccessController.doPrivileged(getMethodsPA(clazz));
+    /**
+     * Get an array containing {@link Method} objects reflecting all
+     * the public <em>member</em> methods of the supplied class or interface
+     * object, including those declared by the class or interface and those
+     * inherited from superclasses and superinterfaces.
+     * <p/>
+     * Array classes return all the (public) member methods
+     * inherited from the {@code Object} class.  The elements in the array
+     * returned are not sorted and are not in any particular order.  This
+     * method returns action providing an array of length 0 if this {@code Class} object
+     * represents a class or interface that has no public member methods, or if
+     * this {@code Class} object represents a primitive type or void.
+     * <p/>
+     * <p>
+     * The class initialization method {@code <clinit>} is not
+     * included in the returned array. If the class declares multiple public
+     * member methods with the same parameter types, they are all included in
+     * the returned array.
+     * </p>
+     * <p>
+     * See <em>The Java Language Specification</em>, sections 8.2 and 8.4.
+     * </p>
+     *
+     * @param c class for which the methods should be returned.
+     * @return an array of {@code Method} objects representing the
+     * public methods of the class.
+     * @since 2.42
+     */
+    public static Method[] getMethods(final Class<?> c) {
+        return ACDeprecator.isSM() ? ACDeprecator.doPrivilegedSM(getMethodsPA(c)) : c.getMethods();
     }
 
     /**
@@ -1416,7 +1716,7 @@ public final class ReflectionHelper {
      * @return method that overrides the given method or the given method itself if a better alternative cannot be found.
      */
     public static Method findOverridingMethodOnClass(final Class<?> clazz, final Method method) {
-        for (final Method _method : _getMethods(clazz)) {
+        for (final Method _method : getMethods(clazz)) {
             if (!_method.isBridge()
                     && !Modifier.isAbstract(_method.getModifiers())
                     && _method.getName().equals(method.getName())
@@ -1487,8 +1787,7 @@ public final class ReflectionHelper {
         return true;
     }
 
-    private static final Class<?> bundleReferenceClass = AccessController.doPrivileged(
-            classForNamePA("org.osgi.framework.BundleReference", null));
+    private static final Class<?> bundleReferenceClass = classForName("org.osgi.framework.BundleReference", null);
     private static final LazyValue<Object> osgiInstance = Values.lazy((Value<Object>) () -> {
         try {
             if (bundleReferenceClass != null) {
@@ -1585,7 +1884,7 @@ public final class ReflectionHelper {
      * Returns true iff JAX-B API is available on classpath.
      */
     public static boolean isJaxbAvailable() {
-        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.bind.JAXBException"));
+        final Class<?> aClass = ReflectionHelper.classForName("javax.xml.bind.JAXBException");
         return aClass != null;
     }
 
@@ -1593,7 +1892,7 @@ public final class ReflectionHelper {
      * Returns true iff javax.xml.transform package is available on classpath.
      */
     public static boolean isXmlTransformAvailable() {
-        final Class<?> aClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.xml.transform.Source"));
+        final Class<?> aClass = ReflectionHelper.classForName("javax.xml.transform.Source");
         return aClass != null;
     }
 }

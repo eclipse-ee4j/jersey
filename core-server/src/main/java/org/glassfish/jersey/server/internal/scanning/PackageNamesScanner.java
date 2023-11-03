@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,6 @@ import java.lang.reflect.ReflectPermission;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.AccessController;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -85,7 +84,7 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
      *                  will be scanned.
      */
     public PackageNamesScanner(final String[] packages, final boolean recursive) {
-        this(AccessController.doPrivileged(ReflectionHelper.getContextClassLoaderPA()),
+        this(ReflectionHelper.getContextClassLoader(),
                 Tokenizer.tokenize(packages, Tokenizer.COMMON_DELIMITERS), recursive);
     }
 

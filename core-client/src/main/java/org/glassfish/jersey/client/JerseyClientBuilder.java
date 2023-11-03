@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.client;
 
-import java.security.AccessController;
 import java.security.KeyStore;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -174,8 +173,7 @@ public class JerseyClientBuilder extends ClientBuilder {
         final Object connectorClass = config.getProperty(ClientProperties.CONNECTOR_PROVIDER);
         if (connectorClass != null) {
             if (String.class.isInstance(connectorClass)) {
-                Class<? extends ConnectorProvider> clazz
-                        = AccessController.doPrivileged(ReflectionHelper.classForNamePA((String) connectorClass));
+                Class<? extends ConnectorProvider> clazz = ReflectionHelper.classForName((String) connectorClass);
                 final ConnectorProvider connectorProvider = new NonInjectionManager().justCreate(clazz);
                 config.connectorProvider(connectorProvider);
             } else {

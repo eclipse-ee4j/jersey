@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package org.glassfish.jersey.server.wadl.internal;
 
 import java.net.URI;
-import java.security.AccessController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,7 +104,7 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
     public static JAXBContext getJAXBContextFromWadlGenerator(WadlGenerator wadlGenerator) throws JAXBException {
         JAXBContext jaxbContextCandidate = null;
 
-        final ClassLoader contextClassLoader = AccessController.doPrivileged(ReflectionHelper.getContextClassLoaderPA());
+        final ClassLoader contextClassLoader = ReflectionHelper.getContextClassLoader();
         try {
             // Nasty ClassLoader magic. JAXB-API has some strange limitation about what class loader can
             // be used in OSGi environment - it must be same as context ClassLoader. Following code just
@@ -113,10 +112,9 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
             // see JERSEY-1818
             // see JSR222-46
 
-            final ClassLoader jerseyModuleClassLoader =
-                    AccessController.doPrivileged(ReflectionHelper.getClassLoaderPA(wadlGenerator.getClass()));
+            final ClassLoader jerseyModuleClassLoader = ReflectionHelper.getClassLoader(wadlGenerator.getClass());
 
-            AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(jerseyModuleClassLoader));
+            ReflectionHelper.setContextClassLoader(jerseyModuleClassLoader);
 
             jaxbContextCandidate = JAXBContext.newInstance(wadlGenerator.getRequiredJaxbContextPath(), jerseyModuleClassLoader);
 
@@ -129,7 +127,7 @@ public final class WadlApplicationContextImpl implements WadlApplicationContext 
                throw ex;
             }
         } finally {
-            AccessController.doPrivileged(ReflectionHelper.setContextClassLoaderPA(contextClassLoader));
+            ReflectionHelper.setContextClassLoader(contextClassLoader);
         }
 
         return jaxbContextCandidate;

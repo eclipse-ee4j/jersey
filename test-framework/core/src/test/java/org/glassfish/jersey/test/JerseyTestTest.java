@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package org.glassfish.jersey.test;
 
 import java.net.URI;
-import java.security.AccessController;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -114,8 +113,8 @@ public class JerseyTestTest {
     public void testThatDefaultContainerPortIsUsed() {
         MyJerseyTest myJerseyTest = new MyJerseyTest();
 
-        String portValue = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(TestProperties.CONTAINER_PORT,
-                String.valueOf(TestProperties.DEFAULT_CONTAINER_PORT)));
+        String portValue = PropertiesHelper.getSystemPropertyNPA(TestProperties.CONTAINER_PORT,
+                String.valueOf(TestProperties.DEFAULT_CONTAINER_PORT));
 
         assertEquals(Integer.valueOf(portValue).intValue(), myJerseyTest.getPort());
     }

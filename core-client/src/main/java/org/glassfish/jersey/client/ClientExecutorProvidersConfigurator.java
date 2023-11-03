@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package org.glassfish.jersey.client;
 
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -141,8 +140,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
         // Get the default ManagedExecutorService, if available
         try {
             // Android and some other environments don't have InitialContext class available.
-            final Class<?> aClass =
-                    AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.naming.InitialContext"));
+            final Class<?> aClass = ReflectionHelper.classForName("javax.naming.InitialContext");
 
             final Object initialContext = aClass.newInstance();
 
@@ -163,8 +161,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
     private ScheduledExecutorService lookupManagedScheduledExecutorService() {
         try {
             // Android and some other environments don't have InitialContext class available.
-            final Class<?> aClass =
-                    AccessController.doPrivileged(ReflectionHelper.classForNamePA("javax.naming.InitialContext"));
+            final Class<?> aClass = ReflectionHelper.classForName("javax.naming.InitialContext");
             final Object initialContext = aClass.newInstance();
 
             final Method lookupMethod = aClass.getMethod("lookup", String.class);

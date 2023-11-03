@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.collection.LazyUnsafeValue;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
@@ -26,7 +27,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
@@ -39,7 +39,7 @@ final class ReflectionUtil {
     }
 
     static <T> T createInstance(Class<T> tClass) {
-        return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+        return ACDeprecator.doPrivileged((PrivilegedAction<T>) () -> {
             try {
                 return tClass.getConstructor().newInstance();
             } catch (Throwable t) {
@@ -50,7 +50,7 @@ final class ReflectionUtil {
 
     @SuppressWarnings("unchecked")
     static <T> T createProxyInstance(Class<T> restClientClass) {
-        return AccessController.doPrivileged((PrivilegedAction<T>) () -> (T) Proxy.newProxyInstance(
+        return ACDeprecator.doPrivileged((PrivilegedAction<T>) () -> (T) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class[] {restClientClass},
                 (proxy, m, args) -> {

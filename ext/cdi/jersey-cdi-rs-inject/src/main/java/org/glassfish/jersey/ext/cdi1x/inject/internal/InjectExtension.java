@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,6 @@ import javax.ws.rs.ext.Providers;
 import javax.ws.rs.sse.Sse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -72,8 +71,7 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 class InjectExtension implements Extension {
-    private static final Class<?> WEB_CONFIG_CLASS =
-            AccessController.doPrivileged(ReflectionHelper.classForNamePA("org.glassfish.jersey.servlet.WebConfig"));
+    private static final Class<?> WEB_CONFIG_CLASS = ReflectionHelper.classForName("org.glassfish.jersey.servlet.WebConfig");
     private AnnotatedType<ServletReferenceProducer> interceptorAnnotatedType;
 
     private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType,

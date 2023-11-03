@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package org.glassfish.jersey.server.internal.inject;
 
 import java.lang.annotation.Annotation;
-import java.security.AccessController;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -363,7 +362,7 @@ final class WebTargetValueParamProvider extends AbstractValueParamProvider {
         if (_cc != null) {
             Class<?> cc;
             if (_cc instanceof String) {
-                cc = AccessController.doPrivileged(ReflectionHelper.classForNamePA((String) _cc));
+                cc = ReflectionHelper.classForName((String) _cc);
             } else if (_cc instanceof Class) {
                 cc = (Class<?>) _cc;
             } else {

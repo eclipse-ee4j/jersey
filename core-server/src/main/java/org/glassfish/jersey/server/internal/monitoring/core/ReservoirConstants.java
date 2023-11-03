@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package org.glassfish.jersey.server.internal.monitoring.core;
 
-import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
 import org.glassfish.jersey.server.ServerProperties;
 
 /**
@@ -34,8 +32,8 @@ public final class ReservoirConstants {
 
     /**
      * Allow for 2^that many duplicate ticks before throwing away measurements.
-     * This value is by default {@link DEFAULT_COLLISION_BUFFER_POWER}, but it can be configured
-     * with {@link COLLISION_BUFFER_POWER_JVM_ARG} JVM argument
+     * This value is by default {@link #DEFAULT_COLLISION_BUFFER_POWER}, but it can be configured
+     * with {@link ServerProperties#COLLISION_BUFFER_POWER_JVM_ARG} JVM argument
      */
     public static final int COLLISION_BUFFER_POWER;
 
@@ -56,7 +54,7 @@ public final class ReservoirConstants {
                 return Integer.getInteger(ServerProperties.COLLISION_BUFFER_POWER_JVM_ARG, DEFAULT_COLLISION_BUFFER_POWER);
             }
         };
-        COLLISION_BUFFER_POWER = AccessController.doPrivileged(action);
+        COLLISION_BUFFER_POWER = ACDeprecator.doPrivileged(action);
         COLLISION_BUFFER = 1 << COLLISION_BUFFER_POWER; // 256
     }
 

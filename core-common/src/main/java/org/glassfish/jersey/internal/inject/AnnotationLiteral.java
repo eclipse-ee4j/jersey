@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import org.glassfish.jersey.internal.deprecated.ACDeprecator;
+
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -23,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 
@@ -95,7 +96,7 @@ public abstract class AnnotationLiteral<T extends Annotation> implements Annotat
     }
 
     private static void setAccessible(final AccessibleObject ao) {
-        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+        ACDeprecator.doPrivileged((PrivilegedAction<Object>) () -> {
             ao.setAccessible(true);
             return null;
         });
@@ -115,7 +116,7 @@ public abstract class AnnotationLiteral<T extends Annotation> implements Annotat
 
     private Method[] getMembers() {
         if (members == null) {
-            members = AccessController.doPrivileged((PrivilegedAction<Method[]>) annotationType()::getDeclaredMethods);
+            members = ACDeprecator.doPrivileged((PrivilegedAction<Method[]>) annotationType()::getDeclaredMethods);
 
             if (members.length > 0 && !annotationType().isAssignableFrom(this.getClass())) {
                 throw new RuntimeException(

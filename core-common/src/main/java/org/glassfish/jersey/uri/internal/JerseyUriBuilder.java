@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.AccessController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -368,7 +367,7 @@ public class JerseyUriBuilder extends UriBuilder {
             throw new IllegalArgumentException(LocalizationMessages.PARAM_NULL("methodName"));
         }
 
-        final Method[] methods = AccessController.doPrivileged(ReflectionHelper.getMethodsPA(resource));
+        final Method[] methods = ReflectionHelper.getMethods(resource);
         Method found = null;
         for (final Method m : methods) {
             if (methodName.equals(m.getName())) {

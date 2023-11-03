@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
-import java.security.AccessController;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -153,7 +152,7 @@ final class BasicTypesMessageProvider extends AbstractMessageReaderWriterProvide
             return primitiveType.convert(entityString);
         }
 
-        final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(type));
+        final Constructor constructor = ReflectionHelper.getStringConstructor(type);
         if (constructor != null) {
             try {
                 return type.cast(constructor.newInstance(entityString));
@@ -184,7 +183,7 @@ final class BasicTypesMessageProvider extends AbstractMessageReaderWriterProvide
             return true;
         }
         if (Number.class.isAssignableFrom(type)) {
-            final Constructor constructor = AccessController.doPrivileged(ReflectionHelper.getStringConstructorPA(type));
+            final Constructor constructor = ReflectionHelper.getStringConstructor(type);
             if (constructor != null) {
                 return true;
             }

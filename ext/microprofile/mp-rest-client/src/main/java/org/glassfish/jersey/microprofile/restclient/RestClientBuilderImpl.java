@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.AccessController;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -277,7 +276,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
 
     private void processConfigProviders(Class<?> restClientInterface, String[] providerArray) {
         for (String provider : providerArray) {
-            Class<?> providerClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(provider));
+            Class<?> providerClass = ReflectionHelper.classForName(provider);
             if (providerClass == null) {
                 throw new IllegalStateException("No provider class with following name found: " + provider);
             }
