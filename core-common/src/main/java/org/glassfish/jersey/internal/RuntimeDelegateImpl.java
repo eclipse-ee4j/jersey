@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,7 @@ public class RuntimeDelegateImpl extends AbstractRuntimeDelegate {
         for (RuntimeDelegate delegate : ServiceFinder.find(RuntimeDelegate.class)) {
             // try to find runtime delegate from core-server
             if (delegate.getClass() != RuntimeDelegateImpl.class) {
+                RuntimeDelegate.setInstance(delegate);
                 return delegate.createEndpoint(application, endpointType);
             }
         }
