@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ public abstract class AbstractFormProvider<T> extends AbstractMessageReaderWrite
     public <M extends MultivaluedMap<String, String>> M readFrom(M map,
                                                                  MediaType mediaType, boolean decode,
                                                                  InputStream entityStream) throws IOException {
-        final String encoded = readFromAsString(entityStream, mediaType);
+        final String encoded = ReaderWriter.readFromAsString(entityStream, mediaType);
 
         final String charsetName = ReaderWriter.getCharset(mediaType).name();
 
@@ -90,6 +90,6 @@ public abstract class AbstractFormProvider<T> extends AbstractMessageReaderWrite
             }
         }
 
-        writeToAsString(sb.toString(), entityStream, mediaType);
+        ReaderWriter.writeToAsString(sb.toString(), entityStream, mediaType);
     }
 }

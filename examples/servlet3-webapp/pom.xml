@@ -63,6 +63,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.plugin.version}</version>
                 <configuration>
 <!--                    <skip>${skip.tests}</skip>-->
 <!--                    <stopWait>10</stopWait>-->

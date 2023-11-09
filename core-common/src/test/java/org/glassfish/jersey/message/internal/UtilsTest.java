@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,22 +22,19 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 public class UtilsTest {
 
     @Test
     public void createTempFile() throws IOException {
         final File file = Utils.createTempFile();
-        final OutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
 
-        try {
+        try (final OutputStream stream = new BufferedOutputStream(Files.newOutputStream(file.toPath()))) {
             final ByteArrayInputStream entityStream = new ByteArrayInputStream("Test stream byte input".getBytes());
             ReaderWriter.writeTo(entityStream, stream);
-        } finally {
-            stream.close();
         }
         Assertions.assertTrue(file.exists());
     }

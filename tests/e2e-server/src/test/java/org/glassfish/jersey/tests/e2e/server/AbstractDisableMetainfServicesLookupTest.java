@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
@@ -145,7 +146,7 @@ public abstract class AbstractDisableMetainfServicesLookupTest extends JerseyTes
                 MediaType mediaType,
                 MultivaluedMap<String, String> httpHeaders,
                 InputStream entityStream) throws IOException {
-            return new UselessMessage(readFromAsString(entityStream, mediaType));
+            return new UselessMessage(ReaderWriter.readFromAsString(entityStream, mediaType));
         }
 
         @Override
@@ -167,7 +168,7 @@ public abstract class AbstractDisableMetainfServicesLookupTest extends JerseyTes
                 MediaType mediaType,
                 MultivaluedMap<String, Object> httpHeaders,
                 OutputStream entityStream) throws IOException {
-            writeToAsString(t.getMessage(), entityStream, mediaType);
+            ReaderWriter.writeToAsString(t.getMessage(), entityStream, mediaType);
         }
     } // class UselessMessageBodyWriter
 

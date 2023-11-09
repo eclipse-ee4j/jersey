@@ -99,6 +99,7 @@
         <module>managed-client-simple-webapp</module>
         <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
+        <module>micrometer</module>
         <module>open-tracing</module>
         <module>osgi-helloworld-webapp</module>
 <!--        <module>osgi-http-service</module> Jakartification - felix osgi is not jakartificated-->
@@ -199,7 +200,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>${resources.mvn.plugin.version}</version>
                     <!-- Add legal information, NOTICE.md and LINCENSE.md to jars -->
                     <executions>
                         <execution>

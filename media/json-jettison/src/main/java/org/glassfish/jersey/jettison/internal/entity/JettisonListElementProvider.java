@@ -47,6 +47,7 @@ import org.glassfish.jersey.jaxb.internal.AbstractCollectionJaxbProvider;
 import org.glassfish.jersey.jettison.JettisonConfig;
 import org.glassfish.jersey.jettison.JettisonConfigured;
 import org.glassfish.jersey.jettison.internal.Stax2JettisonFactory;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * JSON message entity media type provider (reader & writer) for collection
@@ -132,7 +133,7 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     protected final XMLStreamReader getXMLStreamReader(Class<?> elementType, MediaType mediaType, Unmarshaller u,
                                                        InputStream entityStream) throws XMLStreamException {
         JettisonConfig c = JettisonConfig.DEFAULT;
-        final Charset charset = getCharset(mediaType);
+        final Charset charset = ReaderWriter.getCharset(mediaType);
         if (u instanceof JettisonConfigured) {
             c = ((JettisonConfigured) u).getJSONConfiguration();
         }

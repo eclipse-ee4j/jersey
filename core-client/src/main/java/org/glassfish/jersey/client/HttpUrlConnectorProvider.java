@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -283,7 +283,9 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * @throws java.io.IOException in case the connection cannot be provided.
          */
         default HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
-            return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+            synchronized (this){
+                return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
+            }
         }
     }
 

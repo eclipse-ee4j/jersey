@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -79,7 +79,7 @@ public final class InputStreamProvider extends AbstractMessageReaderWriterProvid
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException {
         try {
-            writeTo(t, entityStream);
+            ReaderWriter.writeTo(t, entityStream);
         } finally {
             t.close();
         }

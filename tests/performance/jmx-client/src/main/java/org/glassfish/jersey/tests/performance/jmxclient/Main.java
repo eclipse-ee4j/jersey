@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.tests.performance.jmxclient;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import javax.management.MBeanServerConnection;
@@ -81,6 +80,6 @@ public class Main {
     private static void writeResult(double resultValue, String propertiesFile) throws IOException {
         Properties resultProps = new Properties();
         resultProps.put("YVALUE", Double.toString(resultValue));
-        resultProps.store(new FileOutputStream(propertiesFile), null);
+        resultProps.store(Files.newOutputStream(Paths.get(propertiesFile)), null);
     }
 }

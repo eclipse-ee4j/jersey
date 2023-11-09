@@ -42,7 +42,7 @@
         <module>j-376</module>
         <module>j-441</module>
         <module>j-59</module>
-        <!--                <module>jersey-1829</module> Jakartification-->
+        <module>jackson-14</module>
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>

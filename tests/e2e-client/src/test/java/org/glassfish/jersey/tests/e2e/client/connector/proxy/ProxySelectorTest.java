@@ -23,6 +23,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.netty.connector.NettyClientProperties;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -48,7 +49,7 @@ public class ProxySelectorTest {
     private static final String NO_PASS = "no-pass";
 
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new NettyConnectorProvider());
+        config.connectorProvider(new NettyConnectorProvider()).property(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, false);
     }
 
     @Test

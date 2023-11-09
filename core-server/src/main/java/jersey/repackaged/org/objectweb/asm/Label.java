@@ -117,6 +117,13 @@ public class Label {
   static final int FORWARD_REFERENCE_TYPE_WIDE = 0x20000000;
 
   /**
+   * The type of forward references stored in two bytes in the <i>stack map table</i>. This is the
+   * case of the labels of {@link Frame#ITEM_UNINITIALIZED} stack map frame elements, when the NEW
+   * instruction is after the &lt;init&gt; constructor call (in bytecode offset order).
+   */
+  static final int FORWARD_REFERENCE_TYPE_STACK_MAP = 0x30000000;
+
+  /**
    * The bit mask to extract the 'handle' of a forward reference to this label. The extracted handle
    * is the bytecode offset where the forward reference value is stored (using either 2 or 4 bytes,
    * as indicated by the {@link #FORWARD_REFERENCE_TYPE_MASK}).
@@ -405,6 +412,20 @@ public class Label {
   }
 
   /**
+   * Puts a reference to this label in the <i>stack map table</i> of a method. If the bytecode
+   * offset of the label is known, it is written directly. Otherwise, a null relative offset is
+   * written and a new forward reference is declared for this label.
+   *
+   * @param stackMapTableEntries the stack map table where the label offset must be added.
+   */
+  final void put(final ByteVector stackMapTableEntries) {
+    if ((flags & FLAG_RESOLVED) == 0) {
+      addForwardReference(0, FORWARD_REFERENCE_TYPE_STACK_MAP, stackMapTableEntries.length);
+    }
+    stackMapTableEntries.putShort(bytecodeOffset);
+  }
+
+  /**
    * Adds a forward reference to this label. This method must be called only for a true forward
    * reference, i.e. only if this label is not resolved yet. For backward references, the relative
    * bytecode offset of the reference can be, and must be, computed and stored directly.
@@ -436,9 +457,12 @@ public class Label {
    * Sets the bytecode offset of this label to the given value and resolves the forward references
    * to this label, if any. This method must be called when this label is added to the bytecode of
    * the method, i.e. when its bytecode offset becomes known. This method fills in the blanks that
-   * where left in the bytecode by each forward reference previously added to this label.
+   * where left in the bytecode (and optionally in the stack map table) by each forward reference
+   * previously added to this label.
    *
    * @param code the bytecode of the method.
+   * @param stackMapTableEntries the 'entries' array of the StackMapTable code attribute of the
+   *     method. Maybe {@literal null}.
    * @param bytecodeOffset the bytecode offset of this label.
    * @return {@literal true} if a blank that was left for this label was too small to store the
    *     offset. In such a case the corresponding jump instruction is replaced with an equivalent
@@ -446,7 +470,8 @@ public class Label {
    *     instructions are later replaced with standard bytecode instructions with wider offsets (4
    *     bytes instead of 2), in ClassReader.
    */
-  final boolean resolve(final byte[] code, final int bytecodeOffset) {
+  final boolean resolve(
+      final byte[] code, final ByteVector stackMapTableEntries, final int bytecodeOffset) {
     this.flags |= FLAG_RESOLVED;
     this.bytecodeOffset = bytecodeOffset;
     if (forwardReferences == null) {
@@ -476,11 +501,14 @@ public class Label {
         }
         code[handle++] = (byte) (relativeOffset >>> 8);
         code[handle] = (byte) relativeOffset;
-      } else {
+      } else if ((reference & FORWARD_REFERENCE_TYPE_MASK) == FORWARD_REFERENCE_TYPE_WIDE) {
         code[handle++] = (byte) (relativeOffset >>> 24);
         code[handle++] = (byte) (relativeOffset >>> 16);
         code[handle++] = (byte) (relativeOffset >>> 8);
         code[handle] = (byte) relativeOffset;
+      } else {
+        stackMapTableEntries.data[handle++] = (byte) (bytecodeOffset >>> 8);
+        stackMapTableEntries.data[handle] = (byte) bytecodeOffset;
       }
     }
     return hasAsmInstructions;

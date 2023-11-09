@@ -108,6 +108,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jetty-http2-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-netty-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -240,6 +245,11 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-declarative-linking</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-micrometer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

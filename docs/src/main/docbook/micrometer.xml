@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE chapter [<!ENTITY % ents SYSTEM "jersey.ent" > %ents; ]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+         version="5.0"
+         xml:lang="en"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd
+                             http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+         xml:id="jersey-micrometer">
+    <title>Micrometer - application observability facade</title>
+    <para>
+        The chapter is about Micrometer integration into Jersey which comes since the version 2.41 as an extension module.
+        Before Jersey 2.41, it was possible to integrate Micrometer with Jersey using directly &micrometer.jersey.link;.
+        There is also support for Jakarta EE 10 integration. The detailed documentation regarding metrics fine-tuning
+        can be found at the &micrometer.link;.
+    </para>
+    <section xml:id="micrometer-integration">
+        <title>Integration into Jersey</title>
+        <para>
+            Since Jersey 2.41 it's possibly to use an extension module in order to use Micrometer instrumentation
+            inside your projects. The module shall be added as a dependency:
+            <programlisting language="xml" linenumbering="unnumbered">&lt;dependency>
+   &lt;groupId>org.glassfish.jersey.ext.micrometer&lt;/groupId>
+   &lt;artifactId>jersey-micrometer&lt;/artifactId>
+   &lt;version>&version;&lt;/scope>
+&lt;/dependency></programlisting>
+            After the dependency is added, the Micrometer can be configured as follows:
+            <programlisting language="java" linenumbering="unnumbered">final ResourceConfig resourceConfig = new ResourceConfig();
+resourceConfig.register(new MetricsApplicationEventListener(
+                registry,
+                new DefaultJerseyTagsProvider(), "http.shared.metrics", true));
+final ServletContainer servletContainer = new ServletContainer(resourceConfig);</programlisting>
+            the registry instance is of type <literal>MeterRegistry</literal> which could be
+            <literal>new SimpleMeterRegistry();</literal>. Then all metrics can be accessed like
+            <literal>registry.get("http.shared.metrics")</literal>. The "http.shared.metrics" string
+            is the name of a particular registry which was registered within the
+            <literal>MetricsApplicationEventListener</literal>.
+
+            Micrometer supports a set of <literal>Meter</literal> primitives, including <literal>Timer</literal>,
+            <literal>Counter</literal>, <literal>Gauge</literal>, <literal>DistributionSummary</literal>,
+            <literal>LongTaskTimer</literal>, <literal>FunctionCounter</literal>, <literal>FunctionTimer</literal>,
+            and <literal>TimeGauge</literal>.
+            Different meter types result in a different number of time series metrics. For example, while there is
+            a single metric that represents a <literal>Gauge</literal>, a <literal>Timer</literal> measures both the
+            count of timed events and the total time of all timed events.
+        </para>
+        <para>
+            Implementing resource methods, which should be measured, several annotations can be used. The basic example
+            demonstrates the <literal>@Counted</literal> annotation.
+            <example>
+                <title>Annotated Micrometer resource methods</title>
+                <programlisting language="java" linenumbering="unnumbered">@GET
+@Counted(value = COUNTER_NAME, description = COUNTER_DESCRIPTION)
+@Produces(MediaType.TEXT_PLAIN)
+@Path("counted")
+public String getCounterMessage() {
+        return "Requests to this method are counted. Use /metrics to see more";
+}
+                </programlisting>
+            </example>
+            Metrics however can be introduced using another annotations <literal>@Timed</literal>, or
+            <literal>@TimedSet</literal> which is a set of <literal>@Timed</literal>.
+        </para>
+    </section>
+</chapter>
