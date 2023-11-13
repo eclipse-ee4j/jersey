@@ -666,9 +666,9 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry><literal>org.glassfish.jersey.connectors:jersey-jetty11-connector</literal></entry>
                         </row>
                         <row>
-                            <entry>Jetty HTTP/2 client</entry>
-                            <entry>&jersey.jetty.JettyHttp2ConnectorProvider;</entry>
-                            <entry><literal>org.glassfish.jersey.connectors:jersey-jetty-http2-connector</literal></entry>
+                            <entry>Jetty 11.x HTTP/2 client</entry>
+                            <entry>&jersey.jetty11.Jetty11Http2ConnectorProvider;</entry>
+                            <entry><literal>org.glassfish.jersey.connectors:jersey-jetty11-http2-connector</literal></entry>
                         </row>
                         <row>
                             <entry>Netty NIO framework</entry>
