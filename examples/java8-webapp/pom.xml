@@ -53,9 +53,8 @@
             </plugin>
             <!-- Run the application using "mvn jetty:run" -->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.plugin.version}</version>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-maven-plugin</artifactId>
                 <configuration>
                     <stopWait>5</stopWait>
                     <stopPort>9999</stopPort>
