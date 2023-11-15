@@ -132,15 +132,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <jboss.logging.version>${jboss.logging.8.version}</jboss.logging.version>
-            </properties>
-        </profile>
-    </profiles>
 </project>

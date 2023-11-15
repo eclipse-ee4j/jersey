@@ -345,7 +345,7 @@
                         <artifactId>jersey-jetty11-connector</artifactId>
                         <version>${project.version}</version>
                     </dependency>
-                    <dependency>
+                    <!--<dependency>
                         <groupId>org.glassfish.jersey.connectors</groupId>
                         <artifactId>jersey-jetty11-http2-connector</artifactId>
                         <version>${project.version}</version>
@@ -359,7 +359,7 @@
                         <groupId>org.glassfish.jersey.containers</groupId>
                         <artifactId>jersey-container-jetty11-http2</artifactId>
                         <version>${project.version}</version>
-                    </dependency>
+                    </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
                 </dependencies>
             </dependencyManagement>
             <dependencies>
@@ -368,7 +368,7 @@
                     <artifactId>jersey-jetty11-connector</artifactId>
                     <version>${project.version}</version>
                 </dependency>
-                <dependency>
+                <!--<dependency>
                     <groupId>org.glassfish.jersey.connectors</groupId>
                     <artifactId>jersey-jetty11-http2-connector</artifactId>
                     <version>${project.version}</version>
@@ -382,7 +382,7 @@
                     <groupId>org.glassfish.jersey.containers</groupId>
                     <artifactId>jersey-container-jetty11-http2</artifactId>
                     <version>${project.version}</version>
-                </dependency>
+                </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
             </dependencies>
         </profile>
     </profiles>
