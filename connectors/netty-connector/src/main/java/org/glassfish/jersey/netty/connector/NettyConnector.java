@@ -31,13 +31,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLContext;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
@@ -123,6 +126,7 @@ class NettyConnector implements Connector {
     private static final String PRUNE_INACTIVE_POOL = "prune_inactive_pool";
     private static final String READ_TIMEOUT_HANDLER = "read_timeout_handler";
     private static final String REQUEST_HANDLER = "request_handler";
+    private static final String EXPECT_100_CONTINUE_HANDLER = "expect_100_continue_handler";
 
     NettyConnector(Client client) {
 
@@ -189,6 +193,9 @@ class NettyConnector implements Connector {
     protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
             final CompletableFuture<ClientResponse> responseAvailable) {
         Integer timeout = jerseyRequest.resolveProperty(ClientProperties.READ_TIMEOUT, 0);
+        final Integer expect100ContinueTimeout = jerseyRequest.resolveProperty(
+                NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT,
+                NettyClientProperties.DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE);
         if (timeout == null || timeout < 0) {
             throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(timeout));
         }
@@ -200,8 +207,10 @@ class NettyConnector implements Connector {
         int port = requestUri.getPort() != -1 ? requestUri.getPort() : "https".equals(requestUri.getScheme()) ? 443 : 80;
 
         try {
+            final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
+                    .request(jerseyRequest).setSNIAlways(true).build();
 
-            String key = requestUri.getScheme() + "://" + host + ":" + port;
+            String key = requestUri.getScheme() + "://" + sslConfig.getSNIHostName() + ":" + port;
             ArrayList<Channel> conns;
             synchronized (connections) {
                conns = connections.get(key);
@@ -231,9 +240,8 @@ class NettyConnector implements Connector {
                }
             }
 
-            Integer connectTimeout = jerseyRequest.resolveProperty(ClientProperties.CONNECT_TIMEOUT, 0);
-
             if (chan == null) {
+               Integer connectTimeout = jerseyRequest.resolveProperty(ClientProperties.CONNECT_TIMEOUT, 0);
                Bootstrap b = new Bootstrap();
 
                // http proxy
@@ -270,7 +278,7 @@ class NettyConnector implements Connector {
                      if ("https".equals(requestUri.getScheme())) {
                          // making client authentication optional for now; it could be extracted to configurable property
                          JdkSslContext jdkSslContext = new JdkSslContext(
-                                 client.getSslContext(),
+                                 getSslContext(client, jerseyRequest),
                                  true,
                                  (Iterable) null,
                                  IdentityCipherSuiteFilter.INSTANCE,
@@ -281,8 +289,7 @@ class NettyConnector implements Connector {
                          );
 
                          final int port = requestUri.getPort();
-                         final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
-                                 .request(jerseyRequest).setSNIAlways(true).build();
+
                          final SslHandler sslHandler = jdkSslContext.newHandler(
                                  ch.alloc(), sslConfig.getSNIHostName(), port <= 0 ? 443 : port, executorService
                          );
@@ -320,9 +327,11 @@ class NettyConnector implements Connector {
             final Channel ch = chan;
             JerseyClientHandler clientHandler =
                     new JerseyClientHandler(jerseyRequest, responseAvailable, responseDone, redirectUriHistory, this);
+            final JerseyExpectContinueHandler expect100ContinueHandler = new JerseyExpectContinueHandler();
             // read timeout makes sense really as an inactivity timeout
             ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
                                   new IdleStateHandler(0, 0, timeout, TimeUnit.MILLISECONDS));
+            ch.pipeline().addLast(EXPECT_100_CONTINUE_HANDLER, expect100ContinueHandler);
             ch.pipeline().addLast(REQUEST_HANDLER, clientHandler);
 
             responseDone.whenComplete((_r, th) -> {
@@ -375,11 +384,13 @@ class NettyConnector implements Connector {
             }
 
             // headers
-            setHeaders(jerseyRequest, nettyRequest.headers());
+            if (!jerseyRequest.hasEntity()) {
+                setHeaders(jerseyRequest, nettyRequest.headers(), false);
 
-            // host header - http 1.1
-            if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
-                nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                // host header - http 1.1
+                if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
+                    nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                }
             }
 
             if (jerseyRequest.hasEntity()) {
@@ -407,22 +418,34 @@ class NettyConnector implements Connector {
 //                      // Set later after the entity is "written"
 //                      break;
                 }
+                try {
+                    expect100ContinueHandler.processExpect100ContinueRequest(nettyRequest, jerseyRequest,
+                            ch, expect100ContinueTimeout);
+                } catch (ExecutionException e) {
+                    responseDone.completeExceptionally(e);
+                } catch (TimeoutException e) {
+                    //Expect:100-continue allows timeouts by the spec
+                    //just removing the pipeline from processing
+                    if (ch.pipeline().context(JerseyExpectContinueHandler.class) != null) {
+                        ch.pipeline().remove(EXPECT_100_CONTINUE_HANDLER);
+                    }
+                }
 
-                // Send the HTTP request.
-                entityWriter.writeAndFlush(nettyRequest);
+                final CountDownLatch headersSet = new CountDownLatch(1);
+                final CountDownLatch contentLengthSet = new CountDownLatch(1);
 
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
                     public OutputStream getOutputStream(int contentLength) throws IOException {
+                        replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
+                        if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
+                            nettyRequest.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+                        }
+                        headersSet.countDown();
+
                         return entityWriter.getOutputStream();
                     }
                 });
-
-                if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
-                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
-                } else {
-                    entityWriter.write(entityWriter.getChunkedInput());
-                }
 
                 executorService.execute(new Runnable() {
                     @Override
@@ -434,9 +457,8 @@ class NettyConnector implements Connector {
                             jerseyRequest.writeEntity();
 
                             if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
-                                replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
                                 nettyRequest.headers().set(HttpHeaderNames.CONTENT_LENGTH, entityWriter.getLength());
-                                entityWriter.flush();
+                                contentLengthSet.countDown();
                             }
 
                         } catch (IOException e) {
@@ -445,9 +467,23 @@ class NettyConnector implements Connector {
                     }
                 });
 
-                if (entityWriter.getType() != NettyEntityWriter.Type.DELAYED) {
-                    entityWriter.flush();
+                headersSet.await();
+                if (!expect100ContinueHandler.isExpected()) {
+                    // Send the HTTP request. Expect:100-continue processing is not applicable
+                    // in this case.
+                    entityWriter.writeAndFlush(nettyRequest);
                 }
+
+                if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
+                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
+                } else {
+                    entityWriter.write(entityWriter.getChunkedInput());
+                }
+
+                if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
+                    contentLengthSet.await();
+                }
+                entityWriter.flush();
             } else {
                 // Send the HTTP request.
                 ch.writeAndFlush(nettyRequest);
@@ -456,6 +492,11 @@ class NettyConnector implements Connector {
         } catch (IOException | InterruptedException e) {
             responseDone.completeExceptionally(e);
         }
+    }
+
+    private SSLContext getSslContext(Client client, ClientRequest request) {
+        Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+        return supplier == null ? client.getSslContext() : supplier.get();
     }
 
     private String buildPathWithQueryParameters(URI requestUri) {
@@ -510,7 +551,8 @@ class NettyConnector implements Connector {
 
     private static ProxyHandler createProxyHandler(ClientRequest jerseyRequest, SocketAddress proxyAddr,
                                                    String userName, String password, long connectTimeout) {
-        HttpHeaders httpHeaders = setHeaders(jerseyRequest, new DefaultHttpHeaders());
+        final Boolean filter = jerseyRequest.resolveProperty(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, Boolean.TRUE);
+        HttpHeaders httpHeaders = setHeaders(jerseyRequest, new DefaultHttpHeaders(), Boolean.TRUE.equals(filter));
 
         ProxyHandler proxy = userName == null ? new HttpProxyHandler(proxyAddr, httpHeaders)
                 : new HttpProxyHandler(proxyAddr, userName, password, httpHeaders);
@@ -521,9 +563,12 @@ class NettyConnector implements Connector {
         return proxy;
     }
 
-    private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers) {
+    private static HttpHeaders setHeaders(ClientRequest jerseyRequest, HttpHeaders headers, boolean proxyOnly) {
         for (final Map.Entry<String, List<String>> e : jerseyRequest.getStringHeaders().entrySet()) {
-            headers.add(e.getKey(), e.getValue());
+            final String key = e.getKey();
+            if (!proxyOnly || JerseyClientHandler.ProxyHeaders.INSTANCE.test(key) || additionalProxyHeadersToKeep(key)) {
+                headers.add(key, e.getValue());
+            }
         }
         return headers;
     }
@@ -533,5 +578,12 @@ class NettyConnector implements Connector {
             headers.set(e.getKey(), e.getValue());
         }
         return headers;
+    }
+
+    /*
+     * Keep all X- headers (X-Forwarded-For,...) for proxy
+     */
+    private static boolean additionalProxyHeadersToKeep(String key) {
+        return key.length() > 2 && (key.charAt(0) == 'x' || key.charAt(0) == 'X') && (key.charAt(1) == '-');
     }
 }

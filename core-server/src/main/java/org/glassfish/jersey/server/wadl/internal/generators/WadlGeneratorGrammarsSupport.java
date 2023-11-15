@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 package org.glassfish.jersey.server.wadl.internal.generators;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -116,7 +116,7 @@ public class WadlGeneratorGrammarsSupport implements WadlGenerator {
                     + " is set, one of both is required.");
         }
         _delegate.init();
-        _grammars = WadlUtils.unmarshall(_grammarsFile != null ? new FileInputStream(_grammarsFile) : _grammarsStream,
+        _grammars = WadlUtils.unmarshall(_grammarsFile != null ? Files.newInputStream(_grammarsFile.toPath()) : _grammarsStream,
                 saxFactoryProvider.get(), Grammars.class);
     }
 

@@ -59,6 +59,7 @@
                 <!-- TODO unify Jetty in all examples -->
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.plugin.version}</version>
                 <configuration>
                     <stopWait>10</stopWait>
                     <stopPort>9999</stopPort>

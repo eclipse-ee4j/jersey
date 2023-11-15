@@ -39,6 +39,7 @@ import jakarta.xml.bind.Unmarshaller;
 import org.glassfish.jersey.jaxb.internal.AbstractRootElementJaxbProvider;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 import org.glassfish.jersey.jettison.JettisonMarshaller;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * JSON message entity media type provider (reader & writer) for JAXB types that
@@ -94,7 +95,7 @@ public class JettisonRootElementProvider extends AbstractRootElementJaxbProvider
     @Override
     protected final Object readFrom(Class<Object> type, MediaType mediaType, Unmarshaller u,
                                     InputStream entityStream) throws JAXBException {
-        final Charset c = getCharset(mediaType);
+        final Charset c = ReaderWriter.getCharset(mediaType);
 
         return JettisonJaxbContext.getJSONUnmarshaller(u)
                 .unmarshalFromJSON(new InputStreamReader(entityStream, c), type);

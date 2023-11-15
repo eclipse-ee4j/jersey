@@ -19,12 +19,12 @@ package org.glassfish.jersey.message.internal;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +54,11 @@ public final class ReaderWriter {
     private static final Logger LOGGER = Logger.getLogger(ReaderWriter.class.getName());
     /**
      * The UTF-8 Charset.
+     *
+     * @deprecated use {@code StandardCharsets.UTF_8} instead
      */
-    public static final Charset UTF8 = Charset.forName("UTF-8");
+    @Deprecated
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
     /**
      * The buffer size for arrays of byte and character.
      */
@@ -116,14 +119,14 @@ public final class ReaderWriter {
      * Get the character set from a media type.
      * <p>
      * The character set is obtained from the media type parameter "charset".
-     * If the parameter is not present the {@link #UTF8} charset is utilized.
+     * If the parameter is not present the {@link StandardCharsets#UTF_8} charset is utilized.
      *
      * @param m the media type.
      * @return the character set.
      */
     public static Charset getCharset(MediaType m) {
         String name = (m == null) ? null : m.getParameters().get(MediaType.CHARSET_PARAMETER);
-        return (name == null) ? UTF8 : Charset.forName(name);
+        return (name == null) ? StandardCharsets.UTF_8 : Charset.forName(name);
     }
 
     /**
@@ -167,7 +170,7 @@ public final class ReaderWriter {
 
     /**
      * Java 9+ InputStream::readAllBytes
-     * TODO Replace when Java 8 not any longer supported (3.1+)
+     * TODO Replace in Jersey 4.0, as the sole difference to OpenJDK is working around a bug in the input stream.
      */
     private static byte[] readAllBytes(InputStream inputStream) throws IOException {
         List<byte[]> bufs = null;
@@ -243,7 +246,7 @@ public final class ReaderWriter {
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
         Writer osw = new OutputStreamWriter(out, getCharset(type));
-        osw.write(s, 0, s.length());
+        osw.write(s);
         osw.flush();
     }
 

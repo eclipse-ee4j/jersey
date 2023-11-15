@@ -103,18 +103,18 @@ public class RequestHeaderModificationsTest {
 
     public static List<Object[]> testData() {
         return Arrays.asList(new Object[][] {
-                {new HttpUrlConnectorProvider(), true, false},
-                {new GrizzlyConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
-                {new JettyConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
-                {new ApacheConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
-                {new Apache5ConnectorProvider(), false, false}, // change to true when JERSEY-2341 fixed
-                {new JavaNetHttpConnectorProvider(), true, false},
-                {new HttpUrlConnectorProvider(), true, true},
-                {new GrizzlyConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
-                {new JettyConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
-                {new ApacheConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
-                {new Apache5ConnectorProvider(), false, true}, // change to true when JERSEY-2341 fixed
-                {new JavaNetHttpConnectorProvider(), true, false},
+                {new HttpUrlConnectorProvider(), true, true, false, false},
+                {new GrizzlyConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
+                {new JettyConnectorProvider(), true, false, false, false}, // change to true when JERSEY-2341 fixed
+                {new ApacheConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
+                {new Apache5ConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
+                {new JavaNetHttpConnectorProvider(), true, true, false, false},
+                {new HttpUrlConnectorProvider(), true, true, true, true},
+                {new GrizzlyConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
+                {new JettyConnectorProvider(), false, false, true, false}, // change to true when JERSEY-2341 fixed
+                {new ApacheConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
+                {new Apache5ConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
+                {new JavaNetHttpConnectorProvider(), true, true, false, false},
         });
     }
 
@@ -127,7 +127,7 @@ public class RequestHeaderModificationsTest {
                 return;
             }
             RequestHeaderModificationsTemplateTest test = new RequestHeaderModificationsTemplateTest(
-                    (ConnectorProvider) arr[0], (boolean) arr[1], (boolean) arr[2]) {};
+                    (ConnectorProvider) arr[0], (boolean) arr[1], (boolean) arr[2], (boolean) arr[3], (boolean) arr[4]) {};
             tests.add(TestHelper.toTestContainer(test, String.format("%s (%s, %s, %s)",
                     RequestHeaderModificationsTemplateTest.class.getSimpleName(),
                     arr[0].getClass().getSimpleName(), arr[1], arr[2])));
@@ -138,13 +138,21 @@ public class RequestHeaderModificationsTest {
     public abstract static class RequestHeaderModificationsTemplateTest extends JerseyTest {
         private final ConnectorProvider connectorProvider;
         private final boolean modificationSupported; // remove when JERSEY-2341 fixed
+        private final boolean modificationSupportedAsync; // remove when JERSEY-2341 fixed
+
         private final boolean addHeader;
+        private final boolean addHeaderAsync;
 
         public RequestHeaderModificationsTemplateTest(ConnectorProvider connectorProvider,
-                                              boolean modificationSupported, boolean addHeader) {
+                                                      boolean modificationSupported,
+                                                      boolean modificationSupportedAsync,
+                                                      boolean addHeader,
+                                                      boolean addHeaderAsync) {
             this.connectorProvider = connectorProvider;
             this.modificationSupported = modificationSupported;
+            this.modificationSupportedAsync = modificationSupportedAsync;
             this.addHeader = addHeader;
+            this.addHeaderAsync = addHeaderAsync;
         }
 
         @Override
@@ -162,27 +170,27 @@ public class RequestHeaderModificationsTest {
         @Override
         protected void configureClient(ClientConfig clientConfig) {
             clientConfig.register(MyClientRequestFilter.class);
-            clientConfig.register(new MyWriterInterceptor(addHeader));
-            clientConfig.register(new MyMessageBodyWriter(addHeader));
             clientConfig.connectorProvider(connectorProvider);
         }
 
         @Test
         public void testWarningLogged() throws Exception {
-            Response response = requestBuilder().post(requestEntity());
-            assertResponse(response);
+            Response response = requestBuilder(addHeader).post(requestEntity());
+            assertResponse(response, modificationSupported, addHeader);
         }
 
         @Test
         public void testWarningLoggedAsync() throws Exception {
-            AsyncInvoker asyncInvoker = requestBuilder().async();
+            AsyncInvoker asyncInvoker = requestBuilder(addHeaderAsync).async();
             Future<Response> responseFuture = asyncInvoker.post(requestEntity());
             Response response = responseFuture.get();
-            assertResponse(response);
+            assertResponse(response, modificationSupportedAsync, addHeaderAsync);
         }
 
-        private Invocation.Builder requestBuilder() {
+        private Invocation.Builder requestBuilder(boolean addHeader) {
             return target(PATH)
+                    .register(new MyWriterInterceptor(addHeader))
+                    .register(new MyMessageBodyWriter(addHeader))
                     .request()
                     .header(REQUEST_HEADER_NAME_CLIENT, REQUEST_HEADER_VALUE_CLIENT)
                     .header(REQUEST_HEADER_MODIFICATION_SUPPORTED, modificationSupported && addHeader)
@@ -193,7 +201,7 @@ public class RequestHeaderModificationsTest {
             return Entity.text(new MyEntity(QUESTION));
         }
 
-        private void assertResponse(Response response) {
+        private void assertResponse(Response response, boolean modificationSupported, boolean addHeader) {
             if (!modificationSupported) {
                 final String UNSENT_HEADER_CHANGES = "Unsent header changes";
                 LogRecord logRecord = findLogRecord(UNSENT_HEADER_CHANGES);

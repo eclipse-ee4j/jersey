@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.Map;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.UriBuilder;
@@ -1655,6 +1657,31 @@ public class JerseyUriBuilderTest {
         checkQueryFormat("http://localhost:8080/path",
                          JerseyQueryParamStyle.MULTI_PAIRS,
                          "key1=val1&key1=val2&key2=val1&key1=val3");
+    }
+
+
+    @Test
+    public void testQueryParam() {
+        URI uri = new JerseyUriBuilder().scheme("http").host("localhost").port(8080).uri("some")
+                    .replacePath("NewPath")
+                    .replaceQuery("&Second")
+                    .build();
+        Assertions.assertEquals("&Second", uri.getQuery());
+    }
+
+
+    @Test
+    void testFragment5269() throws URISyntaxException {
+        final URI uri = new URI("http://www.example.org/foo.xml#xpointer(//Rube)").normalize();
+        Assertions.assertEquals(uri, UriBuilder.fromUri(uri).build()); // prints "http://www.example.org/foo.xml#xpointer(//Rube)"
+        Assertions.assertEquals(uri, UriBuilder.fromUri(uri).fragment("xpointer(//{type})").build("Rube"));
+    }
+
+    @Test
+    public void test5416() {
+        URI uri = UriBuilder.fromUri("http://host.com/path%20path/.test.jpg").build();
+        Link link = Link.fromUri(uri).build();
+        Assertions.assertEquals(uri, link.getUri());
     }
 
     private void checkQueryFormat(String fromUri, JerseyQueryParamStyle queryParamStyle, String expected) {

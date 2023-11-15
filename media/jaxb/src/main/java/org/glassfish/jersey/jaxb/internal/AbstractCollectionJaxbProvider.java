@@ -26,6 +26,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,6 +57,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * An abstract provider for {@code T[]}, {@code Collection&lt;T&gt;},
@@ -238,12 +240,12 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
                     ? Arrays.asList((Object[]) t)
                     : (Collection) t;
             final Class elementType = getElementClass(type, genericType);
-            final Charset charset = getCharset(mediaType);
+            final Charset charset = ReaderWriter.getCharset(mediaType);
             final String charsetName = charset.name();
 
             final Marshaller m = getMarshaller(elementType, mediaType);
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            if (charset != UTF8) {
+            if (charset != StandardCharsets.UTF_8) {
                 m.setProperty(Marshaller.JAXB_ENCODING, charsetName);
             }
             setHeader(m, annotations);

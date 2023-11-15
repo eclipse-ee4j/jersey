@@ -50,7 +50,7 @@
         <dependency>
             <groupId>io.helidon.microprofile.config</groupId>
             <artifactId>helidon-microprofile-config</artifactId>
-            <version>${helidon.version}</version>
+            <version>${helidon.config.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.eclipse.microprofile.config</groupId>
@@ -113,6 +113,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>jdk11-</id>
+            <activation>
+                <jdk>(,12)</jdk>
+            </activation>
+            <properties>
+                <helidon.config.version>${helidon.config.11.version}</helidon.config.version>
+            </properties>
         </profile>
     </profiles>
 </project>

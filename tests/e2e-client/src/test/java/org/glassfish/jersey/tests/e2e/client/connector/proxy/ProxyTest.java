@@ -71,7 +71,7 @@ public class ProxyTest {
     private static final String PROXY_URI = "http://127.0.0.1:9997";
     private static final String PROXY_USERNAME = "proxy-user";
     private static final String PROXY_PASSWORD = "proxy-password";
-    private static final String NO_PASS = "no-pass";
+    private static final String PROXY_NO_PASS = "proxy-no-pass";
 
     public static class ApacheConnectorProviderProxyTest extends ProxyTemplateTest {
         public ApacheConnectorProviderProxyTest()
@@ -137,7 +137,7 @@ public class ProxyTest {
         @Test
         public void testGetNoPass() {
             client().property(ClientProperties.PROXY_URI, ProxyTest.PROXY_URI);
-            try (Response response = target("proxyTest").request().header(NO_PASS, 200).get()) {
+            try (Response response = target("proxyTest").request().header(PROXY_NO_PASS, 200).get()) {
                 assertEquals(200, response.getStatus());
             }
         }
@@ -206,8 +206,8 @@ public class ProxyTest {
         Set<HttpChannel> httpConnect = new HashSet<>();
         @Override
         public boolean handle(Request request, org.eclipse.jetty.server.Response response, Callback callback) throws Exception {
-            if (request.getHeaders().get(NO_PASS) != null) {
-                response.setStatus(Integer.parseInt(request.getHeaders().get(NO_PASS)));
+            if (request.getHeaders().get(PROXY_NO_PASS) != null) {
+                response.setStatus(Integer.parseInt(request.getHeaders().get(PROXY_NO_PASS)));
             } else if (request.getHeaders().get("Proxy-Authorization") != null) {
                 String proxyAuthorization = request.getHeaders().get("Proxy-Authorization");
                 String decoded = new String(Base64.getDecoder().decode(proxyAuthorization.substring(6).getBytes()),

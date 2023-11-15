@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -11,9 +11,10 @@
 package org.glassfish.jersey.examples.helloworld.test;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,7 +228,7 @@ public abstract class AbstractWebAppTest {
 
         try {
 
-            final BufferedReader reader = new BufferedReader(new FileReader(felixPolicy));
+            final BufferedReader reader = Files.newBufferedReader(Paths.get(felixPolicy));
             String line;
             final Set<String> cpiNames = new HashSet<String>();
 

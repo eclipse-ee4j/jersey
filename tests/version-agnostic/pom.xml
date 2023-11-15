@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -46,7 +46,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.2.2</version>
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
@@ -78,6 +78,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

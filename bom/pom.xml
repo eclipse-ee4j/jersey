@@ -95,6 +95,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
+                <artifactId>jersey-jetty11-http2-connector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-jdk-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -106,6 +111,16 @@
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty-http</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty11-http</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty11-http2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -161,6 +176,11 @@
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>
                 <artifactId>jersey-entity-filtering</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-micrometer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

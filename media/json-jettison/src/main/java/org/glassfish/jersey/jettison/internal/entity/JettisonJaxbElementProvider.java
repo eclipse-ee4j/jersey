@@ -40,6 +40,7 @@ import jakarta.xml.bind.Unmarshaller;
 import org.glassfish.jersey.jaxb.internal.AbstractJaxbElementProvider;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 import org.glassfish.jersey.jettison.JettisonMarshaller;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * JSON message entity media type provider (reader & writer) for {@link jakarta.xml.bind.JAXBElement}
@@ -95,7 +96,7 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     @Override
     protected final JAXBElement<?> readFrom(Class<?> type, MediaType mediaType, Unmarshaller unmarshaller,
                                             InputStream entityStream) throws JAXBException {
-        final Charset c = getCharset(mediaType);
+        final Charset c = ReaderWriter.getCharset(mediaType);
 
         return JettisonJaxbContext.getJSONUnmarshaller(unmarshaller)
                 .unmarshalJAXBElementFromJSON(new InputStreamReader(entityStream, c), type);

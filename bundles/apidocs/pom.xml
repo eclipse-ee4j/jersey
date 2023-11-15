@@ -149,6 +149,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -243,6 +248,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-micrometer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.ext.microprofile</groupId>
             <artifactId>jersey-mp-config</artifactId>
             <version>${project.version}</version>
@@ -310,6 +320,70 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>jetty11</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jetty.version>${jetty11.version}</jetty.version>
+            </properties>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.connectors</groupId>
+                        <artifactId>jersey-jetty11-connector</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.connectors</groupId>
+                        <artifactId>jersey-jetty11-http2-connector</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.containers</groupId>
+                        <artifactId>jersey-container-jetty11-http</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.containers</groupId>
+                        <artifactId>jersey-container-jetty11-http2</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.connectors</groupId>
+                    <artifactId>jersey-jetty11-connector</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.connectors</groupId>
+                    <artifactId>jersey-jetty11-http2-connector</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-jetty11-http</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-jetty11-http2</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
