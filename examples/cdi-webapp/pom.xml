@@ -180,6 +180,7 @@
                 <dependency>
                     <groupId>org.jboss.weld.servlet</groupId>
                     <artifactId>weld-servlet-core</artifactId>
+                    <version>${weld.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -199,7 +200,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkMode>always</forkMode>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                 </configuration>
             </plugin>

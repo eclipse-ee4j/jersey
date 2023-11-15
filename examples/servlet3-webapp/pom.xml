@@ -61,9 +61,8 @@
 <!--                <artifactId>maven-failsafe-plugin</artifactId>-->
 <!--            </plugin>-->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.plugin.version}</version>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-maven-plugin</artifactId>
                 <configuration>
 <!--                    <skip>${skip.tests}</skip>-->
 <!--                    <stopWait>10</stopWait>-->

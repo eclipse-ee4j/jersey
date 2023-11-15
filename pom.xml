@@ -734,11 +734,6 @@
                 </plugin>
                 <!-- TODO: remove the old jetty plugin dependencies -->
                 <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>8.1.8.v20121106</version>
-                </plugin>
-                <plugin>
                     <groupId>org.eclipse.jetty.ee10</groupId>
                     <artifactId>jetty-ee10-maven-plugin</artifactId>
                     <version>${jetty.plugin.version}</version>
@@ -2063,20 +2058,6 @@
                 <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>pax-exam-link-mvn</artifactId>
                 <version>${pax.exam.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty</artifactId>
-                <version>${jetty.plugin.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.plugin.version}</version>
                 <scope>test</scope>
             </dependency>
 
