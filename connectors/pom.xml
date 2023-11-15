@@ -40,7 +40,7 @@
         <module>helidon-connector</module>
         <module>jdk-connector</module>
         <module>jetty-connector</module>
-        <module>jetty11-http2-connector</module>
+<!--        <module>jetty11-http2-connector</module>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
         <module>jetty11-connector</module>
         <module>jnh-connector</module>
         <module>netty-connector</module>

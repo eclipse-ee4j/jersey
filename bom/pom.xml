@@ -93,11 +93,11 @@
                 <artifactId>jersey-jetty11-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-jetty11-http2-connector</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
             <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-jdk-connector</artifactId>
@@ -113,7 +113,7 @@
                 <artifactId>jersey-container-jetty-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty11-http</artifactId>
                 <version>${project.version}</version>
@@ -122,7 +122,7 @@
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty11-http2</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-grizzly2-http</artifactId>
@@ -433,7 +433,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.9.1</version>
             </plugin>
         </plugins>
     </build>
