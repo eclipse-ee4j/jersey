@@ -24,7 +24,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
@@ -36,10 +35,8 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
-import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
@@ -63,18 +60,15 @@ public class HttpPatchTest {
     private static final Logger LOGGER = Logger.getLogger(RequestHeaderModificationsTest.class.getName());
 
     public static List<ConnectorProvider> testData() {
-        int size = JdkVersion.getJdkVersion().getMajor() < 17 ? 6 : 7;
-        final ConnectorProvider[] providers = new ConnectorProvider[size];
-        providers[0] = new JdkConnectorProvider();
-        providers[1] = new GrizzlyConnectorProvider();
-        providers[2] = new ApacheConnectorProvider();
-        providers[3] = new Apache5ConnectorProvider();
-        providers[4] = new NettyConnectorProvider();
-        providers[5] = new JavaNetHttpConnectorProvider();
-        if (size == 7) {
-            providers[6] = new JettyConnectorProvider();
-        }
-
+        final ConnectorProvider[] providers = new ConnectorProvider[] {
+                new JdkConnectorProvider(),
+                new GrizzlyConnectorProvider(),
+                new ApacheConnectorProvider(),
+                new Apache5ConnectorProvider(),
+                new NettyConnectorProvider(),
+                new JavaNetHttpConnectorProvider(),
+                new JettyConnectorProvider(),
+        };
         return Arrays.asList(providers);
     }
 

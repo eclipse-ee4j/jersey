@@ -58,7 +58,6 @@ import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -111,7 +110,7 @@ public class RequestHeaderModificationsTest {
                 {new JavaNetHttpConnectorProvider(), true, true, false, false},
                 {new HttpUrlConnectorProvider(), true, true, true, true},
                 {new GrizzlyConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
-                {new JettyConnectorProvider(), false, false, true, false}, // change to true when JERSEY-2341 fixed
+                {new JettyConnectorProvider(), true, false, true, false}, // change to true when JERSEY-2341 fixed
                 {new ApacheConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
                 {new Apache5ConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
                 {new JavaNetHttpConnectorProvider(), true, true, false, false},
@@ -122,10 +121,6 @@ public class RequestHeaderModificationsTest {
     public Collection<DynamicContainer> generateTests() {
         Collection<DynamicContainer> tests = new ArrayList<>();
         testData().forEach(arr -> {
-            if (JdkVersion.getJdkVersion().getMajor() < 17
-                    && arr[0].getClass().getName().contains("Jetty")) {
-                return;
-            }
             RequestHeaderModificationsTemplateTest test = new RequestHeaderModificationsTemplateTest(
                     (ConnectorProvider) arr[0], (boolean) arr[1], (boolean) arr[2], (boolean) arr[3], (boolean) arr[4]) {};
             tests.add(TestHelper.toTestContainer(test, String.format("%s (%s, %s, %s)",
