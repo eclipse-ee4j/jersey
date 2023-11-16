@@ -19,6 +19,7 @@ package org.glassfish.jersey.ext.cdi1x.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -118,7 +119,8 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
      */
     private static <T> T produce(InjectionTarget<T> target, CreationalContext<T> ctx, InjectionManager im, Class<T> clazz) {
         try {
-            return target.produce(ctx);
+            return hasContextAnnotatedConstructors(clazz) ? im.create(clazz)
+                    : target.produce(ctx);
         } catch (Exception e) {
             LOGGER.fine(LocalizationMessages.CDI_FAILED_LOADING(clazz, e.getMessage()));
             try {
@@ -131,6 +133,35 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
                 throw re;
             }
         }
+    }
+
+    private static boolean hasContextAnnotatedConstructors(Class clazz) {
+        final Constructor<?>[] constructors = clazz.getConstructors();
+        if (constructors != null && constructors.length > 0) {
+            for (final Constructor<?> constructor : constructors) {
+                final Annotation[][] annotations = constructor.getParameterAnnotations();
+                if (annotations != null && annotations.length > 0) {
+                    for (final Annotation[] annotations1 : annotations) {
+                        if (hasContext(annotations1)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasContext(Annotation[] annotations) {
+        if (annotations != null && annotations.length > 0) {
+            for (final Annotation annotation : annotations) {
+                if ("jakarta.ws.rs.core.Context".equals(annotation.annotationType().getName())
+                    || "javax.ws.rs.core.Context".equals(annotation.annotationType().getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings(value = "unchecked")
