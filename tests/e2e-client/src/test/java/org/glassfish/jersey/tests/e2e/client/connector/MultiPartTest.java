@@ -19,16 +19,15 @@ package org.glassfish.jersey.tests.e2e.client.connector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
-import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.internal.ReaderWriter;
+import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -58,18 +57,15 @@ public class MultiPartTest {
     private static final Logger LOGGER = Logger.getLogger(RequestHeaderModificationsTest.class.getName());
 
     public static ConnectorProvider[] testData() {
-        int size = /*JdkVersion.getJdkVersion().getMajor() < 17 ? */3 /*: 4*/;
-        final ConnectorProvider[] providers = new ConnectorProvider[size];
-        providers[0] = new HttpUrlConnectorProvider();
-        providers[1] = new NettyConnectorProvider();
-        providers[2] = new JdkConnectorProvider();
-        /*if (size == 4) { //It's Jetty11ConnectorProvider in the 3.1,
-                           //and we can not test it here due to incompatibility
-                           //of Jetty 12 and Jetty 11
-            providers[3] = new JettyConnectorProvider();
-        }*/
+        final ConnectorProvider[] providers = new ConnectorProvider[] {
+                new HttpUrlConnectorProvider(),
+                new NettyConnectorProvider(),
+                new JdkConnectorProvider(),
+                new JettyConnectorProvider(),
+        };
         return providers;
     }
+
 
     @TestFactory
     public Collection<DynamicContainer> generateTests() {

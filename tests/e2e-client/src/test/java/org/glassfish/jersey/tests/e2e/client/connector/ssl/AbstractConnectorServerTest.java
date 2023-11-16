@@ -28,7 +28,6 @@ import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
-import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 
@@ -55,16 +54,14 @@ public abstract class AbstractConnectorServerTest {
      * @return test parameters.
      */
     public static Stream<ConnectorProvider> testData() {
-        int size = JdkVersion.getJdkVersion().getMajor() < 17 ? 5 : 6;
-        final ConnectorProvider[] providers = new ConnectorProvider[size];
-        providers[0] = new HttpUrlConnectorProvider();
-        providers[1] = new GrizzlyConnectorProvider();
-        providers[2] = new ApacheConnectorProvider();
-        providers[3] = new Apache5ConnectorProvider();
-        providers[4] = new JavaNetHttpConnectorProvider();
-        if (size == 6) {
-            providers[5] = new JettyConnectorProvider();
-        }
+        final ConnectorProvider[] providers = new ConnectorProvider[] {
+                new HttpUrlConnectorProvider(),
+                new GrizzlyConnectorProvider(),
+                new ApacheConnectorProvider(),
+                new Apache5ConnectorProvider(),
+                new JavaNetHttpConnectorProvider(),
+                new JettyConnectorProvider()
+        };
 
         return Stream.of(providers);
     }
