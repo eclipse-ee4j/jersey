@@ -23,8 +23,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import javax.annotation.Priority;
-
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 
 /**
@@ -315,8 +314,9 @@ public abstract class TracingLogger {
             } else {
                 textSB.append('[');
                 formatInstance(instance, textSB);
-                if (instance.getClass().isAnnotationPresent(Priority.class)) {
-                    textSB.append(" #").append(instance.getClass().getAnnotation(Priority.class).value());
+                final int priority = JerseyPriorities.getPriorityValue(instance.getClass(), -1);
+                if (priority != -1) {
+                    textSB.append(" #").append(priority);
                 }
                 if (instance instanceof WebApplicationException) {
                     formatResponse(((WebApplicationException) instance).getResponse(), textSB);

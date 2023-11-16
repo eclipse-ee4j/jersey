@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,7 @@ import java.util.Set;
 
 import javax.ws.rs.Priorities;
 
-import javax.annotation.Priority;
-
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.model.ContractProvider;
 
 /**
@@ -84,11 +83,7 @@ public class RankedProvider<T> {
                 clazz = clazz.getSuperclass();
             }
 
-            if (clazz.isAnnotationPresent(Priority.class)) {
-                return clazz.getAnnotation(Priority.class).value();
-            } else {
-                return Priorities.USER;
-            }
+            return JerseyPriorities.getPriorityValue(clazz, Priorities.USER);
         }
     }
 
