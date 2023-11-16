@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey;
 
+import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 
 /**
@@ -36,4 +37,15 @@ public class JerseyPriorities {
      * processing after the components with {@code Priorities.ENTITY_CODER} are processed.
      */
     public static final int POST_ENTITY_CODER = Priorities.ENTITY_CODER + 100;
+
+    /**
+     * Return the value of priority annotation on a given class, if exists. Return the default value if not present.
+     * @param prioritized the provider class that potentially has a priority.
+     * @param defaultValue the default priority value if not {@link @Priority) present
+     * @return the value of Priority annotation if present or the default otherwise.
+     */
+    public static int getPriorityValue(Class<?> prioritized, int defaultValue) {
+        final Priority priority = prioritized.getAnnotation(Priority.class);
+        return priority != null ? priority.value() : defaultValue;
+    }
 }
