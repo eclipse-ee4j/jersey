@@ -44,7 +44,7 @@ public class NewCookieProviderTest {
     public void SameSiteTest() {
         final NewCookieProvider provider = new NewCookieProvider();
         final String newCookieString = provider.toString(newCookie);
-        assertTrue(newCookieString.contains("SameSite=STRICT"));
+        assertTrue(newCookieString.contains("SameSite=Strict"));
         assertEquals(NewCookie.SameSite.STRICT, provider.fromString(newCookieString).getSameSite());
     }
 

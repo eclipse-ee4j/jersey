@@ -191,7 +191,7 @@ public class CookieImplTest {
         cookie = new NewCookie("fred", "flintstone", null, null, 1,
                 "a modern stonage family", 60, null, false, false,
                 NewCookie.SameSite.STRICT);
-        expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;SameSite=STRICT";
+        expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;SameSite=Strict";
         assertEquals(expResult, cookie.toString());
     }
 
@@ -217,7 +217,7 @@ public class CookieImplTest {
         assertTrue(cookie.isSecure());
 
         cookie = NewCookie.valueOf(
-                "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;Secure;SameSite=NONE");
+                "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;Secure;SameSite=None");
         assertEquals("fred", cookie.getName());
         assertEquals("flintstone", cookie.getValue());
         assertEquals("a modern stonage family", cookie.getComment());
