@@ -31,6 +31,8 @@ import org.glassfish.jersey.uri.internal.UriTemplateParser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -257,7 +259,7 @@ public class UriTemplateTest {
         final Map<String, String> m = new HashMap<String, String>();
 
         boolean isMatch = t.match(uri, m);
-        assertTrue(isMatch);
+        assertTrue(isMatch, "No match for '" + uri + "' & params '" + Arrays.toString(values) + "`");
         assertEquals(values.length, t.getTemplateVariables().size());
 
         final Iterator<String> names = t.getTemplateVariables().iterator();
@@ -982,11 +984,18 @@ public class UriTemplateTest {
         _testTemplateNames("/{a,b,c}", "a", "b", "c");
         _testMatching("/uri/{a}", "/uri/hello", "hello");
         _testMatching("/uri/{a,b}", "/uri/hello,world", "hello", "world");
+        _testMatching("/uri/{a,b}", "/uri/x", "x", null);
         _testMatching("/uri{?a,b}", "/uri?a=hello&b=world", "hello", "world");
         _testMatching("/uri/{a,b,c}", "/uri/hello,world,!", "hello", "world", "!");
         _testMatching("/uri/{a,b,c}", "/uri/hello,world", "hello", "world", null);
         _testMatching("/uri/{a,b,c}", "/uri/hello", "hello", null, null);
         _testMatching("/uri/{a,b,c}", "/uri/", null, null, null);
+    }
+
+    @Test
+    public void testRegularExpressionIsNotOptional() {
+        Assertions.assertThrows(AssertionFailedError.class,
+                () -> _testMatching("/{name: [a-z0-9]{3,128}}", "/", new String[]{null}));
     }
 
     @Test
