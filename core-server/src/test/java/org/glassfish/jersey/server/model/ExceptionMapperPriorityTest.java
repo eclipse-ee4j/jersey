@@ -26,10 +26,10 @@ import org.glassfish.jersey.server.TestInjectionManagerFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Priority;
-import javax.inject.Singleton;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.annotation.Priority;
+import jakarta.inject.Singleton;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 public class ExceptionMapperPriorityTest {
     @Test
