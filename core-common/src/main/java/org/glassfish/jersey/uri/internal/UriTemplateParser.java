@@ -395,9 +395,14 @@ public class UriTemplateParser {
                     //               groupCounts.add(1 + skipGroup);
 
                     if (variables.hasLength(0)) {
-                        int len = TEMPLATE_VALUE_PATTERN.pattern().length() - 1;
-                        String pattern = TEMPLATE_VALUE_PATTERN.pattern().substring(0, len) + '{' + variables.getLength(0) + '}';
-                        namePattern = Pattern.compile(pattern);
+                        if (variables.getLength(0) != 0) {
+                            int len = TEMPLATE_VALUE_PATTERN.pattern().length() - 1;
+                            String pattern = TEMPLATE_VALUE_PATTERN.pattern().substring(0, len)
+                                    + '{' + variables.getLength(0) + '}';
+                            namePattern = Pattern.compile(pattern);
+                        } else {
+                            namePattern = TEMPLATE_VALUE_PATTERN;
+                        }
                         templateVariable.setLength(variables.getLength(0));
                     } else {
                         namePattern = (!variables.hasRegexp(0))
@@ -462,7 +467,10 @@ public class UriTemplateParser {
                         if (argIndex != 0) {
                             regexBuilder.append(")");
                         }
-                        regexBuilder.append("{0,1}");
+
+                        if (!variables.hasRegexp(argIndex)) {
+                            regexBuilder.append("{0,1}");
+                        }
 
                         argIndex++;
                         groupCounts.add(2);
@@ -571,6 +579,7 @@ public class UriTemplateParser {
 
             StringBuilder regexBuilder = new StringBuilder();
             State state = State.TEMPLATE;
+            State previousState;
             boolean star = false;
             boolean whiteSpace = false;
             boolean ignoredLastComma = false;
@@ -579,6 +588,7 @@ public class UriTemplateParser {
             int regExpRound = 0;   // (
             boolean reqExpSlash = false; // \
             while ((state.value & (State.ERROR.value | State.EXIT.value)) == 0) {
+                previousState = state;
                 c = ci.next();
                 // "\\{(\\w[-\\w\\.]*)
                 if (Character.isLetterOrDigit(c)) {
@@ -702,8 +712,8 @@ public class UriTemplateParser {
                                 regexps.add(regex);
                             }
                         } else {
-                            regexps.add(null);
-                            lengths.add(null);
+                            regexps.add(previousState == State.REGEXP ? "" : null);
+                            lengths.add(previousState == State.REGEXP ? 0 : null);
                         }
 
                         names.add(nameBuilder.toString());

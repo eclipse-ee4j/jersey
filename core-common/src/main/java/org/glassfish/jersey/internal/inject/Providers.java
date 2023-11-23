@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,6 +42,7 @@ import jakarta.ws.rs.core.Feature;
 
 import jakarta.annotation.Priority;
 
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -357,13 +358,7 @@ public final class Providers {
     }
 
     private static int getPriority(Class<?> serviceClass) {
-        Priority annotation = serviceClass.getAnnotation(Priority.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-
-        // default priority
-        return Priorities.USER;
+        return JerseyPriorities.getPriorityValue(serviceClass, /* default priority */ Priorities.USER);
     }
 
     private static <T> Class<T> getImplementationClass(Class<T> contract, ServiceHolder<T> serviceHolder) {

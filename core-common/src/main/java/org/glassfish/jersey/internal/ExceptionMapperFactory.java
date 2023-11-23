@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,11 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
@@ -111,19 +113,18 @@ public class ExceptionMapperFactory implements ExceptionMappers {
     private <T extends Throwable> ExceptionMapper<T> find(final Class<T> type, final T exceptionInstance) {
         ExceptionMapper<T> mapper = null;
         int minDistance = Integer.MAX_VALUE;
+        int priority = Priorities.USER;
 
         for (final ExceptionMapperType mapperType : exceptionMapperTypes.get()) {
             final int d = distance(type, mapperType.exceptionType);
             if (d >= 0 && d <= minDistance) {
                 final ExceptionMapper<T> candidate = mapperType.mapper.getInstance();
+                final int p = mapperType.mapper.getRank() > 0 ? mapperType.mapper.getRank() : Priorities.USER;
 
-                if (isPreferredCandidate(exceptionInstance, candidate, d == minDistance)) {
+                if (isPreferredCandidate(exceptionInstance, candidate, d == minDistance && p >= priority)) {
                     mapper = candidate;
                     minDistance = d;
-                    if (d == 0) {
-                        // slight optimization: if the distance is 0, it is already the best case, so we can exit
-                        return mapper;
-                    }
+                    priority = p;
                 }
             }
         }
