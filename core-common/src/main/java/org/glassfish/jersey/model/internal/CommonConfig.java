@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,6 +45,7 @@ import jakarta.ws.rs.core.FeatureContext;
 import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.ExtendedConfig;
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.Binder;
@@ -131,12 +132,7 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             if (priority != ContractProvider.NO_PRIORITY) {
                 return priority;
             }
-            final Priority priorityAnnotation = featureClass.getAnnotation(Priority.class);
-            if (priorityAnnotation != null) {
-                return priorityAnnotation.value();
-            } else {
-                return Priorities.USER;
-            }
+            return JerseyPriorities.getPriorityValue(featureClass, Priorities.USER);
         }
 
         /**
@@ -592,10 +588,8 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
         // Check whether meta providers have been initialized for a config this config has been loaded from.
         if (!disableMetaProviderConfiguration) {
             final Set<AutoDiscoverable> providers = new TreeSet<>((o1, o2) -> {
-                final int p1 = o1.getClass().isAnnotationPresent(Priority.class)
-                        ? o1.getClass().getAnnotation(Priority.class).value() : Priorities.USER;
-                final int p2 = o2.getClass().isAnnotationPresent(Priority.class)
-                        ? o2.getClass().getAnnotation(Priority.class).value() : Priorities.USER;
+                final int p1 = JerseyPriorities.getPriorityValue(o1.getClass(), Priorities.USER);
+                final int p2 = JerseyPriorities.getPriorityValue(o2.getClass(), Priorities.USER);
 
                 return (p1 < p2 || p1 == p2) ? -1 : 1;
             });
