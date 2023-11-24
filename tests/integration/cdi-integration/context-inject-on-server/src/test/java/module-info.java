@@ -42,4 +42,9 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server.test {
 
     exports org.glassfish.jersey.tests.cdi.inject.test;
     opens org.glassfish.jersey.tests.cdi.inject.test;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }

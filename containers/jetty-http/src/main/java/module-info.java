@@ -22,6 +22,7 @@ module org.glassfish.jersey.container.jetty.http {
 
     requires org.eclipse.jetty.http;
     requires org.eclipse.jetty.server;
+    requires org.eclipse.jetty.security;
     requires org.eclipse.jetty.util;
 
     requires org.glassfish.jersey.core.common;

@@ -35,4 +35,9 @@ module org.glassfish.jersey.tests.integration.cdi.resource.context.test {
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 
     exports org.glassfish.jersey.tests.cdi.resourceatcontext.test;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }

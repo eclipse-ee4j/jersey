@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,9 +22,9 @@ module org.glassfish.jersey.container.grizzly2.http {
     requires jakarta.inject;
     requires static jakarta.xml.bind;
 
-    requires grizzly.framework;
-    requires grizzly.http.server;
-    requires grizzly.http;
+    requires org.glassfish.grizzly;
+    requires org.glassfish.grizzly.http.server;
+    requires org.glassfish.grizzly.http;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
