@@ -38,6 +38,7 @@
         <module>util</module>
         <module>maven</module>
         <module>memleak-test-common</module>
+        <module>jupiter-extension</module>
     </modules>
 
     <dependencies>
