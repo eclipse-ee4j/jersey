@@ -34,7 +34,12 @@ module org.glassfish.jersey.apache.connector {
 
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
+    requires org.junit.platform.commons;
 
     exports org.glassfish.jersey.apache.connector;
     opens org.glassfish.jersey.apache.connector;
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }

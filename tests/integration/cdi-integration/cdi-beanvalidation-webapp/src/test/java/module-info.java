@@ -22,9 +22,14 @@ module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp.test {
 
     requires weld.se.core;
     requires weld.core.impl;
-    requires grizzly.http.server;
+    requires org.glassfish.grizzly.http.server;
     requires org.hibernate.validator;
     requires org.hibernate.validator.cdi;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;

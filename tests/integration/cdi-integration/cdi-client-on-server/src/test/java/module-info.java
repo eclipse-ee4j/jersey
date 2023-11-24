@@ -35,4 +35,9 @@ module org.glassfish.jersey.tests.integration.cdi.client.on.server {
 
     exports org.glassfish.jersey.tests.cdi.client;
     opens org.glassfish.jersey.tests.cdi.client;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }

@@ -23,7 +23,7 @@ open module org.glassfish.jersey.container.grizzly2.http {
     requires jakarta.ws.rs;
 
     requires org.eclipse.jetty.http2.client;
-    requires org.eclipse.jetty.http2.http.client.transport;
+    requires org.eclipse.jetty.http2.client.transport;
 
     requires org.bouncycastle.provider;
     requires org.bouncycastle.pkix;
@@ -32,9 +32,15 @@ open module org.glassfish.jersey.container.grizzly2.http {
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
 
-    requires grizzly.http.server;
-    requires grizzly.http2;
-    requires grizzly.framework;
+    requires org.glassfish.grizzly.http.server;
+    requires org.glassfish.grizzly;
+    requires org.glassfish.grizzly.http;
+    requires org.glassfish.grizzly.http2;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 
     requires org.glassfish.hk2.api;
     requires org.glassfish.hk2.locator;

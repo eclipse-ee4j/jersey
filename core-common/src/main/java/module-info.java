@@ -29,6 +29,7 @@ module org.glassfish.jersey.core.common {
 
     // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey;
+    exports org.glassfish.jersey.http;
     exports org.glassfish.jersey.internal;
     exports org.glassfish.jersey.internal.config;
     exports org.glassfish.jersey.internal.guava;

@@ -119,6 +119,7 @@
             <artifactId>jakarta.inject-api</artifactId>
         </dependency>
 
+<!--
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -129,6 +130,7 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
+-->
 
         <dependency>
             <!-- not to warn about missing activation -->

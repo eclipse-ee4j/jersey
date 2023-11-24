@@ -20,9 +20,9 @@ module org.glassfish.jersey.tests.framework.provider.grizzly {
     requires jakarta.servlet;
     requires jakarta.ws.rs;
 
-    requires grizzly.framework;
-    requires grizzly.http.server;
-    requires grizzly.http.servlet;
+    requires org.glassfish.grizzly;
+    requires org.glassfish.grizzly.http.server;
+    requires org.glassfish.grizzly.servlet;
 
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.core.common;

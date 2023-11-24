@@ -2329,6 +2329,11 @@
         <wiremock.version>2.27.2</wiremock.version>
         <xerces.version>2.12.2</xerces.version>
 
+        <!--required by Grizzly* modules-->
+        <gmbal.version>4.0.3</gmbal.version>
+        <pfl.version>4.1.2</pfl.version>
+        <!--End of required by Grizzly* modules-->
+
         <!-- Graal VM       -->
         <graalvm.version>20.3.12</graalvm.version>
 
@@ -2367,6 +2372,7 @@
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>12.0.3</jetty.version>
         <jetty9.version>9.4.53.v20231009</jetty9.version>
+        <jetty.servlet.api.version>5.0.2</jetty.servlet.api.version>
         <jetty11.version>11.0.18</jetty11.version>
         <jetty.plugin.version>12.0.3</jetty.plugin.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>

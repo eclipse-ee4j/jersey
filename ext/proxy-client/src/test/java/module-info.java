@@ -31,4 +31,9 @@ module org.glassfish.jersey.ext.proxy.client {
 
     exports org.glassfish.jersey.client.proxy;
     opens org.glassfish.jersey.client.proxy;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }

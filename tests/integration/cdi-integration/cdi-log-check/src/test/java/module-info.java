@@ -40,4 +40,9 @@ module org.glassfish.jersey.tests.integration.cdi.log.check.test {
 
     exports org.glassfish.jersey.tests.cdi.resources.test;
     opens org.glassfish.jersey.tests.cdi.resources.test;
+
+//  required by Grizzly* modules
+    requires pfl.tf;
+    requires gmbal;
+//    end of required by Grizzly* modules
 }
