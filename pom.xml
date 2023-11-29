@@ -1748,12 +1748,12 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.http2</groupId>
-                <artifactId>http2-client</artifactId>
+                <artifactId>jetty-http2-client</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.http2</groupId>
-                <artifactId>http2-http-client-transport</artifactId>
+                <artifactId>jetty-http2-client-transport</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -1768,7 +1768,7 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.http2</groupId>
-                <artifactId>http2-server</artifactId>
+                <artifactId>jetty-http2-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>

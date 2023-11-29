@@ -71,8 +71,9 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty11.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.glassfish.jersey.test-framework.maven</groupId>

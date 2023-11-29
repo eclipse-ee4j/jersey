@@ -131,7 +131,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author Marek Potociar
  */
-class JettyConnector implements Connector {
+public class JettyConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(JettyConnector.class.getName());
 
@@ -146,23 +146,17 @@ class JettyConnector implements Connector {
      * @param jaxrsClient JAX-RS client instance, for which the connector is created.
      * @param config client configuration.
      */
-    JettyConnector(final Client jaxrsClient, final Configuration config) {
+    public JettyConnector(final Client jaxrsClient, final Configuration config) {
         this.configuration = config;
-        HttpClient httpClient = null;
-        if (config.isRegistered(JettyHttpClientSupplier.class)) {
-            Optional<Object> contract = config.getInstances().stream()
-                    .filter(a-> JettyHttpClientSupplier.class.isInstance(a)).findFirst();
-            if (contract.isPresent()) {
-                httpClient = ((JettyHttpClientSupplier) contract.get()).getHttpClient();
-            }
-        }
+        HttpClient httpClient = getRegisteredHttpClient(config);
+
         if (httpClient == null) {
             final SSLContext sslContext = jaxrsClient.getSslContext();
             final SslContextFactory.Client sslContextFactory = new SslContextFactory.Client(false);
             sslContextFactory.setSslContext(sslContext);
             final ClientConnector connector = new ClientConnector();
             connector.setSslContextFactory(sslContextFactory);
-            final HttpClientTransport transport = new HttpClientTransportOverHTTP(connector);
+            final HttpClientTransport transport = initClientTransport(connector);
             httpClient = new HttpClient(transport);
         }
         this.client = httpClient;
@@ -229,6 +223,37 @@ class JettyConnector implements Connector {
             throw new ProcessingException("Failed to start the client.", e);
         }
         this.cookieStore = client.getHttpCookieStore();
+    }
+
+    /**
+     * provides required HTTP client transport for client
+     *
+     * the default transport is {@link HttpClientTransportOverHTTP}
+     *
+     * @return instance of {@link HttpClientTransport}
+     * @since 2.41
+     */
+    protected HttpClientTransport initClientTransport(ClientConnector clientConnector) {
+        return new HttpClientTransportOverHTTP(clientConnector);
+    }
+
+    /**
+     * provides custom registered {@link HttpClient} if any (or NULL)
+     *
+     * @param config configuration where {@link HttpClient} could be registered
+     * @return {@link HttpClient} instance if any was previously registered or NULL
+     *
+     * @since 2.41
+     */
+    protected HttpClient getRegisteredHttpClient(Configuration config) {
+        if (config.isRegistered(JettyHttpClientSupplier.class)) {
+            Optional<Object> contract = config.getInstances().stream()
+                    .filter(a-> JettyHttpClientSupplier.class.isInstance(a)).findFirst();
+            if (contract.isPresent()) {
+                return  ((JettyHttpClientSupplier) contract.get()).getHttpClient();
+            }
+        }
+        return null;
     }
 
     /**

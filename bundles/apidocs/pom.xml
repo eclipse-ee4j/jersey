@@ -295,9 +295,9 @@
                             <includeDependencySources>true</includeDependencySources>
                             <sourceFileExcludes>
                                 <fileExclude>META-INF/versions/12/org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
+                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/jetty/*.java</fileExclude>
                                 <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
-                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
                             <dependencySourceIncludes>
