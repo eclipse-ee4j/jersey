@@ -42,7 +42,7 @@
         <module>jersey-servlet</module>
         <module>jetty11-http</module>
         <module>jetty-http</module>
-<!--        <module>jetty11-http2</module>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
+        <module>jetty-http2</module>
         <module>jetty-servlet</module>
         <module>netty-http</module>
         <module>simple-http</module>

@@ -40,7 +40,7 @@
         <module>inmemory</module>
         <module>jdk-http</module>
         <module>jetty</module>
-<!--        <module>jetty11-http2</module>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
+        <module>jetty-http2</module>
         <module>netty</module>
         <module>simple</module>
     </modules>
