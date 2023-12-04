@@ -314,7 +314,12 @@ class NettyConnector implements Connector {
                }
 
                // Make the connection attempt.
-               chan = b.connect(host, port).sync().channel();
+                try {
+                    chan = b.connect(host, port).sync().channel();
+                } catch (Exception e) {
+                    responseAvailable.completeExceptionally(e);
+                    return;
+                }
             }
 
             // assert: clientHandler will always notify responseDone: either normally, or exceptionally
