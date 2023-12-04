@@ -139,6 +139,8 @@ public class MultiReleaseTest {
         if (jerseyVersion.startsWith("3")) {
             return new DependencyPair[] {
                     new DependencyPair("org.glassfish.jersey.connectors", "jersey-helidon-connector"),
+                    new DependencyPair("org.glassfish.jersey.connectors", "jersey-jetty-connector"),
+                    new DependencyPair("org.glassfish.jersey.containers", "jersey-container-jetty-http"),
                     new DependencyPair("org.glassfish.jersey.ext", "jersey-spring6")
             };
         }
