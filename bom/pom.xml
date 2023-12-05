@@ -113,12 +113,12 @@
                 <artifactId>jersey-container-jetty-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!--<dependency>
+            <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty11-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+       <!-- <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty11-http2</artifactId>
                 <version>${project.version}</version>
