@@ -394,6 +394,9 @@
                                 <jar destfile="${project.build.directory}/${project.artifactId}-sources.jar" update="true">
                                     <zipfileset dir="../.." includes="NOTICE.md" prefix="META-INF" />
                                 </jar>
+                                <jar destfile="${project.build.directory}/${project.artifactId}.jar" update="true">
+                                    <zipfileset dir="../.." includes="LICENSE.md" prefix="META-INF" />
+                                </jar>
                             </target>
                         </configuration>
                         <goals>
