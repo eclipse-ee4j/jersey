@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -54,12 +54,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 /**
- * Unit tests for {@link Jetty11HttpServerProvider}.
+ * Unit tests for {@link JettyHttpServerProvider}.
  *
  * @author Markus KARG (markus@headcrashing.eu)
  * @since 3.1.0
  */
-public final class Jetty11HttpServerProviderTest {
+public final class JettyHttpServerProviderTest {
 
     @Test
     @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
@@ -81,7 +81,7 @@ public final class Jetty11HttpServerProviderTest {
     private void shouldProvideServer(final Object application, final Resource resource)
             throws InterruptedException, ExecutionException {
         // given
-        final WebServerProvider webServerProvider = new Jetty11HttpServerProvider();
+        final WebServerProvider webServerProvider = new JettyHttpServerProvider();
         final SeBootstrap.Configuration configuration = configuration(getPort(), FALSE);
 
         // when
@@ -100,10 +100,10 @@ public final class Jetty11HttpServerProviderTest {
         final Object stopResult = stop.toCompletableFuture().get();
 
         // then
-        assertThat(webServer, is(instanceOf(Jetty11HttpServer.class)));
+        assertThat(webServer, is(instanceOf(JettyHttpServer.class)));
         assertThat(nativeHandle, is(instanceOf(org.eclipse.jetty.server.Server.class)));
         assertThat(startResult, is(nullValue()));
-        assertThat(container, is(instanceOf(Jetty11HttpContainer.class)));
+        assertThat(container, is(instanceOf(JettyHttpContainer.class)));
         assertThat(port, is(greaterThan(0)));
         assertThat(entity, is(resource.toString()));
         assertThat(stopResult, is(nullValue()));
@@ -125,11 +125,11 @@ public final class Jetty11HttpServerProviderTest {
         }
     }
 
-    private static final Logger LOGGER = Logger.getLogger(Jetty11HttpServerProviderTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JettyHttpServerProviderTest.class.getName());
 
     private static final int DEFAULT_PORT = 0;
 
-    private static final int getPort() {
+    private static int getPort() {
         final String value = AccessController
                 .doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
         if (value != null) {
@@ -155,7 +155,7 @@ public final class Jetty11HttpServerProviderTest {
     @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public final void shouldScanFreePort() throws InterruptedException, ExecutionException {
         // given
-        final WebServerProvider webServerProvider = new Jetty11HttpServerProvider();
+        final WebServerProvider webServerProvider = new JettyHttpServerProvider();
         final Application application = new Application();
         final SeBootstrap.Configuration configuration = configuration(SeBootstrap.Configuration.FREE_PORT, TRUE);
 

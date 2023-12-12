@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -42,7 +42,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author Michal Gajdos
  */
-public class AsyncTest extends AbstractJetty11ServerTester {
+public class AsyncTest extends AbstractJettyServerTester {
 
     @Path("/async")
     @SuppressWarnings("VoidMethodAnnotatedWithGET")

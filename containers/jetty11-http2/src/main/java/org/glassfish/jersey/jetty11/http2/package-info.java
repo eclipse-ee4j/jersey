@@ -17,4 +17,4 @@
 /**
  * Jersey Jetty HTTP2 container classes.
  */
-package org.glassfish.jersey.jetty11.http2;
+package org.glassfish.jersey.jetty.http2;

@@ -26,8 +26,8 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.inject.hk2.DelayedHk2InjectionManager;
 import org.glassfish.jersey.inject.hk2.ImmediateHk2InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.jetty11.http2.Jetty11Http2ContainerFactory;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainer;
+import org.glassfish.jersey.jetty.http2.Jetty11Http2ContainerFactory;
+import org.glassfish.jersey.jetty.Jetty11HttpContainer;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 

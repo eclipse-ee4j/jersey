@@ -14,18 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11.http2;
+package org.glassfish.jersey.jetty.http2;
 
 import org.glassfish.jersey.internal.util.JdkVersion;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainer;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainerProvider;
-import org.glassfish.jersey.jetty11.internal.LocalizationMessages;
+import org.glassfish.jersey.jetty.Jetty11HttpContainer;
+import org.glassfish.jersey.jetty.Jetty11HttpContainerProvider;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.server.spi.ContainerProvider;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Application;
 
-import static org.glassfish.jersey.jetty11.Jetty11HttpContainerProvider.HANDLER_NAME;
+import static org.glassfish.jersey.jetty.Jetty11HttpContainerProvider.HANDLER_NAME;
 
 public final class Jetty11Http2ContainerProvider implements ContainerProvider {
 

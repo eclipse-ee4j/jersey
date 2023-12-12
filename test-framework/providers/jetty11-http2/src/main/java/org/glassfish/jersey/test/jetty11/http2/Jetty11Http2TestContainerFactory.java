@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jetty11.http2.Jetty11Http2ContainerFactory;
+import org.glassfish.jersey.jetty.http2.Jetty11Http2ContainerFactory;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerException;

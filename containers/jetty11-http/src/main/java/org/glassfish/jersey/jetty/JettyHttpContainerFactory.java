@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import java.net.URI;
 import java.util.concurrent.ThreadFactory;
@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadFactory;
 import jakarta.ws.rs.ProcessingException;
 
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
-import org.glassfish.jersey.jetty11.internal.LocalizationMessages;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -50,9 +50,9 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * @author Arul Dhesiaseelan (aruld@acm.org)
  * @author Marek Potociar
  */
-public final class Jetty11HttpContainerFactory {
+public final class JettyHttpContainerFactory {
 
-    private Jetty11HttpContainerFactory() {
+    private JettyHttpContainerFactory() {
     }
 
     /**
@@ -107,7 +107,7 @@ public final class Jetty11HttpContainerFactory {
     public static Server createServer(final URI uri, final ResourceConfig config)
             throws ProcessingException {
 
-        final Jetty11HttpContainer container = ContainerFactory.createContainer(Jetty11HttpContainer.class, config);
+        final JettyHttpContainer container = ContainerFactory.createContainer(JettyHttpContainer.class, config);
         return createServer(uri, null, container, true);
     }
 
@@ -132,7 +132,7 @@ public final class Jetty11HttpContainerFactory {
      */
     public static Server createServer(final URI uri, final ResourceConfig configuration, final boolean start)
             throws ProcessingException {
-        return createServer(uri, null, ContainerFactory.createContainer(Jetty11HttpContainer.class, configuration), start);
+        return createServer(uri, null, ContainerFactory.createContainer(JettyHttpContainer.class, configuration), start);
     }
 
 
@@ -153,12 +153,12 @@ public final class Jetty11HttpContainerFactory {
      *
      * @throws ProcessingException      in case of any failure when creating a new Jetty {@code Server} instance.
      * @throws IllegalArgumentException if {@code uri} is {@code null}.
-     * @see Jetty11HttpContainer
+     * @see JettyHttpContainer
      * @since 2.12
      */
     public static Server createServer(final URI uri, final ResourceConfig config, final boolean start,
                                       final Object parentContext) {
-        return createServer(uri, null, new Jetty11HttpContainer(config, parentContext), start);
+        return createServer(uri, null, new JettyHttpContainer(config, parentContext), start);
     }
 
 
@@ -177,11 +177,11 @@ public final class Jetty11HttpContainerFactory {
      *
      * @throws ProcessingException      in case of any failure when creating a new Jetty {@code Server} instance.
      * @throws IllegalArgumentException if {@code uri} is {@code null}.
-     * @see Jetty11HttpContainer
+     * @see JettyHttpContainer
      * @since 2.12
      */
     public static Server createServer(final URI uri, final ResourceConfig config, final Object parentContext) {
-        return createServer(uri, null, new Jetty11HttpContainer(config, parentContext), true);
+        return createServer(uri, null, new JettyHttpContainer(config, parentContext), true);
     }
 
     /**
@@ -208,7 +208,7 @@ public final class Jetty11HttpContainerFactory {
     public static Server createServer(final URI uri, final SslContextFactory.Server sslContextFactory,
                                       final ResourceConfig config)
             throws ProcessingException {
-        final Jetty11HttpContainer container = ContainerFactory.createContainer(Jetty11HttpContainer.class, config);
+        final JettyHttpContainer container = ContainerFactory.createContainer(JettyHttpContainer.class, config);
         return createServer(uri, sslContextFactory, container, true);
     }
 
@@ -230,11 +230,11 @@ public final class Jetty11HttpContainerFactory {
      *
      * @throws ProcessingException      in case of any failure when creating a new Jetty {@code Server} instance.
      * @throws IllegalArgumentException if {@code uri} is {@code null}.
-     * @see Jetty11HttpContainer
+     * @see JettyHttpContainer
      */
     public static Server createServer(final URI uri,
                                       final SslContextFactory.Server sslContextFactory,
-                                      final Jetty11HttpContainer handler,
+                                      final JettyHttpContainer handler,
                                       final boolean start) {
         if (uri == null) {
             throw new IllegalArgumentException(LocalizationMessages.URI_CANNOT_BE_NULL());

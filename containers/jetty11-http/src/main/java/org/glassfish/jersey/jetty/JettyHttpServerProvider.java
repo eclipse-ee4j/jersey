@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
@@ -31,21 +31,21 @@ import org.glassfish.jersey.server.spi.WebServerProvider;
  * @author Markus KARG (markus@headcrashing.eu)
  * @since 3.1.0
  */
-public final class Jetty11HttpServerProvider implements WebServerProvider {
+public final class JettyHttpServerProvider implements WebServerProvider {
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Application application,
                                                       final SeBootstrap.Configuration configuration) {
-        return WebServerProvider.isSupportedWebServer(Jetty11HttpServer.class, type, configuration)
-                ? type.cast(new Jetty11HttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
+        return WebServerProvider.isSupportedWebServer(JettyHttpServer.class, type, configuration)
+                ? type.cast(new JettyHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
                                                 final SeBootstrap.Configuration configuration) {
-        return WebServerProvider.isSupportedWebServer(Jetty11HttpServer.class, type, configuration)
-                ? type.cast(new Jetty11HttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
+        return WebServerProvider.isSupportedWebServer(JettyHttpServer.class, type, configuration)
+                ? type.cast(new JettyHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 }
