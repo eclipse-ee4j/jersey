@@ -17,4 +17,4 @@
 /**
  * Jersey Jetty container classes.
  */
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;

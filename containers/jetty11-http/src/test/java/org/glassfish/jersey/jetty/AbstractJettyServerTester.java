@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import java.net.URI;
 import java.security.AccessController;
@@ -40,9 +40,9 @@ import org.junit.jupiter.api.AfterEach;
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author Miroslav Fuksa
  */
-public abstract class AbstractJetty11ServerTester {
+public abstract class AbstractJettyServerTester {
 
-    private static final Logger LOGGER = Logger.getLogger(AbstractJetty11ServerTester.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractJettyServerTester.class.getName());
 
     public static final String CONTEXT = "";
     private static final int DEFAULT_PORT = 0; // rather Jetty choose than 9998
@@ -103,7 +103,7 @@ public abstract class AbstractJetty11ServerTester {
 
     public void startServer(ResourceConfig config) {
         final URI baseUri = getBaseUri();
-        server = Jetty11HttpContainerFactory.createServer(baseUri, config);
+        server = JettyHttpContainerFactory.createServer(baseUri, config);
         LOGGER.log(Level.INFO, "Jetty-http server started on base uri: " + getBaseUri());
     }
 

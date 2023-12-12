@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.spi.AbstractContainerLifecycleListener;
@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Paul Sandoz
  * @author Marek Potociar
  */
-public class LifecycleListenerTest extends AbstractJetty11ServerTester {
+public class LifecycleListenerTest extends AbstractJettyServerTester {
 
     @Path("/one")
     public static class One {

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.Response;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OptionsTest extends AbstractJetty11ServerTester {
+public class OptionsTest extends AbstractJettyServerTester {
 
     @Path("helloworld")
     public static class HelloWorldResource {

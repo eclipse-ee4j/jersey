@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11.http2;
+package org.glassfish.jersey.jetty.http2;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
@@ -27,9 +27,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainer;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainerFactory;
-import org.glassfish.jersey.jetty11.Jetty11HttpContainerProvider;
+import org.glassfish.jersey.jetty.Jetty11HttpContainer;
+import org.glassfish.jersey.jetty.Jetty11HttpContainerFactory;
+import org.glassfish.jersey.jetty.Jetty11HttpContainerProvider;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -49,7 +49,7 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
-import org.glassfish.jersey.jetty11.internal.LocalizationMessages;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerException;
@@ -73,10 +73,10 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  * @author Libor Kramolis
  * @author Marek Potociar
  */
-public final class Jetty11HttpContainer extends AbstractHandler implements Container {
+public final class JettyHttpContainer extends AbstractHandler implements Container {
 
     private static final ExtendedLogger LOGGER =
-            new ExtendedLogger(Logger.getLogger(Jetty11HttpContainer.class.getName()), Level.FINEST);
+            new ExtendedLogger(Logger.getLogger(JettyHttpContainer.class.getName()), Level.FINEST);
 
     private static final Type REQUEST_TYPE = (new GenericType<Ref<Request>>() {}).getType();
     private static final Type RESPONSE_TYPE = (new GenericType<Ref<Response>>() {}).getType();
@@ -471,7 +471,7 @@ public final class Jetty11HttpContainer extends AbstractHandler implements Conta
      * @param application   JAX-RS / Jersey application to be deployed on Jetty HTTP container.
      * @param parentContext DI provider specific context with application's registered bindings.
      */
-    Jetty11HttpContainer(final Application application, final Object parentContext) {
+    JettyHttpContainer(final Application application, final Object parentContext) {
         this.appHandler = new ApplicationHandler(application, new JettyBinder(), parentContext);
     }
 
@@ -480,7 +480,7 @@ public final class Jetty11HttpContainer extends AbstractHandler implements Conta
      *
      * @param application JAX-RS / Jersey application to be deployed on Jetty HTTP container.
      */
-    Jetty11HttpContainer(final Application application) {
+    JettyHttpContainer(final Application application) {
         this.appHandler = new ApplicationHandler(application, new JettyBinder());
 
         cacheConfigSetStatusOverSendError();
@@ -491,7 +491,7 @@ public final class Jetty11HttpContainer extends AbstractHandler implements Conta
      *
      * @param applicationClass JAX-RS / Jersey class of application to be deployed on Jetty HTTP container.
      */
-    Jetty11HttpContainer(final Class<? extends Application> applicationClass) {
+    JettyHttpContainer(final Class<? extends Application> applicationClass) {
         this.appHandler = new ApplicationHandler(applicationClass, new JettyBinder());
 
         cacheConfigSetStatusOverSendError();

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.jetty11;
+package org.glassfish.jersey.jetty;
 
 import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.MANDATORY;
 import static jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication.OPTIONAL;
@@ -39,22 +39,22 @@ import org.glassfish.jersey.server.spi.WebServer;
  * @author Markus KARG (markus@headcrashing.eu)
  * @since 3.1.0
  */
-final class Jetty11HttpServer implements WebServer {
+final class JettyHttpServer implements WebServer {
 
-    private final Jetty11HttpContainer container;
+    private final JettyHttpContainer container;
 
     private final org.eclipse.jetty.server.Server httpServer;
 
-    Jetty11HttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
-        this(ContainerFactory.createContainer(Jetty11HttpContainer.class, application), configuration);
+    JettyHttpServer(final Application application, final JerseySeBootstrapConfiguration configuration) {
+        this(ContainerFactory.createContainer(JettyHttpContainer.class, application), configuration);
     }
 
-    Jetty11HttpServer(final Class<? extends Application> applicationClass,
+    JettyHttpServer(final Class<? extends Application> applicationClass,
                       final JerseySeBootstrapConfiguration configuration) {
-        this(new Jetty11HttpContainer(applicationClass), configuration);
+        this(new JettyHttpContainer(applicationClass), configuration);
     }
 
-    Jetty11HttpServer(final Jetty11HttpContainer container, final JerseySeBootstrapConfiguration configuration) {
+    JettyHttpServer(final JettyHttpContainer container, final JerseySeBootstrapConfiguration configuration) {
         final SeBootstrap.Configuration.SSLClientAuthentication sslClientAuthentication = configuration
                 .sslClientAuthentication();
         final SslContextFactory.Server sslContextFactory;
@@ -67,7 +67,7 @@ final class Jetty11HttpServer implements WebServer {
             sslContextFactory = null;
         }
         this.container = container;
-        this.httpServer = Jetty11HttpContainerFactory.createServer(
+        this.httpServer = JettyHttpContainerFactory.createServer(
                 configuration.uri(true),
                 sslContextFactory,
                 this.container,
@@ -75,7 +75,7 @@ final class Jetty11HttpServer implements WebServer {
     }
 
     @Override
-    public final Jetty11HttpContainer container() {
+    public final JettyHttpContainer container() {
         return this.container;
     }
 
