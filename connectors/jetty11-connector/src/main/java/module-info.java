@@ -14,20 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.test.jetty;
+module org.glassfish.jersey.jetty11.connector {
+    requires java.logging;
 
-import jakarta.ws.rs.ProcessingException;
-import org.glassfish.jersey.test.jetty.internal.LocalizationMessages;
-import org.glassfish.jersey.test.DeploymentContext;
-import org.glassfish.jersey.test.spi.TestContainer;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
+    requires jakarta.ws.rs;
 
-import java.net.URI;
+    requires org.eclipse.jetty.client;
+    requires org.eclipse.jetty.http;
+    requires org.eclipse.jetty.io;
+    requires org.eclipse.jetty.util;
 
-public class JettyTestContainerFactory implements TestContainerFactory {
+    requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
 
-    @Override
-    public TestContainer create(final URI baseUri, final DeploymentContext context) throws IllegalArgumentException {
-        throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-    }
+    exports org.glassfish.jersey.jetty.connector;
+    opens org.glassfish.jersey.jetty.connector;
 }
