@@ -35,6 +35,7 @@ module org.glassfish.jersey.core.client {
             org.glassfish.jersey.apache.connector,
             org.glassfish.jersey.netty.connector,
             org.glassfish.jersey.grizzly.connector,
+            org.glassfish.jersey.jetty11.connector,
             org.glassfish.jersey.jetty.connector;
 
     exports org.glassfish.jersey.client.innate.http to

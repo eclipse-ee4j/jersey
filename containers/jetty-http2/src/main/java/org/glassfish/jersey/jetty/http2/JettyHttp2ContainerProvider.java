@@ -19,7 +19,6 @@ package org.glassfish.jersey.jetty.http2;
 import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jetty.JettyHttpContainer;
 import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
-import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.server.spi.ContainerProvider;
 
 import jakarta.ws.rs.ProcessingException;
