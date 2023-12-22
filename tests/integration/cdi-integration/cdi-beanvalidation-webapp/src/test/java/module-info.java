@@ -26,11 +26,6 @@ module org.glassfish.jersey.tests.integration.cdi.beanvalidation.webapp.test {
     requires org.hibernate.validator;
     requires org.hibernate.validator.cdi;
 
-//  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
-
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;

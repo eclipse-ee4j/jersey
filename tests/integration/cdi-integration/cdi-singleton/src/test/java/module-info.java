@@ -32,9 +32,4 @@ module org.glassfish.jersey.tests.integration.cdi.singleton.test {
     requires org.junit.jupiter.engine;
 
     exports org.glassfish.jersey.tests.cdi.singleton.test;
-
-//  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
 }

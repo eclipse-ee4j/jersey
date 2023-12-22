@@ -30,11 +30,6 @@ module org.glassfish.jersey.jetty11.connector {
     requires org.junit.jupiter.engine;
     requires org.hamcrest;
 
-    //  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
-
     requires jakarta.xml.bind;
 
     requires org.glassfish.jersey.tests.framework.core;

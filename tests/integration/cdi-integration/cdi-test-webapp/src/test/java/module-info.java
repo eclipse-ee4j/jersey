@@ -26,10 +26,6 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp.test {
     requires org.hamcrest;
 
     requires org.glassfish.grizzly.http.server;
-//  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
 
     requires org.glassfish.jersey.tests.integration.cdi.test.webapp;
 

@@ -24,10 +24,6 @@ module org.glassfish.jersey.grizzly.connector {
     requires grizzly.http.client;
 
     requires org.glassfish.grizzly.http;
-//  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.client;
