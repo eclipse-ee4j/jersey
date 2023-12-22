@@ -17,7 +17,6 @@
 module org.glassfish.jersey.tests.framework.provider.jetty {
     requires java.logging;
 
-//    requires jakarta.servlet;
     requires jakarta.ws.rs;
 
     requires org.eclipse.jetty.server;

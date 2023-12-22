@@ -69,6 +69,11 @@
                 <directory>${java11.build.outputDirectory}</directory>
                 <plugins>
                     <plugin>
+                        <groupId>com.sun.istack</groupId>
+                        <artifactId>istack-commons-maven-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <executions>
@@ -91,6 +96,7 @@
                         <configuration>
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/test/jetty/*.java</testExclude>
+                                <testExclude>module-info.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>

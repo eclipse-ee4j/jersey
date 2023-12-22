@@ -86,8 +86,14 @@
                         <configuration>
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/test/jetty/http2/*.java</testExclude>
+                                <testExclude>module-info.java</testExclude>
                             </testExcludes>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.sun.istack</groupId>
+                        <artifactId>istack-commons-maven-plugin</artifactId>
+                        <inherited>true</inherited>
                     </plugin>
                 </plugins>
             </build>
