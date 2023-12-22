@@ -17,7 +17,6 @@
 package org.glassfish.jersey.test.jetty.http2;
 
 import jakarta.ws.rs.ProcessingException;
-import org.glassfish.jersey.jetty.http2.LocalizationMessages;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
