@@ -125,7 +125,7 @@
     </profiles>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <jersey.config.test.container.port>8080</jersey.config.test.container.port>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>

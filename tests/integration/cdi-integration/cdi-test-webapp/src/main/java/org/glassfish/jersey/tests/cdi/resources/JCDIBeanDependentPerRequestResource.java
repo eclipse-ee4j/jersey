@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,6 @@ import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.annotation.Resource;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -40,7 +39,6 @@ import jakarta.enterprise.context.RequestScoped;
  * @author Jakub Podlesak
  */
 @Path("/jcdibean/dependent/per-request")
-@ManagedBean
 @RequestScoped
 public class JCDIBeanDependentPerRequestResource {
 

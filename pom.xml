@@ -29,7 +29,7 @@
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.99-SNAPSHOT</version>
+    <version>4.0.99-SNAPSHOT</version>
     <name>jersey</name>
     <description>
         Eclipse Jersey is the open source (under dual EPL+GPL license) Jakarta RESTful WebServices 3.0
@@ -1605,6 +1605,11 @@
                 <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${cdi.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>jakarta.interceptor</groupId>
+                <artifactId>jakarta.interceptor-api</artifactId>
+                <version>${jakarta.interceptor.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>jakarta.transaction</groupId>
@@ -2190,7 +2195,7 @@
         <findbugs.glassfish.logging.validLoggerPrefixes>
             jakarta.enterprise
         </findbugs.glassfish.logging.validLoggerPrefixes>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 <!--        <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>-->
 <!--        <netbeans.hint.license>gf-cddl-gpl</netbeans.hint.license>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -2319,7 +2324,7 @@
         <rxjava2.version>2.2.21</rxjava2.version>
 
         <servlet4.version>4.0.3</servlet4.version>
-        <servlet6.version>6.0.0</servlet6.version>
+        <servlet6.version>6.1.0-M1</servlet6.version>
 
         <simple.version>6.0.1</simple.version>
         <slf4j.version>2.0.9</slf4j.version>
@@ -2327,7 +2332,7 @@
         <testng.version>7.8.0</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>5.1.1.Final</weld.version>
+        <weld.version>6.0.0.Alpha1</weld.version>
         <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>8.0.1.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
@@ -2340,15 +2345,15 @@
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>7.0.6</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>4.0.1</cdi.api.version>
-        <cdi.osgi.version>jakarta.enterprise.*;version="[3.0,5)"</cdi.osgi.version>
+        <cdi.api.version>4.1.0-M1</cdi.api.version>
+        <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
         <grizzly2.version>4.0.1</grizzly2.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-        <hk2.version>3.0.5</hk2.version>
-        <hk2.osgi.version>org.glassfish.hk2.*;version="[3.0,4)"</hk2.osgi.version>
-        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[3.0,4)"</hk2.jvnet.osgi.version>
+        <hk2.version>4.0.0-M1</hk2.version>
+        <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
+        <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
         <hk2.config.version>7.0.3</hk2.config.version>
         <jsp.version>3.1.1</jsp.version>
         <jstl.version>3.0.0</jstl.version>
@@ -2356,12 +2361,12 @@
         <istack.commons.runtime.version>4.1.1</istack.commons.runtime.version>
         <jakarta.activation-api.version>2.1.1</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.0</jakarta.activation.version>
-        <jakarta.el.version>5.0.1</jakarta.el.version>
+        <jakarta.el.version>6.0.0-M1</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
-        <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
-        <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
+        <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[3.0,4)"</jakarta.annotation.osgi.version>
+        <jakarta.annotation.version>3.0.0-M1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
-        <jakarta.interceptor.version>2.1.0</jakarta.interceptor.version>
+        <jakarta.interceptor.version>2.2.0-M1</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.1.2</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>

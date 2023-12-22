@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,7 @@
 
 package org.glassfish.jersey.linking;
 
-import java.beans.FeatureDescriptor;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import jakarta.el.ELContext;
@@ -84,11 +82,6 @@ class ResponseContextResolver extends ELResolver {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext elc, Object o) {
-        return null;
     }
 
     @Override

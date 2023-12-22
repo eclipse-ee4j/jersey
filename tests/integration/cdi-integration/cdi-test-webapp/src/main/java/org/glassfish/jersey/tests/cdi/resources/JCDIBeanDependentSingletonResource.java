@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,6 @@ import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
@@ -41,7 +40,6 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @Path("/jcdibean/dependent/singleton/{p}")
 @ApplicationScoped
-@ManagedBean
 public class JCDIBeanDependentSingletonResource {
 
     private static final Logger LOGGER = Logger.getLogger(JCDIBeanDependentSingletonResource.class.getName());
