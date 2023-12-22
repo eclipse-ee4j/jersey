@@ -38,8 +38,4 @@ module org.glassfish.jersey.apache.connector {
 
     exports org.glassfish.jersey.apache.connector;
     opens org.glassfish.jersey.apache.connector;
-//  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
 }

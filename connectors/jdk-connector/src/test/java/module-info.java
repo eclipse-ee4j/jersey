@@ -28,11 +28,6 @@ module org.glassfish.jersey.jdk.connector {
     requires org.glassfish.grizzly.http;
     requires org.glassfish.grizzly.http.server;
 
-    //  required by Grizzly* modules
-    requires pfl.tf;
-    requires gmbal;
-//    end of required by Grizzly* modules
-
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 

@@ -115,33 +115,6 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--required by Grizzly* modules-->
-        <dependency>
-            <groupId>org.glassfish.pfl</groupId>
-            <artifactId>pfl-tf</artifactId>
-            <version>${pfl.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
-            <version>${gmbal.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>asm-tree</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>asm</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>asm-analysis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--End of required by Grizzly* modules-->
     </dependencies>
 
     <profiles>

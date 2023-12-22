@@ -24,10 +24,6 @@ module org.glassfish.jersey.tests.framework.provider.grizzly {
     requires org.glassfish.grizzly;
     requires org.glassfish.grizzly.servlet;
     requires org.glassfish.grizzly.http.server;
-//    required by Grizzly* modules
-    requires gmbal;
-    requires pfl.tf;
-//    end of required by Grizzly* modules
 
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.core.common;
