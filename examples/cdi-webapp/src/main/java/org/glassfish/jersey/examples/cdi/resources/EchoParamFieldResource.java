@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -16,7 +16,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.annotation.PostConstruct;
 
 /**
@@ -25,7 +24,6 @@ import jakarta.annotation.PostConstruct;
  * @author Roberto Chinnici
  * @author Jakub Podlesak
  */
-@ManagedBean
 @Path("echofield/{b}")
 public class EchoParamFieldResource {
 

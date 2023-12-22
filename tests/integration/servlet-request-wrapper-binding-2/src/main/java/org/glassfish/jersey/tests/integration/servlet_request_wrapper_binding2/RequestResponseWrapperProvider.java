@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -305,6 +305,16 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                 @Override
                 public void sendRedirect(String s) throws IOException {
                     getHttpServletResponse().sendRedirect(s);
+                }
+
+                @Override
+                public void sendRedirect(String location, int sc) throws IOException {
+                    getHttpServletResponse().sendRedirect(location, sc);
+                }
+
+                @Override
+                public void sendRedirect(String s, int i, boolean b) throws IOException {
+                    getHttpServletResponse().sendRedirect(s, i, b);
                 }
 
                 @Override

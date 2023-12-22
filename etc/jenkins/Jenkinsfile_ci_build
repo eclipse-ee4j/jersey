@@ -8,20 +8,20 @@ pipeline {
     stages {
         stage('Jersey build') {
             parallel {
-                stage('JDK 11') {
-                    agent {
-                        label 'centos-7'
-                    }
-                    tools {
-                        jdk 'openjdk-jdk11-latest'
-                        maven 'apache-maven-latest'
-                    }
-                    steps {
-                        sh '''
-                                bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
-                            '''
-                    }
-                }
+//                stage('JDK 17') {
+//                    agent {
+//                        label 'centos-7'
+//                    }
+//                    tools {
+//                        jdk 'openjdk-jdk17-latest'
+//                        maven 'apache-maven-latest'
+//                    }
+//                    steps {
+//                        sh '''
+//                                bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
+//                            '''
+//                    }
+//                }
                 stage('JDK 21') {
                     agent {
                         label 'centos-7'

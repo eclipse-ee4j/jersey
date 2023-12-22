@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.99-SNAPSHOT</version>
+        <version>4.0.99-SNAPSHOT</version>
     </parent>
 
     <licenses>
@@ -93,7 +93,7 @@
         <module>json-moxy</module>
         <module>json-processing-webapp</module>
         <module>json-with-padding</module>
-        <module>managed-beans-webapp</module>
+<!--        <module>managed-beans-webapp</module> No @ManagedBean any longer-->
         <module>managed-client</module>
         <module>managed-client-webapp</module>
         <module>managed-client-simple-webapp</module>

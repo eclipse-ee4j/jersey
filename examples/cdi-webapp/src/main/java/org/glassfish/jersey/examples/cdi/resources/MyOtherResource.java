@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,8 +18,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.UriInfo;
 
-import jakarta.annotation.ManagedBean;
-
 import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.interceptor.AroundInvoke;
@@ -32,7 +30,6 @@ import jakarta.interceptor.InvocationContext;
  * @author Roberto Chinnici
  * @author Jakub Podlesak
  */
-@ManagedBean
 @RequestScoped
 @Path("/other/{c}/{d}")
 public class MyOtherResource {

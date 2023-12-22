@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,8 +45,6 @@ import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Application;
 
-
-import jakarta.annotation.ManagedBean;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -201,10 +199,9 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
 
         final boolean isCdiManaged = isCdiComponent(clazz);
-        final boolean isManagedBean = isManagedBean(clazz);
         final boolean isJaxRsComponent = isJaxRsComponentType(clazz);
 
-        if (!isCdiManaged && !isManagedBean && !isJaxRsComponent) {
+        if (!isCdiManaged && !isJaxRsComponent) {
             return false;
         }
 
@@ -268,10 +265,6 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private boolean isCdiComponent(final Class<?> component) {
         final Annotation[] qualifiers = CdiUtil.getQualifiers(component.getAnnotations());
         return !beanManager.getBeans(component, qualifiers).isEmpty();
-    }
-
-    private boolean isManagedBean(final Class<?> component) {
-        return component.isAnnotationPresent(ManagedBean.class);
     }
 
     private AnnotatedConstructor<?> enrichedConstructor(final AnnotatedConstructor<?> ctor) {

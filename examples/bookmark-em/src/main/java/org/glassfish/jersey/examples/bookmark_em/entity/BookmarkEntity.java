@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -13,7 +13,6 @@ package org.glassfish.jersey.examples.bookmark_em.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -42,7 +41,6 @@ import jakarta.persistence.TemporalType;
         @NamedQuery(name = "BookmarkEntity.findByLdesc", query = "SELECT b FROM BookmarkEntity b WHERE b.ldesc = :ldesc"),
         @NamedQuery(name = "BookmarkEntity.findBySdesc", query = "SELECT b FROM BookmarkEntity b WHERE b.sdesc = :sdesc")
 })
-@ManagedBean
 @SuppressWarnings("UnusedDeclaration")
 public class BookmarkEntity implements Serializable {
 

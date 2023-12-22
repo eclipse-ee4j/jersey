@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,8 +18,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.annotation.ManagedBean;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
@@ -70,7 +68,6 @@ public class App {
     /**
      * JAX-RS application defined as a CDI bean.
      */
-    @ManagedBean
     public static class JaxRsApplication extends Application {
 
         @Context

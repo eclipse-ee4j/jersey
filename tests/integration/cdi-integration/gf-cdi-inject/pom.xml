@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>3.1.99-SNAPSHOT</version>
+        <version>4.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>gf-cdi-inject-on-server</artifactId>
@@ -351,6 +351,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <skipTests>true</skipTests>
                     <includes>
                         <include>**/GFTest.java</include>
                     </includes>

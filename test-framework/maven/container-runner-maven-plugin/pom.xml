@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.test-framework.maven</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.99-SNAPSHOT</version>
+        <version>4.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>container-runner-maven-plugin</artifactId>
@@ -241,6 +241,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerId>groovy-eclipse-compiler</compilerId>
+                    <release>11</release> <!-- Groovy works until version 15 right now-->
                 </configuration>
                 <dependencies>
                     <dependency>

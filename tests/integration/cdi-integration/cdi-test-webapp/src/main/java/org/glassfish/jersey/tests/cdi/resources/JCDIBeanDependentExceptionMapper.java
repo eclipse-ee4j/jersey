@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,6 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.annotation.PostConstruct;
 
 /**
@@ -36,7 +35,6 @@ import jakarta.annotation.PostConstruct;
  * @author Jakub Podlesak
  */
 @Provider
-@ManagedBean
 public class JCDIBeanDependentExceptionMapper implements ExceptionMapper<JDCIBeanDependentException> {
 
     private static final Logger LOGGER = Logger.getLogger(JCDIBeanDependentExceptionMapper.class.getName());
