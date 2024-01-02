@@ -40,6 +40,7 @@ public enum JaxRSFeature implements ConfigFeature
      * @since 2.15
      */
     READ_FULL_STREAM(true),
+
     /*
     /**********************************************************
     /* HTTP headers
