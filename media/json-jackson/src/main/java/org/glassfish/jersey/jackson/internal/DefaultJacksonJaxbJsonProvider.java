@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -122,7 +122,11 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
             final StreamReadConstraints constraints = jsonFactory.streamReadConstraints();
             jsonFactory.setStreamReadConstraints(
                     StreamReadConstraints.builder()
+                            // our
                             .maxStringLength(maxStringLength)
+                            // customers
+                            .maxDocumentLength(constraints.getMaxDocumentLength())
+                            .maxNameLength(constraints.getMaxNameLength())
                             .maxNestingDepth(constraints.getMaxNestingDepth())
                             .maxNumberLength(constraints.getMaxNumberLength())
                             .build()
