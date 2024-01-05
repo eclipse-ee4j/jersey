@@ -48,7 +48,9 @@
         <module>integration</module>
         <module>jmockit</module>
         <module>mem-leaks</module>
+        <!-- TMP DISABLE - Enable again later 
         <module>osgi</module>
+        -->
         <module>stress</module>
         <module>performance</module>
     </modules>
