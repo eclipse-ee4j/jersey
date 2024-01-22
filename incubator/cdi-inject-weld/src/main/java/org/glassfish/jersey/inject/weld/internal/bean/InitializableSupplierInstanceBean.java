@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,8 @@ import jakarta.ws.rs.RuntimeType;
 import org.glassfish.jersey.inject.weld.internal.inject.InitializableSupplierInstanceBinding;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
+import org.glassfish.jersey.inject.weld.internal.managed.CdiClientInjectionManager;
+import org.glassfish.jersey.inject.weld.internal.managed.ContextSafe;
 import org.glassfish.jersey.inject.weld.internal.type.ParameterizedTypeImpl;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
@@ -101,6 +103,12 @@ class InitializableSupplierInstanceBean<T> extends JerseyBean<Supplier<T>> {
             final JerseyClientCreationalContext jerseyContext = (JerseyClientCreationalContext) context;
             return jerseyContext.getInjectionManager().getInjectionManagerBinding(binding).getSupplier();
         } else {
+            CdiClientInjectionManager locked = ContextSafe.get();
+            if (locked != null) {
+                return locked
+                        .getInjectionManagerBinding((InitializableSupplierInstanceBinding<T>) getBinding())
+                        .getSupplier();
+            }
             return supplier;
         }
     }
@@ -114,5 +122,10 @@ class InitializableSupplierInstanceBean<T> extends JerseyBean<Supplier<T>> {
     @Override
     public Class<? extends Annotation> getScope() {
         return getBinding().getScope() == null ? Dependent.class : transformScope(getBinding().getScope());
+    }
+
+    @Override
+    public String toString() {
+        return getBinding().toString();
     }
 }

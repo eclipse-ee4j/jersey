@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -104,24 +107,35 @@ import org.jboss.weld.injection.producer.BeanInjectionTarget;
  */
 class BinderRegisterExtension implements Extension {
 
-    private AtomicBoolean registrationDone = new AtomicBoolean(false);
+    private final AtomicBoolean registrationDone = new AtomicBoolean(false);
     private Supplier<BeanManager> beanManagerSupplier;
-    private Ref<InjectionManager> serverInjectionManager = Refs.emptyRef();
+    private final Ref<InjectionManager> serverInjectionManager = Refs.emptyRef();
 
-    private BootstrapInjectionManager clientBootstrapInjectionManager = new BootstrapInjectionManager(RuntimeType.CLIENT);
-    private WrappingInjectionManager serverBootstrapInjectionManager = new WrappingInjectionManager()
+    private final BootstrapInjectionManager clientBootstrapInjectionManager = new BootstrapInjectionManager(RuntimeType.CLIENT);
+    private final WrappingInjectionManager serverBootstrapInjectionManager = new WrappingInjectionManager()
             .setInjectionManager(new BootstrapInjectionManager(RuntimeType.SERVER));
-    private BootstrapBag bootstrapBag = new BootstrapBag();
+    private final BootstrapBag bootstrapBag = new BootstrapBag();
 
-    private final CachingBinder clientBindings = new CachingBinder(serverInjectionManager);
-    private final CachingBinder serverBindings = new CachingBinder(serverInjectionManager) {
+    private final List<InitializableInstanceBinding> skippedClientInstanceBindings = new ArrayList<>();
+    private final List<InitializableSupplierInstanceBinding> skippedClientSupplierInstanceBindings = new ArrayList<>();
+
+    private final CachingBinder clientBindings = new CachingBinder(serverInjectionManager, RuntimeType.CLIENT) {
+//        @Override
+//        protected void configure() {
+//            bind(InitializableInstanceBinding.from(
+//            Bindings.service(clientBootstrapInjectionManager).to(InjectionManager.class)));
+//        }
+    };
+    private final CachingBinder serverBindings = new CachingBinder(serverInjectionManager, RuntimeType.SERVER) {
         @Override
         protected void configure() {
             install(new ContextInjectionResolverImpl.Binder(beanManagerSupplier));
-            bind(InitializableInstanceBinding.from(Bindings.service(serverInjectionManager.get()).to(InjectionManager.class)));
+            bind(InitializableInstanceBinding.from(
+                    Bindings.service(serverInjectionManager.get()).to(InjectionManager.class),
+                    RuntimeType.SERVER));
         }
     };
-    private final CachingBinder annotatedBeansBinder = new CachingBinder(serverInjectionManager);
+    private final CachingBinder annotatedBeansBinder = new CachingBinder(serverInjectionManager, null);
     private final MergedBindings mergedBindings = new MergedBindings(serverBindings, clientBindings);
 
     private final List<InitializableInstanceBinding> initializableInstanceBindings = new LinkedList<>();
@@ -274,15 +288,15 @@ class BinderRegisterExtension implements Extension {
      *
      * @param abd         {@code AfterBeanDiscovery} event.
      * @param beanManager current {@code BeanManager}.
-     * @link ProcessAnnotatedType} bootstrap phase.
+     * @see ProcessAnnotatedType bootstrap phase.
      */
     void registerBeans(@Observes AfterBeanDiscovery abd, BeanManager beanManager) {
-        serverInjectionManager.set(new CdiInjectionManager(beanManager, mergedBindings));
+        serverInjectionManager.set(new CdiInjectionManager(beanManager, mergedBindings, RuntimeType.SERVER));
 
         beanManagerSupplier = () -> beanManager; // set bean manager supplier to be called by bindings#configure
         CdiInjectionManagerFactoryBase.setBeanManager(beanManager);
 
-        registerApplicationHandler(beanManager);
+//        registerApplicationHandler(beanManager);
 
         registrationDone.set(true); //
 
@@ -316,16 +330,32 @@ class BinderRegisterExtension implements Extension {
         final Collection<Binding> bindings = binder.getBindings();
         binder.setReadOnly();
 
+        //check unique id;
+        TreeMap<Long, Binding> treeMap = new TreeMap<>();
+        for (Binding binding : bindings) {
+            if (binding.getId() != 0 && !binding.isForClient()) {
+                if (treeMap.containsKey(binding.getId())) {
+                    throw new IllegalStateException("Id " + binding.getId() + " already exists:" + treeMap.get(binding.getId()));
+                }
+                treeMap.put(binding.getId(), binding);
+            }
+        }
+
         allBindingsLabel:
         for (Binding binding : bindings) {
             if (ClassBinding.class.isAssignableFrom(binding.getClass())) {
                 if (RuntimeType.CLIENT == runtimeType) {
                     for (Type contract : ((ClassBinding<?>) binding).getContracts()) {
-                        final List<BindingBeanPair> preregistered = classBindings.get(contract);
-                        if (preregistered != null && preregistered.size() == 1) {
-                            BeanHelper.updateBean(
-                                    (ClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
-                            continue allBindingsLabel;
+                        List<BindingBeanPair> preregistered = classBindings.get(contract);
+                        if (preregistered != null) {
+                            preregistered = preregistered.stream()
+                                    .filter(pair -> pair.getBeans().get(0).getRutimeType() == RuntimeType.SERVER)
+                                    .collect(Collectors.toList());
+                            if (preregistered.size() == 1 || binding.isForClient()) {
+                                BeanHelper.updateBean(
+                                        (ClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
+                                continue allBindingsLabel;
+                            }
                         }
                     }
                 }
@@ -337,11 +367,16 @@ class BinderRegisterExtension implements Extension {
             } else if (SupplierClassBinding.class.isAssignableFrom(binding.getClass())) {
                 if (RuntimeType.CLIENT == runtimeType) {
                     for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
-                        final List<BindingBeanPair> preregistered = supplierClassBindings.get(contract);
-                        if (preregistered != null && preregistered.size() == 1) {
-                            BeanHelper.updateSupplierBean(
-                                    (SupplierClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
-                            continue allBindingsLabel;
+                        List<BindingBeanPair> preregistered = supplierClassBindings.get(contract);
+                        if (preregistered != null) {
+                            preregistered = preregistered.stream()
+                                    .filter(pair -> pair.getBeans().get(0).getRutimeType() == RuntimeType.SERVER)
+                                    .collect(Collectors.toList());
+                            if (preregistered.size() == 1 || binding.isForClient()) {
+                                BeanHelper.updateSupplierBean(
+                                        (SupplierClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
+                                continue allBindingsLabel;
+                            }
                         }
                     }
                 }
@@ -351,17 +386,29 @@ class BinderRegisterExtension implements Extension {
                     supplierClassBindings.add(contract, pair);
                 }
             } else if (InitializableInstanceBinding.class.isAssignableFrom(binding.getClass())) {
-                if (RuntimeType.SERVER == runtimeType
+/*
+ * We do want to register beans such as Configuration just once. There are two of them, one for client and for a server.
+ * But having two of them would fail Weld Validation -> Weld would not know which one to @Inject
+ * The solution is to have JerseyTwoFoldInstantiator that creates a client bean for a client and a server bean for the server.
+ *
+ * But also we do not want to skip registering beans on client that are not in server
+ * or there are multiple of them of the same contract.
+ */
+                if (RuntimeType.SERVER == runtimeType || !binding.isForClient()
                         || !matchInitializableInstanceBinding((InitializableInstanceBinding<?>) binding)) {
                     initializableInstanceBindings.add((InitializableInstanceBinding<?>) binding);
                     BeanHelper.registerBean(
                             runtimeType, (InitializableInstanceBinding<?>) binding, abd, injectionResolvers, beanManager);
+                } else {
+                    skippedClientInstanceBindings.add((InitializableInstanceBinding) binding);
                 }
             } else if (InitializableSupplierInstanceBinding.class.isInstance(binding)) {
-                if (RuntimeType.SERVER == runtimeType
+                if (RuntimeType.SERVER == runtimeType || !binding.isForClient()
                         || !matchInitializableSupplierInstanceBinding((InitializableSupplierInstanceBinding) binding)) {
                     initializableSupplierInstanceBindings.add((InitializableSupplierInstanceBinding) binding);
                     BeanHelper.registerSupplier(runtimeType, (InitializableSupplierInstanceBinding<?>) binding, abd, beanManager);
+                } else {
+                    skippedClientSupplierInstanceBindings.add((InitializableSupplierInstanceBinding) binding);
                 }
             }
         }
@@ -525,21 +572,21 @@ class BinderRegisterExtension implements Extension {
 
 
     /** To be used by the tests only */
-    public void register(BeforeBeanDiscovery beforeBeanDiscovery, Binding binding) {
+    void register(BeforeBeanDiscovery beforeBeanDiscovery, Binding binding) {
         register(RuntimeType.SERVER, binding);
     }
 
     /** To be used by the tests only */
-    public void register(BeforeBeanDiscovery beforeBeanDiscovery, Iterable<Binding> bindings) {
+    void register(BeforeBeanDiscovery beforeBeanDiscovery, Iterable<Binding> bindings) {
         register(RuntimeType.SERVER, bindings);
     }
 
     private void register(RuntimeType runtimeType, Binding binding) {
         final AbstractBinder bindings = runtimeType == RuntimeType.CLIENT ? clientBindings : serverBindings;
         if (InstanceBinding.class.isInstance(binding)) {
-            bindings.bind(InitializableInstanceBinding.from((InstanceBinding) binding));
+            bindings.bind(InitializableInstanceBinding.from((InstanceBinding) binding, runtimeType));
         } else if (SupplierInstanceBinding.class.isInstance(binding)) {
-            bindings.bind(InitializableSupplierInstanceBinding.from((SupplierInstanceBinding) binding));
+            bindings.bind(InitializableSupplierInstanceBinding.from((SupplierInstanceBinding) binding, runtimeType));
         } else {
             bindings.bind(binding);
         }
@@ -556,8 +603,26 @@ class BinderRegisterExtension implements Extension {
         for (BootstrapPreinitialization registrar : ServiceFinder.find(BootstrapPreinitialization.class)) {
             registrars.add(registrar);
         }
+
+        final List<org.glassfish.jersey.innate.BootstrapPreinitialization> preregistrars = new LinkedList<>();
+        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
+                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
+            preregistrars.add(registrar);
+        }
+
+        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
+                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
+            //registrars.add(registrar);
+            registrar.preregister(RuntimeType.SERVER, serverBootstrapInjectionManager);
+        }
+
         for (BootstrapPreinitialization registrar : registrars) {
             registrar.register(RuntimeType.SERVER, serverBindings);
+        }
+
+        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
+                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
+            registrar.preregister(RuntimeType.CLIENT, clientBootstrapInjectionManager);
         }
 
         for (BootstrapPreinitialization registrar : registrars) {
@@ -631,9 +696,6 @@ class BinderRegisterExtension implements Extension {
 
         @Override
         public <T> T createAndInitialize(Class<T> createMe) {
-            if (RequestScope.class == createMe) {
-                return (T) new CdiRequestScope();
-            }
             if (isNotJerseyInternal(createMe)) {
                 return null;
             }
@@ -667,7 +729,10 @@ class BinderRegisterExtension implements Extension {
 
         @Override
         public <T> T getInstance(Class<T> contractOrImpl) {
-            return createAndInitialize(contractOrImpl);
+            if (RequestScope.class == contractOrImpl) {
+                return (T) new CdiRequestScope();
+            }
+            return null; //createAndInitialize(contractOrImpl);
         }
 
         @Override
@@ -705,6 +770,11 @@ class BinderRegisterExtension implements Extension {
         public void preDestroy(Object preDestroyMe) {
             //noop
         }
+
+        @Override
+        public RuntimeType getRuntimeType() {
+            return runtimeType;
+        }
     }
 
     /**
@@ -716,9 +786,11 @@ class BinderRegisterExtension implements Extension {
         private final Ref<InjectionManager> injectionManager;
         private AbstractBinder temporaryBinder = new TemporaryBinder();
         private final Collection<Binding> bindings = new LinkedList<>();
+        private final RuntimeType runtimeType;
 
-        private CachingBinder(Ref<InjectionManager> injectionManager) {
+        private CachingBinder(Ref<InjectionManager> injectionManager, RuntimeType runtimeType) {
             this.injectionManager = injectionManager;
+            this.runtimeType = runtimeType;
         }
 
         @Override
@@ -786,9 +858,9 @@ class BinderRegisterExtension implements Extension {
                 final Collection<Binding> newBindings = temporaryBinder.getBindings();
                 for (Binding binding : newBindings) {
                     if (InstanceBinding.class.isAssignableFrom(binding.getClass())) {
-                        binding = InitializableInstanceBinding.from((InstanceBinding) binding);
+                        binding = InitializableInstanceBinding.from((InstanceBinding) binding, runtimeType);
                     } else if (SupplierInstanceBinding.class.isAssignableFrom(binding.getClass())) {
-                        binding = InitializableSupplierInstanceBinding.from((SupplierInstanceBinding) binding);
+                        binding = InitializableSupplierInstanceBinding.from((SupplierInstanceBinding) binding, runtimeType);
                     }
                     bindings.add(binding);
                 }
@@ -812,16 +884,55 @@ class BinderRegisterExtension implements Extension {
         }
     }
 
-    private static class MergedBindings implements Binder {
+    /* package */ static class MergedBindings implements Binder {
         private final AbstractBinder first;
         private final AbstractBinder second;
-
+        private final Collection<ClassBinding> classBindings = new ArrayList<>();
+        private final Collection<InitializableInstanceBinding> instanceBindings = new ArrayList<>();
+        private final Collection<SupplierClassBinding> supplierClassBindings = new ArrayList<>();
+        private final Collection<InitializableSupplierInstanceBinding> supplierInstanceBindings = new ArrayList<>();
 
         private MergedBindings(AbstractBinder first, AbstractBinder second) {
             this.first = first;
             this.second = second;
         }
 
+//        private void initBindings(Collection<Binding> bindings) {
+//            for (Binding binding : bindings) {
+//                if (InstanceBinding.class.isInstance(binding)) {
+//                    instanceBindings.add((InitializableInstanceBinding) binding);
+//                } else if (ClassBinding.class.isInstance(binding)) {
+//                    classBindings.add((ClassBinding) binding);
+//                } else if (SupplierInstanceBinding.class.isInstance(binding)) {
+//                    supplierInstanceBindings.add((InitializableSupplierInstanceBinding) binding);
+//                } else if (SupplierClassBinding.class.isInstance(binding)) {
+//                    supplierClassBindings.add((SupplierClassBinding) binding);
+//                }
+//            }
+//        }
+//
+//        public <T extends Binding<T,?>> Collection<T> getBindings(Class<T> clazz) {
+//            if (InstanceBinding.class.equals(clazz)) {
+//                return (Collection<T>) (Collection<? extends Binding>) instanceBindings;
+//            } else if (ClassBinding.class.equals(clazz)) {
+//                return (Collection<T>) (Collection<? extends Binding>) classBindings;
+//            } else if (SupplierInstanceBinding.class.isInstance(clazz)) {
+//                return (Collection<T>) (Collection<? extends Binding>) supplierInstanceBindings;
+//            } else if (SupplierClassBinding.class.equals(clazz)) {
+//                return (Collection<T>) (Collection<? extends Binding>) supplierClassBindings;
+//            }
+//            return Collections.emptyList();
+//        }
+
+        public Collection<Binding> getServerBindings() {
+            return first.getBindings();
+        }
+
+        public Collection<Binding> getClientBindings() {
+            return second.getBindings();
+        }
+
+        @Override
         public Collection<Binding> getBindings() {
             final Collection<Binding> firstBindings = first.getBindings();
             final Collection<Binding> secondBindings = second.getBindings();

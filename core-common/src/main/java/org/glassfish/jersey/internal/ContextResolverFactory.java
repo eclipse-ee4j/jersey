@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
 
@@ -60,7 +61,9 @@ public class ContextResolverFactory implements ContextResolvers {
             contextResolverFactory = new ContextResolverFactory();
             InstanceBinding<ContextResolverFactory> binding =
                     Bindings.service(contextResolverFactory)
-                            .to(ContextResolvers.class);
+                            .to(ContextResolvers.class)
+                            .forClient(bootstrapBag.getConfiguration().getRuntimeType() == RuntimeType.CLIENT)
+                            .id(1014);
             injectionManager.register(binding);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,5 +57,10 @@ public class SupplierClassBinding<T> extends Binding<Supplier<T>, SupplierClassB
      */
     public Class<? extends Annotation> getSupplierScope() {
         return supplierScope;
+    }
+
+    @Override
+    public String toString() {
+        return contractsAsString() + " <- " + supplierClass.getSimpleName();
     }
 }

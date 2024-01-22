@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.inject.weld.managed;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
@@ -34,9 +35,14 @@ import org.glassfish.jersey.server.ApplicationHandler;
 public class CdiInjectionManagerFactory extends CdiInjectionManagerFactoryBase implements InjectionManagerFactory {
 
     @Override
-    // TODO deprecate this in favor of #create(Object parent, RuntimeType runtimeType)
+    @Deprecated
     public InjectionManager create(Object parent) {
         return create(parent, getRuntimeType());
+    }
+
+    @Override
+    public InjectionManager create(Object parent, Configuration configuration) {
+        return create(parent, configuration.getRuntimeType());
     }
 
     /**
@@ -62,7 +68,7 @@ public class CdiInjectionManagerFactory extends CdiInjectionManagerFactoryBase i
         }
     }
 
-    // TODO refactor to call InjectionManagerFactory#create(Object, RuntimeType);
+    @Deprecated
     private static RuntimeType getRuntimeType() {
         Exception e = new RuntimeException();
         for (StackTraceElement element : e.getStackTrace()) {

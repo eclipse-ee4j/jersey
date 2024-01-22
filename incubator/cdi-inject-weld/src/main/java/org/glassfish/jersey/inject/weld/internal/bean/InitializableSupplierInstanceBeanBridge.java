@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,10 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.internal.inject.InitializableSupplierInstanceBinding;
+import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
+import org.glassfish.jersey.inject.weld.internal.managed.CdiClientInjectionManager;
+import org.glassfish.jersey.inject.weld.internal.managed.ContextSafe;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
@@ -83,7 +86,19 @@ class InitializableSupplierInstanceBeanBridge<T> extends JerseyBean<Object> {
 
     @Override
     public Object create(CreationalContext creationalContext) {
-        return supplier.get();
+        if (JerseyClientCreationalContext.class.isInstance(creationalContext)) {
+            final InitializableSupplierInstanceBinding binding = (InitializableSupplierInstanceBinding) getBinding();
+            final JerseyClientCreationalContext jerseyContext = (JerseyClientCreationalContext) creationalContext;
+            return jerseyContext.getInjectionManager().getInjectionManagerBinding(binding).getSupplier().get();
+        } else {
+            CdiClientInjectionManager locked = ContextSafe.get();
+            if (locked != null) {
+                return locked
+                        .getInjectionManagerBinding((InitializableSupplierInstanceBinding) getBinding())
+                        .getSupplier().get();
+            }
+            return supplier.get();
+        }
     }
 
     @Override

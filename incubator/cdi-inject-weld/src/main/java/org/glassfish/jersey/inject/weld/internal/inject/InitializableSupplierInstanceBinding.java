@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,10 +21,12 @@ import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
+import jakarta.ws.rs.RuntimeType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -32,20 +34,23 @@ import java.util.function.Supplier;
  * @param <T> Type of the supplied service described by this injection binding.
  */
 public class InitializableSupplierInstanceBinding<T>
-        extends MatchableBinding<Supplier<T>, InitializableSupplierInstanceBinding<T>>
+        extends InitializableBinding<Supplier<T>, InitializableSupplierInstanceBinding<T>>
         implements Cloneable {
 
     private final InitializableSupplier<T> supplier;
+    private final RuntimeType runtimeType;
 
     /**
      * Creates a supplier as an instance.
      *
-     * @param supplier service's instance.
+     * @param supplier    service's instance.
+     * @param runtimeType
      */
-    public InitializableSupplierInstanceBinding(Supplier<T> supplier) {
+    public InitializableSupplierInstanceBinding(Supplier<T> supplier, RuntimeType runtimeType) {
         this.supplier = DisposableSupplier.class.isInstance(supplier)
                 ? new InitializableDisposableSupplier<T>((DisposableSupplier<T>) supplier)
                 : new InitializableSupplier<T>(supplier);
+        this.runtimeType = runtimeType;
         if ("EmptyReferenceFactory".equals(supplier.getClass().getSimpleName())) {
             this.supplier.init(supplier);
             this.supplier.isReferencingFactory = true;
@@ -65,6 +70,11 @@ public class InitializableSupplierInstanceBinding<T>
         return supplier.init.get();
     }
 
+    @Override
+    public RuntimeType getRuntimeType() {
+        return runtimeType;
+    }
+
     /**
      * Gets supplier's instance.
      *
@@ -81,8 +91,8 @@ public class InitializableSupplierInstanceBinding<T>
         return supplier.originalSupplier;
     }
 
-    public static <T> InitializableSupplierInstanceBinding<T> from(SupplierInstanceBinding<T> binding) {
-        return new InitializableSupplierWrappingInstanceBinding(binding);
+    public static <T> InitializableSupplierInstanceBinding<T> from(SupplierInstanceBinding<T> binding, RuntimeType runtimeType) {
+        return new InitializableSupplierWrappingInstanceBinding(binding, runtimeType);
     }
 
     @Override
@@ -100,6 +110,9 @@ public class InitializableSupplierInstanceBinding<T>
 
     private Matching<InitializableSupplierInstanceBinding<T>> matches(
             Class<?> originalSupplierClass, Class<?> otherSupplierClass, Binding other) {
+        if (getId() != 0) {
+            return matchesById(other);
+        }
         final boolean matchesService = originalSupplierClass.equals(otherSupplierClass);
         final Matching matching = matchesContracts(other);
         if (matching.matchLevel == MatchLevel.FULL_CONTRACT && matchesService) {
@@ -113,6 +126,11 @@ public class InitializableSupplierInstanceBinding<T>
         return MatchLevel.SUPPLIER;
     }
 
+    @Override
+    public Matching<MatchableBinding> matching(Binding other) {
+        return visitor.matches((InitializableSupplierInstanceBinding) this, other);
+    }
+
     private static class InitializableDisposableSupplier<T> extends InitializableSupplier<T> implements DisposableSupplier<T> {
         private InitializableDisposableSupplier(DisposableSupplier<T> originalSupplier) {
             super(originalSupplier);
@@ -120,7 +138,9 @@ public class InitializableSupplierInstanceBinding<T>
 
         @Override
         public void dispose(T instance) {
-            ((DisposableSupplier) supplier).dispose(instance);
+            if (isInit()) {
+                ((DisposableSupplier) supplier).dispose(instance);
+            }
         }
     }
 
@@ -158,40 +178,59 @@ public class InitializableSupplierInstanceBinding<T>
 
     private static class InitializableSupplierWrappingInstanceBinding<T> extends InitializableSupplierInstanceBinding<T> {
         private final SupplierInstanceBinding wrapped;
-        public InitializableSupplierWrappingInstanceBinding(SupplierInstanceBinding binding) {
-            super(binding.getSupplier());
+        InitializableSupplierWrappingInstanceBinding(SupplierInstanceBinding binding, RuntimeType runtimeType) {
+            super(binding.getSupplier(), runtimeType);
             wrapped = binding;
+            postCreate();
         }
 
-        private InitializableSupplierWrappingInstanceBinding(InitializableSupplierWrappingInstanceBinding binding) {
-            super(binding.getOriginalSupplier());
+        private InitializableSupplierWrappingInstanceBinding(InitializableSupplierWrappingInstanceBinding binding,
+                                                             RuntimeType runtimeType) {
+            super(binding.getOriginalSupplier(), runtimeType);
             wrapped = binding.wrapped;
+            postCreate();
         }
 
-        @Override
-        public Class getImplementationType() {
-            return super.getImplementationType();
+        private void postCreate() {
+            wrapped.getContracts().forEach(c -> this.to((Type) c));
+            if (wrapped.getRank() != null) {
+                this.ranked(wrapped.getRank());
+            }
+            this.named(wrapped.getName());
+            this.id(wrapped.getId());
+            this.in(wrapped.getScope());
+            this.forClient(wrapped.isForClient());
         }
 
-        @Override
-        public Supplier getSupplier() {
-            return super.getSupplier();
-        }
+//        @Override
+//        public Class getImplementationType() {
+//            return super.getImplementationType();
+//        }
+//
+//        @Override
+//        public Supplier getSupplier() {
+//            return super.getSupplier();
+//        }
+//
+//        @Override
+//        public RuntimeType getRuntime() {
+//            return super.getRuntime();
+//        }
 
-        @Override
-        public Class<? extends Annotation> getScope() {
-            return wrapped.getScope();
-        }
-
-        @Override
-        public Set<Type> getContracts() {
-            return wrapped.getContracts();
-        }
-
-        @Override
-        public Integer getRank() {
-            return wrapped.getRank();
-        }
+//        @Override
+//        public Class<? extends Annotation> getScope() {
+//            return wrapped.getScope();
+//        }
+//
+//        @Override
+//        public Set<Type> getContracts() {
+//            return wrapped.getContracts();
+//        }
+//
+//        @Override
+//        public Integer getRank() {
+//            return wrapped.getRank();
+//        }
 
         @Override
         public Set<AliasBinding> getAliases() {
@@ -209,19 +248,35 @@ public class InitializableSupplierInstanceBinding<T>
         }
 
         @Override
-        public String getName() {
-            return wrapped.getName();
+        public String toString() {
+            return wrapped.toString();
         }
+
+
+//        @Override
+//        public String getName() {
+//            return wrapped.getName();
+//        }
+
+//        @Override
+//        public long getId() {
+//            return wrapped.getId();
+//        }
+//
+//        @Override
+//        public boolean isForClient() {
+//            return wrapped.isForClient();
+//        }
 
         @Override
         public InitializableSupplierWrappingInstanceBinding clone() {
-            return new InitializableSupplierWrappingInstanceBinding(this);
+            return new InitializableSupplierWrappingInstanceBinding(this, getRuntimeType());
         }
 
-        @Override
-        public String toString() {
-            return "InitializableSupplierWrappingInstanceBinding(" +  wrapped.getSupplier() + ")";
-        }
+//        @Override
+//        public String toString() {
+//            return "InitializableSupplierWrappingInstanceBinding(" +  wrapped.getSupplier() + ")";
+//        }
     }
 
 }

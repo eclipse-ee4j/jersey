@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.enterprise.context.Dependent;
@@ -161,7 +162,7 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
             return binding.getRank();
         }
 
-        int defaultValue = 1;
+        int defaultValue = 0;
         Class<T> type = binding.getImplementationType();
         if (type != null) {
             return JerseyPriorities.getPriorityValue(type, defaultValue);
@@ -188,5 +189,18 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
 
     public String getContractsAsString() {
         return Arrays.toString(binding.getContracts().toArray());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JerseyBean<?> that = (JerseyBean<?>) o;
+        return Objects.equals(binding, that.binding) && runtimeType == that.runtimeType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(binding, runtimeType);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
+
+import jakarta.ws.rs.RuntimeType;
 
 /**
  * Abstract Configurator which initializes and register {@link ExecutorServiceProvider} and
@@ -57,7 +59,8 @@ public abstract class AbstractExecutorProvidersConfigurator implements Bootstrap
             ComponentBag componentBag,
             ExecutorServiceProvider defaultAsyncExecutorProvider,
             ScheduledExecutorServiceProvider defaultScheduledExecutorProvider,
-            ManagedObjectsFinalizer finalizer) {
+            ManagedObjectsFinalizer finalizer,
+            RuntimeType runtimeType) {
 
         List<ExecutorServiceProvider> customExecutors =
                 Stream.concat(
@@ -79,6 +82,6 @@ public abstract class AbstractExecutorProvidersConfigurator implements Bootstrap
         customScheduledExecutors.add(defaultScheduledExecutorProvider);
         customScheduledExecutors.stream().forEach(e -> finalizer.registerForPreDestroyCall(e));
 
-        ExecutorProviders.registerExecutorBindings(injectionManager, customExecutors, customScheduledExecutors);
+        ExecutorProviders.registerExecutorBindings(injectionManager, customExecutors, customScheduledExecutors, runtimeType);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.inject.cdi.se;
 
 import jakarta.annotation.Priority;
+import jakarta.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
@@ -32,5 +33,10 @@ public class CdiSeInjectionManagerFactory implements InjectionManagerFactory {
     @Override
     public InjectionManager create(Object parent) {
         return new CdiSeInjectionManager();
+    }
+
+    @Override
+    public InjectionManager create(Object parent, Configuration configuration) {
+        return create(parent); // no configuration used at the moment
     }
 }

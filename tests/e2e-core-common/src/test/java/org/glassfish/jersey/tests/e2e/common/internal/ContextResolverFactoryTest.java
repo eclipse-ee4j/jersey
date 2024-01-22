@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.e2e.common.internal;
 import java.util.Collections;
 
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
@@ -30,6 +31,8 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.internal.inject.ProviderBinder;
+import org.glassfish.jersey.model.internal.CommonConfig;
+import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -115,6 +118,7 @@ public class ContextResolverFactoryTest {
         injectionManager.register(new Binder());
 
         BootstrapBag bootstrapBag = new BootstrapBag();
+        bootstrapBag.setConfiguration(new CommonConfig(RuntimeType.SERVER, ComponentBag.INCLUDE_ALL));
         ContextResolverFactory.ContextResolversConfigurator configurator =
                 new ContextResolverFactory.ContextResolversConfigurator();
         configurator.init(injectionManager, bootstrapBag);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledThreadPoolExecutorProvider;
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
+
+import jakarta.ws.rs.RuntimeType;
 
 /**
  * Configurator which initializes and register {@link org.glassfish.jersey.spi.ExecutorServiceProvider} and
@@ -57,7 +59,7 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
         injectionManager.register(executorBinding);
 
         registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider,
-                defaultScheduledExecutorProvider, serverBag.getManagedObjectsFinalizer());
+                defaultScheduledExecutorProvider, serverBag.getManagedObjectsFinalizer(), RuntimeType.SERVER);
     }
 
     /**

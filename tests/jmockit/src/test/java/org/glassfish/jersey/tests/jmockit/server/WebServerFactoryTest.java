@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +26,7 @@ import java.util.Iterator;
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
+import jakarta.ws.rs.core.Configuration;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.guava.Iterators;
@@ -78,8 +79,14 @@ public final class WebServerFactoryTest {
                             }
                         }
                                 : service == InjectionManagerFactory.class ? new InjectionManagerFactory() {
+
                             @Override
                             public final InjectionManager create(final Object parent) {
+                                return mockInjectionManager;
+                            }
+
+                            @Override
+                            public InjectionManager create(Object parent, Configuration configuration) {
                                 return mockInjectionManager;
                             }
                         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,13 +18,13 @@ package org.glassfish.jersey.inject.weld.internal.inject;
 
 import org.glassfish.jersey.internal.inject.AliasBinding;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
 
+import jakarta.ws.rs.RuntimeType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,19 +34,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @param <T> Type of the service described by this injection binding.
  */
-public class InitializableInstanceBinding<T> extends MatchableBinding<T, InitializableInstanceBinding<T>> implements Cloneable {
+public class InitializableInstanceBinding<T> extends InitializableBinding<T, InitializableInstanceBinding<T>>
+        implements Cloneable {
 
     protected T service;
-    private AtomicBoolean isInit = new AtomicBoolean(false);
+    private final AtomicBoolean isInit = new AtomicBoolean(false);
     private Class<T> implementationType;
+    private final RuntimeType runtimeType;
 
     /**
      * Creates a service as an instance.
      *
      * @param service service's instance.
      */
-    protected InitializableInstanceBinding(T service) {
-        this(service, null);
+    protected InitializableInstanceBinding(T service, RuntimeType runtimeType) {
+        this(service, null, runtimeType);
     }
 
     /**
@@ -55,12 +57,13 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
      * @param service      service's instance.
      * @param contractType service's contractType.
      */
-    private InitializableInstanceBinding(T service, Type contractType) {
+    private InitializableInstanceBinding(T service, Type contractType, RuntimeType runtimeType) {
         this.service = service;
         this.implementationType = service == null ? null : (Class<T>) service.getClass();
         if (contractType != null) {
             this.to(contractType);
         }
+        this.runtimeType = runtimeType;
     }
 
     /**
@@ -81,6 +84,7 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
      *
      * @return service's type.
      */
+    @Override
     public Class<T> getImplementationType() {
         return implementationType;
     }
@@ -98,6 +102,12 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
         return isInit.get();
     }
 
+    @Override
+    public RuntimeType getRuntimeType() {
+        return runtimeType;
+    }
+
+    @Override
     public Matching<InitializableInstanceBinding<T>> matches(Binding other) {
         return super.matches(other);
     }
@@ -107,8 +117,8 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
         throw new RuntimeException(new CloneNotSupportedException());
     }
 
-    public static <T> InitializableInstanceBinding<T> from(InstanceBinding<T> instanceBinding) {
-        return new InitializableWrappingInstanceBinding(instanceBinding);
+    public static <T> InitializableInstanceBinding<T> from(InstanceBinding<T> instanceBinding, RuntimeType runtimeType) {
+        return new InitializableWrappingInstanceBinding(instanceBinding, runtimeType);
     }
 
     @Override
@@ -116,42 +126,79 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
         return MatchLevel.IMPLEMENTATION;
     }
 
+    @Override
+    public Matching<MatchableBinding> matching(Binding other) {
+        return visitor.matches((InitializableInstanceBinding) this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(service, implementationType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InitializableInstanceBinding<?> that = (InitializableInstanceBinding<?>) o;
+        return Objects.equals(service, that.service)
+                && Objects.equals(implementationType, that.implementationType);
+    }
+
     private static class InitializableWrappingInstanceBinding<T> extends InitializableInstanceBinding<T> {
         private final InstanceBinding<T> wrapped;
-        public InitializableWrappingInstanceBinding(InstanceBinding<T> binding) {
-            super(binding.getService());
+        public InitializableWrappingInstanceBinding(InstanceBinding<T> binding, RuntimeType runtimeType) {
+            super(binding.getService(), runtimeType);
             wrapped = binding;
+            postCreate();
         }
 
-        private InitializableWrappingInstanceBinding(InitializableWrappingInstanceBinding<T> binding) {
-            super(binding.service);
+        private InitializableWrappingInstanceBinding(InitializableWrappingInstanceBinding<T> binding, RuntimeType runtimeType) {
+            super(binding.service, runtimeType);
             wrapped = binding.wrapped;
+            postCreate();
         }
 
-        @Override
-        public Class<T> getImplementationType() {
-            return super.getImplementationType();
+        private void postCreate() {
+            wrapped.getContracts().forEach(c -> this.to(c));
+            if (wrapped.getRank() != null) {
+                this.ranked(wrapped.getRank());
+            }
+            this.named(wrapped.getName());
+            this.id(wrapped.getId());
+            this.in(wrapped.getScope());
+            this.forClient(wrapped.isForClient());
         }
 
-        @Override
-        public T getService() {
-            return super.getService();
-        }
+//        @Override
+//        public Class<T> getImplementationType() {
+//            return super.getImplementationType();
+//        }
+//
+//        @Override
+//        public T getService() {
+//            return super.getService();
+//        }
+//
+//        @Override
+//        public RuntimeType getRuntime() {
+//            return super.getRuntime();
+//        }
 
-        @Override
-        public Class<? extends Annotation> getScope() {
-            return wrapped.getScope();
-        }
-
-        @Override
-        public Set<Type> getContracts() {
-            return wrapped.getContracts();
-        }
-
-        @Override
-        public Integer getRank() {
-            return wrapped.getRank();
-        }
+//        @Override
+//        public Class<? extends Annotation> getScope() {
+//            return wrapped.getScope();
+//        }
+//
+//        @Override
+//        public Set<Type> getContracts() {
+//            return wrapped.getContracts();
+//        }
+//
+//        @Override
+//        public Integer getRank() {
+//            return wrapped.getRank();
+//        }
 
         @Override
         public Set<AliasBinding> getAliases() {
@@ -175,12 +222,22 @@ public class InitializableInstanceBinding<T> extends MatchableBinding<T, Initial
 
         @Override
         public String toString() {
-            return "InitializableWrappingInstanceBinding(" + wrapped.getService().getClass() + ")";
+            return wrapped.toString();
         }
+
+//        @Override
+//        public boolean isForClient() {
+//            return wrapped.isForClient();
+//        }
+//
+//        @Override
+//        public long getId() {
+//            return wrapped.getId();
+//        }
 
         @Override
         public InitializableWrappingInstanceBinding clone() {
-            return new InitializableWrappingInstanceBinding(this);
+            return new InitializableWrappingInstanceBinding(this, this.getRuntimeType());
         }
     }
 }

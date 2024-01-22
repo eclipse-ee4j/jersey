@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,24 +47,27 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
+import org.glassfish.jersey.internal.inject.SupplierClassBinding;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 /**
  * Implementation of {@link InjectionManager} used on the server side.
  */
 @Singleton
-public class CdiInjectionManager implements InjectionManager {
+class CdiInjectionManager implements InjectionManager {
 
     private final BeanManager beanManager;
-    private final Binder bindings;
+    private final BinderRegisterExtension.MergedBindings bindings;
     private boolean isCompleted = false;
     Set<Class<?>> managedBeans;
+    protected final ProviderBindings userBindings;
 
     // Keeps all binders and bindings added to the InjectionManager during the bootstrap.
 
-    public CdiInjectionManager(BeanManager beanManager, Binder bindings) {
+    CdiInjectionManager(BeanManager beanManager, BinderRegisterExtension.MergedBindings bindings, RuntimeType runtimeType) {
         this.beanManager = beanManager;
         this.bindings = bindings;
+        userBindings = new ProviderBindings(runtimeType, this);
     }
 
     @Override
@@ -73,33 +76,37 @@ public class CdiInjectionManager implements InjectionManager {
             return;
         }
         if (InstanceBinding.class.isInstance(binding)) {
-            final Collection<Binding> preBindings = bindings.getBindings();
-            MatchableBinding.Matching<InitializableInstanceBinding> matching = MatchableBinding.Matching.noneMatching();
-            for (Binding preBinding : preBindings) {
-                if (InitializableInstanceBinding.class.isInstance(preBinding)) {
-                    matching = matching.better(((InitializableInstanceBinding) preBinding).matches((InstanceBinding) binding));
-                    if (matching.isBest()) {
-                        break;
-                    }
-                }
-            }
+//            final Collection<Binding> preBindings = bindings.getBindings();
+//            MatchableBinding.Matching<InitializableInstanceBinding> matching = MatchableBinding.Matching.noneMatching();
+//            for (Binding preBinding : preBindings) {
+//                if (InitializableInstanceBinding.class.isInstance(preBinding)) {
+//                    matching = matching.better(((InitializableInstanceBinding) preBinding).matches((InstanceBinding) binding));
+//                    if (matching.isBest()) {
+//                        break;
+//                    }
+//                }
+//            }
+            MatchableBinding.Matching<InitializableInstanceBinding> matching
+                    = findPrebinding(InitializableInstanceBinding.class, binding);
             if (matching.matches()) {
                matching.getBinding().init(((InstanceBinding) binding).getService());
-            } else if (findClassBinding(binding.getImplementationType()) == null) {
-                throw new IllegalStateException("Not initialized " + ((InstanceBinding<?>) binding).getService());
+            } else /*if (findClassBinding(binding.getImplementationType()) == null) */{
+                throw new IllegalStateException("Could not initialize " + ((InstanceBinding<?>) binding).getService());
             }
         } else if (SupplierInstanceBinding.class.isInstance(binding)) {
-            final Collection<Binding> preBindings = bindings.getBindings();
-            MatchableBinding.Matching<InitializableSupplierInstanceBinding> matching = MatchableBinding.Matching.noneMatching();
-            for (Binding preBinding : preBindings) {
-                if (InitializableSupplierInstanceBinding.class.isInstance(preBinding)) {
-                    matching = matching.better(
-                            ((InitializableSupplierInstanceBinding) preBinding).matches((SupplierInstanceBinding) binding));
-                    if (matching.isBest()) {
-                        break;
-                    }
-                }
-            }
+//            final Collection<Binding> preBindings = bindings.getBindings();
+//            MatchableBinding.Matching<InitializableSupplierInstanceBinding> matching = MatchableBinding.Matching.noneMatching();
+//            for (Binding preBinding : preBindings) {
+//                if (InitializableSupplierInstanceBinding.class.isInstance(preBinding)) {
+//                    matching = matching.better(
+//                            ((InitializableSupplierInstanceBinding) preBinding).matches((SupplierInstanceBinding) binding));
+//                    if (matching.isBest()) {
+//                        break;
+//                    }
+//                }
+//            }
+            MatchableBinding.Matching<InitializableSupplierInstanceBinding> matching =
+                    findPrebinding(InitializableSupplierInstanceBinding.class, binding);
             if (matching.matches()) {
                 matching.getBinding().init(((SupplierInstanceBinding) binding).getSupplier());
             } else {
@@ -123,13 +130,46 @@ public class CdiInjectionManager implements InjectionManager {
         }
     }
 
-    private <T> ClassBinding<T> findClassBinding(Class<T> implementationType) {
+    protected <MB extends MatchableBinding> MatchableBinding.Matching<MB>
+    findPrebinding(Class<MB> matchebleBindingClass, Binding binderBinding) {
+        final Collection<Binding> preBindings;
+//        if (runtimeType == RuntimeType.SERVER) {
+//            preBindings = bindings.getServerBindings();
+//        } else if (runtimeType == RuntimeType.CLIENT) {
+//            preBindings = bindings.getClientBindings();
+//        } else {
+            preBindings = bindings.getBindings();
+//        }
+        MatchableBinding.Matching<MB> matching = MatchableBinding.Matching.noneMatching();
+        for (Binding preBinding : preBindings) {
+            if (matchebleBindingClass.isInstance(preBinding)) {
+                matching = matching.better(((MB) preBinding).matching(binderBinding));
+                if (matching.isBest()
+                        || (matching.matches() && binderBinding.isForClient())) {
+                    break;
+                }
+            }
+        }
+        return matching;
+    }
+
+    protected <T> ClassBinding<T> findClassBinding(Class<T> implementationType) {
         final Collection<Binding> preBindings = bindings.getBindings();
-        boolean found = false;
         for (Binding preBinding : preBindings) {
             if (ClassBinding.class.isInstance(preBinding)
                     && ((ClassBinding) preBinding).getImplementationType().equals(implementationType)) {
                 return (ClassBinding<T>) preBinding;
+            }
+        }
+        return null;
+    }
+
+    protected <T> SupplierClassBinding<T> findSupplierClassBinding(Class<T> implementationType) {
+        final Collection<Binding> preBindings = bindings.getBindings();
+        for (Binding preBinding : preBindings) {
+            if (SupplierClassBinding.class.isInstance(preBinding)
+                    && ((SupplierClassBinding) preBinding).getImplementationType().equals(implementationType)) {
+                return (SupplierClassBinding<T>) preBinding;
             }
         }
         return null;
@@ -168,13 +208,13 @@ public class CdiInjectionManager implements InjectionManager {
 
     @Override
     public <T> T create(Class<T> createMe) {
-        Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(createMe).newInstance();
+        Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(beanManager, createMe).newInstance();
         return unmanaged.produce().get();
     }
 
     @Override
     public <T> T createAndInitialize(Class<T> createMe) {
-        Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(createMe).newInstance();
+        Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(beanManager, createMe).newInstance();
         return unmanaged.produce()
                 .inject()
                 .postConstruct()
@@ -192,15 +232,18 @@ public class CdiInjectionManager implements InjectionManager {
             }
 
             CreationalContext<?> ctx = createCreationalContext(bean);
+            lockContext();
             T reference = (T) beanManager.getReference(bean, contractOrImpl, ctx);
+            unlockContext();
 
-            int rank = 1;
+            int rank = 0;
             if (bean instanceof JerseyBean) {
                 rank = ((JerseyBean) bean).getRank();
             }
 
             result.add(new ServiceHolderImpl<>(reference, (Class<T>) bean.getBeanClass(), bean.getTypes(), rank));
         }
+        result.addAll(userBindings.getServiceHolders(contractOrImpl));
         return result;
     }
 
@@ -220,7 +263,7 @@ public class CdiInjectionManager implements InjectionManager {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> T getInstanceInternal(Type contractOrImpl, Annotation... qualifiers) {
+    protected <T> T  getInstanceInternal(Type contractOrImpl, Annotation... qualifiers) {
 //        if (contractOrImpl.getTypeName().contains("HelloResource")) {
 //            T t = (T) CDI.current().select((Class) contractOrImpl, qualifiers).get();
 //            try {
@@ -242,11 +285,22 @@ public class CdiInjectionManager implements InjectionManager {
 
         final Iterator<?> beansIterator = beans.iterator();
         Bean<?> bean = (Bean<?>) beansIterator.next();
-        while (beansIterator.hasNext() && !JerseyBean.class.isInstance(bean) && !isRuntimeTypeBean(bean)) {
-            bean = (Bean<?>) beansIterator.next(); // prefer Jersey binding
+        boolean isRuntimeType = false;
+        while (!(isRuntimeType = isRuntimeTypeBean(bean))) {
+            if (beansIterator.hasNext()) {
+                bean = (Bean<?>) beansIterator.next(); // prefer Jersey binding
+            } else {
+                break;
+            }
+        }
+        if (!isRuntimeType) {
+            throw new IllegalStateException("Bean for type " + contractOrImpl + " not found");
         }
         CreationalContext<T> ctx = createCreationalContext((Bean<T>) bean);
-        return (T) beanManager.getReference(bean, contractOrImpl, ctx);
+        lockContext();
+        T t = (T) beanManager.getReference(bean, contractOrImpl, ctx);
+        unlockContext();
+        return t;
     }
 
     @Override
@@ -286,10 +340,16 @@ public class CdiInjectionManager implements InjectionManager {
     public <T> List<T> getAllInstances(Type contractOrImpl) {
         List<T> result = new ArrayList<>();
         for (Bean<?> bean : beanManager.getBeans(contractOrImpl)) {
+            if (!isRuntimeTypeBean(bean)) {
+                continue;
+            }
             CreationalContext<?> ctx = createCreationalContext(bean);
+            lockContext();
             Object reference = beanManager.getReference(bean, contractOrImpl, ctx);
+            unlockContext();
             result.add((T) reference);
         }
+        result.addAll(userBindings.getServices(contractOrImpl));
         return result;
     }
 
@@ -302,6 +362,12 @@ public class CdiInjectionManager implements InjectionManager {
         InjectionTarget injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         injectionTarget.inject(instance, creationalContext);
+    }
+
+    protected void lockContext() {
+    }
+
+    protected void unlockContext() {
     }
 
     @Override
@@ -338,7 +404,7 @@ public class CdiInjectionManager implements InjectionManager {
         return false;
     }
 
-    protected Binder getBindings() {
+    protected BinderRegisterExtension.MergedBindings getBindings() {
         return bindings;
     }
 
@@ -361,7 +427,8 @@ public class CdiInjectionManager implements InjectionManager {
      * @return true iff the given bean is not a Jersey Bean or the Jersey Bean is of the proper {@code RuntimeType}.
      */
     protected boolean isRuntimeTypeBean(Bean<?> bean) {
-        return !JerseyBean.class.isInstance(bean) || ((JerseyBean) bean).getRutimeType() == RuntimeType.SERVER;
+        return !JerseyBean.class.isInstance(bean)
+                || ((JerseyBean) bean).getRutimeType() == RuntimeType.SERVER;
     }
 
     @Override
@@ -374,5 +441,10 @@ public class CdiInjectionManager implements InjectionManager {
     public <T> T getInstance(Class<T> contractOrImpl, String classAnalyzer) {
         // TODO: Used only in legacy CDI integration.
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public RuntimeType getRuntimeType() {
+        return RuntimeType.SERVER;
     }
 }

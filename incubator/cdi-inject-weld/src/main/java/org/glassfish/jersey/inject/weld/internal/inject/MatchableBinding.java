@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,8 @@
 package org.glassfish.jersey.inject.weld.internal.inject;
 
 import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.internal.inject.InstanceBinding;
+import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -29,9 +31,20 @@ import java.util.Set;
  */
 public abstract class MatchableBinding<T, D extends MatchableBinding> extends Binding<T, D> {
 
+    protected static MatchingVisitor visitor = new MatchingVisitor();
     protected abstract MatchLevel bestMatchLevel();
 
+    /**
+     * Visitor version of matches
+     * @param other
+     * @return
+     */
+    public abstract Matching<MatchableBinding> matching(Binding other);
+
     protected Matching<D> matches(Binding<?, ?> other) {
+        if (getId() != 0) {
+            return matchesById(other);
+        }
         final Matching<D> matching = matchesContracts(other);
         if (matching.matchLevel == MatchLevel.FULL_CONTRACT) {
             if (getImplementationType().equals(other.getImplementationType())) {
@@ -39,6 +52,14 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
             }
         }
         return matching;
+    }
+
+    protected Matching matchesById(Binding<?, ?> other) {
+        if (getId() == other.getId()) {
+            return new Matching<>((D) this, MatchLevel.FULL_CONTRACT);
+        } else {
+            return Matching.noneMatching();
+        }
     }
 
     /**
@@ -113,6 +134,10 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
         public D getBinding() {
             return binding;
         }
+
+        public Matching<D> clone() {
+            return new Matching<>(binding, matchLevel);
+        }
     }
 
     /**
@@ -123,12 +148,29 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
         PARTIAL_CONTRACT(1),
         FULL_CONTRACT(2),
         IMPLEMENTATION(3),
-        SUPPLIER(4);
+        SUPPLIER(4),
+        NEVER(5);
 
         private final int level;
 
         MatchLevel(int level) {
             this.level = level;
+        }
+    }
+
+    protected static class MatchingVisitor<D extends MatchableBinding<?, D>> {
+        public MatchableBinding.Matching<InitializableInstanceBinding<D>> matches(
+                InitializableInstanceBinding<D> binding, Binding other) {
+            return binding.matches((InstanceBinding) other);
+        }
+
+        public MatchableBinding.Matching<InitializableSupplierInstanceBinding<D>> matches(
+                InitializableSupplierInstanceBinding<D> binding, Binding other) {
+            return binding.matches((SupplierInstanceBinding<D>) other);
+        }
+
+        public Matching<MatchableBinding<?, D>> matches(MatchableBinding<?, D> binding, Binding other) {
+            throw new IllegalStateException("Unexpected");
         }
     }
 }

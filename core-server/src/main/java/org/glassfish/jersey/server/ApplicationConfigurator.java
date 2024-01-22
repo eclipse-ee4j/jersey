@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,7 @@ class ApplicationConfigurator implements BootstrapConfigurator {
         }
 
         serverBag.setApplication(resultApplication);
-        injectionManager.register(Bindings.service(resultApplication).to(Application.class));
+        injectionManager.register(Bindings.service(resultApplication).to(Application.class).id(3199));
     }
 
     private static Application createApplication(

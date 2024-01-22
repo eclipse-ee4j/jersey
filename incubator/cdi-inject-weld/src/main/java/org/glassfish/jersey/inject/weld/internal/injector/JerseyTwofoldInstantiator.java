@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.inject.weld.internal.injector;
 
 import jakarta.enterprise.context.spi.CreationalContext;
+
 import org.jboss.weld.injection.ConstructorInjectionPoint;
 import org.jboss.weld.injection.producer.AbstractInstantiator;
 import org.jboss.weld.manager.BeanManagerImpl;
@@ -59,10 +60,10 @@ public class JerseyTwofoldInstantiator<T> extends AbstractInstantiator<T> {
     @Override
     public T newInstance(CreationalContext<T> ctx, BeanManagerImpl manager) {
         final ConstructorInjectionPoint<T> cip =
-                optionalConstructorInjectionPoint == null || !JerseyClientCreationalContext.class.isInstance(ctx)
+                !hasOptionalConstructorInjectionPoint() || !JerseyClientCreationalContext.class.isInstance(ctx)
                 ? primaryInstantiator.getConstructorInjectionPoint()
                 : optionalConstructorInjectionPoint;
-        return cip.newInstance(manager, ctx);
+            return cip.newInstance(manager, ctx);
     }
 
     /**
@@ -71,5 +72,9 @@ public class JerseyTwofoldInstantiator<T> extends AbstractInstantiator<T> {
      */
     public void setOptionalConstructorInjectionPoint(ConstructorInjectionPoint<T> optionalConstructorInjectionPoint) {
         this.optionalConstructorInjectionPoint = optionalConstructorInjectionPoint;
+    }
+
+    public boolean hasOptionalConstructorInjectionPoint() {
+        return optionalConstructorInjectionPoint != null;
     }
 }

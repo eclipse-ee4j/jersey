@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import org.glassfish.jersey.internal.BootstrapBag;
@@ -31,9 +32,10 @@ public class ParamConverterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
+        long id = injectionManager.getRuntimeType() == RuntimeType.CLIENT ? 2010 : 3010;
         final ClassBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
                 Bindings.service(ParamConverters.AggregatedProvider.class)
-                    .to(ParamConverterProvider.class);
+                    .to(ParamConverterProvider.class).id(id);
         injectionManager.register(aggregatedConverters);
     }
 }

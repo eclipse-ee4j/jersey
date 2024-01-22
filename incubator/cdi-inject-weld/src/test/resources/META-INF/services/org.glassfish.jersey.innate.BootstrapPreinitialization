@@ -1,0 +1,2 @@
+org.glassfish.jersey.inject.weld.binder.client.ClientOnlyPreinitialization
+org.glassfish.jersey.inject.weld.internal.managed.TestPreinitialization

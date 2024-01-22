@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
@@ -75,7 +75,9 @@ public class ExceptionMapperFactory implements ExceptionMappers {
             exceptionMapperFactory = new ExceptionMapperFactory(injectionManager);
             InstanceBinding<ExceptionMapperFactory> binding =
                     Bindings.service(exceptionMapperFactory)
-                            .to(ExceptionMappers.class);
+                            .to(ExceptionMappers.class)
+                            .forClient(bootstrapBag.getConfiguration().getRuntimeType() == RuntimeType.CLIENT)
+                            .id(1015);
             injectionManager.register(binding);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -82,24 +82,26 @@ class ClientBinder extends AbstractBinder {
     @Override
     protected void configure() {
         install(new MessagingBinders.MessageBodyProviders(clientRuntimeProperties, RuntimeType.CLIENT),
-                new MessagingBinders.HeaderDelegateProviders());
+                new MessagingBinders.HeaderDelegateProviders(RuntimeType.CLIENT));
 
         bindFactory(ReferencingFactory.referenceFactory()).to(new GenericType<Ref<ClientConfig>>() {
-        }).in(RequestScoped.class);
+        }).in(RequestScoped.class).id(2101);
 
         bindFactory(RequestContextInjectionFactory.class)
                 .to(ClientRequest.class)
-                .in(RequestScoped.class);
+                .in(RequestScoped.class)
+                .id(2102);
 
         bindFactory(RequestContextInjectionFactory.class).to(HttpHeaders.class)
-                .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+                .proxy(true).proxyForSameScope(false).in(RequestScoped.class).id(2103);
 
         bindFactory(ReferencingFactory.referenceFactory()).to(new GenericType<Ref<ClientRequest>>() {
-        }).in(RequestScoped.class);
+        }).in(RequestScoped.class).id(2104);
 
-        bindFactory(PropertiesDelegateFactory.class, Singleton.class).to(PropertiesDelegate.class).in(RequestScoped.class);
+        bindFactory(PropertiesDelegateFactory.class, Singleton.class).to(PropertiesDelegate.class).in(RequestScoped.class)
+                .forClient(true).id(1001);
 
         // ChunkedInput entity support
-        bind(ChunkedInputReader.class).to(MessageBodyReader.class).in(Singleton.class);
+        bind(ChunkedInputReader.class).to(MessageBodyReader.class).in(Singleton.class).id(2105);
     }
 }
