@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.inject.weld.internal.data;
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
 import org.glassfish.jersey.internal.inject.Binding;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class BindingBeanPair {
     private final Binding binding;
-    private final List<JerseyBean> beans = new LinkedList<JerseyBean>();
+    private final List<JerseyBean> beans = new ArrayList<JerseyBean>();
 
     public BindingBeanPair(Binding binding, JerseyBean... beans) {
         this.binding = binding;

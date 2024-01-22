@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,8 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.ws.rs.RuntimeType;
 
+import org.glassfish.jersey.inject.weld.internal.inject.InitializableInstanceBinding;
+import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.internal.inject.ClassBinding;
 
@@ -60,7 +62,7 @@ import org.glassfish.jersey.internal.inject.ClassBinding;
  *
  * @author Petr Bouda
  */
-class ClassBean<T> extends JerseyBean<T> {
+public class ClassBean<T> extends JerseyBean<T> {
 
     private final ClassBinding<T> binding;
     private InjectionTarget<T> injectionTarget;
@@ -90,6 +92,12 @@ class ClassBean<T> extends JerseyBean<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T create(CreationalContext<T> context) {
+//        ClassBinding<T> realBinding = (ClassBinding<T>) getBinding();
+//        if (JerseyClientCreationalContext.class.isInstance(context)) {
+//            realBinding = ((JerseyClientCreationalContext) context)
+//                  .getInjectionManager().getInjectionManagerBinding(realBinding);
+//        }
+//        T service = realBinding.getService();
         T instance = injectionTarget.produce(context);
         injectionTarget.inject(instance, context);
         injectionTarget.postConstruct(instance);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,6 @@ public class ParameterUpdaterConfigurator implements BootstrapConfigurator {
         ParameterUpdaterFactory parameterUpdaterFactory = new ParameterUpdaterFactory(lazyParamConverterFactory);
         clientBag.setParameterUpdaterProvider(parameterUpdaterFactory);
         injectionManager.register(Bindings.service(parameterUpdaterFactory)
-                        .to(ParameterUpdaterProvider.class));
+                        .to(ParameterUpdaterProvider.class).id(2011));
     }
 }

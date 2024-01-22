@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import org.glassfish.jersey.Beta;
+
+import jakarta.ws.rs.RuntimeType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -257,4 +260,13 @@ public interface InjectionManager {
      * @param preDestroyMe The object to preDestroy
      */
     void preDestroy(Object preDestroyMe);
+
+    /**
+     * Get RuntimeType of the InjectionManager.
+     * @return the runtimeType
+     */
+    @Beta
+    default RuntimeType getRuntimeType() {
+        return null;
+    }
 }

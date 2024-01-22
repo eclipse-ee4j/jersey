@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,9 +51,6 @@ import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.process.internal.RequestScoped;
-import org.glassfish.jersey.server.wadl.WadlFeature;
-import org.glassfish.jersey.server.wadl.processor.OptionsMethodProcessor;
-import org.glassfish.jersey.server.wadl.processor.WadlModelProcessor;
 import org.glassfish.jersey.servlet.WebConfig;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
 import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
@@ -558,7 +555,7 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
 //        binder.bind(ChunkedResponseWriter.class).to(MessageBodyWriter.class).in(Singleton.class);
 //        binder.bind(JsonWithPaddingInterceptor.class).to(WriterInterceptor.class).in(Singleton.class);
 
-        if (runtimeType == RuntimeType.SERVER) {
+        if (runtimeType == null /*RuntimeType.SERVER*/) {
             // new ApplicationHandler(new ResourceConfig());
 
             //grizzly
@@ -597,29 +594,29 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
             final ServletConfig servletConfig = webConfig.getServletConfig();
             binder.bindFactory(() -> servletConfig).to(ServletConfig.class).in(Singleton.class);
 
-            // WADL TODO put to a proper module
-            try {
-                new WadlFeature().configure(new PreinitializationFeatureContext(binder) {
-                    @Override
-                    public FeatureContext register(Class<?> componentClass) {
-                        if (WadlModelProcessor.class.isAssignableFrom(componentClass)) {
-                            super.register(WadlModelProcessor.OptionsHandler.class);
-                        }
-                        super.register(componentClass);
-                        return this;
-                    }
-                });
-            } catch (Exception e) {
-
-            }
-            try {
-                Class[] classes = OptionsMethodProcessor.class.getDeclaredClasses();
-                for (Class clz : classes) {
-                    binder.bindAsContract(clz);
-                }
-            } catch (Exception e) {
-
-            }
+//            // WADL TODO put to a proper module
+//            try {
+//                new WadlFeature().configure(new PreinitializationFeatureContext(binder) {
+//                    @Override
+//                    public FeatureContext register(Class<?> componentClass) {
+//                        if (WadlModelProcessor.class.isAssignableFrom(componentClass)) {
+//                            super.register(WadlModelProcessor.OptionsHandler.class);
+//                        }
+//                        super.register(componentClass);
+//                        return this;
+//                    }
+//                });
+//            } catch (Exception e) {
+//
+//            }
+//            try {
+//                Class[] classes = OptionsMethodProcessor.class.getDeclaredClasses();
+//                for (Class clz : classes) {
+//                    binder.bindAsContract(clz);
+//                }
+//            } catch (Exception e) {
+//
+//            }
         }
 
 //

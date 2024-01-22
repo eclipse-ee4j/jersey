@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,8 @@
  */
 
 package org.glassfish.jersey.internal.inject;
+
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Factory which is able to create {@link InjectionManager}. Every DI provider must create its own {@link InjectionManagerFactory}
@@ -39,4 +41,13 @@ public interface InjectionManagerFactory {
      * @return initialized injection manager.
      */
     InjectionManager create(Object parent);
+
+    /**
+     * Load a new injection manager with parent object for a given RuntimeType.
+     *
+     * @param configuration the configuration including RuntimeType of the InjectionManager used.
+     * @param parent injection manager parent or concrete DI specific object which is compatible with DI provider.
+     * @return initialized injection manager.
+     */
+    InjectionManager create(Object parent, Configuration configuration);
 }

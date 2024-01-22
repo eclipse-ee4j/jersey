@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -186,12 +186,14 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
             // TODO: Do we really need these three bindings in DI provider? What JAX-RS specification says?
             InstanceBinding<ApplicationHandler> handlerBinding =
                     Bindings.service(ApplicationHandler.this)
-                            .to(ApplicationHandler.class);
+                            .to(ApplicationHandler.class)
+                            .id(3180);
 
             InstanceBinding<ResourceConfig> configBinding =
                     Bindings.service(serverBag.getRuntimeConfig())
                             .to(Configuration.class)
-                            .to(ServerConfig.class);
+                            .to(ServerConfig.class)
+                            .id(1000);
 
             injectionManager.register(handlerBinding);
             injectionManager.register(configBinding);
@@ -274,6 +276,10 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
         initialize(new ApplicationConfigurator(application), Injections.createInjectionManager(parentManager), customBinder);
     }
 
+    /* package */ ApplicationHandler(InjectionManager injectionManager) {
+        initialize(new ApplicationConfigurator(new Application()), injectionManager, null);
+    }
+
     private void initialize(ApplicationConfigurator applicationConfigurator, InjectionManager injectionManager,
             Binder customBinder) {
         LOGGER.config(LocalizationMessages.INIT_MSG(Version.getBuildId()));
@@ -284,19 +290,19 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
         ServerBootstrapBag bootstrapBag = new ServerBootstrapBag();
         bootstrapBag.setManagedObjectsFinalizer(managedObjectsFinalizer);
         List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
-                new RequestProcessingConfigurator(),
+                new RequestProcessingConfigurator(), // 3100-3110
                 new RequestScope.RequestScopeConfigurator(),
-                new ParamConverterConfigurator(),
-                new ParamExtractorConfigurator(),
-                new ValueParamProviderConfigurator(),
-                new JerseyResourceContextConfigurator(),
+                new ParamConverterConfigurator(), // 3010
+                new ParamExtractorConfigurator(), // 3111
+                new ValueParamProviderConfigurator(), // 3120-3150
+                new JerseyResourceContextConfigurator(), // 3112
                 new ComponentProviderConfigurator(),
-                new JaxrsProviders.ProvidersConfigurator(),
-                applicationConfigurator,
-                new RuntimeConfigConfigurator(),
-                new ContextResolverFactory.ContextResolversConfigurator(),
-                new MessageBodyFactory.MessageBodyWorkersConfigurator(),
-                new ExceptionMapperFactory.ExceptionMappersConfigurator(),
+                new JaxrsProviders.ProvidersConfigurator(), // 3016
+                applicationConfigurator, // 3190 - 3199
+                new RuntimeConfigConfigurator(), // 3180 - 3181
+                new ContextResolverFactory.ContextResolversConfigurator(), // 3014
+                new MessageBodyFactory.MessageBodyWorkersConfigurator(), // 3182
+                new ExceptionMapperFactory.ExceptionMappersConfigurator(), // 3015
                 new ResourceMethodInvokerConfigurator(),
                 new ProcessingProvidersConfigurator(),
                 new ContainerProviderConfigurator(RuntimeType.SERVER),

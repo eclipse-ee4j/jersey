@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -116,17 +116,17 @@ public class ValueParamProviderConfigurator implements BootstrapConfigurator {
         serverBag.setValueParamProviders(Collections.unmodifiableCollection(suppliers));
 
         // Needs to be in InjectionManager because of CdiComponentProvider
-        injectionManager.register(Bindings.service(asyncProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(cookieProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(formProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(headerProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(matrixProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(pathProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(queryProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(webTargetProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(beanProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(entityProvider).to(ValueParamProvider.class));
-        injectionManager.register(Bindings.service(contextProvider).to(ValueParamProvider.class));
+        injectionManager.register(Bindings.service(asyncProvider).to(ValueParamProvider.class).id(3120));
+        injectionManager.register(Bindings.service(cookieProvider).to(ValueParamProvider.class).id(3121));
+        injectionManager.register(Bindings.service(formProvider).to(ValueParamProvider.class).id(3122));
+        injectionManager.register(Bindings.service(headerProvider).to(ValueParamProvider.class).id(3123));
+        injectionManager.register(Bindings.service(matrixProvider).to(ValueParamProvider.class).id(3124));
+        injectionManager.register(Bindings.service(pathProvider).to(ValueParamProvider.class).id(3125));
+        injectionManager.register(Bindings.service(queryProvider).to(ValueParamProvider.class).id(3126));
+        injectionManager.register(Bindings.service(webTargetProvider).to(ValueParamProvider.class).id(3127));
+        injectionManager.register(Bindings.service(beanProvider).to(ValueParamProvider.class).id(3128));
+        injectionManager.register(Bindings.service(entityProvider).to(ValueParamProvider.class).id(3129));
+        injectionManager.register(Bindings.service(contextProvider).to(ValueParamProvider.class).id(3130));
 
         // Provide request scoped ContainerRequest without the proxy.
         Provider<ContainerRequest> request = () -> {
@@ -134,20 +134,20 @@ public class ValueParamProviderConfigurator implements BootstrapConfigurator {
             return reference.get().request();
         };
 
-        registerResolver(injectionManager, asyncProvider, Suspended.class, request);
-        registerResolver(injectionManager, cookieProvider, CookieParam.class, request);
-        registerResolver(injectionManager, formProvider, FormParam.class, request);
-        registerResolver(injectionManager, headerProvider, HeaderParam.class, request);
-        registerResolver(injectionManager, matrixProvider, MatrixParam.class, request);
-        registerResolver(injectionManager, pathProvider, PathParam.class, request);
-        registerResolver(injectionManager, queryProvider, QueryParam.class, request);
-        registerResolver(injectionManager, webTargetProvider, Uri.class, request);
-        registerResolver(injectionManager, beanProvider, BeanParam.class, request);
+        registerResolver(injectionManager, asyncProvider, Suspended.class, request, 3140);
+        registerResolver(injectionManager, cookieProvider, CookieParam.class, request, 3141);
+        registerResolver(injectionManager, formProvider, FormParam.class, request, 3142);
+        registerResolver(injectionManager, headerProvider, HeaderParam.class, request, 3143);
+        registerResolver(injectionManager, matrixProvider, MatrixParam.class, request, 3144);
+        registerResolver(injectionManager, pathProvider, PathParam.class, request, 3145);
+        registerResolver(injectionManager, queryProvider, QueryParam.class, request, 3146);
+        registerResolver(injectionManager, webTargetProvider, Uri.class, request, 31457);
+        registerResolver(injectionManager, beanProvider, BeanParam.class, request, 3148);
     }
 
     private void registerResolver(InjectionManager im, ValueParamProvider vfp, Class<? extends Annotation> annotation,
-            Provider<ContainerRequest> request) {
-        im.register(Bindings.injectionResolver(new ParamInjectionResolver<>(vfp, annotation, request)));
+            Provider<ContainerRequest> request, long id) {
+        im.register(Bindings.injectionResolver(new ParamInjectionResolver<>(vfp, annotation, request)).id(id));
     }
 
     @Override

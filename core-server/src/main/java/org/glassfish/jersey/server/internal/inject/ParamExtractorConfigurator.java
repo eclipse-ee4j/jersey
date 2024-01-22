@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +52,7 @@ public class ParamExtractorConfigurator implements BootstrapConfigurator {
         serverBag.setMultivaluedParameterExtractorProvider(multiExtractor);
         injectionManager.register(
                 Bindings.service(multiExtractor)
-                        .to(MultivaluedParameterExtractorProvider.class));
+                        .to(MultivaluedParameterExtractorProvider.class)
+                        .id(3111));
     }
 }

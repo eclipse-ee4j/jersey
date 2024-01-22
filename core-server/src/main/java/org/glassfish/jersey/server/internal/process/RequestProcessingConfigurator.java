@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -123,25 +123,28 @@ public class RequestProcessingConfigurator implements BootstrapConfigurator {
         @Override
         protected void configure() {
             bindAsContract(RequestProcessingContextReference.class)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class).id(3101);
 
             // Bind non-proxiable ContainerRequest injection injection points
             bindFactory(ContainerRequestFactory.class)
                     .to(ContainerRequest.class).to(ContainerRequestContext.class)
                     .proxy(false)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3102);
 
             // Bind proxiable HttpHeaders, Request and ContainerRequestContext injection injection points
             bindFactory(ContainerRequestFactory.class)
                     .to(HttpHeaders.class).to(Request.class).to(PropertiesDelegate.class)
                     .proxy(true).proxyForSameScope(false)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3103);
 
             // Bind proxiable UriInfo, ExtendedUriInfo and ResourceInfo injection points
             bindFactory(UriRoutingContextFactory.class)
                     .to(UriInfo.class).to(ExtendedUriInfo.class).to(ResourceInfo.class)
                     .proxy(true).proxyForSameScope(false)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3104);
 
             // Bind proxiable SecurityContext injection point.
             // NOTE:
@@ -152,20 +155,23 @@ public class RequestProcessingConfigurator implements BootstrapConfigurator {
             bind(SecurityContextInjectee.class)
                     .to(SecurityContext.class)
                     .proxy(true).proxyForSameScope(false)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3105);
 
             // Bind proxiable CloseableService injection point.
             bindFactory(CloseableServiceFactory.class)
                     .to(CloseableService.class)
                     .proxy(true).proxyForSameScope(false)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3106);
 
             // Bind proxiable AsyncContext and AsyncResponse injection points.
             // TODO maybe we can get rid of these completely? Or at least for AsyncContext?
             bindFactory(AsyncContextFactory.class)
                     .to(AsyncContext.class)
                     .to(AsyncResponse.class)
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(3107);
         }
     }
 }

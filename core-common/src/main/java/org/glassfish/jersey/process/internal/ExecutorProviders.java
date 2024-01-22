@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import jakarta.inject.Named;
 import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -68,13 +69,13 @@ public final class ExecutorProviders {
      *
      * @param injectionManager application's injection manager.
      */
-    public static void registerExecutorBindings(InjectionManager injectionManager) {
+    public static void registerExecutorBindings(InjectionManager injectionManager, RuntimeType runtimeType) {
         List<ExecutorServiceProvider> executorProviders =
                 getExecutorProviders(injectionManager, ExecutorServiceProvider.class);
         List<ScheduledExecutorServiceProvider> scheduledProviders =
                 getExecutorProviders(injectionManager, ScheduledExecutorServiceProvider.class);
 
-        registerExecutorBindings(injectionManager, executorProviders, scheduledProviders);
+        registerExecutorBindings(injectionManager, executorProviders, scheduledProviders, runtimeType);
     }
 
     private static <T> List<T> getExecutorProviders(InjectionManager injectionManager, Class<T> providerClass) {
@@ -103,7 +104,8 @@ public final class ExecutorProviders {
     public static void registerExecutorBindings(
             InjectionManager injectionManager,
             List<ExecutorServiceProvider> executorProviders,
-            List<ScheduledExecutorServiceProvider> scheduledProviders) {
+            List<ScheduledExecutorServiceProvider> scheduledProviders,
+            RuntimeType runtimeType) {
 
         Map<Class<? extends Annotation>, List<ExecutorServiceProvider>> executorProviderMap =
                 getQualifierToProviderMap(executorProviders);
@@ -122,7 +124,9 @@ public final class ExecutorProviders {
             SupplierInstanceBinding<ExecutorService> descriptor =
                     Bindings.supplier(new ExecutorServiceSupplier(executorProvider))
                             .in(Singleton.class)
-                            .to(ExecutorService.class);
+                            .to(ExecutorService.class)
+//                            .forClient(runtimeType == RuntimeType.CLIENT)
+                            .id(runtimeType == RuntimeType.CLIENT ? 1011 : 1111);
 
             Annotation qualifier = executorProvider.getClass().getAnnotation(qualifierAnnotationClass);
             if (qualifier instanceof Named) {
@@ -151,7 +155,9 @@ public final class ExecutorProviders {
             SupplierInstanceBinding<ScheduledExecutorService> descriptor =
                     Bindings.supplier(new ScheduledExecutorServiceSupplier(executorProvider))
                             .in(Singleton.class)
-                            .to(ScheduledExecutorService.class);
+                            .to(ScheduledExecutorService.class)
+//                            .forClient(runtimeType == RuntimeType.CLIENT)
+                            .id(runtimeType == RuntimeType.CLIENT ? 1013 : 1113);
 
             if (!executorProviderMap.containsKey(qualifierAnnotationClass)) {
                 // it is safe to register binding for ExecutorService too...

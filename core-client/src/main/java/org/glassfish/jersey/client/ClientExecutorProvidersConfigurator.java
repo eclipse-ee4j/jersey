@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,8 @@ import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.AbstractExecutorProvidersConfigurator;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
+
+import jakarta.ws.rs.RuntimeType;
 
 /**
  * Configurator which initializes and register {@link ExecutorServiceProvider} and
@@ -106,7 +108,9 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
 
         InstanceBinding<ExecutorServiceProvider> executorBinding = Bindings
                 .service(defaultAsyncExecutorProvider)
-                .to(ExecutorServiceProvider.class);
+                .to(ExecutorServiceProvider.class)
+                .forClient(true)
+                .id(2020);
 
         injectionManager.register(executorBinding);
 
@@ -130,11 +134,13 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
 
         InstanceBinding<ScheduledExecutorServiceProvider> schedulerBinding = Bindings
                 .service(defaultScheduledExecutorProvider)
-                .to(ScheduledExecutorServiceProvider.class);
+                .to(ScheduledExecutorServiceProvider.class)
+                .forClient(true)
+                .id(2021);
         injectionManager.register(schedulerBinding);
 
         registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider,
-                defaultScheduledExecutorProvider, bootstrapBag.getManagedObjectsFinalizer());
+                defaultScheduledExecutorProvider, bootstrapBag.getManagedObjectsFinalizer(), RuntimeType.CLIENT);
     }
 
     private static ExecutorService lookupManagedExecutorService() {

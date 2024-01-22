@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,8 @@ class JerseyResourceContextConfigurator implements BootstrapConfigurator {
         InstanceBinding<JerseyResourceContext> resourceContextBinding =
                 Bindings.service(resourceContext)
                         .to(ResourceContext.class)
-                        .to(ExtendedResourceContext.class);
+                        .to(ExtendedResourceContext.class)
+                        .id(3112);
         injectionManager.register(resourceContextBinding);
         serverBag.setResourceContext(resourceContext);
     }

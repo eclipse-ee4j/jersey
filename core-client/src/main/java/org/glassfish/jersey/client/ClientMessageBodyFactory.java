@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,8 +65,7 @@ class ClientMessageBodyFactory extends MessageBodyFactory {
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             messageBodyFactory = new ClientMessageBodyFactory(bootstrapBag.getConfiguration(), () -> clientRuntime);
             InstanceBinding<ClientMessageBodyFactory> binding =
-                    Bindings.service(messageBodyFactory)
-                            .to(MessageBodyWorkers.class);
+                    Bindings.service(messageBodyFactory).to(MessageBodyWorkers.class).id(2020);
             injectionManager.register(binding);
         }
 

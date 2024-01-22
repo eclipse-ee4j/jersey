@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.internal;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
@@ -59,7 +60,8 @@ public class JaxrsProviders implements Providers {
             injectionManager.register(
                     Bindings.service(JaxrsProviders.class)
                             .to(Providers.class)
-                            .in(PerLookup.class));
+                            .in(PerLookup.class)
+                            .id(injectionManager.getRuntimeType() == RuntimeType.CLIENT ? 2016 : 3016));
         }
     }
 

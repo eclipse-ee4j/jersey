@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,12 @@ import java.security.AccessController;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.RuntimeType;
@@ -89,17 +91,17 @@ public final class MessagingBinders {
         protected void configure() {
 
             // Message body providers (both readers & writers)
-            bindSingletonWorker(ByteArrayProvider.class);
+            bindSingletonWorker(ByteArrayProvider.class, runtimeType == RuntimeType.CLIENT ? 2030 : 3030);
             // bindSingletonWorker(DataSourceProvider.class);
-            bindSingletonWorker(FileProvider.class);
-            bindSingletonWorker(FormMultivaluedMapProvider.class);
-            bindSingletonWorker(FormProvider.class);
-            bindSingletonWorker(InputStreamProvider.class);
-            bindSingletonWorker(BasicTypesMessageProvider.class);
-            bindSingletonWorker(ReaderProvider.class);
+            bindSingletonWorker(FileProvider.class, runtimeType == RuntimeType.CLIENT ? 2031 : 3031);
+            bindSingletonWorker(FormMultivaluedMapProvider.class, runtimeType == RuntimeType.CLIENT ? 2032 : 3032);
+            bindSingletonWorker(FormProvider.class, runtimeType == RuntimeType.CLIENT ? 2033 : 3033);
+            bindSingletonWorker(InputStreamProvider.class, runtimeType == RuntimeType.CLIENT ? 2034 : 3034);
+            bindSingletonWorker(BasicTypesMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2035 : 3035);
+            bindSingletonWorker(ReaderProvider.class, runtimeType == RuntimeType.CLIENT ? 2036 : 3036);
             // bindSingletonWorker(RenderedImageProvider.class); - enabledProvidersBinder
-            bindSingletonWorker(StringMessageProvider.class);
-            bindSingletonWorker(EnumMessageProvider.class);
+            bindSingletonWorker(StringMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2037 : 3037);
+            bindSingletonWorker(EnumMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2038 : 3038);
 
             // Message body readers -- enabledProvidersBinder
             // bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
@@ -110,7 +112,8 @@ public final class MessagingBinders {
              */
 
             // Message body writers
-            bind(StreamingOutputProvider.class).to(MessageBodyWriter.class).in(Singleton.class);
+            bind(StreamingOutputProvider.class).to(MessageBodyWriter.class).in(Singleton.class)
+                    .id(runtimeType == RuntimeType.CLIENT ? 2039 : 3039);
             // bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class); - enabledProvidersBinder
 
             final EnabledProvidersBinder enabledProvidersBinder = new EnabledProvidersBinder();
@@ -119,14 +122,14 @@ public final class MessagingBinders {
                         String.valueOf(applicationProperties.get(CommonProperties.PROVIDER_DEFAULT_DISABLE))
                 );
             }
-            enabledProvidersBinder.bindToBinder(this);
+            enabledProvidersBinder.bindToBinder(this, runtimeType);
 
             // Header Delegate Providers registered in META-INF.services
             install(new ServiceFinderBinder<>(HeaderDelegateProvider.class, applicationProperties, runtimeType));
         }
 
-        private <T extends MessageBodyReader & MessageBodyWriter> void bindSingletonWorker(final Class<T> worker) {
-            bind(worker).to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class);
+        private <T extends MessageBodyReader & MessageBodyWriter> void bindSingletonWorker(final Class<T> worker, long id) {
+            bind(worker).to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class).id(id);
         }
     }
 
@@ -136,9 +139,11 @@ public final class MessagingBinders {
     public static class HeaderDelegateProviders extends AbstractBinder {
 
         private final Set<HeaderDelegateProvider> providers;
+        private final RuntimeType runtimeType;
 
-        public HeaderDelegateProviders() {
-            Set<HeaderDelegateProvider> providers = new HashSet<>();
+        public HeaderDelegateProviders(RuntimeType runtimeType) {
+            this.runtimeType = runtimeType;
+            Set<HeaderDelegateProvider> providers = new LinkedHashSet<>();
             providers.add(new CacheControlProvider());
             providers.add(new CookieProvider());
             providers.add(new DateProvider());
@@ -154,7 +159,9 @@ public final class MessagingBinders {
 
         @Override
         protected void configure() {
-            providers.forEach(provider -> bind(provider).to(HeaderDelegateProvider.class));
+            AtomicLong id = new AtomicLong(40);
+            providers.forEach(provider -> bind(provider).to(HeaderDelegateProvider.class)
+                    .id((runtimeType == RuntimeType.CLIENT ? 2000 : 3000) + id.getAndIncrement()));
         }
 
         /**
@@ -207,7 +214,7 @@ public final class MessagingBinders {
             }
         }
 
-        private void bindToBinder(AbstractBinder binder) {
+        private void bindToBinder(AbstractBinder binder, RuntimeType runtimeType) {
             ProviderBinder providerBinder = null;
             for (Provider provider : enabledProviders) {
                 if (isClass(provider.className)) {
@@ -231,7 +238,7 @@ public final class MessagingBinders {
                             providerBinder = new StreamSourceBinder();
                             break;
                     }
-                    providerBinder.bind(binder, provider);
+                    providerBinder.bind(binder, provider, runtimeType);
                 } else {
                     if (warningMap.get(provider).compareAndSet(false, true)) {
                         switch (provider) {
@@ -260,50 +267,56 @@ public final class MessagingBinders {
         }
 
         private interface ProviderBinder {
-            void bind(AbstractBinder binder, Provider provider);
+            void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType);
         }
 
         private static class DataSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(DataSourceProvider.class)
-                        .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class);
+                        .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2070 : 3070);
             }
         }
 
         private static class DomSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
-                binder.bind(SourceProvider.DomSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+                binder.bind(SourceProvider.DomSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2071 : 3071);
             }
         }
 
         private static class RenderedImageBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(RenderedImageProvider.class)
-                        .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class);
+                        .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2072 : 3072);
             }
         }
 
         private static class SaxSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
-                binder.bind(SourceProvider.SaxSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+                binder.bind(SourceProvider.SaxSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2073 : 3073);
             }
         }
 
         private static class SourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
-                binder.bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class);
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+                binder.bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2074 : 3074);
             }
         }
 
         private static class StreamSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider) {
-                binder.bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
+            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+                binder.bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
+                        .id(runtimeType == RuntimeType.CLIENT ? 2075 : 3075);
             }
         }
     }

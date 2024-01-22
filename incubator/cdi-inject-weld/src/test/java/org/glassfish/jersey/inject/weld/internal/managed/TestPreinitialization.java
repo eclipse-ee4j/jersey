@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,10 +22,11 @@ import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.spi.BootstrapPreinitialization;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerThread;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-public class TestPreinitialization implements BootstrapPreinitialization {
+public class TestPreinitialization implements BootstrapPreinitialization, org.glassfish.jersey.innate.BootstrapPreinitialization {
     @Override
     public void register(RuntimeType runtimeType, AbstractBinder binder) {
         if (RuntimeType.CLIENT == runtimeType) {
@@ -33,6 +34,7 @@ public class TestPreinitialization implements BootstrapPreinitialization {
             {
                 binder.bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierClient.class)
                         .to(ClientInstanceInjectionTest.InjectableClientServer.class);
+                binder.bindAsContract(ClientInstanceInjectionTest.InjectedBean.class);
             }
             return;
         }
@@ -112,5 +114,9 @@ public class TestPreinitialization implements BootstrapPreinitialization {
             binder.bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierServer.class)
                     .to(ClientInstanceInjectionTest.InjectableClientServer.class);
         }
+    }
+
+    @Override
+    public void preregister(RuntimeType runtimeType, InjectionManager registrator) {
     }
 }

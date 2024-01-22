@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,20 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Feature;
+
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -43,7 +50,7 @@ public class Injections {
      * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager() {
-        return lookupInjectionManagerFactory(RuntimeType.SERVER).create();
+        return createInjectionManager(new EmptyConfiguration(RuntimeType.SERVER));
     }
 
     /**
@@ -53,7 +60,17 @@ public class Injections {
      * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(RuntimeType type) {
-        return lookupInjectionManagerFactory(type).create();
+        return createInjectionManager(new EmptyConfiguration(type));
+    }
+
+    /**
+     * Creates an {@link InjectionManager} without parent and initial binder.
+     * @param configuration {@link Configuration} including {@link RuntimeType} the {@link InjectionManagerFactory}
+     *                      must be {@link ConstrainedTo} if annotated.
+     * @return an injection manager with all the bindings.
+     */
+    public static InjectionManager createInjectionManager(Configuration configuration) {
+        return lookupInjectionManagerFactory(configuration.getRuntimeType()).create(null, configuration);
     }
 
     /**
@@ -63,8 +80,7 @@ public class Injections {
      * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(Binder binder) {
-        InjectionManagerFactory injectionManagerFactory = lookupInjectionManagerFactory(RuntimeType.SERVER);
-        InjectionManager injectionManager = injectionManagerFactory.create();
+        InjectionManager injectionManager = createInjectionManager(RuntimeType.SERVER);
         injectionManager.register(binder);
         return injectionManager;
     }
@@ -78,7 +94,21 @@ public class Injections {
      * @return an injection manager with all the bindings.
      */
     public static InjectionManager createInjectionManager(Object parent) {
-        return lookupInjectionManagerFactory(RuntimeType.SERVER).create(parent);
+        return createInjectionManager(parent, new EmptyConfiguration(RuntimeType.SERVER));
+    }
+
+    /**
+     * Creates an unnamed, parented {@link InjectionManager}. In case the {@code parent} injection manager is not specified, the
+     * locator will not be parented.
+     *
+     * @param parent The parent of this injection manager. Services can be found in the parent (and all grand-parents). May be
+     *               {@code null}. An underlying DI provider checks whether the parent is in a proper type.
+     * @param configuration {@link Configuration} including {@link RuntimeType} the {@link InjectionManagerFactory}
+     *                      must be {@link ConstrainedTo} if annotated.
+     * @return an injection manager with all the bindings.
+     */
+    public static InjectionManager createInjectionManager(Object parent, Configuration configuration) {
+        return lookupInjectionManagerFactory(configuration.getRuntimeType()).create(parent, configuration);
     }
 
     private static InjectionManagerFactory lookupInjectionManagerFactory(RuntimeType type) {
@@ -134,6 +164,70 @@ public class Injections {
             }
 
             throw e;
+        }
+    }
+
+    private static final class EmptyConfiguration implements Configuration {
+
+        private final RuntimeType runtimeType;
+
+        private EmptyConfiguration(RuntimeType runtimeType) {
+            this.runtimeType = runtimeType;
+        }
+
+        @Override
+        public RuntimeType getRuntimeType() {
+            return runtimeType;
+        }
+
+        @Override
+        public Map<String, Object> getProperties() {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public Object getProperty(String name) {
+            return getProperties().get(name);
+        }
+
+        @Override
+        public Collection<String> getPropertyNames() {
+            return getProperties().keySet();
+        }
+
+        @Override
+        public boolean isEnabled(Feature feature) {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(Class<? extends Feature> featureClass) {
+            return false;
+        }
+
+        @Override
+        public boolean isRegistered(Object component) {
+            return false;
+        }
+
+        @Override
+        public boolean isRegistered(Class<?> componentClass) {
+            return false;
+        }
+
+        @Override
+        public Map<Class<?>, Integer> getContracts(Class<?> componentClass) {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public Set<Class<?>> getClasses() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public Set<Object> getInstances() {
+            return Collections.emptySet();
         }
     }
 }

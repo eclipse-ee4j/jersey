@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,12 @@ import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.internal.inject.InitializableInstanceBinding;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
+import org.glassfish.jersey.inject.weld.internal.managed.CdiClientInjectionManager;
+import org.glassfish.jersey.inject.weld.internal.managed.ContextSafe;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 
 /**
  * Instance bean to be created in the pre-initialization phase and initialized after Jersey is bootstrap.
@@ -52,6 +56,11 @@ public class InitializableInstanceBean<T> extends JerseyBean<T> {
         InitializableInstanceBinding<T> realBinding = (InitializableInstanceBinding<T>) getBinding();
         if (JerseyClientCreationalContext.class.isInstance(context)) {
             realBinding = ((JerseyClientCreationalContext) context).getInjectionManager().getInjectionManagerBinding(realBinding);
+        } else {
+            CdiClientInjectionManager locked = ContextSafe.get();
+            if (locked != null) {
+                realBinding = locked.getInjectionManagerBinding(realBinding);
+            }
         }
         T service = realBinding.getService();
         this.injectionTarget.inject(service, context);
@@ -75,6 +84,6 @@ public class InitializableInstanceBean<T> extends JerseyBean<T> {
 
     @Override
     public String toString() {
-        return "InitializableInstanceBean{" + getBeanClass() + "}";
+        return getBinding().toString();
     }
 }
