@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,6 @@ import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.uri.UriComponent;
-
-import javax.ws.rs.core.HttpHeaders;
 
 /**
  * A content disposition header.
@@ -63,7 +61,7 @@ public class ContentDisposition {
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
         this.type = type;
-        this.fileName = fileName;
+        this.fileName = encodeAsciiFileName(fileName);
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
         this.readDate = readDate;
@@ -211,6 +209,24 @@ public class ContentDisposition {
         }
     }
 
+    protected String encodeAsciiFileName(String fileName) {
+        if (fileName == null
+                || (fileName.indexOf('"') == -1
+                && fileName.indexOf('\\') == -1)) {
+            return fileName;
+        }
+        final byte[] bytes = fileName.getBytes();
+        final StringBuilder encodedBuffer = new StringBuilder();
+        for (byte x : bytes) {
+            char c = (char) x;
+            if (c == '"' || c == '\\') {
+                encodedBuffer.append('\\');
+            }
+            encodedBuffer.append(c);
+        }
+        return encodedBuffer.toString();
+    }
+
     private void createParameters() throws ParseException {
         defineFileName();
 
@@ -229,7 +245,7 @@ public class ContentDisposition {
         final String fileNameExt = parameters.get("filename*");
 
         if (fileNameExt == null) {
-            this.fileName = fileName;
+            this.fileName = encodeAsciiFileName(fileName);
             return;
         }
 
