@@ -58,6 +58,9 @@ public class ContentDisposition {
     private static final Pattern FILENAME_VALUE_CHARS_PATTERN =
             Pattern.compile("(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+", Pattern.CASE_INSENSITIVE);
 
+    private static final char QUOTE = '"';
+    private static final char BACK_SLASH = '\\';
+
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
         this.type = type;
@@ -211,16 +214,15 @@ public class ContentDisposition {
 
     protected String encodeAsciiFileName(String fileName) {
         if (fileName == null
-                || (fileName.indexOf('"') == -1
-                && fileName.indexOf('\\') == -1)) {
+                || (fileName.indexOf(QUOTE) == -1
+                && fileName.indexOf(BACK_SLASH) == -1)) {
             return fileName;
         }
-        final byte[] bytes = fileName.getBytes();
+        final char[] chars = fileName.toCharArray();
         final StringBuilder encodedBuffer = new StringBuilder();
-        for (byte x : bytes) {
-            char c = (char) x;
-            if (c == '"' || c == '\\') {
-                encodedBuffer.append('\\');
+        for (char c : chars) {
+            if (c == QUOTE || c == BACK_SLASH) {
+                encodedBuffer.append(BACK_SLASH);
             }
             encodedBuffer.append(c);
         }
