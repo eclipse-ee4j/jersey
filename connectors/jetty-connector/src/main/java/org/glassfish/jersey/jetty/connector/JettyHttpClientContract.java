@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,19 +13,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.jersey.helidon.connector;
 
-import org.glassfish.jersey.internal.util.PropertiesClass;
+package org.glassfish.jersey.jetty.connector;
+
+import org.eclipse.jetty.client.HttpClient;
+import org.glassfish.jersey.spi.Contract;
 
 /**
- * Configuration options specific to the Client API that utilizes {@code HelidonConnectorProvider}
- * @since 2.31
+ * A contract that allows for an optional registration of user predefined Jetty {@code HttpClient}
+ * that is consequently used by {@link JettyConnector}
  */
-@PropertiesClass
-public final class HelidonClientProperties {
-
+@Contract
+public interface JettyHttpClientContract {
     /**
-     * A Helidon {@code Config} instance that is passed to {@code WebClient.Builder#config(Config)} if available.
+     * Supply a user predefined HttpClient
+     * @return a user predefined HttpClient
      */
-    public static final String CONFIG = "jersey.connector.helidon.config";
+    HttpClient getHttpClient();
 }

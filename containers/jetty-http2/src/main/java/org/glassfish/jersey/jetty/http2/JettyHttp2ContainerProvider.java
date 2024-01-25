@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,9 +31,6 @@ public final class JettyHttp2ContainerProvider implements ContainerProvider {
 
     @Override
     public <T> T createContainer(final Class<T> type, final Application application) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
         if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
             return type.cast(new JettyHttpContainerProvider().createContainer(JettyHttpContainer.class, application));
         }

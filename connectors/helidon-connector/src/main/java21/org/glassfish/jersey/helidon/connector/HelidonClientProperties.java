@@ -15,17 +15,18 @@
  */
 package org.glassfish.jersey.helidon.connector;
 
+import io.helidon.jersey.connector.HelidonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 
 /**
- * Configuration options specific to the Client API that utilizes {@code HelidonConnectorProvider}
+ * Configuration options specific to the Client API that utilizes {@code HelidonConnectorProvider}.
  * @since 2.31
  */
 @PropertiesClass
 public final class HelidonClientProperties {
 
     /**
-     * A Helidon {@code Config} instance that is passed to {@code WebClient.Builder#config(Config)} if available.
+     * A Helidon {@link Config} instance that is passed to {@link WebClient.Builder#config(Config)} if available
      */
-    public static final String CONFIG = "jersey.connector.helidon.config";
+    public static final String CONFIG = HelidonProperties.CONFIG;
 }

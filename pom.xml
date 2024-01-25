@@ -2295,7 +2295,7 @@
 
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <helidon.jersey.connector.version>3.0.2</helidon.jersey.connector.version>
+        <helidon.jersey.connector.version>3.2.5</helidon.jersey.connector.version>
         <xmlunit.version>2.9.1</xmlunit.version>
         <httpcore.version>4.4.16</httpcore.version>
         <httpclient.version>4.5.14</httpclient.version>
