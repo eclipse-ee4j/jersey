@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.client.on.server {
+module org.glassfish.jersey.tests.integration.cdi.client.on.server.test {
 
     requires jakarta.inject;
     requires jakarta.ws.rs;
     requires jakarta.cdi;
 
+    requires weld.core.impl;
+    requires weld.environment.common;
     requires weld.se.core;
     requires org.jboss.logging;
 
@@ -30,9 +32,10 @@ module org.glassfish.jersey.tests.integration.cdi.client.on.server {
     requires org.glassfish.jersey.tests.framework.provider.external;
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 
+    requires org.glassfish.jersey.tests.integration.cdi.client.on.server;
+
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
 
-    exports org.glassfish.jersey.tests.cdi.client;
-    opens org.glassfish.jersey.tests.cdi.client;
+    exports org.glassfish.jersey.tests.cdi.client.test to org.junit.platform.commons;
 }

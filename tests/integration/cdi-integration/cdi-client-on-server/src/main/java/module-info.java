@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,10 @@ module org.glassfish.jersey.tests.integration.cdi.client.on.server {
     requires jakarta.xml.bind;
     requires jakarta.inject;
     requires jakarta.cdi;
+    requires weld.api;
 
     requires org.glassfish.jersey.core.server;
 
     opens org.glassfish.jersey.tests.cdi.client;
+    exports org.glassfish.jersey.tests.cdi.client;
 }

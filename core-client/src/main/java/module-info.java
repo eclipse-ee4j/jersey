@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ module org.glassfish.jersey.core.client {
 
     exports org.glassfish.jersey.client.innate to
             org.glassfish.jersey.apache.connector,
+            org.glassfish.jersey.apache5.connector,
             org.glassfish.jersey.netty.connector,
             org.glassfish.jersey.grizzly.connector,
             org.glassfish.jersey.jetty11.connector,
@@ -40,10 +41,14 @@ module org.glassfish.jersey.core.client {
 
     exports org.glassfish.jersey.client.innate.http to
             org.glassfish.jersey.apache.connector,
+            org.glassfish.jersey.apache5.connector,
             org.glassfish.jersey.netty.connector,
             org.glassfish.jersey.grizzly.connector,
             org.glassfish.jersey.jetty.connector,
             org.glassfish.jersey.jdk.connector;
+
+    exports org.glassfish.jersey.client.innate.inject to
+            org.glassfish.jersey.incubator.injectless.client;
 
     opens org.glassfish.jersey.client;
     opens org.glassfish.jersey.client.spi;

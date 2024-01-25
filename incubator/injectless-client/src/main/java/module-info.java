@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,14 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.integration.cdi.client {
-    requires jakarta.cdi;
+module org.glassfish.jersey.incubator.injectless.client {
+
+    requires jakarta.annotation;
     requires jakarta.inject;
     requires jakarta.ws.rs;
 
+    requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.client;
 
-    requires weld.api;
+    exports org.glassfish.jersey.inject.injectless;
 
-    opens org.glassfish.jersey.tests.cdi.client;
-    exports org.glassfish.jersey.tests.cdi.client;
+    provides org.glassfish.jersey.internal.inject.InjectionManagerFactory
+            with org.glassfish.jersey.inject.injectless.NonInjectionManagerFactory;
 }

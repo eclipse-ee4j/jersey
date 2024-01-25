@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.HierarchyTraversalMode;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Helper class for Jersey Test Framework.
@@ -54,13 +55,16 @@ public final class TestHelper {
 
     public static DynamicContainer toTestContainer(Object test, String displayName) {
         Class<?> klass = test.getClass();
-        List<Method> testMethods = ReflectionUtils.findMethods(klass,
+        List<Method> testMethods = ReflectionSupport.findMethods(klass,
                 method -> method.isAnnotationPresent(org.junit.jupiter.api.Test.class)
-                && !method.isAnnotationPresent(org.junit.jupiter.api.Disabled.class));
-        List<Method> beforeEachMethods = ReflectionUtils.findMethods(klass,
-                method -> method.isAnnotationPresent(org.junit.jupiter.api.BeforeEach.class));
-        List<Method> afterEachMethods = ReflectionUtils.findMethods(klass,
-                method -> method.isAnnotationPresent(org.junit.jupiter.api.AfterEach.class));
+                && !method.isAnnotationPresent(org.junit.jupiter.api.Disabled.class),
+                HierarchyTraversalMode.TOP_DOWN);
+        List<Method> beforeEachMethods = ReflectionSupport.findMethods(klass,
+                method -> method.isAnnotationPresent(org.junit.jupiter.api.BeforeEach.class),
+                HierarchyTraversalMode.TOP_DOWN);
+        List<Method> afterEachMethods = ReflectionSupport.findMethods(klass,
+                method -> method.isAnnotationPresent(org.junit.jupiter.api.AfterEach.class),
+                HierarchyTraversalMode.TOP_DOWN);
         Collection<DynamicTest> children = new ArrayList<>();
         for (Method method : testMethods) {
             children.add(DynamicTest.dynamicTest(method.getName(), () -> {
