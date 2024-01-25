@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,11 +27,10 @@ module org.glassfish.jersey.ext.bean.validation {
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
 
-    requires org.glassfish.jersey.ext.cdi1x;
-    requires jakarta.cdi;
+    requires static org.glassfish.jersey.ext.cdi1x;
+    requires static jakarta.cdi;
 
     exports org.glassfish.jersey.server.validation;
-    exports org.glassfish.jersey.server.validation.internal.hibernate;
     exports org.glassfish.jersey.server.validation.internal;
     opens org.glassfish.jersey.server.validation.internal;
     opens org.glassfish.jersey.server.validation.internal.hibernate;

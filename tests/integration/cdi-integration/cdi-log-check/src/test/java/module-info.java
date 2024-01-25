@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,12 +18,14 @@ module org.glassfish.jersey.tests.integration.cdi.log.check.test {
     requires java.logging;
 
     requires jakarta.cdi;
+    requires jakarta.el;
     requires jakarta.inject;
     requires jakarta.interceptor;
     requires jakarta.ws.rs;
 
-    requires weld.se.core;
     requires weld.core.impl;
+    requires weld.environment.common;
+    requires weld.se.core;
     requires org.jboss.logging;
 
     requires org.glassfish.jersey.tests.integration.cdi.log.check;
