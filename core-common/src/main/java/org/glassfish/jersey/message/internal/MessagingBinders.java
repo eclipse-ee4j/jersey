@@ -20,6 +20,7 @@ import java.security.AccessController;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +36,7 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -91,17 +93,26 @@ public final class MessagingBinders {
         protected void configure() {
 
             // Message body providers (both readers & writers)
-            bindSingletonWorker(ByteArrayProvider.class, runtimeType == RuntimeType.CLIENT ? 2030 : 3030);
+            bindSingletonWorker(ByteArrayProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_BYTE_ARRAY_PROVIDER.id() : InjectionIds.SERVER_BYTE_ARRAY_PROVIDER.id());
             // bindSingletonWorker(DataSourceProvider.class);
-            bindSingletonWorker(FileProvider.class, runtimeType == RuntimeType.CLIENT ? 2031 : 3031);
-            bindSingletonWorker(FormMultivaluedMapProvider.class, runtimeType == RuntimeType.CLIENT ? 2032 : 3032);
-            bindSingletonWorker(FormProvider.class, runtimeType == RuntimeType.CLIENT ? 2033 : 3033);
-            bindSingletonWorker(InputStreamProvider.class, runtimeType == RuntimeType.CLIENT ? 2034 : 3034);
-            bindSingletonWorker(BasicTypesMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2035 : 3035);
-            bindSingletonWorker(ReaderProvider.class, runtimeType == RuntimeType.CLIENT ? 2036 : 3036);
+            bindSingletonWorker(FileProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_FILE_PROVIDER.id() : InjectionIds.SERVER_FILE_PROVIDER.id());
+            bindSingletonWorker(FormMultivaluedMapProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_MULTIVALUED_MAP_PROVIDER.id() : InjectionIds.SERVER_MULTIVALUED_MAP_PROVIDER.id());
+            bindSingletonWorker(FormProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_FORM_PROVIDER.id() : InjectionIds.SERVER_FORM_PROVIDER.id());
+            bindSingletonWorker(InputStreamProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_INPUT_STREAM_PROVIDER.id() : InjectionIds.SERVER_INPUT_STREAM_PROVIDER.id());
+            bindSingletonWorker(BasicTypesMessageProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_BASIC_TYPES_PROVIDER.id() : InjectionIds.SERVER_BASIC_TYPES_PROVIDER.id());
+            bindSingletonWorker(ReaderProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_READER_PROVIDER.id() : InjectionIds.SERVER_READER_PROVIDER.id());
             // bindSingletonWorker(RenderedImageProvider.class); - enabledProvidersBinder
-            bindSingletonWorker(StringMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2037 : 3037);
-            bindSingletonWorker(EnumMessageProvider.class, runtimeType == RuntimeType.CLIENT ? 2038 : 3038);
+            bindSingletonWorker(StringMessageProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_STRING_MESSAGE_PROVIDER.id() : InjectionIds.SERVER_STRING_MESSAGE_PROVIDER.id());
+            bindSingletonWorker(EnumMessageProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_ENUM_MESSAGE_PROVIDER.id() : InjectionIds.SERVER_ENUM_MESSAGE_PROVIDER.id());
 
             // Message body readers -- enabledProvidersBinder
             // bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class);
@@ -113,7 +124,9 @@ public final class MessagingBinders {
 
             // Message body writers
             bind(StreamingOutputProvider.class).to(MessageBodyWriter.class).in(Singleton.class)
-                    .id(runtimeType == RuntimeType.CLIENT ? 2039 : 3039);
+                    .id(runtimeType == RuntimeType.CLIENT
+                            ? InjectionIds.CLIENT_STREAMING_OUTPUT_PROVIDER.id()
+                            : InjectionIds.SERVER_STREAMING_OUTPUT_PROVIDER.id());
             // bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class); - enabledProvidersBinder
 
             final EnabledProvidersBinder enabledProvidersBinder = new EnabledProvidersBinder();
@@ -138,30 +151,38 @@ public final class MessagingBinders {
      */
     public static class HeaderDelegateProviders extends AbstractBinder {
 
-        private final Set<HeaderDelegateProvider> providers;
+        private final Map<HeaderDelegateProvider, Integer> providers;
         private final RuntimeType runtimeType;
 
         public HeaderDelegateProviders(RuntimeType runtimeType) {
             this.runtimeType = runtimeType;
-            Set<HeaderDelegateProvider> providers = new LinkedHashSet<>();
-            providers.add(new CacheControlProvider());
-            providers.add(new CookieProvider());
-            providers.add(new DateProvider());
-            providers.add(new EntityTagProvider());
-            providers.add(new LinkProvider());
-            providers.add(new LocaleProvider());
-            providers.add(new MediaTypeProvider());
-            providers.add(new NewCookieProvider());
-            providers.add(new StringHeaderProvider());
-            providers.add(new UriProvider());
+            Map<HeaderDelegateProvider, Integer> providers = new LinkedHashMap<>();
+            providers.put(new CacheControlProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_CACHE_CONTROL_PROVIDER.id() : InjectionIds.SERVER_CACHE_CONTROL_PROVIDER.id());
+            providers.put(new CookieProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_COOKIE_PROVIDER.id() : InjectionIds.SERVER_COOKIE_PROVIDER.id());
+            providers.put(new DateProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_DATE_PROVIDER.id() : InjectionIds.SERVER_DATE_PROVIDER.id());
+            providers.put(new EntityTagProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_ENTITY_TAG_PROVIDER.id() : InjectionIds.SERVER_ENTITY_TAG_PROVIDER.id());
+            providers.put(new LinkProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_LINK_PROVIDER.id() : InjectionIds.SERVER_LINK_PROVIDER.id());
+            providers.put(new LocaleProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_LOCALE_PROVIDER.id() : InjectionIds.SERVER_LOCALE_PROVIDER.id());
+            providers.put(new MediaTypeProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_MEDIA_TYPE_PROVIDER.id() : InjectionIds.SERVER_MEDIA_TYPE_PROVIDER.id());
+            providers.put(new NewCookieProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_NEW_COOKIE_PROVIDER.id() : InjectionIds.SERVER_NEW_COOKIE_PROVIDER.id());
+            providers.put(new StringHeaderProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_STRING_HEADER_PROVIDER.id() : InjectionIds.SERVER_STRING_HEADER_PROVIDER.id());
+            providers.put(new UriProvider(), runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_URI_PROVIDER.id() : InjectionIds.SERVER_URI_PROVIDER.id());
             this.providers = providers;
         }
 
         @Override
         protected void configure() {
-            AtomicLong id = new AtomicLong(40);
-            providers.forEach(provider -> bind(provider).to(HeaderDelegateProvider.class)
-                    .id((runtimeType == RuntimeType.CLIENT ? 2000 : 3000) + id.getAndIncrement()));
+            providers.forEach((provider, id) -> bind(provider).to(HeaderDelegateProvider.class).id(id));
         }
 
         /**
@@ -170,7 +191,7 @@ public final class MessagingBinders {
          * @return all internally registered {@link HeaderDelegateProvider}.
          */
         public Set<HeaderDelegateProvider> getHeaderDelegateProviders() {
-            return providers;
+            return providers.keySet();
         }
     }
 
@@ -275,7 +296,9 @@ public final class MessagingBinders {
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(DataSourceProvider.class)
                         .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2070 : 3070);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.CLIENT_DATA_SOURCE_PROVIDER.id()
+                                : InjectionIds.SERVER_DATA_SOURCE_PROVIDER.id());
             }
         }
 
@@ -283,7 +306,9 @@ public final class MessagingBinders {
             @Override
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.DomSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2071 : 3071);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.CLIENT_DOM_SOURCE_READER.id()
+                                : InjectionIds.SERVER_DOM_SOURCE_READER.id());
             }
         }
 
@@ -292,7 +317,9 @@ public final class MessagingBinders {
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(RenderedImageProvider.class)
                         .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2072 : 3072);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.CLIENT_RENDERED_IMAGE_PROVIDER.id()
+                                : InjectionIds.SERVER_RENDERED_IMAGE_PROVIDER.id());
             }
         }
 
@@ -300,7 +327,9 @@ public final class MessagingBinders {
             @Override
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.SaxSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2073 : 3073);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.CLIENT_SAX_SOURCE_READER.id()
+                                : InjectionIds.SERVER_SAX_SOURCE_READER.id());
             }
         }
 
@@ -308,7 +337,9 @@ public final class MessagingBinders {
             @Override
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2074 : 3074);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.CLIENT_SOURCE_WRITER.id()
+                                : InjectionIds.SERVER_SOURCE_WRITER.id());
             }
         }
 
@@ -316,7 +347,8 @@ public final class MessagingBinders {
             @Override
             public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
-                        .id(runtimeType == RuntimeType.CLIENT ? 2075 : 3075);
+                        .id(runtimeType == RuntimeType.CLIENT
+                                ? 2075 : 3075);
             }
         }
     }

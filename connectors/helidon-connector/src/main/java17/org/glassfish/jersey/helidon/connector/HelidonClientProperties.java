@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,21 +15,17 @@
  */
 package org.glassfish.jersey.helidon.connector;
 
-import io.helidon.jersey.connector.HelidonProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 
-import io.helidon.config.Config;
-import io.helidon.webclient.WebClient;
-
 /**
- * Configuration options specific to the Client API that utilizes {@code HelidonConnectorProvider}.
+ * Configuration options specific to the Client API that utilizes {@code HelidonConnectorProvider}
  * @since 2.31
  */
 @PropertiesClass
 public final class HelidonClientProperties {
 
     /**
-     * A Helidon {@link Config} instance that is passed to {@link WebClient.Builder#config(Config)} if available
+     * A Helidon {@code Config} instance that is passed to {@code WebClient.Builder#config(Config)} if available.
      */
-    public static final String CONFIG = HelidonProperties.CONFIG;
+    public static final String CONFIG = "jersey.connector.helidon.config";
 }

@@ -29,6 +29,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
@@ -85,23 +86,25 @@ class ClientBinder extends AbstractBinder {
                 new MessagingBinders.HeaderDelegateProviders(RuntimeType.CLIENT));
 
         bindFactory(ReferencingFactory.referenceFactory()).to(new GenericType<Ref<ClientConfig>>() {
-        }).in(RequestScoped.class).id(2101);
+        }).in(RequestScoped.class).id(InjectionIds.CLIENT_CLIENT_CONFIG.id());
 
         bindFactory(RequestContextInjectionFactory.class)
                 .to(ClientRequest.class)
                 .in(RequestScoped.class)
-                .id(2102);
+                .id(InjectionIds.CLIENT_CLIENT_REQUEST.id());
 
         bindFactory(RequestContextInjectionFactory.class).to(HttpHeaders.class)
-                .proxy(true).proxyForSameScope(false).in(RequestScoped.class).id(2103);
+                .proxy(true).proxyForSameScope(false).in(RequestScoped.class)
+                .id(InjectionIds.CLIENT_HTTP_HEADERS.id());
 
         bindFactory(ReferencingFactory.referenceFactory()).to(new GenericType<Ref<ClientRequest>>() {
-        }).in(RequestScoped.class).id(2104);
+        }).in(RequestScoped.class).id(InjectionIds.CLIENT_CLIENT_REQUEST_REF_FACTORY.id());
 
         bindFactory(PropertiesDelegateFactory.class, Singleton.class).to(PropertiesDelegate.class).in(RequestScoped.class)
-                .forClient(true).id(1001);
+                .forClient(true).id(InjectionIds.COMMON_PROPERTIES_DELEGATE.id());
 
         // ChunkedInput entity support
-        bind(ChunkedInputReader.class).to(MessageBodyReader.class).in(Singleton.class).id(2105);
+        bind(ChunkedInputReader.class).to(MessageBodyReader.class).in(Singleton.class)
+                .id(InjectionIds.CLIENT_CHUNKED_INPUT_READER.id());
     }
 }

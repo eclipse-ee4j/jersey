@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.client;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -65,7 +66,9 @@ class ClientMessageBodyFactory extends MessageBodyFactory {
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             messageBodyFactory = new ClientMessageBodyFactory(bootstrapBag.getConfiguration(), () -> clientRuntime);
             InstanceBinding<ClientMessageBodyFactory> binding =
-                    Bindings.service(messageBodyFactory).to(MessageBodyWorkers.class).id(2020);
+                    Bindings.service(messageBodyFactory).to(MessageBodyWorkers.class)
+                            .forClient(true)
+                            .id(InjectionIds.SERVER_MESSAGE_BODY_WORKERS.id());
             injectionManager.register(binding);
         }
 

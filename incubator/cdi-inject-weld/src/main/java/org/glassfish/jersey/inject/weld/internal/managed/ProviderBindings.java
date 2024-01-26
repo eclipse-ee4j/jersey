@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.inject.weld.internal.managed;
 
+import jakarta.ws.rs.Path;
 import org.glassfish.jersey.inject.weld.internal.inject.ClassListBinding;
 import org.glassfish.jersey.inject.weld.internal.inject.InstanceListBinding;
 import org.glassfish.jersey.internal.inject.ClassBinding;
@@ -35,8 +36,13 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.WriterInterceptor;
+import org.glassfish.jersey.internal.util.collection.Cache;
+import org.glassfish.jersey.server.model.Resource;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +50,17 @@ import java.util.Map;
 class ProviderBindings {
     private final Map<Type, InstanceListBinding<?>> userInstanceBindings = new HashMap<>();
     private final Map<Type, ClassListBinding<?>> userClassBindings = new HashMap<>();
+    private final Map<Type, ClassListBinding<?>> userPathBindings = new HashMap<>();
     private final InjectionManager injectionManager;
+    // Check first if a class is a JAX-RS resource, and only if so check with validation.
+    // This prevents unnecessary warnings being logged for pure CDI beans.
+    private final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(
+            clazz -> Resource.from(clazz, true) != null && Resource.from(clazz) != null);
+
+    public boolean isJaxRsResource(Class<?> resource) {
+        return jaxRsResourceCache.apply(resource);
+    }
+
 
     ProviderBindings(RuntimeType runtimeType, InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
@@ -66,8 +82,8 @@ class ProviderBindings {
     }
 
     private <T> void init(Class<T> contract) {
-        userInstanceBindings.put(contract, new InstanceListBinding<T>(contract));
-        userClassBindings.put(contract, new ClassListBinding<T>(contract, injectionManager));
+        userInstanceBindings.put(contract, new InstanceListBinding<>(contract));
+        userClassBindings.put(contract, new ClassListBinding<>(contract, injectionManager));
     }
 
     boolean init(InstanceBinding<?> userBinding) {
@@ -77,7 +93,6 @@ class ProviderBindings {
             if (binding != null) {
                 init = true;
                 binding.init(userBinding);
-                break;
             }
         }
         return init;
@@ -90,7 +105,29 @@ class ProviderBindings {
             if (binding != null) {
                 init = true;
                 binding.init(userBinding);
-                break;
+            }
+        }
+
+        if (!init) {
+            init = initPathBinding(userBinding);
+        }
+
+        return init;
+    }
+
+    private boolean initPathBinding(ClassBinding<?> userBinding) {
+        boolean init = false;
+        if (isJaxRsResource(userBinding.getService())) {
+            for (Type contract : userBinding.getContracts()) {
+                if (isClass(contract)) {
+                    ClassListBinding<?> binding = userPathBindings.get(contract);
+                    if (binding != null) {
+                        binding.init(userBinding);
+                    } else {
+                        userPathBindings.put(contract, new ClassListBinding<>((Class) contract, injectionManager));
+                    }
+                    init = true;
+                }
             }
         }
         return init;
@@ -106,6 +143,9 @@ class ProviderBindings {
 
         ClassListBinding<T> classBinding = (ClassListBinding<T>) userClassBindings.get(contract);
         if (classBinding != null) {
+            list.addAll(classBinding.getServiceHolders());
+        } else if (isAnnotationPresent(contract, Path.class)) {
+            classBinding = (ClassListBinding<T>) userPathBindings.get(contract);
             list.addAll(classBinding.getServiceHolders());
         }
 
@@ -123,8 +163,19 @@ class ProviderBindings {
         ClassListBinding<T> classBinding = (ClassListBinding<T>) userClassBindings.get(contract);
         if (classBinding != null) {
             list.addAll(classBinding.getServices());
+        } else if (isAnnotationPresent(contract, Path.class)) {
+            classBinding = (ClassListBinding<T>) userPathBindings.get(contract);
+            list.addAll(classBinding.getServices());
         }
 
         return list;
+    }
+
+    private boolean isAnnotationPresent(Type contract, Class<? extends Annotation> annotation) {
+        return isClass(contract) && ((Class) contract).isAnnotationPresent(annotation);
+    }
+
+    private boolean isClass(Type contract) {
+        return Class.class.isInstance(contract);
     }
 }

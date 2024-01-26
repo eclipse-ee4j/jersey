@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -141,6 +141,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private volatile Map<Class<?>, Set<Method>> methodsToSkip = new HashMap<>();
     private volatile Map<Class<?>, Set<Field>> fieldsToSkip = new HashMap<>();
 
+    private volatile boolean isHk2Environment;
+
     public CdiComponentProvider() {
         customHk2TypesProvider = CdiUtil.lookupService(Hk2CustomBoundTypesProvider.class);
         injectionManagerStore = CdiUtil.createHk2InjectionManagerStore();
@@ -151,6 +153,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     public void initialize(final InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
         this.beanManager = CdiUtil.getBeanManager();
+        this.isHk2Environment = injectionManager.getClass().getPackageName().contains("hk2");
 
         if (beanManager != null) {
             // Try to get CdiComponentProvider created by CDI.
@@ -162,7 +165,9 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 this.fieldsToSkip = extension.getFieldsToSkip();
                 this.methodsToSkip = extension.getMethodsToSkip();
 
-                bindHk2ClassAnalyzer();
+                if (isHk2Environment) {
+                    bindHk2ClassAnalyzer();
+                }
 
                 LOGGER.config(LocalizationMessages.CDI_PROVIDER_INITIALIZED());
             }
@@ -171,11 +176,14 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     @Override
     public boolean bind(final Class<?> clazz, final Set<Class<?>> providerContracts) {
-        return bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
+        return isHk2Environment && bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
     }
 
     @Override
     public boolean bind(Class<?> component, ContractProvider contractProvider) {
+        if (!isHk2Environment) {
+            return false;
+        }
         return contractProvider != null
                 ? bind(component, contractProvider.getContracts(), contractProvider.getPriority(component))
                 : bind(component, Collections.EMPTY_SET);

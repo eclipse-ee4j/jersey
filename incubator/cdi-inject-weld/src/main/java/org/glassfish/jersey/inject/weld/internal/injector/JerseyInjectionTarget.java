@@ -32,6 +32,9 @@ import jakarta.enterprise.inject.spi.Interceptor;
 
 import org.glassfish.jersey.inject.weld.internal.bean.BeanHelper;
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
+import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
@@ -302,6 +305,10 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
                 // incomplete instance will be resolved
                 ctx.push(instance);
             }
+        }
+        if (CdiInjectionManagerFactory.SUPPORT_CONTEXT) {
+            InjectionManager injectionManager = CdiInjectionManagerFactory.getInjectionManager(ctx);
+            injectionManager.inject(instance, "CONTEXT");
         }
         return instance;
     }

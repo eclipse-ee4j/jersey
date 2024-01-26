@@ -46,6 +46,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
@@ -187,13 +188,13 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
             InstanceBinding<ApplicationHandler> handlerBinding =
                     Bindings.service(ApplicationHandler.this)
                             .to(ApplicationHandler.class)
-                            .id(3180);
+                            .id(InjectionIds.SERVER_APPLICATION_HANDLER.id());
 
             InstanceBinding<ResourceConfig> configBinding =
                     Bindings.service(serverBag.getRuntimeConfig())
                             .to(Configuration.class)
                             .to(ServerConfig.class)
-                            .id(1000);
+                            .id(InjectionIds.COMMON_CONFIGURATION.id());
 
             injectionManager.register(handlerBinding);
             injectionManager.register(configBinding);

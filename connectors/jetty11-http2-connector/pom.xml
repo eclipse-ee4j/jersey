@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,10 +34,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java8.build.outputDirectory>${project.basedir}/target</java8.build.outputDirectory>
-        <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
-        <java11.build.outputDirectory>${project.basedir}/target11</java11.build.outputDirectory>
-        <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
     </properties>
 
     <dependencyManagement>

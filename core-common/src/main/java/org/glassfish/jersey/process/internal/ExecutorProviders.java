@@ -33,6 +33,7 @@ import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
@@ -126,7 +127,9 @@ public final class ExecutorProviders {
                             .in(Singleton.class)
                             .to(ExecutorService.class)
 //                            .forClient(runtimeType == RuntimeType.CLIENT)
-                            .id(runtimeType == RuntimeType.CLIENT ? 1011 : 1111);
+                            .id(runtimeType == RuntimeType.CLIENT
+                                ? InjectionIds.COMMON_EXECUTOR_SERVICE_CLIENT.id()
+                                : InjectionIds.COMMON_EXECUTOR_SERVICE_SERVER.id());
 
             Annotation qualifier = executorProvider.getClass().getAnnotation(qualifierAnnotationClass);
             if (qualifier instanceof Named) {
@@ -157,7 +160,9 @@ public final class ExecutorProviders {
                             .in(Singleton.class)
                             .to(ScheduledExecutorService.class)
 //                            .forClient(runtimeType == RuntimeType.CLIENT)
-                            .id(runtimeType == RuntimeType.CLIENT ? 1013 : 1113);
+                            .id(runtimeType == RuntimeType.CLIENT
+                                    ? InjectionIds.COMMON_SCHEDULED_EXECUTOR_SERVICE_CLIENT.id()
+                                    : InjectionIds.COMMON_SCHEDULED_EXECUTOR_SERVICE_SERVER.id());
 
             if (!executorProviderMap.containsKey(qualifierAnnotationClass)) {
                 // it is safe to register binding for ExecutorService too...

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Binding;
@@ -54,7 +55,8 @@ class ModelProcessorConfigurator implements BootstrapConfigurator {
         ComponentBag componentBag = runtimeConfig.getComponentBag();
 
         OptionsMethodProcessor optionsMethodProcessor = new OptionsMethodProcessor();
-        injectionManager.register(Bindings.service(optionsMethodProcessor).to(ModelProcessor.class));
+        injectionManager.register(Bindings.service(optionsMethodProcessor).to(ModelProcessor.class)
+                        .id(InjectionIds.SERVER_OPTIONS_METHOD_PROCESSOR.id()));
 
         // Get all model processors, registered as an instance or class
         List<ModelProcessor> modelProcessors =

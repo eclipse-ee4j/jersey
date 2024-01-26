@@ -47,8 +47,7 @@ public class ClassListBinding<T> {
     }
 
     private T create(ClassBinding<T> binding) {
-        T t = injectionManager.create(binding.getService());
-        injectionManager.inject(t);
+        T t = injectionManager.createAndInitialize(binding.getService());
         return t;
     }
 
@@ -62,4 +61,10 @@ public class ClassListBinding<T> {
 
     public List<ServiceHolder<T>> getServiceHolders() {
         return instances.get();
-    }}
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+}

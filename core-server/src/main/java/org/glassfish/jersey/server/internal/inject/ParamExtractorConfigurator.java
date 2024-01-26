@@ -19,6 +19,7 @@ package org.glassfish.jersey.server.internal.inject;
 
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -53,6 +54,6 @@ public class ParamExtractorConfigurator implements BootstrapConfigurator {
         injectionManager.register(
                 Bindings.service(multiExtractor)
                         .to(MultivaluedParameterExtractorProvider.class)
-                        .id(3111));
+                        .id(InjectionIds.SERVER_MULTIVALUED_PARAMETER_EXTRACTOR_PROVIDER.id()));
     }
 }
