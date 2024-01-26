@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,8 +21,6 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
-import org.glassfish.jersey.internal.util.JdkVersion;
-import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.spi.WebServer;
 import org.glassfish.jersey.server.spi.WebServerProvider;
@@ -39,9 +37,6 @@ public final class JettyHttpServerProvider implements WebServerProvider {
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Application application,
                                                       final SeBootstrap.Configuration configuration) {
-        if (JdkVersion.getJdkVersion().getMajor() < 17) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
         return WebServerProvider.isSupportedWebServer(JettyHttpServer.class, type, configuration)
                 ? type.cast(new JettyHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
@@ -50,9 +45,6 @@ public final class JettyHttpServerProvider implements WebServerProvider {
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
                                                 final SeBootstrap.Configuration configuration) {
-        if (JdkVersion.getJdkVersion().getMajor() < 17) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
-        }
         return WebServerProvider.isSupportedWebServer(JettyHttpServer.class, type, configuration)
                 ? type.cast(new JettyHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
