@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1150,14 +1150,6 @@
                     <version>${moxy.version}</version>
                 </dependency>
             </dependencies>
-            <repositories>
-                <repository>
-                    <id>eclipselink.repository</id>
-                    <name>Eclipse Maven Repository</name>
-                    <url>https://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
         </profile>
         <profile>
             <id>securityOff</id>
