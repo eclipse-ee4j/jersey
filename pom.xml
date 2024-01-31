@@ -2306,7 +2306,7 @@
         <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.10</mustache.version>
-        <netty.version>4.1.105.Final</netty.version>
+        <netty.version>4.1.104.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
