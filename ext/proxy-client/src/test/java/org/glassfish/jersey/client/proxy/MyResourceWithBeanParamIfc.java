@@ -61,6 +61,12 @@ public interface MyResourceWithBeanParamIfc {
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
+    @Path("getPrivateField")
+    @Produces("text/plain")
+    public String echoPrivateField(@BeanParam MyBeanParamWithPrivateField bean);
+
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
     @Path("all/{pathParam}")
     @Produces("text/plain")
     public String echo(@BeanParam MyBeanParam bean);

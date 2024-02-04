@@ -138,4 +138,14 @@ public class WebResourceFactoryBeanParamTest  extends JerseyTest {
 
         assertEquals("query", response);
     }
+
+    @Test
+    public void testBeanParamPrivateFieldQuery() {
+        MyBeanParamWithPrivateField myGetBeanParam = new MyBeanParamWithPrivateField();
+        myGetBeanParam.setPrivateFieldParam("query");
+
+        String response = resourceWithBeanParam.echoPrivateField(myGetBeanParam);
+
+        assertEquals("query", response);
+    }
 }

@@ -156,7 +156,7 @@ class RequestParameters {
                 anns.put(ann.annotationType(), ann);
             }
 
-            if (hasAnyParamAnnotation(anns)) {
+            if (field.canAccess(beanParam) && hasAnyParamAnnotation(anns)) {
                 value = field.get(beanParam);
             } else {
                 // get getter annotations if there are no field annotations

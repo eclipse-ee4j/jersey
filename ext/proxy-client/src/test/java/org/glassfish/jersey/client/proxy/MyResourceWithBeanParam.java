@@ -54,6 +54,11 @@ public class MyResourceWithBeanParam implements MyResourceWithBeanParamIfc {
     }
 
     @Override
+    public String echoPrivateField(@BeanParam MyBeanParamWithPrivateField bean) {
+        return bean.getPrivateFieldParam();
+    }
+
+    @Override
     public String echo(MyBeanParam bean) {
         return ("HEADER=" + bean.getHeaderParam() + ",PATH=" + bean.getPathParam() + ",FORM="
                 + bean.getFormParam1() + "," + bean.getFormParam2() + ",QUERY=" + bean.getQueryParam()
