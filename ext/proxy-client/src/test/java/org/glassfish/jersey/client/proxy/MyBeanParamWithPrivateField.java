@@ -16,7 +16,8 @@
 
 package org.glassfish.jersey.client.proxy;
 
-import jakarta.ws.rs.*;
+
+import jakarta.ws.rs.QueryParam;
 
 /**
  * @author Divyansh Shekhar Gaur
