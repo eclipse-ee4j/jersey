@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -30,7 +30,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
@@ -48,8 +47,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ResponseStatusTypeTest.InMemoryTest.class,
         ResponseStatusTypeTest.GrizzlyContainerGrizzlyConnectorTest.class,
-        ResponseStatusTypeTest.GrizzlyContainerApacheConnectorTest.class,
-        ResponseStatusTypeTest.SimpleContainerHttpUrlConnectorTest.class})
+        ResponseStatusTypeTest.GrizzlyContainerApacheConnectorTest.class})
 public class ResponseStatusTypeTest {
 
     public static final String REASON_PHRASE = "my-phrase";
@@ -130,37 +128,9 @@ public class ResponseStatusTypeTest {
 
         @Override
         protected void configureClient(ClientConfig config) {
-            config.connectorProvider(new ApacheConnectorProvider());
+            config.connectorProvider(new Apache5ConnectorProvider());
         }
 
-
-        @Test
-        public void testCustom() {
-            _testCustom(target());
-        }
-
-        @Test
-        public void testBadRequest() {
-            _testBadRequest(target());
-        }
-
-        @Test
-        public void testCustomBadRequest() {
-            _testCustomBadRequest(target());
-        }
-    }
-
-    public static class SimpleContainerHttpUrlConnectorTest extends JerseyTest {
-        @Override
-        protected Application configure() {
-            return new ResourceConfig(TestResource.class);
-
-        }
-
-        @Override
-        protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-            return new SimpleTestContainerFactory();
-        }
 
         @Test
         public void testCustom() {

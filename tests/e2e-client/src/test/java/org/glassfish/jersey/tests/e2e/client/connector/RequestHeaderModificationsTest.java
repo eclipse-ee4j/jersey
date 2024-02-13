@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,6 @@ import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import jakarta.annotation.Priority;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
@@ -105,13 +104,11 @@ public class RequestHeaderModificationsTest {
                 {new HttpUrlConnectorProvider(), true, true, false, false},
                 {new GrizzlyConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
                 {new JettyConnectorProvider(), true, false, false, false}, // change to true when JERSEY-2341 fixed
-                {new ApacheConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
                 {new Apache5ConnectorProvider(), false, false, false, false}, // change to true when JERSEY-2341 fixed
                 {new JavaNetHttpConnectorProvider(), true, true, false, false},
                 {new HttpUrlConnectorProvider(), true, true, true, true},
                 {new GrizzlyConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
                 {new JettyConnectorProvider(), true, false, true, false}, // change to true when JERSEY-2341 fixed
-                {new ApacheConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
                 {new Apache5ConnectorProvider(), false, false, true, true}, // change to true when JERSEY-2341 fixed
                 {new JavaNetHttpConnectorProvider(), true, true, false, false},
         });

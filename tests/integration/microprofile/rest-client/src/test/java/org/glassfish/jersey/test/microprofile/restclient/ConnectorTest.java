@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,12 +20,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.http.conn.ConnectionRequest;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.HttpRoute;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.io.LeaseRequest;
+import org.apache.hc.core5.util.Timeout;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ClientProperties;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -50,17 +51,22 @@ public class ConnectorTest extends JerseyTest {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager() {
 
             @Override
-            public ConnectionRequest requestConnection(HttpRoute route, Object state) {
+            public LeaseRequest lease(String id, HttpRoute route, Object state) {
                 countDownLatch.countDown();
-                return super.requestConnection(route, state);
+                return super.lease(id, route, state);
             }
 
+            @Override
+            public LeaseRequest lease(String id, HttpRoute route, Timeout requestTimeout, Object state) {
+                countDownLatch.countDown();
+                return super.lease(id, route, requestTimeout, state);
+            }
         };
 
         ApplicationResource app = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:9998"))
-                .property(ApacheClientProperties.CONNECTION_MANAGER, connectionManager)
-                .register(ApacheConnectorProvider.class)
+                .property(Apache5ClientProperties.CONNECTION_MANAGER, connectionManager)
+                .register(Apache5ConnectorProvider.class)
                 .build(ApplicationResource.class);
 
         app.getTestMap();

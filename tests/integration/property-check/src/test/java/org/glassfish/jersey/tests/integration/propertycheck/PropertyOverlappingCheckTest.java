@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.glassfish.jersey.CommonProperties;
-import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache5.connector.Apache5ClientProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.Property;
@@ -71,7 +71,7 @@ public class PropertyOverlappingCheckTest {
 
     private static final Class<?>[] classes = new Class[] {
             JettyClientProperties.class,
-            ApacheClientProperties.class,
+            Apache5ClientProperties.class,
             OAuth1ServerProperties.class,
             ServletProperties.class,
             CommonProperties.class,

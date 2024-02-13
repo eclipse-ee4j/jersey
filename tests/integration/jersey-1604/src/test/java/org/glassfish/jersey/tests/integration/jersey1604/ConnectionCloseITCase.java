@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.tests.integration.jersey1604;
 
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -50,7 +50,7 @@ public class ConnectionCloseITCase extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new ApacheConnectorProvider());
+        config.connectorProvider(new Apache5ConnectorProvider());
     }
 
     @Test

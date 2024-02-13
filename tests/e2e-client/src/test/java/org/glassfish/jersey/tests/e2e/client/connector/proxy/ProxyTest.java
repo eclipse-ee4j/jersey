@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.internal.HttpChannelState;
 import org.eclipse.jetty.util.Callback;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -59,7 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @Suite
 @SelectClasses({
-        ProxyTest.ApacheConnectorProviderProxyTest.class,
         ProxyTest.Apache5ConnectorProviderProxyTest.class,
         ProxyTest.GrizzlyConnectorProviderProxyTest.class,
         ProxyTest.JettyConnectorProviderProxyTest.class,
@@ -72,14 +70,6 @@ public class ProxyTest {
     private static final String PROXY_USERNAME = "proxy-user";
     private static final String PROXY_PASSWORD = "proxy-password";
     private static final String PROXY_NO_PASS = "proxy-no-pass";
-
-    public static class ApacheConnectorProviderProxyTest extends ProxyTemplateTest {
-        public ApacheConnectorProviderProxyTest()
-                throws NoSuchMethodException, InvocationTargetException, InstantiationException,
-                IllegalAccessException {
-            super(ApacheConnectorProvider.class);
-        }
-    }
 
     public static class Apache5ConnectorProviderProxyTest extends ProxyTemplateTest {
         public Apache5ConnectorProviderProxyTest()

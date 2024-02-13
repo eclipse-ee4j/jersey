@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -36,15 +36,15 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.sse.SseEventSource;
 
-import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ClientProperties;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -85,9 +85,9 @@ public class JaxrsItemStoreResourceTest extends JerseyTest {
         cm.setMaxTotal(MAX_LISTENERS * MAX_ITEMS);
         cm.setDefaultMaxPerRoute(MAX_LISTENERS * MAX_ITEMS);
 
-        config.property(ApacheClientProperties.CONNECTION_MANAGER, cm)
+        config.property(Apache5ClientProperties.CONNECTION_MANAGER, cm)
                 .property(ClientProperties.READ_TIMEOUT, 2000)
-                .connectorProvider(new ApacheConnectorProvider());
+                .connectorProvider(new Apache5ConnectorProvider());
     }
 
     @Override

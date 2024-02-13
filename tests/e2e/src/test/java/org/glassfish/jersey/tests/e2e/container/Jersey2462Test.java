@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,6 @@ import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
@@ -55,8 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @Suite
 @SelectClasses({Jersey2462Test.GrizzlyContainerTest.class,
-        Jersey2462Test.JettyContainerTest.class,
-        Jersey2462Test.SimpleContainerTest.class})
+        Jersey2462Test.JettyContainerTest.class})
 public class Jersey2462Test {
     private static final String REQUEST_NUMBER = "request-number";
 
@@ -197,68 +195,6 @@ public class Jersey2462Test {
         @Override
         protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
             return new JettyTestContainerFactory();
-        }
-
-        /**
-         * Reproducer for JERSEY-2462 on Grizzly container.
-         */
-        @Test
-        public void testReqestReponseInjectionIntoSingletonProvider() {
-            Jersey2462Test.testReqestReponseInjectionIntoSingletonProvider(target());
-        }
-    }
-
-    /**
-     * Filter testing Simple framework request/response injection support into singleton providers.
-     */
-    @PreMatching
-    public static class SimpleRequestFilter implements ContainerRequestFilter {
-        @Inject
-        private org.simpleframework.http.Request simpleRequest;
-        @Inject
-        private org.simpleframework.http.Response simpleResponse;
-
-        @Override
-        public void filter(ContainerRequestContext ctx) throws IOException {
-            StringBuilder sb = new StringBuilder();
-
-            // First, make sure there are no null injections.
-            if (simpleRequest == null) {
-                sb.append("Simple HTTP framework Request is null.\n");
-            }
-            if (simpleResponse == null) {
-                sb.append("Simple HTTP framework Response is null.\n");
-            }
-
-            if (sb.length() > 0) {
-                ctx.abortWith(Response.serverError().entity(sb.toString()).build());
-            }
-
-            // let's also test some method calls
-            int flags = 0;
-
-            if ("/echo".equals(simpleRequest.getAddress().getPath().getPath())) {
-                flags += 1;
-            }
-            if (!simpleResponse.isCommitted()) {
-                flags += 10;
-            }
-            final String header = simpleRequest.getValue(REQUEST_NUMBER);
-
-            ctx.setEntityStream(new ByteArrayInputStream(("filtered-" + flags + "-" + header).getBytes()));
-        }
-    }
-
-    public static class SimpleContainerTest extends JerseyTest {
-        @Override
-        protected DeploymentContext configureDeployment() {
-            return DeploymentContext.builder(new ResourceConfig(EchoResource.class, SimpleRequestFilter.class))
-                    .build();
-        }
-
-        @Override
-        protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-            return new SimpleTestContainerFactory();
         }
 
         /**

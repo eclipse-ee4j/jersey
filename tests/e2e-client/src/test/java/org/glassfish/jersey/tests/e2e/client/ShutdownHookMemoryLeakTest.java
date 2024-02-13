@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientLifecycleListener;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
@@ -67,7 +67,7 @@ public class ShutdownHookMemoryLeakTest {
         return Arrays.asList(
                 new GrizzlyConnectorProvider(),
                 new JettyConnectorProvider(),
-                new ApacheConnectorProvider(),
+                new Apache5ConnectorProvider(),
                 new HttpUrlConnectorProvider()
         );
     }

