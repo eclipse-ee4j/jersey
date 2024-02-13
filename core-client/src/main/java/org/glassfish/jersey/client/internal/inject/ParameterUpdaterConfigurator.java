@@ -20,6 +20,7 @@ package org.glassfish.jersey.client.internal.inject;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.client.ClientBootstrapBag;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -53,6 +54,6 @@ public class ParameterUpdaterConfigurator implements BootstrapConfigurator {
         ParameterUpdaterFactory parameterUpdaterFactory = new ParameterUpdaterFactory(lazyParamConverterFactory);
         clientBag.setParameterUpdaterProvider(parameterUpdaterFactory);
         injectionManager.register(Bindings.service(parameterUpdaterFactory)
-                        .to(ParameterUpdaterProvider.class).id(2011));
+                        .to(ParameterUpdaterProvider.class).id(InjectionIds.CLIENT_PARAMETER_UPDATER_PROVIDER.id()));
     }
 }

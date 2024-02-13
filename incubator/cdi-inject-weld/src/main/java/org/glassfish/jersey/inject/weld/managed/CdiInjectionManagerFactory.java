@@ -34,6 +34,16 @@ import org.glassfish.jersey.server.ApplicationHandler;
 @Priority(20)
 public class CdiInjectionManagerFactory extends CdiInjectionManagerFactoryBase implements InjectionManagerFactory {
 
+    /**
+     * True when @Context mixed with @Inject is to be supported
+     */
+    public static boolean SUPPORT_CONTEXT = true;
+
+    /**
+     * True when CDI injection on client is supported
+     */
+    public static boolean SUPPORT_CLIENT = true;
+
     @Override
     @Deprecated
     public InjectionManager create(Object parent) {

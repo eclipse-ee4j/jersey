@@ -39,6 +39,7 @@ import org.glassfish.jersey.client.innate.inject.NonInjectionManager;
 import org.glassfish.jersey.client.internal.inject.ParameterUpdaterConfigurator;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.AutoDiscoverableConfigurator;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
@@ -88,7 +89,8 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
         @Override
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             bootstrapBag.setConfiguration(runtimeConfig);
-            injectionManager.register(Bindings.service(runtimeConfig).to(Configuration.class).forClient(true).id(1000));
+            injectionManager.register(Bindings.service(runtimeConfig).to(Configuration.class).forClient(true)
+                    .id(InjectionIds.COMMON_CONFIGURATION.id()));
         }
     }
 

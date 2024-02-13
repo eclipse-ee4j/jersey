@@ -33,7 +33,7 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
             new ApplicationHandler(injectionManager);
             if (new WadlFeature().configure(BootstrapPreinitialization.featureContextInstance())) {
                 injectionManager.register(
-                        Bindings.serviceAsContract(WadlModelProcessor.OptionsHandler.class).in(RequestScoped.class)
+                        Bindings.serviceAsContract(WadlModelProcessor.OptionsHandler.class).in(RequestScoped.class).id(0)
                 );
             }
         }

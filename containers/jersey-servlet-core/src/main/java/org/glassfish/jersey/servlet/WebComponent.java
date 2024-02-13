@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +54,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -160,9 +161,11 @@ public class WebComponent {
         }
     }
 
-    private final class WebComponentBinder extends AbstractBinder {
+    static final class WebComponentBinder extends AbstractBinder {
 
         private final Map<String, Object> applicationProperties;
+        private final WebConfig webConfig;
+        private final boolean requestResponseBindingExternalized;
 
         /**
          * Create binder for {@link WebComponent} passing a map of properties to determine whether certain features are allowed
@@ -171,8 +174,13 @@ public class WebComponent {
          *
          * @param applicationProperties map of properties to determine whether certain features are allowed or not.
          */
-        private WebComponentBinder(final Map<String, Object> applicationProperties) {
+        /* package */ WebComponentBinder(
+                final Map<String, Object> applicationProperties,
+                final WebConfig webComponent,
+                final boolean requestResponseBindingExternalized) {
             this.applicationProperties = applicationProperties;
+            this.webConfig = webComponent;
+            this.requestResponseBindingExternalized = requestResponseBindingExternalized;
         }
 
         @Override
@@ -182,43 +190,60 @@ public class WebComponent {
 
                 // request
                 bindFactory(HttpServletRequestReferencingFactory.class).to(HttpServletRequest.class)
-                        .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+                        .proxy(true).proxyForSameScope(false).in(RequestScoped.class)
+                        .id(InjectionIds.SERVLET_HTTP_SERVLET_REQUEST.id());
 
                 bindFactory(ReferencingFactory.referenceFactory())
-                        .to(new GenericType<Ref<HttpServletRequest>>() {}).in(RequestScoped.class);
+                        .to(new GenericType<Ref<HttpServletRequest>>() {}).in(RequestScoped.class)
+                        .id(InjectionIds.SERVLET_HTTP_SERVLET_REQUEST_REF.id());
 
                 // response
                 bindFactory(HttpServletResponseReferencingFactory.class).to(HttpServletResponse.class)
-                        .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+                        .proxy(true).proxyForSameScope(false).in(RequestScoped.class)
+                        .id(InjectionIds.SERVLET_HTTP_SERVLET_RESPONSE.id());
                 bindFactory(ReferencingFactory.referenceFactory())
-                        .to(new GenericType<Ref<HttpServletResponse>>() {}).in(RequestScoped.class);
+                        .to(new GenericType<Ref<HttpServletResponse>>() {}).in(RequestScoped.class)
+                        .id(InjectionIds.SERVLET_HTTP_SERVLET_RESPONSE_REF.id());
             }
 
-            bindFactory(webConfig::getServletContext).to(ServletContext.class).in(Singleton.class);
+            bindFactory(webConfig::getServletContext).to(ServletContext.class).in(Singleton.class)
+                    .id(InjectionIds.SERVLET_SERVLET_CONTEXT.id());
 
             final ServletConfig servletConfig = webConfig.getServletConfig();
             if (webConfig.getConfigType() == WebConfig.ConfigType.ServletConfig) {
-                bindFactory(() -> servletConfig).to(ServletConfig.class).in(Singleton.class);
+                bindFactory(() -> servletConfig).to(ServletConfig.class).in(Singleton.class)
+                        .id(InjectionIds.SERVLET_SERVLET_CONFIG.id());
 
                 // @PersistenceUnit
-                final Enumeration initParams = servletConfig.getInitParameterNames();
-                while (initParams.hasMoreElements()) {
-                    final String initParamName = (String) initParams.nextElement();
+                if (isJPA()) {
+                    final Enumeration initParams = servletConfig.getInitParameterNames();
+                    while (initParams.hasMoreElements()) {
+                        final String initParamName = (String) initParams.nextElement();
 
-                    if (initParamName.startsWith(PersistenceUnitBinder.PERSISTENCE_UNIT_PREFIX)) {
-                        install(new PersistenceUnitBinder(servletConfig));
-                        break;
+                        if (initParamName.startsWith(PersistenceUnitBinder.PERSISTENCE_UNIT_PREFIX)) {
+                            install(new PersistenceUnitBinder(servletConfig));
+                            break;
+                        }
                     }
                 }
             } else {
-                bindFactory(webConfig::getFilterConfig).to(FilterConfig.class).in(Singleton.class);
+                bindFactory(webConfig::getFilterConfig).to(FilterConfig.class).in(Singleton.class)
+                        .id(InjectionIds.SERVLET_FILTER_CONFIG.id());
             }
 
-            bindFactory(() -> webConfig).to(WebConfig.class).in(Singleton.class);
+            bindFactory(() -> webConfig).to(WebConfig.class).in(Singleton.class)
+                    .id(InjectionIds.SERVLET_WEB_CONFIG.id());
 
             install(new ServiceFinderBinder<>(AsyncContextDelegateProvider.class, applicationProperties, RuntimeType.SERVER));
             install(new ServiceFinderBinder<>(FilterUrlMappingsProvider.class, applicationProperties, RuntimeType.SERVER));
         }
+    }
+
+    /* Checks the JPA on CP */
+    /* package */ static boolean isJPA() {
+        @SuppressWarnings("removal")
+        Class<?> clz = AccessController.doPrivileged(ReflectionHelper.classForNamePA("jakarta.persistence.PersistenceUnit"));
+        return clz != null;
     }
 
     /**
@@ -302,7 +327,8 @@ public class WebComponent {
         requestScopedInitializer = rsiProvider != null ? rsiProvider : DEFAULT_REQUEST_SCOPE_INITIALIZER_PROVIDER;
         requestResponseBindingExternalized = rrbExternalized;
 
-        final AbstractBinder webComponentBinder = new WebComponentBinder(resourceConfig.getProperties());
+        final AbstractBinder webComponentBinder =
+                new WebComponentBinder(resourceConfig.getProperties(), webConfig, requestResponseBindingExternalized);
         resourceConfig.register(webComponentBinder);
 
         final Object locator = webConfig.getServletContext()
@@ -412,7 +438,7 @@ public class WebComponent {
     }
 
     /**
-     * Initialize {@code ContainerRequest} instance to used used to handle {@code servletRequest}.
+     * Initialize {@code ContainerRequest} instance to be used to handle {@code servletRequest}.
      */
     private void initContainerRequest(
             final ContainerRequest requestContext,

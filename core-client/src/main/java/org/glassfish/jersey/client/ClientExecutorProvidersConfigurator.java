@@ -24,6 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -110,7 +111,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                 .service(defaultAsyncExecutorProvider)
                 .to(ExecutorServiceProvider.class)
                 .forClient(true)
-                .id(2020);
+                .id(InjectionIds.CLIENT_EXECUTOR_SERVICE_PROVIDER.id());
 
         injectionManager.register(executorBinding);
 
@@ -136,7 +137,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                 .service(defaultScheduledExecutorProvider)
                 .to(ScheduledExecutorServiceProvider.class)
                 .forClient(true)
-                .id(2021);
+                .id(InjectionIds.CLIENT_SCHEDULED_EXECUTOR_SERVICE_PROVIDER.id());
         injectionManager.register(schedulerBinding);
 
         registerExecutors(injectionManager, componentBag, defaultAsyncExecutorProvider,

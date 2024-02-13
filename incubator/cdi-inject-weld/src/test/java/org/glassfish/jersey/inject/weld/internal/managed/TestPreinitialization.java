@@ -20,103 +20,104 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.inject.weld.spi.BootstrapPreinitialization;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerThread;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-public class TestPreinitialization implements BootstrapPreinitialization, org.glassfish.jersey.innate.BootstrapPreinitialization {
+public class TestPreinitialization implements org.glassfish.jersey.innate.BootstrapPreinitialization {
+
     @Override
-    public void register(RuntimeType runtimeType, AbstractBinder binder) {
-        if (RuntimeType.CLIENT == runtimeType) {
-            //ClientInstanceInjectionTest
-            {
-                binder.bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierClient.class)
-                        .to(ClientInstanceInjectionTest.InjectableClientServer.class);
-                binder.bindAsContract(ClientInstanceInjectionTest.InjectedBean.class);
-            }
-            return;
-        }
+    public void preregister(RuntimeType runtimeType, InjectionManager injectionManager) {
+        injectionManager.register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                if (RuntimeType.CLIENT == runtimeType) {
+                    //ClientInstanceInjectionTest
+                    {
+                        bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierClient.class)
+                                .to(ClientInstanceInjectionTest.InjectableClientServer.class);
+                        bindAsContract(ClientInstanceInjectionTest.InjectedBean.class);
+                    }
+                    return;
+                }
 
-        // Disposable supplier test
-        {
-            binder.bindFactory(DisposableSupplierTest.DisposableSupplierImpl.class, Singleton.class)
-                    .to(DisposableSupplierTest.StringForSupplierSingletonClass.class);
-            binder.bindFactory(DisposableSupplierTest.DisposableSupplierImpl.class)
-                    .to(DisposableSupplierTest.StringForSupplierClass.class);
-            binder.bindFactory(new DisposableSupplierTest.DisposableSupplierImpl())
-                    .to(DisposableSupplierTest.StringForSupplierInstance.class);
-            binder.bindFactory(SupplierGreeting.class)
-                    .to(DisposableSupplierTest.GreetingsClass.class);
-            binder.bindFactory(new SupplierGreeting())
-                    .to(DisposableSupplierTest.GreetingsInstance.class);
+                // Disposable supplier test
+                {
+                    bindFactory(DisposableSupplierTest.DisposableSupplierImpl.class, Singleton.class)
+                            .to(DisposableSupplierTest.StringForSupplierSingletonClass.class);
+                    bindFactory(DisposableSupplierTest.DisposableSupplierImpl.class)
+                            .to(DisposableSupplierTest.StringForSupplierClass.class);
+                    bindFactory(new DisposableSupplierTest.DisposableSupplierImpl())
+                            .to(DisposableSupplierTest.StringForSupplierInstance.class);
+                    bindFactory(SupplierGreeting.class)
+                            .to(DisposableSupplierTest.GreetingsClass.class);
+                    bindFactory(new SupplierGreeting())
+                            .to(DisposableSupplierTest.GreetingsInstance.class);
 
-            binder.bindFactory(DisposableSupplierTest.ProxiableDisposableSingletonSupplierImpl.class, Singleton.class)
-                    .to(DisposableSupplierTest.ProxiableHolderSingletonClass.class)
-                    .in(RequestScoped.class);
-            binder.bindFactory(DisposableSupplierTest.ProxiableDisposableSupplierImpl.class)
-                    .to(DisposableSupplierTest.ProxiableHolderClass.class)
-                    .in(RequestScoped.class);
+                    bindFactory(DisposableSupplierTest.ProxiableDisposableSingletonSupplierImpl.class, Singleton.class)
+                            .to(DisposableSupplierTest.ProxiableHolderSingletonClass.class)
+                            .in(RequestScoped.class);
+                    bindFactory(DisposableSupplierTest.ProxiableDisposableSupplierImpl.class)
+                            .to(DisposableSupplierTest.ProxiableHolderClass.class)
+                            .in(RequestScoped.class);
 
-            binder.bindFactory(DisposableSupplierTest.DisposableSupplierForComposedImpl.class, Singleton.class)
-                    .to(DisposableSupplierTest.StringForComposed.class);
-            binder.bindAsContract(DisposableSupplierTest.ComposedObject.class)
-                    .in(RequestScoped.class);
-        }
+                    bindFactory(DisposableSupplierTest.DisposableSupplierForComposedImpl.class, Singleton.class)
+                            .to(DisposableSupplierTest.StringForComposed.class);
+                    bindAsContract(DisposableSupplierTest.ComposedObject.class)
+                            .in(RequestScoped.class);
+                }
 
-        // ThreadScopeTest
-        {
-            //testThreadScopedInDifferentThread
-            binder.bindAsContract(ThreadScopeTest.SingletonObject.class)
-                    .in(Singleton.class);
-            binder.bindFactory(new ThreadScopeTest.SupplierGreeting())
-                    .to(ThreadScopeTest.Greeting.class)
-                    .in(PerThread.class);
+                // ThreadScopeTest
+                {
+                    //testThreadScopedInDifferentThread
+                    bindAsContract(ThreadScopeTest.SingletonObject.class)
+                            .in(Singleton.class);
+                    bindFactory(new ThreadScopeTest.SupplierGreeting())
+                            .to(ThreadScopeTest.Greeting.class)
+                            .in(PerThread.class);
 
-            //testThreadScopedInRequestScope
-            binder.bindAsContract(ThreadScopeTest.RequestScopedInterface.class)
-                    .in(jakarta.enterprise.context.RequestScoped.class);
+                    //testThreadScopedInRequestScope
+                    bindAsContract(ThreadScopeTest.RequestScopedInterface.class)
+                            .in(jakarta.enterprise.context.RequestScoped.class);
 //                    bindFactory(new SupplierGreeting())
 //                            .to(Greeting.class)
 //                            .in(PerThread.class);
 
-            //testThreadScopedInRequestScopeImplementation
-            binder.bindAsContract(ThreadScopeTest.RequestScopedCzech.class)
-                    .in(jakarta.enterprise.context.RequestScoped.class);
-            binder.bindFactory(new ThreadScopeTest.SupplierGreeting())
-                    .to(ThreadScopeTest.CzechGreeting.class)
-                    .in(PerThread.class);
+                    //testThreadScopedInRequestScopeImplementation
+                    bindAsContract(ThreadScopeTest.RequestScopedCzech.class)
+                            .in(jakarta.enterprise.context.RequestScoped.class);
+                    bindFactory(new ThreadScopeTest.SupplierGreeting())
+                            .to(ThreadScopeTest.CzechGreeting.class)
+                            .in(PerThread.class);
 
-            //testThreadScopedInRequestTwoTypes
-            binder.bindAsContract(ThreadScopeTest.RequestScopedCzech2.class)
-                    .in(jakarta.enterprise.context.RequestScoped.class);
-            binder.bindAsContract(ThreadScopeTest.RequestScopedEnglish2.class)
-                    .in(jakarta.enterprise.context.RequestScoped.class);
-            binder.bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.CzechGreeting2.GREETING))
-                    .to(ThreadScopeTest.CzechGreeting2.class)
-                    .in(PerThread.class);
-            binder.bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.EnglishGreeting2.GREETING))
-                    .to(ThreadScopeTest.EnglishGreeting2.class)
-                    .in(PerThread.class);
-        }
+                    //testThreadScopedInRequestTwoTypes
+                    bindAsContract(ThreadScopeTest.RequestScopedCzech2.class)
+                            .in(jakarta.enterprise.context.RequestScoped.class);
+                    bindAsContract(ThreadScopeTest.RequestScopedEnglish2.class)
+                            .in(jakarta.enterprise.context.RequestScoped.class);
+                    bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.CzechGreeting2.GREETING))
+                            .to(ThreadScopeTest.CzechGreeting2.class)
+                            .in(PerThread.class);
+                    bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.EnglishGreeting2.GREETING))
+                            .to(ThreadScopeTest.EnglishGreeting2.class)
+                            .in(PerThread.class);
+                }
 
-        //ClientInstanceInjectionTest
-        {
-            binder.bind(new ClientInstanceInjectionTest.StringInjectable(0))
-                    .to(ClientInstanceInjectionTest.Injectable.class).in(Dependent.class);
-            binder.bindAsContract(ClientInstanceInjectionTest.InjectedBean.class);
+                //ClientInstanceInjectionTest
+                {
+                    bind(new ClientInstanceInjectionTest.StringInjectable(0))
+                            .to(ClientInstanceInjectionTest.Injectable.class).in(Dependent.class);
+                    bindAsContract(ClientInstanceInjectionTest.InjectedBean.class);
 
-            binder.bindFactory(new ClientInstanceInjectionTest.StringInjectableSupplier2(0))
-                    .to(ClientInstanceInjectionTest.Injectable2.class).in(Dependent.class);
-            //bindAsContract(ClientInstanceInjectionTest.InjectedSupplierBean.class);
+                    bindFactory(new ClientInstanceInjectionTest.StringInjectableSupplier2(0))
+                            .to(ClientInstanceInjectionTest.Injectable2.class).in(Dependent.class);
+                    //bindAsContract(ClientInstanceInjectionTest.InjectedSupplierBean.class);
 
-            binder.bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierServer.class)
-                    .to(ClientInstanceInjectionTest.InjectableClientServer.class);
-        }
-    }
-
-    @Override
-    public void preregister(RuntimeType runtimeType, InjectionManager registrator) {
+                    bindFactory(ClientInstanceInjectionTest.InjectableClientServerSupplierServer.class)
+                            .to(ClientInstanceInjectionTest.InjectableClientServer.class);
+                }
+            }
+        });
     }
 }

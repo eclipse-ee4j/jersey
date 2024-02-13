@@ -31,6 +31,7 @@ import jakarta.ws.rs.ext.Providers;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerLookup;
@@ -61,7 +62,9 @@ public class JaxrsProviders implements Providers {
                     Bindings.service(JaxrsProviders.class)
                             .to(Providers.class)
                             .in(PerLookup.class)
-                            .id(injectionManager.getRuntimeType() == RuntimeType.CLIENT ? 2016 : 3016));
+                            .id(injectionManager.getRuntimeType() == RuntimeType.CLIENT
+                                    ? InjectionIds.COMMON_PROVIDERS_CLIENT.id()
+                                    : InjectionIds.COMMON_PROVIDERS_SERVER.id()));
         }
     }
 

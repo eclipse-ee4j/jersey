@@ -49,18 +49,26 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Test Servlet BootstrapPreinitialization -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
+        <!-- End of Test Servlet BootstrapPreinitialization -->
+
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>

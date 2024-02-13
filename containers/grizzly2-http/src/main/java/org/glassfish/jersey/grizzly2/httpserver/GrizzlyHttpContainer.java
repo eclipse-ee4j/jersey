@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
@@ -123,14 +124,18 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
         @Override
         protected void configure() {
             bindFactory(GrizzlyRequestReferencingFactory.class).to(Request.class)
-                    .proxy(false).in(RequestScoped.class);
+                    .proxy(false).in(RequestScoped.class)
+                    .id(InjectionIds.GRIZZLY_REQUEST_REFERENCING_FACTORY.id());
             bindFactory(ReferencingFactory.<Request>referenceFactory()).to(new GenericType<Ref<Request>>() {})
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(InjectionIds.GRIZZLY_REQUEST.id());
 
             bindFactory(GrizzlyResponseReferencingFactory.class).to(Response.class)
-                    .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+                    .proxy(true).proxyForSameScope(false).in(RequestScoped.class)
+                    .id(InjectionIds.GRIZZLY_RESPONSE_REFERENCING_FACTORY.id());
             bindFactory(ReferencingFactory.<Response>referenceFactory()).to(new GenericType<Ref<Response>>() {})
-                    .in(RequestScoped.class);
+                    .in(RequestScoped.class)
+                    .id(InjectionIds.GRIZZLY_RESPONSE.id());
         }
     }
 

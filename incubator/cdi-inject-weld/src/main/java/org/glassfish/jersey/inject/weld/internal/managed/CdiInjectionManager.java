@@ -17,7 +17,12 @@
 package org.glassfish.jersey.inject.weld.internal.managed;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,10 +39,12 @@ import jakarta.enterprise.inject.spi.Unmanaged;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
+import jakarta.ws.rs.core.Context;
 import org.glassfish.jersey.inject.weld.internal.inject.InitializableInstanceBinding;
 import org.glassfish.jersey.inject.weld.internal.inject.InitializableSupplierInstanceBinding;
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
 import org.glassfish.jersey.inject.weld.internal.inject.MatchableBinding;
+import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -49,6 +56,9 @@ import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
 import org.glassfish.jersey.internal.inject.SupplierClassBinding;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.internal.util.collection.Cache;
+import org.glassfish.jersey.server.model.Resource;
 
 /**
  * Implementation of {@link InjectionManager} used on the server side.
@@ -90,7 +100,7 @@ class CdiInjectionManager implements InjectionManager {
                     = findPrebinding(InitializableInstanceBinding.class, binding);
             if (matching.matches()) {
                matching.getBinding().init(((InstanceBinding) binding).getService());
-            } else /*if (findClassBinding(binding.getImplementationType()) == null) */{
+            } else if (!userBindings.init((InstanceBinding<?>) binding)){
                 throw new IllegalStateException("Could not initialize " + ((InstanceBinding<?>) binding).getService());
             }
         } else if (SupplierInstanceBinding.class.isInstance(binding)) {
@@ -125,7 +135,9 @@ class CdiInjectionManager implements InjectionManager {
 //                }
 //            }
 //            if (!found) {
-                throw new IllegalStateException("ClassBinding for " + binding.getImplementationType() + " not preregistered");
+                if (!userBindings.init((ClassBinding<?>) binding)) {
+                    throw new IllegalStateException("ClassBinding for " + binding.getImplementationType() + " not preregistered");
+                }
             }
         }
     }
@@ -215,10 +227,16 @@ class CdiInjectionManager implements InjectionManager {
     @Override
     public <T> T createAndInitialize(Class<T> createMe) {
         Unmanaged.UnmanagedInstance<T> unmanaged = new Unmanaged<>(beanManager, createMe).newInstance();
-        return unmanaged.produce()
-                .inject()
-                .postConstruct()
-                .get();
+
+        try {
+            this.lockContext();
+            unmanaged = unmanaged.produce().inject();
+            injectContext(unmanaged.get());
+        } finally {
+            this.unlockContext();
+        }
+
+        return unmanaged.postConstruct().get();
     }
 
     @Override
@@ -231,10 +249,16 @@ class CdiInjectionManager implements InjectionManager {
                 continue;
             }
 
+            final T reference;
+
             CreationalContext<?> ctx = createCreationalContext(bean);
-            lockContext();
-            T reference = (T) beanManager.getReference(bean, contractOrImpl, ctx);
-            unlockContext();
+            try {
+                lockContext();
+                reference = (T) beanManager.getReference(bean, contractOrImpl, ctx);
+            } finally {
+                unlockContext();
+            }
+
 
             int rank = 0;
             if (bean instanceof JerseyBean) {
@@ -297,9 +321,13 @@ class CdiInjectionManager implements InjectionManager {
             throw new IllegalStateException("Bean for type " + contractOrImpl + " not found");
         }
         CreationalContext<T> ctx = createCreationalContext((Bean<T>) bean);
-        lockContext();
-        T t = (T) beanManager.getReference(bean, contractOrImpl, ctx);
-        unlockContext();
+        final T t;
+        try {
+            lockContext();
+            t = (T) beanManager.getReference(bean, contractOrImpl, ctx);
+        } finally {
+            unlockContext();
+        }
         return t;
     }
 
@@ -344,9 +372,13 @@ class CdiInjectionManager implements InjectionManager {
                 continue;
             }
             CreationalContext<?> ctx = createCreationalContext(bean);
-            lockContext();
-            Object reference = beanManager.getReference(bean, contractOrImpl, ctx);
-            unlockContext();
+            final Object reference;
+            try {
+                lockContext();
+                reference = beanManager.getReference(bean, contractOrImpl, ctx);
+            } finally {
+                unlockContext();
+            }
             result.add((T) reference);
         }
         result.addAll(userBindings.getServices(contractOrImpl));
@@ -362,6 +394,42 @@ class CdiInjectionManager implements InjectionManager {
         InjectionTarget injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         injectionTarget.inject(instance, creationalContext);
+
+        if (CdiInjectionManagerFactory.SUPPORT_CONTEXT) {
+            injectContext(instance);
+        }
+    }
+
+    public void injectContext(Object instance) {
+        Field[] fields = AccessController.doPrivileged(ReflectionHelper.getAllFieldsPA(instance.getClass()));
+        for (Field f : fields) {
+            if (f.isAnnotationPresent(Context.class)) {
+                setAccesible(f);
+                try {
+                    if (f.get(instance) == null) {
+                        Object o = getInstance(f.getType());
+                        f.set(instance, o);
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    private static void setAccesible(Field member) {
+        if (isPublic(member)) {
+            return;
+        }
+
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            member.setAccessible(true);
+            return null;
+        });
+    }
+
+    private static boolean isPublic(Member member) {
+        return Modifier.isPublic(member.getModifiers());
     }
 
     protected void lockContext() {
@@ -433,6 +501,10 @@ class CdiInjectionManager implements InjectionManager {
 
     @Override
     public void inject(Object injectMe, String classAnalyzer) {
+        if ("CONTEXT".equals(classAnalyzer)) {
+            injectContext(injectMe);
+            return;
+        }
         // TODO: Used only in legacy CDI integration.
         throw new UnsupportedOperationException();
     }
