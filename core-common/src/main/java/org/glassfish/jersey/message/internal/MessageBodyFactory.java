@@ -57,6 +57,7 @@ import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.xml.transform.Source;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.LocalizationMessages;
@@ -106,7 +107,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
             InstanceBinding<MessageBodyFactory> binding =
                     Bindings.service(messageBodyFactory)
                             .to(MessageBodyWorkers.class)
-                            .id(3182);
+                            .id(InjectionIds.SERVER_MESSAGE_BODY_WORKERS.id());
             injectionManager.register(binding);
         }
 

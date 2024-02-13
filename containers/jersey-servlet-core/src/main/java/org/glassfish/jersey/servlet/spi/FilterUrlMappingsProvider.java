@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import jakarta.servlet.FilterConfig;
 import java.util.List;
 
 /**
- * Provides an access to context path from the filter configuration.
+ * Provides access to context path from the filter configuration.
  *
  * @author Adam Lindenthal
  */

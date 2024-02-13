@@ -17,6 +17,7 @@
 package org.glassfish.jersey.inject.weld.binder.server;
 
 import org.glassfish.jersey.inject.weld.TestParent;
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -38,13 +39,8 @@ public class ModelProcessorBindingsTest extends TestParent {
     @Test
     public void testWadlProcessor() {
         injectionManager.completeRegistration();
-        injectionManager.register(Bindings.service(new OptionsMethodProcessor()).to(ModelProcessor.class));
-//        injectionManager.register(new AbstractBinder() {
-//            @Override
-//            protected void configure() {
-//                bind(new WadlModelProcessor()).to(ModelProcessor.class);
-//            }
-//        });
+        injectionManager.register(Bindings.service(new OptionsMethodProcessor()).to(ModelProcessor.class)
+                .id(InjectionIds.SERVER_OPTIONS_METHOD_PROCESSOR.id()));
         assertMultiple(ModelProcessor.class, 2, WadlModelProcessor.class.getSimpleName(),
                 OptionsMethodProcessor.class.getSimpleName());
     }
@@ -54,8 +50,10 @@ public class ModelProcessorBindingsTest extends TestParent {
         injectionManager.register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(new ResourceConfig()).to(ServerConfig.class).to(Configuration.class).id(1000);
-                bind(new JerseyResourceContext(null, null, null)).to(ResourceContext.class).id(3112);
+                bind(new ResourceConfig()).to(ServerConfig.class).to(Configuration.class)
+                        .id(InjectionIds.COMMON_CONFIGURATION.id());
+                bind(new JerseyResourceContext(null, null, null)).to(ResourceContext.class)
+                        .id(InjectionIds.SERVER_RESOURCE_CONTEXT.id());
                 bind(WadlApplicationContextImpl.class).to(WadlApplicationContext.class).in(Singleton.class);
             }
         });

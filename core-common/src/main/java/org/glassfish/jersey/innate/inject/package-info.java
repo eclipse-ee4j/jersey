@@ -14,18 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.media.sse.internal;
-
-import org.glassfish.jersey.innate.BootstrapPreinitialization;
-import org.glassfish.jersey.internal.inject.InjectionManager;
-
-import jakarta.ws.rs.RuntimeType;
-
-public class SseBootstrapPreinitialization implements BootstrapPreinitialization {
-    @Override
-    public void preregister(RuntimeType runtimeType, InjectionManager injectionManager) {
-        if (runtimeType == RuntimeType.SERVER) {
-            injectionManager.register(new SseBinder());
-        }
-    }
-}
+/**
+ * Jersey innate injection related packages. The innate packages will not be opened by JPMS outside of Jersey.
+ */
+package org.glassfish.jersey.innate.inject;

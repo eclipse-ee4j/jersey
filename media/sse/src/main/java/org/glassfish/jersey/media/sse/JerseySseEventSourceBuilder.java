@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.media.sse;
 import org.glassfish.jersey.media.sse.internal.JerseySseEventSource;
 
 /**
- * Public {@link SseEventSource.Builder} implementation.
+ * Public {@link jakarta.ws.rs.sse.SseEventSource.Builder} implementation.
  */
 public final class JerseySseEventSourceBuilder extends JerseySseEventSource.Builder {
 }

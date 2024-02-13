@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.Application;
 
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -81,7 +82,8 @@ class ApplicationConfigurator implements BootstrapConfigurator {
         }
 
         serverBag.setApplication(resultApplication);
-        injectionManager.register(Bindings.service(resultApplication).to(Application.class).id(3199));
+        injectionManager.register(Bindings.service(resultApplication).to(Application.class)
+                .id(InjectionIds.SERVER_APPLICATION.id()));
     }
 
     private static Application createApplication(
@@ -105,7 +107,7 @@ class ApplicationConfigurator implements BootstrapConfigurator {
             }
             if (!appClassBound) {
                 if (applicationClass.isAnnotationPresent(Singleton.class)) {
-                    injectionManager.register(Bindings.serviceAsContract(applicationClass).in(Singleton.class));
+                    injectionManager.register(Bindings.serviceAsContract(applicationClass).in(Singleton.class).id(0));
                     appClassBound = true;
                 }
             }

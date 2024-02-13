@@ -73,7 +73,7 @@ import org.glassfish.jersey.inject.weld.internal.bean.BeanHelper;
 import org.glassfish.jersey.inject.weld.internal.injector.ContextInjectionResolverImpl;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.inject.weld.internal.scope.CdiRequestScope;
-import org.glassfish.jersey.inject.weld.spi.BootstrapPreinitialization;
+import org.glassfish.jersey.innate.BootstrapPreinitialization;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -523,15 +523,6 @@ class BinderRegisterExtension implements Extension {
         return binding;
     }
 
-//    // Check first if a class is a JAX-RS resource, and only if so check with validation.
-//    // This prevents unnecessary warnings being logged for pure CDI beans.
-//    private final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(
-//            clazz -> Resource.from(clazz, true) != null && Resource.from(clazz) != null);
-//
-//    public boolean isJaxRsResource(Class<?> resource) {
-//        return jaxRsResourceCache.apply(resource);
-//    }
-
     private boolean isJaxrs(Class<?> clazz) {
         return Providers.isJaxRsProvider(clazz) || BeanHelper.isResourceClass(clazz) || isJerseyRegistrable(clazz);
     }
@@ -604,29 +595,12 @@ class BinderRegisterExtension implements Extension {
             registrars.add(registrar);
         }
 
-        final List<org.glassfish.jersey.innate.BootstrapPreinitialization> preregistrars = new LinkedList<>();
-        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
-                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
-            preregistrars.add(registrar);
-        }
-
-        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
-                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
-            //registrars.add(registrar);
+        for (BootstrapPreinitialization registrar : ServiceFinder.find(BootstrapPreinitialization.class)) {
             registrar.preregister(RuntimeType.SERVER, serverBootstrapInjectionManager);
         }
 
-        for (BootstrapPreinitialization registrar : registrars) {
-            registrar.register(RuntimeType.SERVER, serverBindings);
-        }
-
-        for (org.glassfish.jersey.innate.BootstrapPreinitialization registrar
-                : ServiceFinder.find(org.glassfish.jersey.innate.BootstrapPreinitialization.class)) {
+        for (BootstrapPreinitialization registrar : ServiceFinder.find(BootstrapPreinitialization.class)) {
             registrar.preregister(RuntimeType.CLIENT, clientBootstrapInjectionManager);
-        }
-
-        for (BootstrapPreinitialization registrar : registrars) {
-            registrar.register(RuntimeType.CLIENT, clientBindings);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -47,7 +47,7 @@ public class AutoDiscoverableConfigurator extends AbstractServiceFinderConfigura
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
         Configuration configuration = bootstrapBag.getConfiguration();
         List<AutoDiscoverable> autoDiscoverables = loadImplementations(configuration.getProperties()).stream()
-                .peek(implClass -> injectionManager.register(Bindings.service(implClass).to(AutoDiscoverable.class)))
+                .peek(implClass -> injectionManager.register(Bindings.service(implClass).to(AutoDiscoverable.class).id(0)))
                 .map(injectionManager::createAndInitialize)
                 .collect(Collectors.toList());
 

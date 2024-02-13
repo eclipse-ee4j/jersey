@@ -21,6 +21,7 @@ import java.util.function.Function;
 
 import jakarta.ws.rs.container.ResourceContext;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Binding;
@@ -51,7 +52,7 @@ class JerseyResourceContextConfigurator implements BootstrapConfigurator {
                 Bindings.service(resourceContext)
                         .to(ResourceContext.class)
                         .to(ExtendedResourceContext.class)
-                        .id(3112);
+                        .id(InjectionIds.SERVER_RESOURCE_CONTEXT.id());
         injectionManager.register(resourceContextBinding);
         serverBag.setResourceContext(resourceContext);
     }

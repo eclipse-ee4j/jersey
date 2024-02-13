@@ -20,6 +20,7 @@ package org.glassfish.jersey.internal.inject;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 
@@ -32,7 +33,9 @@ public class ParamConverterConfigurator implements BootstrapConfigurator {
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        long id = injectionManager.getRuntimeType() == RuntimeType.CLIENT ? 2010 : 3010;
+        long id = injectionManager.getRuntimeType() == RuntimeType.CLIENT
+                ? InjectionIds.CLIENT_AGGREGATED_PROVIDER.id()
+                : InjectionIds.SERVER_AGGREGATED_PROVIDER.id();
         final ClassBinding<ParamConverters.AggregatedProvider> aggregatedConverters =
                 Bindings.service(ParamConverters.AggregatedProvider.class)
                     .to(ParamConverterProvider.class).id(id);

@@ -28,6 +28,7 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
@@ -63,7 +64,7 @@ public class ContextResolverFactory implements ContextResolvers {
                     Bindings.service(contextResolverFactory)
                             .to(ContextResolvers.class)
                             .forClient(bootstrapBag.getConfiguration().getRuntimeType() == RuntimeType.CLIENT)
-                            .id(1014);
+                            .id(InjectionIds.COMMON_CONTEXT_RESOLVERS.id());;
             injectionManager.register(binding);
         }
 

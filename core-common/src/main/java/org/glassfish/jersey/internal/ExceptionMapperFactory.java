@@ -33,6 +33,7 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
+import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
@@ -77,7 +78,7 @@ public class ExceptionMapperFactory implements ExceptionMappers {
                     Bindings.service(exceptionMapperFactory)
                             .to(ExceptionMappers.class)
                             .forClient(bootstrapBag.getConfiguration().getRuntimeType() == RuntimeType.CLIENT)
-                            .id(1015);
+                            .id(InjectionIds.COMMON_EXCEPTION_MAPPERS.id());
             injectionManager.register(binding);
         }
 
