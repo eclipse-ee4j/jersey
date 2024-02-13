@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -380,7 +380,19 @@ public class OutboundJaxrsResponse extends jakarta.ws.rs.core.Response {
             if (st == null) {
                 st = context.hasEntity() ? Status.OK : Status.NO_CONTENT;
             }
+
+            checkStatusAndEntity(st);
+
             return new OutboundJaxrsResponse(st, new OutboundMessageContext(context));
+        }
+
+        private void checkStatusAndEntity(StatusType status) {
+            if (status.getFamily() == Status.Family.INFORMATIONAL
+                    || status == Status.NO_CONTENT || status == Status.RESET_CONTENT || status == Status.NOT_MODIFIED) {
+                if (context.hasEntity()) {
+                    throw new IllegalArgumentException(LocalizationMessages.RESPONSE_HAS_ENTITY(status.getStatusCode()));
+                }
+            }
         }
 
         @SuppressWarnings({"CloneDoesntCallSuperClone", "CloneDoesntDeclareCloneNotSupportedException"})
@@ -392,7 +404,7 @@ public class OutboundJaxrsResponse extends jakarta.ws.rs.core.Response {
         @Override
         public jakarta.ws.rs.core.Response.ResponseBuilder status(StatusType status) {
             if (status == null) {
-                throw new IllegalArgumentException("Response status must not be 'null'");
+                throw new IllegalArgumentException(LocalizationMessages.RESPONSE_STATUS_NULL());
             }
 
             this.status = status;
@@ -402,7 +414,7 @@ public class OutboundJaxrsResponse extends jakarta.ws.rs.core.Response {
         @Override
         public ResponseBuilder status(int status, final String reasonPhrase) {
             if (status < 100 || status > 599) {
-                throw new IllegalArgumentException("Response status must not be less than '100' or greater than '599'");
+                throw new IllegalArgumentException(LocalizationMessages.RESPONSE_STATUS_OUT_OF_BOUNDS());
             }
 
             final Status.Family family = Status.Family.familyOf(status);
