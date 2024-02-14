@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@ import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.FeatureContext;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -135,7 +135,7 @@ public class AbortingFilterTest extends JerseyTest {
     @Test
     public void testAbortingFilterWithApacheConnector() {
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.connectorProvider(new ApacheConnectorProvider());
+        clientConfig.connectorProvider(new Apache5ConnectorProvider());
         Client client = ClientBuilder.newClient(clientConfig);
 
         final Response response = client.target(getBaseUri()).path("/simple").request().get();

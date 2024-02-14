@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,6 @@ import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.netty.NettyTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 /**
@@ -38,7 +37,6 @@ public abstract class JerseyContainerTest extends JerseyTest {
     private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
             new GrizzlyTestContainerFactory(),
             new InMemoryTestContainerFactory(),
-            new SimpleTestContainerFactory(),
             new JdkHttpServerTestContainerFactory(),
             new JettyTestContainerFactory(),
             new NettyTestContainerFactory()

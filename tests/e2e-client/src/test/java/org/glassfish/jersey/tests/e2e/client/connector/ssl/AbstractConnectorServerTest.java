@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.SslConfigurator;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
@@ -57,7 +56,6 @@ public abstract class AbstractConnectorServerTest {
         final ConnectorProvider[] providers = new ConnectorProvider[] {
                 new HttpUrlConnectorProvider(),
                 new GrizzlyConnectorProvider(),
-                new ApacheConnectorProvider(),
                 new Apache5ConnectorProvider(),
                 new JavaNetHttpConnectorProvider(),
                 new JettyConnectorProvider()

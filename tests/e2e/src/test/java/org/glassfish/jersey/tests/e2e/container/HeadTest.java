@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,9 +19,7 @@ package org.glassfish.jersey.tests.e2e.container;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.ws.rs.GET;
@@ -36,7 +34,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -53,7 +50,6 @@ public class HeadTest extends JerseyTest {
     private static final List<TestContainerFactory> FACTORIES = Arrays.asList(
             new GrizzlyTestContainerFactory(),
             new InMemoryTestContainerFactory(),
-            new SimpleTestContainerFactory(),
             new JettyTestContainerFactory());
 
     public static Stream<TestContainerFactory> parameters() throws Exception {

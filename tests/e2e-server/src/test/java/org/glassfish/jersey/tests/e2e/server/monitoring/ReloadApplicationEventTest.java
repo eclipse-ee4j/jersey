@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
@@ -67,8 +66,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Miroslav Fuksa
  */
 @Suite
-@SelectClasses({ReloadApplicationEventTest.GrizzlyTestCase.class, ReloadApplicationEventTest.JdkServerTestCase.class,
-        ReloadApplicationEventTest.SimpleHttpServerTestCase.class})
+@SelectClasses({ReloadApplicationEventTest.GrizzlyTestCase.class, ReloadApplicationEventTest.JdkServerTestCase.class})
 public class ReloadApplicationEventTest extends JerseyTest {
 
     public static final String ORIGINAL = "original";
@@ -90,22 +88,11 @@ public class ReloadApplicationEventTest extends JerseyTest {
         }
     }
 
-    /**
-     * Works only with Java 7
-     */
     public static class JettyServerTestCase extends ParentTest {
 
         @Override
         protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
             return new JettyTestContainerFactory();
-        }
-    }
-
-    public static class SimpleHttpServerTestCase extends ParentTest {
-
-        @Override
-        protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-            return new SimpleTestContainerFactory();
         }
     }
 

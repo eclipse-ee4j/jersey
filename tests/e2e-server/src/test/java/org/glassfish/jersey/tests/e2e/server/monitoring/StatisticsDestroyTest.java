@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
-import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -53,8 +52,7 @@ import org.junit.platform.suite.api.Suite;
  * @author Miroslav Fuksa
  */
 @Suite
-@SelectClasses({StatisticsDestroyTest.GrizzlyTestCase.class, StatisticsDestroyTest.JdkServerTestCase.class,
-        StatisticsDestroyTest.SimpleHttpServerTestCase.class})
+@SelectClasses({StatisticsDestroyTest.GrizzlyTestCase.class, StatisticsDestroyTest.JdkServerTestCase.class})
 public class StatisticsDestroyTest {
 
     public static class ParentTest extends JerseyTest {
@@ -149,14 +147,6 @@ public class StatisticsDestroyTest {
         protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
             StatisticsListener.reset();
             return new JettyTestContainerFactory();
-        }
-    }
-
-    public static class SimpleHttpServerTestCase extends ParentTest {
-        @Override
-        protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-            StatisticsListener.reset();
-            return new SimpleTestContainerFactory();
         }
     }
 

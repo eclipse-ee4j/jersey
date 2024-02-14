@@ -1731,11 +1731,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.httpcomponents.client5</groupId>
                 <artifactId>httpclient5</artifactId>
                 <version>${httpclient5.version}</version>
@@ -1785,24 +1780,6 @@
                 <groupId>org.eclipse.jetty.ee10</groupId>
                 <artifactId>jetty-ee10-webapp</artifactId>
                 <version>${jetty.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-http</artifactId>
-                <version>${simple.version}</version>
-             </dependency>
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-transport</artifactId>
-                <version>${simple.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-common</artifactId>
-                <version>${simple.version}</version>
             </dependency>
 
             <dependency>
@@ -2298,7 +2275,6 @@
         <helidon.jersey.connector.version>3.2.5</helidon.jersey.connector.version>
         <xmlunit.version>2.9.1</xmlunit.version>
         <httpcore.version>4.4.16</httpcore.version>
-        <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
         <jackson.version>2.15.3</jackson.version>
         <javassist.version>3.29.2-GA</javassist.version>
@@ -2330,7 +2306,6 @@
         <servlet4.version>4.0.3</servlet4.version>
         <servlet6.version>6.1.0-M1</servlet6.version>
 
-        <simple.version>6.0.1</simple.version>
         <slf4j.version>2.0.9</slf4j.version>
         <spring6.version>6.0.13</spring6.version>
         <testng.version>7.8.0</testng.version>

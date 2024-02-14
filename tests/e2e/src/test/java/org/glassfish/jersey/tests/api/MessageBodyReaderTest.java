@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,16 +34,17 @@ import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Provider;
 
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -115,13 +116,13 @@ public class MessageBodyReaderTest extends JerseyTest {
     @Test
     public void testDefaultContentTypeForReader() throws Exception {
         final HttpPost httpPost = new HttpPost(UriBuilder.fromUri(getBaseUri()).path("resource/plain").build());
-        httpPost.setEntity(new ByteArrayEntity("value".getBytes()));
+        httpPost.setEntity(new ByteArrayEntity("value".getBytes(), null));
         httpPost.removeHeaders("Content-Type");
 
         final HttpClient httpClient = HttpClientBuilder.create().build();
-        final HttpResponse response = httpClient.execute(httpPost);
+        final ClassicHttpResponse response = (ClassicHttpResponse) httpClient.execute(httpPost);
 
-        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals(200, response.getCode());
         assertEquals("value;null", ReaderWriter.readFromAsString(response.getEntity().getContent(), null));
     }
 }

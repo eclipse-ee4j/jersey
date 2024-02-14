@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,14 +34,12 @@
     <description>Jersey client connection providers umbrella project module</description>
 
     <modules>
-        <module>apache-connector</module>
         <module>apache5-connector</module>
         <module>grizzly-connector</module>
         <module>helidon-connector</module>
         <module>jdk-connector</module>
         <module>jetty-connector</module>
         <module>jetty-http2-connector</module>
-        <module>jetty11-connector</module>
         <module>jnh-connector</module>
         <module>netty-connector</module>
     </modules>
