@@ -29,7 +29,7 @@ class JerseySystemPropertiesConfigurationModel extends SystemPropertiesConfigura
             "org.glassfish.jersey.servlet.ServletProperties",
             "org.glassfish.jersey.message.MessageProperties",
             "org.glassfish.jersey.apache.connector.ApacheClientProperties",
-            "org.glassfish.jersey.apache5.connector.ApacheClientProperties",
+            "org.glassfish.jersey.apache5.connector.Apache5ClientProperties",
             "org.glassfish.jersey.helidon.connector.HelidonClientProperties",
             "org.glassfish.jersey.jdk.connector.JdkConnectorProperties",
             "org.glassfish.jersey.jetty.connector.JettyClientProperties",
