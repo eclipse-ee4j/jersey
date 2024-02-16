@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.media.sse.internal;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -29,7 +30,6 @@ import jakarta.ws.rs.sse.SseEventSource;
 
 import org.glassfish.jersey.client.ClientExecutor;
 import org.glassfish.jersey.client.JerseyWebTarget;
-import org.glassfish.jersey.internal.jsr166.Flow;
 import org.glassfish.jersey.internal.util.JerseyPublisher;
 import org.glassfish.jersey.media.sse.LocalizationMessages;
 

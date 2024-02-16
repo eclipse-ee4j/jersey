@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +16,10 @@
  */
 package org.glassfish.jersey.microprofile.restclient;
 
-import org.glassfish.jersey.internal.jsr166.Flow;
-import java.util.logging.Logger;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow;
 
 /**
  * A {@link SseEventSubscription} represents a one-to-one life-cycle of a
