@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,8 +31,6 @@ import jakarta.ws.rs.sse.SseEventSink;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.inject.Provider;
 
-import org.glassfish.jersey.internal.jsr166.Flow;
-import org.glassfish.jersey.internal.jsr166.JerseyFlowSubscriber;
 import org.glassfish.jersey.media.sse.LocalizationMessages;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.server.AsyncContext;
@@ -45,7 +44,7 @@ import org.glassfish.jersey.server.ChunkedOutput;
  * @author Adam Lindenthal
  */
 class JerseyEventSink extends ChunkedOutput<OutboundSseEvent>
-        implements SseEventSink, Flushable, JerseyFlowSubscriber<Object> {
+        implements SseEventSink, Flushable, Flow.Subscriber<Object> {
 
     private static final Logger LOGGER = Logger.getLogger(JerseyEventSink.class.getName());
     private static final byte[] SSE_EVENT_DELIMITER = "\n".getBytes(StandardCharsets.UTF_8);

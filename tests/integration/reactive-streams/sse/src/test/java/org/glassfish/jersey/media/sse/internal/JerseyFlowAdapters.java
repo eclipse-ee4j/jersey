@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,15 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
-import org.glassfish.jersey.internal.jsr166.Flow;
+import java.util.concurrent.Flow;
 
 public class JerseyFlowAdapters {
 
     /**
-     * Adapt {@link org.glassfish.jersey.internal.jsr166.Flow.Subscriber} to
+     * Adapt {@link Flow.Subscriber} to
      * {@link org.reactivestreams.Subscriber}.
      *
-     * @param jerseySubscriber Jersey's repackaged {@link org.glassfish.jersey.internal.jsr166.Flow.Subscriber}
+     * @param jerseySubscriber Jersey's repackaged {@link Flow.Subscriber}
      * @param <T>              payload type
      * @return Reactive Streams's {@link org.reactivestreams.Subscriber}
      */

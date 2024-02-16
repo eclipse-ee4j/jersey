@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,8 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-import org.glassfish.jersey.internal.jsr166.Flow;
+
+import java.util.concurrent.Flow;
 
 public class SseEventSuscriber<T> implements Flow.Subscriber<T> {
 

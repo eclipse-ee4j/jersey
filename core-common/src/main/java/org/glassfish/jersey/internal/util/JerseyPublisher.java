@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,17 +18,15 @@ package org.glassfish.jersey.internal.util;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Flow;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.SubmissionPublisher;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.jsr166.Flow;
-import org.glassfish.jersey.internal.jsr166.SubmissionPublisher;
-import org.glassfish.jersey.internal.jsr166.SubmissionPublisherFactory;
-import org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher;
 
 
 /**
@@ -41,7 +39,7 @@ import org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher;
 public class JerseyPublisher<T> implements Flow.Publisher<T> {
 
     private static final int DEFAULT_BUFFER_CAPACITY = 256;
-    private SubmittableFlowPublisher<T> submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher();
+    private SubmissionPublisher<T> submissionPublisher = new SubmissionPublisher<T>();
 
     private final PublisherStrategy strategy;
 
@@ -94,7 +92,7 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
      */
     public JerseyPublisher(final Executor executor, final PublisherStrategy strategy) {
         this.strategy = strategy;
-        submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher(executor, DEFAULT_BUFFER_CAPACITY);
+        submissionPublisher = new SubmissionPublisher<T>(executor, DEFAULT_BUFFER_CAPACITY);
     }
 
 
@@ -132,7 +130,7 @@ public class JerseyPublisher<T> implements Flow.Publisher<T> {
      */
     public JerseyPublisher(final Executor executor, final int maxBufferCapacity, PublisherStrategy strategy) {
         this.strategy = strategy;
-        submissionPublisher = SubmissionPublisherFactory.createSubmissionPublisher(executor, maxBufferCapacity);
+        submissionPublisher = new SubmissionPublisher<T>(executor, maxBufferCapacity);
     }
 
     @Override
