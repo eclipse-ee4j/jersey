@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -67,6 +67,13 @@ public interface ExtendedUriInfo extends UriInfo {
      * @return a read-only list of URI templates for matched resources.
      */
     List<UriTemplate> getMatchedTemplates();
+
+    /**
+     * Get the matched resource templates as a single String value.
+     * @return a String representing the list of matched templates.
+     * @see #getMatchedTemplates()
+     */
+    String getResourceTemplate();
 
     /**
      * Get the path segments that contain a template variable.
