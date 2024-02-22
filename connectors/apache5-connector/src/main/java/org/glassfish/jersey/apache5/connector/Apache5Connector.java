@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -531,7 +533,7 @@ class Apache5Connector implements Connector {
 
             try {
                 final ConnectionClosingMechanism closingMechanism = new ConnectionClosingMechanism(clientRequest, request);
-                responseContext.setEntityStream(getInputStream(response, closingMechanism));
+                responseContext.setEntityStream(getInputStream(response, closingMechanism, () -> clientRequest.isCancelled()));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -741,13 +743,14 @@ class Apache5Connector implements Connector {
     }
 
     private static InputStream getInputStream(final CloseableHttpResponse response,
-                                              final ConnectionClosingMechanism closingMechanism) throws IOException {
+                                              final ConnectionClosingMechanism closingMechanism,
+                                              final Supplier<Boolean> isCancelled) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
             inputStream = new ByteArrayInputStream(new byte[0]);
         } else {
-            final InputStream i = response.getEntity().getContent();
+            final InputStream i = new CancellableInputStream(response.getEntity().getContent(), isCancelled);
             if (i.markSupported()) {
                 inputStream = i;
             } else {
@@ -889,4 +892,69 @@ class Apache5Connector implements Connector {
             }
         }
     }
+
+    private static class CancellableInputStream extends InputStream {
+        private final InputStream in;
+        private final Supplier<Boolean> isCancelled;
+
+        private CancellableInputStream(InputStream in, Supplier<Boolean> isCancelled) {
+            this.in = in;
+            this.isCancelled = isCancelled;
+        }
+
+        public int read(byte b[]) throws IOException {
+            checkAborted();
+            return in.read();
+        }
+
+        public int read(byte b[], int off, int len) throws IOException {
+            checkAborted();
+            return in.read(b, off, len);
+        }
+
+        @Override
+        public int read() throws IOException {
+            checkAborted();
+            return in.read();
+        }
+
+        public boolean markSupported() {
+            return in.markSupported();
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            checkAborted();
+            return in.skip(n);
+        }
+
+        @Override
+        public int available() throws IOException {
+            checkAborted();
+            return in.available();
+        }
+
+        @Override
+        public void close() throws IOException {
+            in.close();
+        }
+
+        @Override
+        public synchronized void mark(int readlimit) {
+            in.mark(readlimit);
+        }
+
+        @Override
+        public synchronized void reset() throws IOException {
+            checkAborted();
+            in.reset();
+        }
+
+        private void checkAborted() throws IOException {
+            if (isCancelled.get()) {
+                throw new IOException(new CancellationException());
+            }
+        }
+    }
+
 }
