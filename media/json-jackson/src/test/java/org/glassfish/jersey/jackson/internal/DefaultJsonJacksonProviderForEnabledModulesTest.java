@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Response;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class DefaultJsonJacksonProviderForEnabledModulesTest extends JerseyTest {
@@ -34,9 +36,10 @@ public class DefaultJsonJacksonProviderForEnabledModulesTest extends JerseyTest 
 
     @Test
     public final void testDisabledModule() {
-        final String response = target("entity/simple")
-                .request().get(String.class);
-        assertNotEquals("{\"name\":\"Hello\",\"value\":\"World\"}", response);
+        try (Response response = target("entity/simple").request().get()) {
+            assertEquals(400, response.getStatus());
+            assertNotEquals("{\"name\":\"Hello\",\"value\":\"World\"}", response.readEntity(String.class));
+        }
     }
 
 }
