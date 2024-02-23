@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,9 +49,10 @@ public class DefaultJsonJacksonProviderForDisabledModulesTest extends JerseyTest
                 .register(JacksonFeature.class)
                 .register(TestJacksonJaxbJsonProvider.class)
                 .property("jersey.config.json.jackson.disabled.modules", "Jdk8Module");
-        final String response = target("JAXBEntity")
-                .request().get(String.class);
-        assertNotEquals("{\"key\":\"key\",\"value\":\"value\"}", response);
+        try (Response response = target("JAXBEntity").request().get()) {
+            assertEquals(400, response.getStatus());
+            assertNotEquals("{\"key\":\"key\",\"value\":\"value\"}", response.readEntity(String.class));
+        }
     }
 
     private static class TestJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {

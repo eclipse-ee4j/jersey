@@ -2291,7 +2291,8 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
-        <jackson.version>2.15.3</jackson.version>
+        <jackson.version>2.16.1</jackson.version>
+        <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <jboss.logging.8.version>3.4.3.Final</jboss.logging.8.version>

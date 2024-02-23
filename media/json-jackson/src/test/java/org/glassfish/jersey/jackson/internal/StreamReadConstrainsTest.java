@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,6 +50,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class StreamReadConstrainsTest extends JerseyTest {
+    private static final String ERROR_MSG_PART = "maximum allowed (";
 
     @Override
     protected final Application configure() {
@@ -78,7 +79,7 @@ public class StreamReadConstrainsTest extends JerseyTest {
                 .post(Entity.entity(new MyEntity(8), MediaType.APPLICATION_JSON_TYPE))) {
             Assertions.assertEquals(200, response.getStatus());
             String errorMsg = response.readEntity(String.class);
-            Assertions.assertTrue(errorMsg.contains("maximum length (4)"));
+            Assertions.assertTrue(errorMsg.contains(ERROR_MSG_PART + 4));
         }
     }
 
@@ -125,7 +126,7 @@ public class StreamReadConstrainsTest extends JerseyTest {
                 throw ex;
             }
             String errorMsg = ex.getCause().getMessage();
-            Assertions.assertTrue(errorMsg.contains("maximum length (" + String.valueOf(expectedLength) + ")"));
+            Assertions.assertTrue(errorMsg.contains(ERROR_MSG_PART + String.valueOf(expectedLength)));
         }
     }
 
@@ -137,7 +138,7 @@ public class StreamReadConstrainsTest extends JerseyTest {
                 + " Please update the code in " + DefaultJacksonJaxbJsonProvider.class.getName()
                 + " updateFactoryConstraints method";
         Method[] method = StreamReadConstraints.Builder.class.getDeclaredMethods();
-        Assertions.assertEquals(4, method.length, message); // three max + build methods
+        Assertions.assertEquals(6, method.length, message); // five setMax... + build() methods
     }
 
     @Path("len")
