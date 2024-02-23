@@ -31,7 +31,6 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModif
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterInjector;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey;
-import org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -44,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.LRUMap;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 public abstract class ProviderBase<
