@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,16 +20,14 @@ import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
-import org.junit.Test;
-
-import java.security.NoSuchAlgorithmException;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit test that checks that the right RuntimeDelegateImpl is loaded by JAX-RS.
@@ -70,7 +68,7 @@ public class RuntimeDelegateImplTest {
     }
 
     @Test
-    public final void shouldBuildDefaultConfiguration() throws NoSuchAlgorithmException {
+    public final void shouldBuildDefaultConfiguration() {
         // given
         final SeBootstrap.Configuration.Builder configurationBuilder = new RuntimeDelegateImpl().createConfigurationBuilder();
         // when

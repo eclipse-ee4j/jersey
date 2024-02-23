@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,31 +18,29 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 
-import org.glassfish.jersey.tests.e2e.client.connector.ProviderFiltering;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
-import com.google.common.io.ByteStreams;
+import org.apache.commons.io.IOUtils;
 
 /**
  * SSL connector hostname verification tests.
  *
  * @author Petr Bouda
  */
-@RunWith(Parameterized.class)
 public abstract class AbstractConnectorServerTest {
 
     // Default truststore and keystore
@@ -55,23 +53,23 @@ public abstract class AbstractConnectorServerTest {
      *
      * @return test parameters.
      */
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> testData() {
-        return Arrays.asList(ProviderFiltering.filterProviders(new Object[][] {
-                {new HttpUrlConnectorProvider()},
-                {new GrizzlyConnectorProvider()},
-                {new JettyConnectorProvider()},
-                {new ApacheConnectorProvider()}
-        }));
-    }
+    public static Stream<ConnectorProvider> testData() {
+        final ConnectorProvider[] providers = new ConnectorProvider[] {
+                new HttpUrlConnectorProvider(),
+                new GrizzlyConnectorProvider(),
+                new ApacheConnectorProvider(),
+                new Apache5ConnectorProvider(),
+                new JavaNetHttpConnectorProvider(),
+                new JettyConnectorProvider()
+        };
 
-    @Parameterized.Parameter(0)
-    public ConnectorProvider connectorProvider;
+        return Stream.of(providers);
+    }
 
     private final Object serverGuard = new Object();
     private Server server = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         synchronized (serverGuard) {
             if (server != null) {
@@ -82,7 +80,7 @@ public abstract class AbstractConnectorServerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         synchronized (serverGuard) {
             if (server == null) {
@@ -97,9 +95,9 @@ public abstract class AbstractConnectorServerTest {
         final InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
         final InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);
         return SslConfigurator.newInstance()
-                .trustStoreBytes(ByteStreams.toByteArray(trustStore))
+                .trustStoreBytes(IOUtils.toByteArray(trustStore))
                 .trustStorePassword("asdfgh")
-                .keyStoreBytes(ByteStreams.toByteArray(keyStore))
+                .keyStoreBytes(IOUtils.toByteArray(keyStore))
                 .keyPassword("asdfgh")
                 .createSSLContext();
     }

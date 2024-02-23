@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.client;
 
+import java.security.AccessController;
 import java.security.KeyStore;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -31,12 +32,12 @@ import jakarta.ws.rs.core.Configuration;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.glassfish.jersey.SslConfigurator;
-import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.innate.inject.NonInjectionManager;
 import org.glassfish.jersey.client.spi.ClientBuilderListener;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.internal.util.collection.UnsafeValue;
-import org.glassfish.jersey.internal.util.collection.Values;
+import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.model.internal.RankedComparator;
 import org.glassfish.jersey.model.internal.RankedProvider;
 
@@ -49,8 +50,7 @@ public class JerseyClientBuilder extends ClientBuilder {
 
     private final ClientConfig config;
     private HostnameVerifier hostnameVerifier;
-    private SslConfigurator sslConfigurator;
-    private SSLContext sslContext;
+    private final SslContextClientBuilder sslContextClientBuilder = new SslContextClientBuilder();
 
     private static final List<ClientBuilderListener> CLIENT_BUILDER_LISTENERS;
 
@@ -108,41 +108,19 @@ public class JerseyClientBuilder extends ClientBuilder {
 
     @Override
     public JerseyClientBuilder sslContext(SSLContext sslContext) {
-        if (sslContext == null) {
-            throw new NullPointerException(LocalizationMessages.NULL_SSL_CONTEXT());
-        }
-        this.sslContext = sslContext;
-        sslConfigurator = null;
+        sslContextClientBuilder.sslContext(sslContext);
         return this;
     }
 
     @Override
     public JerseyClientBuilder keyStore(KeyStore keyStore, char[] password) {
-        if (keyStore == null) {
-            throw new NullPointerException(LocalizationMessages.NULL_KEYSTORE());
-        }
-        if (password == null) {
-            throw new NullPointerException(LocalizationMessages.NULL_KEYSTORE_PASWORD());
-        }
-        if (sslConfigurator == null) {
-            sslConfigurator = SslConfigurator.newInstance();
-        }
-        sslConfigurator.keyStore(keyStore);
-        sslConfigurator.keyPassword(password);
-        sslContext = null;
+        sslContextClientBuilder.keyStore(keyStore, password);
         return this;
     }
 
     @Override
     public JerseyClientBuilder trustStore(KeyStore trustStore) {
-        if (trustStore == null) {
-            throw new NullPointerException(LocalizationMessages.NULL_TRUSTSTORE());
-        }
-        if (sslConfigurator == null) {
-            sslConfigurator = SslConfigurator.newInstance();
-        }
-        sslConfigurator.trustStore(trustStore);
-        sslContext = null;
+        sslContextClientBuilder.trustStore(trustStore);
         return this;
     }
 
@@ -186,21 +164,23 @@ public class JerseyClientBuilder extends ClientBuilder {
 
     @Override
     public JerseyClient build() {
-        if (sslContext != null) {
-            return new JerseyClient(config, sslContext, hostnameVerifier, null);
-        } else if (sslConfigurator != null) {
-            final SslConfigurator sslConfiguratorCopy = sslConfigurator.copy();
-            return new JerseyClient(
-                    config,
-                    Values.lazy(new UnsafeValue<SSLContext, IllegalStateException>() {
-                        @Override
-                        public SSLContext get() {
-                            return sslConfiguratorCopy.createSSLContext();
-                        }
-                    }),
-                    hostnameVerifier);
-        } else {
-            return new JerseyClient(config, (UnsafeValue<SSLContext, IllegalStateException>) null, hostnameVerifier);
+        ExternalPropertiesConfigurationFactory.configure(this.config);
+        setConnectorFromProperties();
+
+        return new JerseyClient(config, sslContextClientBuilder, hostnameVerifier, null);
+    }
+
+    private void setConnectorFromProperties() {
+        final Object connectorClass = config.getProperty(ClientProperties.CONNECTOR_PROVIDER);
+        if (connectorClass != null) {
+            if (String.class.isInstance(connectorClass)) {
+                Class<? extends ConnectorProvider> clazz
+                        = AccessController.doPrivileged(ReflectionHelper.classForNamePA((String) connectorClass));
+                final ConnectorProvider connectorProvider = new NonInjectionManager().justCreate(clazz);
+                config.connectorProvider(connectorProvider);
+            } else {
+                throw new IllegalArgumentException();
+            }
         }
     }
 

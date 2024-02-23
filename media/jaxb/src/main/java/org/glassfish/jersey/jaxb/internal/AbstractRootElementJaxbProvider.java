@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,10 +22,12 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
@@ -41,6 +43,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * An abstract provider for JAXB types that are annotated with
@@ -69,8 +72,8 @@ public abstract class AbstractRootElementJaxbProvider extends AbstractJaxbProvid
      *
      * @param providers JAX-RS providers.
      */
-    public AbstractRootElementJaxbProvider(Providers providers) {
-        super(providers);
+    public AbstractRootElementJaxbProvider(Providers providers, Configuration config) {
+        super(providers, config);
     }
 
     /**
@@ -79,8 +82,8 @@ public abstract class AbstractRootElementJaxbProvider extends AbstractJaxbProvid
      * @param providers JAX-RS providers.
      * @param resolverMediaType JAXB component context resolver media type to be used.
      */
-    public AbstractRootElementJaxbProvider(Providers providers, MediaType resolverMediaType) {
-        super(providers, resolverMediaType);
+    public AbstractRootElementJaxbProvider(Providers providers, MediaType resolverMediaType, Configuration config) {
+        super(providers, resolverMediaType, config);
     }
 
     @Override
@@ -149,8 +152,8 @@ public abstract class AbstractRootElementJaxbProvider extends AbstractJaxbProvid
             OutputStream entityStream) throws IOException {
         try {
             final Marshaller m = getMarshaller(type, mediaType);
-            final Charset c = getCharset(mediaType);
-            if (c != UTF8) {
+            final Charset c = ReaderWriter.getCharset(mediaType);
+            if (c != StandardCharsets.UTF_8) {
                 m.setProperty(Marshaller.JAXB_ENCODING, c.name());
             }
             setHeader(m, annotations);

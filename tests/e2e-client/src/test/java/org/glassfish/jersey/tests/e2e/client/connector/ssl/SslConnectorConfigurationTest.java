@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,16 +23,15 @@ import jakarta.ws.rs.core.Response;
 
 import javax.net.ssl.SSLContext;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * SSL connector tests.
@@ -41,7 +40,6 @@ import static org.junit.Assert.assertTrue;
  * @author Arul Dhesiaseelan (aruld at acm.org)
  * @author Marek Potociar
  */
-@RunWith(Parameterized.class)
 public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
 
     /**
@@ -49,8 +47,9 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
      *
      * @throws Exception in case of a test failure.
      */
-    @Test
-    public void testSSLWithAuth() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testSSLWithAuth(ConnectorProvider connectorProvider) throws Exception {
         final SSLContext sslContext = getSslContext();
 
         final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
@@ -74,11 +73,12 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
      *
      * @throws Exception in case of a test failure.
      */
-    @Test
-    public void testHTTPBasicAuth1() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testHTTPBasicAuth1(ConnectorProvider connectorProvider) throws Exception {
         final SSLContext sslContext = getSslContext();
 
-        final ClientConfig cc = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+        final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
         final Client client = ClientBuilder.newBuilder()
                 .withConfig(cc)
                 .sslContext(sslContext)
@@ -97,11 +97,12 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
      *
      * @throws Exception in case of a test failure.
      */
-    @Test
-    public void testSSLAuth1() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testSSLAuth1(ConnectorProvider connectorProvider) throws Exception {
         final SSLContext sslContext = getSslContext();
 
-        final ClientConfig cc = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+        final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);
         final Client client = ClientBuilder.newBuilder()
                 .withConfig(cc)
                 .sslContext(sslContext)
@@ -122,8 +123,9 @@ public class SslConnectorConfigurationTest extends AbstractConnectorServerTest {
     /**
      * Test that a response to an authentication challenge has the same SSL configuration as the original request.
      */
-    @Test
-    public void testSSLWithNonPreemptiveAuth() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testSSLWithNonPreemptiveAuth(ConnectorProvider connectorProvider) throws Exception {
         final SSLContext sslContext = getSslContext();
 
         final ClientConfig cc = new ClientConfig().connectorProvider(connectorProvider);

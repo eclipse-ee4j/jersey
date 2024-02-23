@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -55,6 +55,7 @@ public class KryoMessageBodyProvider implements MessageBodyWriter<Object>, Messa
     private final ContextResolver<Kryo> contextResolver;
     private final Optional<KryoPool> kryoPool;
 
+    @Inject
     public KryoMessageBodyProvider(@Context Providers providers) {
         final MediaType mediaType = new MediaType("application", "x-kryo");
         contextResolver = providers.getContextResolver(Kryo.class, mediaType);

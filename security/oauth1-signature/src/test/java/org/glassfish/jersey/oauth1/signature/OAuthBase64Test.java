@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,8 @@ package org.glassfish.jersey.oauth1.signature;
 
 import java.io.IOException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -35,17 +35,17 @@ public class OAuthBase64Test {
         final String encodedUtilStr = java.util.Base64.getEncoder().encodeToString(str.getBytes());
 
         System.out.println(encoded);
-        Assert.assertEquals(encoded, encodedUtil);
-        Assert.assertEquals(encoded, encodedUtilStr);
+        Assertions.assertEquals(encoded, encodedUtil);
+        Assertions.assertEquals(encoded, encodedUtilStr);
 
         final String decoded = new String(Base64.decode(encoded));
         final String decodedUtil = new String(java.util.Base64.getDecoder().decode(encoded.getBytes()));
         final String decodedUtilStr = new String(java.util.Base64.getDecoder().decode(encoded.getBytes()));
         final String decodedUtilStr2 = new String(java.util.Base64.getDecoder().decode(encoded));
 
-        Assert.assertEquals(decoded, decodedUtil);
-        Assert.assertEquals(decoded, decodedUtilStr);
-        Assert.assertEquals(decoded, decodedUtilStr2);
-        Assert.assertEquals(decoded, str);
+        Assertions.assertEquals(decoded, decodedUtil);
+        Assertions.assertEquals(decoded, decodedUtilStr);
+        Assertions.assertEquals(decoded, decodedUtilStr2);
+        Assertions.assertEquals(decoded, str);
     }
 }

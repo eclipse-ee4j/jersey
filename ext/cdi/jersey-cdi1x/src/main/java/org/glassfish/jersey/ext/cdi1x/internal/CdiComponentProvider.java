@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,6 @@
 package org.glassfish.jersey.ext.cdi1x.internal;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -41,6 +39,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.inject.Singleton;
@@ -48,8 +47,6 @@ import jakarta.ws.rs.core.Application;
 
 
 import jakarta.annotation.ManagedBean;
-import jakarta.annotation.Priority;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -63,15 +60,13 @@ import jakarta.enterprise.inject.spi.AnnotatedConstructor;
 import jakarta.enterprise.inject.spi.AnnotatedParameter;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.BeforeShutdown;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
 import jakarta.enterprise.util.AnnotationLiteral;
-import jakarta.inject.Qualifier;
 
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
@@ -88,18 +83,9 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.model.ContractProvider;
-import org.glassfish.jersey.server.model.Parameter;
-import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 import org.glassfish.jersey.spi.ComponentProvider;
 
 import org.glassfish.hk2.api.ClassAnalyzer;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Jersey CDI integration implementation.
@@ -130,7 +116,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private final Set<Type> jaxrsInjectableTypes = new HashSet<>();
     private final Set<Type> hk2ProvidedTypes = Collections.synchronizedSet(new HashSet<Type>());
     private final Set<Type> jerseyVetoedTypes = Collections.synchronizedSet(new HashSet<Type>());
-    private final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
+    private static final Set<DependencyPredicate> jerseyOrDependencyTypes = Collections.synchronizedSet(new LinkedHashSet<>());
     private final ThreadLocal<InjectionManager> threadInjectionManagers = new ThreadLocal<>();
 
     /**
@@ -185,92 +171,6 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
     }
 
-    /**
-     * CDI producer for CDI bean constructor String parameters, that should be injected by JAX-RS.
-     */
-    @ApplicationScoped
-    public static class JaxRsParamProducer {
-
-        @Qualifier
-        @Retention(RUNTIME)
-        @Target({METHOD, FIELD, PARAMETER, TYPE})
-        public static @interface JaxRsParamQualifier {
-        }
-
-        private static final JaxRsParamQualifier JaxRsParamQUALIFIER = new JaxRsParamQualifier() {
-
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return JaxRsParamQualifier.class;
-            }
-        };
-
-        static final Set<Class<? extends Annotation>> JAX_RS_STRING_PARAM_ANNOTATIONS =
-                new HashSet<Class<? extends Annotation>>() {{
-                    add(jakarta.ws.rs.PathParam.class);
-                    add(jakarta.ws.rs.QueryParam.class);
-                    add(jakarta.ws.rs.CookieParam.class);
-                    add(jakarta.ws.rs.HeaderParam.class);
-                    add(jakarta.ws.rs.MatrixParam.class);
-                    add(jakarta.ws.rs.FormParam.class);
-                }};
-
-        /**
-         * Internal cache to store CDI {@link InjectionPoint} to Jersey {@link Parameter} mapping.
-         */
-        final Cache<InjectionPoint, Parameter> parameterCache = new Cache<>(injectionPoint -> {
-            final Annotated annotated = injectionPoint.getAnnotated();
-            final Class<?> clazz = injectionPoint.getMember().getDeclaringClass();
-
-            if (annotated instanceof AnnotatedParameter) {
-
-                final AnnotatedParameter annotatedParameter = (AnnotatedParameter) annotated;
-                final AnnotatedCallable callable = annotatedParameter.getDeclaringCallable();
-
-                if (callable instanceof AnnotatedConstructor) {
-
-                    final AnnotatedConstructor ac = (AnnotatedConstructor) callable;
-                    final int position = annotatedParameter.getPosition();
-                    final List<Parameter> parameters = Parameter.create(clazz, clazz, ac.getJavaMember(), false);
-
-                    return parameters.get(position);
-                }
-            }
-
-            return null;
-        });
-
-        /**
-         * Provide a value for given injection point. If the injection point does not refer
-         * to a CDI bean constructor parameter, or the value could not be found, the method will return null.
-         *
-         * @param injectionPoint actual injection point.
-         * @param beanManager    current application bean manager.
-         * @return concrete JAX-RS parameter value for given injection point.
-         */
-        @jakarta.enterprise.inject.Produces
-        @JaxRsParamQualifier
-        public String getParameterValue(final InjectionPoint injectionPoint, final BeanManager beanManager) {
-            final Parameter parameter = parameterCache.apply(injectionPoint);
-
-            if (parameter != null) {
-                InjectionManager injectionManager =
-                        beanManager.getExtension(CdiComponentProvider.class).getEffectiveInjectionManager();
-
-                Set<ValueParamProvider> providers = Providers.getProviders(injectionManager, ValueParamProvider.class);
-                ContainerRequest containerRequest = injectionManager.getInstance(ContainerRequest.class);
-                for (ValueParamProvider vfp : providers) {
-                    Function<ContainerRequest, ?> paramValueSupplier = vfp.getValueProvider(parameter);
-                    if (paramValueSupplier != null) {
-                        return (String) paramValueSupplier.apply(containerRequest);
-                    }
-                }
-            }
-
-            return null;
-        }
-    }
-
     @Override
     public boolean bind(final Class<?> clazz, final Set<Class<?>> providerContracts) {
         return bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
@@ -289,6 +189,10 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         }
 
         if (beanManager == null) {
+            return false;
+        }
+
+        if (clazz.isAnnotationPresent(Vetoed.class)) {
             return false;
         }
 
@@ -648,7 +552,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      *
      * @return HK2 injection manager.
      */
-    /* package */ InjectionManager getEffectiveInjectionManager() {
+    public InjectionManager getEffectiveInjectionManager() {
         return injectionManagerStore.getEffectiveInjectionManager();
     }
 
@@ -765,7 +669,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public void inject(final Object t, final CreationalContext cc) {
             InjectionManager injectingManager = getEffectiveInjectionManager();
-            if (injectingManager == null) {
+            if (injectingManager == null || /* reload */ injectingManager.isShutdown()) {
                 injectingManager = effectiveInjectionManager;
                 threadInjectionManagers.set(injectingManager);
             }
@@ -823,7 +727,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
             return Collections.emptySet();
         }
 
-        @Override
+        // @Override - Removed in CDI 4
         public boolean isNullable() {
             return true;
         }
@@ -831,7 +735,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         @Override
         public Object create(final CreationalContext creationalContext) {
             InjectionManager injectionManager = getEffectiveInjectionManager();
-            if (injectionManager == null) {
+            if (injectionManager == null || /* reload */ injectionManager.isShutdown()) {
                 injectionManager = threadInjectionManagers.get();
             }
 
@@ -955,15 +859,20 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         );
     }
 
+    @SuppressWarnings("unused")
+    private void beforeShutDown(@Observes final BeforeShutdown beforeShutdown, final BeanManager beanManager) {
+        runtimeSpecifics.clearJaxRsResource(Thread.currentThread().getContextClassLoader());
+    }
+
     /**
      * Add a predicate to test HK2 dependency to create a CDI bridge bean to HK2 for it.
      * @param predicate to test whether given class is a HK2 dependency.
      */
-    public void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
+    public static void addHK2DepenendencyCheck(Predicate<Class<?>> predicate) {
         jerseyOrDependencyTypes.add(new DependencyPredicate(predicate));
     }
 
-    private final class DependencyPredicate implements Predicate<Class<?>> {
+    private static final class DependencyPredicate implements Predicate<Class<?>> {
         private final Predicate<Class<?>> predicate;
 
         public DependencyPredicate(Predicate<Class<?>> predicate) {
@@ -980,7 +889,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DependencyPredicate that = (DependencyPredicate) o;
-            return predicate.getClass().equals(that.predicate);
+            return predicate.getClass().equals(that.predicate.getClass());
         }
 
         @Override

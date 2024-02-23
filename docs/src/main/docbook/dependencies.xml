@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@
          xml:id="modules-and-dependencies">
     <title>Modules and dependencies</title>
 
-    <section>
+    <section xml:id="se_compatibility">
         <title>Java SE Compatibility</title>
 
         <para>
@@ -39,11 +39,24 @@
                     <para>This user guide refers only to version 3 and above of Jersey, its compatibility is described below</para>
                 </listitem>
                 <listitem>
-                    <para>Since version 3.0.0* all Jersey components are compiled with Java SE 1.8 target.
+                    <para>Since version 3.0.0 all Jersey components are compiled with Java SE 1.8 target.
                     It means, that you will need at least Java SE 1.8 to be able to compile and run your application
-                        which uses the latest Jersey 3.x.
-                    All modules however are fully compatible with JDK 11 and above. So, it's possible to use JDK 11+ to
-                        build your app.
+                        which uses the latest Jersey 3.0.x.
+                    Some modules, however, are fully compatible with JDK 11 and above (Jetty modules based on Jetty 11).
+                    Some modules (Helidon Connector, Spring 6) require JDK 17.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>Since version 3.1.0 all Jersey components are compiled with Java SE 11 target.
+                        It means, that you will need at least Java SE 11 to be able to compile and run your application
+                        which uses the latest Jersey 3.1.x.
+                        Some modules, however, are fully compatible with JDK 17 and above (Jetty modules based on Jetty 12
+                        [since 3.1.4], Helidon Connector, Spring 6).
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Please see <xref linkend="migration"/> for additional compatibility information.
                     </para>
                 </listitem>
             </itemizedlist>
@@ -162,7 +175,12 @@
     &lt;artifactId&gt;jersey-apache-connector&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
-<!-- Requires JDK 11+ -->
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jersey.connectory&lt;/groupId&gt;
+    &lt;artifactId&gt;jersey-jetty11-connector&lt;/artifactId&gt;
+    &lt;version&gt;&version;&lt;/version&gt;
+&lt;/dependency&gt;
+<!-- Requires JDK 17+ -->
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
     &lt;artifactId&gt;jersey-jetty-connector&lt;/artifactId&gt;

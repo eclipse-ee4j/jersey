@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,11 +21,11 @@
 package org.glassfish.jersey.server.wadl.config;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,8 +37,8 @@ import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.sun.research.ws.wadl.Application;
 import com.sun.research.ws.wadl.Method;
@@ -67,10 +67,10 @@ public class WadlGeneratorLoaderTest {
 
         final WadlGenerator wadlGenerator =
                 WadlGeneratorLoader.loadWadlGeneratorDescriptions(result.injectionManager, description);
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
 
         final URL resource = getClass().getResource("testfile.xml");
-        Assert.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
+        Assertions.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
                 .getAbsolutePath());
 
     }
@@ -85,10 +85,10 @@ public class WadlGeneratorLoaderTest {
 
         final WadlGenerator wadlGenerator =
                 WadlGeneratorLoader.loadWadlGeneratorDescriptions(result.injectionManager, description);
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
 
         final URL resource = getClass().getResource("testfile.xml");
-        Assert.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
+        Assertions.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
                 .getAbsolutePath());
 
     }
@@ -105,9 +105,9 @@ public class WadlGeneratorLoaderTest {
 
         final WadlGenerator wadlGenerator =
                 WadlGeneratorLoader.loadWadlGeneratorDescriptions(result.injectionManager, description);
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
 
-        Assert.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
+        Assertions.assertEquals(new File(resource.toURI()).getAbsolutePath(), ((MyWadlGenerator2) wadlGenerator).getTestFile()
                 .getAbsolutePath());
     }
 
@@ -121,10 +121,10 @@ public class WadlGeneratorLoaderTest {
 
         final WadlGenerator wadlGenerator =
                 WadlGeneratorLoader.loadWadlGeneratorDescriptions(result.injectionManager, description);
-        Assert.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
+        Assertions.assertEquals(MyWadlGenerator2.class, wadlGenerator.getClass());
 
         final URL resource = getClass().getResource("testfile.xml");
-        Assert.assertEquals(new File(resource.toURI()).length(), ((MyWadlGenerator2) wadlGenerator).getTestStreamContent()
+        Assertions.assertEquals(new File(resource.toURI()).length(), ((MyWadlGenerator2) wadlGenerator).getTestStreamContent()
                 .length());
 
     }
@@ -155,7 +155,7 @@ public class WadlGeneratorLoaderTest {
             /*
             try {
                 System.out.println( "listing file " + _testFileContent.getName() );
-                BufferedReader in = new BufferedReader( new FileReader( _testFileContent ) );
+                BufferedReader in = Files.newBufferedReader( _testFileContent.toPath() );
                 String line = null;
                 while ( (line = in.readLine()) != null ) {
                     System.out.println( line );
@@ -172,7 +172,7 @@ public class WadlGeneratorLoaderTest {
                 _testStreamContent = File.createTempFile("testfile-" + getClass().getSimpleName(), null);
                 OutputStream to = null;
                 try {
-                    to = new FileOutputStream(_testStreamContent);
+                    to = Files.newOutputStream(_testStreamContent.toPath());
                     byte[] buffer = new byte[4096];
                     int bytes_read;
                     while ((bytes_read = _testStream.read(buffer)) != -1) {

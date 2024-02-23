@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.incubator</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-cdi-inject-weld</artifactId>
@@ -80,8 +80,13 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -124,8 +129,9 @@
                             jakarta.servlet.*;version="[5.0,7.0)",
                             sun.misc.*;resolution:=optional,
                             ${jakarta.annotation.osgi.version},
-                            jakarta.enterprise.*;version="[3.0,5)",
+                            ${cdi.osgi.version},
                             jakarta.decorator.*;version="[3.0,5)",
+                            ${jakarta.annotation.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

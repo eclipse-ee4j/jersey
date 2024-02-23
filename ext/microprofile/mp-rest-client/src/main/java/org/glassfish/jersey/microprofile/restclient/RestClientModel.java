@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,13 +22,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.ext.ParamConverterProvider;
-
-import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
-import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 
 /**
  * Model of the rest client interface.

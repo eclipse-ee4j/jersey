@@ -26,6 +26,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 // THE POSSIBILITY OF SUCH DAMAGE.
 package jersey.repackaged.org.objectweb.asm;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;

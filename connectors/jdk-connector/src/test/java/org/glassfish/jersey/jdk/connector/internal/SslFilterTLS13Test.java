@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,30 @@
 
 package org.glassfish.jersey.jdk.connector.internal;
 
+import java.util.Arrays;
+
+import javax.net.ssl.SSLContext;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+
 public class SslFilterTLS13Test extends SslFilterTest {
 
-    public SslFilterTLS13Test() {
-        System.setProperty("jdk.tls.server.protocols", "TLSv1.3");
-        System.setProperty("jdk.tls.client.protocols", "TLSv1.3");
+    @BeforeAll
+    public static void setup() throws Exception {
+        final SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, null, null);
+        final String[] supportedProtocols = context.getDefaultSSLParameters().getProtocols();
+        if (Arrays.toString(supportedProtocols).contains("TLSv1.3")) {
+           System.setProperty("jdk.tls.server.protocols", "TLSv1.3");
+           System.setProperty("jdk.tls.client.protocols", "TLSv1.3");
+        }
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        System.clearProperty("jdk.tls.server.protocols");
+        System.clearProperty("jdk.tls.client.protocols");
     }
 
 }

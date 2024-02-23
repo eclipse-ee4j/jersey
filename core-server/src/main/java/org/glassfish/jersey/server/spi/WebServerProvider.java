@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ApplicationHandler;
-import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.spi.Contract;
 
 /**
@@ -86,7 +86,7 @@ public interface WebServerProvider {
      */
     <T extends WebServer> T createServer(Class<T> type,
                                          Application application,
-                                         JerseySeBootstrapConfiguration configuration) throws ProcessingException;
+                                         SeBootstrap.Configuration configuration) throws ProcessingException;
 
     /**
      * Creates a server of a given type which runs the given application using the
@@ -108,5 +108,26 @@ public interface WebServerProvider {
      */
     <T extends WebServer> T createServer(Class<T> type,
                                          Class<? extends Application> applicationClass,
-                                         JerseySeBootstrapConfiguration configuration) throws ProcessingException;
+                                         SeBootstrap.Configuration configuration) throws ProcessingException;
+
+
+    /**
+     * Utility function that matches {@code WebServerProvider} supported type with the user type passed either
+     * as {@link ServerProperties#WEBSERVER_CLASS} property (higher priority) or by the {@code userType} argument
+     * (lower priority).
+     * @param supportedType The type supported by the {@code WebServerProvider} implementation
+     * @param userType The user type passed in by the user, usually {@link WebServer} class.
+     * @param configuration The configuration to check {@link ServerProperties#WEBSERVER_CLASS} property
+     * @param <T> The {@link WebServer} subtype
+     * @return @{code true} if the user provided type matches the supported type.
+     */
+    static <T extends WebServer> boolean isSupportedWebServer(
+            Class<? extends WebServer> supportedType, Class<T> userType, SeBootstrap.Configuration configuration) {
+        final Object webServerObj = configuration.property(ServerProperties.WEBSERVER_CLASS);
+        final Class<? extends WebServer> webServerCls = webServerObj == null || WebServer.class.equals(webServerObj)
+                ? null : (Class<? extends WebServer>) webServerObj;
+        // WebServer.class.equals(webServerObj) is the default, and then we want userType
+        return (webServerCls != null  && webServerCls.isAssignableFrom(supportedType))
+                || (webServerCls == null && userType.isAssignableFrom(supportedType));
+    }
 }

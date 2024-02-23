@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,11 +27,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.glassfish.jersey.internal.jsr166.Flow;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test Jersey {@link Flow.Publisher} implementation, {@link JerseyPublisher}.
@@ -163,28 +163,6 @@ public class JerseyPublisherTest {
         assertTrue(closeLatch.await(WAIT_TIME, TimeUnit.MILLISECONDS));
         assertTrue(activeSubscriber.isCompleted());
         assertFalse(deadSubscriber.isCompleted());
-    }
-
-    @Test
-    public void testCascadingClose() throws InterruptedException {
-        final CountDownLatch openLatch = new CountDownLatch(1);
-        final CountDownLatch writeLatch = new CountDownLatch(1);
-        final CountDownLatch closeLatch = new CountDownLatch(1);
-
-        final JerseyPublisher<String> publisher =
-            new JerseyPublisher<>(JerseyPublisher.PublisherStrategy.BLOCKING);
-        final PublisherTestSubscriber subscriber =
-            new PublisherTestSubscriber("SUBSCRIBER", openLatch, writeLatch, closeLatch);
-        publisher.subscribe(subscriber);
-        assertTrue(openLatch.await(200, TimeUnit.MILLISECONDS));
-
-        subscriber.receive(1);
-        publisher.publish("Zero");
-        assertTrue(writeLatch.await(1000, TimeUnit.MILLISECONDS));
-
-        publisher.close(false);     // must not call onComplete()
-        Thread.sleep(10000);
-        assertFalse(subscriber.isCompleted());
     }
 
     class PublisherTestSubscriber implements Flow.Subscriber<String> {

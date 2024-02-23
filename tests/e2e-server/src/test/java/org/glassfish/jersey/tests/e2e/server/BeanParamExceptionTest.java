@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.tests.e2e.server;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -33,15 +32,15 @@ import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import jakarta.ws.rs.ext.Provider;
 
-// import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ParamException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Tests the ability to catch WebApplicationException thrown in ParamConverter
@@ -58,8 +57,8 @@ public class BeanParamExceptionTest extends JerseyTest {
         return new ResourceConfig(
                 BeanParamController.class,
                 ModelObjectParamConverter.class,
-                QueryParamErrorMapper.class/*,
-                JacksonJaxbJsonProvider.class*/);
+                QueryParamErrorMapper.class,
+                JacksonJaxbJsonProvider.class);
     }
 
     @Path("/")
@@ -199,14 +198,12 @@ public class BeanParamExceptionTest extends JerseyTest {
             this.status = status;
         }
 
-        // @JsonProperty
-        @JsonbProperty
+        @JsonProperty
         public String getMessage() {
             return message;
         }
 
-        // @JsonProperty
-        @JsonbProperty
+        @JsonProperty
         public int getStatus() {
             return status;
         }

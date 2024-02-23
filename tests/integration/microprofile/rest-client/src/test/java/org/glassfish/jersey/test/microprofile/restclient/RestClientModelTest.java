@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,9 +25,9 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by David Kral.
@@ -55,5 +55,13 @@ public class RestClientModelTest extends JerseyTest {
         assertEquals("secondValue", map.get("secondKey"));
 
         assertEquals("Hi", app.sayHi());
+    }
+
+    @Test
+    public void testFormParam() throws URISyntaxException {
+        String response = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost:9998"))
+                .build(ApplicationResource.class).formParam(null);
+        assertEquals("", response);
     }
 }

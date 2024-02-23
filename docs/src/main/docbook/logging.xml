@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -152,6 +152,19 @@
                                 string at the end. Negative values are interpreted as zero.
                             </para>
                             <para>Default value &jersey.logging.LoggingFeature.DEFAULT_MAX_ENTITY_SIZE;.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <literal>Redact HTTP headers</literal>
+                            </para>
+                            <para>
+                                HTTP headers with sensitive information can be configured to print "[redacted]" in place of their
+                                real values. This should be a string with the names of the HTTP headers to be redacted, each entry
+                                separated by a semicolon (;). Header names will be compared in a case-insensitive manner and
+                                ignoring initial or trailing whitespaces.
+                            </para>
+                            <para>Default value &jersey.logging.LoggingFeature.DEFAULT_REDACT_HEADERS;.
                             </para>
                         </listitem>
                     </itemizedlist>

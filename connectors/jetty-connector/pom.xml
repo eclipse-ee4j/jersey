@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.connectors</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-jetty-connector</artifactId>
@@ -34,16 +34,22 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java11.build.outputDirectory>${project.basedir}/target</java11.build.outputDirectory>
+        <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
+        <java17.build.outputDirectory>${project.basedir}/target17</java17.build.outputDirectory>
+        <java17.sourceDirectory>${project.basedir}/src/main/java17</java17.sourceDirectory>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -68,11 +74,6 @@
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-jetty</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -103,6 +104,159 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            ${jetty.osgi.version},
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>JettyExclude</id>
+            <activation>
+                <jdk>[11,17)</jdk>
+            </activation>
+            <properties>
+                <jetty.version>${jetty11.version}</jetty.version>
+            </properties>
+            <build>
+                <directory>${java11.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java11.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/jetty/connector/*.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>JettyInclude</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <build>
+                <directory>${java17.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java17.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK17FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java17.build.outputDirectory} does not work here -->
+                    <exists>target17/classes/org/glassfish/jersey/jetty/connector/JettyConnector.class</exists>
+                </file>
+                <jdk>[11,17)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk17-classes</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${java11.build.outputDirectory}/classes/META-INF/versions/17</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java17.build.outputDirectory}/classes</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk17-sources</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <property name="sources-jar" value="${java11.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
+                                        <echo>sources-jar: ${sources-jar}</echo>
+                                        <zip destfile="${sources-jar}" update="true">
+                                            <zipfileset dir="${java17.sourceDirectory}" prefix="META-INF/versions/17"/>
+                                        </zip>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

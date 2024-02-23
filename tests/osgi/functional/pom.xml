@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.osgi</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-tests-osgi-functional</artifactId>
@@ -33,6 +33,10 @@
     <description>
         Functional Jersey OSGi tests
     </description>
+
+    <properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
 
     <build>
         <plugins>
@@ -76,6 +80,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${surefire.mvn.plugin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <!-- use pax exam maven plugin -->
             <plugin>
@@ -275,7 +286,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
+            <version>${servlet6.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -286,11 +297,6 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -358,14 +364,13 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <profiles>

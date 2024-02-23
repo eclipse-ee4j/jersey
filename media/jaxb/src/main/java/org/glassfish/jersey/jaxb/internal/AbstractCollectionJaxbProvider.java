@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +40,7 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
@@ -55,6 +57,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * An abstract provider for {@code T[]}, {@code Collection&lt;T&gt;},
@@ -120,12 +123,12 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
         }
     };
 
-    public AbstractCollectionJaxbProvider(Providers ps) {
-        super(ps);
+    public AbstractCollectionJaxbProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    public AbstractCollectionJaxbProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    public AbstractCollectionJaxbProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override
@@ -237,12 +240,12 @@ public abstract class AbstractCollectionJaxbProvider extends AbstractJaxbProvide
                     ? Arrays.asList((Object[]) t)
                     : (Collection) t;
             final Class elementType = getElementClass(type, genericType);
-            final Charset charset = getCharset(mediaType);
+            final Charset charset = ReaderWriter.getCharset(mediaType);
             final String charsetName = charset.name();
 
             final Marshaller m = getMarshaller(elementType, mediaType);
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            if (charset != UTF8) {
+            if (charset != StandardCharsets.UTF_8) {
                 m.setProperty(Marshaller.JAXB_ENCODING, charsetName);
             }
             setHeader(m, annotations);

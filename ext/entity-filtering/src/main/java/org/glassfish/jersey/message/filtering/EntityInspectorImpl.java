@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import java.util.stream.StreamSupport;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
@@ -51,9 +52,7 @@ import org.glassfish.jersey.model.internal.RankedComparator;
 @Singleton
 final class EntityInspectorImpl implements EntityInspector {
     private final List<EntityProcessor> entityProcessors;
-
-    @Inject
-    private EntityGraphProvider graphProvider;
+    private final EntityGraphProvider graphProvider;
 
     /**
      * Constructor expecting {@link InjectionManager} to be injected.
@@ -61,10 +60,11 @@ final class EntityInspectorImpl implements EntityInspector {
      * @param injectionManager injection manager to be injected.
      */
     @Inject
-    public EntityInspectorImpl(final InjectionManager injectionManager) {
+    public EntityInspectorImpl(@Context InjectionManager injectionManager, @Context EntityGraphProvider graphProvider) {
         Spliterator<EntityProcessor> entities =
                 Providers.getAllProviders(injectionManager, EntityProcessor.class, new RankedComparator<>()).spliterator();
         this.entityProcessors = StreamSupport.stream(entities, false).collect(Collectors.toList());
+        this.graphProvider = graphProvider;
     }
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>j-376</artifactId>
@@ -75,7 +75,19 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
@@ -86,8 +98,6 @@
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-server</artifactId>
-            <version>2.3.16</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

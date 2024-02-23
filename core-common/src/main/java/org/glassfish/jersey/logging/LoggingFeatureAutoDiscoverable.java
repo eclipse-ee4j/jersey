@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,9 @@ import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER;
+import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS;
+import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT;
+import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT;
 import static org.glassfish.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER;
@@ -75,7 +78,8 @@ public final class LoggingFeatureAutoDiscoverable implements AutoDiscoverable {
                 || properties.containsKey(LOGGING_FEATURE_LOGGER_LEVEL)
                 || properties.containsKey(LOGGING_FEATURE_VERBOSITY)
                 || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE)
-                || properties.containsKey(LOGGING_FEATURE_SEPARATOR);
+                || properties.containsKey(LOGGING_FEATURE_SEPARATOR)
+                || properties.containsKey(LOGGING_FEATURE_REDACT_HEADERS);
     }
 
     private boolean clientConfigured(Map properties) {
@@ -83,7 +87,8 @@ public final class LoggingFeatureAutoDiscoverable implements AutoDiscoverable {
                 || properties.containsKey(LOGGING_FEATURE_LOGGER_LEVEL_CLIENT)
                 || properties.containsKey(LOGGING_FEATURE_VERBOSITY_CLIENT)
                 || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT)
-                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_CLIENT);
+                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_CLIENT)
+                || properties.containsKey(LOGGING_FEATURE_REDACT_HEADERS_CLIENT);
     }
 
     private boolean serverConfigured(Map properties) {
@@ -91,6 +96,7 @@ public final class LoggingFeatureAutoDiscoverable implements AutoDiscoverable {
                 || properties.containsKey(LOGGING_FEATURE_LOGGER_LEVEL_SERVER)
                 || properties.containsKey(LOGGING_FEATURE_VERBOSITY_SERVER)
                 || properties.containsKey(LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER)
-                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_SERVER);
+                || properties.containsKey(LOGGING_FEATURE_SEPARATOR_SERVER)
+                || properties.containsKey(LOGGING_FEATURE_REDACT_HEADERS_SERVER);
     }
 }

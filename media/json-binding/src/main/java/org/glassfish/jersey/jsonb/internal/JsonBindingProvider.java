@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,9 +19,23 @@ package org.glassfish.jersey.jsonb.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
+
+import org.glassfish.jersey.jsonb.LocalizationMessages;
+import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
+
+import jakarta.inject.Inject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.Produces;
@@ -33,14 +47,6 @@ import jakarta.ws.rs.core.NoContentException;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 import jakarta.ws.rs.ext.Providers;
-
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbException;
-
-import org.glassfish.jersey.jsonb.LocalizationMessages;
-import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
-import org.glassfish.jersey.message.internal.EntityInputStream;
 
 /**
  * Entity provider (reader and writer) for JSONB.
@@ -55,8 +61,9 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
     private static final String JSON = "json";
     private static final String PLUS_JSON = "+json";
 
-    private Providers providers;
+    private final Providers providers;
 
+    @Inject
     public JsonBindingProvider(@Context Providers providers) {
         this.providers = providers;
     }
@@ -100,7 +107,7 @@ public class JsonBindingProvider extends AbstractMessageReaderWriterProvider<Obj
                         OutputStream entityStream) throws IOException, WebApplicationException {
         Jsonb jsonb = getJsonb(type);
         try {
-            entityStream.write(jsonb.toJson(o).getBytes(AbstractMessageReaderWriterProvider.getCharset(mediaType)));
+            entityStream.write(jsonb.toJson(o).getBytes(ReaderWriter.getCharset(mediaType)));
             entityStream.flush();
         } catch (IOException e) {
             throw new ProcessingException(LocalizationMessages.ERROR_JSONB_SERIALIZATION(), e);

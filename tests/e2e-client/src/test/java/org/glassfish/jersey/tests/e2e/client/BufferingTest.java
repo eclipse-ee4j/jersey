@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,16 +29,26 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Tests chunk encoding and possibility of buffering the entity.
@@ -64,43 +74,43 @@ public class BufferingTest extends JerseyTest {
         }
     }
 
-    @Test
-    public void testApacheConnector() {
-        testWithBuffering(getApacheConnectorConfig());
-        testWithChunkEncodingWithoutPropertyDefinition(getApacheConnectorConfig());
-        testWithChunkEncodingWithPropertyDefinition(getApacheConnectorConfig());
-        testWithChunkEncodingPerRequest(getApacheConnectorConfig());
-        testDefaultOption(getApacheConnectorConfig(), RequestEntityProcessing.CHUNKED);
+    public static Stream<Arguments> clientConfigs() {
+        return Stream.of(
+                Arguments.of(new TestArguments(() -> new ApacheConnectorProvider(), RequestEntityProcessing.CHUNKED)),
+                Arguments.of(new TestArguments(() -> new Apache5ConnectorProvider(), RequestEntityProcessing.CHUNKED)),
+                Arguments.of(new TestArguments(() -> new GrizzlyConnectorProvider(), RequestEntityProcessing.CHUNKED)),
+                Arguments.of(new TestArguments(() -> new NettyConnectorProvider(), RequestEntityProcessing.CHUNKED)),
+                Arguments.of(new TestArguments(() -> new HttpUrlConnectorProvider(), RequestEntityProcessing.BUFFERED)),
+                Arguments.of(new TestArguments(() -> new JdkConnectorProvider(), RequestEntityProcessing.BUFFERED))
+        );
     }
 
-    @Test
-    public void testGrizzlyConnector() {
-        testWithBuffering(getGrizzlyConnectorConfig());
-        testWithChunkEncodingWithoutPropertyDefinition(getGrizzlyConnectorConfig());
-        testWithChunkEncodingWithPropertyDefinition(getGrizzlyConnectorConfig());
-        testWithChunkEncodingPerRequest(getGrizzlyConnectorConfig());
-        testDefaultOption(getGrizzlyConnectorConfig(), RequestEntityProcessing.CHUNKED);
+    private static final class TestArguments {
+        private final Supplier<ConnectorProvider> connectorProviderSupplier;
+        private final RequestEntityProcessing defaultProcessing;
+
+        private TestArguments(Supplier<ConnectorProvider> connectorProviderSupplier, RequestEntityProcessing defaultProcessing) {
+            this.connectorProviderSupplier = connectorProviderSupplier;
+            this.defaultProcessing = defaultProcessing;
+        }
+
+        private ClientConfig clientConfig() {
+            return new ClientConfig().connectorProvider(connectorProviderSupplier.get());
+        }
+
+        private RequestEntityProcessing defaultProcessing() {
+            return defaultProcessing;
+        }
     }
 
-    @Test
-    public void testHttpUrlConnector() {
-        testWithBuffering(getHttpUrlConnectorConfig());
-        testWithChunkEncodingWithoutPropertyDefinition(getHttpUrlConnectorConfig());
-        testWithChunkEncodingWithPropertyDefinition(getHttpUrlConnectorConfig());
-        testWithChunkEncodingPerRequest(getHttpUrlConnectorConfig());
-        testDefaultOption(getHttpUrlConnectorConfig(), RequestEntityProcessing.BUFFERED);
-    }
-
-    private ClientConfig getApacheConnectorConfig() {
-        return new ClientConfig().connectorProvider(new ApacheConnectorProvider());
-    }
-
-    private ClientConfig getGrizzlyConnectorConfig() {
-        return new ClientConfig().connectorProvider(new GrizzlyConnectorProvider());
-    }
-
-    private ClientConfig getHttpUrlConnectorConfig() {
-        return new ClientConfig();
+    @ParameterizedTest
+    @MethodSource("clientConfigs")
+    public void testConnector(TestArguments arguments) {
+        testWithBuffering(arguments.clientConfig());
+        testWithChunkEncodingWithoutPropertyDefinition(arguments.clientConfig());
+        testWithChunkEncodingWithPropertyDefinition(arguments.clientConfig());
+        testWithChunkEncodingPerRequest(arguments.clientConfig());
+        testDefaultOption(arguments.clientConfig(), arguments.defaultProcessing());
     }
 
     private void testDefaultOption(ClientConfig cc, RequestEntityProcessing mode) {
@@ -121,8 +131,8 @@ public class BufferingTest extends JerseyTest {
         WebTarget target = client.target(UriBuilder.fromUri(getBaseUri()).path("resource").build());
 
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(expected, response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(expected, response.readEntity(String.class));
     }
 
     private void testWithChunkEncodingWithPropertyDefinition(ClientConfig cc) {
@@ -154,13 +164,13 @@ public class BufferingTest extends JerseyTest {
 
         String entity = getVeryLongString();
         Response response = target.request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("chunked", response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("chunked", response.readEntity(String.class));
 
         response = target.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
                 .request().post(Entity.entity(entity, MediaType.TEXT_PLAIN_TYPE));
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(String.valueOf(entity.length()), response.readEntity(String.class));
     }
 
     public String getVeryLongString() {

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
     </parent>
 
     <groupId>org.glassfish.jersey.tools.plugins</groupId>
@@ -108,7 +108,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <maven.version>3.6.3</maven.version>
+        <maven.version>3.8.1</maven.version>
         <maven.shared.version>3.0.1</maven.shared.version>
     </properties>
 </project>

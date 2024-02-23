@@ -38,9 +38,9 @@
         </dependency>
         -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>\${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -72,11 +72,19 @@
                     <mainClass>\${package}.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- Surefire support for JUnit-5 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.mvn.plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <surefire.mvn.plugin.version>3.2.1</surefire.mvn.plugin.version>
     </properties>
 </project>

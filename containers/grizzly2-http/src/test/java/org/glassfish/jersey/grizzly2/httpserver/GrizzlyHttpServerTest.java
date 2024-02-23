@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2021, 2022 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,15 +27,15 @@ import org.glassfish.jersey.grizzly2.httpserver.test.tools.ClientThread;
 import org.glassfish.jersey.grizzly2.httpserver.test.tools.ClientThread.ClientThreadSettings;
 import org.glassfish.jersey.grizzly2.httpserver.test.tools.JdkHttpClientThread;
 import org.glassfish.jersey.grizzly2.httpserver.test.tools.ServerManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -57,10 +58,7 @@ public class GrizzlyHttpServerTest {
     private AtomicInteger counter;
     private ServerManager server;
 
-    @Rule
-    public TestName testName = new TestName();
-
-    @BeforeClass
+    @BeforeAll
     public static void printSettings() {
         System.out.println("Client implementation: " + CLIENT_IMPLEMENTATION);
         System.out.println("Count of clients: " + COUNT_OF_CLIENTS);
@@ -68,16 +66,16 @@ public class GrizzlyHttpServerTest {
     }
 
 
-    @Before
+    @BeforeEach
     public void init() {
         this.counter = new AtomicInteger();
     }
 
 
-    @After
-    public void cleanup() {
+    @AfterEach
+    public void cleanup(TestInfo testInfo) {
         error = null;
-        System.out.println(String.format("Server processed %s requests of test %s.", counter, testName.getMethodName()));
+        System.out.println(String.format("Server processed %s requests of test %s.", counter, testInfo.getDisplayName()));
         if (server != null) {
             server.close();
         }
@@ -120,9 +118,11 @@ public class GrizzlyHttpServerTest {
      *
      * @throws Throwable
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void http2() throws Throwable {
-        this.server = new ServerManager(false, true);
+    @Test
+    public void http2() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () ->
+        this.server = new ServerManager(false, true));
     }
 
 
@@ -159,7 +159,7 @@ public class GrizzlyHttpServerTest {
         if (error.get() != null) {
             throw error.get();
         }
-        assertTrue("No requests processed.", counter.get() > 0);
+        assertTrue(counter.get() > 0, "No requests processed.");
     }
 
 
@@ -177,7 +177,7 @@ public class GrizzlyHttpServerTest {
         final Class<ClientThread> clazz = (Class<ClientThread>) Class.forName(CLIENT_IMPLEMENTATION);
         final Constructor<ClientThread> constructor = clazz.getConstructor(ClientThreadSettings.class,
             AtomicInteger.class, AtomicReference.class);
-        assertNotNull("constructor for " + CLIENT_IMPLEMENTATION, constructor);
+        assertNotNull(constructor, "constructor for " + CLIENT_IMPLEMENTATION);
         final ClientThreadSettings settings = new ClientThreadSettings(id, secured, useHttp2,
             server.getApplicationServiceEndpoint());
         return constructor.newInstance(settings, counter, error);

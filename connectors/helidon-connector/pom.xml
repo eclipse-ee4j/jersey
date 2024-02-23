@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.connectors</groupId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,11 +30,19 @@
     <packaging>jar</packaging>
     <name>jersey-connectors-helidon</name>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java8.build.outputDirectory>${project.basedir}/target</java8.build.outputDirectory>
+        <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
+        <java17.build.outputDirectory>${project.basedir}/target17</java17.build.outputDirectory>
+        <java17.sourceDirectory>${project.basedir}/src/main/java17</java17.sourceDirectory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.helidon.jersey</groupId>
             <artifactId>helidon-jersey-connector</artifactId>
-            <version>2.2.1</version>
+            <version>${helidon.jersey.connector.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -67,18 +75,153 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <inherited>false</inherited>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
             </plugin>
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-javadoc-plugin</artifactId>
                <configuration>
                     <source>8</source>
+                   <detectJavaApiLink>false</detectJavaApiLink>
                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>HelidonExclude</id>
+            <activation>
+                <jdk>[1.8,17)</jdk>
+            </activation>
+            <build>
+                <directory>${java8.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java8.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testExcludes>
+                                <testExclude>org/glassfish/jersey/helidon/connector/sse/*.java</testExclude>
+                                <testExclude>org/glassfish/jersey/helidon/connector/*.java</testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>HelidonInclude</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <build>
+                <directory>${java17.build.outputDirectory}</directory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${java17.sourceDirectory}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK17FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java17.build.outputDirectory} does not work here -->
+                    <exists>target17/classes/org/glassfish/jersey/helidon/connector/HelidonConnectorProvider.class</exists>
+                </file>
+                <jdk>[1.8,17)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk17-classes</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${java8.build.outputDirectory}/classes/META-INF/versions/17</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java17.build.outputDirectory}/classes</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk17-sources</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <property name="sources-jar" value="${java8.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
+                                        <echo>sources-jar: ${sources-jar}</echo>
+                                        <zip destfile="${sources-jar}" update="true">
+                                            <zipfileset dir="${java17.sourceDirectory}" prefix="META-INF/versions/17"/>
+                                        </zip>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -148,6 +148,61 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES; /
+                                &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT; /
+                                &jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.json.jackson.enabled.modules</literal>
+                            <literal>jersey.config.client.json.jackson.enabled.modules</literal>
+                            <literal>jersey.config.server.json.jackson.enabled.modules</literal>
+                        </entry>
+                        <entry>
+                            Comma separated list of jackson modules which shall be used for json-jackson provider.
+                            If set, only those modules will be used for JSON processing.
+
+                            Default value is <literal>NULL</literal>
+                            @since 2.36
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES; /
+                            &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT; /
+                            &jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.json.jackson.disabled.modules</literal>
+                            <literal>jersey.config.client.json.jackson.disabled.modules</literal>
+                            <literal>jersey.config.server.json.jackson.disabled.modules</literal>
+                        </entry>
+                        <entry>
+                            Comma separated list of jackson modules which shall be excluded from json-jackson provider.
+                            If set, those modules will be excluded from JSON processing.
+
+                            Default value is <literal>NULL</literal>
+                            @since 2.36
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE;(Jersey 2.40 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.paramconverters.throw.iae</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Force the &jaxrs.ext.ParamConverter; to throw <literal>IllegalArgumentException
+                            </literal> as mandated in javadoc.
+                                Must be convertible to &lit.jdk6.Boolean; value.
+                            </para>
+                            <para>
+                                Internally the <literal>Exception</literal> is caught by Jersey and usually converted to
+                                <literal>null</literal>
+                                Therefore, the default value is set to &lit.false; to speed up the conversion.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME;
                         </entry>
                         <entry>
@@ -204,6 +259,17 @@
                         <entry>
                             Custom logging delimiter for new lines separation.
                             See <link linkend="logging.xml">logging</link> chapter for more information.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
                         </entry>
                     </row>
                 </tbody>
@@ -704,8 +770,91 @@
                             See <link linkend="logging.xml">logging</link> chapter for more information.
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.server.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
+        </table>
+    </section>
+
+    <section xml:id="appendix-properties-webserver">
+        <title>SeBootstrap and WebServer related configuration properties</title>
+
+        <para>
+            List of SeBootstrap configuration properties that can be found in &jersey.server.ServerProperties; class.
+        </para>
+
+        <table>
+        <title>List of SeBootstrap and WebServer configuration properties</title>
+        <tgroup cols="3">
+        <thead>
+            <row>
+                <entry>Constant</entry>
+                <entry>Value</entry>
+                <entry>Description</entry>
+            </row>
+        </thead>
+        <tbody>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.allow.privileged.ports</literal></entry>
+                <entry>
+                    <para>
+                        Defines whether to allow privileged ports (0-1023) to be used to start the
+                        &lit.jersey.server.spi.WebServer; implementation to be chosen from the unused ports when the
+                        &lit.jaxrs.SeBootstrap.Configuration; PORT is set to <literal>-1</literal> or unset.
+                    </para>
+                    <para>
+                        The default ports are 80 for HTTP and 443 for HTTPS when
+                        <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.true; or 8080 for HTTP and 8443 for HTTPS when
+                        <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.false;.
+                    </para>
+                    <para>
+                        If &lit.jaxrs.SeBootstrap.Configuration; PORT is set to <literal>0</literal>, the implementation scans for
+                        random port (0-65535) when <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.true;, or
+                        (1024-65535) when <literal>WEBSERVER_ALLOW_PRIVILEGED_PORTS</literal> is &lit.false;.
+                    </para>
+                    <para>
+                        The default this is &lit.false;. Use &lit.true; to allow a restricted port number.
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_AUTO_START;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.autostart</literal></entry>
+                <entry>
+                    <para>
+                        Whether to automatically startup <literal>WebServer</literal> at bootstrap.
+                    </para>
+                    <para>
+                        By default, servers are immediately listening to connections after bootstrap,
+                        so no explicit invocation of <literal>WebServer#start()</literal> is needed.
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>&jersey.server.ServerProperties.WEBSERVER_CLASS;</entry>
+                <entry><literal>jersey.config.server.bootstrap.webserver.class</literal></entry>
+                <entry>
+                    <para>
+                        Defines the implementation of <literal>WebServer</literal> to bootstrap.
+                    </para>
+                    <para>
+                        By default auto-selects the first server provider found.
+                    </para>
+                </entry>
+            </row>
+        </tbody>
+        </tgroup>
         </table>
     </section>
 
@@ -859,6 +1008,53 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.CONNECTOR_PROVIDER;(Jersey 2.40 or later)</entry>
+                        <entry><literal>jersey.config.client.connector.provider</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the &jersey.client.ConnectorProvider; class. Overrides the value from META-INF/services.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.String;.
+                            </para>
+                            <para>
+                                The property is recognized by &lit.jaxrs.client.ClientBuilder;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT;</entry>
+                        <entry><literal>jersey.config.client.digestAuthUriCacheSizeLimit</literal></entry>
+                        <entry>
+                            <para>
+                                The property defines a URI of a HTTP proxy the client connector should use.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.processing</literal></entry>
+                        <entry>
+                            <para>
+                                Allows for HTTP Expect:100-Continue being handled by the HttpUrlConnector (default Jersey
+                                connector). <literal>Since 2.32</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.threshold.size</literal></entry>
+                        <entry>
+                            <para>
+                                Property for threshold size for content length after which Expect:100-Continue header would be applied
+                                before the main request.
+                                Default threshold size (64kb) after which Expect:100-Continue header would be applied before
+                                the main request.
+                                <literal>Since 2.32</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.FEATURE_AUTO_DISCOVERY_DISABLE;</entry>
                         <entry><literal>jersey.config.client.disableAutoDiscovery</literal></entry>
                         <entry>
@@ -921,7 +1117,12 @@
                         <entry>
                             <para>
                                 URI of a HTTP proxy the client connector should use. Default value is not set.
-                                <emphasis>Currently supported with &jersey.apache.ApacheConnectorProvider; and
+                                <emphasis>Currently supported with &jersey.apache.ApacheConnectorProvider;,
+                                    &jersey.apache5.Apache5ConnectorProvider;,
+                                    &jersey.grizzly.GrizzlyConnectorProvider;,
+                                    &jersey.helidon.HelidonConnectorProvider;,
+                                    &jersey.netty.NettyConnectorProvider;,
+                                    &jersey.jetty11.Jetty11ConnectorProvider;, and
                                     &jersey.jetty.JettyConnectorProvider; only.</emphasis>
                             </para>
                         </entry>
@@ -984,6 +1185,21 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER;</entry>
+                        <entry><literal>jersey.config.client.ssl.context.supplier</literal></entry>
+                        <entry>
+                            <para>
+                                The <literal>javax.net.ssl.SSLContext java.util.function.Supplier</literal> to be used to set ssl
+                                context in the current HTTP request. Has precedence over the
+                                <literal>Client#getSslContext()</literal>.
+                            </para>
+                            <para>
+                                Currently supported by the default <literal>HttpUrlConnector</literal> and by
+                                <literal>NettyConnector</literal> only.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.USE_ENCODING;</entry>
                         <entry><literal>jersey.config.client.useEncoding</literal></entry>
                         <entry>
@@ -994,34 +1210,19 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.client.ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT;</entry>
-                        <entry><literal>jersey.config.client.digestAuthUriCacheSizeLimit</literal></entry>
+                        <entry>&jersey.client.ClientProperties.SNI_HOST_NAME;</entry>
+                        <entry><literal>jersey.config.client.sniHostName</literal></entry>
                         <entry>
                             <para>
-                                The property defines a URI of a HTTP proxy the client connector should use.
+                                Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+                                <literal>HttpUrlConnector</literal> and <literal>JavaNetHttpConnector</literal> need
+                                an extra System Property set to allow HOST header.
+                                As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
+                                be set on each request.
+                                <literal>Since 3.1.2</literal>
                             </para>
-                        </entry>
-                    </row>
-                    <row>
-                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE;</entry>
-                        <entry><literal>jersey.config.client.request.expect.100.continue.processing</literal></entry>
-                        <entry>
                             <para>
-                                Allows for HTTP Expect:100-Continue being handled by the HttpUrlConnector (default Jersey
-                                connector). <literal>Since 2.32</literal>
-                            </para>
-                        </entry>
-                    </row>
-                    <row>
-                        <entry>&jersey.client.ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE;</entry>
-                        <entry><literal>jersey.config.client.request.expect.100.continue.threshold.size</literal></entry>
-                        <entry>
-                            <para>
-                                Property for threshold size for content length after which Expect:100-Continue header would be applied
-                                before the main request.
-                                Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
-                                the main request.
-                                <literal>Since 2.32</literal>
+                                The value MUST be an instance of &lit.jdk6.String;
                             </para>
                         </entry>
                     </row>
@@ -1082,6 +1283,1024 @@
                         <entry>
                             New line delimiter property (client side).
                             See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT;
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.client.logging.headers.redact</literal>
+                        </entry>
+                        <entry>
+                            The HTTP headers (semicolon separated) to be redacted when logging.
+                            See <link linkend="logging_chapter">logging</link> chapter for more information.
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-message">
+        <title>Jersey configuration properties for message &amp; entity processing</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.message.MessageProperties; class.
+        </para>
+
+        <table>
+            <title>List of Apache HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB;</entry>
+                        <entry><literal>jersey.config.deflate.nozlib</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true;, <literal>DeflateEncoder deflate encoding interceptor</literal> will use non-standard version
+                                of the deflate content encoding, skipping the zlib wrapper. Unfortunately, deflate encoding
+                                implementations in some products use this non-compliant version, hence the switch.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.IO_BUFFER_SIZE;</entry>
+                        <entry><literal>jersey.config.io.bufferSize</literal></entry>
+                        <entry>
+                            <para>
+                                Value of the property indicates the buffer size to be used for I/O operations
+                                on byte and character streams. The property value is expected to be a positive
+                                integer otherwise it will be ignored.
+                            </para>
+                            <para>
+                                The default value is value of &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT;</entry>
+                        <entry><literal>jersey.config.jaxb.collections.processXmlRootElement</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; then XML root element tag name for collections will
+                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                annotation value and won't be de-capitalized.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH;</entry>
+                        <entry><literal>jersey.config.json.string.length</literal></entry>
+                        <entry>
+                            <para>
+                                The default value is not set and the JSON provider default maximum value is used.
+                            </para>
+                            <para>
+                                If supported by Jackson provider, the default value can differ for each Jackson version. For instance,
+                                Jackson 2.14 does not support this setting and the default value is <literal>Integer#MAX_VALUE</literal>,
+                                Jackson 2.15.0 has the default value 5_000_000, Jackson 2.15.2 has the default value 20_000_000.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_SECURITY_DISABLE;</entry>
+                        <entry><literal>jersey.config.xml.security.disable</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; XML security features when parsing XML documents will be
+                                disabled.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.message.MessageProperties.XML_FORMAT_OUTPUT;</entry>
+                        <entry><literal>jersey.config.xml.formatOutput</literal></entry>
+                        <entry>
+                            <para>
+                                If set to &lit.true; indicates that produced XML output should be formatted
+                                if possible.
+                            </para>
+                            <para>
+                                A XML message entity written by a &jaxrs.ext.MessageBodyWriter;
+                                may be formatted for the purposes of human readability provided the respective
+                                &jaxrs.ext.MessageBodyWriter; supports XML output formatting. All JAXB-based message
+                                body writers support this property.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+
+    </section>
+    <section xml:id="appendix-properties-client-apache">
+        <title>Apache HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.apache.ApacheClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Apache HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.CONNECTION_CLOSING_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache.client.connectionClosingStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Strategy that closes the Apache Connection.
+                                Accepts an instance of &jersey.apache.ApacheConnectionClosingStrategy;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.CONNECTION_MANAGER;</entry>
+                        <entry><literal>jersey.config.apache.client.connectionManager</literal></entry>
+                        <entry>
+                            <para>
+                                Connection Manager which will be used to create
+                                <literal>org.apache.http.client.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.conn.HttpClientConnectionManager</literal>
+                            </para>
+                            <para>
+                                If the property is absent a default Connection Manager will be used
+                                <literal>org.apache.http.impl.conn.BasicHttpClientConnectionManager</literal>.
+                                If you want to use this client in multi-threaded environment, be sure you override default value with
+                                <literal>org.apache.http.impl.conn.PoolingHttpClientConnectionManager</literal> instance.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.CONNECTION_MANAGER_SHARED;</entry>
+                        <entry><literal>jersey.config.apache.client.connectionManagerShared</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.true; indicates that configured connection manager should be shared
+                                among multiple Jersey client runtime instances. It means that closing
+                                a particular client runtime instance does not shut down the underlying
+                                connection manager automatically. In such case, the connection manager life-cycle
+                                should be fully managed by the application code. To release all allocated resources,
+                                caller code should especially ensure
+                                <literal>org.apache.http.conn.HttpClientConnectionManager#shutdown()</literal> gets
+                                invoked eventually.
+                            </para>
+                            <para>
+                                This property may only be set prior to constructing Apache connector using
+                                &jersey.apache.ApacheConnectorProvider;
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.CREDENTIALS_PROVIDER;</entry>
+                        <entry><literal>jersey.config.apache.client.credentialsProvider</literal></entry>
+                        <entry>
+                            <para>
+                                The credential provider that should be used to retrieve
+                                credentials from a user. Credentials needed for proxy authentication
+                                are stored here as well.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.client.CredentialsProvider</literal>.
+                            </para>
+                            <para>
+                                If the property is absent a default provider will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.DISABLE_COOKIES;</entry>
+                        <entry><literal>jersey.config.apache.client.handleCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client should handle cookies
+                                automatically using HttpClient's default cookie policy. A value
+                                of &lit.true; will cause the client to ignore all cookies.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.KEEPALIVE_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache.client.keepAliveStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Apache <literal>ConnectionKeepAliveStrategy</literal> for the
+                                <literal>org.apache.http.client.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.conn.ConnectionKeepAliveStrategy</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default keepalive strategy of the Apache HTTP library will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION;</entry>
+                        <entry><literal>jersey.config.apache.client.preemptiveBasicAuthentication</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.true; indicates that a client should send an
+                                authentication request even before the server gives a 401
+                                response.
+                            </para>
+                            <para>
+                                This property may only be set prior to constructing Apache connector using
+                                &jersey.apache.ApacheConnectorProvider;.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.REQUEST_CONFIG;</entry>
+                        <entry><literal>jersey.config.apache.client.requestConfig</literal></entry>
+                        <entry>
+                            <para>
+                                Request configuration for the <literal>org.apache.http.client.HttpClient</literal>.
+                                Http parameters which will be used to create <literal>org.apache.http.client.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.client.config.RequestConfig</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default request configuration will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.RETRY_HANDLER;</entry>
+                        <entry><literal>jersey.config.apache.client.retryHandler</literal></entry>
+                        <entry>
+                            <para>
+                                Apache <literal>HttpRequestRetryHandler</literal> which will be used to create
+                                <literal>org.apache.http.client.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.client.HttpRequestRetryHandler</literal>.
+                            </para>
+                            <para>
+                                If the property is absent a default retry handler will be used
+                                (<literal>org.apache.http.impl.client.DefaultHttpRequestRetryHandler</literal>).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.REUSE_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache.client.reuseStrategy</literal></entry>
+                        <entry>
+                            <para>
+                               Apache <literal>ConnectionReuseStrategy</literal> for the
+                                <literal>org.apache.http.client.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.http.ConnectionReuseStrategy</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default reuse strategy of the Apache HTTP library will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache.ApacheClientProperties.USE_SYSTEM_PROPERTIES;</entry>
+                        <entry><literal>jersey.config.apache.client.useSystemProperties</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client will use default Apache &lit.jersey.client.Connector;
+                                params. A value of &lit.true; will cause the client to take into account the system properties
+                                <literal>https.protocols</literal>, <literal>https.cipherSuites</literal>,
+                                <literal>http.keepAlive</literal>, <literal>http.maxConnections</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.Boolean;
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-apache5">
+        <title>Apache 5 HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.apache5.Apache5ClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Apache 5 HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.CONNECTION_CLOSING_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache5.client.connectionClosingStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Strategy that closes the Apache Connection.
+                                Accepts an instance of &jersey.apache5.Apache5ConnectionClosingStrategy;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.CONNECTION_MANAGER;</entry>
+                        <entry><literal>jersey.config.apache5.client.connectionManager</literal></entry>
+                        <entry>
+                            <para>
+                                Connection Manager which will be used to create
+                                <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.client5.http.io.HttpClientConnectionManager</literal>
+                            </para>
+                            <para>
+                                If the property is absent a default Connection Manager will be used
+                                <literal>org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager</literal>.
+                                If you want to use this client in multi-threaded environment, be sure you override default value with
+                                <literal>org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager</literal> instance.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.CONNECTION_MANAGER_SHARED;</entry>
+                        <entry><literal>jersey.config.apache5.client.connectionManagerShared</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.true; indicates that configured connection manager should be shared
+                                among multiple Jersey client runtime instances. It means that closing
+                                a particular client runtime instance does not shut down the underlying
+                                connection manager automatically. In such case, the connection manager life-cycle
+                                should be fully managed by the application code. To release all allocated resources,
+                                caller code should especially ensure
+                                <literal>org.apache.hc.client5.http.io.HttpClientConnectionManager#close()</literal> gets
+                                invoked eventually.
+                            </para>
+                            <para>
+                                This property may only be set prior to constructing Apache connector using
+                                &jersey.apache5.Apache5ConnectorProvider;
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.CREDENTIALS_PROVIDER;</entry>
+                        <entry><literal>jersey.config.apache5.client.credentialsProvider</literal></entry>
+                        <entry>
+                            <para>
+                                The credential provider that should be used to retrieve
+                                credentials from a user. Credentials needed for proxy authentication
+                                are stored here as well.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.client5.http.auth.CredentialsProvider</literal>.
+                            </para>
+                            <para>
+                                If the property is absent a default provider will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.DISABLE_COOKIES;</entry>
+                        <entry><literal>jersey.config.apache5.client.handleCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client should handle cookies
+                                automatically using HttpClient's default cookie policy. A value
+                                of &lit.true; will cause the client to ignore all cookies.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.KEEPALIVE_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache5.client.keepAliveStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Apache <literal>ConnectionKeepAliveStrategy</literal> for the
+                                <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.client5.http.ConnectionKeepAliveStrategy</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default keepalive strategy of the Apache HTTP library will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION;</entry>
+                        <entry><literal>jersey.config.apache5.client.preemptiveBasicAuthentication</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.true; indicates that a client should send an
+                                authentication request even before the server gives a 401
+                                response.
+                            </para>
+                            <para>
+                                This property may only be set prior to constructing Apache connector using
+                                &jersey.apache5.Apache5ConnectorProvider;.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.REQUEST_CONFIG;</entry>
+                        <entry><literal>jersey.config.apache5.client.requestConfig</literal></entry>
+                        <entry>
+                            <para>
+                                Request configuration for the <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                                Http parameters which will be used to create <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.client5.http.config.RequestConfig</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default request configuration will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.RETRY_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache5.client.retryStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Apache <literal>HttpRequestRetryStrategy</literal> which will be used to create
+                                <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.client5.http.HttpRequestRetryStrategy</literal>.
+                            </para>
+                            <para>
+                                If the property is absent a default retry handler will be used
+                                (<literal>org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy</literal>).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.REUSE_STRATEGY;</entry>
+                        <entry><literal>jersey.config.apache5.client.reuseStrategy</literal></entry>
+                        <entry>
+                            <para>
+                                Apache <literal>ConnectionReuseStrategy</literal> for the
+                                <literal>org.apache.hc.client5.http.classic.HttpClient</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.apache.hc.core5.http.ConnectionReuseStrategy</literal>.
+                            </para>
+                            <para>
+                                If the property is absent the default reuse strategy of the Apache HTTP library will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.apache5.Apache5ClientProperties.USE_SYSTEM_PROPERTIES;</entry>
+                        <entry><literal>jersey.config.apache5.client.useSystemProperties</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client will use default Apache &lit.jersey.client.Connector;
+                                params. A value of &lit.true; will cause the client to take into account the system properties
+                                <literal>https.protocols</literal>, <literal>https.cipherSuites</literal>,
+                                <literal>http.keepAlive</literal>, <literal>http.maxConnections</literal>.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.Boolean;
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-helidon">
+        <title>Helidon HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.helidon.HelidonClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Helidon HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.helidon.HelidonClientProperties.CONFIG;</entry>
+                        <entry><literal>jersey.connector.helidon.config</literal></entry>
+                        <entry>
+                            <para>
+                                A Helidon <literal>io.helidon.Config</literal> instance that is passed to
+                                <literal>io.helidon.webclient.WebClient.Builder#config(Config)</literal> if available.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-jdk">
+        <title>JDK HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.jdk.JdkClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Jdk HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.CONTAINER_IDLE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.containerIdleTimeout</literal></entry>
+                        <entry>
+                            <para>
+                                Container idle timeout in milliseconds <literal>Integer</literal> value).
+                            </para>
+                            <para>
+                                The default value is <literal>java.net.CookiePolicy#ACCEPT_ORIGINAL_SERVER</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.COOKIE_POLICY;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.cookiePolicy</literal></entry>
+                        <entry>
+                            <para>
+                                To set the cookie policy of this cookie manager.
+                            </para>
+                            <para>
+                                When the timeout elapses, the shared thread pool will be destroyed.
+                            </para>
+                            <para>
+                                The default value is &jersey.jdk.JdkClientProperties.DEFAULT_CONNECTION_CLOSE_WAIT;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.CONNECTION_IDLE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.connectionIdleTimeout</literal></entry>
+                        <entry>
+                            <para>
+                                An amount of time in milliseconds (<literal>Integer</literal> value) during which an idle
+                                connection will be kept open.
+                            </para>
+                            <para>
+                                The default value is &jersey.jdk.JdkClientProperties.DEFAULT_CONNECTION_IDLE_TIMEOUT;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.MAX_CONNECTIONS_PER_DESTINATION;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.maxConnectionsPerDestination</literal></entry>
+                        <entry>
+                            <para>
+                                A maximum number of open connections per each destination. A destination is determined by the
+                                following triple: <literal>host</literal>, <literal>port</literal>,
+                                <literal>protocol (HTTP/HTTPS)</literal>.
+                            </para>
+                            <para>
+                                The default value is &jersey.jdk.JdkClientProperties.DEFAULT_MAX_CONNECTIONS_PER_DESTINATION;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.MAX_HEADER_SIZE;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.maxHeaderSize</literal></entry>
+                        <entry>
+                            <para>
+                                A configurable property of HTTP parser. It defines the maximal acceptable size of HTTP response
+                                initial line, each header and chunk header.
+                            </para>
+                            <para>
+                                The default value is &jersey.jdk.JdkClientProperties.DEFAULT_MAX_HEADER_SIZE;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.MAX_REDIRECTS;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.maxRedirects</literal></entry>
+                        <entry>
+                            <para>
+                                The maximal number of redirects during single request.
+                            </para>
+                            <para>
+                                Value is expected to be positive <literal>Integer</literal>. The default value is
+                                &jersey.jdk.JdkClientProperties.DEFAULT_MAX_REDIRECTS;.
+                            </para>
+                            <para>
+                                HTTP redirection must be enabled by property &jersey.client.ClientProperties.FOLLOW_REDIRECTS;,
+                                otherwise &jersey.jdk.JdkClientProperties.MAX_REDIRECTS; is not applied.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jdk.JdkClientProperties.WORKER_THREAD_POOL_CONFIG;</entry>
+                        <entry><literal>jersey.config.client.JdkConnectorProvider.workerThreadPoolConfig</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of the connector thread pool.
+                            </para>
+                            <para>
+                                An instance of <literal>org.glassfish.jersey.jdk.connector.internal.ThreadPoolConfig</literal>
+                                is expected.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-jetty">
+        <title>Jetty HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.jetty.JettyClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Jetty HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.DISABLE_COOKIES;</entry>
+                        <entry><literal>jersey.config.jetty.client.disableCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client should handle cookies
+                                automatically using HttpClient's default cookie policy. A value
+                                of &lit.false; will cause the client to ignore all cookies.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.Boolean;.
+                                If the property is absent the default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION;</entry>
+                        <entry><literal>jersey.config.jetty.client.disableCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client disable a hostname verification
+                                during SSL Handshake. A client will ignore CN value defined in a certificate
+                                that is stored in a truststore.
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.Boolean;.
+                                If the property is absent the default value is &lit.true;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION;</entry>
+                        <entry><literal>jersey.config.jetty.client.preemptiveBasicAuthentication</literal></entry>
+                        <entry>
+                            <para>
+                                The credential provider that should be used to retrieve
+                                credentials from a user.
+                            </para>
+                            <para>
+                                If an <literal>org.eclipse.jetty.client.api.Authentication</literal> mechanism is found,
+                                it is then used for the given request, returning an
+                                <literal>org.eclipse.jetty.client.api.Authentication.Result</literal>,
+                                which is then stored in the <literal>org.eclipse.jetty.client.api.AuthenticationStore</literal>
+                                so that subsequent requests can be preemptively authenticated.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>org.eclipse.jetty.client.util.BasicAuthentication</literal>.
+                                If the property is absent a default provider will be used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE;</entry>
+                        <entry><literal>jersey.config.jetty.client.syncListenerResponseMaxSize</literal></entry>
+                        <entry>
+                            <para>
+                                Overrides the default Jetty synchronous listener response max buffer size.
+                                In practise, this allows you to read larger responses.
+                                Size in bytes.
+                            </para>
+                            <para>
+                                If the property is absent, the value is such as specified by Jetty (currently 2MiB).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.jetty.client.totalTimeout</literal></entry>
+                        <entry>
+                            <para>
+                                Total timeout interval for request/response conversation, in milliseconds.
+                                Opposed to &jersey.client.ClientProperties.READ_TIMEOUT;.
+                            </para>
+                            <para>
+                                The value MUST be an instance convertible to <literal>Integer</literal>.
+                                The value of zero <literal>0</literal> is equivalent to an interval of infinity.
+                            </para>
+                            <para>
+                                The default value is <literal>0</literal> (infinity).
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-netty">
+        <title>Netty HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.netty.NettyClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Netty HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY;</entry>
+                        <entry><literal>jersey.config.client.filter.headers.proxy</literal></entry>
+                        <entry>
+                            <para>
+                                Filter the HTTP headers for requests (CONNECT) towards the proxy except for
+                                <literal>PROXY</literal>-prefixed and <literal>HOST</literal> headers when &lit.true;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the headers are filtered out.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.idleConnectionPruneTimeout</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the number of seconds the idle connections are kept in the pool before pruned.
+                                The default is 60. Specify 0 to disable.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_CONNECTIONS;</entry>
+                        <entry><literal>jersey.config.client.maxConnections</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the maximum number of idle connections that will be simultaneously kept
+                                alive, per destination. The default is 5.
+                            </para>
+                            <para>
+                                This property is a Jersey alternative to System property <literal>http.maxConnections</literal>.
+                                The Jersey property takes precedence over the system property.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_CONNECTIONS_TOTAL;</entry>
+                        <entry><literal>jersey.config.client.maxTotalConnections</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the maximum number of idle connections that will be simultaneously kept alive
+                                in total, rather than per destination. The default is 60. Specify 0 to disable.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_REDIRECTS;</entry>
+                        <entry><literal>jersey.config.client.NettyConnectorProvider.maxRedirect</literal></entry>
+                        <entry>
+                            <para>
+                                This property determines the maximal number of redirects during single request. Value is expected to be
+                                positive number. Default value is 5.
+                                HTTP redirection must be enabled by property org.glassfish.jersey.client.ClientProperties.FOLLOW_REDIRECTS
+                                otherwise &jersey.netty.NettyClientProperties.MAX_REDIRECTS; is not applied.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT;</entry>
+                        <entry><literal>jersey.config.client.redirect.preserve.method</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the HTTP POST method to be preserved on HTTP status 301 (MOVED PERMANENTLY) or status 302 (FOUND)
+                                when &lit.true; or redirected as GET when &lit.false;.
+                            </para>
+                            <para>
+                                The default value is &lit.true; and the HTTP POST request is not redirected as GET.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.client.request.expect.100.continue.timeout</literal></entry>
+                        <entry>
+                            <para>
+                                This timeout is used for waiting for 100-Continue response when 100-Continue
+                                is sent by the client.
+                                Default timeout value is 500 ms after which Expect:100-Continue feature is ignored.
+                                <literal>Since 2.41</literal>
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-client-jnh">
+        <title>Java Net HTTP client configuration properties</title>
+
+        <para>
+            List of client configuration properties that can be found in &jersey.jnh.JavaNetHttpClientProperties; class.
+        </para>
+
+        <table>
+            <title>List of Java Net HTTP client configuration properties</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.COOKIE_HANDLER;</entry>
+                        <entry><literal>jersey.config.jnh.client.cookieHandler</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of the <literal>java.net.CookieHandler</literal> that should be used by the
+                                <literal>java.net.http.HttpClient</literal>. If this option is not set,
+                                <literal>java.net.http.HttpClient#cookieHandler()</literal> will return an empty
+                                <literal>java.util.Optional</literal> and therefore no cookie handler will be used.
+                            </para>
+                            <para>
+                                A provided value to this option has to be of type <literal>java.net.CookieHandler</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.SSL_PARAMETERS;</entry>
+                        <entry><literal>jersey.config.jnh.client.sslParameters</literal></entry>
+                        <entry>
+                            <para>
+                                Configuration of SSL parameters used by the <literal>java.net.http.HttpClient</literal>.
+                                If this option is not set, then the <literal>java.net.http.HttpClient</literal> will use
+                                <it>implementation specific</it> default values.
+                            </para>
+                            <para>
+                                A provided value to this option has to be of type <literal>javax.net.ssl.SSLParameters</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION;</entry>
+                        <entry><literal>jersey.config.jnh.client.preemptiveBasicAuthentication</literal></entry>
+                        <entry>
+                            <para>
+                                An instance of the Authenticator class which represents an object that knows how to
+                                obtain authentication for a network connection should be used.
+                            </para>
+                            <para>
+                                If an <literal>java.net.Authenticator</literal> instance is found,
+                                it is then used for the given request.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.net.Authenticator</literal>.
+                                If the property is absent, no authentication is used.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.DISABLE_COOKIES;</entry>
+                        <entry><literal>jersey.config.jnh.client.disableCookies</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.false; indicates the client should handle cookies
+                                automatically using HttpClient's default cookie policy. A value
+                                of &lit.true; will cause the client to ignore all cookies.
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.lang.Boolean</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.jnh.JavaNetHttpClientProperties.HTTP_VERSION;</entry>
+                        <entry><literal>jersey.config.jnh.client.httpVersion</literal></entry>
+                        <entry>
+                            <para>
+                                HTTP version - if null or instance of HttpClient.Version.HTTP_1_1
+                                the version will be set to HTTP_1_1. If version is HttpClient.Version.HTTP_2
+                                the client will attempt to perform each request using HTTP_2 protocol
+                                but if not supported by server, the protocol will be still HTTP_1_1
+                            </para>
+                            <para>
+                                The value MUST be an instance of <literal>java.net.http.HttpClient.Version</literal>.
+                            </para>
+                            <para>
+                                The default value is &lit.null;.
+                            </para>
                         </entry>
                     </row>
                 </tbody>

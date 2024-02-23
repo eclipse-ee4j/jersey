@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
@@ -50,14 +51,12 @@ import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import com.google.common.util.concurrent.SettableFuture;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Reproducer for JERSEY-2705. Client side entity InputStream exception
@@ -80,7 +79,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "JavaDoc"})
     public static class TestResource {
 
-        private static final ConcurrentMap<String, SettableFuture<Exception>> REQUEST_MAP = new ConcurrentHashMap<>();
+        private static final ConcurrentMap<String, CompletableFuture<Exception>> REQUEST_MAP = new ConcurrentHashMap<>();
 
         @QueryParam(REQ_ID_PARAM_NAME)
         private String reqId;
@@ -100,7 +99,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
                 thrown = ex;
             }
 
-            if (!getFutureFor(reqId).set(thrown)) {
+            if (!getFutureFor(reqId).complete(thrown)) {
                 LOGGER.log(Level.WARNING,
                         "Unable to set stream processing exception into the settable future instance for request id " + reqId,
                         thrown);
@@ -113,7 +112,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
         @GET
         public Boolean getRequestWasMade() {
             // add a new future for the request if not there yet to avoid race conditions with POST processing
-            final SettableFuture<Exception> esf = getFutureFor(reqId);
+            final CompletableFuture<Exception> esf = getFutureFor(reqId);
             try {
                 // wait for up to three second for a request to be made;
                 // there is always a value, if set...
@@ -126,7 +125,7 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
         @Path("/requestCausedException")
         @GET
         public Boolean getRequestCausedException() {
-            final SettableFuture<Exception> esf = getFutureFor(reqId);
+            final CompletableFuture<Exception> esf = getFutureFor(reqId);
             try {
                 return esf.get(3, TimeUnit.SECONDS) != NO_EXCEPTION;
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -134,9 +133,9 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
             }
         }
 
-        private SettableFuture<Exception> getFutureFor(String key) {
-            final SettableFuture<Exception> esf = SettableFuture.create();
-            final SettableFuture<Exception> oldEsf = REQUEST_MAP.putIfAbsent(key, esf);
+        private CompletableFuture<Exception> getFutureFor(String key) {
+            final CompletableFuture<Exception> esf = new CompletableFuture();
+            final CompletableFuture<Exception> oldEsf = REQUEST_MAP.putIfAbsent(key, esf);
             return (oldEsf != null) ? oldEsf : esf;
         }
     }
@@ -161,15 +160,14 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
 
         Response testResponse = target("test").queryParam(REQ_ID_PARAM_NAME, testReqId)
                 .request().post(Entity.entity("0123456789ABCDEF", MediaType.APPLICATION_OCTET_STREAM));
-        assertEquals("Unexpected response status code.", 200, testResponse.getStatus());
-        assertEquals("Unexpected response entity.", "16", testResponse.readEntity(String.class));
+        assertEquals(200, testResponse.getStatus(), "Unexpected response status code.");
+        assertEquals("16", testResponse.readEntity(String.class), "Unexpected response entity.");
 
-        assertTrue("POST request " + testReqId + " has not reached the server.",
-                target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId)
-                        .request().get(Boolean.class));
-        assertFalse("POST request " + testReqId + " has caused an unexpected exception on the server.",
-                target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId)
-                        .request().get(Boolean.class));
+        assertTrue(target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId).request().get(Boolean.class),
+                "POST request " + testReqId + " has not reached the server.");
+        assertFalse(target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId)
+                .request().get(Boolean.class), "POST request " + testReqId
+                + " has caused an unexpected exception on the server.");
     }
 
     /**
@@ -192,24 +190,23 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
             connection.setChunkedStreamingMode(1024);
             OutputStream entityStream = connection.getOutputStream();
             ReaderWriter.writeTo(new ExceptionThrowingInputStream(BYTES_TO_SEND), entityStream);
-            Assert.fail("Expected ProcessingException has not been thrown.");
+            Assertions.fail("Expected ProcessingException has not been thrown.");
         } catch (IOException expected) {
             // so far so good
         } finally {
             connection.disconnect();
         }
         // we should make it to the server, but there the exceptional behaviour should get noticed
-        assertTrue("POST request " + testReqId + " has not reached the server.",
-                target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId).request().get(Boolean.class));
-        assertTrue("POST request " + testReqId + " did not cause an expected exception on the server.",
-                target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId)
-                        .request().get(Boolean.class));
+        assertTrue(target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId).request().get(Boolean.class),
+                "POST request " + testReqId + " has not reached the server.");
+        assertTrue(target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId).request()
+                .get(Boolean.class), "POST request " + testReqId + " did not cause an expected exception on the server.");
     }
 
     /**
      * This test reproduces the Jersey Client behavior reported in JERSEY-2705.
      */
-    @Ignore
+    @Disabled
     @Test
     public void testInterruptedJerseyClient() {
         final String testReqId = nextRequestId("testInterruptedJerseyClient");
@@ -217,16 +214,15 @@ public class ChunkedInputStreamClosedPrematurelyTest extends JerseyTest {
         try {
             target("test").queryParam(REQ_ID_PARAM_NAME, testReqId).request()
                     .post(Entity.entity(new ExceptionThrowingInputStream(BYTES_TO_SEND), MediaType.APPLICATION_OCTET_STREAM));
-            Assert.fail("Expected ProcessingException has not been thrown.");
+            Assertions.fail("Expected ProcessingException has not been thrown.");
         } catch (ProcessingException expected) {
             // so far so good
         }
         // we should make it to the server, but there the exceptional behaviour should get noticed
-        assertTrue("POST request " + testReqId + " has not reached the server.",
-                target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId).request().get(Boolean.class));
-        assertTrue("POST request " + testReqId + " did not cause an expected exception on the server.",
-                target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId)
-                        .request().get(Boolean.class));
+        assertTrue(target("test").path("requestWasMade").queryParam(REQ_ID_PARAM_NAME, testReqId).request().get(Boolean.class),
+                "POST request " + testReqId + " has not reached the server.");
+        assertTrue(target("test").path("requestCausedException").queryParam(REQ_ID_PARAM_NAME, testReqId)
+            .request().get(Boolean.class), "POST request " + testReqId + " did not cause an expected exception on the server.");
     }
 
     private static String nextRequestId(String testMethodName) {

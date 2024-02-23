@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,11 +28,32 @@ public class NettyClientProperties {
 
     /**
      * <p>
-     *    This property determines the maximum number of idle connections that will be simultaneously kept alive
-     *    in total, rather than per destination. The default is 60. Specify 0 to disable.
+     *     Sets the endpoint identification algorithm to HTTPS.
      * </p>
+     * <p>
+     *     The default value is {@code true} (for HTTPS uri scheme).
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.35
+     * @see javax.net.ssl.SSLParameters#setEndpointIdentificationAlgorithm(String)
      */
-    public static final String MAX_CONNECTIONS_TOTAL = "jersey.config.client.maxTotalConnections";
+    public static final String ENABLE_SSL_HOSTNAME_VERIFICATION = "jersey.config.client.tls.enableHostnameVerification";
+
+    /**
+     * <p>
+     *     Filter the HTTP headers for requests (CONNECT) towards the proxy except for PROXY-prefixed and HOST headers when {@code true}.
+     * </p>
+     * <p>
+     *     The default value is {@code true} and the headers are filtered out.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.41
+     */
+    public static final String FILTER_HEADERS_FOR_PROXY = "jersey.config.client.filter.headers.proxy";
 
     /**
      * <p>
@@ -53,4 +74,59 @@ public class NettyClientProperties {
      *  </p>
      */
     public static final String MAX_CONNECTIONS = "jersey.config.client.maxConnections";
+
+    /**
+     * <p>
+     *    This property determines the maximum number of idle connections that will be simultaneously kept alive
+     *    in total, rather than per destination. The default is 60. Specify 0 to disable.
+     * </p>
+     */
+    public static final String MAX_CONNECTIONS_TOTAL = "jersey.config.client.maxTotalConnections";
+
+    /**
+     * The maximal number of redirects during single request.
+     * <p/>
+     * Value is expected to be positive {@link Integer}. Default value is 5.
+     * <p/>
+     * HTTP redirection must be enabled by property {@link org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS},
+     * otherwise {@code MAX_REDIRECTS} is not applied.
+     *
+     * @since 2.36
+     * @see org.glassfish.jersey.client.ClientProperties#FOLLOW_REDIRECTS
+     * @see org.glassfish.jersey.netty.connector.internal.RedirectException
+     */
+    public static final String MAX_REDIRECTS = "jersey.config.client.NettyConnectorProvider.maxRedirects";
+
+    /**
+     * <p>
+     *     Sets the HTTP POST method to be preserved on HTTP status 301 (MOVED PERMANENTLY) or status 302 (FOUND) when {@code true}
+     *     or redirected as GET when {@code false}.
+     * </p>
+     * <p>
+     *     The default value is {@code true} and the HTTP POST request is not redirected as GET.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.41
+     */
+    public static final String PRESERVE_METHOD_ON_REDIRECT = "jersey.config.client.redirect.preserve.method";
+
+
+    /**
+     * This timeout is used for waiting for 100-Continue response when 100-Continue is sent by the client.
+     *
+     * @since 2.41
+     */
+    public static final String
+            EXPECT_100_CONTINUE_TIMEOUT = "jersey.config.client.request.expect.100.continue.timeout";
+
+    /**
+     * The default value of EXPECT_100_CONTINUE_TIMEOUT.
+     *
+     * @since 2.41
+     */
+    public static final Integer
+            DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE = 500;
+
 }

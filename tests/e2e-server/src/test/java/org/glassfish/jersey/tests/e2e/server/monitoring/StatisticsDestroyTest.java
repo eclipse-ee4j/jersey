@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,9 @@
  */
 
 package org.glassfish.jersey.tests.e2e.server.monitoring;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.management.ManagementFactory;
 
@@ -39,21 +42,18 @@ import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.simple.SimpleTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  *
  * @author Miroslav Fuksa
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({StatisticsDestroyTest.GrizzlyTestCase.class, StatisticsDestroyTest.JdkServerTestCase.class,
+@Suite
+@SelectClasses({StatisticsDestroyTest.GrizzlyTestCase.class, StatisticsDestroyTest.JdkServerTestCase.class,
         StatisticsDestroyTest.SimpleHttpServerTestCase.class})
 public class StatisticsDestroyTest {
 
@@ -71,7 +71,7 @@ public class StatisticsDestroyTest {
         }
 
         @Override
-        @After
+        @AfterEach
         public void tearDown() throws Exception {
             super.tearDown();
             assertTrue(StatisticsListener.ON_SHUTDOWN_CALLED);
@@ -90,7 +90,7 @@ public class StatisticsDestroyTest {
                 registered = mBeanServer.isRegistered(name);
             }
 
-            Assert.assertFalse("MBean should be already unregistered!", mBeanServer.isRegistered(name));
+            Assertions.assertFalse(mBeanServer.isRegistered(name), "MBean should be already unregistered!");
         }
 
         @Path("resource")
@@ -119,9 +119,9 @@ public class StatisticsDestroyTest {
                 registered = mBeanServer.isRegistered(name);
             }
 
-            assertTrue("MBean should be already registered!", mBeanServer.isRegistered(name));
+            assertTrue(mBeanServer.isRegistered(name), "MBean should be already registered!");
             final String str = (String) mBeanServer.getAttribute(name, "ApplicationName");
-            Assert.assertEquals("myApplication", str);
+            Assertions.assertEquals("myApplication", str);
         }
     }
 

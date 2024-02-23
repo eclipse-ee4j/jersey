@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,32 +16,24 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.SingleItemListWrapperBean;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * Reproducible test case for JERSEY-1835.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
-public class Jersey1835Test extends AbstractJsonTest {
+public class Jersey1835Test {
 
-    @Parameterized.Parameters()
-    public static Collection<JsonTestSetup[]> generateTestCases() throws Exception {
-        final List<JsonTestSetup[]> result = new LinkedList<JsonTestSetup[]>();
-        result.add(new JsonTestSetup[] {new JsonTestSetup(new Class<?>[] {SingleItemListWrapperBean.class},
-                new JsonTestProvider.JettisonMappedJsonTestProvider())});
-        return result;
-    }
-
-    public Jersey1835Test(final JsonTestSetup jsonTestSetup) throws Exception {
-        super(jsonTestSetup);
+    @TestFactory
+    public DynamicContainer generateTests() throws Exception {
+        JsonTestSetup setupTest = new JsonTestSetup(new Class<?>[]
+                {SingleItemListWrapperBean.class}, new JsonTestProvider.JettisonMappedJsonTestProvider());
+        JsonTest jsonTest = new JsonTest(setupTest) {};
+        return TestHelper.toTestContainer(jsonTest, "jersey1835Test");
     }
 }

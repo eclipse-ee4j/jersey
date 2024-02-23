@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -89,6 +89,15 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
         if (parameterName == null || parameterName.isEmpty()) {
             // Invalid query parameter name
             return null;
+        }
+
+        if (EntityPart.class == parameter.getType()) {
+            return new Function<ContainerRequest, Object>() {
+                @Override
+                public Object apply(ContainerRequest containerRequest) {
+                    return multipartProvider.getEntityPart(containerRequest, parameter);
+                }
+            };
         }
 
         MultivaluedParameterExtractor e = get(parameter);
@@ -259,14 +268,11 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
             });
         }
 
-
         @Override
         public Object apply(ContainerRequest containerRequest, Parameter parameter) {
             Object entity = null;
-            if (entityPartProvider.get() != null) { // else jersey-multipart module is missing
-                final Function<ContainerRequest, ?> valueSupplier = entityPartProvider.get().getValueProvider(
-                        new WrappingFormParamParameter(entityPartParameter, parameter));
-                final EntityPart entityPart = (EntityPart) valueSupplier.apply(containerRequest);
+            final EntityPart entityPart = getEntityPart(containerRequest, parameter);
+            if (entityPart != null) { // else jersey-multipart module is missing
                 try {
                     entity = parameter.getType() != parameter.getRawType()
                             ? entityPart.getContent(genericType(parameter.getRawType(), parameter.getType()))
@@ -277,6 +283,16 @@ final class FormParamValueParamProvider extends AbstractValueParamProvider {
             }
 
             return entity;
+        }
+
+        private EntityPart getEntityPart(ContainerRequest containerRequest, Parameter parameter) {
+            final ValueParamProvider valueParamProvider = entityPartProvider.get();
+            if (valueParamProvider != null) { // else jersey-multipart module is missing
+                final Function<ContainerRequest, ?> valueSupplier = valueParamProvider.getValueProvider(
+                        new WrappingFormParamParameter(entityPartParameter, parameter));
+                return (EntityPart) valueSupplier.apply(containerRequest);
+            }
+            return null;
         }
 
         private GenericType genericType(Type rawType, Type genericType) {

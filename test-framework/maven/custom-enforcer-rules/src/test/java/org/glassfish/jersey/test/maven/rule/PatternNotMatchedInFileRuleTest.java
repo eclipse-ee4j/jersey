@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Basic sanity test of {@link PatternNotMatchedInFileRule} enforcer rule.
@@ -29,9 +30,9 @@ import org.junit.Test;
  */
 public class PatternNotMatchedInFileRuleTest {
 
-    @Test(expected = EnforcerRuleException.class)
+    @Test
     public void testMatchedPath() throws URISyntaxException, EnforcerRuleException {
-        testFilePatternLineMatcher("/out_of_memory.dat");
+        assertThrows(EnforcerRuleException.class, () -> testFilePatternLineMatcher("/out_of_memory.dat"));
     }
 
     @Test
@@ -46,6 +47,6 @@ public class PatternNotMatchedInFileRuleTest {
         filePatternDoesNotContainLineMatching.file = new File(getClass().getResource(fileOnClasspath).toURI());
         filePatternDoesNotContainLineMatching.pattern = ".*java\\.lang\\.OutOfMemoryError.*";
 
-        filePatternDoesNotContainLineMatching.execute(null);
+        filePatternDoesNotContainLineMatching.execute();
     }
 }

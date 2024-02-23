@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package org.glassfish.jersey.tests.e2e.common.internal;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link org.glassfish.jersey.internal.LocalizationMessages}.
@@ -30,7 +30,7 @@ public class LocalizationMessagesTest {
 
     @Test
     public void test() {
-        Assert.assertTrue(LocalizationMessages.COMPONENT_CONTRACTS_EMPTY_OR_NULL("TYPE")
+        Assertions.assertTrue(LocalizationMessages.COMPONENT_CONTRACTS_EMPTY_OR_NULL("TYPE")
                 .contains("Attempt to register component of type TYPE"));
     }
 }

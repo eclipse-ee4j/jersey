@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.netty.connector;
 
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -25,9 +26,9 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the headers.
@@ -46,6 +47,15 @@ public class HttpHeadersTest extends JerseyTest {
             assertEquals("client", xClient);
             return "POST";
         }
+
+        @GET
+        public String get(
+                @HeaderParam("Transfer-Encoding") String transferEncoding,
+                @HeaderParam("X-CLIENT") String xClient,
+                @HeaderParam("X-WRITER") String xWriter) {
+            assertEquals("client", xClient);
+            return "GET";
+        }
     }
 
     @Override
@@ -61,6 +71,15 @@ public class HttpHeadersTest extends JerseyTest {
     @Test
     public void testPost() {
         Response response = target("test").request().header("X-CLIENT", "client").post(null);
+
+        assertEquals(200, response.getStatus());
+        assertTrue(response.hasEntity());
+        response.close();
+    }
+
+    @Test
+    public void testGet() {
+        Response response = target("test").request().header("X-CLIENT", "client").get();
 
         assertEquals(200, response.getStatus());
         assertTrue(response.hasEntity());

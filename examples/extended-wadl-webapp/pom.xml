@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,7 +19,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>extended-wadl-webapp</artifactId>
@@ -90,6 +90,12 @@
             <artifactId>pax-exam-link-mvn</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- OSGi runtime - Felix -->
         <dependency>
@@ -103,7 +109,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -133,8 +139,8 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>jakarta.activation</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-activation</artifactId>
         </dependency>
     </dependencies>
 
@@ -171,7 +177,7 @@
                     <dependency>
                         <groupId>jakarta.activation</groupId>
                         <artifactId>jakarta.activation-api</artifactId>
-                        <version>${jakarta.activation.version}</version>
+                        <version>${jakarta.activation-api.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>jakarta.xml.bind</groupId>
@@ -228,6 +234,16 @@
                             <artifactId>xercesImpl</artifactId>
                             <version>${xerces.version}</version>
                         </docletArtifact>
+                        <docletArtifact>
+                            <groupId>xml-apis</groupId>
+                            <artifactId>xml-apis</artifactId>
+                            <version>1.4.01</version>
+                        </docletArtifact>
+                        <docletArtifact>
+                            <groupId>jakarta.xml.bind</groupId>
+                            <artifactId>jakarta.xml.bind-api</artifactId>
+                            <version>${jakarta.jaxb.api.version}</version>
+                        </docletArtifact>
                     </docletArtifacts>
                     <!-- the following option is required as a work around for
                          version 2.5 of the javadoc plugin which will be used
@@ -243,12 +259,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkMode>always</forkMode>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <excludes>
                         <exclude>org/glassfish/jersey/examples/extendedwadl/ExtendedWadlWebappOsgiTest.java</exclude>
                     </excludes>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${surefire.mvn.plugin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.ops4j.pax.exam</groupId>

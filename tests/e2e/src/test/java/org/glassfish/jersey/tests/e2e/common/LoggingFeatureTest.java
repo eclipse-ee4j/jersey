@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,14 @@ package org.glassfish.jersey.tests.e2e.common;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -37,6 +41,8 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -48,9 +54,13 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.hamcrest.Matcher;
+import org.hamcrest.core.SubstringMatcher;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -63,8 +73,8 @@ import static org.hamcrest.Matchers.lessThan;
  *
  * @author Michal Gajdos
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
+@Suite
+@SelectClasses({
         LoggingFeatureTest.ClientTest.class,
         LoggingFeatureTest.ContainerTest.class,
         LoggingFeatureTest.ContainerAutodiscoveryTest.class,
@@ -117,6 +127,16 @@ public class LoggingFeatureTest {
                     .build();
         }
 
+        @Path("/echo-headers")
+        @GET
+        @Produces(TEXT_MEDIA_TYPE)
+        public Response getSameHeadersAsRequest(@Context HttpHeaders httpHeaders) {
+            Response.ResponseBuilder responseBuilder = Response.ok(ENTITY);
+            httpHeaders.getRequestHeaders().forEach(
+                    (key, values) -> values.forEach(
+                            value -> responseBuilder.header(key, value)));
+            return responseBuilder.build();
+        }
     }
 
     /**
@@ -269,11 +289,9 @@ public class LoggingFeatureTest {
         @Test
         public void testLoggingFeatureBuilderProperty() {
             final Response response = target("/text")
-                    .register(LoggingFeature
-                            .builder()
-                            .withLogger(Logger.getLogger(LOGGER_NAME))
-                            .build()
-                    ).property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_SEPARATOR, SEPARATOR)
                     .request()
                     .post(Entity.text(ENTITY));
 
@@ -284,6 +302,236 @@ public class LoggingFeatureTest {
             assertThat(record.getMessage(), containsString(SEPARATOR));
         }
 
+        @Test
+        public void testLoggingFeatureMaxEntitySize() {
+            final Response response = target("/text")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE, 1)
+                    .request()
+                    .post(Entity.text(ENTITY));
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for trimmedEntity.
+            String trimmedEntity = ENTITY.charAt(0) + "...more...";
+            List<LogRecord> logRecords = getLoggedRecords();
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), containsString(trimmedEntity));
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), containsString(trimmedEntity));
+        }
+
+        @Test
+        public void testSingleValuedHeader() {
+            String headerName = "X-Single-Valued-Header";
+            String headerValue = "test-value";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .request()
+                    .header(headerName, headerValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = new ContainsHeaderMatcher(headerName, headerValue);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testMultivaluedHeader() {
+            String headerName = "X-Multi-Valued-Header";
+            String firstHeaderValue = "first-value";
+            String secondHeaderValue = "second-value";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .request()
+                    .header(headerName, firstHeaderValue)
+                    .header(headerName, secondHeaderValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = new ContainsHeaderMatcher(headerName, firstHeaderValue, secondHeaderValue);
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testMultipleHeaders() {
+            String firstHeaderName = "X-First-Header";
+            String firstHeaderValue = "first-value";
+            String secondHeaderName = "X-Second-Header";
+            String secondHeaderValue = "second-value";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .request()
+                    .header(firstHeaderName, firstHeaderValue)
+                    .header(secondHeaderName, secondHeaderValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(firstHeaderName, firstHeaderValue),
+                    new ContainsHeaderMatcher(secondHeaderName, secondHeaderValue));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testAuthorizationHeaderRedactedByDefault() {
+            String headerName = HttpHeaders.AUTHORIZATION;
+            String headerValue = "username:password";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .request()
+                    .header(headerName, headerValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(headerName, "[redacted]"),
+                    not(containsString(headerValue)));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testLoggingFeatureRedactOneHeader() {
+            String headerName = "X-Redact-This-Header";
+            String headerValue = "sensitive-info";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, headerName)
+                    .request()
+                    .header(headerName, headerValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(headerName, "[redacted]"),
+                    not(containsString(headerValue)));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testLoggingFeatureRedactOneHeaderNormalizing() {
+            String headerName = "X-Redact-This-Header";
+            String headerValue = "sensitive-info";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS,
+                            " " + headerName.toUpperCase(Locale.ROOT) + " ")
+                    .request()
+                    .header(headerName, headerValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(headerName, "[redacted]"),
+                    not(containsString(headerValue)));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testLoggingFeatureRedactMultivaluedHeader() {
+            String headerName = "X-Redact-This-Header";
+            String firstHeaderValue = "sensitive-info";
+            String secondHeaderValue = "additional-info";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, headerName)
+                    .request()
+                    .header(headerName, firstHeaderValue)
+                    .header(headerName, secondHeaderValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(headerName, "[redacted]"),
+                    not(containsString(firstHeaderValue)),
+                    not(containsString(secondHeaderValue)));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testLoggingFeatureRedactMultipleHeaders() {
+            String firstHeaderName = "X-Redact-This-Header";
+            String firstHeaderValue = "sensitive-info";
+            String secondHeaderName = "X-Also-Redact-This-Header";
+            String secondHeaderValue = "additional-info";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, firstHeaderName + ';' + secondHeaderName)
+                    .request()
+                    .header(firstHeaderName, firstHeaderValue)
+                    .header(secondHeaderName, secondHeaderValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(firstHeaderName, "[redacted]"),
+                    not(containsString(firstHeaderValue)),
+                    new ContainsHeaderMatcher(secondHeaderName, "[redacted]"),
+                    not(containsString(secondHeaderValue)));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
+
+        @Test
+        public void testLoggingFeatureRedactZeroHeaders() {
+            String headerName = HttpHeaders.AUTHORIZATION;
+            String headerValue = "username:password";
+            final Response response = target("/echo-headers")
+                    .register(LoggingFeature.class)
+                    .property(LoggingFeature.LOGGING_FEATURE_LOGGER_NAME, LOGGER_NAME)
+                    .property(LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS, "")
+                    .request()
+                    .header(headerName, headerValue)
+                    .get();
+
+            // Correct response status.
+            assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+            // Check logs for header
+            List<LogRecord> logRecords = getLoggedRecords();
+            Matcher<String> matcher = allOf(
+                    new ContainsHeaderMatcher(headerName, headerValue),
+                    not(containsString("[redacted]")));
+            assertThat(getLoggingFilterRequestLogRecord(logRecords).getMessage(), matcher);
+            assertThat(getLoggingFilterResponseLogRecord(logRecords).getMessage(), matcher);
+        }
     }
 
     /**
@@ -460,32 +708,67 @@ public class LoggingFeatureTest {
 
             // --- client request log entry
             // client added header before request has sent (and logged)
-            assertThat(getLoggedRecords().get(0).getMessage(),
+            Iterator<LogRecord> it = getLoggedRecords().iterator();
+            LogRecord logRecord = it.next();
+            while (logRecord.getLevel() == Level.WARNING) { // Skip any warning at the beginning
+                logRecord = it.next();
+            }
+            assertThat(logRecord.getMessage(),
                     containsString("1 > custom_header: client/request\n"));
 
 
             // --- container request log entry
             // container receives header from client request
-            assertThat(getLoggedRecords().get(1).getMessage(),
+            logRecord = it.next();
+            assertThat(logRecord.getMessage(),
                     containsString("1 > custom_header: client/request\n"));
             // container has added its own header after logging filter logged message
-            assertThat(getLoggedRecords().get(1).getMessage(),
+            assertThat(logRecord.getMessage(),
                     not(containsString("1 > custom_header: container/request\n")));
 
 
             // --- container response log entry
             // container added header to the response and it was logged
-            assertThat(getLoggedRecords().get(2).getMessage(),
+            assertThat(it.next().getMessage(),
                     containsString("1 < custom_header: container/response\n"));
 
             // --- client response log entry
             // client received header
-            assertThat(getLoggedRecords().get(3).getMessage(),
+            logRecord = it.next();
+            assertThat(logRecord.getMessage(),
                     containsString("1 < custom_header: container/response\n"));
-            assertThat(getLoggedRecords().get(3).getMessage(),
+            assertThat(logRecord.getMessage(),
                     not(containsString("1 < custom_header: client/response\n")));
 
         }
 
+    }
+
+    private static final class ContainsHeaderMatcher extends SubstringMatcher {
+
+        ContainsHeaderMatcher(String headerName, String... headerValues) {
+            super("matching regex", true, makeRegex(headerName, Arrays.asList(headerValues)));
+        }
+
+        private static String makeRegex(String headerName, List<String> headerValues) {
+            StringBuilder stringBuilder = new StringBuilder("^[\\s\\S]*")
+                    // Header name is case insensitive
+                    .append("(?i)").append(quote(headerName)).append("(?-i): ");
+
+            // Not assuming order of header values is guaranteed to be consistent
+            headerValues.forEach(headerValue -> stringBuilder
+                    .append("(?=.*").append(quote(headerValue)).append(",?)"));
+
+            return stringBuilder.append("[\\s\\S]*$").toString();
+        }
+
+        private static String quote(String input) {
+            return Pattern.quote(input);
+        }
+
+        @Override
+        protected boolean evalSubstringOf(String string) {
+            return string.matches(substring);
+        }
     }
 }

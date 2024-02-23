@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,30 +16,33 @@
 
 package org.glassfish.jersey.tests.externalproperties;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
 public class HttpProxyTest extends JerseyTest {
+    public HttpProxyTest() {
+        set(TestProperties.CONTAINER_PORT, 0);
+    }
 
     private static final String PROXY_HOST = "localhost";
-    private static final String PROXY_PORT = "9997";
+    private static final String PROXY_PORT = "0";
     private static boolean proxyHit = false;
 
     @Path("resource")
@@ -57,10 +60,9 @@ public class HttpProxyTest extends JerseyTest {
         return new ResourceConfig(ProxyTestResource.class);
     }
 
-    @Before
+    @BeforeEach
     public void startFakeProxy() {
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, PROXY_PORT);
         Server server = new Server(Integer.parseInt(PROXY_PORT));
         server.setHandler(new ProxyHandler(false));
         try {
@@ -68,6 +70,7 @@ public class HttpProxyTest extends JerseyTest {
         } catch (Exception e) {
 
         }
+        System.setProperty(ExternalProperties.HTTP_PROXY_PORT, String.valueOf(server.getURI().getPort()));
     }
 
     @Override
@@ -81,7 +84,7 @@ public class HttpProxyTest extends JerseyTest {
 
         Response response = target("resource").request().get();
 
-        Assert.assertEquals(407, response.getStatus());
+        Assertions.assertEquals(407, response.getStatus());
     }
 
     @Test
@@ -90,20 +93,18 @@ public class HttpProxyTest extends JerseyTest {
 
         Response response = target("resource").request().get();
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("OK", response.readEntity(String.class));
-        Assert.assertFalse(proxyHit);
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals("OK", response.readEntity(String.class));
+        Assertions.assertFalse(proxyHit);
     }
 
-    class ProxyHandler extends AbstractHandler {
+    class ProxyHandler extends Handler.Abstract {
         @Override
-        public void handle(String target,
-                           Request baseRequest,
-                           HttpServletRequest request,
-                           HttpServletResponse response) {
+        public boolean handle(Request request, org.eclipse.jetty.server.Response response, Callback callback) throws Exception {
             proxyHit = true;
             response.setStatus(407);
-            baseRequest.setHandled(true);
+            callback.succeeded();
+            return true;
         }
 
         ProxyHandler(boolean pProxyHit) {
@@ -113,4 +114,3 @@ public class HttpProxyTest extends JerseyTest {
     }
 
 }
-

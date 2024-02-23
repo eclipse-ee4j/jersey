@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -19,7 +19,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>servlet3-webapp</artifactId>
@@ -37,7 +37,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet5.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -62,8 +61,8 @@
 <!--                <artifactId>maven-failsafe-plugin</artifactId>-->
 <!--            </plugin>-->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-maven-plugin</artifactId>
                 <configuration>
 <!--                    <skip>${skip.tests}</skip>-->
 <!--                    <stopWait>10</stopWait>-->

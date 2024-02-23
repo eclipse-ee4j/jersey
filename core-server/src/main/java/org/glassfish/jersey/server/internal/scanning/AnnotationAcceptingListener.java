@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -276,6 +276,12 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
             return null;
         }
 
+        @Override
+        public ClassVisitor getDelegate() {
+            //do nothing
+            return null;
+        }
+
         private Class getClassForName(final String className) {
             try {
                 final OsgiRegistry osgiRegistry = ReflectionHelper.getOsgiRegistryInstance();
@@ -303,7 +309,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V18;
+        private static final int WARN_VERSION = Opcodes.V22;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;
@@ -313,7 +319,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
         private void accept(final ClassVisitor classVisitor, final int parsingOptions) {
             final int originalVersion = getMajorVersion(b);
-            if (originalVersion == WARN_VERSION + 1) {
+            if (originalVersion > WARN_VERSION) {
                 // temporarily downgrade version to bypass check in ASM
                 setMajorVersion(WARN_VERSION, b);
                 LOGGER.warning("Unsupported class file major version " + originalVersion);

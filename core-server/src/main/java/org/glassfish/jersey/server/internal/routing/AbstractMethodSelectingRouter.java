@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -201,10 +201,10 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
         /**
          * Determines whether this {@code ConsumesProducesAcceptor} router can process the {@code request}.
          *
-         * @param requestContext The request to be tested.
+         * @param contentType The media type of the {@code request} to be tested (can be NULL).
          * @return True if the {@code request} can be processed by this router, false otherwise.
          */
-        abstract boolean isConsumable(ContainerRequest requestContext);
+        abstract boolean isConsumable(MediaType contentType);
 
         @Override
         public String toString() {
@@ -399,8 +399,9 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
 
         final List<ConsumesProducesAcceptor> satisfyingAcceptors = new LinkedList<>();
         final Set<ResourceMethod> differentInvokableMethods = Collections.newSetFromMap(new IdentityHashMap<>());
-        for (ConsumesProducesAcceptor cpi : acceptors) {
-            if (cpi.isConsumable(request)) {
+        final MediaType requestContentType = request.getMediaType();
+        for (final ConsumesProducesAcceptor cpi : acceptors) {
+            if (cpi.isConsumable(requestContentType)) {
                 satisfyingAcceptors.add(cpi);
                 differentInvokableMethods.add(cpi.methodRouting.method);
             }
@@ -411,7 +412,6 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
 
         final List<AcceptableMediaType> acceptableMediaTypes = request.getQualifiedAcceptableMediaTypes();
 
-        final MediaType requestContentType = request.getMediaType();
         final MediaType effectiveContentType = requestContentType == null ? MediaType.WILDCARD_TYPE : requestContentType;
 
         final MethodSelector methodSelector = selectMethod(acceptableMediaTypes, satisfyingAcceptors, effectiveContentType,

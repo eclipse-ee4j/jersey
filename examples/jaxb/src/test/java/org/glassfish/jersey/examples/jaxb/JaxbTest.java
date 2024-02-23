@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -16,7 +16,6 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
 import static jakarta.ws.rs.client.Entity.xml;
 
-import jakarta.ws.rs.core.MediaType;
 import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
@@ -24,9 +23,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Jersey JAXB example test.
@@ -50,8 +49,7 @@ public class JaxbTest extends JerseyTest {
     @Test
     public void testApplicationWadl() {
         String applicationWadl = target().path("application.wadl").request().get(String.class);
-        assertTrue("Something wrong. Returned wadl length is not > 0",
-                applicationWadl.length() > 0);
+        assertTrue(applicationWadl.length() > 0, "Something wrong. Returned wadl length is not > 0");
     }
 
     @Test
@@ -78,7 +76,7 @@ public class JaxbTest extends JerseyTest {
 
         JAXBElement<JaxbXmlType> e1 = target().path("jaxb/JAXBElement").request().get(genericType);
 
-        JAXBElement<JaxbXmlType> e2 = target().path("jaxb/JAXBElement").request(MediaType.APPLICATION_XML)
+        JAXBElement<JaxbXmlType> e2 = target().path("jaxb/JAXBElement").request("application/xml")
                 .post(xml(e1), genericType);
 
         assertEquals(e1.getValue(), e2.getValue());
@@ -92,7 +90,7 @@ public class JaxbTest extends JerseyTest {
                 new QName("jaxbXmlRootElement"),
                 JaxbXmlType.class,
                 t1);
-        JaxbXmlType t2 = target().path("jaxb/XmlType").request(MediaType.APPLICATION_XML)
+        JaxbXmlType t2 = target().path("jaxb/XmlType").request("application/xml")
                 .post(xml(e), JaxbXmlType.class);
 
         assertEquals(t1, t2);
@@ -105,7 +103,7 @@ public class JaxbTest extends JerseyTest {
                 new GenericType<Collection<JaxbXmlRootElement>>() {};
 
         Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request().get(genericType);
-        Collection<JaxbXmlRootElement> ce2 = target().path("jaxb/collection/XmlRootElement").request(MediaType.APPLICATION_XML)
+        Collection<JaxbXmlRootElement> ce2 = target().path("jaxb/collection/XmlRootElement").request("application/xml")
                 .post(xml(new GenericEntity<Collection<JaxbXmlRootElement>>(ce1) {}), genericType);
 
         assertEquals(ce1, ce2);
@@ -119,20 +117,23 @@ public class JaxbTest extends JerseyTest {
                 new GenericType<Collection<JaxbXmlType>>() {
                 };
 
-        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request().get(genericRootElement);
+        Collection<JaxbXmlRootElement> ce1 = target().path("jaxb/collection/XmlRootElement").request()
+                .get(genericRootElement);
 
-        Collection<JaxbXmlType> ct1 = target().path("jaxb/collection/XmlType").request(MediaType.APPLICATION_XML)
+        Collection<JaxbXmlType> ct1 = target().path("jaxb/collection/XmlType").request("application/xml")
                 .post(xml(new GenericEntity<Collection<JaxbXmlRootElement>>(ce1) {}), genericXmlType);
 
-        Collection<JaxbXmlType> ct2 = target().path("jaxb/collection/XmlRootElement").request().get(genericXmlType);
+        Collection<JaxbXmlType> ct2 = target().path("jaxb/collection/XmlRootElement").request()
+                .get(genericXmlType);
 
         assertEquals(ct1, ct2);
     }
 
     @Test
     public void testRootElementArray() {
-        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlRootElement[].class);
-        JaxbXmlRootElement[] ae2 = target().path("jaxb/array/XmlRootElement").request(MediaType.APPLICATION_XML)
+        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request()
+                .get(JaxbXmlRootElement[].class);
+        JaxbXmlRootElement[] ae2 = target().path("jaxb/array/XmlRootElement").request("application/xml")
                 .post(xml(ae1), JaxbXmlRootElement[].class);
 
         assertEquals(ae1.length, ae2.length);
@@ -143,12 +144,14 @@ public class JaxbTest extends JerseyTest {
 
     @Test
     public void testXmlTypeArray() {
-        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlRootElement[].class);
+        JaxbXmlRootElement[] ae1 = target().path("jaxb/array/XmlRootElement").request()
+                .get(JaxbXmlRootElement[].class);
 
-        JaxbXmlType[] at1 = target().path("jaxb/array/XmlType").request(MediaType.APPLICATION_XML)
+        JaxbXmlType[] at1 = target().path("jaxb/array/XmlType").request("application/xml")
                 .post(xml(ae1), JaxbXmlType[].class);
 
-        JaxbXmlType[] at2 = target().path("jaxb/array/XmlRootElement").request().get(JaxbXmlType[].class);
+        JaxbXmlType[] at2 = target().path("jaxb/array/XmlRootElement").request()
+                .get(JaxbXmlType[].class);
 
         assertEquals(at1.length, at2.length);
         for (int i = 0; i < at1.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,11 +37,11 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Paul Sandoz
@@ -95,7 +95,7 @@ public class CookieTest extends JerseyTest {
 
         final JettyConnector connector = (JettyConnector) client.getConfiguration().getConnector();
         if (connector.getCookieStore() != null) {
-            assertTrue(connector.getCookieStore().getCookies().isEmpty());
+            assertTrue(connector.getCookieStore().all().isEmpty());
         } else {
             assertNull(connector.getCookieStore());
         }
@@ -113,9 +113,9 @@ public class CookieTest extends JerseyTest {
         assertEquals("value", r.request().get(String.class));
 
         final JettyConnector connector = (JettyConnector) client.getConfiguration().getConnector();
-        assertNotNull(connector.getCookieStore().getCookies());
-        assertEquals(1, connector.getCookieStore().getCookies().size());
-        assertEquals("value", connector.getCookieStore().getCookies().get(0).getValue());
+        assertNotNull(connector.getCookieStore().all());
+        assertEquals(1, connector.getCookieStore().all().size());
+        assertEquals("value", connector.getCookieStore().all().get(0).getValue());
         client.close();
     }
 }

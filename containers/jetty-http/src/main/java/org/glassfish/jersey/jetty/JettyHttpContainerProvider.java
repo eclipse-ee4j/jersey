@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,16 +31,25 @@ import org.glassfish.jersey.server.spi.ContainerProvider;
  */
 public final class JettyHttpContainerProvider implements ContainerProvider {
 
+    public static final String HANDLER_NAME = "org.eclipse.jetty.server.Handler";
     @Override
     public <T> T createContainer(final Class<T> type, final Application application) throws ProcessingException {
-        if (JdkVersion.getJdkVersion().getMajor() < 11) {
+        if (JdkVersion.getJdkVersion().getMajor() < 17) {
             throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
         }
-        if (type != null
-                && ("org.eclipse.jetty.server.Handler".equalsIgnoreCase(type.getCanonicalName())
-                        || JettyHttpContainer.class == type)
-        ) {
+        if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
             return type.cast(new JettyHttpContainer(application));
+        }
+        return null;
+    }
+
+    public <T> T createContainer(final Class<T> type, final Application application,
+                                 Object parentContext) throws ProcessingException {
+        if (JdkVersion.getJdkVersion().getMajor() < 17) {
+            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
+        }
+        if (type != null && (HANDLER_NAME.equalsIgnoreCase(type.getCanonicalName()) || JettyHttpContainer.class == type)) {
+            return type.cast(new JettyHttpContainer(application, parentContext));
         }
         return null;
     }

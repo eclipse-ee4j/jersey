@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,13 +19,16 @@ package org.glassfish.jersey.message.internal;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,8 +54,11 @@ public final class ReaderWriter {
     private static final Logger LOGGER = Logger.getLogger(ReaderWriter.class.getName());
     /**
      * The UTF-8 Charset.
+     *
+     * @deprecated use {@code StandardCharsets.UTF_8} instead
      */
-    public static final Charset UTF8 = Charset.forName("UTF-8");
+    @Deprecated
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
     /**
      * The buffer size for arrays of byte and character.
      */
@@ -113,14 +119,14 @@ public final class ReaderWriter {
      * Get the character set from a media type.
      * <p>
      * The character set is obtained from the media type parameter "charset".
-     * If the parameter is not present the {@link #UTF8} charset is utilized.
+     * If the parameter is not present the {@link StandardCharsets#UTF_8} charset is utilized.
      *
      * @param m the media type.
      * @return the character set.
      */
     public static Charset getCharset(MediaType m) {
         String name = (m == null) ? null : m.getParameters().get(MediaType.CHARSET_PARAMETER);
-        return (name == null) ? UTF8 : Charset.forName(name);
+        return (name == null) ? StandardCharsets.UTF_8 : Charset.forName(name);
     }
 
     /**
@@ -134,7 +140,7 @@ public final class ReaderWriter {
      * @throws IOException if there is an error reading from the input stream.
      */
     public static String readFromAsString(InputStream in, MediaType type) throws IOException {
-        return readFromAsString(new InputStreamReader(in, getCharset(type)));
+        return new String(readAllBytes(in), getCharset(type));
     }
 
     /**
@@ -154,6 +160,80 @@ public final class ReaderWriter {
         }
         return sb.toString();
     }
+    /**
+     * The maximum size of array to allocate.
+     * Some VMs reserve some header words in an array.
+     * Attempts to allocate larger arrays may result in
+     * OutOfMemoryError: Requested array size exceeds VM limit
+     */
+    private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
+
+    /**
+     * Java 9+ InputStream::readAllBytes
+     * TODO Replace in Jersey 4.0, as the sole difference to OpenJDK is working around a bug in the input stream.
+     */
+    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+        List<byte[]> bufs = null;
+        byte[] result = null;
+        int total = 0;
+        int remaining = Integer.MAX_VALUE;
+        int n;
+        do {
+            byte[] buf = new byte[Math.min(remaining, BUFFER_SIZE)];
+            int nread = 0;
+
+            // read to EOF which may read more or less than buffer size
+            while ((n = inputStream.read(buf, nread,
+                    Math.min(buf.length - nread, remaining))) > 0) {
+                nread += n;
+                remaining -= n;
+
+                if (nread == BUFFER_SIZE) { // This differs from JDK version
+                    break;                  // prevents a bug (See ReaderWriterTest)
+                }
+            }
+
+            if (nread > 0) {
+                if (MAX_BUFFER_SIZE - total < nread) {
+                    throw new OutOfMemoryError("Required array size too large");
+                }
+                if (nread < buf.length) {
+                    buf = Arrays.copyOfRange(buf, 0, nread);
+                }
+                total += nread;
+                if (result == null) {
+                    result = buf;
+                } else {
+                    if (bufs == null) {
+                        bufs = new ArrayList<>();
+                        bufs.add(result);
+                    }
+                    bufs.add(buf);
+                }
+            }
+            // if the last call to read returned -1 or the number of bytes
+            // requested have been read then break
+        } while (n >= 0 && remaining > 0);
+
+        if (bufs == null) {
+            if (result == null) {
+                return new byte[0];
+            }
+            return result.length == total ? result : Arrays.copyOf(result, total);
+        }
+
+        result = new byte[total];
+        int offset = 0;
+        remaining = total;
+        for (byte[] b : bufs) {
+            int count = Math.min(b.length, remaining);
+            System.arraycopy(b, 0, result, offset, count);
+            offset += count;
+            remaining -= count;
+        }
+
+        return result;
+    }
 
     /**
      * Convert a string to bytes and write those bytes to an output stream.
@@ -166,7 +246,7 @@ public final class ReaderWriter {
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
         Writer osw = new OutputStreamWriter(out, getCharset(type));
-        osw.write(s, 0, s.length());
+        osw.write(s);
         osw.flush();
     }
 

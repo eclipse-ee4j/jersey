@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,64 +16,48 @@
 
 package org.glassfish.jersey.tests.cdi.resources;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test injection of request depending instances works as expected.
  *
  * @author Jakub Podlesak
  */
-@RunWith(Parameterized.class)
 public class RequestSensitiveTest extends CdiTest {
 
-    @Parameterized.Parameters
-    public static List<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
-                {"app-field-injected", "alpha", "App: alpha"},
-                {"app-field-injected", "gogol", "App: gogol"},
-                {"app-field-injected", "elcaro", "App: elcaro"},
-                {"app-ctor-injected", "alpha", "App: alpha"},
-                {"app-ctor-injected", "gogol", "App: gogol"},
-                {"app-ctor-injected", "elcaro", "App: elcaro"},
-                {"request-field-injected", "alpha", "Request: alpha"},
-                {"request-field-injected", "gogol", "Request: gogol"},
-                {"request-field-injected", "oracle", "Request: oracle"},
-                {"request-ctor-injected", "alpha", "Request: alpha"},
-                {"request-ctor-injected", "gogol", "Request: gogol"},
-                {"request-ctor-injected", "oracle", "Request: oracle"}
-        });
+    public static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("app-field-injected", "alpha", "App: alpha"),
+                Arguments.of("app-field-injected", "gogol", "App: gogol"),
+                Arguments.of("app-field-injected", "elcaro", "App: elcaro"),
+                Arguments.of("app-ctor-injected", "alpha", "App: alpha"),
+                Arguments.of("app-ctor-injected", "gogol", "App: gogol"),
+                Arguments.of("app-ctor-injected", "elcaro", "App: elcaro"),
+                Arguments.of("request-field-injected", "alpha", "Request: alpha"),
+                Arguments.of("request-field-injected", "gogol", "Request: gogol"),
+                Arguments.of("request-field-injected", "oracle", "Request: oracle"),
+                Arguments.of("request-ctor-injected", "alpha", "Request: alpha"),
+                Arguments.of("request-ctor-injected", "gogol", "Request: gogol"),
+                Arguments.of("request-ctor-injected", "oracle", "Request: oracle")
+        );
     }
 
-    final String resource, straight, echoed;
-
-    /**
-     * Construct instance with the above test data injected.
-     *
-     * @param resource uri of the resource to be tested.
-     * @param straight request specific input.
-     * @param echoed   CDI injected service should produce this out of previous, straight, parameter.
-     */
-    public RequestSensitiveTest(final String resource, final String straight, final String echoed) {
-        this.resource = resource;
-        this.straight = straight;
-        this.echoed = echoed;
-    }
-
-    @Test
-    public void testCdiInjection() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testCdiInjection(String resource, String straight, String echoed) {
         final String s = target().path(resource).queryParam("s", straight).request().get(String.class);
         assertThat(s, equalTo(echoed));
     }
 
-    @Test
-    public void testHk2Injection() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testHk2Injection(String resource, String straight, String echoed) {
         final String s = target().path(resource).path("path").path(straight).request().get(String.class);
         assertThat(s, equalTo(String.format("%s/path/%s", resource, straight)));
     }

@@ -775,8 +775,8 @@ public final class ServerProperties {
      * {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code false}.
      * </p>
      * <p>
-     * If {@link jakarta.ws.rs.SeBootstrap.Configuration#PORT} is set to {@code 0}, the implementation chooses random ports
-     * (0-65535) when {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code true}, or (1024-65535) when
+     * If {@link jakarta.ws.rs.SeBootstrap.Configuration#PORT} is set to {@code 0}, the implementation scans for random unused
+     * port (0-65535) when {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code true}, or (1024-65535) when
      * {@code WEBSERVER_ALLOW_PRIVILEGED_PORTS} is {@code false.}
      * </p>
      * <p>

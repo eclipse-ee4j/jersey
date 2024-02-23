@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -199,7 +199,8 @@ class HttpConnection {
 
             }
 
-            socket = new SslFilter(transportFilter, sslContext, uri.getHost(), configuration.getHostnameVerifier());
+            socket = new SslFilter(transportFilter, sslContext, uri.getHost(),
+                            configuration.getHostnameVerifier(), configuration.getSniConfig());
         } else {
             socket = new TransportFilter(INPUT_BUFFER_SIZE, configuration.getThreadPoolConfig(),
                     configuration.getContainerIdleTimeout());

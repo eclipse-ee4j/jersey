@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,9 +23,9 @@ import jakarta.ws.rs.core.NewCookie;
 
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Marc Hadley
@@ -191,7 +191,7 @@ public class CookieImplTest {
         cookie = new NewCookie("fred", "flintstone", null, null, 1,
                 "a modern stonage family", 60, null, false, false,
                 NewCookie.SameSite.STRICT);
-        expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;SameSite=STRICT";
+        expResult = "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;SameSite=Strict";
         assertEquals(expResult, cookie.toString());
     }
 
@@ -217,7 +217,7 @@ public class CookieImplTest {
         assertTrue(cookie.isSecure());
 
         cookie = NewCookie.valueOf(
-                "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;Secure;SameSite=NONE");
+                "fred=flintstone;Version=1;Comment=\"a modern stonage family\";Max-Age=60;Secure;SameSite=None");
         assertEquals("fred", cookie.getName());
         assertEquals("flintstone", cookie.getValue());
         assertEquals("a modern stonage family", cookie.getComment());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -22,8 +22,8 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * HTTP PATCH Example unit tests.
@@ -62,7 +62,7 @@ public class HttpPatchTest extends JerseyTest {
 
         // initial precondition check
         final State expected = new State();
-        assertEquals(expected, target.request(MediaType.APPLICATION_JSON).get(State.class));
+        assertEquals(expected, target.request("application/json").get(State.class));
 
         // apply first patch
         expected.setMessage("patchedMessage");
@@ -94,7 +94,7 @@ public class HttpPatchTest extends JerseyTest {
         assertEquals(expected, target.request()
                                      .method("PATCH",
                                              Entity.entity(patch_1, MediaType.APPLICATION_JSON_PATCH_JSON), State.class));
-        assertEquals(expected, target.request(MediaType.APPLICATION_JSON).get(State.class));
+        assertEquals(expected, target.request("application/json").get(State.class));
 
         // apply second patch
         expected.getList().add("three");

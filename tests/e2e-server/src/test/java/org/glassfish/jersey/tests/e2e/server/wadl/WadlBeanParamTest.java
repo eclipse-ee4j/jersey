@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collections;
 
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.CookieParam;
@@ -38,9 +39,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -50,18 +55,16 @@ import javax.xml.xpath.XPathFactory;
 import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementNameAndTextQualifier;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Test;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.ComparisonResult;
+import org.xmlunit.diff.ComparisonType;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests whether WADL for a {@link BeanParam} annotated resource method parameter is generated properly.
@@ -76,35 +79,6 @@ import com.google.common.collect.ImmutableMap;
  * @author Stepan Vavra
  */
 public class WadlBeanParamTest extends JerseyTest {
-
-    private final ElementNameAndTextQualifier elementQualifier = new ElementNameAndTextQualifier() {
-
-        /**
-         * For {@code <param ??? />} nodes, the comparison is based on matching {@code name} attributes while ignoring
-         * their order. For any other nodes, strict comparison (including ordering) is made.
-         *
-         * @param control The reference element to compare the {@code test} with.
-         * @param test The test element to compare against {@code control}.
-         * @return Whether given nodes qualify for comparison.
-         */
-        @Override
-        public boolean qualifyForComparison(final Element control, final Element test) {
-            if (test != null && !"param".equals(test.getNodeName())) {
-                return super.qualifyForComparison(control, test);
-            }
-            if (!(control != null && test != null
-                          && equalsNamespace(control, test)
-                          && getNonNamespacedNodeName(control).equals(getNonNamespacedNodeName(test)))) {
-                return false;
-            }
-            if (control.hasAttribute("name") && test.hasAttribute("name")) {
-                if (control.getAttribute("name").equals(test.getAttribute("name"))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
 
     @Override
     protected Application configure() {
@@ -159,18 +133,28 @@ public class WadlBeanParamTest extends JerseyTest {
         final SimpleNamespaceResolver nsContext = new SimpleNamespaceResolver("wadl", "http://wadl.dev.java.net/2009/02");
         xp.setNamespaceContext(nsContext);
 
-        final Diff diff = XMLUnit.compareXML(
-                nodeAsString(
-                        xp.evaluate("//wadl:resource[@path='wadlBeanParamReference']/wadl:resource", d,
-                                XPathConstants.NODE)),
-                nodeAsString(
-                        xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
-                                XPathConstants.NODE))
-        );
-        XMLUnit.setXpathNamespaceContext(
-                new SimpleNamespaceContext(ImmutableMap.of("wadl", "http://wadl.dev.java.net/2009/02")));
-        diff.overrideElementQualifier(elementQualifier);
-        XMLAssert.assertXMLEqual(diff, true);
+        final Diff diff = DiffBuilder.compare(
+                        nodeAsString(
+                                xp.evaluate("//wadl:resource[@path='wadlBeanParamReference']/wadl:resource", d,
+                                        XPathConstants.NODE)))
+                .withTest(
+                        nodeAsString(
+                                xp.evaluate("//wadl:resource[@path='" + resource + "']/wadl:resource", d,
+                                        XPathConstants.NODE))
+                ).withNamespaceContext(Collections.singletonMap("wadl", "http://wadl.dev.java.net/2009/02"))
+                /**
+                 * For nodes, the comparison is based on matching {@code name} attributes while ignoring
+                 * their order. For any other nodes, strict comparison (including ordering) is made.
+                 * **/
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAttributes("name")))
+                .withDifferenceEvaluator(((comparison, outcome) -> {
+                    if (outcome == ComparisonResult.DIFFERENT && comparison.getType() == ComparisonType.CHILD_NODELIST_SEQUENCE) {
+                        return ComparisonResult.EQUAL;
+                    }
+                    return outcome;
+                }))
+                .build();
+        Assertions.assertFalse(diff.hasDifferences());
     }
 
     @Path("wadlBeanParamReference")

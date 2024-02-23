@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,12 +18,11 @@
 package org.glassfish.jersey.jdkhttp;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 
 import java.security.AccessController;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +30,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,14 +44,14 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.PropertiesHelper;
-import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
 import org.glassfish.jersey.server.spi.WebServerProvider;
-import org.junit.Test;
 
 import com.sun.net.httpserver.HttpServer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Unit tests for {@link JdkHttpServerProvider}.
@@ -61,14 +61,16 @@ import com.sun.net.httpserver.HttpServer;
  */
 public final class JdkHttpServerProviderTest {
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public void shouldProvideServer() throws InterruptedException, ExecutionException {
         // given
         final Resource resource = new Resource();
         shouldProvideServer(ShouldProvideServerApplication.class, resource);
     }
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public void shouldProvideServerWithClass() throws InterruptedException, ExecutionException {
         // given
         final Resource resource = new Resource();
@@ -83,10 +85,9 @@ public final class JdkHttpServerProviderTest {
         final SeBootstrap.Configuration configuration = configuration(getPort());
 
         // when
-        final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
         final WebServer webServer = Application.class.isInstance(application)
-                ? webServerProvider.createServer(WebServer.class, (Application) application, jerseySeConfig)
-                : webServerProvider.createServer(WebServer.class, (Class<Application>) application, jerseySeConfig);
+                ? webServerProvider.createServer(WebServer.class, (Application) application, configuration)
+                : webServerProvider.createServer(WebServer.class, (Class<Application>) application, configuration);
         final Object nativeHandle = webServer.unwrap(Object.class);
         final CompletionStage<?> start = webServer.start();
         final Object startResult = start.toCompletableFuture().get();
@@ -150,7 +151,8 @@ public final class JdkHttpServerProviderTest {
         return DEFAULT_PORT;
     }
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
     public final void shouldScanFreePort() throws InterruptedException, ExecutionException {
         // given
         final WebServerProvider webServerProvider = new JdkHttpServerProvider();
@@ -158,8 +160,7 @@ public final class JdkHttpServerProviderTest {
         final SeBootstrap.Configuration configuration = configuration(SeBootstrap.Configuration.FREE_PORT);
 
         // when
-        final JerseySeBootstrapConfiguration jerseySeConfig = JerseySeBootstrapConfiguration.from(configuration);
-        final WebServer webServer = webServerProvider.createServer(WebServer.class, application, jerseySeConfig);
+        final WebServer webServer = webServerProvider.createServer(WebServer.class, application, configuration);
 
         // then
         assertThat(webServer.port(), is(greaterThan(0)));

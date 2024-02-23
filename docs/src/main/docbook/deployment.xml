@@ -508,6 +508,88 @@ Channel server = NettyHttpContainerProvider.createServer(baseUri, resourceConfig
                 </note>
             </section>
         </section>
+
+        <section xml:id="deployment.bootstrap.api">
+            <title>Jakarta REST Bootstrap API</title>
+            <para>
+                Jakarta REST 3.1 comes with a new API for starting an application in Java SE environment. This
+                <literal>Bootstrap</literal> API is mainly represented by &lit.jaxrs.SeBootstrap; interface.
+                The Jakarta REST application is started as follows:
+                <programlisting language="java">Application application = new MyApplication();
+SeBootstrap.Configuration.Builder configBuilder = SeBootstrap.Configuration.builder();
+CompletionStage&lt;SeBootstrap.Instance&gt; completionStage = SeBootstrap.start(application, configBuilder.build());</programlisting>
+            </para>
+            <para>
+                Later, when the SE application is no longer needed, it can be shutdown as follows:
+                <programlisting language="java">CompletionStage&lt;SeBootstrap.Instance&gt; completionStage = ...
+SeBootstrap.Instance instance = completionStage().get();
+instance.stop();</programlisting>
+            </para>
+            <para>
+                The &lit.jaxrs.SeBootstrap.Configuration; allows for configuring the Jersey runtime. The Jakarta REST 3.1 allows
+                for configuring the HTTP port, the protocol (HTTP), the hostname, the root path, and SSL. The
+                &lit.jaxrs.SeBootstrap; is configured as follows:
+                <programlisting language="java">SeBootstrap.Configuration.Builder configBuilder = SeBootstrap.Configuration.builder();
+configBuilder.property(SeBootstrap.Configuration.PROTOCOL, "HTTP")
+    .property(SeBootstrap.Configuration.HOST, "localhost")
+    .property(SeBootstrap.Configuration.PORT, 1234)
+    .property(SeBootstrap.Configuration.ROOT_PATH, "/root/path");</programlisting>
+            </para>
+            <para>
+                The &lit.jaxrs.SeBootstrap; deployment is backed up by an HTTP server described in
+                <xref linkend="deployment.http"/>. If multiple Jersey container modules are on the classpath,
+                the first found is used.
+            </para>
+        </section>
+
+        <section xml:id="deployment.webserver.spi">
+            <title>Jersey WebServer SPI</title>
+            <para>
+                Jersey &jersey.server.spi.WebServer; and &jersey.server.spi.WebServerProvider; are SPI interfaces similar to
+                &jersey.server.spi.ContainerProvider; but they are used for the SE deployment. They serve as a bridge between
+                Jersey containers and &lit.jaxrs.SeBootstrap; API.
+                The Jakarta REST application can be started as follows:
+                <programlisting language="java">Application application = new MyApplication();
+SeBootstrap.Configuration.Builder configBuilder = SeBootstrap.Configuration.builder();
+WebServer webServer = WebServerFactory.createServer(WebServer.class, application, configBuilder.build());</programlisting>
+            </para>
+            <para>
+                Later, when the SE application is no longer needed, it can be shutdown as follows:
+                <programlisting language="java">WebServer webServer = ...
+webServer.stop();</programlisting>
+            </para>
+            <para>
+                &jersey.server.WebServerFactory; is used to automatically choose among available implementations on a classpath.
+                If there are multiple implementations available, the first found is used. The user can choose the implementation
+                of a &lit.jersey.server.spi.WebServer; by a concrete WebServer subclass, for instance:
+                <programlisting language="java">
+WebServer webServer = WebServerFactory.createServer(GrizzlyHttpServer.class, application, configBuilder.build());</programlisting>
+                Another way to choose the &lit.jersey.server.spi.WebServer; implementation is by the
+                &lit.jersey.server.spi.WebServerProvider; implementation:
+                <programlisting language="java">
+WebServer webServer = GrizzlyHttpServerProvider.createServer(WebServer.class, application, configBuilder.build());</programlisting>
+            </para>
+            <para>
+                For additional customization of the WebServer settings, see <xref linkend="appendix-properties-webserver"/>.
+            </para>
+        </section>
+
+        <warning xml:id="ports.warning" xreflabel="Default ports">
+            <para>
+                When the port is set to -1, the default ports are used.
+                Unlike the default ports used by the <xref linkend="deployment.http"/>, the &lit.jaxrs.SeBootstrap; API and
+                &lit.jersey.server.spi.WebServer; SPI use default ports 8080 and 8443, respectively.
+            </para>
+            <para>
+                When the port is set to 0, the implementation scans for a free port. The privileged ports are skipped, and the
+                scanning starts with port 1024.
+            </para>
+            <para>
+                Using the restricted ports can be ensured either by setting directly the port, or by setting
+                &jersey.server.ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS; property to true in the
+                &lit.jaxrs.SeBootstrap.Configuration;
+            </para>
+        </warning>
     </section>
 
     <section xml:id="deployment.jaxrs.endpoint">

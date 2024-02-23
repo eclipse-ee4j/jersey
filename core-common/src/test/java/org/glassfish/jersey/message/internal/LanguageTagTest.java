@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,12 @@ package org.glassfish.jersey.message.internal;
 
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for {@link LanguageTag} class.
@@ -38,9 +39,9 @@ public class LanguageTagTest {
         _test("CZ", "cs");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testLanguageCountryInvalid() throws Exception {
-        _test("en", "gbgbgbgbgb");
+        assertThrows(IllegalArgumentException.class, () -> _test("en", "gbgbgbgbgb"));
     }
 
     @Test

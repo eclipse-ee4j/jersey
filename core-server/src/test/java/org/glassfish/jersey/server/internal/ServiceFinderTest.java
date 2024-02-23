@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,13 @@
 package org.glassfish.jersey.server.internal;
 
 import static org.glassfish.jersey.server.JarUtils.createJarFile;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import jakarta.ws.rs.container.DynamicFeature;
+import jakarta.ws.rs.core.Configurable;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -33,25 +36,21 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import jakarta.ws.rs.container.DynamicFeature;
-import jakarta.ws.rs.core.Configurable;
-
-import org.glassfish.jersey.internal.ServiceConfigurationError;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceLookupIteratorProvider;
 import org.glassfish.jersey.internal.ServiceFinder.ServiceReflectionIteratorProvider;
 import org.glassfish.jersey.server.JarUtils;
 import org.glassfish.jersey.server.JaxRsFeatureRegistrationTest.DynamicFeatureImpl;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Michal Gajdos
  */
 public class ServiceFinderTest {
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         // Restore the default
         ServiceFinder.setIteratorProvider(null);
@@ -103,7 +102,7 @@ public class ServiceFinderTest {
         try {
             serviceFinder.iterator().hasNext();
             fail("It is expected to fail");
-        } catch (ServiceConfigurationError e) {
+        } catch (org.glassfish.jersey.internal.ServiceConfigurationError e) {
             // Expected
         }
     }
@@ -133,7 +132,7 @@ public class ServiceFinderTest {
 
     private void checks(ServiceIteratorProvider provider, ServiceFinder<?> serviceFinder) {
         Iterator<?> iterator = serviceFinder.iterator();
-        assertTrue("No instance found with " + provider, iterator.hasNext());
+        assertTrue(iterator.hasNext(), "No instance found with " + provider);
         Object dynamicFeature = iterator.next();
         assertEquals(DynamicFeatureImpl.class, dynamicFeature.getClass());
     }

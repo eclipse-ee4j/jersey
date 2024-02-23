@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>osgi-helloworld-webapp</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.jersey.examples.osgi-helloworld-webapp</groupId>
@@ -80,15 +80,6 @@
             <artifactId>javassist</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- JUnit and Pax-Exam dependencies -->
         <dependency>
             <groupId>org.osgi</groupId>
@@ -123,6 +114,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -153,9 +145,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>jakarta.activation</artifactId>
-            <version>${jakarta.activation.version}</version>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-activation</artifactId>
         </dependency>
          <!-- uncomment the following dependency to get ability
               to run felix console in the test -->
@@ -213,7 +204,8 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkMode>always</forkMode>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <classpathDependencyExcludes>
                         <classpathDepenencyExclude>org.apache.felix:org.osgi.core</classpathDepenencyExclude>

@@ -157,7 +157,8 @@ public abstract class BeanHelper {
 
         Class<Supplier<T>> supplierClass = (Class<Supplier<T>>) binding.getSupplierClass();
         AnnotatedType<Supplier<T>> annotatedType = beanManager.createAnnotatedType(supplierClass);
-        InjectionTarget<Supplier<T>> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        final InjectionTargetFactory<Supplier<T>> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        final InjectionTarget<Supplier<T>> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         SupplierClassBean<T> supplierBean = new SupplierClassBean<>(runtimeType, binding);
         InjectionTarget<Supplier<T>> jit = getJerseyInjectionTarget(supplierClass, injectionTarget, supplierBean, resolvers);
@@ -218,7 +219,8 @@ public abstract class BeanHelper {
 
         final Class<Supplier<T>> bindingClass = (Class<Supplier<T>>) binding.getSupplierClass();
         final AnnotatedType<Supplier<T>> annotatedType = beanManager.createAnnotatedType(bindingClass);
-        final InjectionTarget<Supplier<T>> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        final InjectionTargetFactory<Supplier<T>> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        final InjectionTarget<Supplier<T>> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         final CachedConstructorAnalyzer<Supplier<T>> analyzer =
                 new CachedConstructorAnalyzer<>(bindingClass, InjectionUtils.getInjectAnnotations(resolvers));
@@ -239,7 +241,8 @@ public abstract class BeanHelper {
 
         final Class<T> bindingClass = binding.getImplementationType();
         final AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(bindingClass);
-        final InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        final InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        final InjectionTarget<T> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         final CachedConstructorAnalyzer<T> analyzer =
                 new CachedConstructorAnalyzer<>(bindingClass, InjectionUtils.getInjectAnnotations(resolvers));

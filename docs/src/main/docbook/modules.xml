@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -112,8 +112,9 @@
     jersey-container-jetty-http
 </link>
 </entry>
-<entry>Jetty Http Container (for JDK 11+)</entry>
+<entry>Jetty Http Container (for JDK 17+)</entry>
 </row>
+            <!-- TODO - HTTP/2 support for Jetty 12 container -->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-container-jetty-servlet/dependencies.html">
@@ -178,6 +179,14 @@
         <tbody>
 <row>
 <entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-apache5-connector/dependencies.html">
+    jersey-apache5-connector
+</link>
+</entry>
+<entry>Jersey Client Transport via Apache 5</entry>
+</row>
+<row>
+<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-apache-connector/dependencies.html">
     jersey-apache-connector
 </link>
@@ -194,6 +203,14 @@
 </row>
 <row>
 <entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-helidon-connector/dependencies.html">
+    jersey-helidon-connector
+</link>
+</entry>
+<entry>Jersey Client Transport via Helidon</entry>
+</row>
+<row>
+<entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-jdk-connector/dependencies.html">
     jersey-jdk-connector
 </link>
@@ -206,8 +223,17 @@
     jersey-jetty-connector
 </link>
 </entry>
-<entry>Jersey Client Transport via Jetty (for JDK 11+)</entry>
+<entry>Jersey Client Transport via Jetty (for JDK 17+)</entry>
 </row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-jetty11-connector/dependencies.html">
+    jersey-jetty11-connector
+</link>
+</entry>
+<entry>Jersey Client Transport via Jetty 11.x</entry>
+</row>
+            <!-- TODO - HTTP/2 support for Jetty 12 container -->
 <row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-netty-connector/dependencies.html">
@@ -387,6 +413,30 @@
 </link>
 </entry>
 <entry>Jersey extension module enabling automatic registration of JAX-RS providers (MBW/MBR/EM) via META-INF/services mechanism.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-micrometer/dependencies.html">
+    jersey-micrometer
+</link>
+</entry>
+<entry>Jersey extension module providing support for Micrometer.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-mp-config/dependencies.html">
+    jersey-mp-config
+</link>
+</entry>
+<entry>Jersey extension module providing support for MicroProfile Configuration.</entry>
+</row>
+<row>
+<entry>
+<link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/project/jersey-mp-rest-client/dependencies.html">
+    jersey-mp-rest-client
+</link>
+</entry>
+<entry>Jersey extension module providing support for MicroProfile REST Client.</entry>
 </row>
 <row>
 <entry>

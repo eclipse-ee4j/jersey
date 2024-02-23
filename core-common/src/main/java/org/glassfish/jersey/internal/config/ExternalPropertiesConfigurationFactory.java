@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.internal.config;
 
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.spi.ExternalConfigurationModel;
 import org.glassfish.jersey.spi.ExternalConfigurationProvider;
 
-import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.core.Configurable;
 import java.util.ArrayList;
@@ -152,19 +152,8 @@ public class ExternalPropertiesConfigurationFactory {
 
         @Override
         public int compare(ExternalConfigurationProvider config1, ExternalConfigurationProvider config2) {
-
-            boolean config1PriorityPresent = config1.getClass().isAnnotationPresent(Priority.class);
-            boolean config2PriorityPresent = config2.getClass().isAnnotationPresent(Priority.class);
-
-            int priority1 = Priorities.USER;
-            int priority2 = Priorities.USER;
-
-            if (config1PriorityPresent) {
-                priority1 = config1.getClass().getAnnotation(Priority.class).value();
-            }
-            if (config2PriorityPresent) {
-                priority2 = config2.getClass().getAnnotation(Priority.class).value();
-            }
+            int priority1 = JerseyPriorities.getPriorityValue(config1.getClass(), Priorities.USER);
+            int priority2 = JerseyPriorities.getPriorityValue(config2.getClass(), Priorities.USER);
 
             if (priority1 == priority2) {
                 return config1.getClass().getName().compareTo(config2.getClass().getName());

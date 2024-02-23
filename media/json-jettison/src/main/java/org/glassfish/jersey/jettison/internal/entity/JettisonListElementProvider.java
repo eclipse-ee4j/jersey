@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,10 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
@@ -45,6 +47,7 @@ import org.glassfish.jersey.jaxb.internal.AbstractCollectionJaxbProvider;
 import org.glassfish.jersey.jettison.JettisonConfig;
 import org.glassfish.jersey.jettison.JettisonConfigured;
 import org.glassfish.jersey.jettison.internal.Stax2JettisonFactory;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * JSON message entity media type provider (reader & writer) for collection
@@ -54,12 +57,12 @@ import org.glassfish.jersey.jettison.internal.Stax2JettisonFactory;
  */
 public class JettisonListElementProvider extends AbstractCollectionJaxbProvider {
 
-    JettisonListElementProvider(Providers ps) {
-        super(ps);
+    JettisonListElementProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    JettisonListElementProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    JettisonListElementProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override
@@ -75,9 +78,9 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     @Produces("application/json")
     @Consumes("application/json")
     public static final class App extends JettisonListElementProvider {
-
-        public App(@Context Providers ps) {
-            super(ps, MediaType.APPLICATION_JSON_TYPE);
+        @Inject
+        public App(@Context Providers ps, @Context Configuration config) {
+            super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
 
@@ -85,8 +88,9 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     @Consumes("*/*")
     public static final class General extends JettisonListElementProvider {
 
-        public General(@Context Providers ps) {
-            super(ps);
+        @Inject
+        public General(@Context Providers ps, @Context Configuration config) {
+            super(ps, config);
         }
 
         @Override
@@ -129,7 +133,7 @@ public class JettisonListElementProvider extends AbstractCollectionJaxbProvider 
     protected final XMLStreamReader getXMLStreamReader(Class<?> elementType, MediaType mediaType, Unmarshaller u,
                                                        InputStream entityStream) throws XMLStreamException {
         JettisonConfig c = JettisonConfig.DEFAULT;
-        final Charset charset = getCharset(mediaType);
+        final Charset charset = ReaderWriter.getCharset(mediaType);
         if (u instanceof JettisonConfigured) {
             c = ((JettisonConfigured) u).getJSONConfiguration();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,10 +21,12 @@ import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.RuntimeDelegateImpl;
 import org.glassfish.jersey.server.spi.Container;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SeBootstrapPropertiesTest {
     @Test
@@ -33,7 +35,7 @@ public class SeBootstrapPropertiesTest {
                 .createConfigurationBuilder().port(SeBootstrap.Configuration.FREE_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertTrue(uri.getPort() > 0);
+        assertTrue(uri.getPort() > 0);
     }
 
     @Test
@@ -42,7 +44,7 @@ public class SeBootstrapPropertiesTest {
                 .createConfigurationBuilder().port(SeBootstrap.Configuration.DEFAULT_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(Container.DEFAULT_HTTP_PORT + 8000, uri.getPort());
+        assertEquals(Container.DEFAULT_HTTP_PORT + 8000, uri.getPort());
     }
 
     @Test
@@ -53,7 +55,7 @@ public class SeBootstrapPropertiesTest {
                 .port(SeBootstrap.Configuration.DEFAULT_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(Container.DEFAULT_HTTP_PORT, uri.getPort());
+        assertEquals(Container.DEFAULT_HTTP_PORT, uri.getPort());
     }
 
     @Test
@@ -62,7 +64,7 @@ public class SeBootstrapPropertiesTest {
                 .createConfigurationBuilder().protocol("HTTPS").port(SeBootstrap.Configuration.DEFAULT_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(Container.DEFAULT_HTTPS_PORT + 8000, uri.getPort());
+        assertEquals(Container.DEFAULT_HTTPS_PORT + 8000, uri.getPort());
     }
 
     @Test
@@ -74,6 +76,6 @@ public class SeBootstrapPropertiesTest {
                 .port(SeBootstrap.Configuration.DEFAULT_PORT).build();
 
         URI uri = configuration.uri(true);
-        Assert.assertEquals(Container.DEFAULT_HTTPS_PORT, uri.getPort());
+        assertEquals(Container.DEFAULT_HTTPS_PORT, uri.getPort());
     }
 }

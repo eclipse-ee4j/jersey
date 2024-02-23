@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,11 +23,11 @@ import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -102,7 +102,7 @@ public class ContentDispositionTest {
     @Test
     public void testFileNameExt() {
         final String fileName = "test.file";
-        String fileNameExt;
+        String fileNameExt = null;
         String encodedFilename;
         try {
             //incorrect fileNameExt - does not contain charset''
@@ -217,14 +217,31 @@ public class ContentDispositionTest {
             assertFileNameExt(fileNameExt, fileName, fileNameExt);
 
         } catch (ParseException ex) {
-            fail(ex.getMessage());
+            fail(ex.getMessage() + " for " + fileNameExt);
         }
     }
+
+    @Test
+    void testDecoding() throws ParseException {
+        final String fileName = "Ueberflieger.jpg";
+        final String extendedFilename = "UTF-8'de'%C3%9Cberflieger.jpg";
+        assertFileNameExt("Überflieger.jpg", fileName, extendedFilename, true);
+    }
+
 
     private void assertFileNameExt(
             final String expectedFileName,
             final String actualFileName,
             final String actualFileNameExt
+    ) throws ParseException {
+        assertFileNameExt(expectedFileName, actualFileName, actualFileNameExt, false);
+    }
+
+    private void assertFileNameExt(
+            final String expectedFileName,
+            final String actualFileName,
+            final String actualFileNameExt,
+            final boolean decode
     ) throws ParseException {
         final Date date = new Date();
         final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
@@ -233,7 +250,7 @@ public class ContentDispositionTest {
                 + dateString + "\";size=1222" + ";name=\"testData\";" + "filename*=\"";
         final String header = prefixHeader + actualFileNameExt + "\"";
         final ContentDisposition contentDisposition = new ContentDisposition(HttpHeaderReader.newInstance(header), true);
-        assertEquals(expectedFileName, contentDisposition.getFileName());
+        assertEquals(expectedFileName, contentDisposition.getFileName(decode));
     }
 
     protected void assertContentDisposition(final ContentDisposition contentDisposition, Date date) {

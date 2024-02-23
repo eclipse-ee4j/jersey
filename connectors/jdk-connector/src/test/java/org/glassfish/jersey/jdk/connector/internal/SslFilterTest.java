@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,15 +23,21 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.net.URI;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -39,15 +45,21 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 import org.glassfish.jersey.SslConfigurator;
-import org.junit.Test;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Petr Janouch
  */
+@ExtendWith(SslFilterTest.DeprecatedTLSCondition.class)
 public abstract class SslFilterTest {
 
     private static final int PORT = 8321;
@@ -383,7 +395,10 @@ public abstract class SslFilterTest {
                 .keyStorePassword("asdfgh");
 
         TransportFilter transportFilter = new TransportFilter(17_000, ThreadPoolConfig.defaultConfig(), 100_000);
-        final SslFilter sslFilter = new SslFilter(transportFilter, sslConfig.createSSLContext(), host, customHostnameVerifier);
+        final SSLParamConfigurator sslParamConfigurator = SSLParamConfigurator.builder()
+                .uri(URI.create("Https://" + host)).headers(Collections.emptyMap()).build();
+        final SslFilter sslFilter = new SslFilter(
+                transportFilter, sslConfig.createSSLContext(), host, customHostnameVerifier, sslParamConfigurator);
 
         // exceptions errors that occur before SSL handshake has finished are thrown from this method
         final AtomicReference<Throwable> exception = new AtomicReference<>();
@@ -530,5 +545,33 @@ public abstract class SslFilterTest {
         void rehandshake() throws IOException {
             socket.startHandshake();
         }
+    }
+
+    public static class DeprecatedTLSCondition implements ExecutionCondition {
+
+        @Override
+        public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+            Class<?> test = context.getTestClass().get();
+            String required = null;
+            if (test == SslFilterTLS1Test.class) {
+                required = "TLSv1";
+            } else if (test == SslFilterTLS11Test.class) {
+                required = "TLSv1.1";
+            }
+            if (required != null) {
+                try {
+                    SSLContext context1 = SSLContext.getInstance("TLS");
+                    context1.init(null, null, null);
+                    List<String> supportedProtocols = Arrays.asList(context1.getDefaultSSLParameters().getProtocols());
+                    if (!supportedProtocols.contains(required)) {
+                        return ConditionEvaluationResult.disabled("JDK does not support " + required);
+                    }
+                } catch (KeyManagementException | NoSuchAlgorithmException e) {
+                    return ConditionEvaluationResult.disabled("JDK does not support TLS: " + e.getMessage());
+                }
+            }
+            return ConditionEvaluationResult.enabled("JDK is valid to run " + test.getCanonicalName());
+        }
+
     }
 }

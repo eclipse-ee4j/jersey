@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,11 +37,12 @@ import jakarta.inject.Provider;
 
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * TODO: javadoc.
@@ -71,9 +72,12 @@ public class RequestScopedReadEntityTest extends JerseyTest {
 
     @Produces("text/plain")
     public static class ScopedMessageEntityProvider extends AbstractMessageReaderWriterProvider<Message> {
+        private final Provider<ClientRequest> clientRequestProvider;
 
         @Inject
-        private Provider<ClientRequest> clientRequestProvider;
+        public ScopedMessageEntityProvider(Provider<ClientRequest> clientRequestProvider) {
+            this.clientRequestProvider = clientRequestProvider;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -88,7 +92,7 @@ public class RequestScopedReadEntityTest extends JerseyTest {
                 MultivaluedMap<String, String> httpHeaders,
                 InputStream entityStream) throws IOException, WebApplicationException {
             return clientRequestProvider.get() != null
-                    ? new Message(readFromAsString(entityStream, mediaType)) : new Message("failed");
+                    ? new Message(ReaderWriter.readFromAsString(entityStream, mediaType)) : new Message("failed");
         }
 
         @Override
@@ -105,7 +109,8 @@ public class RequestScopedReadEntityTest extends JerseyTest {
                 MediaType mediaType,
                 MultivaluedMap<String, Object> httpHeaders,
                 OutputStream entityStream) throws IOException, WebApplicationException {
-            writeToAsString((clientRequestProvider.get() != null) ? message.text : "failed", entityStream, mediaType);
+            ReaderWriter
+                    .writeToAsString((clientRequestProvider.get() != null) ? message.text : "failed", entityStream, mediaType);
         }
     }
 

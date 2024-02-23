@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.util.Map;
 
 import jakarta.json.JsonValue;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -76,4 +77,10 @@ public interface ApplicationResource {
     @Path("content1/{content1}/content0/{content0: [0-9]{4}}")
     @Produces(MediaType.TEXT_PLAIN)
     String regex0(@PathParam("content1") String context0, @PathParam("content0") String context1);
+
+    @POST
+    @Path("formParam")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    String formParam(@FormParam("param") String param);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,14 +45,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Pavel Bucek
@@ -106,6 +105,14 @@ public class CompletionStageTest extends JerseyTest {
     }
 
     @Test
+    public void testGetCompletedAsyncResponse() {
+        Response response = target("cs/completedAsyncResponse").request().get();
+
+        assertThat(response.getStatus(), is(200));
+        assertThat(response.readEntity(List.class).get(0), is(ENTITY));
+    }
+
+    @Test
     public void testGetException400Async() {
         Response response = target("cs/exception400Async").request().get();
 
@@ -151,7 +158,15 @@ public class CompletionStageTest extends JerseyTest {
 
     @Test
     public void testCompletionStageUnwrappedInGenericType() {
-        try (Response r = target("cs/databeanlist").request().get()){
+        try (Response r = target("cs/databeanlist").request().get()) {
+            assertEquals(200, r.getStatus());
+            assertTrue(r.readEntity(String.class).startsWith(ENTITY));
+        }
+    }
+
+    @Test
+    void testExtends() {
+        try (Response r = target("cs/csextends").request().get()) {
             assertEquals(200, r.getStatus());
             assertTrue(r.readEntity(String.class).startsWith(ENTITY));
         }
@@ -215,6 +230,14 @@ public class CompletionStageTest extends JerseyTest {
         }
 
         @GET
+        @Path("/completedAsyncResponse")
+        public CompletionStage<Response> getCompletedAsyncResponse() {
+            CompletableFuture<Response> cs = new CompletableFuture<>();
+            delaySubmit(() -> cs.complete(Response.ok().entity(Collections.singletonList(ENTITY)).build()));
+            return cs;
+        }
+
+        @GET
         @Path("/exception400Async")
         public CompletionStage<String> getException400Async() {
             CompletableFuture<String> cs = new CompletableFuture<>();
@@ -255,7 +278,6 @@ public class CompletionStageTest extends JerseyTest {
         @GET
         @Path("/databeanlist")
         public CompletionStage<List<DataBean>> getDataBeanList(@Context ContainerRequestContext requestContext) {
-            requestContext.setProperty(ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE, Boolean.TRUE);
             return CompletableFuture.completedFuture(Collections.singletonList(new DataBean(ENTITY)));
         }
 
@@ -272,6 +294,12 @@ public class CompletionStageTest extends JerseyTest {
             delaySubmit(() -> cf.complete(ENTITY));
 
             return cs;
+        }
+
+        @GET
+        @Path("csextends")
+        public CompletionStage<? extends CharSequence> csExtends() {
+            return CompletableFuture.completedFuture(ENTITY);
         }
 
         private void delaySubmit(Runnable runnable) {

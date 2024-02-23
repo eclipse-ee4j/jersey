@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2020 Markus Karg. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,9 +36,9 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.UriBuilder;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Compliance Test for Java SE Bootstrap API of Jakarta REST API
@@ -310,12 +310,12 @@ public class SeBootstrapTest {
 
     private static Client client;
 
-    @BeforeClass
+    @BeforeAll
     public static void createClient() {
         SeBootstrapTest.client = ClientBuilder.newClient();
     }
 
-    @AfterClass
+    @AfterAll
     public static void disposeClient() {
         SeBootstrapTest.client.close();
     }

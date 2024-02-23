@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.annotation.Priority;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -36,6 +35,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
+import org.glassfish.jersey.JerseyPriorities;
 import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.internal.inject.PerThread;
@@ -142,7 +142,7 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
         return false;
     }
 
-    @Override
+    // @Override - Removed in CDI 4
     public boolean isNullable() {
         return false;
     }
@@ -161,15 +161,13 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
             return binding.getRank();
         }
 
+        int defaultValue = 1;
         Class<T> type = binding.getImplementationType();
         if (type != null) {
-            Priority priority = type.getAnnotation(Priority.class);
-            if (priority != null) {
-                return priority.value();
-            }
+            return JerseyPriorities.getPriorityValue(type, defaultValue);
         }
 
-        return 1;
+        return defaultValue;
     }
 
     @Override

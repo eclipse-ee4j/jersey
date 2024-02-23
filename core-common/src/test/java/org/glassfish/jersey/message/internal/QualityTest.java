@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,95 +16,85 @@
 
 package org.glassfish.jersey.message.internal;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Quality unit tests.
  *
  * @author Marek Potociar
  */
-@RunWith(Parameterized.class)
 public class QualityTest {
 
     private static final Locale ORIGINAL_LOCALE = Locale.getDefault();
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][]{{Locale.US}, {Locale.GERMANY}});
-    }
-
-    @Parameterized.Parameter(0)
-    public Locale locale;
-
-    @Before
-    public void setUp() throws Exception {
-        Locale.setDefault(locale);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        Locale.setDefault(ORIGINAL_LOCALE);
+    public static Stream<Arguments> data() {
+        return Stream.of(Arguments.of(Locale.US), Arguments.of(Locale.GERMANY));
     }
 
     /**
      * Test enhancing HTT header parameter map with a quality parameter.
      */
-    @Test
-    public void testEnhanceWithQualityParameter() {
-        Map<String, String> result;
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testEnhanceWithQualityParameter(Locale locale) {
+        try {
+            Locale.setDefault(locale);
+            Map<String, String> result;
 
-        result = Quality.enhanceWithQualityParameter(null, "q", 1000);
-        assertThat(result, equalTo(null));
+            result = Quality.enhanceWithQualityParameter(null, "q", 1000);
+            assertThat(result, equalTo(null));
 
-        result = Quality.enhanceWithQualityParameter(null, "q", 200);
-        assertThat(result, equalTo(asMap("q=0.2")));
+            result = Quality.enhanceWithQualityParameter(null, "q", 200);
+            assertThat(result, equalTo(asMap("q=0.2")));
 
-        result = Quality.enhanceWithQualityParameter(null, "q", 220);
-        assertThat(result, equalTo(asMap("q=0.22")));
+            result = Quality.enhanceWithQualityParameter(null, "q", 220);
+            assertThat(result, equalTo(asMap("q=0.22")));
 
-        result = Quality.enhanceWithQualityParameter(null, "q", 222);
-        assertThat(result, equalTo(asMap("q=0.222")));
+            result = Quality.enhanceWithQualityParameter(null, "q", 222);
+            assertThat(result, equalTo(asMap("q=0.222")));
 
-        Map<String, String> parameters;
+            Map<String, String> parameters;
 
-        parameters = asMap("a=b");
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 1000);
-        assertThat(result, equalTo(parameters));
+            parameters = asMap("a=b");
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 1000);
+            assertThat(result, equalTo(parameters));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 200);
-        assertThat(result, equalTo(asMap("a=b;q=0.2")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 200);
+            assertThat(result, equalTo(asMap("a=b;q=0.2")));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 220);
-        assertThat(result, equalTo(asMap("a=b;q=0.22")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 220);
+            assertThat(result, equalTo(asMap("a=b;q=0.22")));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 222);
-        assertThat(result, equalTo(asMap("a=b;q=0.222")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 222);
+            assertThat(result, equalTo(asMap("a=b;q=0.222")));
 
-        // test quality parameter override
-        parameters = asMap("a=b;q=0.3");
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 1000);
-        assertThat(result, equalTo(asMap("a=b;q=1.0")));
+            // test quality parameter override
+            parameters = asMap("a=b;q=0.3");
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 1000);
+            assertThat(result, equalTo(asMap("a=b;q=1.0")));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 200);
-        assertThat(result, equalTo(asMap("a=b;q=0.2")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 200);
+            assertThat(result, equalTo(asMap("a=b;q=0.2")));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 220);
-        assertThat(result, equalTo(asMap("a=b;q=0.22")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 220);
+            assertThat(result, equalTo(asMap("a=b;q=0.22")));
 
-        result = Quality.enhanceWithQualityParameter(parameters, "q", 222);
-        assertThat(result, equalTo(asMap("a=b;q=0.222")));
+            result = Quality.enhanceWithQualityParameter(parameters, "q", 222);
+            assertThat(result, equalTo(asMap("a=b;q=0.222")));
+        } finally {
+            Locale.setDefault(ORIGINAL_LOCALE);
+        }
     }
 
     /**

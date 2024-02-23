@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Member;
@@ -444,7 +445,7 @@ public final class ReflectionHelper {
      * @see AccessController#doPrivileged(java.security.PrivilegedAction)
      */
     public static PrivilegedAction setAccessibleMethodPA(final Method m) {
-        if (Modifier.isPublic(m.getModifiers())) {
+        if (isPublic(m)) {
             return NoOpPrivilegedACTION;
         }
 
@@ -458,6 +459,24 @@ public final class ReflectionHelper {
                 return m;
             }
         };
+    }
+
+    /**
+     * Return {@code true} iff the method is public.
+     * @param clazz The method in question
+     * @return {@code true} if mod includes the public modifier; {@code false} otherwise.
+     */
+    public static boolean isPublic(Class<?> clazz) {
+        return Modifier.isPublic(clazz.getModifiers());
+    }
+
+    /**
+     * Return {@code true} iff the executable is public.
+     * @param executable The executable in question
+     * @return {@code true} if the executable includes the public modifier; {@code false} otherwise.
+     */
+    public static boolean isPublic(Executable executable) {
+        return Modifier.isPublic(executable.getModifiers());
     }
 
     /**
@@ -879,8 +898,7 @@ public final class ReflectionHelper {
      * @return {@code true} if the method is {@code getter}, {@code false} otherwise.
      */
     public static boolean isGetter(final Method method) {
-        if (method.getParameterTypes().length == 0
-                && Modifier.isPublic(method.getModifiers())) {
+        if (method.getParameterTypes().length == 0 && isPublic(method)) {
             final String methodName = method.getName();
 
             if (methodName.startsWith("get") && methodName.length() > 3) {
@@ -921,7 +939,7 @@ public final class ReflectionHelper {
      * @return {@code true} if the method is {@code setter}, {@code false} otherwise.
      */
     public static boolean isSetter(final Method method) {
-        return Modifier.isPublic(method.getModifiers())
+        return isPublic(method)
                 && void.class.equals(method.getReturnType())
                 && method.getParameterTypes().length == 1
                 && method.getName().startsWith("set");

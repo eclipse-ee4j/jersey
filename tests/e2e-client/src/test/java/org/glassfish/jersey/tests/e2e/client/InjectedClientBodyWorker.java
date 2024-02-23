@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -43,7 +44,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,9 +74,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Provider
     @Produces(ProviderType)
     public static class ProvidersInjectedWriter implements MessageBodyWriter<String> {
-
-        @Context
         Providers providers;
+
+        @Inject
+        public ProvidersInjectedWriter(@Context Providers providers) {
+            this.providers = providers;
+        }
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -105,8 +109,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Consumes(ProviderType)
     public static class ProvidersInjectedReader implements MessageBodyReader<String> {
 
-        @Context
         Providers providers;
+
+        @Inject
+        ProvidersInjectedReader(@Context Providers providers) {
+            this.providers = providers;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -132,8 +140,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Produces(ConfigurationTYPE)
     public static class ConfigurationInjectedWriter implements MessageBodyWriter<String> {
 
-        @Context
         Configuration configuration;
+
+        @Inject
+        public ConfigurationInjectedWriter(@Context Configuration configuration) {
+            this.configuration = configuration;
+        }
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -158,9 +170,12 @@ public class InjectedClientBodyWorker extends JerseyTest {
     @Provider
     @Consumes(ConfigurationTYPE)
     public static class ConfigurationInjectedReader implements MessageBodyReader<String> {
-
-        @Context
         Configuration configuration;
+
+        @Inject
+        public ConfigurationInjectedReader(@Context Configuration configuration) {
+            this.configuration = configuration;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

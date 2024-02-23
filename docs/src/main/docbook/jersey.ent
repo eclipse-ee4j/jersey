@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -114,6 +114,8 @@
 <!ENTITY helidon.link "<link xlink:href='https://helidon.io/'>Helidon</link>">
 <!ENTITY smallrye.link "<link xlink:href='https://smallrye.io/'>SmallRye</link>">
 <!ENTITY yasson.link "<link xlink:href='https://eclipse-ee4j.github.io/yasson/'>Yasson</link>">
+<!ENTITY micrometer.link "<link xlink:href='https://micrometer.io/'>Micrometer project</link>">
+<!ENTITY micrometer.jersey.link "<link xlink:href='https://micrometer.io/docs/ref/jetty'>Micrometer Jersey/Jetty support</link>">
 
 <!-- API Docs links -->
 <!ENTITY bv.Configuration "<link xlink:href='&bv30.javadoc.uri;/jakarta/validation/configuration'>Configuration</link>">
@@ -234,6 +236,7 @@
 <!ENTITY jaxrs.core.Response.Status "<link xlink:href='&jaxrs.javadoc.uri;/core/Response.Status.html'>Response.Status</link>">
 <!ENTITY jaxrs.core.Response.Status.Family "<link xlink:href='&jaxrs.javadoc.uri;/core/Response.Status.Family.html'>Response.Status.Family</link>">
 <!ENTITY jaxrs.core.Response.StatusType "<link xlink:href='&jaxrs.javadoc.uri;/core/Response.StatusType.html'>Response.StatusType</link>">
+<!ENTITY jaxrs.core.SeBootstrap "<link xlink:href='&jaxrs.javadoc.uri;/SeBootstrap.html'>SeBootstrap</link>">
 <!ENTITY jaxrs.core.SecurityContext "<link xlink:href='&jaxrs.javadoc.uri;/core/SecurityContext.html'>SecurityContext</link>">
 <!ENTITY jaxrs.core.StreamingOutput "<link xlink:href='&jaxrs.javadoc.uri;/core/StreamingOutput.html'>StreamingOutput</link>">
 <!ENTITY jaxrs.core.UriBuilder "<link xlink:href='&jaxrs.javadoc.uri;/core/UriBuilder.html'>UriBuilder</link>">
@@ -245,6 +248,7 @@
 <!ENTITY jaxrs.ext.ExceptionMapper "<link xlink:href='&jaxrs.javadoc.uri;/ext/ExceptionMapper.html'>ExceptionMapper&lt;E extends Throwable&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyReader "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyReader.html'>MessageBodyReader&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.MessageBodyWriter "<link xlink:href='&jaxrs.javadoc.uri;/ext/MessageBodyWriter.html'>MessageBodyWriter&lt;T&gt;</link>">
+<!ENTITY jaxrs.ext.ParamConverter "<link xlink:href='&jaxrs.javadoc.uri;/ext/ParamConverter.html'>ParamConverter&lt;T&gt;</link>">
 <!ENTITY jaxrs.ext.Provider "<link xlink:href='&jaxrs.javadoc.uri;/ext/Provider.html'>@Provider</link>">
 <!ENTITY jaxrs.ext.Providers "<link xlink:href='&jaxrs.javadoc.uri;/ext/Providers.html'>Providers</link>">
 <!ENTITY jaxrs.ext.RuntimeDelegate "<link xlink:href='&jaxrs.javadoc.uri;/ext/RuntimeDelegate.html'>RuntimeDelegate</link>">
@@ -302,6 +306,35 @@
 <!ENTITY jee6.jakarta.enterprise.concurrent.ManagedScheduledExecutorService "<link xlink:href='&jee.javadoc.uri;/jakarta.enterprise/concurrent/ManagedScheduledExecutorService.html'>ManagedScheduledExecutorService</link>">
 
 <!ENTITY jersey.apache.ApacheConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheConnectorProvider.html'>ApacheConnectorProvider</link>">
+<!ENTITY jersey.apache.ApacheConnectionClosingStrategy "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheConnectionClosingStrategy.html'>ApacheConnectionClosingStrategy</link>">
+<!ENTITY jersey.apache.ApacheHttpClientBuilderConfigurator "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheHttpClientBuilderConfigurator.html'>ApacheHttpClientBuilderConfigurator</link>">
+<!ENTITY jersey.apache.ApacheClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html'>ApacheClientProperties</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.CONNECTION_CLOSING_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#CONNECTION_CLOSING_STRATEGY'>ApacheClientProperties.CONNECTION_CLOSING_STRATEGY</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.CONNECTION_MANAGER "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#CONNECTION_MANAGER'>ApacheClientProperties.CONNECTION_MANAGER</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.CONNECTION_MANAGER_SHARED "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#CONNECTION_MANAGER_SHARED'>ApacheClientProperties.CONNECTION_MANAGER_SHARED</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.CREDENTIALS_PROVIDER "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#CREDENTIALS_PROVIDER'>ApacheClientProperties.CREDENTIALS_PROVIDER</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#DISABLE_COOKIES'>ApacheClientProperties.DISABLE_COOKIES</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.KEEPALIVE_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#KEEPALIVE_STRATEGY'>ApacheClientProperties.KEEPALIVE_STRATEGY</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>ApacheClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.REQUEST_CONFIG "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#REQUEST_CONFIG'>ApacheClientProperties.REQUEST_CONFIG</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.RETRY_HANDLER "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#RETRY_HANDLER'>ApacheClientProperties.RETRY_HANDLER</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.REUSE_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#REUSE_STRATEGY'>ApacheClientProperties.REUSE_STRATEGY</link>">
+<!ENTITY jersey.apache.ApacheClientProperties.USE_SYSTEM_PROPERTIES "<link xlink:href='&jersey.javadoc.uri.prefix;/apache/connector/ApacheClientProperties.html#USE_SYSTEM_PROPERTIES'>ApacheClientProperties.USE_SYSTEM_PROPERTIES</link>">
+<!ENTITY jersey.apache5.Apache5ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ConnectorProvider.html'>Apache5ConnectorProvider</link>">
+<!ENTITY jersey.apache5.Apache5ConnectionClosingStrategy "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ConnectionClosingStrategy.html'>Apache5ConnectionClosingStrategy</link>">
+<!ENTITY jersey.apache5.Apache5HttpClientBuilderConfigurator "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5HttpClientBuilderConfigurator.html'>Apache5HttpClientBuilderConfigurator</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html'>Apache5ClientProperties</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.CONNECTION_CLOSING_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#CONNECTION_CLOSING_STRATEGY'>Apache5ClientProperties.CONNECTION_CLOSING_STRATEGY</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.CONNECTION_MANAGER "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#CONNECTION_MANAGER'>Apache5ClientProperties.CONNECTION_MANAGER</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.CONNECTION_MANAGER_SHARED "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#CONNECTION_MANAGER_SHARED'>Apache5ClientProperties.CONNECTION_MANAGER_SHARED</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.CREDENTIALS_PROVIDER "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#CREDENTIALS_PROVIDER'>Apache5ClientProperties.CREDENTIALS_PROVIDER</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#DISABLE_COOKIES'>ApacheC5lientProperties.DISABLE_COOKIES</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.KEEPALIVE_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#KEEPALIVE_STRATEGY'>Apache5ClientProperties.KEEPALIVE_STRATEGY</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>Apache5ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.REQUEST_CONFIG "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#REQUEST_CONFIG'>Apache5ClientProperties.REQUEST_CONFIG</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.RETRY_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#RETRY_STRATEGY'>Apache5ClientProperties.RETRY_STRATEGY</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.REUSE_STRATEGY "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#REUSE_STRATEGY'>Apache5ClientProperties.REUSE_STRATEGY</link>">
+<!ENTITY jersey.apache5.Apache5ClientProperties.USE_SYSTEM_PROPERTIES "<link xlink:href='&jersey.javadoc.uri.prefix;/apache5/connector/Apache5ClientProperties.html#USE_SYSTEM_PROPERTIES'>Apache5ClientProperties.USE_SYSTEM_PROPERTIES</link>">
 <!ENTITY jersey.client.ChunkParser "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ChunkParser.html'>ChunkParser</link>">
 <!ENTITY jersey.client.ChunkedInput "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ChunkedInput.html'>ChunkedInput</link>">
 <!ENTITY jersey.client.ClientAsyncExecutor "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientAsyncExecutor.html'>@ClientAsyncExecutor</link>">
@@ -313,6 +346,7 @@
 <!ENTITY jersey.client.ClientProperties.BUFFER_RESPONSE_ENTITY_ON_EXCEPTION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#BUFFER_RESPONSE_ENTITY_ON_EXCEPTION'>ClientProperties.BUFFER_RESPONSE_ENTITY_ON_EXCEPTION</link>" >
 <!ENTITY jersey.client.ClientProperties.CHUNKED_ENCODING_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CHUNKED_ENCODING_SIZE'>ClientProperties.CHUNKED_ENCODING_SIZE</link>" >
 <!ENTITY jersey.client.ClientProperties.CONNECT_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CONNECT_TIMEOUT'>ClientProperties.CONNECT_TIMEOUT</link>" >
+<!ENTITY jersey.client.ClientProperties.CONNECTOR_PROVIDER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#CONNECTOR_PROVIDER'>ClientProperties.CONNECTOR_PROVIDER</link>" >
 <!ENTITY jersey.client.ClientProperties.DEFAULT_CHUNK_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#DEFAULT_CHUNK_SIZE'>ClientProperties.DEFAULT_CHUNK_SIZE</link>" >
 <!ENTITY jersey.client.ClientProperties.FEATURE_AUTO_DISCOVERY_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#FEATURE_AUTO_DISCOVERY_DISABLE'>ClientProperties.FEATURE_AUTO_DISCOVERY_DISABLE</link>" >
 <!ENTITY jersey.client.ClientProperties.FOLLOW_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#FOLLOW_REDIRECTS'>ClientProperties.FOLLOW_REDIRECTS</link>" >
@@ -326,10 +360,12 @@
 <!ENTITY jersey.client.ClientProperties.READ_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#READ_TIMEOUT'>ClientProperties.READ_TIMEOUT</link>" >
 <!ENTITY jersey.client.ClientProperties.REQUEST_ENTITY_PROCESSING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#REQUEST_ENTITY_PROCESSING'>ClientProperties.REQUEST_ENTITY_PROCESSING</link>" >
 <!ENTITY jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SUPPRESS_HTTP_COMPLIANCE_VALIDATION'>ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION</link>" >
+<!ENTITY jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SSL_CONTEXT_SUPPLIER'>ClientProperties.SSL_CONTEXT_SUPPLIER</link>" >
 <!ENTITY jersey.client.ClientProperties.USE_ENCODING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#USE_ENCODING'>ClientProperties.USE_ENCODING</link>" >
 <!ENTITY jersey.client.ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#DIGESTAUTH_URI_CACHE_SIZELIMIT'>ClientProperties.DIGESTAUTH_URI_CACHE_SIZELIMIT</link>" >
 <!ENTITY jersey.client.ClientProperties.EXPECT_100_CONTINUE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#EXPECT_100_CONTINUE'>ClientProperties.EXPECT_100_CONTINUE</link>" >
 <!ENTITY jersey.client.ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#EXPECT_100_CONTINUE_THRESHOLD_SIZE'>ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE</link>" >
+<!ENTITY jersey.client.ClientProperties.SNI_HOST_NAME "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SNI_HOST_NAME'>ClientProperties.SNI_HOST_NAME</link>" >
 <!ENTITY jersey.client.ClientLifecycleListener "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientLifecycleListener.html'>ClientLifecycleListener</link>">
 <!ENTITY jersey.client.Connector "<link xlink:href='&jersey.javadoc.uri.prefix;/client/spi/Connector.html'>Connector</link>">
 <!ENTITY jersey.client.ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/client/spi/ConnectorProvider.html'>ConnectorProvider</link>">
@@ -371,6 +407,13 @@
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER'>CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PROVIDER_DEFAULT_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PROVIDER_DEFAULT_DISABLE'>CommonProperties.PROVIDER_DEFAULT_DISABLE</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES_CLIENT</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_ENABLED_MODULES'>CommonProperties.JSON_JACKSON_ENABLED_MODULES_SERVER</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT</link>" >
+<!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER</link>" >
+<!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
@@ -415,36 +458,79 @@
 <!ENTITY jersey.grizzly.GrizzlyHttpContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/grizzly2/httpserver/GrizzlyHttpContainerProvider.html'>GrizzlyHttpContainerProvider</link>">
 <!ENTITY jersey.grizzly.GrizzlyHttpServerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/grizzly2/httpserver/GrizzlyHttpServerFactory.html'>GrizzlyHttpServerFactory</link>">
 <!ENTITY jersey.grizzly.GrizzlyWebContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/grizzly2/servlet/GrizzlyWebContainerFactory.html'>GrizzlyWebContainerFactory</link>">
+<!ENTITY jersey.helidon.HelidonConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/helidon/connector/HelidonConnectorProvider.html'>HelidonConnectorProvider</link>">
+<!ENTITY jersey.helidon.HelidonClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/helidon/connector/HelidonClientProperties.html'>HelidonClientProperties</link>">
+<!ENTITY jersey.helidon.HelidonClientProperties.CONFIG "<link xlink:href='&jersey.javadoc.uri.prefix;/helidon/connector/HelidonClientProperties.html#CONFIG'>HelidonClientProperties.CONFIG</link>">
+<!ENTITY jersey.jdk.JdkConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProvider.html'>JdkConnectorProvider</link>">
+<!ENTITY jersey.jdk.JdkClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html'>JdkConnectorProperties</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.CONNECTION_IDLE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#CONNECTION_IDLE_TIMEOUT'>JdkConnectorProperties.CONNECTION_IDLE_TIMEOUT</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.CONTAINER_IDLE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#CONTAINER_IDLE_TIMEOUT'>JdkConnectorProperties.CONTAINER_IDLE_TIMEOUT</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.COOKIE_POLICY "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#COOKIE_POLICY'>JdkConnectorProperties.COOKIE_POLICY</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.DEFAULT_CONNECTION_CLOSE_WAIT "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#DEFAULT_CONNECTION_CLOSE_WAIT'>JdkConnectorProperties.DEFAULT_CONNECTION_CLOSE_WAIT</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.DEFAULT_CONNECTION_IDLE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#DEFAULT_CONNECTION_IDLE_TIMEOUT'>JdkConnectorProperties.DEFAULT_CONNECTION_IDLE_TIMEOUT</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.DEFAULT_MAX_CONNECTIONS_PER_DESTINATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#DEFAULT_MAX_CONNECTIONS_PER_DESTINATION'>JdkConnectorProperties.DEFAULT_MAX_CONNECTIONS_PER_DESTINATION</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.DEFAULT_MAX_HEADER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#DEFAULT_MAX_HEADER_SIZE'>JdkConnectorProperties.DEFAULT_MAX_HEADER_SIZE</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.DEFAULT_MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#DEFAULT_MAX_REDIRECTS'>JdkConnectorProperties.DEFAULT_MAX_REDIRECTS</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.MAX_CONNECTIONS_PER_DESTINATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#MAX_CONNECTIONS_PER_DESTINATION'>JdkConnectorProperties.MAX_CONNECTIONS_PER_DESTINATION</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.MAX_HEADER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#MAX_HEADER_SIZE'>JdkConnectorProperties.MAX_HEADER_SIZE</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#MAX_REDIRECTS'>JdkConnectorProperties.MAX_REDIRECTS</link>">
+<!ENTITY jersey.jdk.JdkClientProperties.WORKER_THREAD_POOL_CONFIG "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProperties.html#WORKER_THREAD_POOL_CONFIG'>JdkConnectorProperties.WORKER_THREAD_POOL_CONFIG</link>">
 <!ENTITY jersey.jdkhttp.JdkHttpHandlerContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/jdkhttp/JdkHttpHandlerContainer.html'>JdkHttpHandlerContainer</link>">
 <!ENTITY jersey.jdkhttp.JdkHttpHandlerContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jdkhttp/JdkHttpHandlerContainerProvider.html'>JdkHttpHandlerContainerProvider</link>">
 <!ENTITY jersey.jdkhttp.JdkHttpServerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jdkhttp/JdkHttpServerFactory.html'>JdkHttpServerFactory</link>">
+<!ENTITY jersey.jetty.JettyClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html'>JettyClientProperties</link>" >
+<!ENTITY jersey.jetty.JettyHttpClientSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyHttpClientSupplier.html'>JettyHttpClientSupplier</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#ENABLE_SSL_HOSTNAME_VERIFICATION'>JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#DISABLE_COOKIES'>JettyClientProperties.DISABLE_COOKIES</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>JettyClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>JettyClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
+<!ENTITY jersey.jetty.JettyClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyClientProperties.html#TOTAL_TIMEOUT'>JettyClientProperties.TOTAL_TIMEOUT</link>" >
 <!ENTITY jersey.jetty.JettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/connector/JettyConnectorProvider.html'>JettyConnectorProvider</link>">
+<!ENTITY jersey.jetty11.Jetty11Http2ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/http2/connector/Jetty11ConnectorProvider.html'>Jetty11Http2ConnectorProvider</link>">
 <!ENTITY jersey.jetty.JettyHttpContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainer.html'>JettyHttpContainer</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerFactory.html'>JettyHttpContainerFactory</link>">
 <!ENTITY jersey.jetty.JettyHttpContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/JettyHttpContainerProvider.html'>JettyHttpContainerProvider</link>">
 <!ENTITY jersey.jetty.JettyWebContainerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty/servlet/JettyWebContainerFactory.html'>JettyWebContainerFactory</link>">
-<!ENTITY jersey.jetty.JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/JettyClientProperties.html#ENABLE_SSL_HOSTNAME_VERIFICATION'>JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html'>Jetty11ClientProperties</link>" >
+<!ENTITY jersey.jetty11.Jetty11HttpClientSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11HttpClientSupplier.html'>Jetty11HttpClientSupplier</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#ENABLE_SSL_HOSTNAME_VERIFICATION'>Jetty11ClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#DISABLE_COOKIES'>Jetty11ClientProperties.DISABLE_COOKIES</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>Jetty11ClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#SYNC_LISTENER_RESPONSE_MAX_SIZE'>Jetty11ClientProperties.SYNC_LISTENER_RESPONSE_MAX_SIZE</link>" >
+<!ENTITY jersey.jetty11.Jetty11ClientProperties.TOTAL_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ClientProperties.html#TOTAL_TIMEOUT'>Jetty11ClientProperties.TOTAL_TIMEOUT</link>" >
+<!ENTITY jersey.jetty11.Jetty11ConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jetty11/connector/Jetty11ConnectorProvider.html'>Jetty11ConnectorProvider</link>">
+<!ENTITY jersey.jnh.JavaNetHttpConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpConnectorProvider.html'>JavaNetHttpConnectorProvider</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html'>JavaNetHttpClientProperties</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties.COOKIE_HANDLER "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#COOKIE_HANDLER'>JavaNetHttpClientProperties.COOKIE_HANDLER</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties.SSL_PARAMETERS "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#SSL_PARAMETERS'>JavaNetHttpClientProperties.SSL_PARAMETERS</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#PREEMPTIVE_BASIC_AUTHENTICATION'>JavaNetHttpClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties.DISABLE_COOKIES "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#DISABLE_COOKIES'>JavaNetHttpClientProperties.DISABLE_COOKIES</link>">
+<!ENTITY jersey.jnh.JavaNetHttpClientProperties.HTTP_VERSION "<link xlink:href='&jersey.javadoc.uri.prefix;/jnh/connector/JavaNetHttpClientProperties.html#HTTP_VERSION'>JavaNetHttpClientProperties.HTTP_VERSION</link>">
 <!ENTITY jersey.linking.DeclarativeLinkingFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/linking/DeclarativeLinkingFeature.html'>DeclarativeLinkingFeature</link>">
 <!ENTITY jersey.logging.LoggingFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html'>LoggingFeature</link>">
 <!ENTITY jersey.logging.LoggingFeature.DEFAULT_LOGGER_NAME "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#DEFAULT_LOGGER_NAME'>LoggingFeature.DEFAULT_LOGGER_NAME</link>">
 <!ENTITY jersey.logging.LoggingFeature.DEFAULT_LOGGER_LEVEL "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#DEFAULT_LOGGER_LEVEL'>LoggingFeature.DEFAULT_LOGGER_LEVEL</link>">
 <!ENTITY jersey.logging.LoggingFeature.DEFAULT_VERBOSITY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#DEFAULT_VERBOSITY'>LoggingFeature.DEFAULT_VERBOSITY</link>">
 <!ENTITY jersey.logging.LoggingFeature.DEFAULT_MAX_ENTITY_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#DEFAULT_MAX_ENTITY_SIZE'>LoggingFeature.DEFAULT_MAX_ENTITY_SIZE</link>">
+<!ENTITY jersey.logging.LoggingFeature.DEFAULT_REDACT_HEADERS "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#DEFAULT_REDACT_HEADERS'>LoggingFeature.DEFAULT_REDACT_HEADERS</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_NAME'>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_LEVEL'>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_VERBOSITY'>LoggingFeature.LOGGING_FEATURE_VERBOSITY</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_MAX_ENTITY_SIZE'>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_SEPARATOR'>LoggingFeature.LOGGING_FEATURE_SEPARATOR</link>">
+<!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_REDACT_HEADERS'>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_NAME_CLIENT'>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_CLIENT</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_LEVEL_CLIENT'>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_VERBOSITY_CLIENT'>LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT'>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT'>LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT</link>">
+<!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_REDACT_HEADERS_CLIENT'>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_NAME_SERVER'>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_LOGGER_LEVEL_SERVER'>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_VERBOSITY_SERVER'>LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER'>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER</link>">
 <!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER'>LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER</link>">
+<!ENTITY jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.html#LOGGING_FEATURE_REDACT_HEADERS_SERVER'>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER</link>">
 <!ENTITY jersey.logging.LoggingFeature.Verbosity "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html'>LoggingFeature.Verbosity</link>">
 <!ENTITY jersey.logging.LoggingFeature.Verbosity.HEADERS_ONLY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html#HEADERS_ONLY'>LoggingFeature.Verbosity.HEADERS_ONLY</link>">
 <!ENTITY jersey.logging.LoggingFeature.Verbosity.PAYLOAD_ANY "<link xlink:href='&jersey.javadoc.uri.prefix;/logging/LoggingFeature.Verbosity.html#PAYLOAD_ANY'>LoggingFeature.Verbosity.PAYLOAD_ANY</link>">
@@ -470,6 +556,13 @@
 <!ENTITY jersey.media.multipart.StreamDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/StreamDataBodyPart.html'>StreamDataBodyPart</link>" >
 <!ENTITY jersey.message.MessageBodyWorkers "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageBodyWorkers.html'>MessageBodyWorkers</link>">
 <!ENTITY jersey.message.MessageProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html'>MessageProperties</link>">
+<!ENTITY jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#DEFLATE_WITHOUT_ZLIB'>MessageProperties.DEFLATE_WITHOUT_ZLIB</link>">
+<!ENTITY jersey.message.MessageProperties.IO_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_BUFFER_SIZE'>MessageProperties.IO_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#IO_DEFAULT_BUFFER_SIZE'>MessageProperties.IO_DEFAULT_BUFFER_SIZE</link>">
+<!ENTITY jersey.message.MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JAXB_PROCESS_XML_ROOT_ELEMENT'>MessageProperties.JAXB_PROCESS_XML_ROOT_ELEMENT</link>">
+<!ENTITY jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#JSON_MAX_STRING_LENGTH'>MessageProperties.JSON_MAX_STRING_LENGTH</link>">
+<!ENTITY jersey.message.MessageProperties.XML_SECURITY_DISABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_SECURITY_DISABLE'>MessageProperties.XML_SECURITY_DISABLE</link>">
+<!ENTITY jersey.message.MessageProperties.XML_FORMAT_OUTPUT "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#XML_FORMAT_OUTPUT'>MessageProperties.XML_FORMAT_OUTPUT</link>">
 <!ENTITY jersey.message.filtering.AbstractEntityProcessor "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractEntityProcessor.html'>AbstractEntityProcessor</link>">
 <!ENTITY jersey.message.filtering.AbstractObjectProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/spi/AbstractObjectProvider.html'>AbstractObjectProvider</link>">
 <!ENTITY jersey.message.filtering.EntityFiltering "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/EntityFiltering.html'>@EntityFiltering</link>">
@@ -482,9 +575,15 @@
 <!ENTITY jersey.message.filtering.SecurityAnnotations "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SecurityAnnotations.html'>SecurityAnnotations</link>">
 <!ENTITY jersey.message.filtering.SecurityEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SecurityEntityFilteringFeature.html'>SecurityEntityFilteringFeature</link>">
 <!ENTITY jersey.message.filtering.SelectableEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SelectableEntityFilteringFeature.html'>SelectableEntityFilteringFeature</link>">
+<!ENTITY jersey.netty.NettyClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html'>NettyClientProperties</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#FILTER_HEADERS_FOR_PROXY'>NettyClientProperties.FILTER_HEADERS_FOR_PROXY</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#IDLE_CONNECTION_PRUNE_TIMEOUT'>NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS'>NettyClientProperties.MAX_CONNECTIONS</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS_TOTAL "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS_TOTAL'>NettyClientProperties.MAX_CONNECTIONS_TOTAL</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_REDIRECTS'>NettyClientProperties.MAX_REDIRECTS</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#PRESERVE_METHOD_ON_REDIRECT'>NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#EXPECT_100_CONTINUE_TIMEOUT'>NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
-<!ENTITY jersey.jdk.JdkConnectorProvider
-        "<link xlink:href='&jersey.javadoc.uri.prefix;/jdk/connector/JdkConnectorProvider.html'>JdkConnectorProvider</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">
 <!ENTITY jersey.server.BackgroundSchedulerLiteral "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundSchedulerLiteral.html'>BackgroundSchedulerLiteral</link>">
@@ -543,11 +642,15 @@
 <!ENTITY jersey.server.ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231 "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231'>ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231</link>" >
 <!ENTITY jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE'>ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE</link>" >
 <!ENTITY jersey.server.ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES'>ServerProperties.EMPTY_REQUEST_MEDIA_TYPE_MATCHES_ANY_CONSUMES</link>" >
+<!ENTITY jersey.server.ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#WEBSERVER_ALLOW_PRIVILEGED_PORTS'>ServerProperties.WEBSERVER_ALLOW_PRIVILEGED_PORTS</link>" >
+<!ENTITY jersey.server.ServerProperties.WEBSERVER_AUTO_START "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#WEBSERVER_AUTO_START'>ServerProperties.WEBSERVER_AUTO_START</link>" >
+<!ENTITY jersey.server.ServerProperties.WEBSERVER_CLASS "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ServerProperties.html#WEBSERVER_CLASS'>ServerProperties.WEBSERVER_CLASS</link>" >
 <!ENTITY jersey.server.Uri "<link xlink:href='&jersey.javadoc.uri.prefix;/server/Uri.html'>Uri</link>">
 <!ENTITY jersey.server.UriConnegFilter "<link xlink:href='&jersey.javadoc.uri.prefix;/server/filter/UriConnegFilter.html'>UriConnegFilter</link>">
 <!ENTITY jersey.server.WadlFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/server/wadl/WadlFeature.html'>WadlFeature</link>">
 <!ENTITY jersey.server.WadlGenerator "<link xlink:href='&jersey.javadoc.uri.prefix;/server/wadl/WadlGenerator.html'>WadlGenerator</link>">
 <!ENTITY jersey.server.WadlGeneratorConfig "<link xlink:href='&jersey.javadoc.uri.prefix;/server/wadl/config/WadlGeneratorConfig.html'>WadlGeneratorConfig</link>">
+<!ENTITY jersey.server.WebServerFactory "<link xlink:href='&jersey.javadoc.uri.prefix;/server/WebServerFactory.html'>WebServerFactory</link>">
 <!ENTITY jersey.server.model.MethodHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/model/MethodHandler.html'>MethodHandler</link>">
 <!ENTITY jersey.server.model.ComponentModelValidator "<link xlink:href='&jersey.javadoc.uri.prefix;/server/model/ComponentModelValidator.html'>ComponentModelValidator</link>">
 <!ENTITY jersey.server.monitoring.ApplicationEvent "<link xlink:href='&jersey.javadoc.uri.prefix;/server/monitoring/ApplicationEvent.html'>ApplicationEvent</link>">
@@ -590,6 +693,8 @@
 <!ENTITY jersey.server.spi.ContainerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/ContainerProvider.html'>ContainerProvider</link>">
 <!ENTITY jersey.server.spi.ExternalRequestScope "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/ExternalRequestScope.html'>ExternalRequestScope</link>">
 <!ENTITY jersey.server.spi.RequestScopedInitializer "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/RequestScopedInitializer.html'>RequestScopedInitializer</link>">
+<!ENTITY jersey.server.spi.WebServer "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/WebServer.html'>WebServer</link>">
+<!ENTITY jersey.server.spi.WebServerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/server/spi/WebServerProvider.html'>WebServerProvider</link>">
 <!ENTITY jersey.servlet.ServletContainer "<link xlink:href='&jersey.javadoc.uri.prefix;/servlet/ServletContainer.html'>ServletContainer</link>">
 <!ENTITY jersey.servlet.ServletProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/servlet/ServletProperties.html'>ServletProperties</link>">
 <!ENTITY jersey.servlet.ServletProperties.FILTER_CONTEXT_PATH "<link xlink:href='&jersey.javadoc.uri.prefix;/servlet/ServletProperties.html#FILTER_CONTEXT_PATH'>ServletProperties.FILTER_CONTEXT_PATH</link>">
@@ -729,6 +834,8 @@
 <!ENTITY lit.jaxrs.QueryParam "<literal>@QueryParam</literal>">
 <!ENTITY lit.jaxrs.ReaderInterceptor "<literal>ReaderInterceptor</literal>">
 <!ENTITY lit.jaxrs.ReaderInterceptorContext "<literal>ReaderInterceptorContext</literal>">
+<!ENTITY lit.jaxrs.SeBootstrap "<literal>SeBootstrap</literal>">
+<!ENTITY lit.jaxrs.SeBootstrap.Configuration "<literal>SeBootstrap.Configuration</literal>">
 <!ENTITY lit.jaxrs.WebApplicationException "<literal>WebApplicationException</literal>">
 <!ENTITY lit.jaxrs.WriterInterceptor "<literal>WriterInterceptor</literal>">
 <!ENTITY lit.jaxrs.WriterInterceptorContext "<literal>WriterInterceptorContext</literal>">
@@ -912,27 +1019,32 @@
 <!ENTITY lit.jersey.jetty.JettyHttpContainerFactory "<literal>JettyHttpContainerFactory</literal>">
 <!ENTITY lit.jersey.jetty.JettyHttpContainerProvider "<literal>JettyHttpContainerProvider</literal>">
 <!ENTITY lit.jersey.jetty.JettyWebContainerFactory "<literal>JettyWebContainerFactory</literal>">
+<!ENTITY lit.jersey.jetty11.Jetty11ConnectorProvider "<literal>Jetty11ConnectorProvider</literal>">
 <!ENTITY lit.jersey.linking.DeclarativeLinkingFeature "<literal>DeclarativeLinkingFeature</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature "<literal>LoggingFeature</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_LOGGER_NAME "<literal>LoggingFeature.DEFAULT_LOGGER_NAME</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_LOGGER_LEVEL "<literal>LoggingFeature.DEFAULT_LOGGER_LEVEL</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_VERBOSITY "<literal>LoggingFeature.DEFAULT_VERBOSITY</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_MAX_ENTITY_SIZE "<literal>LoggingFeature.DEFAULT_MAX_ENTITY_SIZE</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.DEFAULT_REDACT_HEADERS "<literal>LoggingFeature.DEFAULT_REDACT_HEADERS</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY "<literal>LoggingFeature.LOGGING_FEATURE_VERBOSITY</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE "<literal>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATOR</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS "<literal>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT</literal>">
-<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATORE_CLIENT</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATOR_CLIENT</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT "<literal>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_CLIENT</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_NAME_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_VERBOSITY_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_SEPARATOR_SERVER</literal>">
+<!ENTITY lit.jersey.logging.LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER "<literal>LoggingFeature.LOGGING_FEATURE_REDACT_HEADERS_SERVER</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.Verbosity "<literal>LoggingFeature.Verbosity</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.Verbosity.HEADERS_ONLY "<literal>LoggingFeature.Verbosity.HEADERS_ONLY</literal>">
 <!ENTITY lit.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_ANY "<literal>LoggingFeature.Verbosity.PAYLOAD_ANY</literal>">
@@ -1046,6 +1158,8 @@
 <!ENTITY lit.jersey.server.oauth1.TokenResource "<literal>TokenResource</literal>">
 <!ENTITY lit.jersey.server.spi.ComponentProvider "<literal>ComponentProvider</literal>">
 <!ENTITY lit.jersey.server.spi.ContainerProvider "<literal>ContainerProvider</literal>">
+<!ENTITY lit.jersey.server.spi.WebServer "<literal>WebServer</literal>">
+<!ENTITY lit.jersey.server.spi.WebServerProvider "<literal>WebServerProvider</literal>">
 <!ENTITY lit.jersey.servlet.ServletContainer "<literal>ServletContainer</literal>">
 <!ENTITY lit.jersey.servlet.ServletProperties "<literal>ServletProperties</literal>">
 <!ENTITY lit.jersey.servlet.ServletProperties.FILTER_CONTEXT_PATH "<literal>ServletProperties.FILTER_CONTEXT_PATH</literal>">

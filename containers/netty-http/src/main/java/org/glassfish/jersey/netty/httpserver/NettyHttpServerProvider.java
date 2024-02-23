@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.jersey.netty.httpserver;
 
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
@@ -35,17 +36,17 @@ public final class NettyHttpServerProvider implements WebServerProvider {
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Application application,
-                                                final JerseySeBootstrapConfiguration configuration) {
-        return NettyHttpServer.class == type || WebServer.class == type
-                ? type.cast(new NettyHttpServer(application, configuration))
+                                                final SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(NettyHttpServer.class, type, configuration)
+                ? type.cast(new NettyHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 
     @Override
     public <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> applicationClass,
-                                                final JerseySeBootstrapConfiguration configuration) {
-        return NettyHttpServer.class == type || WebServer.class == type
-                ? type.cast(new NettyHttpServer(applicationClass, configuration))
+                                                final SeBootstrap.Configuration configuration) {
+        return WebServerProvider.isSupportedWebServer(NettyHttpServer.class, type, configuration)
+                ? type.cast(new NettyHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
                 : null;
     }
 }

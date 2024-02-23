@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Basic sanity test of {@link FilePatternDoesNotExistRule} enforcer rule.
@@ -30,17 +31,19 @@ import org.junit.Test;
  */
 public class FilePatternDoesNotExistRuleTest {
 
-    @Test(expected = EnforcerRuleException.class)
+    @Test
     public void testMatchedPath() throws URISyntaxException, EnforcerRuleException {
-        final FilePatternDoesNotExistRule filePatternDoesNotExistRule = new FilePatternDoesNotExistRule();
+        assertThrows(EnforcerRuleException.class, () -> {
+            final FilePatternDoesNotExistRule filePatternDoesNotExistRule = new FilePatternDoesNotExistRule();
 
-        final URI uri = getClass()
-                .getResource("/org/glassfish/jersey/test/maven/rule/FilePatternDoesNotExistRule.class").toURI();
-        final File file = new File(uri);
-        final String pattern = file.getAbsolutePath().replace("PatternDoes", "*");
-        filePatternDoesNotExistRule.files = new File[] {new File(pattern)};
+            final URI uri = getClass()
+                    .getResource("/org/glassfish/jersey/test/maven/rule/FilePatternDoesNotExistRule.class").toURI();
+            final File file = new File(uri);
+            final String pattern = file.getAbsolutePath().replace("PatternDoes", "*");
+            filePatternDoesNotExistRule.files = new File[] {new File(pattern)};
 
-        filePatternDoesNotExistRule.execute(null);
+            filePatternDoesNotExistRule.execute();
+        });
     }
 
     @Test
@@ -53,6 +56,6 @@ public class FilePatternDoesNotExistRuleTest {
         final String pattern = file.getAbsolutePath().replace("PatternDoes", "*").replace("Exist", "");
         filePatternDoesNotExistRule.files = new File[] {new File(pattern)};
 
-        filePatternDoesNotExistRule.execute(null);
+        filePatternDoesNotExistRule.execute();
     }
 }

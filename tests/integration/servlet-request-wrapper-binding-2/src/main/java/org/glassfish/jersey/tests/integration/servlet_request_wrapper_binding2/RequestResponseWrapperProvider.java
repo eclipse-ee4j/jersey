@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +40,7 @@ import jakarta.inject.Provider;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -291,16 +293,6 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                 }
 
                 @Override
-                public String encodeUrl(String s) {
-                    return getHttpServletResponse().encodeUrl(s);
-                }
-
-                @Override
-                public String encodeRedirectUrl(String s) {
-                    return getHttpServletResponse().encodeRedirectUrl(s);
-                }
-
-                @Override
                 public void sendError(int i, String s) throws IOException {
                     getHttpServletResponse().sendError(i, s);
                 }
@@ -330,14 +322,17 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                     getHttpServletResponse().setHeader(h, v);
                 }
 
+                @Override
                 public Collection<String> getHeaderNames() {
                     return getHttpServletResponse().getHeaderNames();
                 }
 
+                @Override
                 public Collection<String> getHeaders(String s) {
                     return getHttpServletResponse().getHeaders(s);
                 }
 
+                @Override
                 public String getHeader(String s) {
                     return getHttpServletResponse().getHeader(s);
                 }
@@ -365,11 +360,6 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                 @Override
                 public int getStatus() {
                     return getHttpServletResponse().getStatus();
-                }
-
-                @Override
-                public void setStatus(int i, String s) {
-                    getHttpServletResponse().setStatus(i, s);
                 }
 
                 @Override
@@ -499,6 +489,22 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
     }
 
     private abstract static class MyHttpServletRequestImpl implements HttpServletRequest {
+
+        @Override
+        public String getRequestId() {
+            return getHttpServletRequest().getRequestId();
+        }
+
+        @Override
+        public String getProtocolRequestId() {
+            return getHttpServletRequest().getProtocolRequestId();
+        }
+
+        @Override
+        public ServletConnection getServletConnection() {
+            return getHttpServletRequest().getServletConnection();
+        }
+
 
         @Override
         public String getAuthType() {
@@ -658,11 +664,6 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
         }
 
         @Override
-        public boolean isRequestedSessionIdFromUrl() {
-            return getHttpServletRequest().isRequestedSessionIdFromUrl();
-        }
-
-        @Override
         public Object getAttribute(String s) {
             return getHttpServletRequest().getAttribute(s);
         }
@@ -780,11 +781,6 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
         @Override
         public RequestDispatcher getRequestDispatcher(String s) {
             return getHttpServletRequest().getRequestDispatcher(s);
-        }
-
-        @Override
-        public String getRealPath(String s) {
-            return getHttpServletRequest().getRealPath(s);
         }
 
         @Override

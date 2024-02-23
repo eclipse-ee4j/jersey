@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.NoContentException;
@@ -40,6 +42,7 @@ import jakarta.xml.bind.Unmarshaller;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.EntityInputStream;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * An abstract provider for {@link JAXBElement}.
@@ -67,8 +70,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
      *
      * @param providers JAX-RS providers.
      */
-    public AbstractJaxbElementProvider(Providers providers) {
-        super(providers);
+    public AbstractJaxbElementProvider(Providers providers, Configuration config) {
+        super(providers, config);
     }
 
     /**
@@ -77,8 +80,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
      * @param providers         JAX-RS providers.
      * @param resolverMediaType JAXB component context resolver media type to be used.
      */
-    public AbstractJaxbElementProvider(Providers providers, MediaType resolverMediaType) {
-        super(providers, resolverMediaType);
+    public AbstractJaxbElementProvider(Providers providers, MediaType resolverMediaType, Configuration config) {
+        super(providers, resolverMediaType, config);
     }
 
     @Override
@@ -144,8 +147,8 @@ public abstract class AbstractJaxbElementProvider extends AbstractJaxbProvider<J
             OutputStream entityStream) throws IOException {
         try {
             final Marshaller m = getMarshaller(t.getDeclaredType(), mediaType);
-            final Charset c = getCharset(mediaType);
-            if (c != UTF8) {
+            final Charset c = ReaderWriter.getCharset(mediaType);
+            if (c != StandardCharsets.UTF_8) {
                 m.setProperty(Marshaller.JAXB_ENCODING, c.name());
             }
             setHeader(m, annotations);

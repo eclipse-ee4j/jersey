@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,13 +30,14 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.test.JerseyTest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.jboss.weld.environment.se.Weld;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Bean Validation tests for programmatically created resources.
@@ -47,11 +48,12 @@ public class ProgrammaticValidationTest extends JerseyTest {
 
     Weld weld;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Assume.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
+        Assumptions.assumeTrue(Hk2InjectionManagerFactory.isImmediateStrategy());
     }
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {
@@ -63,6 +65,7 @@ public class ProgrammaticValidationTest extends JerseyTest {
         }
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         if (Hk2InjectionManagerFactory.isImmediateStrategy()) {

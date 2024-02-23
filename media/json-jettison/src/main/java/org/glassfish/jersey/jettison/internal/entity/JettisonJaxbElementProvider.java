@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Providers;
@@ -38,6 +40,7 @@ import jakarta.xml.bind.Unmarshaller;
 import org.glassfish.jersey.jaxb.internal.AbstractJaxbElementProvider;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 import org.glassfish.jersey.jettison.JettisonMarshaller;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * JSON message entity media type provider (reader & writer) for {@link jakarta.xml.bind.JAXBElement}
@@ -47,12 +50,12 @@ import org.glassfish.jersey.jettison.JettisonMarshaller;
  */
 public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
 
-    JettisonJaxbElementProvider(Providers ps) {
-        super(ps);
+    JettisonJaxbElementProvider(Providers ps, Configuration config) {
+        super(ps, config);
     }
 
-    JettisonJaxbElementProvider(Providers ps, MediaType mt) {
-        super(ps, mt);
+    JettisonJaxbElementProvider(Providers ps, MediaType mt, Configuration config) {
+        super(ps, mt, config);
     }
 
     @Override
@@ -69,8 +72,9 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     @Consumes("application/json")
     public static final class App extends JettisonJaxbElementProvider {
 
-        public App(@Context Providers ps) {
-            super(ps, MediaType.APPLICATION_JSON_TYPE);
+        @Inject
+        public App(@Context Providers ps, @Context Configuration config) {
+            super(ps, MediaType.APPLICATION_JSON_TYPE, config);
         }
     }
 
@@ -78,8 +82,9 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     @Consumes("*/*")
     public static final class General extends JettisonJaxbElementProvider {
 
-        public General(@Context Providers ps) {
-            super(ps);
+        @Inject
+        public General(@Context Providers ps, @Context Configuration config) {
+            super(ps, config);
         }
 
         @Override
@@ -91,7 +96,7 @@ public class JettisonJaxbElementProvider extends AbstractJaxbElementProvider {
     @Override
     protected final JAXBElement<?> readFrom(Class<?> type, MediaType mediaType, Unmarshaller unmarshaller,
                                             InputStream entityStream) throws JAXBException {
-        final Charset c = getCharset(mediaType);
+        final Charset c = ReaderWriter.getCharset(mediaType);
 
         return JettisonJaxbContext.getJSONUnmarshaller(unmarshaller)
                 .unmarshalJAXBElementFromJSON(new InputStreamReader(entityStream, c), type);

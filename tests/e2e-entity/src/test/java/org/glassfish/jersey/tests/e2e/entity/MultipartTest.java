@@ -21,8 +21,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -51,9 +54,11 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.test.spi.TestHelper;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -62,21 +67,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Martin Matula
  */
-@RunWith(Parameterized.class)
-public class MultipartTest extends JerseyTest {
+public class MultipartTest {
 
     private static Class<? extends Feature> featureClass;
 
-    @Parameterized.Parameters(name = "Provider: {0}")
-    public static Iterable<Class[]> providers() {
-        return Arrays.asList(new Class[][]{{MoxyJsonFeature.class}, {JacksonFeature.class}, {JsonBindingFeature.class}});
-    }
-
-    public MultipartTest(Class<? extends Feature> featureProvider) {
-        super(configure(featureProvider));
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
     public static class MyObject {
 
         private String value;
@@ -172,6 +166,9 @@ public class MultipartTest extends JerseyTest {
         }
     }
 
+    private static final List<Class<? extends Feature>> providers =
+            Arrays.asList(MoxyJsonFeature.class, JacksonFeature.class, JsonBindingFeature.class);
+
     protected static Application configure(Class<? extends Feature> featureClass) {
         MultipartTest.featureClass = featureClass;
         return new ResourceConfig(MultipartResource.class, MessageBodyProvider.class)
@@ -180,87 +177,105 @@ public class MultipartTest extends JerseyTest {
 //                .register(JacksonFeature.class);
 //                .register(JsonBindingFeature.class);
     }
-
-    @Override
-    protected void configureClient(final ClientConfig config) {
-        config.register(MultiPartFeature.class);
-        config.register(featureClass);
-        //config.register(JacksonFeature.class);
-        //config.register(JsonBindingFeature.class);
+    public static Stream<Class<? extends Feature>> parameters() {
+        return providers.stream();
     }
 
-    @Test
-    public void testFileNameInternetExplorer() throws Exception {
-        final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
-        final Response response = target("filename")
-                .request()
-                .header("User-Agent", "Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)")
-                .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
-
-        assertThat(response.readEntity(String.class), equalTo("bhhklbpom.xml"));
+    @TestFactory
+    public Collection<DynamicContainer> generateTests() {
+        final Collection<DynamicContainer> tests = new ArrayList<>();
+        MultipartTest.parameters().forEach(feature -> {
+            final MultipartTest.MultipartTemplateTest test =
+                    new MultipartTemplateTest(feature) {};
+            tests.add(TestHelper.toTestContainer(test, feature.getClass().getSimpleName()));
+        });
+        return tests;
     }
+    public abstract class MultipartTemplateTest extends JerseyTest {
 
-    @Test
-    public void testFileName() throws Exception {
-        final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
-        final Response response = target("filename")
-                .request()
-                .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
-
-        assertThat(response.readEntity(String.class), equalTo("bhhklbC:javaprojectsmultipart-testcasepom.xml"));
-    }
-
-    @Test
-    public void testMbrExceptionServer() throws Exception {
-        final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
-        final Response response = target("mbr")
-                .request()
-                .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
-
-        assertThat(response.getStatus(), equalTo(500));
-    }
-
-    /**
-     * Test that injection of a list (specific type) works.
-     */
-    @Test
-    public void testSpecificListAsParameter() throws Exception {
-        if (featureClass == MoxyJsonFeature.class) {
-            // No available MessageBodyWriter for class "class java.util.Arrays$ArrayList" and media type "application/json"
-            return;
+        public MultipartTemplateTest(Class<? extends Feature> featureProvider) {
+            super(MultipartTest.configure(featureProvider));
         }
-        final MyObject object = new MyObject("object");
-        final List<MyObject> list = Arrays.asList(new MyObject("list1"), new MyObject("list2"));
+        @Override
+        protected void configureClient(final ClientConfig config) {
+            config.register(MultiPartFeature.class);
+            config.register(featureClass);
+            //config.register(JacksonFeature.class);
+            //config.register(JsonBindingFeature.class);
+        }
 
-        final FormDataMultiPart mp = new FormDataMultiPart();
-        mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("object").fileName("object").build(),
-                object, MediaType.APPLICATION_JSON_TYPE));
-        mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("list").fileName("list").build(),
-                list, MediaType.APPLICATION_JSON_TYPE));
+        @Test
+        public void testFileNameInternetExplorer() throws Exception {
+            final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
+            final Response response = target("filename")
+                    .request()
+                    .header("User-Agent", "Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)")
+                    .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
 
-        final Response response = target("listAsParameter")
-                .request().post(Entity.entity(mp, MediaType.MULTIPART_FORM_DATA_TYPE));
+            assertThat(response.readEntity(String.class), equalTo("bhhklbpom.xml"));
+        }
 
-        assertThat(response.readEntity(String.class), is("object_list1_list2"));
+        @Test
+        public void testFileName() throws Exception {
+            final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
+            final Response response = target("filename")
+                    .request()
+                    .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
+
+            assertThat(response.readEntity(String.class), equalTo("bhhklbC:javaprojectsmultipart-testcasepom.xml"));
+        }
+
+        @Test
+        public void testMbrExceptionServer() throws Exception {
+            final InputStream entity = getClass().getResourceAsStream("multipart-testcase.txt");
+            final Response response = target("mbr")
+                    .request()
+                    .post(Entity.entity(entity, "multipart/form-data; boundary=---------------------------7dc941520888"));
+
+            assertThat(response.getStatus(), equalTo(500));
+        }
+
+        /**
+         * Test that injection of a list (specific type) works.
+         */
+        @Test
+        public void testSpecificListAsParameter() throws Exception {
+            if (featureClass == MoxyJsonFeature.class) {
+                // No available MessageBodyWriter for class "class java.util.Arrays$ArrayList" and media type "application/json"
+                return;
+            }
+            final MyObject object = new MyObject("object");
+            final List<MyObject> list = Arrays.asList(new MyObject("list1"), new MyObject("list2"));
+
+            final FormDataMultiPart mp = new FormDataMultiPart();
+            mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("object").fileName("object").build(),
+                    object, MediaType.APPLICATION_JSON_TYPE));
+            mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("list").fileName("list").build(),
+                    list, MediaType.APPLICATION_JSON_TYPE));
+
+            final Response response = target("listAsParameter")
+                    .request().post(Entity.entity(mp, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+            assertThat(response.readEntity(String.class), is("object_list1_list2"));
+        }
+
+        @Test
+        public void testEmptyEntity() throws Exception {
+            final Response response = target("filename")
+                    .request()
+                    .post(Entity.entity(null, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+            assertThat(response.getStatus(), is(400));
+        }
+
+        @Test
+        public void testEmptyEntityWithoutContentType() throws Exception {
+            final Response response = target("filename")
+                    .request()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
+                    .post(null);
+
+            assertThat(response.getStatus(), is(400));
+        }
     }
-
-    @Test
-    public void testEmptyEntity() throws Exception {
-        final Response response = target("filename")
-                .request()
-                .post(Entity.entity(null, MediaType.MULTIPART_FORM_DATA_TYPE));
-
-        assertThat(response.getStatus(), is(400));
-    }
-
-    @Test
-    public void testEmptyEntityWithoutContentType() throws Exception {
-        final Response response = target("filename")
-                .request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
-                .post(null);
-
-        assertThat(response.getStatus(), is(400));
-    }
-
 }

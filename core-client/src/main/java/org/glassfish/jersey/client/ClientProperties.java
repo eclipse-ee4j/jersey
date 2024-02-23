@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,9 @@ import org.glassfish.jersey.client.internal.HttpUrlConnector;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.PropertyAlias;
+
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 
 /**
  * Jersey client implementation configuration properties.
@@ -444,7 +447,7 @@ public final class ClientProperties {
             EXPECT_100_CONTINUE_THRESHOLD_SIZE = "jersey.config.client.request.expect.100.continue.threshold.size";
 
     /**
-     * Default threshold size (64kb) after which which Expect:100-Continue header would be applied before
+     * Default threshold size (64kb) after which Expect:100-Continue header would be applied before
      * the main request.
      *
      * @since 2.32
@@ -462,6 +465,50 @@ public final class ClientProperties {
      * </p>
      */
     public static final String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style";
+
+    /**
+     * <p>
+     *     Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+     *     {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
+     *     to have an extra System Property set to allow HOST header.
+     *     As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
+     *     be set on each request.
+     * </p>
+     * <p>
+     *     The value MUST be an instance of {@link java.lang.String}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.2
+     */
+    public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
+
+    /**
+     * Sets the {@link org.glassfish.jersey.client.spi.ConnectorProvider} class. Overrides the value from META-INF/services.
+     *
+     * <p>
+     *     The value MUST be an instance of {@code String}.
+     * </p>
+     * <p>
+     *     The property is recognized by {@link ClientBuilder}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.40
+     */
+    public static final String CONNECTOR_PROVIDER = "jersey.config.client.connector.provider";
+
+    /**
+     * <p>The {@link javax.net.ssl.SSLContext} {@link java.util.function.Supplier} to be used to set ssl context in the current
+     * HTTP request. Has precedence over the {@link Client#getSslContext()}.
+     * </p>
+     * <p>Currently supported by the default {@code HttpUrlConnector} and by {@code NettyConnector} only.</p>
+     * @since 2.41
+     * @see org.glassfish.jersey.client.SslContextClientBuilder
+     */
+    public static final String SSL_CONTEXT_SUPPLIER = "jersey.config.client.ssl.context.supplier";
 
     private ClientProperties() {
         // prevents instantiation

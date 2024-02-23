@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package org.glassfish.jersey.server;
 
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
 
 import org.glassfish.jersey.internal.ServiceFinder;
@@ -63,7 +64,7 @@ public final class WebServerFactory {
      *             if no server provider supports the type.
      */
     public static <T extends WebServer> T createServer(final Class<T> type, final Application application,
-                                                       final JerseySeBootstrapConfiguration configuration) {
+                                                       final SeBootstrap.Configuration configuration) {
         for (final WebServerProvider webServerProvider : ServiceFinder.find(WebServerProvider.class)) {
             final T server = webServerProvider.createServer(type, application, configuration);
             if (server != null) {
@@ -99,7 +100,7 @@ public final class WebServerFactory {
      *             if no server provider supports the type.
      */
     public static <T extends WebServer> T createServer(final Class<T> type, final Class<? extends Application> application,
-                                                       final JerseySeBootstrapConfiguration configuration) {
+                                                       final SeBootstrap.Configuration configuration) {
         for (final WebServerProvider webServerProvider : ServiceFinder.find(WebServerProvider.class)) {
             final T server = webServerProvider.createServer(type, application, configuration);
             if (server != null) {

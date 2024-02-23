@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.GenericType;
@@ -36,7 +37,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.SecurityContext;
-import jakarta.ws.rs.ext.RuntimeDelegate;
 import jakarta.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -80,31 +80,33 @@ public class RequestContextBuilder {
         public void setWorkers(final MessageBodyWorkers workers) {
             super.setWorkers(workers);
             final byte[] entityBytes;
-            if (entity != null) {
-                final MultivaluedMap<String, Object> myMap = new MultivaluedHashMap<String, Object>(getHeaders());
-                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                OutputStream stream = null;
-                try {
-                    stream = workers.writeTo(entity, entity.getClass(), entityType.getType(),
-                            new Annotation[0], getMediaType(),
-                            myMap,
-                            propertiesDelegate, baos, Collections.<WriterInterceptor>emptyList());
-                } catch (final IOException | WebApplicationException ex) {
-                    Logger.getLogger(TestContainerRequest.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    if (stream != null) {
-                        try {
-                            stream.close();
-                        } catch (final IOException e) {
-                            // ignore
+            if (workers != null) {
+                if (entity != null) {
+                    final MultivaluedMap<String, Object> myMap = new MultivaluedHashMap<String, Object>(getHeaders());
+                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    OutputStream stream = null;
+                    try {
+                        stream = workers.writeTo(entity, entity.getClass(), entityType.getType(),
+                                new Annotation[0], getMediaType(),
+                                myMap,
+                                propertiesDelegate, baos, Collections.<WriterInterceptor>emptyList());
+                    } catch (final IOException | WebApplicationException ex) {
+                        Logger.getLogger(TestContainerRequest.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        if (stream != null) {
+                            try {
+                                stream.close();
+                            } catch (final IOException e) {
+                                // ignore
+                            }
                         }
                     }
+                    entityBytes = baos.toByteArray();
+                } else {
+                    entityBytes = new byte[0];
                 }
-                entityBytes = baos.toByteArray();
-            } else {
-                entityBytes = new byte[0];
+                setEntityStream(new ByteArrayInputStream(entityBytes));
             }
-            setEntityStream(new ByteArrayInputStream(entityBytes));
         }
     }
 
@@ -160,7 +162,7 @@ public class RequestContextBuilder {
     }
 
     public RequestContextBuilder type(final MediaType contentType) {
-        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, null));
+        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, (Configuration) null));
         return this;
     }
 
@@ -184,7 +186,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.header(name, HeaderUtils.asString(value, null));
+        request.header(name, HeaderUtils.asString(value, (Configuration) null));
     }
 
     private void putHeaders(final String name, final Object... values) {
@@ -192,7 +194,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), null));
+        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), (Configuration) null));
     }
 
     private void putHeaders(final String name, final String... values) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.LogRecord;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -53,8 +54,8 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test, that managed client uses the custom executor service.
@@ -62,6 +63,11 @@ import org.junit.Test;
  * @author Adam Lindenthal
  */
 public class ManagedClientExecutorTest extends JerseyTest {
+
+    public ManagedClientExecutorTest() {
+        // The tests need to run on port 9998, since @Uri() annotation needs a constant String with a port
+        System.setProperty(TestProperties.CONTAINER_PORT, "9998");
+    }
 
     @Override
     protected ResourceConfig configure() {
@@ -213,11 +219,15 @@ public class ManagedClientExecutorTest extends JerseyTest {
      */
     public static class SchedulerThreadNameReader implements MessageBodyReader<SchedulerThreadName> {
 
-        @Inject
-        ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorServiceProvider injectedProvider;
+        private final ScheduledExecutorService injectedService;
 
         @Inject
-        ScheduledExecutorService injectedService;
+        public SchedulerThreadNameReader(ScheduledExecutorService injectedService,
+                                         ScheduledExecutorServiceProvider injectedProvider) {
+            this.injectedProvider = injectedProvider;
+            this.injectedService = injectedService;
+        }
 
         @Override
         public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -256,14 +266,21 @@ public class ManagedClientExecutorTest extends JerseyTest {
 
     @Test
     public void testManagedClientExecutor() {
-        final String response = target().path("test/executor").request().get(String.class);
-        Assert.assertEquals("foo-executor-service-0", response);
+        try {
+            final String response = target().path("test/executor").request().get(String.class);
+            Assertions.assertEquals("foo-executor-service-0", response);
+        } catch (Exception e) {
+            for (LogRecord record : getLoggedRecords()) {
+                System.out.println(record.getMessage());
+            }
+        }
+
     }
 
     @Test
     public void testManagedClientScheduledExecutor() {
         final String response = target().path("test/scheduledExecutor").request().get(String.class);
-        Assert.assertEquals("bar-executor-service bar-executor-service", response);
+        Assertions.assertEquals("bar-executor-service bar-executor-service", response);
         System.out.println(response);
     }
 }

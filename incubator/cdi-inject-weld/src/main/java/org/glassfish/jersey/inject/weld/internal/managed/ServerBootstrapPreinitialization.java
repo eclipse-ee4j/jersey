@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +47,6 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
-import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
@@ -231,27 +231,7 @@ public class ServerBootstrapPreinitialization implements BootstrapPreinitializat
                 }
 
                 @Override
-                public Servlet getServlet(String name) throws ServletException {
-                    return null;
-                }
-
-                @Override
-                public Enumeration<Servlet> getServlets() {
-                    return null;
-                }
-
-                @Override
-                public Enumeration<String> getServletNames() {
-                    return null;
-                }
-
-                @Override
                 public void log(String msg) {
-
-                }
-
-                @Override
-                public void log(Exception exception, String msg) {
 
                 }
 
