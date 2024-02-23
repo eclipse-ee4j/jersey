@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache5.connector.Apache5ClientProperties;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.internal.util.JdkVersion;
@@ -79,8 +80,13 @@ public class SystemPropertiesConfigurationModelTest {
     @Test
     public void propertyLoadedWhenSecurityException() {
         final String TEST_STRING = "test";
-        SecurityManager sm = System.getSecurityManager();
-        String policy = System.getProperty("java.security.policy");
+        final boolean isSm = JdkVersion.getJdkVersion().getMajor() < 19;
+        SecurityManager sm = null;
+        String policy = null;
+        if (isSm) {
+            sm = System.getSecurityManager();
+            policy = System.getProperty("java.security.policy");
+        }
         try {
             System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
             System.setProperty(ServerProperties.APPLICATION_NAME, TEST_STRING);
@@ -88,15 +94,20 @@ public class SystemPropertiesConfigurationModelTest {
             System.setProperty(ServletProperties.JAXRS_APPLICATION_CLASS, TEST_STRING);
             System.setProperty(MessageProperties.IO_BUFFER_SIZE, TEST_STRING);
             System.setProperty(ApacheClientProperties.DISABLE_COOKIES, TEST_STRING);
+            System.setProperty(Apache5ClientProperties.DISABLE_COOKIES, TEST_STRING);
             System.setProperty(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, TEST_STRING);
             System.setProperty(MultiPartProperties.TEMP_DIRECTORY, TEST_STRING);
             System.setProperty(OAuth1ServerProperties.REALM, TEST_STRING);
             JerseySystemPropertiesConfigurationModel model = new JerseySystemPropertiesConfigurationModel();
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
-            String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
-            System.setProperty("java.security.policy", securityPolicy);
-            SecurityManager manager = new SecurityManager();
-            System.setSecurityManager(manager);
+
+            if (isSm) {
+                String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
+                System.setProperty("java.security.policy", securityPolicy);
+                SecurityManager manager = new SecurityManager();
+                System.setSecurityManager(manager);
+            }
+
             Map<String, Object> properties = model.getProperties();
             assertEquals(TEST_STRING, properties.get(ServerProperties.APPLICATION_NAME));
             assertEquals(Boolean.TRUE.toString(), properties.get(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER));
@@ -109,7 +120,9 @@ public class SystemPropertiesConfigurationModelTest {
             assertEquals(TEST_STRING, properties.get(MessageProperties.IO_BUFFER_SIZE));
             assertFalse(properties.containsKey(MessageProperties.DEFLATE_WITHOUT_ZLIB));
             assertEquals(TEST_STRING, properties.get(ApacheClientProperties.DISABLE_COOKIES));
+            assertEquals(TEST_STRING, properties.get(Apache5ClientProperties.DISABLE_COOKIES));
             assertFalse(properties.containsKey(ApacheClientProperties.CONNECTION_MANAGER));
+            assertFalse(properties.containsKey(Apache5ClientProperties.CONNECTION_MANAGER));
             assertEquals(TEST_STRING, properties.get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION));
             assertFalse(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
             assertEquals(TEST_STRING, properties.get(MultiPartProperties.TEMP_DIRECTORY));
@@ -120,7 +133,9 @@ public class SystemPropertiesConfigurationModelTest {
             if (policy != null) {
                 System.setProperty("java.security.policy", policy);
             }
-            System.setSecurityManager(sm);
+            if (isSm) {
+                System.setSecurityManager(sm);
+            }
         }
     }
 

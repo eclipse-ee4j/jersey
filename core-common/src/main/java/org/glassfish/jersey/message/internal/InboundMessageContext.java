@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,17 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -41,21 +37,16 @@ import java.util.function.Function;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Configuration;
-import jakarta.ws.rs.core.Cookie;
-import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 
-import jakarta.ws.rs.ext.RuntimeDelegate;
 import javax.xml.transform.Source;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
-import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.internal.util.collection.GuardianStringKeyMultivaluedMap;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
@@ -67,7 +58,7 @@ import org.glassfish.jersey.message.MessageBodyWorkers;
  *
  * @author Marek Potociar
  */
-public abstract class InboundMessageContext {
+public abstract class InboundMessageContext extends MessageHeaderMethods {
 
     private static final InputStream EMPTY = new InputStream() {
 
@@ -100,7 +91,6 @@ public abstract class InboundMessageContext {
     private final boolean translateNce;
     private MessageBodyWorkers workers;
     private final Configuration configuration;
-    private final RuntimeDelegate runtimeDelegateDecorator;
     private LazyValue<MediaType> contentTypeCache;
     private LazyValue<List<AcceptableMediaType>> acceptTypeCache;
 
@@ -166,11 +156,11 @@ public abstract class InboundMessageContext {
      *                      as required by JAX-RS specification on the server side.
      */
     public InboundMessageContext(Configuration configuration, boolean translateNce) {
+        super(configuration);
         this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createInbound());
         this.entityContent = new EntityContent();
         this.translateNce = translateNce;
         this.configuration = configuration;
-        runtimeDelegateDecorator = RuntimeDelegateDecorator.configured(configuration);
 
         contentTypeCache = contentTypeCache();
         acceptTypeCache = acceptTypeCache();
@@ -319,42 +309,9 @@ public abstract class InboundMessageContext {
         return buffer.toString();
     }
 
-    /**
-     * Get a single typed header value.
-     *
-     * @param name        header name.
-     * @param converter   from string conversion function. Is expected to throw {@link ProcessingException}
-     *                    if conversion fails.
-     * @param convertNull if {@code true} this method calls the provided converter even for {@code null}. Otherwise this
-     *                    method returns the {@code null} without calling the converter.
-     * @return value of the header, or (possibly converted) {@code null} if not present.
-     */
-    private <T> T singleHeader(String name, Function<String, T> converter, boolean convertNull) {
-        final List<String> values = this.headers.get(name);
-
-        if (values == null || values.isEmpty()) {
-            return convertNull ? converter.apply(null) : null;
-        }
-        if (values.size() > 1) {
-            throw new HeaderValueException(LocalizationMessages.TOO_MANY_HEADER_VALUES(name, values.toString()),
-                    HeaderValueException.Context.INBOUND);
-        }
-
-        Object value = values.get(0);
-        if (value == null) {
-            return convertNull ? converter.apply(null) : null;
-        }
-
-        try {
-            return converter.apply(HeaderUtils.asString(value, runtimeDelegateDecorator));
-        } catch (ProcessingException ex) {
-            throw exception(name, value, ex);
-        }
-    }
-
-    private static HeaderValueException exception(final String headerName, Object headerValue, Exception e) {
-        return new HeaderValueException(LocalizationMessages.UNABLE_TO_PARSE_HEADER_VALUE(headerName, headerValue), e,
-                HeaderValueException.Context.INBOUND);
+    @Override
+    public HeaderValueException.Context getHeaderValueExceptionContext() {
+        return HeaderValueException.Context.INBOUND;
     }
 
     /**
@@ -364,24 +321,6 @@ public abstract class InboundMessageContext {
      */
     public MultivaluedMap<String, String> getHeaders() {
         return this.headers;
-    }
-
-    /**
-     * Get message date.
-     *
-     * @return the message date, otherwise {@code null} if not present.
-     */
-    public Date getDate() {
-        return singleHeader(HttpHeaders.DATE, new Function<String, Date>() {
-            @Override
-            public Date apply(String input) {
-                try {
-                    return HttpHeaderReader.readDate(input);
-                } catch (ParseException ex) {
-                    throw new ProcessingException(ex);
-                }
-            }
-        }, false);
     }
 
     /**
@@ -416,42 +355,6 @@ public abstract class InboundMessageContext {
         } catch (java.text.ParseException e) {
             throw exception(HttpHeaders.IF_NONE_MATCH, ifNoneMatch, e);
         }
-    }
-
-    /**
-     * Get the language of the entity.
-     *
-     * @return the language of the entity or {@code null} if not specified.
-     */
-    public Locale getLanguage() {
-        return singleHeader(HttpHeaders.CONTENT_LANGUAGE, new Function<String, Locale>() {
-            @Override
-            public Locale apply(String input) {
-                try {
-                    return new LanguageTag(input).getAsLocale();
-                } catch (ParseException e) {
-                    throw new ProcessingException(e);
-                }
-            }
-        }, false);
-    }
-
-    /**
-     * Get Content-Length value.
-     *
-     * @return Content-Length as integer if present and valid number. In other cases returns -1.
-     */
-    public int getLength() {
-        return singleHeader(HttpHeaders.CONTENT_LENGTH, new Function<String, Integer>() {
-            @Override
-            public Integer apply(String input) {
-                try {
-                    return (input != null && !input.isEmpty()) ? Integer.parseInt(input) : -1;
-                } catch (NumberFormatException ex) {
-                    throw new ProcessingException(ex);
-                }
-            }
-        }, true);
     }
 
     /**
@@ -569,120 +472,6 @@ public abstract class InboundMessageContext {
     }
 
     /**
-     * Get any cookies that accompanied the request.
-     *
-     * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
-     */
-    public Map<String, Cookie> getRequestCookies() {
-        List<String> cookies = this.headers.get(HttpHeaders.COOKIE);
-        if (cookies == null || cookies.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        Map<String, Cookie> result = new HashMap<String, Cookie>();
-        for (String cookie : cookies) {
-            if (cookie != null) {
-                result.putAll(HttpHeaderReader.readCookies(cookie));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Get the allowed HTTP methods from the Allow HTTP header.
-     *
-     * @return the allowed HTTP methods, all methods will returned as upper case
-     * strings.
-     */
-    public Set<String> getAllowedMethods() {
-        final String allowed = getHeaderString(HttpHeaders.ALLOW);
-        if (allowed == null || allowed.isEmpty()) {
-            return Collections.emptySet();
-        }
-        try {
-            return new HashSet<String>(HttpHeaderReader.readStringList(allowed.toUpperCase(Locale.ROOT)));
-        } catch (java.text.ParseException e) {
-            throw exception(HttpHeaders.ALLOW, allowed, e);
-        }
-    }
-
-    /**
-     * Get any new cookies set on the response message.
-     *
-     * @return a read-only map of cookie name (String) to a {@link jakarta.ws.rs.core.NewCookie new cookie}.
-     */
-    public Map<String, NewCookie> getResponseCookies() {
-        List<String> cookies = this.headers.get(HttpHeaders.SET_COOKIE);
-        if (cookies == null || cookies.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        Map<String, NewCookie> result = new HashMap<String, NewCookie>();
-        for (String cookie : cookies) {
-            if (cookie != null) {
-                NewCookie newCookie = HttpHeaderReader.readNewCookie(cookie);
-                String cookieName = newCookie.getName();
-                if (result.containsKey(cookieName)) {
-                    result.put(cookieName, HeaderUtils.getPreferredCookie(result.get(cookieName), newCookie));
-                } else {
-                    result.put(cookieName, newCookie);
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Get the entity tag.
-     *
-     * @return the entity tag, otherwise {@code null} if not present.
-     */
-    public EntityTag getEntityTag() {
-        return singleHeader(HttpHeaders.ETAG, new Function<String, EntityTag>() {
-            @Override
-            public EntityTag apply(String value) {
-                return EntityTag.valueOf(value);
-            }
-        }, false);
-    }
-
-    /**
-     * Get the last modified date.
-     *
-     * @return the last modified date, otherwise {@code null} if not present.
-     */
-    public Date getLastModified() {
-        return singleHeader(HttpHeaders.LAST_MODIFIED, new Function<String, Date>() {
-            @Override
-            public Date apply(String input) {
-                try {
-                    return HttpHeaderReader.readDate(input);
-                } catch (ParseException e) {
-                    throw new ProcessingException(e);
-                }
-            }
-        }, false);
-    }
-
-    /**
-     * Get the location.
-     *
-     * @return the location URI, otherwise {@code null} if not present.
-     */
-    public URI getLocation() {
-        return singleHeader(HttpHeaders.LOCATION, new Function<String, URI>() {
-            @Override
-            public URI apply(String value) {
-                try {
-                    return URI.create(value);
-                } catch (IllegalArgumentException ex) {
-                    throw new ProcessingException(ex);
-                }
-            }
-        }, false);
-    }
-
-    /**
      * Get the links attached to the message as header.
      *
      * @return links, may return empty {@link java.util.Set} if no links are present. Never
@@ -724,57 +513,6 @@ public abstract class InboundMessageContext {
         } catch (IllegalArgumentException e) {
             throw exception(HttpHeaders.LINK, links, e);
         }
-    }
-
-    /**
-     * Check if link for relation exists.
-     *
-     * @param relation link relation.
-     * @return {@code true} if the for the relation link exists, {@code false}
-     * otherwise.
-     */
-    public boolean hasLink(String relation) {
-        for (Link link : getLinks()) {
-            List<String> relations = LinkProvider.getLinkRelations(link.getRel());
-
-            if (relations != null && relations.contains(relation)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Get the link for the relation.
-     *
-     * @param relation link relation.
-     * @return the link for the relation, otherwise {@code null} if not present.
-     */
-    public Link getLink(String relation) {
-        for (Link link : getLinks()) {
-            List<String> relations = LinkProvider.getLinkRelations(link.getRel());
-            if (relations != null && relations.contains(relation)) {
-                return link;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Convenience method that returns a {@link jakarta.ws.rs.core.Link.Builder Link.Builder}
-     * for the relation.
-     *
-     * @param relation link relation.
-     * @return the link builder for the relation, otherwise {@code null} if not
-     * present.
-     */
-    public Link.Builder getLinkBuilder(String relation) {
-        Link link = getLink(relation);
-        if (link == null) {
-            return null;
-        }
-
-        return Link.fromLink(link);
     }
 
     // Message entity
