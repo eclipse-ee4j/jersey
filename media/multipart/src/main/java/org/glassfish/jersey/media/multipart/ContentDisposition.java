@@ -28,8 +28,6 @@ import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.uri.UriComponent;
 
-import jakarta.ws.rs.core.HttpHeaders;
-
 /**
  * A content disposition header.
  *

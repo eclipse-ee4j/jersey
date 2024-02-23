@@ -19,15 +19,15 @@ package org.glassfish.jersey.message.internal;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.RuntimeDelegate;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.Collections;
@@ -295,7 +295,7 @@ public abstract class MessageHeaderMethods {
     }
 
     /**
-     * Convenience method that returns a {@link javax.ws.rs.core.Link.Builder Link.Builder}
+     * Convenience method that returns a {@link jakarta.ws.rs.core.Link.Builder Link.Builder}
      * for the relation.
      *
      * @param relation link relation.
@@ -329,7 +329,7 @@ public abstract class MessageHeaderMethods {
     /**
      * Get any cookies that accompanied the message.
      *
-     * @return a read-only map of cookie name (String) to {@link javax.ws.rs.core.Cookie}.
+     * @return a read-only map of cookie name (String) to {@link jakarta.ws.rs.core.Cookie}.
      */
     public Map<String, Cookie> getRequestCookies() {
         @SuppressWarnings("unchecked")
@@ -350,7 +350,7 @@ public abstract class MessageHeaderMethods {
     /**
      * Get any new cookies set on the message.
      *
-     * @return a read-only map of cookie name (String) to a {@link javax.ws.rs.core.NewCookie new cookie}.
+     * @return a read-only map of cookie name (String) to a {@link jakarta.ws.rs.core.NewCookie new cookie}.
      */
     public Map<String, NewCookie> getResponseCookies() {
         @SuppressWarnings("unchecked")
