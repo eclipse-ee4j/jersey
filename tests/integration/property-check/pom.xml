@@ -79,6 +79,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-jnh-connector</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-server</artifactId>
             <version>${project.version}</version>
