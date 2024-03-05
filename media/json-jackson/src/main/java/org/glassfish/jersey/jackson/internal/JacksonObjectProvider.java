@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
 import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
 import org.glassfish.jersey.message.filtering.spi.EntityInspector;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -37,7 +38,6 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.PropertyFilter;
 import com.fasterxml.jackson.databind.ser.PropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;

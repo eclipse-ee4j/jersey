@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,13 @@
 
 package org.glassfish.jersey.server.internal.scanning;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -155,7 +155,7 @@ final class JarZipSchemeResourceFinderFactory implements UriSchemeResourceFinder
             return new URL(jarUrlString).openStream();
         } catch (final MalformedURLException e) {
             return Files.newInputStream(
-                    new File(UriComponent.decode(jarUrlString, UriComponent.Type.PATH)).toPath());
+                    Paths.get(UriComponent.decode(jarUrlString, UriComponent.Type.PATH)));
         }
     }
 }

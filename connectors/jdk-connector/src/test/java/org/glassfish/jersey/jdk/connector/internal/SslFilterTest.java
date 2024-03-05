@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -388,11 +388,7 @@ public abstract class SslFilterTest {
                                                                                     final CountDownLatch completionLatch,
                                                                                     HostnameVerifier customHostnameVerifier)
             throws Throwable {
-        SslConfigurator sslConfig = SslConfigurator.newInstance()
-                .trustStoreFile(this.getClass().getResource("/truststore_client").getPath())
-                .trustStorePassword("asdfgh")
-                .keyStoreFile(this.getClass().getResource("/keystore_client").getPath())
-                .keyStorePassword("asdfgh");
+        SslConfigurator sslConfig = getSslConfigurator();
 
         TransportFilter transportFilter = new TransportFilter(17_000, ThreadPoolConfig.defaultConfig(), 100_000);
         final SSLParamConfigurator sslParamConfigurator = SSLParamConfigurator.builder()
@@ -479,6 +475,14 @@ public abstract class SslFilterTest {
         }
 
         return clientSocket;
+    }
+
+    protected SslConfigurator getSslConfigurator() {
+        return SslConfigurator.newInstance()
+                .trustStoreFile(this.getClass().getResource("/truststore_client").getPath())
+                .trustStorePassword("asdfgh")
+                .keyStoreFile(this.getClass().getResource("/keystore_client").getPath())
+                .keyStorePassword("asdfgh");
     }
 
     /**
