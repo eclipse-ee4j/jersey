@@ -1933,8 +1933,8 @@
                 <version>${jakarta.el.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
                 <version>${jakarta.el.impl.version}</version>
             </dependency>
 
@@ -2350,7 +2350,7 @@
         <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
         <jakarta.activation.version>2.0.1</jakarta.activation.version>
         <jakarta.el.version>5.0.1</jakarta.el.version>
-        <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
+        <jakarta.el.impl.version>5.0.0</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
