@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,6 +53,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -280,6 +281,11 @@ class InvocationInterceptorStages {
             return clientRequest.getPropertyNames();
         }
 
+//        @Override
+        public boolean hasProperty(String name) {
+            return clientRequest.hasProperty(name);
+        }
+
         @Override
         public void setProperty(String name, Object object) {
             clientRequest.setProperty(name, object);
@@ -323,6 +329,16 @@ class InvocationInterceptorStages {
         @Override
         public String getHeaderString(String name) {
             return clientRequest.getHeaderString(name);
+        }
+
+//        @Override
+        public boolean containsHeaderString(String name, String valueSeparatorRegex, Predicate<String> valuePredicate) {
+            return clientRequest.containsHeaderString(name, valueSeparatorRegex, valuePredicate);
+        }
+
+//        @Override
+        public boolean containsHeaderString(String name, Predicate<String> valuePredicate) {
+            return clientRequest.containsHeaderString(name, valuePredicate);
         }
 
         @Override
@@ -498,6 +514,16 @@ class InvocationInterceptorStages {
         @Override
         public String getHeaderString(String name) {
             return clientResponse.getHeaderString(name);
+        }
+
+//        @Override
+        public boolean containsHeaderString(String name, String valueSeparatorRegex, Predicate<String> valuePredicate) {
+            return clientResponse.containsHeaderString(name, valueSeparatorRegex, valuePredicate);
+        }
+
+//        @Override
+        public boolean containsHeaderString(String name, Predicate<String> valuePredicate) {
+            return clientResponse.containsHeaderString(name, valuePredicate);
         }
 
         @Override

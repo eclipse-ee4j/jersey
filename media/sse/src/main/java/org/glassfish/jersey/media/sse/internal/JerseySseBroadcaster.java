@@ -142,16 +142,23 @@ class JerseySseBroadcaster extends JerseyPublisher<OutboundSseEvent> implements 
         @Override
         public void onError(final Throwable throwable) {
             // TODO JAX-RS 2.1
-            sseEventSink.close();
+            try {
+                sseEventSink.close();
+            } catch (/*IO*/Exception e) {
+                // ignore - already an error
+            }
             notifyOnErrorCallbacks(this, throwable);
         }
 
         @Override
         public void onComplete() {
             // TODO JAX-RS 2.1
-            sseEventSink.close();
-            notifyOnCompleteHandlers(this);
-
+            try {
+                sseEventSink.close();
+                notifyOnCompleteHandlers(this);
+            } catch (/*IO*/Exception e) {
+                notifyOnErrorCallbacks(this, e);
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,7 @@ public class SseTest extends JerseyTest {
     public static class SimpleSseResource {
         @GET
         @Produces(MediaType.SERVER_SENT_EVENTS)
-        public void send(@Context SseEventSink sink, @Context Sse sse) {
+        public void send(@Context SseEventSink sink, @Context Sse sse) throws Exception {
             try (SseEventSink s = sink) {
                 for (int i = 0; i != 10; i++) {
                     s.send(sse.newEvent("A"));

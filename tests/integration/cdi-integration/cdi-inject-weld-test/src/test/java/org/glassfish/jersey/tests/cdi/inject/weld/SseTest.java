@@ -57,7 +57,7 @@ public class SseTest extends JerseySingleContainerTest {
     public static class SseResource {
         @GET
         @Produces(MediaType.SERVER_SENT_EVENTS)
-        public void eventStream(@Context SseEventSink eventSink, @Context Sse sse) {
+        public void eventStream(@Context SseEventSink eventSink, @Context Sse sse) throws Exception {
             try (SseEventSink sink = eventSink) {
                 eventSink.send(sse.newEvent("event1"));
                 eventSink.send(sse.newEvent("event2"));

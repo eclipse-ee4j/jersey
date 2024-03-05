@@ -56,7 +56,11 @@
                 <configuration>
                     <instructions>
                         <Export-Package>org.glassfish.jersey.moxy.*</Export-Package>
-                        <Import-Package>${jakarta.annotation.osgi.version},*</Import-Package>
+                        <Import-Package>
+                            ${jakarta.annotation.osgi.version},
+                            ${jakarta.rest.osgi.version},
+                            *
+                        </Import-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

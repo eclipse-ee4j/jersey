@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.core.Configuration;
@@ -159,6 +160,16 @@ public class ContainerResponse implements ContainerResponseContext {
         return messageContext.getHeaderString(name);
     }
 
+//    @Override
+    public boolean containsHeaderString(String name, String valueSeparatorRegex, Predicate<String> valuePredicate) {
+        return messageContext.containsHeaderString(name, valueSeparatorRegex, valuePredicate);
+    }
+
+//    @Override
+    public boolean containsHeaderString(String name, Predicate<String> valuePredicate) {
+        return messageContext.containsHeaderString(name, valuePredicate);
+    }
+
     @Override
     public MultivaluedMap<String, Object> getHeaders() {
         return messageContext.getHeaders();
@@ -240,7 +251,7 @@ public class ContainerResponse implements ContainerResponseContext {
     }
 
     /**
-     * Set a new message message entity.
+     * Set a new message entity.
      *
      * @param entity entity object.
      * @see jakarta.ws.rs.ext.MessageBodyWriter
@@ -250,7 +261,7 @@ public class ContainerResponse implements ContainerResponseContext {
     }
 
     /**
-     * Set a new message message entity.
+     * Set a new message entity.
      *
      * @param entity      entity object.
      * @param annotations annotations attached to the entity.

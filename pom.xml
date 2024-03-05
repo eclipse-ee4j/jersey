@@ -2334,7 +2334,7 @@
         <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
         <hk2.config.version>7.0.4</hk2.config.version>
-        <jsp.version>3.1.1</jsp.version>
+        <jsp.version>4.0.0-M2</jsp.version>
         <jstl.version>3.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.1.2</istack.commons.runtime.version>
@@ -2344,15 +2344,17 @@
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[3.0,4)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>3.0.0-M1</jakarta.annotation.version>
+        <jakarta.decorator.osgi.version>jakarta.decorator.*;version="[4.0,5)"</jakarta.decorator.osgi.version> <!-- CDI -->
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.2.0-M1</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.1.3</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>
+        <jakarta.validation.api.version>3.1.0-M1</jakarta.validation.api.version>
         <jakarta.jaxb.api.version>4.0.1</jakarta.jaxb.api.version>
         <jaxb.ri.version>4.0.4</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
+        <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)"</jakarta.rest.osgi.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>12.0.5</jetty.version>
         <jetty9.version>9.4.53.v20231009</jetty9.version>
