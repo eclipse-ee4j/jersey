@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -86,6 +86,14 @@ public class ContentDispositionTest {
         } catch (final NullPointerException exception) {
             //expected
         }
+    }
+
+    @Test
+    void testContentDispositionEncoded() {
+        final Date date = new Date();
+        final ContentDisposition contentDisposition = ContentDisposition.type(contentDispositionType).fileName("\"rm\\ -rf\".sh")
+                .creationDate(date).modificationDate(date).readDate(date).size(312).build();
+        assertEquals("\\\"rm\\\\ -rf\\\".sh", contentDisposition.getFileName());
     }
 
     @Test

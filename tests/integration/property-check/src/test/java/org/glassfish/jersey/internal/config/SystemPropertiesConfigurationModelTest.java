@@ -79,8 +79,13 @@ public class SystemPropertiesConfigurationModelTest {
     @Test
     public void propertyLoadedWhenSecurityException() {
         final String TEST_STRING = "test";
-        SecurityManager sm = System.getSecurityManager();
-        String policy = System.getProperty("java.security.policy");
+        final boolean isSm = JdkVersion.getJdkVersion().getMajor() < 19;
+        SecurityManager sm = null;
+        String policy = null;
+        if (isSm) {
+            sm = System.getSecurityManager();
+            policy = System.getProperty("java.security.policy");
+        }
         try {
             System.setProperty(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.TRUE.toString());
             System.setProperty(ServerProperties.APPLICATION_NAME, TEST_STRING);
@@ -93,10 +98,14 @@ public class SystemPropertiesConfigurationModelTest {
             System.setProperty(OAuth1ServerProperties.REALM, TEST_STRING);
             JerseySystemPropertiesConfigurationModel model = new JerseySystemPropertiesConfigurationModel();
             assertTrue(model.as(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER, Boolean.class));
-            String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
-            System.setProperty("java.security.policy", securityPolicy);
-            SecurityManager manager = new SecurityManager();
-            System.setSecurityManager(manager);
+
+            if (isSm) {
+                String securityPolicy = SystemPropertiesConfigurationModelTest.class.getResource("/server.policy").getFile();
+                System.setProperty("java.security.policy", securityPolicy);
+                SecurityManager manager = new SecurityManager();
+                System.setSecurityManager(manager);
+            }
+
             Map<String, Object> properties = model.getProperties();
             assertEquals(TEST_STRING, properties.get(ServerProperties.APPLICATION_NAME));
             assertEquals(Boolean.TRUE.toString(), properties.get(CommonProperties.ALLOW_SYSTEM_PROPERTIES_PROVIDER));
@@ -120,7 +129,9 @@ public class SystemPropertiesConfigurationModelTest {
             if (policy != null) {
                 System.setProperty("java.security.policy", policy);
             }
-            System.setSecurityManager(sm);
+            if (isSm) {
+                System.setSecurityManager(sm);
+            }
         }
     }
 
