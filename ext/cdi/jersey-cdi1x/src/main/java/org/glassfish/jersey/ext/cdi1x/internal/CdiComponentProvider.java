@@ -70,15 +70,15 @@ import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarge
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
 import org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionTargetListener;
 import org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.internal.inject.ForeignRequestScopeBridge;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Providers;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.spi.ComponentProvider;
@@ -635,7 +635,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 ? new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager)
                 : defaultClassAnalyzer;
 
-        Binder binder = new AbstractBinder() {
+        Binder binder = new InternalBinder() {
             @Override
             protected void configure() {
                 bind(customizedClassAnalyzer)

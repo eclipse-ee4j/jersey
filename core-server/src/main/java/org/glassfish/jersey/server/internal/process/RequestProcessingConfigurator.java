@@ -28,10 +28,10 @@ import jakarta.ws.rs.core.UriInfo;
 
 import jakarta.inject.Inject;
 
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.PropertiesDelegate;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.AsyncContext;
@@ -118,7 +118,7 @@ public class RequestProcessingConfigurator implements BootstrapConfigurator {
      *
      * @author Marek Potociar
      */
-    private class ServerProcessingBinder extends AbstractBinder {
+    private class ServerProcessingBinder extends InternalBinder {
 
         @Override
         protected void configure() {

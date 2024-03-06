@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,14 +35,14 @@ import jakarta.enterprise.inject.spi.WithAnnotations;
 
 import org.glassfish.jersey.inject.cdi.se.bean.BeanHelper;
 import org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InjectionResolverBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
-import org.glassfish.jersey.internal.inject.InjectionResolverBinding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import org.jboss.weld.injection.producer.BasicInjectionTarget;
 
@@ -54,7 +54,7 @@ import org.jboss.weld.injection.producer.BasicInjectionTarget;
  */
 class SeBeanRegisterExtension implements Extension {
 
-    private final AbstractBinder bindings;
+    private final InternalBinder bindings;
 
     private final List<JerseyInjectionTarget> jerseyInjectionTargets = new ArrayList<>();
 
@@ -66,7 +66,7 @@ class SeBeanRegisterExtension implements Extension {
      *
      * @param bindings all register beans using Jersey.
      */
-    SeBeanRegisterExtension(AbstractBinder bindings) {
+    SeBeanRegisterExtension(InternalBinder bindings) {
         this.bindings = bindings;
     }
 

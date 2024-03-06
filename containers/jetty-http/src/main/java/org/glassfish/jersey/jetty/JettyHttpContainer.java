@@ -43,8 +43,8 @@ import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.security.AuthenticationState;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.util.Callback;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
@@ -114,7 +114,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
      * the injection of Jetty request instance into singleton JAX-RS and Jersey providers is only supported via
      * {@link jakarta.inject.Provider injection provider}.
      */
-    private static class JettyBinder extends AbstractBinder {
+    private static class JettyBinder extends InternalBinder {
 
         @Override
         protected void configure() {

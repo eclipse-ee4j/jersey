@@ -16,7 +16,7 @@
 package org.glassfish.jersey.inject.weld.internal.data;
 
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
-import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.innate.inject.InternalBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,10 @@ import java.util.List;
  * Pair of a binding and corresponding Jersey beans.
  */
 public class BindingBeanPair {
-    private final Binding binding;
+    private final InternalBinding binding;
     private final List<JerseyBean> beans = new ArrayList<JerseyBean>();
 
-    public BindingBeanPair(Binding binding, JerseyBean... beans) {
+    public BindingBeanPair(InternalBinding binding, JerseyBean... beans) {
         this.binding = binding;
         if (beans != null) {
             for (JerseyBean bean : beans) {
@@ -37,7 +37,7 @@ public class BindingBeanPair {
         }
     }
 
-    public Binding getBinding() {
+    public InternalBinding getBinding() {
         return binding;
     }
 

@@ -31,20 +31,21 @@ import org.glassfish.jersey.inject.weld.internal.inject.InitializableSupplierIns
 import org.glassfish.jersey.inject.weld.internal.inject.MatchableBinding;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.jboss.weld.contexts.CreationalContextImpl;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * Each Client Runtime has a unique CdiClientInjectionManager, which passes proper {@link Binding} to the Weld.
+ * Each Client Runtime has a unique CdiClientInjectionManager, which passes proper {@link InternalBinding} to the Weld.
  */
 public final class CdiClientInjectionManager extends CdiInjectionManager {
 

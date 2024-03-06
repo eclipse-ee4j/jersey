@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,11 +23,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
 
@@ -44,7 +44,8 @@ import org.jvnet.hk2.external.runtime.ServiceLocatorRuntimeBean;
  *
  * @author Petr Bouda
  */
-abstract class AbstractHk2InjectionManager implements InjectionManager {
+abstract sealed class AbstractHk2InjectionManager implements InjectionManager
+        permits DelayedHk2InjectionManager, ImmediateHk2InjectionManager {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractHk2InjectionManager.class.getName());
 

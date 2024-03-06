@@ -29,7 +29,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.GenericType;
 
 import org.glassfish.jersey.inject.weld.TestParent;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 
 import org.hamcrest.core.StringStartsWith;
 import org.junit.jupiter.api.BeforeEach;
@@ -221,7 +221,7 @@ public class SupplierInstanceBindingTest extends TestParent {
 
     private static class SupplierInstanceBindingTestExtension implements Extension {
         void registerBindings(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager) {
-            AbstractBinder testBinder = new AbstractBinder() {
+            InternalBinder testBinder = new InternalBinder() {
                 @Override
                 protected void configure() {
                     MyVetoedLongSupplier supplier = new MyVetoedLongSupplier();

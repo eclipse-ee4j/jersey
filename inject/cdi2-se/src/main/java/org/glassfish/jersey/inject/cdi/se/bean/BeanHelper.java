@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,12 +33,12 @@ import org.glassfish.jersey.inject.cdi.se.injector.InjectionUtils;
 import org.glassfish.jersey.inject.cdi.se.injector.JerseyConstructorInjectionPoint;
 import org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.inject.cdi.se.injector.WrappingJerseyInjectionTarget;
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.PerThread;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import org.jboss.weld.annotated.enhanced.EnhancedAnnotatedConstructor;
 import org.jboss.weld.annotated.enhanced.EnhancedAnnotatedType;

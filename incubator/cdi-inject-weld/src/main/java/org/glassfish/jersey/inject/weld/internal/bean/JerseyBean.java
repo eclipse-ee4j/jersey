@@ -37,7 +37,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.JerseyPriorities;
-import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.innate.inject.InternalBinding;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.internal.inject.PerThread;
 
@@ -59,21 +59,21 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
         DEFAULT_QUALIFIERS.add(new AnnotationLiteral<Any>() {});
     }
 
-    public Binding<T, ?> getBinding() {
+    public InternalBinding<T, ?> getBinding() {
         return binding;
     }
 
-    private final Binding<T, ?> binding;
+    private final InternalBinding<T, ?> binding;
     private final RuntimeType runtimeType;
 
     /**
-     * JerseyBean constructor with {@link Binding} which represents {@link jakarta.enterprise.context.spi.Contextual} part of the
+     * JerseyBean constructor with {@link InternalBinding} which represents {@link jakarta.enterprise.context.spi.Contextual} part of the
      * bean.
      *
      * @param runtimeType
      * @param binding information about the bean.
      */
-    JerseyBean(RuntimeType runtimeType, Binding<T, ?> binding) {
+    JerseyBean(RuntimeType runtimeType, InternalBinding<T, ?> binding) {
         this.binding = binding;
         this.runtimeType = runtimeType == null ? RuntimeType.SERVER : runtimeType;
     }

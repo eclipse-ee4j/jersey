@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import jakarta.ws.rs.ext.WriterInterceptorContext;
 import jakarta.annotation.Priority;
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import org.glassfish.jersey.server.internal.process.MappableException;
 
@@ -74,7 +74,7 @@ public class MappableExceptionWrapperInterceptor implements ReaderInterceptor, W
      * (used on the client side).
      *
      */
-    public static class Binder extends AbstractBinder {
+    public static class Binder extends InternalBinder {
 
         @Override
         protected void configure() {

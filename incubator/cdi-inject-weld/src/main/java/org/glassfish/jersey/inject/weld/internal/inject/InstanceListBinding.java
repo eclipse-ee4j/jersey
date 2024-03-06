@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.inject.weld.internal.inject;
 
-import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
 
@@ -46,7 +46,7 @@ public class InstanceListBinding<T> extends MatchableBinding<List<T>, Initializa
     }
 
     @Override
-    public Matching<MatchableBinding> matching(Binding other) {
+    public Matching<MatchableBinding> matching(InternalBinding other) {
         return Matching.noneMatching();
     }
 

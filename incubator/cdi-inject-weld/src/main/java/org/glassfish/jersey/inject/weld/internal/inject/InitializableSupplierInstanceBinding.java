@@ -16,17 +16,16 @@
 
 package org.glassfish.jersey.inject.weld.internal.inject;
 
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.AliasBinding;
-import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import jakarta.ws.rs.RuntimeType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -109,7 +108,7 @@ public class InitializableSupplierInstanceBinding<T>
     }
 
     private Matching<InitializableSupplierInstanceBinding<T>> matches(
-            Class<?> originalSupplierClass, Class<?> otherSupplierClass, Binding other) {
+            Class<?> originalSupplierClass, Class<?> otherSupplierClass, InternalBinding other) {
         if (getId() != 0) {
             return matchesById(other);
         }
@@ -127,7 +126,7 @@ public class InitializableSupplierInstanceBinding<T>
     }
 
     @Override
-    public Matching<MatchableBinding> matching(Binding other) {
+    public Matching<MatchableBinding> matching(InternalBinding other) {
         return visitor.matches((InitializableSupplierInstanceBinding) this, other);
     }
 

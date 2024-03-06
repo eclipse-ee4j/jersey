@@ -21,7 +21,6 @@ import java.security.AccessController;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.core.Configuration;
 
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
 import org.glassfish.jersey.internal.util.PropertiesHelper;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,9 +31,8 @@ import jakarta.ws.rs.container.ResourceContext;
 import jakarta.inject.Scope;
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -203,7 +202,7 @@ public class JerseyResourceContext implements ExtendedResourceContext {
      *                      wil be bound as a contract provider too.
      */
     public <T> void unsafeBindResource(Class<T> resourceClass, ContractProvider providerModel) {
-        ClassBinding<T> descriptor;
+        Binding<T, ?> descriptor;
         if (providerModel != null) {
             Class<? extends Annotation> scope = providerModel.getScope();
             descriptor = Bindings.serviceAsContract(resourceClass).in(scope);

@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.inject.weld.internal.inject;
 
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.AliasBinding;
-import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 
 import jakarta.ws.rs.RuntimeType;
 import java.lang.annotation.Annotation;
@@ -108,7 +108,7 @@ public class InitializableInstanceBinding<T> extends InitializableBinding<T, Ini
     }
 
     @Override
-    public Matching<InitializableInstanceBinding<T>> matches(Binding other) {
+    public Matching<InitializableInstanceBinding<T>> matches(InternalBinding other) {
         return super.matches(other);
     }
 
@@ -127,7 +127,7 @@ public class InitializableInstanceBinding<T> extends InitializableBinding<T, Ini
     }
 
     @Override
-    public Matching<MatchableBinding> matching(Binding other) {
+    public Matching<MatchableBinding> matching(InternalBinding other) {
         return visitor.matches((InitializableInstanceBinding) this, other);
     }
 

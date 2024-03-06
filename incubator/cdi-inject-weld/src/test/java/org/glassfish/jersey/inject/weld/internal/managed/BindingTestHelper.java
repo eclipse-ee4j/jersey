@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.weld.internal.managed;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 
@@ -35,8 +35,8 @@ class BindingTestHelper {
      * @param injectionManager injection manager which accepts the consumer.
      * @param bindConsumer     consumer to populate a binder.
      */
-    static void bind(InjectionManager injectionManager, Consumer<AbstractBinder> bindConsumer) {
-        AbstractBinder binder = new AbstractBinder() {
+    static void bind(InjectionManager injectionManager, Consumer<InternalBinder> bindConsumer) {
+        InternalBinder binder = new InternalBinder() {
             @Override
             protected void configure() {
                 bindConsumer.accept(this);

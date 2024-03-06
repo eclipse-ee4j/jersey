@@ -30,7 +30,7 @@ import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.internal.util.Producer;

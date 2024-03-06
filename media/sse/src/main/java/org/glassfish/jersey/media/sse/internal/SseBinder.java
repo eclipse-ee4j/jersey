@@ -19,14 +19,14 @@ package org.glassfish.jersey.media.sse.internal;
 import jakarta.ws.rs.sse.Sse;
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 
 /**
  * Binds implementations to interfaces for injection of SSE-related injectables.
  *
  * @author Adam Lindenthal
  */
-public class SseBinder extends AbstractBinder {
+public class SseBinder extends InternalBinder {
     @Override
     protected void configure() {
         bind(JerseySse.class)

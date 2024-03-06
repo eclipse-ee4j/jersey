@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,7 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.PassivationCapable;
 
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 
 import org.jboss.weld.bean.StringBeanIdentifier;
 import org.jboss.weld.bean.proxy.BeanInstance;

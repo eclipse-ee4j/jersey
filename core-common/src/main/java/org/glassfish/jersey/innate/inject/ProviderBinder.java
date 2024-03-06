@@ -14,13 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +31,12 @@ import jakarta.ws.rs.RuntimeType;
 
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.internal.inject.Binder;
+import org.glassfish.jersey.internal.inject.Custom;
+import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.PerLookup;
+import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.spi.ComponentProvider;
@@ -84,7 +89,7 @@ public class ProviderBinder {
 
     private static <T> Binder createInstanceBinder(T instance, ContractProvider model) {
 
-        return new AbstractBinder() {
+        return new InternalBinder() {
 
             @Override
             protected void configure() {
@@ -104,7 +109,7 @@ public class ProviderBinder {
 
     private static Binder createClassBinder(ContractProvider model) {
 
-        return new AbstractBinder() {
+        return new InternalBinder() {
 
             @Override
             protected void configure() {
@@ -124,7 +129,7 @@ public class ProviderBinder {
 
     private static Collection<Binder> createProviderBinders(Class<?> providerClass, ContractProvider model) {
         /* Create a Binder of the Provider with the concrete contract. */
-        Function<Class, Binder> binderFunction = contract -> new AbstractBinder() {
+        Function<Class, Binder> binderFunction = contract -> new InternalBinder() {
             @Override
             @SuppressWarnings("unchecked")
             protected void configure() {
@@ -161,7 +166,7 @@ public class ProviderBinder {
 
     private static Collection<Binder> createProviderBinders(Object providerInstance, ContractProvider model) {
         /* Create a Binder of the Provider with the concrete contract. */
-        Function<Class, Binder> binderFunction = contract -> new AbstractBinder() {
+        Function<Class, Binder> binderFunction = contract -> new InternalBinder() {
             @Override
             @SuppressWarnings("unchecked")
             protected void configure() {
@@ -287,7 +292,7 @@ public class ProviderBinder {
     @SuppressWarnings("unchecked")
     private static <T> Collection<Binder> createInstanceBinders(T instance) {
         Function<Class, Binder> binderFunction = contract ->
-                new AbstractBinder() {
+                new InternalBinder() {
                     @Override
                     protected void configure() {
                         bind(instance).to(contract).qualifiedBy(CustomAnnotationLiteral.INSTANCE);
@@ -385,7 +390,7 @@ public class ProviderBinder {
         final Class<? extends Annotation> scope = getProviderScope(clazz);
 
         if (isResource) {
-            return new AbstractBinder() {
+            return new InternalBinder() {
                 @Override
                 protected void configure() {
                     ClassBinding<T> descriptor = bindAsContract(clazz).in(scope);
@@ -398,7 +403,7 @@ public class ProviderBinder {
                 }
             };
         } else {
-            return new AbstractBinder() {
+            return new InternalBinder() {
                 @Override
                 protected void configure() {
                     ClassBinding<T> builder = bind(clazz).in(scope).qualifiedBy(CustomAnnotationLiteral.INSTANCE).id(0);

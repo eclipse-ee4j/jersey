@@ -25,12 +25,12 @@ import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
+import org.glassfish.jersey.innate.inject.ProviderBinder;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.ContextResolverFactory;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
-import org.glassfish.jersey.internal.inject.ProviderBinder;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import jakarta.annotation.Priority;
 
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 
@@ -42,7 +42,7 @@ public class MetaInfServicesAutoDiscoverable implements ForcedAutoDiscoverable {
         final Map<String, Object> properties = context.getConfiguration().getProperties();
         final RuntimeType runtimeType = context.getConfiguration().getRuntimeType();
 
-        context.register(new AbstractBinder() {
+        context.register(new InternalBinder() {
             @Override
             protected void configure() {
                 // Message Body providers.

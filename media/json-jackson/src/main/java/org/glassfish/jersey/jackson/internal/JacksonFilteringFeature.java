@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.GenericType;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.message.filtering.spi.ObjectGraphTransformer;
 import org.glassfish.jersey.message.filtering.spi.ObjectProvider;
 
@@ -47,7 +47,7 @@ public final class JacksonFilteringFeature implements Feature {
         return false;
     }
 
-    private static final class Binder extends AbstractBinder {
+    private static final class Binder extends InternalBinder {
 
         @Override
         protected void configure() {

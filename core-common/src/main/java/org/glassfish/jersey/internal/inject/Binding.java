@@ -16,19 +16,15 @@
 
 package org.glassfish.jersey.internal.inject;
 
+import jakarta.inject.Named;
+import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.Beta;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-
-import jakarta.ws.rs.core.GenericType;
-
-import jakarta.inject.Named;
 
 /**
  * Abstract injection binding description of a bean.
@@ -50,8 +46,6 @@ public abstract class Binding<T, D extends Binding> {
     private Boolean proxiable = null;
     private Boolean proxyForSameScope = null;
     private Integer ranked = null;
-    private boolean forClient = false;
-    private long id = 0;
 
     /**
      * Gets information whether the service is proxiable.
@@ -141,15 +135,6 @@ public abstract class Binding<T, D extends Binding> {
      */
     public Set<AliasBinding> getAliases() {
         return aliases;
-    }
-
-    /**
-     * Get the hint of the bean that exists both on the client and the server
-     * @return the hint that this binding if for being injected on the client.
-     */
-    @Beta
-    public boolean isForClient() {
-        return forClient;
     }
 
     /**
@@ -285,62 +270,8 @@ public abstract class Binding<T, D extends Binding> {
      *
      * @return current instance.
      */
-    D asType(Class type) {
+    public D asType(Class type) {
         this.implementationType = type;
         return (D) this;
     }
-
-    /**
-     * A hint whether the bean is for being injected using {@code @Inject} on the client side
-     * but there is also a bean with the same contract on the server, such as for {@code Configuration}.
-     *
-     * <p>Default is false.</p>
-     *
-     * @param forClient {@code true} when injectable for the same contract exists both on the client and server and
-     *                              this binding is for the client side.
-     * @return current instance.
-     */
-    @Beta
-    public D forClient(boolean forClient) {
-        this.forClient = forClient;
-        return (D) this;
-    }
-
-    /**
-     * The binding id used to match the binding in the pre-binding phase and in the binding phase.
-     * @param id the unique id.
-     * @return current instance.
-     */
-    @Beta
-    public D id(long id) {
-        // 1000 - 1999 Core-Common
-        // 2000 - 2999 Core-Client
-        // 3000 - 3999 Core-Server
-        this.id = id;
-        return (D) this;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public String toString() {
-        return contractsAsString() + " <- " + implementationType.getSimpleName();
-    }
-
-    protected String contractsAsString() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<Type> it = contracts.iterator();
-        while (it.hasNext()) {
-            Type next = it.next();
-            if (Class.class.isInstance(next)) {
-                sb.append(((Class) next).getSimpleName());
-            } else if (ParameterizedType.class.isInstance(next)) {
-                sb.append(next);
-            }
-        }
-        return sb.toString();
-    }
-
 }

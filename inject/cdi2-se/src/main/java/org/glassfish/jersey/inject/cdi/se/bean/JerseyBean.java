@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.JerseyPriorities;
-import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.innate.inject.InternalBinding;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.internal.inject.PerThread;
 
@@ -56,15 +56,15 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
         DEFAULT_QUALIFIERS.add(new AnnotationLiteral<Any>() {});
     }
 
-    private final Binding<T, ?> binding;
+    private final InternalBinding<T, ?> binding;
 
     /**
-     * JerseyBean constructor with {@link Binding} which represents {@link jakarta.enterprise.context.spi.Contextual} part of the
+     * JerseyBean constructor with {@link InternalBinding} which represents {@link jakarta.enterprise.context.spi.Contextual} part of the
      * bean.
      *
      * @param binding information about the bean.
      */
-    JerseyBean(Binding<T, ?> binding) {
+    JerseyBean(InternalBinding<T, ?> binding) {
         this.binding = binding;
     }
 

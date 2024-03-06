@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,22 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.integration.jersey2167;
+package org.glassfish.jersey.inject.hk2;
 
-import jakarta.inject.Singleton;
-
-import org.glassfish.jersey.inject.hk2.AbstractBinder;
-import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
+import org.glassfish.jersey.innate.inject.BlindBinder;
+import org.glassfish.jersey.internal.inject.Binder;
 
 /**
- * Custom annotation binder for JERSEY-2167 reproducer.
- *
- * @author Adam Lindenthal
+ * Implementation of {@link Binder} interface dedicated to keep some level of code compatibility between previous HK2
+ * implementation and new DI SPI.
+ * <p>
+ * Currently, there are supported only bind method and more complicated method where HK2 interfaces are required were omitted.
  */
-public class MyBinder extends AbstractBinder {
+public abstract class AbstractBinder extends BlindBinder {
 
-    @Override
-    protected void configure() {
-        bind(MyValueParamProvider.class).to(ValueParamProvider.class).in(Singleton.class);
-    }
 }

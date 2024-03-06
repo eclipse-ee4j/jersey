@@ -29,8 +29,8 @@ import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.inject.weld.internal.type.ParameterizedTypeImpl;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
 
 /**
  * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link SupplierClassBinding}.

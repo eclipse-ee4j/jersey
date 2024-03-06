@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
 
 import java.lang.reflect.Type;
 
@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
  * @param <T> type of the bean described by this injection binding.
  * @author Petr Bouda
  */
-public class InstanceBinding<T> extends Binding<T, InstanceBinding<T>> {
+public class InstanceBinding<T> extends InternalBinding<T, InstanceBinding<T>> {
 
     private final T service;
 

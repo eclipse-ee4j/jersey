@@ -21,14 +21,13 @@ import java.util.function.Function;
 
 import jakarta.ws.rs.container.ResourceContext;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.server.internal.JerseyResourceContext;
 
 /**
@@ -48,7 +47,7 @@ class JerseyResourceContextConfigurator implements BootstrapConfigurator {
 
         // Initialize and register Resource Context
         JerseyResourceContext resourceContext = new JerseyResourceContext(getOrCreateInstance, injectInstance, registerBinding);
-        InstanceBinding<JerseyResourceContext> resourceContextBinding =
+        Binding<JerseyResourceContext, ?> resourceContextBinding =
                 Bindings.service(resourceContext)
                         .to(ResourceContext.class)
                         .to(ExtendedResourceContext.class)

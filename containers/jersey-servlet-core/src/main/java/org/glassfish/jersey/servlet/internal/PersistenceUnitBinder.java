@@ -29,7 +29,7 @@ import jakarta.persistence.PersistenceUnit;
 import jakarta.servlet.ServletConfig;
 
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.server.ContainerException;
@@ -39,7 +39,7 @@ import org.glassfish.jersey.server.ContainerException;
  *
  * @author Michal Gajdos
  */
-public class PersistenceUnitBinder extends AbstractBinder {
+public class PersistenceUnitBinder extends InternalBinder {
 
     private final ServletConfig servletConfig;
 

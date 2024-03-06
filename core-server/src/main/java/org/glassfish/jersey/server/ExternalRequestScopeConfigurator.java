@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.spi.ComponentProvider;
@@ -68,7 +68,7 @@ class ExternalRequestScopeConfigurator implements BootstrapConfigurator {
         }
     }
 
-    private static class NoopExternalRequestScopeBinder extends AbstractBinder {
+    private static class NoopExternalRequestScopeBinder extends InternalBinder {
 
         @Override
         protected void configure() {

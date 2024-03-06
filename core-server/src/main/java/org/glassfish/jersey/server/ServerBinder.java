@@ -22,7 +22,7 @@ import jakarta.ws.rs.ext.WriterInterceptor;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.server.internal.JsonWithPaddingInterceptor;
 import org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor;
 import org.glassfish.jersey.server.internal.monitoring.MonitoringContainerListener;
@@ -33,7 +33,7 @@ import org.glassfish.jersey.server.internal.monitoring.MonitoringContainerListen
  * @author Marek Potociar
  * @author Libor Kramolis
  */
-class ServerBinder extends AbstractBinder {
+class ServerBinder extends InternalBinder {
 
     @Override
     protected void configure() {

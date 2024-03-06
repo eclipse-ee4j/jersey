@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.jersey.server.internal.monitoring;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
 import org.glassfish.jersey.server.spi.Container;
@@ -81,7 +81,7 @@ public final class MonitoringContainerListener implements ContainerLifecycleList
     /**
      * A binder that binds the {@link MonitoringContainerListener}.
      */
-    public static class Binder extends AbstractBinder {
+    public static class Binder extends InternalBinder {
         @Override
         protected void configure() {
             bindAsContract(MonitoringContainerListener.class)

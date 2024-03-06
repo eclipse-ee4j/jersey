@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.inject.weld.internal.inject;
 
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;

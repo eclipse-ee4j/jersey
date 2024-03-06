@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,14 +37,14 @@ import jakarta.annotation.Priority;
 import jakarta.inject.Scope;
 
 import org.glassfish.jersey.Severity;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.process.Inflector;
@@ -214,7 +214,7 @@ public class ComponentBag {
      * methods for getting classes and instances {@link ComponentBag#getClasses(Predicate)} and
      * {@link ComponentBag#getInstances(Predicate)}.
      * <p>
-     * Method selects all {@link org.glassfish.jersey.internal.inject.Binding bindings} and picks up the instances or creates
+     * Method selects all {@link Binding bindings} and picks up the instances or creates
      * the instances from {@link ClassBinding} (injection does not work at this moment).
      *
      * @param injectionManager injection manager to create an object from {@code T} class.

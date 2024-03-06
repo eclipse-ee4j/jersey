@@ -27,7 +27,7 @@ import jakarta.inject.Provider;
 import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.inject.weld.TestParent;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 
 import org.hamcrest.core.StringStartsWith;
 import org.junit.jupiter.api.Assertions;
@@ -214,7 +214,7 @@ public class ProviderInjectionTest extends TestParent {
 
     private static class ProviderInjectionTestExtension implements Extension {
         void registerBindings(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager) {
-            AbstractBinder testBinder = new AbstractBinder() {
+            InternalBinder testBinder = new InternalBinder() {
                 @Override
                 protected void configure() {
                     bind(CzechGreeting.class).to(Greeting.class);

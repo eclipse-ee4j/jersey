@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,14 +37,14 @@ import jakarta.enterprise.inject.spi.Unmanaged;
 
 import org.glassfish.jersey.inject.cdi.se.bean.JerseyBean;
 import org.glassfish.jersey.inject.cdi.se.injector.ContextInjectionResolverImpl;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
 
@@ -57,7 +57,7 @@ import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
 public class CdiSeInjectionManager implements InjectionManager {
 
     // Keeps all binders and bindings added to the InjectionManager during the bootstrap.
-    private final AbstractBinder bindings = new AbstractBinder() {
+    private final InternalBinder bindings = new InternalBinder() {
         @Override
         protected void configure() {
         }
@@ -262,7 +262,7 @@ public class CdiSeInjectionManager implements InjectionManager {
         this.beanManager = container.getBeanManager();
     }
 
-    protected AbstractBinder getBindings() {
+    protected InternalBinder getBindings() {
         return bindings;
     }
 

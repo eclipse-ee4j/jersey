@@ -14,14 +14,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
+
+import org.glassfish.jersey.internal.inject.InjectionResolver;
 
 /**
  * Class which has the fields containing the instance of {@link InjectionResolver} and its a concrete type.
  *
  * @param <T> type of the annotation which is served using th given injection resolver.
  */
-public class InjectionResolverBinding<T extends InjectionResolver> extends Binding<T, InjectionResolverBinding<T>> {
+public class InjectionResolverBinding<T extends InjectionResolver> extends InternalBinding<T, InjectionResolverBinding<T>> {
 
     private final T resolver;
 

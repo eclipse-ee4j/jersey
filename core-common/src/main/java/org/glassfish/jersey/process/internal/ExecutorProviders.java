@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,13 +34,13 @@ import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
@@ -122,7 +123,7 @@ public final class ExecutorProviders {
             ExecutorServiceProvider executorProvider = bucketProviderIterator.next();
             logExecutorServiceProvider(qualifierAnnotationClass, bucketProviderIterator, executorProvider);
 
-            SupplierInstanceBinding<ExecutorService> descriptor =
+            Binding<Supplier<ExecutorService>, ?> descriptor =
                     Bindings.supplier(new ExecutorServiceSupplier(executorProvider))
                             .in(Singleton.class)
                             .to(ExecutorService.class)
@@ -155,7 +156,7 @@ public final class ExecutorProviders {
             ScheduledExecutorServiceProvider executorProvider = bucketProviderIterator.next();
             logScheduledExecutorProvider(qualifierAnnotationClass, bucketProviderIterator, executorProvider);
 
-            SupplierInstanceBinding<ScheduledExecutorService> descriptor =
+            Binding<Supplier<ScheduledExecutorService>, ?> descriptor =
                     Bindings.supplier(new ScheduledExecutorServiceSupplier(executorProvider))
                             .in(Singleton.class)
                             .to(ScheduledExecutorService.class)

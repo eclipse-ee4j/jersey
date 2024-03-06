@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,11 +50,10 @@ import jakarta.inject.Singleton;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.ComponentProvider;
@@ -152,7 +151,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
     public void initialize(final InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
 
-        InstanceBinding<EjbComponentProvider> descriptor = Bindings.service(EjbComponentProvider.this)
+        Binding descriptor = Bindings.service(EjbComponentProvider.this)
                 .to(ResourceMethodInvocationHandlerProvider.class);
         this.injectionManager.register(descriptor);
     }
@@ -304,7 +303,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
     }
 
     private void registerEjbExceptionMapper() {
-        injectionManager.register(new AbstractBinder() {
+        injectionManager.register(new InternalBinder() {
             @Override
             protected void configure() {
                 bind(EjbExceptionMapper.class).to(ExceptionMapper.class).in(Singleton.class);

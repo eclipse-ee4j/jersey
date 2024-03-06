@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,10 @@ import java.lang.annotation.Annotation;
  * <p>
  * Jersey provides all {@code InjectionResolvers} for JAX-RS annotation and {@code org.glassfish.jersey.server.Uri} apart from
  * {@link jakarta.ws.rs.core.Context} which must be implemented and registered directly as a part of DI integration because of
- * many optimization which cannot be implemented on Jersey side.
+ * much optimization which cannot be implemented on Jersey side.
  * <p>
  * The {@code InjectionResolvers} are delivered to DI integration using {@link InjectionManager#register(Binder)} and DI provider
- * just filter {@link InjectionResolverBinding} and internally register the annotation handling using its own mechanism.
+ * just filter {@code InjectionResolverBinding} and internally register the annotation handling using its own mechanism.
  *
  * @param <T> This must be the annotation class of the injection annotation that this resolver will handle.
  */

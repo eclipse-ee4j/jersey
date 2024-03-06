@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
+
+import jakarta.inject.Provider;
+import jakarta.ws.rs.core.GenericType;
+import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.inject.Binder;
+import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionResolver;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -26,12 +34,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.GenericType;
-
-import jakarta.inject.Provider;
-
-import org.glassfish.jersey.internal.LocalizationMessages;
-
 /**
  * Implementation of {@link Binder} interface dedicated to keep some level of code compatibility between previous HK2
  * implementation and new DI SPI.
@@ -40,11 +42,11 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  *
  * @author Petr Bouda
  */
-public abstract class AbstractBinder implements Binder {
+public abstract class BlindBinder implements Binder {
 
     private List<Binding> internalBindings = new ArrayList<>();
 
-    private List<AbstractBinder> installed = new ArrayList<>();
+    private List<Binder> installed = new ArrayList<>();
 
     private InjectionManager injectionManager;
 
@@ -93,7 +95,7 @@ public abstract class AbstractBinder implements Binder {
      * @param serviceType service class.
      * @return initialized binding builder.
      */
-    public <T> ClassBinding<T> bind(Class<T> serviceType) {
+    public <T> Binding<T, ?> bind(Class<T> serviceType) {
         ClassBinding<T> binding = Bindings.service(serviceType);
         internalBindings.add(binding);
         return binding;
@@ -119,7 +121,7 @@ public abstract class AbstractBinder implements Binder {
      * @param serviceType service class.
      * @return initialized binding builder.
      */
-    public <T> ClassBinding<T> bindAsContract(Class<T> serviceType) {
+    public <T> Binding<T, ?> bindAsContract(Class<T> serviceType) {
         ClassBinding<T> binding = Bindings.serviceAsContract(serviceType);
         internalBindings.add(binding);
         return binding;
@@ -134,7 +136,7 @@ public abstract class AbstractBinder implements Binder {
      * @param serviceType generic service type information.
      * @return initialized binding builder.
      */
-    public <T> ClassBinding<T> bindAsContract(GenericType<T> serviceType) {
+    public <T> Binding<T, ?> bindAsContract(GenericType<T> serviceType) {
         ClassBinding<T> binding = Bindings.service(serviceType);
         internalBindings.add(binding);
         return binding;
@@ -148,7 +150,7 @@ public abstract class AbstractBinder implements Binder {
      * @param serviceType generic service type information.
      * @return initialized binding builder.
      */
-    public ClassBinding<Object> bindAsContract(Type serviceType) {
+    public Binding<Object, ?> bindAsContract(Type serviceType) {
         ClassBinding<Object> binding = Bindings.serviceAsContract(serviceType);
         internalBindings.add(binding);
         return binding;
@@ -164,7 +166,7 @@ public abstract class AbstractBinder implements Binder {
      * @param service service instance.
      * @return initialized binding builder.
      */
-    public <T> InstanceBinding<T> bind(T service) {
+    public <T> Binding<T, ?> bind(T service) {
         InstanceBinding<T> binding = Bindings.service(service);
         internalBindings.add(binding);
         return binding;
@@ -178,7 +180,7 @@ public abstract class AbstractBinder implements Binder {
      * @param supplierScope factory scope.
      * @return initialized binding builder.
      */
-    public <T> SupplierClassBinding<T> bindFactory(
+    public <T> Binding<Supplier<T>, ?> bindFactory(
             Class<? extends Supplier<T>> supplierType, Class<? extends Annotation> supplierScope) {
         SupplierClassBinding<T> binding = Bindings.supplier(supplierType, supplierScope);
         internalBindings.add(binding);
@@ -194,7 +196,7 @@ public abstract class AbstractBinder implements Binder {
      * @param supplierType service supplier class.
      * @return initialized binding builder.
      */
-    public <T> SupplierClassBinding<T> bindFactory(Class<? extends Supplier<T>> supplierType) {
+    public <T> Binding<Supplier<T>, ?> bindFactory(Class<? extends Supplier<T>> supplierType) {
         SupplierClassBinding<T> binding = Bindings.supplier(supplierType);
         internalBindings.add(binding);
         return binding;
@@ -207,7 +209,7 @@ public abstract class AbstractBinder implements Binder {
      * @param factory service instance.
      * @return initialized binding builder.
      */
-    public <T> SupplierInstanceBinding<T> bindFactory(Supplier<T> factory) {
+    public <T> Binding<Supplier<T>, ?> bindFactory(Supplier<T> factory) {
         SupplierInstanceBinding<T> binding = Bindings.supplier(factory);
         internalBindings.add(binding);
         return binding;
@@ -217,14 +219,14 @@ public abstract class AbstractBinder implements Binder {
      * Start building a new injection resolver binding. The injection resolver is naturally
      * considered to be a {@link jakarta.inject.Singleton singleton-scoped}.
      * <p>
-     * There is no need to provide any additional information. Other method on {@link Binding}
+     * There is no need to provide any additional information. Other method on {@link InternalBinding}
      * will be ignored.
      *
      * @param <T>      type of the injection resolver.
      * @param resolver injection resolver instance.
      * @return initialized binding builder.
      */
-    public <T extends InjectionResolver> InjectionResolverBinding<T> bind(T resolver) {
+    public <T extends InjectionResolver> Binding<T, ?> bind(T resolver) {
         InjectionResolverBinding<T> binding = Bindings.injectionResolver(resolver);
         internalBindings.add(binding);
         return binding;
@@ -235,7 +237,7 @@ public abstract class AbstractBinder implements Binder {
      *
      * @param binders binders whose binding definitions should be configured.
      */
-    public final void install(AbstractBinder... binders) {
+    public final void install(Binder... binders) {
         Arrays.stream(binders)
                 .filter(Objects::nonNull)
                 .forEach(installed::add);

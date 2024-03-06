@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,16 +33,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
 
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.Bindings;
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.inject.hk2.Hk2RequestScope;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.AnnotationLiteral;
 import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -69,18 +68,18 @@ public class CustomInjectablesApplicationTest extends JerseyTest {
         @Inject
         public MyApplication(InjectionManager injectionManager) {
             System.out.println("Registering injectables...");
-            ClassBinding<MyInjectablePerRequest> injectClassRequest =
+            Binding injectClassRequest =
                     Bindings.serviceAsContract(MyInjectablePerRequest.class)
                             .in(RequestScoped.class);
 
-            ClassBinding<MyInjectableSingleton> injectClassSingleton =
+            Binding injectClassSingleton =
                     Bindings.serviceAsContract(MyInjectableSingleton.class)
                             .in(Singleton.class);
 
-            InstanceBinding<MyInjectableSingleton> injectInstanceSingleton =
+            Binding injectInstanceSingleton =
                     Bindings.serviceAsContract(new MyInjectableSingleton());
 
-            ClassBinding<MyInjectablePerRequest> injectQualifiedClassRequest =
+            Binding injectQualifiedClassRequest =
                     Bindings.serviceAsContract(MyInjectablePerRequest.class)
                             .qualifiedBy(new MyQualifierImpl())
                             .in(RequestScoped.class);

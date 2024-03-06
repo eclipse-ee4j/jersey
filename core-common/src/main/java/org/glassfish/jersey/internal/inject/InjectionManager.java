@@ -65,10 +65,7 @@ public interface InjectionManager {
      * represented by a class or direct instance.
      *
      * @param binding one descriptor.
-     * @see ClassBinding
-     * @see InstanceBinding
-     * @see SupplierClassBinding
-     * @see SupplierInstanceBinding
+     * @see Binding
      */
     void register(Binding binding);
 
@@ -78,24 +75,18 @@ public interface InjectionManager {
      * register a bean represented by a class or direct instance.
      *
      * @param descriptors collection of descriptors.
-     * @see ClassBinding
-     * @see InstanceBinding
-     * @see SupplierClassBinding
-     * @see SupplierInstanceBinding
+     * @see Binding
      */
     void register(Iterable<Binding> descriptors);
 
     /**
-     * Registers beans which are included in {@link Binder}. {@code Binder} can contains all descriptors extending
+     * Registers beans which are included in {@link Binder}. {@code Binder} can contain all descriptors extending
      * {@link Binding} or other binders which are installed together in tree-structure. This method will get all descriptors
      * bound in the given binder and register them in the order how the binders are installed together. In the tree structure,
      * the deeper on the left side will be processed first.
      *
      * @param binder collection of descriptors.
-     * @see ClassBinding
-     * @see InstanceBinding
-     * @see SupplierClassBinding
-     * @see SupplierInstanceBinding
+     * @see Binding
      */
     void register(Binder binder);
 

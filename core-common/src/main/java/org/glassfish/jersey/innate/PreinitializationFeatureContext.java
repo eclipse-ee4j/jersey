@@ -16,9 +16,8 @@
 
 package org.glassfish.jersey.innate;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
@@ -33,10 +32,10 @@ import java.util.Map;
  */
 class PreinitializationFeatureContext implements FeatureContext {
 
-    private final AbstractBinder binder;
+    private final InternalBinder binder;
 
     PreinitializationFeatureContext() {
-        this.binder = new AbstractBinder() {
+        this.binder = new InternalBinder() {
             @Override
             protected void configure() {
 
@@ -68,7 +67,7 @@ class PreinitializationFeatureContext implements FeatureContext {
 
     @Override
     public FeatureContext register(Class<?> componentClass, Class<?>... contracts) {
-        final ClassBinding binding = binder.bind(componentClass);
+        final Binding binding = binder.bind(componentClass);
         if (contracts != null) {
             for (Class<?> contract : contracts) {
                 binding.to(contract);
@@ -80,12 +79,12 @@ class PreinitializationFeatureContext implements FeatureContext {
     @Override
     public FeatureContext register(Class<?> componentClass, Map<Class<?>, Integer> contracts) {
         for (Map.Entry<Class<?>, Integer> contract : contracts.entrySet()) {
-            final AbstractBinder abstractBinder = new AbstractBinder() {
+            final InternalBinder abstractBinder = new InternalBinder() {
                 @Override
                 protected void configure() {
                 }
             };
-            final ClassBinding binding = abstractBinder.bind(componentClass);
+            final Binding binding = abstractBinder.bind(componentClass);
             binding.to(contract.getKey()).ranked(contract.getValue());
             binder.install(abstractBinder);
         }
@@ -96,8 +95,8 @@ class PreinitializationFeatureContext implements FeatureContext {
     public FeatureContext register(Object component) {
         if (InjectionManager.class.isInstance(component)) {
             ((InjectionManager) component).register(binder);
-        } else if (AbstractBinder.class.isInstance(component)) {
-            binder.install((AbstractBinder) component);
+        } else if (InternalBinder.class.isInstance(component)) {
+            binder.install((InternalBinder) component);
         } else {
             binder.bind(component).to(component.getClass());
         }
@@ -124,7 +123,7 @@ class PreinitializationFeatureContext implements FeatureContext {
     @Override
     public FeatureContext register(Object component, Map<Class<?>, Integer> contracts) {
         for (Map.Entry<Class<?>, Integer> contract : contracts.entrySet()) {
-            final AbstractBinder abstractBinder = new AbstractBinder() {
+            final InternalBinder abstractBinder = new InternalBinder() {
                 @Override
                 protected void configure() {
                 }

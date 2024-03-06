@@ -19,9 +19,9 @@ package org.glassfish.jersey.server;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Configuration;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.internal.AbstractServiceFinderConfigurator;
 import org.glassfish.jersey.internal.BootstrapBag;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.server.spi.ContainerProvider;

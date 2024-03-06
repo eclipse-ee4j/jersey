@@ -21,12 +21,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.RuntimeType;
@@ -37,9 +35,9 @@ import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.inject.InjectionIds;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
@@ -72,7 +70,7 @@ public final class MessagingBinders {
     /**
      * Message body providers injection binder.
      */
-    public static class MessageBodyProviders extends AbstractBinder {
+    public static class MessageBodyProviders extends InternalBinder {
 
         private final Map<String, Object> applicationProperties;
 
@@ -149,7 +147,7 @@ public final class MessagingBinders {
     /**
      * Header delegate provider injection binder.
      */
-    public static class HeaderDelegateProviders extends AbstractBinder {
+    public static class HeaderDelegateProviders extends InternalBinder {
 
         private final Map<HeaderDelegateProvider, Integer> providers;
         private final RuntimeType runtimeType;
@@ -235,7 +233,7 @@ public final class MessagingBinders {
             }
         }
 
-        private void bindToBinder(AbstractBinder binder, RuntimeType runtimeType) {
+        private void bindToBinder(InternalBinder binder, RuntimeType runtimeType) {
             ProviderBinder providerBinder = null;
             for (Provider provider : enabledProviders) {
                 if (isClass(provider.className)) {
@@ -288,12 +286,12 @@ public final class MessagingBinders {
         }
 
         private interface ProviderBinder {
-            void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType);
+            void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType);
         }
 
         private static class DataSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(DataSourceProvider.class)
                         .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
@@ -304,7 +302,7 @@ public final class MessagingBinders {
 
         private static class DomSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.DomSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
                                 ? InjectionIds.CLIENT_DOM_SOURCE_READER.id()
@@ -314,7 +312,7 @@ public final class MessagingBinders {
 
         private static class RenderedImageBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(RenderedImageProvider.class)
                         .to(MessageBodyReader.class).to(MessageBodyWriter.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
@@ -325,7 +323,7 @@ public final class MessagingBinders {
 
         private static class SaxSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.SaxSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
                                 ? InjectionIds.CLIENT_SAX_SOURCE_READER.id()
@@ -335,7 +333,7 @@ public final class MessagingBinders {
 
         private static class SourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.SourceWriter.class).to(MessageBodyWriter.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
                                 ? InjectionIds.CLIENT_SOURCE_WRITER.id()
@@ -345,7 +343,7 @@ public final class MessagingBinders {
 
         private static class StreamSourceBinder implements ProviderBinder {
             @Override
-            public void bind(AbstractBinder binder, Provider provider, RuntimeType runtimeType) {
+            public void bind(InternalBinder binder, Provider provider, RuntimeType runtimeType) {
                 binder.bind(SourceProvider.StreamSourceReader.class).to(MessageBodyReader.class).in(Singleton.class)
                         .id(runtimeType == RuntimeType.CLIENT
                                 ? 2075 : 3075);

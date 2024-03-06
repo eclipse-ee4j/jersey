@@ -26,8 +26,8 @@ import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.inject.weld.internal.managed.CdiClientInjectionManager;
 import org.glassfish.jersey.inject.weld.internal.managed.ContextSafe;
 import org.glassfish.jersey.inject.weld.internal.type.ParameterizedTypeImpl;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

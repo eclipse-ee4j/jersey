@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package org.glassfish.jersey.message.filtering.spi;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.spi.Contract;
 
 /**
@@ -43,7 +42,7 @@ import org.glassfish.jersey.spi.Contract;
  * </p>
  * <p>
  * Implementations should be registered into client/server runtime via
- * {@link AbstractBinder jersey binder} (for more information and common implementation see
+ * {@code AbstractBinder jersey binder} (for more information and common implementation see
  * {@link AbstractObjectProvider}):
  * <pre>
  * bindAsContract(MyObjectProvider.class)
