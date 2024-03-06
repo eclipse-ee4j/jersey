@@ -73,8 +73,9 @@
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Import-Package>
                             jakarta.persistence.*;resolution:=optional,
-                            jakarta.servlet.*;version="[5.0,7.0)",
+                            jakarta.servlet.*;version="[6.0,7.0)",
                             ${jakarta.annotation.osgi.version},
+                            ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>
                         <Export-Package>org.glassfish.jersey.servlet.*</Export-Package>

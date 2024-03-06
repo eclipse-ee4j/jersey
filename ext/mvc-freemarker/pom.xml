@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>jakarta.servlet.*;version="[5.0,7.0)",*</Import-Package>
+                        <Import-Package>
+                            jakarta.servlet.*;version="[6.0,7.0)",
+                            ${jakarta.rest.osgi.version},
+                            *
+                        </Import-Package>
                         <Export-Package>org.glassfish.jersey.server.mvc.freemarker.*;version=${project.version}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,8 +74,9 @@
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Import-Package>
-                            jakarta.servlet.*;version="[5.0,7.0)",
+                            jakarta.servlet.*;version="[6.0,7.0)",
                             ${jakarta.annotation.osgi.version},
+                            ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>
                     </instructions>

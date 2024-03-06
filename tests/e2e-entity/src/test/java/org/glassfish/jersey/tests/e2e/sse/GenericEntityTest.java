@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -122,7 +122,7 @@ public class GenericEntityTest extends JerseyTest {
         @GET
         @Path("string")
         @Produces(MediaType.SERVER_SENT_EVENTS)
-        public void sendString(@Context SseEventSink sink, @Context Sse sse) {
+        public void sendString(@Context SseEventSink sink, @Context Sse sse) throws Exception {
             GenericEntity<String> ges = new GenericEntity<String>("Cindy") {
             };
             try (SseEventSink s = sink) {
@@ -133,7 +133,7 @@ public class GenericEntityTest extends JerseyTest {
         @GET
         @Path("pair")
         @Produces(MediaType.SERVER_SENT_EVENTS)
-        public void sendPair(@Context SseEventSink sink, @Context Sse sse) {
+        public void sendPair(@Context SseEventSink sink, @Context Sse sse) throws Exception {
             Pair<String, Integer> person = new Pair<>("Cindy", 30);
             GenericEntity<Pair<String, Integer>> entity = new GenericEntity<Pair<String, Integer>>(person) {
             };
@@ -145,7 +145,7 @@ public class GenericEntityTest extends JerseyTest {
         @GET
         @Path("list")
         @Produces(MediaType.SERVER_SENT_EVENTS)
-        public void sendList(@Context SseEventSink sink, @Context Sse sse) {
+        public void sendList(@Context SseEventSink sink, @Context Sse sse) throws Exception {
             Pair<String, Integer> person1 = new Pair<>("Cindy", 30);
             Pair<String, Integer> person2 = new Pair<>("Jack", 32);
             List<Pair<String, Integer>> people = new LinkedList<>();

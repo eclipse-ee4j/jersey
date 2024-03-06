@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -97,12 +97,17 @@ public class BroadcasterExecutorTest extends JerseyTest {
                 }
 
                 @Override
-                public void close() {
+                public void close() /* TODO 4.0 throws IOException */ {
                     final String name = Thread.currentThread().getName();
                     LOGGER.info("onComplete called from " + name);
                     onCompleteThreadOk = name.startsWith(THREAD_PREFIX);
                     closeLatch.countDown();
-                    eventSink.close();
+                    try {
+                        eventSink.close();
+                    } catch (Exception e) {
+                        // TODO 4.0 throws
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }
