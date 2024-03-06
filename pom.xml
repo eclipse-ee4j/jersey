@@ -2220,7 +2220,7 @@
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
         <proguard.mvn.plugin.version>2.6.0</proguard.mvn.plugin.version>
         <resources.mvn.plugin.version>3.3.1</resources.mvn.plugin.version>
-        <shade.mvn.plugin.version>3.5.1</shade.mvn.plugin.version>
+        <shade.mvn.plugin.version>3.5.2</shade.mvn.plugin.version>
         <site.mvn.plugin.version>3.9.1</site.mvn.plugin.version>
         <source.mvn.plugin.version>3.3.0</source.mvn.plugin.version>
         <surefire.mvn.plugin.version>3.2.1</surefire.mvn.plugin.version>
