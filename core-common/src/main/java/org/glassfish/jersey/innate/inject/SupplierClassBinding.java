@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Supplier;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * @param <T> type of the bean described by this injection binding descriptor.
  * @author Petr Bouda
  */
-public class SupplierClassBinding<T> extends Binding<Supplier<T>, SupplierClassBinding<T>> {
+public class SupplierClassBinding<T> extends InternalBinding<Supplier<T>, SupplierClassBinding<T>> {
 
     private final Class<? extends Supplier<T>> supplierClass;
     private final Class<? extends Annotation> supplierScope;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
@@ -55,9 +55,9 @@ import jakarta.servlet.http.HttpServletResponseWrapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
 import org.glassfish.jersey.inject.hk2.DelayedHk2InjectionManager;
 import org.glassfish.jersey.inject.hk2.ImmediateHk2InjectionManager;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.collection.Ref;

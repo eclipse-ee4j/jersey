@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.transform.TransformerFactory;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.PerThread;
 
 /**
@@ -33,7 +33,7 @@ import org.glassfish.jersey.internal.inject.PerThread;
  *
  * @author Jakub Podlesak
  */
-public class JaxbMessagingBinder extends AbstractBinder {
+public class JaxbMessagingBinder extends InternalBinder {
 
     @Override
     protected void configure() {

@@ -17,7 +17,7 @@
 package org.glassfish.jersey.inject.weld.binder.client;
 
 import org.glassfish.jersey.innate.BootstrapPreinitialization;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import jakarta.ws.rs.RuntimeType;
@@ -34,7 +34,7 @@ public class ClientOnlyPreinitialization implements BootstrapPreinitialization {
     }
     @Override
     public void preregister(RuntimeType runtimeType, InjectionManager injectionManager) {
-        injectionManager.register(new AbstractBinder() {
+        injectionManager.register(new InternalBinder() {
             @Override
             protected void configure() {
                 bind(ClientOnlyClassA.class).to(ClientOnlyInterface.class);

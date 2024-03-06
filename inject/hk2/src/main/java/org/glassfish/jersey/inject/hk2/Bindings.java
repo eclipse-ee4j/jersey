@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,16 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.inject.hk2;
+
+import jakarta.ws.rs.core.GenericType;
+import org.glassfish.jersey.internal.inject.Binder;
+import org.glassfish.jersey.internal.inject.Binding;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionResolver;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.function.Supplier;
-
-import jakarta.ws.rs.core.GenericType;
-
-import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
  * Utility class to create a new injection binding descriptions for arbitrary Java beans.
@@ -37,11 +39,7 @@ public final class Bindings {
     }
 
     public static Collection<Binding> getBindings(InjectionManager injectionManager, Binder binder) {
-        if (binder instanceof AbstractBinder) {
-            ((AbstractBinder) binder).setInjectionManager(injectionManager);
-        }
-
-        return binder.getBindings();
+        return org.glassfish.jersey.innate.inject.Bindings.getBindings(injectionManager, binder);
     }
 
     /**
@@ -53,8 +51,8 @@ public final class Bindings {
      * @param serviceType service class.
      * @return initialized binding builder.
      */
-    public static <T> ClassBinding<T> service(Class<T> serviceType) {
-        return new ClassBinding<>(serviceType);
+    public static <T> Binding service(Class<T> serviceType) {
+        return org.glassfish.jersey.innate.inject.Bindings.service(serviceType);
     }
 
     /**
@@ -66,8 +64,8 @@ public final class Bindings {
      * @param serviceType service class.
      * @return initialized binding builder.
      */
-    public static <T> ClassBinding<T> serviceAsContract(Class<T> serviceType) {
-        return new ClassBinding<>(serviceType).to(serviceType);
+    public static <T> Binding serviceAsContract(Class<T> serviceType) {
+        return org.glassfish.jersey.innate.inject.Bindings.serviceAsContract(serviceType);
     }
 
     /**
@@ -80,9 +78,8 @@ public final class Bindings {
      * @return initialized binding builder.
      */
     @SuppressWarnings("unchecked")
-    public static <T> ClassBinding<T> service(GenericType<T> serviceType) {
-        return (ClassBinding<T>) new ClassBinding<>(serviceType.getRawType())
-                .asType((Class<T>) serviceType.getType());
+    public static <T> Binding service(GenericType<T> serviceType) {
+        return org.glassfish.jersey.innate.inject.Bindings.service(serviceType);
     }
 
     /**
@@ -95,10 +92,8 @@ public final class Bindings {
      * @return initialized binding builder.
      */
     @SuppressWarnings("unchecked")
-    public static <T> ClassBinding<T> serviceAsContract(GenericType<T> serviceType) {
-        return (ClassBinding<T>) new ClassBinding<>(serviceType.getRawType())
-                .asType((Class<T>) serviceType.getType())
-                .to(serviceType.getType());
+    public static <T> Binding serviceAsContract(GenericType<T> serviceType) {
+        return org.glassfish.jersey.innate.inject.Bindings.serviceAsContract(serviceType);
     }
 
     /**
@@ -111,10 +106,8 @@ public final class Bindings {
      * @return initialized binding builder.
      */
     @SuppressWarnings("unchecked")
-    public static <T> ClassBinding<T> serviceAsContract(Type serviceType) {
-        return new ClassBinding<>((Class<T>) ReflectionHelper.getRawClass(serviceType))
-                .asType((Class<T>) serviceType)
-                .to(serviceType);
+    public static <T> Binding serviceAsContract(Type serviceType) {
+        return org.glassfish.jersey.innate.inject.Bindings.serviceAsContract(serviceType);
     }
 
     /**
@@ -127,8 +120,8 @@ public final class Bindings {
      * @param service service instance.
      * @return initialized binding builder.
      */
-    public static <T> InstanceBinding<T> service(T service) {
-        return new InstanceBinding<>(service);
+    public static <T> Binding service(T service) {
+        return org.glassfish.jersey.innate.inject.Bindings.service(service);
     }
 
     /**
@@ -141,8 +134,8 @@ public final class Bindings {
      * @param service service instance.
      * @return initialized binding builder.
      */
-    public static <T> InstanceBinding<T> serviceAsContract(T service) {
-        return new InstanceBinding<>(service, service.getClass());
+    public static <T> Binding serviceAsContract(T service) {
+        return org.glassfish.jersey.innate.inject.Bindings.serviceAsContract(service);
     }
 
     /**
@@ -153,9 +146,9 @@ public final class Bindings {
      * @param supplierScope factory scope.
      * @return initialized binding builder.
      */
-    public static <T> SupplierClassBinding<T> supplier(
+    public static <T> Binding supplier(
             Class<? extends Supplier<T>> supplierType, Class<? extends Annotation> supplierScope) {
-        return new SupplierClassBinding<>(supplierType, supplierScope);
+        return org.glassfish.jersey.innate.inject.Bindings.supplier(supplierType, supplierScope);
     }
 
     /**
@@ -167,8 +160,8 @@ public final class Bindings {
      * @param supplierType service supplier class.
      * @return initialized binding builder.
      */
-    public static <T> SupplierClassBinding<T> supplier(Class<? extends Supplier<T>> supplierType) {
-        return new SupplierClassBinding<>(supplierType, null);
+    public static <T> Binding supplier(Class<? extends Supplier<T>> supplierType) {
+        return org.glassfish.jersey.innate.inject.Bindings.supplier(supplierType);
     }
 
     /**
@@ -178,8 +171,8 @@ public final class Bindings {
      * @param supplier service instance.
      * @return initialized binding builder.
      */
-    public static <T> SupplierInstanceBinding<T> supplier(Supplier<T> supplier) {
-        return new SupplierInstanceBinding<>(supplier);
+    public static <T> Binding supplier(Supplier<T> supplier) {
+        return org.glassfish.jersey.innate.inject.Bindings.supplier(supplier);
     }
 
     /**
@@ -193,7 +186,7 @@ public final class Bindings {
      * @param resolver   injection resolver instance.
      * @return initialized binding builder.
      */
-    public static <T extends InjectionResolver> InjectionResolverBinding<T> injectionResolver(T resolver) {
-        return new InjectionResolverBinding<>(resolver);
+    public static <T extends InjectionResolver> Binding injectionResolver(T resolver) {
+        return org.glassfish.jersey.innate.inject.Bindings.injectionResolver(resolver);
     }
 }

@@ -24,16 +24,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.model.internal.ComponentBag;
-import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.AbstractExecutorProvidersConfigurator;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
@@ -92,7 +91,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
             if (asyncThreadPoolSize != null) {
                 // TODO: Do we need to register DEFAULT Executor and ScheduledExecutor to InjectionManager?
                 asyncThreadPoolSize = (asyncThreadPoolSize < 0) ? 0 : asyncThreadPoolSize;
-                InstanceBinding<Integer> asyncThreadPoolSizeBinding = Bindings
+                Binding<Integer, ?> asyncThreadPoolSizeBinding = Bindings
                         .service(asyncThreadPoolSize)
                         .named("ClientAsyncThreadPoolSize");
                 injectionManager.register(asyncThreadPoolSizeBinding);
@@ -107,7 +106,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
             }
         }
 
-        InstanceBinding<ExecutorServiceProvider> executorBinding = Bindings
+        Binding<ExecutorServiceProvider, ?> executorBinding = Bindings
                 .service(defaultAsyncExecutorProvider)
                 .to(ExecutorServiceProvider.class)
                 .forClient(true)
@@ -133,7 +132,7 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                         : new ClientScheduledExecutorServiceProvider(Values.of(scheduledExecutorService));
         }
 
-        InstanceBinding<ScheduledExecutorServiceProvider> schedulerBinding = Bindings
+        Binding<ScheduledExecutorServiceProvider, ?> schedulerBinding = Bindings
                 .service(defaultScheduledExecutorProvider)
                 .to(ScheduledExecutorServiceProvider.class)
                 .forClient(true)

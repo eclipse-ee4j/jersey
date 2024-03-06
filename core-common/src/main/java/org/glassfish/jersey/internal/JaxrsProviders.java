@@ -31,8 +31,8 @@ import jakarta.ws.rs.ext.Providers;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.message.MessageBodyWorkers;

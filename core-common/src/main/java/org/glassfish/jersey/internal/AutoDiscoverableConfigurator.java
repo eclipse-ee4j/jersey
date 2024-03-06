@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.Configuration;
 
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 

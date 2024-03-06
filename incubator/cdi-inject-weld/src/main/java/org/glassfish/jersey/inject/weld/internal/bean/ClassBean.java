@@ -28,10 +28,8 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.inject.weld.internal.inject.InitializableInstanceBinding;
-import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.ClassBinding;
 
 /**
  * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link ClassBinding}. Binding

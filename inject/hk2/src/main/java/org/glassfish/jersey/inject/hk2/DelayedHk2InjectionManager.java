@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,14 +21,14 @@ import java.util.List;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.glassfish.jersey.internal.inject.Binding;
 
 /**
  * Implementation of {@link org.glassfish.jersey.internal.inject.InjectionManager} that is able to delay service's registration
@@ -37,7 +37,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
  *
  * @author Petr Bouda
  */
-public class DelayedHk2InjectionManager extends AbstractHk2InjectionManager {
+public final class DelayedHk2InjectionManager extends AbstractHk2InjectionManager {
 
     // Keeps all binders and bindings added to the InjectionManager during the bootstrap.
     private final AbstractBinder bindings = new AbstractBinder() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,18 +22,17 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InjectionResolverBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.AliasBinding;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.DisposableSupplier;
-import org.glassfish.jersey.internal.inject.InjectionResolverBinding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.internal.inject.PerThread;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
@@ -149,7 +148,7 @@ class Hk2Helper {
     @SuppressWarnings("unchecked")
     private static ActiveDescriptor<?> wrapInjectionResolver(InjectionResolverBinding resolverDescriptor) {
         InjectionResolverWrapper<?> wrappedResolver = new InjectionResolverWrapper<>(resolverDescriptor.getResolver());
-        return translateToActiveDescriptor(Bindings.service(wrappedResolver),
+        return translateToActiveDescriptor(org.glassfish.jersey.innate.inject.Bindings.service(wrappedResolver),
                 new ParameterizedTypeImpl(InjectionResolver.class, resolverDescriptor.getResolver().getAnnotation()));
     }
 
@@ -370,7 +369,7 @@ class Hk2Helper {
     }
 
     /**
-     * Creates a new binder and automatically use it to bind the the descriptors in {@code bindConsumer}.
+     * Creates a new binder and automatically use it to bind the descriptors in {@code bindConsumer}.
      *
      * @param bindConsumer consumer used to process the defined operation with a binder.
      * @return populated binder.

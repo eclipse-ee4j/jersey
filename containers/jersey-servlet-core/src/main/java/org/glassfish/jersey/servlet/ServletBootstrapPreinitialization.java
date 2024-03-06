@@ -23,13 +23,12 @@ import jakarta.servlet.ServletContext;
 import jakarta.ws.rs.RuntimeType;
 import org.glassfish.jersey.innate.BootstrapPreinitialization;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.servlet.internal.PersistenceUnitBinder;
 
 import java.lang.reflect.Proxy;
-import java.security.AccessController;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -40,7 +39,7 @@ public class ServletBootstrapPreinitialization implements BootstrapPreinitializa
         if (RuntimeType.SERVER == runtimeType) {
             injectionManager.register(
                     new WebComponent.WebComponentBinder(Collections.emptyMap(), new BootstrapWebConfig(), false));
-            injectionManager.register(new AbstractBinder() {
+            injectionManager.register(new InternalBinder() {
                 @Override
                 protected void configure() {
                     bindFactory(() -> (FilterConfig) null).to(FilterConfig.class).in(Singleton.class)

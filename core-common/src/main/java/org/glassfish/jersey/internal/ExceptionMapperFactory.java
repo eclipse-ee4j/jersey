@@ -33,10 +33,10 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -74,7 +74,7 @@ public class ExceptionMapperFactory implements ExceptionMappers {
         @Override
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             exceptionMapperFactory = new ExceptionMapperFactory(injectionManager);
-            InstanceBinding<ExceptionMapperFactory> binding =
+            Binding<ExceptionMapperFactory, ?> binding =
                     Bindings.service(exceptionMapperFactory)
                             .to(ExceptionMappers.class)
                             .forClient(bootstrapBag.getConfiguration().getRuntimeType() == RuntimeType.CLIENT)

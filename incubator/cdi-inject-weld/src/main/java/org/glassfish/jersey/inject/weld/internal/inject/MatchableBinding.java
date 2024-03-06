@@ -16,9 +16,9 @@
 
 package org.glassfish.jersey.inject.weld.internal.inject;
 
-import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -29,7 +29,7 @@ import java.util.Set;
  * @param <T> Type of the bean described by this injection binding.
  * @param <D> Concrete injection binding implementation type.
  */
-public abstract class MatchableBinding<T, D extends MatchableBinding> extends Binding<T, D> {
+public abstract class MatchableBinding<T, D extends MatchableBinding> extends InternalBinding<T, D> {
 
     protected static MatchingVisitor visitor = new MatchingVisitor();
     protected abstract MatchLevel bestMatchLevel();
@@ -39,9 +39,9 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
      * @param other
      * @return
      */
-    public abstract Matching<MatchableBinding> matching(Binding other);
+    public abstract Matching<MatchableBinding> matching(InternalBinding other);
 
-    protected Matching<D> matches(Binding<?, ?> other) {
+    protected Matching<D> matches(InternalBinding<?, ?> other) {
         if (getId() != 0) {
             return matchesById(other);
         }
@@ -54,7 +54,7 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
         return matching;
     }
 
-    protected Matching matchesById(Binding<?, ?> other) {
+    protected Matching matchesById(InternalBinding<?, ?> other) {
         if (getId() == other.getId()) {
             return new Matching<>((D) this, MatchLevel.FULL_CONTRACT);
         } else {
@@ -68,7 +68,7 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
      * @param other
      * @return
      */
-    public Matching<D> matchesContracts(Binding<?, ?> other) {
+    public Matching<D> matchesContracts(InternalBinding<?, ?> other) {
         boolean atLeastOneMatch = false;
         boolean allMatch = true;
         final Set<Type> firstContracts = getContracts();
@@ -160,16 +160,16 @@ public abstract class MatchableBinding<T, D extends MatchableBinding> extends Bi
 
     protected static class MatchingVisitor<D extends MatchableBinding<?, D>> {
         public MatchableBinding.Matching<InitializableInstanceBinding<D>> matches(
-                InitializableInstanceBinding<D> binding, Binding other) {
+                InitializableInstanceBinding<D> binding, InternalBinding other) {
             return binding.matches((InstanceBinding) other);
         }
 
         public MatchableBinding.Matching<InitializableSupplierInstanceBinding<D>> matches(
-                InitializableSupplierInstanceBinding<D> binding, Binding other) {
+                InitializableSupplierInstanceBinding<D> binding, InternalBinding other) {
             return binding.matches((SupplierInstanceBinding<D>) other);
         }
 
-        public Matching<MatchableBinding<?, D>> matches(MatchableBinding<?, D> binding, Binding other) {
+        public Matching<MatchableBinding<?, D>> matches(MatchableBinding<?, D> binding, InternalBinding other) {
             throw new IllegalStateException("Unexpected");
         }
     }

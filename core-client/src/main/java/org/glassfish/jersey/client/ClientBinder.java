@@ -30,8 +30,8 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.innate.inject.InjectionIds;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.PropertiesDelegate;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.message.internal.MessagingBinders;
@@ -44,7 +44,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
  * @author Jakub Podlesak
  * @author Libor Kramolis
  */
-class ClientBinder extends AbstractBinder {
+class ClientBinder extends InternalBinder {
 
     private final Map<String, Object> clientRuntimeProperties;
 

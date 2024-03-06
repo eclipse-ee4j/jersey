@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,16 +42,14 @@ import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
 
-import jakarta.annotation.Priority;
-
 import org.glassfish.jersey.ExtendedConfig;
 import org.glassfish.jersey.JerseyPriorities;
+import org.glassfish.jersey.innate.inject.CompositeBinder;
+import org.glassfish.jersey.innate.inject.ProviderBinder;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.Binder;
-import org.glassfish.jersey.internal.inject.CompositeBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.ProviderBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 import org.glassfish.jersey.internal.util.PropertiesHelper;

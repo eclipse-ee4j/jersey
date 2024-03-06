@@ -57,15 +57,15 @@ import jakarta.ws.rs.ext.WriterInterceptor;
 
 import javax.xml.transform.Source;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.guava.Primitives;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -104,7 +104,7 @@ public class MessageBodyFactory implements MessageBodyWorkers {
         @Override
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             messageBodyFactory = new MessageBodyFactory(bootstrapBag.getConfiguration());
-            InstanceBinding<MessageBodyFactory> binding =
+            Binding<MessageBodyFactory, ?> binding =
                     Bindings.service(messageBodyFactory)
                             .to(MessageBodyWorkers.class)
                             .id(InjectionIds.SERVER_MESSAGE_BODY_WORKERS.id());

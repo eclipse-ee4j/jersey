@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
 
 final class OptionalParamBinder extends AbstractBinder {
 

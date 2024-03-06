@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
 
 /**
  * Injection binding description of a bean bound via its a Java class.
@@ -22,7 +22,7 @@ package org.glassfish.jersey.internal.inject;
  * @param <T> type of the bean described by this injection binding.
  * @author Petr Bouda
  */
-public class ClassBinding<T> extends Binding<T, ClassBinding<T>> {
+public class ClassBinding<T> extends InternalBinding<T, ClassBinding<T>> {
 
     private final Class<T> service;
 

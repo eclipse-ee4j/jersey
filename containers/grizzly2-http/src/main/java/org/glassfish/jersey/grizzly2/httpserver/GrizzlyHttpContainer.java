@@ -38,7 +38,7 @@ import jakarta.inject.Provider;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
@@ -119,7 +119,7 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
      * the injection of Grizzly request instance into singleton JAX-RS and Jersey providers is only supported via
      * {@link jakarta.inject.Provider injection provider}.
      */
-    static class GrizzlyBinder extends AbstractBinder {
+    static class GrizzlyBinder extends InternalBinder {
 
         @Override
         protected void configure() {

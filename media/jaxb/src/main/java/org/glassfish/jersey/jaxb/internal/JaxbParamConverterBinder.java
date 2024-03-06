@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import jakarta.ws.rs.ext.ParamConverterProvider;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 
 /**
  * Binder for JAXB parameter converter.
@@ -30,7 +30,7 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
  * @author Jakub Podlesak
  */
 @ConstrainedTo(RuntimeType.SERVER)
-public class JaxbParamConverterBinder extends AbstractBinder {
+public class JaxbParamConverterBinder extends InternalBinder {
 
     @Override
     protected void configure() {

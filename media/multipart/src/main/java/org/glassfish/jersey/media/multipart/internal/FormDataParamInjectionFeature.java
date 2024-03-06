@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import jakarta.ws.rs.core.FeatureContext;
 
 import jakarta.inject.Provider;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
@@ -41,7 +41,7 @@ public final class FormDataParamInjectionFeature implements Feature {
 
     @Override
     public boolean configure(FeatureContext context) {
-        context.register(new AbstractBinder() {
+        context.register(new InternalBinder() {
             @Override
             protected void configure() {
                 Provider<MultivaluedParameterExtractorProvider> extractorProvider =

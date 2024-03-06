@@ -28,10 +28,10 @@ import jakarta.ws.rs.RuntimeType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ContextResolver;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper.DeclaringClassInterfacePair;
 import org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap;

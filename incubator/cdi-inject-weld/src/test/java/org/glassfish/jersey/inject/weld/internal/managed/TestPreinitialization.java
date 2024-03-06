@@ -20,7 +20,7 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.PerThread;
 import org.glassfish.jersey.process.internal.RequestScoped;
@@ -29,7 +29,7 @@ public class TestPreinitialization implements org.glassfish.jersey.innate.Bootst
 
     @Override
     public void preregister(RuntimeType runtimeType, InjectionManager injectionManager) {
-        injectionManager.register(new AbstractBinder() {
+        injectionManager.register(new InternalBinder() {
             @Override
             protected void configure() {
                 if (RuntimeType.CLIENT == runtimeType) {

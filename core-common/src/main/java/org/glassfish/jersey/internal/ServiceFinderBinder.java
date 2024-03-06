@@ -20,7 +20,7 @@ import java.util.Map;
 
 import jakarta.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 
@@ -34,7 +34,7 @@ import org.glassfish.jersey.internal.util.PropertiesHelper;
  * @author Pavel Bucek
  * @author Libor Kramolis
  */
-public class ServiceFinderBinder<T> extends AbstractBinder {
+public class ServiceFinderBinder<T> extends InternalBinder {
 
     private final Class<T> contract;
 

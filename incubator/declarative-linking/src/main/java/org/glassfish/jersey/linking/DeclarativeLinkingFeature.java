@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.FeatureContext;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.Beta;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.linking.contributing.NaiveResourceLinkContributionContext;
 import org.glassfish.jersey.linking.contributing.ResourceLinkContributionContext;
 import org.glassfish.jersey.linking.mapping.NaiveResourceMappingContext;
@@ -43,7 +43,7 @@ public class DeclarativeLinkingFeature implements Feature {
 
         Configuration config = context.getConfiguration();
         if (!config.isRegistered(ResponseLinkFilter.class)) {
-            context.register(new AbstractBinder() {
+            context.register(new InternalBinder() {
 
                 @Override
                 protected void configure() {
@@ -51,7 +51,7 @@ public class DeclarativeLinkingFeature implements Feature {
                             .to(ResourceMappingContext.class).in(Singleton.class);
                 }
             });
-            context.register(new AbstractBinder() {
+            context.register(new InternalBinder() {
 
                 @Override
                 protected void configure() {

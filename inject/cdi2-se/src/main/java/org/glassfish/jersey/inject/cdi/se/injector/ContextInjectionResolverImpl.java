@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,8 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.BlindBinder;
 import org.glassfish.jersey.internal.inject.ContextInjectionResolver;
 import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjecteeImpl;
@@ -102,7 +102,7 @@ public class ContextInjectionResolverImpl implements InjectionResolver<Context>,
     /**
      * Context injection resolver binder.
      */
-    public static final class Binder extends AbstractBinder {
+    public static final class Binder extends BlindBinder {
 
         private Supplier<BeanManager> beanManager;
 

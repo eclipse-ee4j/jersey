@@ -54,9 +54,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
@@ -161,7 +161,7 @@ public class WebComponent {
         }
     }
 
-    static final class WebComponentBinder extends AbstractBinder {
+    static final class WebComponentBinder extends InternalBinder {
 
         private final Map<String, Object> applicationProperties;
         private final WebConfig webConfig;
@@ -327,7 +327,7 @@ public class WebComponent {
         requestScopedInitializer = rsiProvider != null ? rsiProvider : DEFAULT_REQUEST_SCOPE_INITIALIZER_PROVIDER;
         requestResponseBindingExternalized = rrbExternalized;
 
-        final AbstractBinder webComponentBinder =
+        final InternalBinder webComponentBinder =
                 new WebComponentBinder(resourceConfig.getProperties(), webConfig, requestResponseBindingExternalized);
         resourceConfig.register(webComponentBinder);
 

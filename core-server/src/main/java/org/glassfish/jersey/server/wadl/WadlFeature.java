@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.FeatureContext;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.ServerProperties;
@@ -68,7 +68,7 @@ public class WadlFeature implements Feature {
         }
 
         context.register(WadlModelProcessor.class);
-        context.register(new AbstractBinder() {
+        context.register(new InternalBinder() {
             @Override
             protected void configure() {
                 bind(WadlApplicationContextImpl.class).to(WadlApplicationContext.class).in(Singleton.class);

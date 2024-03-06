@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.glassfish.jersey.inject.cdi.se.injector.JerseyInjectionTarget;
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.ClassBinding;
 
 /**
  * Creates an implementation of {@link jakarta.enterprise.inject.spi.Bean} interface using Jersey's {@link ClassBinding}. Binding

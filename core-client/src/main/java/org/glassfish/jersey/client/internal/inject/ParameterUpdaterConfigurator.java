@@ -20,10 +20,10 @@ package org.glassfish.jersey.client.internal.inject;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.client.ClientBootstrapBag;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import org.glassfish.jersey.internal.inject.Providers;

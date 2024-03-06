@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.FeatureContext;
 
 import jakarta.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
 
 /**
  * Feature enabling OAuth signature support. If the feature is registered the
@@ -47,7 +47,7 @@ public class OAuth1SignatureFeature implements Feature {
      * <p/>
      *
      */
-    static class Binder extends AbstractBinder {
+    static class Binder extends InternalBinder {
 
         @Override
         protected void configure() {

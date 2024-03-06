@@ -45,20 +45,19 @@ import org.glassfish.jersey.inject.weld.internal.inject.InitializableSupplierIns
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
 import org.glassfish.jersey.inject.weld.internal.inject.MatchableBinding;
 import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.inject.ServiceHolderImpl;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.internal.util.collection.Cache;
-import org.glassfish.jersey.server.model.Resource;
 
 /**
  * Implementation of {@link InjectionManager} used on the server side.
@@ -155,9 +154,9 @@ class CdiInjectionManager implements InjectionManager {
         MatchableBinding.Matching<MB> matching = MatchableBinding.Matching.noneMatching();
         for (Binding preBinding : preBindings) {
             if (matchebleBindingClass.isInstance(preBinding)) {
-                matching = matching.better(((MB) preBinding).matching(binderBinding));
+                matching = matching.better(((MB) preBinding).matching((InternalBinding) binderBinding));
                 if (matching.isBest()
-                        || (matching.matches() && binderBinding.isForClient())) {
+                        || (matching.matches() && ((InternalBinding) binderBinding).isForClient())) {
                     break;
                 }
             }

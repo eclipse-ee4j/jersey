@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,14 +62,11 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.internal.ClientResponseProcessingException;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.DisposableSupplier;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
 import org.glassfish.jersey.internal.util.Producer;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.process.internal.ExecutorProviders;
 import org.glassfish.jersey.process.internal.RequestScope;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 

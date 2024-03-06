@@ -24,10 +24,8 @@ import org.glassfish.jersey.inject.weld.internal.inject.InitializableInstanceBin
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyClientCreationalContext;
 import org.glassfish.jersey.inject.weld.internal.managed.CdiClientInjectionManager;
 import org.glassfish.jersey.inject.weld.internal.managed.ContextSafe;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 
 import java.lang.annotation.Annotation;
-import java.util.Objects;
 
 /**
  * Instance bean to be created in the pre-initialization phase and initialized after Jersey is bootstrap.

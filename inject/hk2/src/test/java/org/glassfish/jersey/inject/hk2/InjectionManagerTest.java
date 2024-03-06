@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,7 @@
 
 package org.glassfish.jersey.inject.hk2;
 
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 
@@ -54,7 +53,7 @@ public class InjectionManagerTest {
 
     @Test
     public void testInjectionManagerParent() {
-        ClassBinding<EnglishGreeting> greetingBinding = Bindings.serviceAsContract(EnglishGreeting.class);
+        Binding greetingBinding = Bindings.serviceAsContract(EnglishGreeting.class);
         InjectionManager parentInjectionManager = Injections.createInjectionManager();
         parentInjectionManager.register(greetingBinding);
         parentInjectionManager.completeRegistration();
@@ -76,7 +75,7 @@ public class InjectionManagerTest {
         InjectionManager injectionManager = Injections.createInjectionManager();
         assertTrue(injectionManager.isRegistrable(Binder.class));
         assertTrue(injectionManager.isRegistrable(AbstractBinder.class));
-        assertFalse(injectionManager.isRegistrable(org.glassfish.jersey.internal.inject.AbstractBinder.class));
+        assertFalse(injectionManager.isRegistrable(org.glassfish.jersey.inject.hk2.AbstractBinder.class));
         assertFalse(injectionManager.isRegistrable(String.class));
     }
 

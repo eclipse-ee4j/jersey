@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,8 +45,8 @@ import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.spi.ValidationProvider;
 
+import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -62,7 +62,7 @@ import org.glassfish.jersey.server.validation.ValidationConfig;
  *
  * @author Michal Gajdos
  */
-public final class ValidationBinder extends AbstractBinder {
+public final class ValidationBinder extends InternalBinder {
 
     private static final Logger LOGGER = Logger.getLogger(ValidationBinder.class.getName());
 

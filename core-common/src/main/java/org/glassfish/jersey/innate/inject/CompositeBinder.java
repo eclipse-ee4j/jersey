@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.innate.inject;
+
+import org.glassfish.jersey.internal.inject.Binder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +29,7 @@ import java.util.Collection;
  *
  * @author Petr Bouda
  */
-public class CompositeBinder extends AbstractBinder {
+public class CompositeBinder extends InternalBinder {
 
     private Collection<Binder> installed = new ArrayList<>();
 
@@ -46,7 +48,7 @@ public class CompositeBinder extends AbstractBinder {
      * @param binders provided binder to install as a collection.
      * @return composite binder.
      */
-    public static AbstractBinder wrap(Collection<Binder> binders) {
+    public static InternalBinder wrap(Collection<Binder> binders) {
         return new CompositeBinder(binders);
     }
 
@@ -56,7 +58,7 @@ public class CompositeBinder extends AbstractBinder {
      * @param binders provided binder to install as an array.
      * @return composite binder.
      */
-    public static AbstractBinder wrap(Binder... binders) {
+    public static InternalBinder wrap(Binder... binders) {
         return new CompositeBinder(Arrays.asList(binders));
     }
 
@@ -65,6 +67,6 @@ public class CompositeBinder extends AbstractBinder {
      */
     @Override
     public void configure() {
-        install(installed.toArray(new AbstractBinder[] {}));
+        install(installed.toArray(new Binder[] {}));
     }
 }

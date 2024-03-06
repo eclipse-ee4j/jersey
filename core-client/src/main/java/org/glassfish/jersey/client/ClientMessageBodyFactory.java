@@ -16,12 +16,12 @@
 
 package org.glassfish.jersey.client;
 
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.Binding;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
@@ -65,7 +65,7 @@ class ClientMessageBodyFactory extends MessageBodyFactory {
         @Override
         public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
             messageBodyFactory = new ClientMessageBodyFactory(bootstrapBag.getConfiguration(), () -> clientRuntime);
-            InstanceBinding<ClientMessageBodyFactory> binding =
+            Binding<ClientMessageBodyFactory, ?> binding =
                     Bindings.service(messageBodyFactory).to(MessageBodyWorkers.class)
                             .forClient(true)
                             .id(InjectionIds.SERVER_MESSAGE_BODY_WORKERS.id());

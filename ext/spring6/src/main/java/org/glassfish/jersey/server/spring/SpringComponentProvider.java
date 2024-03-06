@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import jakarta.servlet.ServletContext;
 
 import org.glassfish.jersey.inject.hk2.ImmediateHk2InjectionManager;
+import org.glassfish.jersey.inject.hk2.Bindings;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.spi.ComponentProvider;

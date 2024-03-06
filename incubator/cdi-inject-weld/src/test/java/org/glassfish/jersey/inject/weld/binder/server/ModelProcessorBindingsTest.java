@@ -18,8 +18,8 @@ package org.glassfish.jersey.inject.weld.binder.server;
 
 import org.glassfish.jersey.inject.weld.TestParent;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerConfig;
 import org.glassfish.jersey.server.internal.JerseyResourceContext;
@@ -47,7 +47,7 @@ public class ModelProcessorBindingsTest extends TestParent {
 
     @Test
     public void testWadlContext() {
-        injectionManager.register(new AbstractBinder() {
+        injectionManager.register(new InternalBinder() {
             @Override
             protected void configure() {
                 bind(new ResourceConfig()).to(ServerConfig.class).to(Configuration.class)

@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -74,23 +73,24 @@ import org.glassfish.jersey.inject.weld.internal.injector.ContextInjectionResolv
 import org.glassfish.jersey.inject.weld.internal.injector.JerseyInjectionTarget;
 import org.glassfish.jersey.inject.weld.internal.scope.CdiRequestScope;
 import org.glassfish.jersey.innate.BootstrapPreinitialization;
-import org.glassfish.jersey.internal.BootstrapBag;
-import org.glassfish.jersey.internal.ServiceFinder;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.innate.inject.InternalBinder;
+import org.glassfish.jersey.innate.inject.InternalBinding;
+import org.glassfish.jersey.innate.inject.Bindings;
+import org.glassfish.jersey.innate.inject.ClassBinding;
+import org.glassfish.jersey.innate.inject.InjectionResolverBinding;
+import org.glassfish.jersey.innate.inject.InstanceBinding;
+import org.glassfish.jersey.innate.inject.SupplierClassBinding;
+import org.glassfish.jersey.innate.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.inject.Binder;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
-import org.glassfish.jersey.internal.inject.ClassBinding;
 import org.glassfish.jersey.internal.inject.CustomAnnotationLiteral;
 import org.glassfish.jersey.internal.inject.ForeignDescriptor;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
-import org.glassfish.jersey.internal.inject.InjectionResolverBinding;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.ServiceHolder;
-import org.glassfish.jersey.internal.inject.SupplierClassBinding;
-import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
+import org.glassfish.jersey.internal.BootstrapBag;
+import org.glassfish.jersey.internal.ServiceFinder;
 
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;
@@ -327,12 +327,12 @@ class BinderRegisterExtension implements Extension {
 
     private void registerBeans(RuntimeType runtimeType, CachingBinder binder, AfterBeanDiscovery abd,
                                BeanManager beanManager) {
-        final Collection<Binding> bindings = binder.getBindings();
+        final Collection<InternalBinding> bindings = (Collection<InternalBinding>) (Collection) binder.getBindings();
         binder.setReadOnly();
 
         //check unique id;
-        TreeMap<Long, Binding> treeMap = new TreeMap<>();
-        for (Binding binding : bindings) {
+        TreeMap<Long, InternalBinding> treeMap = new TreeMap<>();
+        for (InternalBinding binding : bindings) {
             if (binding.getId() != 0 && !binding.isForClient()) {
                 if (treeMap.containsKey(binding.getId())) {
                     throw new IllegalStateException("Id " + binding.getId() + " already exists:" + treeMap.get(binding.getId()));
@@ -342,7 +342,7 @@ class BinderRegisterExtension implements Extension {
         }
 
         allBindingsLabel:
-        for (Binding binding : bindings) {
+        for (InternalBinding binding : bindings) {
             if (ClassBinding.class.isAssignableFrom(binding.getClass())) {
                 if (RuntimeType.CLIENT == runtimeType) {
                     for (Type contract : ((ClassBinding<?>) binding).getContracts()) {
@@ -504,12 +504,12 @@ class BinderRegisterExtension implements Extension {
 //        }
 //    }
 
-    private static <T> ClassBinding<T> bind(Class<T> clazz, AbstractBinder binder) {
+    private static <T> ClassBinding<T> bind(Class<T> clazz, InternalBinder binder) {
         final ClassBinding<T> binding = binder.bindAsContract(clazz);
         return toSuper(clazz, binding);
     }
 
-    private static <T extends Binding> T toSuper(Class<?> clazz, T binding) {
+    private static <T extends InternalBinding> T toSuper(Class<?> clazz, T binding) {
         Class<?> superClass = clazz;
         while (superClass != null) {
             superClass = superClass.getSuperclass();
@@ -573,7 +573,7 @@ class BinderRegisterExtension implements Extension {
     }
 
     private void register(RuntimeType runtimeType, Binding binding) {
-        final AbstractBinder bindings = runtimeType == RuntimeType.CLIENT ? clientBindings : serverBindings;
+        final InternalBinder bindings = runtimeType == RuntimeType.CLIENT ? clientBindings : serverBindings;
         if (InstanceBinding.class.isInstance(binding)) {
             bindings.bind(InitializableInstanceBinding.from((InstanceBinding) binding, runtimeType));
         } else if (SupplierInstanceBinding.class.isInstance(binding)) {
@@ -756,9 +756,9 @@ class BinderRegisterExtension implements Extension {
      * Each additional binding is added to the cache by the next call of {@link #getBindings()}.
      * When {@link #setReadOnly()} is called, no additional binding is added to the cache.
      */
-    private class CachingBinder extends AbstractBinder {
+    private class CachingBinder extends InternalBinder {
         private final Ref<InjectionManager> injectionManager;
-        private AbstractBinder temporaryBinder = new TemporaryBinder();
+        private InternalBinder temporaryBinder = new TemporaryBinder();
         private final Collection<Binding> bindings = new LinkedList<>();
         private final RuntimeType runtimeType;
 
@@ -849,7 +849,7 @@ class BinderRegisterExtension implements Extension {
             readOnly = true;
         }
 
-        private class TemporaryBinder extends AbstractBinder {
+        private class TemporaryBinder extends InternalBinder {
 
             @Override
             protected void configure() {
@@ -859,14 +859,14 @@ class BinderRegisterExtension implements Extension {
     }
 
     /* package */ static class MergedBindings implements Binder {
-        private final AbstractBinder first;
-        private final AbstractBinder second;
+        private final InternalBinder first;
+        private final InternalBinder second;
         private final Collection<ClassBinding> classBindings = new ArrayList<>();
         private final Collection<InitializableInstanceBinding> instanceBindings = new ArrayList<>();
         private final Collection<SupplierClassBinding> supplierClassBindings = new ArrayList<>();
         private final Collection<InitializableSupplierInstanceBinding> supplierInstanceBindings = new ArrayList<>();
 
-        private MergedBindings(AbstractBinder first, AbstractBinder second) {
+        private MergedBindings(InternalBinder first, InternalBinder second) {
             this.first = first;
             this.second = second;
         }
@@ -898,11 +898,11 @@ class BinderRegisterExtension implements Extension {
 //            return Collections.emptyList();
 //        }
 
-        public Collection<Binding> getServerBindings() {
+        public Collection<? extends Binding> getServerBindings() {
             return first.getBindings();
         }
 
-        public Collection<Binding> getClientBindings() {
+        public Collection<? extends Binding> getClientBindings() {
             return second.getBindings();
         }
 

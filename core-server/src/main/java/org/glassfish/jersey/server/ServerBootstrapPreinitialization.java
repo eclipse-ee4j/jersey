@@ -17,7 +17,7 @@
 package org.glassfish.jersey.server;
 
 import org.glassfish.jersey.innate.BootstrapPreinitialization;
-import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.wadl.WadlFeature;
