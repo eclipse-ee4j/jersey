@@ -2304,14 +2304,14 @@
         <rxjava2.version>2.2.21</rxjava2.version>
 
         <servlet4.version>4.0.3</servlet4.version>
-        <servlet6.version>6.1.0-M1</servlet6.version>
+        <servlet6.version>6.1.0-M2</servlet6.version>
 
         <slf4j.version>2.0.9</slf4j.version>
         <spring6.version>6.0.13</spring6.version>
         <testng.version>7.8.0</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
         <!-- Jakartified, eligible for CQ -->
-        <weld.version>6.0.0.Alpha1</weld.version>
+        <weld.version>6.0.0.Beta1</weld.version>
         <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>8.0.1.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
@@ -2322,9 +2322,9 @@
         <graalvm.version>20.3.12</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>7.0.6</gf.impl.version>
+        <gf.impl.version>7.0.13</gf.impl.version>
         <!-- Jakartified -->
-        <cdi.api.version>4.1.0-M1</cdi.api.version>
+        <cdi.api.version>4.1.0.RC1</cdi.api.version>
         <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
         <grizzly2.version>4.0.2</grizzly2.version>
@@ -2338,9 +2338,9 @@
         <jstl.version>3.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.1.2</istack.commons.runtime.version>
-        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
-        <jakarta.activation.version>2.0.1</jakarta.activation.version>
-        <jakarta.el.version>6.0.0-M1</jakarta.el.version>
+        <jakarta.activation-api.version>2.1.3</jakarta.activation-api.version>
+        <jakarta.activation.version>2.0.2</jakarta.activation.version>
+        <jakarta.el.version>6.0.0-RC1</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0-M1</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[3.0,4)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>3.0.0-M1</jakarta.annotation.version>
@@ -2356,10 +2356,10 @@
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)"</jakarta.rest.osgi.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>12.0.5</jetty.version>
+        <jetty.version>12.0.7</jetty.version>
         <jetty9.version>9.4.53.v20231009</jetty9.version>
         <jetty11.version>11.0.19</jetty11.version>
-        <jetty.plugin.version>12.0.5</jetty.plugin.version>
+        <jetty.plugin.version>12.0.7</jetty.plugin.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>
         <jsonp.ri.version>1.1.5</jsonp.ri.version>
         <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
