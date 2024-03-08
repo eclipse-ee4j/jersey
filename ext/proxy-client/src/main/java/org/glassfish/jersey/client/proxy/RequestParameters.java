@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -156,7 +156,7 @@ class RequestParameters {
                 anns.put(ann.annotationType(), ann);
             }
 
-            if (hasAnyParamAnnotation(anns)) {
+            if (field.canAccess(beanParam) && hasAnyParamAnnotation(anns)) {
                 value = field.get(beanParam);
             } else {
                 // get getter annotations if there are no field annotations

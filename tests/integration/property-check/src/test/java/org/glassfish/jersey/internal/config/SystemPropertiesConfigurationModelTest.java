@@ -38,6 +38,7 @@ import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesClass;
 import org.glassfish.jersey.internal.util.Property;
 import org.glassfish.jersey.jetty.connector.JettyClientProperties;
+import org.glassfish.jersey.jnh.connector.JavaNetHttpClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPartProperties;
 import org.glassfish.jersey.message.MessageProperties;
 import org.glassfish.jersey.server.ServerProperties;
@@ -94,6 +95,7 @@ public class SystemPropertiesConfigurationModelTest {
             System.setProperty(MessageProperties.IO_BUFFER_SIZE, TEST_STRING);
             System.setProperty(Apache5ClientProperties.DISABLE_COOKIES, TEST_STRING);
             System.setProperty(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION, TEST_STRING);
+            System.setProperty(JavaNetHttpClientProperties.DISABLE_COOKIES, TEST_STRING);
             System.setProperty(MultiPartProperties.TEMP_DIRECTORY, TEST_STRING);
             System.setProperty(OAuth1ServerProperties.REALM, TEST_STRING);
             JerseySystemPropertiesConfigurationModel model = new JerseySystemPropertiesConfigurationModel();
@@ -121,6 +123,8 @@ public class SystemPropertiesConfigurationModelTest {
             assertFalse(properties.containsKey(Apache5ClientProperties.CONNECTION_MANAGER));
             assertEquals(TEST_STRING, properties.get(JettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION));
             assertFalse(properties.containsKey(JettyClientProperties.DISABLE_COOKIES));
+            assertEquals(TEST_STRING, properties.get(JavaNetHttpClientProperties.DISABLE_COOKIES));
+            assertFalse(properties.containsKey(JavaNetHttpClientProperties.SSL_PARAMETERS));
             assertEquals(TEST_STRING, properties.get(MultiPartProperties.TEMP_DIRECTORY));
             assertFalse(properties.containsKey(MultiPartProperties.BUFFER_THRESHOLD));
             assertEquals(TEST_STRING, properties.get(OAuth1ServerProperties.REALM));
