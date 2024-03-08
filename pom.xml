@@ -1923,8 +1923,8 @@
                 <version>${jakarta.el.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
                 <version>${jakarta.el.impl.version}</version>
             </dependency>
 
