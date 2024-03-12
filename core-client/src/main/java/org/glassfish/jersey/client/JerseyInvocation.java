@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -573,6 +573,18 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
             throw new IllegalStateException(
                     LocalizationMessages.CLIENT_RX_PROVIDER_NOT_REGISTERED(clazz.getSimpleName()));
         }
+
+        /**
+         * Sets Future that backs {@link ClientRequest} {@link ClientRequest#isCancelled()} method. Can be used for instance
+         * by {@link CompletionStageRxInvoker} to pass the created {@link CompletableFuture} to the provided {@link SyncInvoker}.
+         * @param cancellable the {@link Future} whose result of {@link Future#cancel(boolean)} will be available by
+         * {@link ClientRequest#isCancelled()}.
+         * @return the updated builder.
+         */
+        public Builder setCancellable(Future cancellable) {
+            requestContext.setCancellable(cancellable);
+            return this;
+        }
     }
 
     /* package */ static class AsyncInvoker extends CompletableFutureAsyncInvoker implements jakarta.ws.rs.client.AsyncInvoker {
@@ -711,6 +723,8 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
     public Future<Response> submit() {
         final CompletableFuture<Response> responseFuture = new CompletableFuture<>();
         final ClientRuntime runtime = request().getClientRuntime();
+
+        requestContext.setCancellable(responseFuture);
         runtime.submit(runtime.createRunnableForAsyncProcessing(requestForCall(requestContext),
                 new InvocationResponseCallback<>(responseFuture, (request, scope) -> translate(request, scope, Response.class))));
 
@@ -725,6 +739,7 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
         final CompletableFuture<T> responseFuture = new CompletableFuture<>();
         final ClientRuntime runtime = request().getClientRuntime();
 
+        requestContext.setCancellable(responseFuture);
         runtime.submit(runtime.createRunnableForAsyncProcessing(requestForCall(requestContext),
                 new InvocationResponseCallback<T>(responseFuture, (request, scope) -> translate(request, scope, responseType))));
 
@@ -764,6 +779,7 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
         final CompletableFuture<T> responseFuture = new CompletableFuture<>();
         final ClientRuntime runtime = request().getClientRuntime();
 
+        requestContext.setCancellable(responseFuture);
         runtime.submit(runtime.createRunnableForAsyncProcessing(requestForCall(requestContext),
                 new InvocationResponseCallback<T>(responseFuture, (request, scope) -> translate(request, scope, responseType))));
 
@@ -888,6 +904,7 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
                 }
             };
             final ClientRuntime runtime = request().getClientRuntime();
+            requestContext.setCancellable(responseFuture);
             runtime.submit(runtime.createRunnableForAsyncProcessing(requestForCall(requestContext), responseCallback));
         } catch (final Throwable error) {
             final ProcessingException ce;
