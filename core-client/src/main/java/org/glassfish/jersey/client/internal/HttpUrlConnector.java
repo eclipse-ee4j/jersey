@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
@@ -155,7 +156,7 @@ public class HttpUrlConnector implements Connector {
         );
     }
 
-    private static InputStream getInputStream(final HttpURLConnection uc) throws IOException {
+    private static InputStream getInputStream(final HttpURLConnection uc, final ClientRequest clientRequest) throws IOException {
         return new InputStream() {
             private final UnsafeValue<InputStream, IOException> in = Values.lazy(new UnsafeValue<InputStream, IOException>() {
                 @Override
@@ -189,6 +190,10 @@ public class HttpUrlConnector implements Connector {
             private void throwIOExceptionIfClosed() throws IOException {
                 if (closed) {
                     throw new IOException("Stream closed");
+                }
+                if (clientRequest.isCancelled()) {
+                    close();
+                    throw new IOException(new CancellationException());
                 }
             }
 
@@ -311,7 +316,7 @@ public class HttpUrlConnector implements Connector {
             if (DEFAULT_SSL_SOCKET_FACTORY.get() == suc.getSSLSocketFactory()) {
                 // indicates that the custom socket factory was not set
                 suc.setSSLSocketFactory(sslSocketFactory.get());
-                }
+            }
         }
     }
 
@@ -448,7 +453,7 @@ public class HttpUrlConnector implements Connector {
         );
 
         try {
-            InputStream inputStream = getInputStream(uc);
+            InputStream inputStream = getInputStream(uc, request);
             responseContext.setEntityStream(inputStream);
         } catch (IOException ioe) {
             // allow at least a partial response in a ResponseProcessingException
