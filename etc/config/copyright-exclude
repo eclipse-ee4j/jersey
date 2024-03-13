@@ -41,6 +41,7 @@ jaxb.index
 /etc/config/copyright.txt
 /etc/config/edl-copyright.txt
 /etc/jenkins/
+/etc/scripts
 /etc/travis/
 /LICENSE.md
 /third-party-license-readme.txt
