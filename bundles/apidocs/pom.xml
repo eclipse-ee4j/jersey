@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,17 +61,6 @@
         <!-- CONNECTORS -->
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
-            <artifactId>jersey-apache-connector</artifactId>
-            <version>${project.version}</version>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-            </exclusions>-->
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache5-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -129,18 +118,12 @@
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.servlet</artifactId>
-            <version>3.1</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-simple-http</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -150,6 +133,16 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jetty-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-netty-http</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -171,6 +164,11 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-gson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -294,10 +292,6 @@
                         <configuration>
                             <includeDependencySources>true</includeDependencySources>
                             <sourceFileExcludes>
-                                <fileExclude>META-INF/versions/12/org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
-                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/jetty/*.java</fileExclude>
-                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/jetty/connector/*.java</fileExclude>
-                                <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
@@ -330,61 +324,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>jetty11</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <jetty.version>${jetty11.version}</jetty.version>
-            </properties>
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.glassfish.jersey.connectors</groupId>
-                        <artifactId>jersey-jetty11-connector</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <!--<dependency>
-                        <groupId>org.glassfish.jersey.connectors</groupId>
-                        <artifactId>jersey-jetty11-http2-connector</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.glassfish.jersey.containers</groupId>
-                        <artifactId>jersey-container-jetty11-http</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.glassfish.jersey.containers</groupId>
-                        <artifactId>jersey-container-jetty11-http2</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
-                </dependencies>
-            </dependencyManagement>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.jersey.connectors</groupId>
-                    <artifactId>jersey-jetty11-connector</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <!--<dependency>
-                    <groupId>org.glassfish.jersey.connectors</groupId>
-                    <artifactId>jersey-jetty11-http2-connector</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-jetty11-http</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-jetty11-http2</artifactId>
-                    <version>${project.version}</version>
-                </dependency>--> <!-- TODO - HTTP/2 support for Jetty 12 container -->
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

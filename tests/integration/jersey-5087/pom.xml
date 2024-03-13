@@ -59,10 +59,6 @@
             <artifactId>jersey-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.bundles</groupId>
-            <artifactId>jaxrs-ri</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache5-connector</artifactId>
         </dependency>
