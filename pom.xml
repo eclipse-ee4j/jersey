@@ -885,6 +885,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>verify</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <!-- Fail the build if checkstyle rules for contributions are not met. -->
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>etc/config/checkstyle-verify.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <excludes>**/module-info.java</excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <extensions>
             <extension>
@@ -1181,37 +1202,6 @@
                     <url>http://localhost</url>
                 </site>
             </distributionManagement>
-        </profile>
-        <profile>
-            <id>jdk1.7+</id>
-            <activation>
-                <jdk>[1.7,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>verify</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <!-- Fail the build if checkstyle rules for contributions are not met. -->
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <configLocation>etc/config/checkstyle-verify.xml</configLocation>
-                                    <consoleOutput>true</consoleOutput>
-                                    <failOnViolation>true</failOnViolation>
-                                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                                    <excludes>**/module-info.java</excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>sonar</id>

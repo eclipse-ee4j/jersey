@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,6 +48,7 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerException;
@@ -137,6 +138,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
 
         final ResponseWriter responseWriter = new ResponseWriter(request, response, callback, configSetStatusOverSendError);
         try {
+            LOGGER.debugLog(LocalizationMessages.CONTAINER_STARTED());
             final URI baseUri = getBaseUri(request);
             final URI requestUri = getRequestUri(request, baseUri);
             final ContainerRequest requestContext = new ContainerRequest(

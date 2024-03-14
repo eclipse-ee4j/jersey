@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
@@ -158,6 +159,10 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
+        if (jerseyRequest.isCancelled()) {
+            responseAvailable.completeExceptionally(new CancellationException());
+            return;
+        }
         if (msg instanceof HttpResponse) {
             final HttpResponse response = (HttpResponse) msg;
             jerseyResponse = new ClientResponse(new Response.StatusType() {
