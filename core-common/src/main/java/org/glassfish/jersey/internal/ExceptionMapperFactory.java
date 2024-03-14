@@ -57,7 +57,7 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
  * @author Marek Potociar
  * @author Jakub Podlesak
  */
-public class ExceptionMapperFactory implements ExceptionMappers {
+public final class ExceptionMapperFactory implements ExceptionMappers {
 
     private static final Logger LOGGER = Logger.getLogger(ExceptionMapperFactory.class.getName());
 

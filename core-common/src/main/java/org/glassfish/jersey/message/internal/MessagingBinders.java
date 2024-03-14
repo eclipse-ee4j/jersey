@@ -37,7 +37,7 @@ import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.LocalizationMessages;
-import org.glassfish.jersey.internal.ServiceFinderBinder;
+import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;

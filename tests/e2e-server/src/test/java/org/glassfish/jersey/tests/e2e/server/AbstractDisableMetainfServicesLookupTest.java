@@ -44,7 +44,7 @@ import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.inject.hk2.AbstractBinder;
-import org.glassfish.jersey.internal.ServiceFinderBinder;
+import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -53,7 +53,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Assertions;
 
 /**
- * This is base for tests testing enabling/disabling configuration property
+ * This is base for tests enabling/disabling configuration property
  * {@link org.glassfish.jersey.server.ServerProperties#METAINF_SERVICES_LOOKUP_DISABLE}.
  *
  * @author Libor Kramolis

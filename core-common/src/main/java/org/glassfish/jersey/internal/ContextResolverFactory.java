@@ -45,7 +45,7 @@ import org.glassfish.jersey.spi.ContextResolvers;
  * @author Paul Sandoz
  * @author Marek Potociar
  */
-public class ContextResolverFactory implements ContextResolvers {
+public final class ContextResolverFactory implements ContextResolvers {
 
     /**
      * Configurator which initializes and register {@link ContextResolvers} instance into {@link InjectionManager} and

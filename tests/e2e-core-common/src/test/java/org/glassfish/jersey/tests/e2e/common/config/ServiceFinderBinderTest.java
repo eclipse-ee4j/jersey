@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.inject.hk2.AbstractBinder;
-import org.glassfish.jersey.internal.ServiceFinderBinder;
+import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.internal.inject.Providers;
