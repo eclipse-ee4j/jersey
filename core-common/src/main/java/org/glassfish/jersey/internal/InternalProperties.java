@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import org.glassfish.jersey.internal.util.PropertiesClass;
  * @author Michal Gajdos
  */
 @PropertiesClass
-public class InternalProperties {
+public final class InternalProperties {
 
     /**
      * This property should be set by configured JSON feature to indicate that other (registered but not configured) JSON features

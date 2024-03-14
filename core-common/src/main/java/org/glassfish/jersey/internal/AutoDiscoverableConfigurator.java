@@ -32,7 +32,7 @@ import org.glassfish.jersey.internal.spi.AutoDiscoverable;
  *
  * @author Petr Bouda
  */
-public class AutoDiscoverableConfigurator extends AbstractServiceFinderConfigurator<AutoDiscoverable> {
+public final class AutoDiscoverableConfigurator extends AbstractServiceFinderConfigurator<AutoDiscoverable> {
 
     /**
      * Create a new configurator.

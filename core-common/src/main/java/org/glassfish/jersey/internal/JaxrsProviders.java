@@ -44,7 +44,7 @@ import org.glassfish.jersey.spi.ExceptionMappers;
  *
  * @author Marek Potociar
  */
-public class JaxrsProviders implements Providers {
+public final class JaxrsProviders implements Providers {
 
     /**
      * Configurator which initializes and registers {@link Providers} instance into {@link InjectionManager} and

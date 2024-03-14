@@ -56,7 +56,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.innate.inject.InjectionIds;
-import org.glassfish.jersey.internal.ServiceFinderBinder;
+import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;

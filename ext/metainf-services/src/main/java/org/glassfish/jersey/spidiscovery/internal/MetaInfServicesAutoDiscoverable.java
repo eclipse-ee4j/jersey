@@ -27,7 +27,7 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.innate.inject.InternalBinder;
-import org.glassfish.jersey.internal.ServiceFinderBinder;
+import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 
