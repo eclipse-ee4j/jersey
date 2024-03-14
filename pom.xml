@@ -313,8 +313,6 @@
                     <version>${compiler.mvn.plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
                         <compilerArguments>
                             <!--<Werror />-->
                             <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
@@ -322,9 +320,6 @@
                         </compilerArguments>
                         <showWarnings>false</showWarnings>
                         <fork>false</fork>
-                        <excludes>
-                            <exclude>module-info.java</exclude>
-                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -820,6 +815,38 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                    <executions>
+                        <!-- when module.info
+                                                        <execution>
+                                                            <id>default-compile</id>
+                                                            <configuration>
+                                                                compile everything to ensure module-info contains right entries
+                                                                <release>11</release>
+                                                            </configuration>
+                                                        </execution>
+                        -->
+                        <execution>
+                            <id>base-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <!-- recompile everything for target VM except the module-info.java -->
+                            <configuration>
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -917,81 +944,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <checkstyle.version>9.3</checkstyle.version>
-                <istack.mvn.plugin.version>3.0.9</istack.mvn.plugin.version>
-            </properties>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <inherited>true</inherited>
-                            <configuration>
-                                <source>${java.version}</source>
-                                <target>${java.version}</target>
-                                <excludes>
-                                    <exclude>module-info.java</exclude>
-                                </excludes>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk11+</id>
-            <!--
-                JDK 9 & 10 is unsupported (as well as <release>9</release>)
-                module-info for java.xml.bind is taken from JDK (lib/ct.sym/9-modules)
-                and it depends on java.activation which clashes with javax.activation
-            -->
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <inherited>true</inherited>
-                            <executions>
-<!-- when module.info
-                                <execution>
-                                    <id>default-compile</id>
-                                    <configuration>
-                                        compile everything to ensure module-info contains right entries
-                                        <release>11</release>
-                                    </configuration>
-                                </execution>
--->
-                                <execution>
-                                    <id>base-compile</id>
-                                    <goals>
-                                        <goal>compile</goal>
-                                    </goals>
-                                    <!-- recompile everything for target VM except the module-info.java -->
-                                    <configuration>
-                                        <excludes>
-                                            <exclude>module-info.java</exclude>
-                                        </excludes>
-                                        <source>1.8</source>
-                                        <target>1.8</target>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
         <profile>
             <!-- Use it with release-perform goal to skip another test run. -->
             <id>testsSkip</id>
