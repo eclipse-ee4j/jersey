@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.MediaType;
@@ -622,6 +624,7 @@ public abstract class HttpHeaderReader {
 
     private abstract static class ListReader<T> {
         private final LRU<String, List<T>> LIST_CACHE = LRU.create();
+        private final Lock lock = new ReentrantLock();
         protected final ListElementCreator<T> creator;
 
         protected ListReader(ListElementCreator<T> creator) {
@@ -639,7 +642,8 @@ public abstract class HttpHeaderReader {
             List<T> list = LIST_CACHE.getIfPresent(header);
 
             if (list == null) {
-                synchronized (LIST_CACHE) {
+                lock.lock();
+                try {
                     list = LIST_CACHE.getIfPresent(header);
                     if (list == null) {
                         HttpHeaderReader reader = new HttpHeaderReaderImpl(header);
@@ -655,6 +659,8 @@ public abstract class HttpHeaderReader {
                         }
                         LIST_CACHE.put(header, list);
                     }
+                } finally {
+                    lock.unlock();
                 }
             }
 
