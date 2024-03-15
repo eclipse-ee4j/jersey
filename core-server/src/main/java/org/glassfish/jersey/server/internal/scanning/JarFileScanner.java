@@ -112,7 +112,7 @@ public final class JarFileScanner extends AbstractResourceFinderAdapter {
     public InputStream open() {
         //noinspection NullableProblems
         return new InputStream() {
-            private Lock markLock = new ReentrantLock();
+            private final Lock markLock = new ReentrantLock();
 
             @Override
             public int read() throws IOException {

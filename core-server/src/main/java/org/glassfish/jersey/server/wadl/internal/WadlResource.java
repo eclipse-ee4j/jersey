@@ -58,7 +58,7 @@ public final class WadlResource {
 
     private byte[] wadlXmlRepresentation;
     private String lastModified;
-    private Lock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
     @Context
     private WadlApplicationContext wadlContext;
