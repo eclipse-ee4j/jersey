@@ -43,6 +43,7 @@
         <module>injectless-client</module>
         <module>kryo</module>
         <module>open-tracing</module>
+        <module>brotli</module>
     </modules>
 
     <dependencies>
