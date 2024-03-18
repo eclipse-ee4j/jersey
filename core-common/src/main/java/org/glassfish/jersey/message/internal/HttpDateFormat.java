@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,13 +50,7 @@ public final class HttpDateFormat {
 
     private static final TimeZone GMT_TIME_ZONE = TimeZone.getTimeZone("GMT");
 
-    private static final ThreadLocal<List<SimpleDateFormat>> dateFormats = new ThreadLocal<List<SimpleDateFormat>>() {
-
-        @Override
-        protected synchronized List<SimpleDateFormat> initialValue() {
-            return createDateFormats();
-        }
-    };
+    private static final ThreadLocal<List<SimpleDateFormat>> dateFormats = ThreadLocal.withInitial(() -> createDateFormats());
 
     private static List<SimpleDateFormat> createDateFormats() {
         final SimpleDateFormat[] formats = new SimpleDateFormat[]{

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +62,7 @@ public class MBeanExposer extends AbstractContainerLifecycleListener implements 
     private volatile ResourcesMBeanGroup resourceClassStatsGroup;
     private volatile ExceptionMapperMXBeanImpl exceptionMapperMXBean;
     private final AtomicBoolean destroyed = new AtomicBoolean(false);
-    private final Object LOCK = new Object();
+    private final Lock LOCK = new ReentrantLock();
 
     /**
      * Name of domain that will prefix mbeans {@link ObjectName}. The code uses this
@@ -110,45 +112,47 @@ public class MBeanExposer extends AbstractContainerLifecycleListener implements 
     void registerMBean(Object mbean, String namePostfix) {
         final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         final String name = domain + namePostfix;
+        LOCK.lock();
         try {
-            synchronized (LOCK) {
-                if (destroyed.get()) {
-                    // already destroyed
-                    return;
-                }
-                final ObjectName objectName = new ObjectName(name);
-                if (mBeanServer.isRegistered(objectName)) {
-
-                    LOGGER.log(Level.WARNING,
-                            LocalizationMessages.WARNING_MONITORING_MBEANS_BEAN_ALREADY_REGISTERED(objectName));
-                    mBeanServer.unregisterMBean(objectName);
-                }
-                mBeanServer.registerMBean(mbean, objectName);
+            if (destroyed.get()) {
+                // already destroyed
+                return;
             }
+            final ObjectName objectName = new ObjectName(name);
+            if (mBeanServer.isRegistered(objectName)) {
+
+                LOGGER.log(Level.WARNING,
+                        LocalizationMessages.WARNING_MONITORING_MBEANS_BEAN_ALREADY_REGISTERED(objectName));
+                mBeanServer.unregisterMBean(objectName);
+            }
+            mBeanServer.registerMBean(mbean, objectName);
         } catch (JMException e) {
             throw new ProcessingException(LocalizationMessages.ERROR_MONITORING_MBEANS_REGISTRATION(name), e);
+        } finally {
+            LOCK.unlock();
         }
     }
 
     private void unregisterJerseyMBeans(boolean destroy) {
         final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        LOCK.lock();
         try {
-            synchronized (LOCK) {
-                if (destroy) {
-                    destroyed.set(true); // do not register new beans since now
-                }
+            if (destroy) {
+                destroyed.set(true); // do not register new beans since now
+            }
 
-                if (domain == null) {
-                    // No bean has been registered yet.
-                    return;
-                }
-                final Set<ObjectName> names = mBeanServer.queryNames(new ObjectName(domain + ",*"), null);
-                for (ObjectName name : names) {
-                    mBeanServer.unregisterMBean(name);
-                }
+            if (domain == null) {
+                // No bean has been registered yet.
+                return;
+            }
+            final Set<ObjectName> names = mBeanServer.queryNames(new ObjectName(domain + ",*"), null);
+            for (ObjectName name : names) {
+                mBeanServer.unregisterMBean(name);
             }
         } catch (Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_MONITORING_MBEANS_UNREGISTRATION_DESTROY(), e);
+        } finally {
+            LOCK.unlock();
         }
     }
 

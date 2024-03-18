@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,6 +56,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,18 +93,23 @@ public final class NonInjectionManager implements InjectionManager {
         private final MultivaluedMap<TYPE, InstanceContext<?>> singletonInstances = new MultivaluedHashMap<>();
         private final ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
         private final List<Object> threadPredestroyables = Collections.synchronizedList(new LinkedList<>());
+        private final ReentrantLock singletonInstancesLock = new ReentrantLock();
 
         private <T> List<InstanceContext<?>> _getSingletons(TYPE clazz) {
             List<InstanceContext<?>> si;
-            synchronized (singletonInstances) {
+            singletonInstancesLock.lock();
+            try {
                 si = singletonInstances.get(clazz);
+            } finally {
+                singletonInstancesLock.unlock();
             }
             return si;
         }
 
         @SuppressWarnings("unchecked")
         <T> T _addSingleton(TYPE clazz, T instance, Binding<?, ?> binding, Annotation[] qualifiers) {
-            synchronized (singletonInstances) {
+            singletonInstancesLock.lock();
+            try {
                 // check existing singleton with a qualifier already created by another thread io a meantime
                 List<InstanceContext<?>> values = singletonInstances.get(clazz);
                 if (values != null) {
@@ -118,6 +124,8 @@ public final class NonInjectionManager implements InjectionManager {
                 singletonInstances.add(clazz, new InstanceContext<>(instance, binding, qualifiers));
                 threadPredestroyables.add(instance);
                 return instance;
+            } finally {
+                singletonInstancesLock.unlock();
             }
         }
 

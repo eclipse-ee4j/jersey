@@ -34,6 +34,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -800,7 +802,7 @@ public class ServerRuntime {
             }
         };
 
-        private final Object stateLock = new Object();
+        private final ReadWriteLock stateLock = new ReentrantReadWriteLock();
         private State state = RUNNING;
         private boolean cancelled = false;
 
@@ -832,11 +834,13 @@ public class ServerRuntime {
         @Override
         public void onTimeout(final ContainerResponseWriter responseWriter) {
             final TimeoutHandler handler = timeoutHandler;
+            stateLock.readLock().lock();
             try {
-                synchronized (stateLock) {
-                    if (state == SUSPENDED) {
-                        handler.handleTimeout(this);
-                    }
+                if (state == SUSPENDED) {
+                    stateLock.readLock().unlock(); // unlock before handleTimeout to prevent write lock in handleTimeout
+                    handler.handleTimeout(this);
+                } else {
+                    stateLock.readLock().unlock();
                 }
             } catch (final Throwable throwable) {
                 resume(throwable);
@@ -845,9 +849,9 @@ public class ServerRuntime {
 
         @Override
         public void onComplete(final Throwable throwable) {
-            synchronized (stateLock) {
-                state = COMPLETED;
-            }
+            stateLock.writeLock().lock();
+            state = COMPLETED;
+            stateLock.writeLock().unlock();
         }
 
         @Override
@@ -875,14 +879,19 @@ public class ServerRuntime {
 
         @Override
         public boolean suspend() {
-            synchronized (stateLock) {
-                if (state == RUNNING) {
-                    if (responder.processingContext.request().getResponseWriter().suspend(
-                            AsyncResponse.NO_TIMEOUT, TimeUnit.SECONDS, this)) {
-                        state = SUSPENDED;
-                        return true;
-                    }
+            stateLock.readLock().lock();
+            if (state == RUNNING) {
+                stateLock.readLock().unlock();
+                if (responder.processingContext.request().getResponseWriter().suspend(
+                        AsyncResponse.NO_TIMEOUT, TimeUnit.SECONDS, this)) {
+                    // Must release read lock before acquiring write lock
+                    stateLock.writeLock().lock();
+                    state = SUSPENDED;
+                    stateLock.writeLock().unlock();
+                    return true;
                 }
+            } else {
+                stateLock.readLock().unlock();
             }
             return false;
         }
@@ -925,12 +934,17 @@ public class ServerRuntime {
         }
 
         private boolean resume(final Runnable handler) {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 if (state != SUSPENDED) {
                     return false;
                 }
-                state = RESUMED;
+            } finally {
+                stateLock.readLock().unlock();
             }
+            stateLock.writeLock().lock();
+            state = RESUMED;
+            stateLock.writeLock().unlock();
 
             try {
                 responder.runtime.requestScope.runInScope(requestContext, handler);
@@ -978,7 +992,8 @@ public class ServerRuntime {
         }
 
         private boolean cancel(final Value<Response> responseValue) {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 if (cancelled) {
                     return true;
                 }
@@ -986,9 +1001,14 @@ public class ServerRuntime {
                 if (state != SUSPENDED) {
                     return false;
                 }
-                state = RESUMED;
-                cancelled = true;
+            } finally {
+                stateLock.readLock().unlock();
             }
+
+            stateLock.writeLock().lock();
+            state = RESUMED;
+            cancelled = true;
+            stateLock.writeLock().unlock();
 
             responder.runtime.requestScope.runInScope(requestContext, new Runnable() {
                 @Override
@@ -1006,29 +1026,41 @@ public class ServerRuntime {
         }
 
         public boolean isRunning() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == RUNNING;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isSuspended() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == SUSPENDED;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isCancelled() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return cancelled;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isDone() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == COMPLETED;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 

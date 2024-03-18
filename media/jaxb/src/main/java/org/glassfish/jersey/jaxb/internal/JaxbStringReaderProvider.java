@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Context;
@@ -54,6 +56,7 @@ import org.xml.sax.InputSource;
 public class JaxbStringReaderProvider {
 
     private static final Map<Class, JAXBContext> jaxbContexts = new WeakHashMap<Class, JAXBContext>();
+    private static final Lock jaxbContextsLock = new ReentrantLock();
     private final Value<ContextResolver<JAXBContext>> mtContext;
     private final Value<ContextResolver<Unmarshaller>> mtUnmarshaller;
 
@@ -116,13 +119,16 @@ public class JaxbStringReaderProvider {
      * @throws JAXBException in case JAXB context retrieval fails.
      */
     protected JAXBContext getStoredJAXBContext(Class type) throws JAXBException {
-        synchronized (jaxbContexts) {
+        jaxbContextsLock.lock();
+        try {
             JAXBContext c = jaxbContexts.get(type);
             if (c == null) {
                 c = JAXBContext.newInstance(type);
                 jaxbContexts.put(type, c);
             }
             return c;
+        } finally {
+            jaxbContextsLock.unlock();
         }
     }
 

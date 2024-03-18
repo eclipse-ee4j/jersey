@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,8 @@ package org.glassfish.jersey.server.internal.scanning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
@@ -110,6 +112,7 @@ public final class JarFileScanner extends AbstractResourceFinderAdapter {
     public InputStream open() {
         //noinspection NullableProblems
         return new InputStream() {
+            private final Lock markLock = new ReentrantLock();
 
             @Override
             public int read() throws IOException {
@@ -142,13 +145,23 @@ public final class JarFileScanner extends AbstractResourceFinderAdapter {
             }
 
             @Override
-            public synchronized void mark(final int i) {
-                jarInputStream.mark(i);
+            public void mark(final int i) {
+                markLock.lock();
+                try {
+                    jarInputStream.mark(i);
+                } finally {
+                    markLock.unlock();
+                }
             }
 
             @Override
-            public synchronized void reset() throws IOException {
-                jarInputStream.reset();
+            public void reset() throws IOException {
+                markLock.lock();
+                try {
+                    jarInputStream.reset();
+                } finally {
+                    markLock.unlock();
+                }
             }
 
             @Override
