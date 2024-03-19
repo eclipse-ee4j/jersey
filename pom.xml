@@ -930,6 +930,7 @@
             <properties>
                 <checkstyle.version>9.3</checkstyle.version>
                 <istack.mvn.plugin.version>3.0.9</istack.mvn.plugin.version>
+                <hk2.version>3.0.3</hk2.version>
             </properties>
             <build>
                 <pluginManagement>
@@ -2230,6 +2231,7 @@
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
         <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
         <xml.mvn.plugin.version>1.1.0</xml.mvn.plugin.version>
+        <harness.testing.mvn.plugin.version>3.3.0</harness.testing.mvn.plugin.version>
         <!-- END of Versions of Maven plugins -->
 
         <!-- Dependency versions -->
@@ -2244,6 +2246,7 @@
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons.io.version>2.15.0</commons.io.version>
+        <commons.codec.version>1.16.1</commons.codec.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
         <commons.logging.version>1.2</commons.logging.version>
         <fasterxml.classmate.version>1.6.0</fasterxml.classmate.version>
@@ -2253,7 +2256,7 @@
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <freemarker.version>2.3.32</freemarker.version>
         <gae.version>2.0.21</gae.version>
-        <groovy.version>4.0.15</groovy.version>
+        <groovy.version>4.0.20</groovy.version>
         <gson.version>2.10.1</gson.version>
 
         <!--versions, extracted here due to maven-enforcer-plugin -->
@@ -2269,7 +2272,7 @@
         <!-- microprofile -->
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
-        <helidon.config.version>3.0.2</helidon.config.version>
+        <helidon.config.version>3.2.6</helidon.config.version>
         <helidon.config.11.version>1.4.13</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.0.0</smallrye.config.version>
 
@@ -2281,9 +2284,8 @@
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
-        <jackson.version>2.16.1</jackson.version>
-        <jackson1.version>1.9.13</jackson1.version>
-        <javassist.version>3.29.2-GA</javassist.version>
+        <jackson.version>2.16.2</jackson.version>
+        <javassist.version>3.30.2-GA</javassist.version>
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <jboss.logging.8.version>3.4.3.Final</jboss.logging.8.version>
         <jersey1.version>1.19.3</jersey1.version>
@@ -2292,7 +2294,7 @@
         <jmh.version>1.37</jmh.version>
         <jmockit.version>1.49</jmockit.version>
         <junit4.version>4.13.2</junit4.version>
-        <junit5.version>5.10.0</junit5.version>
+        <junit5.version>5.10.2</junit5.version>
         <junit-platform-suite.version>1.10.0</junit-platform-suite.version>
         <kryo.version>4.0.2</kryo.version>
         <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
@@ -2335,7 +2337,7 @@
         <grizzly2.version>3.0.1</grizzly2.version>
         <grizzly.client.version>1.16</grizzly.client.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-        <hk2.version>3.0.3</hk2.version> <!-- 3.0.4 fails osgi tests, 3.0.5 is for JDK 11+ -->
+        <hk2.version>3.0.6</hk2.version> <!-- 3.0.4 fails osgi tests, 3.0.5 is for JDK 11+ -->
         <jsp.version>3.0.0</jsp.version>
         <jstl.version>2.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
@@ -2346,7 +2348,7 @@
         <jakarta.el.version>4.0.0</jakarta.el.version>
         <jakarta.el.impl.version>4.0.2</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
-        <jakarta.annotation.version>2.0.0</jakarta.annotation.version>
+        <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.0.1</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.0.2</jakarta.jsonp.version>
@@ -2357,7 +2359,7 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.18</jetty.version>
+        <jetty.version>11.0.20</jetty.version>
         <jetty.tracing.version>11.0.15</jetty.tracing.version> <!-- special version for tracing support tests-->
         <jetty9.version>9.4.53.v20231009</jetty9.version>
         <jetty.plugin.version>11.0.18</jetty.plugin.version>
