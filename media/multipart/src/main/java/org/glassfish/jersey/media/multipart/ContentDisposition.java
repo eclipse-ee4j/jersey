@@ -202,7 +202,9 @@ public class ContentDisposition {
 
     protected void addDateParameter(final StringBuilder sb, final String name, final Date p) {
         if (p != null) {
-            sb.append("; ").append(name).append("=\"").append(HttpDateFormat.getPreferredDateFormat().format(p)).append("\"");
+            sb.append("; ").append(name).append("=\"")
+                    .append(HttpDateFormat.getPreferredDateFormatter().format(p))
+                    .append("\"");
         }
     }
 
@@ -302,7 +304,7 @@ public class ContentDisposition {
         if (value == null) {
             return null;
         }
-        return HttpDateFormat.getPreferredDateFormat().parse(value);
+        return HttpDateFormat.getPreferredDateFormatter().toDate(value);
     }
 
     private long createLong(final String name) throws ParseException {

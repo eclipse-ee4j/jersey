@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -402,8 +402,8 @@ public class FormParamTest extends AbstractTest {
         initiateWebApplication(FormResourceDate.class);
 
         final String date_RFC1123 = "Sun, 06 Nov 1994 08:49:37 GMT";
-        final String date_RFC1036 = "Sunday, 06-Nov-94 08:49:37 GMT";
-        final String date_ANSI_C = "Sun Nov  6 08:49:37 1994";
+        final String date_RFC1036 = "Sunday, 07-Nov-04 08:49:37 GMT";
+        final String date_ANSI_C = "Sun Nov 6 08:49:37 1994";
 
         final Form form = new Form();
         form.param("a", date_RFC1123);
