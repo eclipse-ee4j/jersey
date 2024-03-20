@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -360,24 +360,30 @@ public class JavaNetHttpConnector implements Connector {
         @Override
         public int read() throws IOException {
             lock.lock();
-            final int r = zero != -1 ? zero : inner.read();
-            zero = -1;
-            lock.unlock();
-            return r;
+            try {
+                final int r = zero != -1 ? zero : inner.read();
+                zero = -1;
+                return r;
+            } finally {
+                lock.unlock();
+            }
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             lock.lock();
             int r;
-            if (zero != -1) {
-                b[off] = (byte) (zero & 0xFF);
-                r = inner.read(b, off + 1, len - 1);
-            } else {
-                r = inner.read(b, off, len);
+            try {
+                if (zero != -1) {
+                    b[off] = (byte) (zero & 0xFF);
+                    r = inner.read(b, off + 1, len - 1);
+                } else {
+                    r = inner.read(b, off, len);
+                }
+                zero = -1;
+            } finally {
+                lock.unlock();
             }
-            zero = -1;
-            lock.unlock();
             return r;
 
         }
@@ -385,23 +391,24 @@ public class JavaNetHttpConnector implements Connector {
         @Override
         public int available() throws IOException {
             lock.lock();
-            if (zero != -1) {
-                lock.unlock();
-                return 1;
-            }
+            try {
+                if (zero != -1) {
+                    return 1;
+                }
 
-            int available = inner.available();
-            if (available != 1) {
-                lock.unlock();
+                int available = inner.available();
+                if (available != 1) {
+                    return available;
+                }
+
+                zero = inner.read();
+                if (zero == -1) {
+                    available = 0;
+                }
                 return available;
+            } finally {
+                lock.unlock();
             }
-
-            zero = inner.read();
-            if (zero == -1) {
-                available = 0;
-            }
-            lock.unlock();
-            return available;
         }
 
         @Override
@@ -418,10 +425,14 @@ public class JavaNetHttpConnector implements Connector {
         }
 
         @Override
-        public synchronized void mark(int readlimit) {
+        public void mark(int readlimit) {
             inner.mark(readlimit);
         }
 
+        @Override
+        public void reset() throws IOException {
+            inner.reset();
+        }
     }
 
 }
