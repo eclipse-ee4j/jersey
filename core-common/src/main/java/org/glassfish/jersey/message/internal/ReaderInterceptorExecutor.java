@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -252,6 +254,7 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
 
         private final InputStream original;
         private final MessageBodyReader reader;
+        private final Lock markLock = new ReentrantLock();
 
         private UnCloseableInputStream(final InputStream original, final MessageBodyReader reader) {
             this.original = original;
@@ -284,13 +287,23 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
         }
 
         @Override
-        public synchronized void mark(final int i) {
-            original.mark(i);
+        public void mark(final int i) {
+            markLock.lock();
+            try {
+                original.mark(i);
+            } finally {
+                markLock.unlock();
+            }
         }
 
         @Override
-        public synchronized void reset() throws IOException {
-            original.reset();
+        public void reset() throws IOException {
+            markLock.lock();
+            try {
+                original.reset();
+            } finally {
+                markLock.unlock();
+            }
         }
 
         @Override

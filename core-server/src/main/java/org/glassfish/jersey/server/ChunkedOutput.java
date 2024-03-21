@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,8 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import jakarta.ws.rs.container.ConnectionCallback;
 import jakarta.ws.rs.core.GenericType;
@@ -54,7 +56,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private final BlockingDeque<T> queue = new LinkedBlockingDeque<>();
     private final byte[] chunkDelimiter;
     private final AtomicBoolean resumed = new AtomicBoolean(false);
-    private final Object lock = new Object();
+    private final Lock lock = new ReentrantLock();
 
     // the following flushing and touchingEntityStream variables are used in a synchronized block exclusively
     private boolean flushing = false;
@@ -202,7 +204,8 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                     boolean shouldClose;
                     T t;
 
-                    synchronized (lock) {
+                    lock.lock();
+                    try {
                         if (flushing) {
                             // if another thread is already flushing the queue, we don't have to do anything
                             return null;
@@ -220,13 +223,15 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                             // and they don't have to bother
                             flushing = true;
                         }
+                    } finally {
+                        lock.unlock();
                     }
 
                     while (t != null) {
                         try {
-                            synchronized (lock) {
-                                touchingEntityStream = true;
-                            }
+                            lock.lock();
+                            touchingEntityStream = true;
+                            lock.unlock();
 
                             final OutputStream origStream = responseContext.getEntityStream();
                             final OutputStream writtenStream = requestContext.getWorkers().writeTo(
@@ -265,14 +270,15 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                             }
                             throw mpe;
                         } finally {
-                           synchronized (lock) {
-                               touchingEntityStream = false;
-                           }
+                           lock.lock();
+                           touchingEntityStream = false;
+                           lock.unlock();
                         }
 
                         t = queue.poll();
                         if (t == null) {
-                            synchronized (lock) {
+                            lock.lock();
+                            try {
                                 // queue seems empty
                                 // check again in the synchronized block before clearing the flushing flag
                                 // first remember the closed flag (this has to be before polling the queue,
@@ -290,6 +296,8 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                                     flushing = shouldClose;
                                     break;
                                 }
+                            } finally {
+                                lock.unlock();
                             }
                         }
                     }
@@ -303,17 +311,19 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
             onClose(e);
         } finally {
             if (closed) {
+                lock.lock();
                 try {
-                    synchronized (lock) {
-                        if (!touchingEntityStream) {
-                            responseContext.close();
-                        } // else the next thread will close responseContext
-                    }
+                    if (!touchingEntityStream) {
+                        responseContext.close();
+                    } // else the next thread will close responseContext
                 } catch (final Exception e) {
                     // if no exception remembered before, remember this one
                     // otherwise the previously remembered exception (from catch clause) takes precedence
                     ex = ex == null ? e : ex;
+                } finally {
+                    lock.unlock();
                 }
+
 
                 requestScopeContext.release();
 

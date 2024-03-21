@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -53,7 +55,7 @@ public class JerseyResourceContext implements ExtendedResourceContext {
     private final Consumer<Binding> registerBinding;
 
     private final Set<Class<?>> bindingCache;
-    private final Object bindingCacheLock;
+    private final Lock bindingCacheLock;
 
     private volatile ResourceModel resourceModel;
 
@@ -72,7 +74,7 @@ public class JerseyResourceContext implements ExtendedResourceContext {
         this.injectInstance = injectInstance;
         this.registerBinding = registerBinding;
         this.bindingCache = Collections.newSetFromMap(new IdentityHashMap<>());
-        this.bindingCacheLock = new Object();
+        this.bindingCacheLock = new ReentrantLock();
     }
 
     @Override
@@ -109,11 +111,14 @@ public class JerseyResourceContext implements ExtendedResourceContext {
             return;
         }
 
-        synchronized (bindingCacheLock) {
+        bindingCacheLock.lock();
+        try {
             if (bindingCache.contains(resourceClass)) {
                 return;
             }
             unsafeBindResource(resourceClass, null);
+        } finally {
+            bindingCacheLock.unlock();
         }
     }
 
@@ -134,7 +139,8 @@ public class JerseyResourceContext implements ExtendedResourceContext {
             return;
         }
 
-        synchronized (bindingCacheLock) {
+        bindingCacheLock.lock();
+        try {
             if (bindingCache.contains(resourceClass)) {
                 return;
             }
@@ -143,6 +149,8 @@ public class JerseyResourceContext implements ExtendedResourceContext {
             }
 
             bindingCache.add(resourceClass);
+        } finally {
+            bindingCacheLock.unlock();
         }
     }
 
