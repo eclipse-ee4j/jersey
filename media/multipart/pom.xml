@@ -120,6 +120,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <inherited>true</inherited>
                         <configuration>
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/media/multipart/internal/MultiPartHeaderModificationTest.java</testExclude>

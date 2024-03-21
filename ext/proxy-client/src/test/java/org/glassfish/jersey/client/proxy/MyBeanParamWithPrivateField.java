@@ -27,6 +27,10 @@ public class MyBeanParamWithPrivateField {
     @QueryParam("privateFieldParam")
     private String privateFieldParam;
 
+    private static String privateStaticField;
+
+    static String staticField;
+
     public MyBeanParamWithPrivateField() {}
 
     public String getPrivateFieldParam() {
@@ -35,5 +39,21 @@ public class MyBeanParamWithPrivateField {
 
     public void setPrivateFieldParam(String privateFieldParam) {
         this.privateFieldParam = privateFieldParam;
+    }
+
+    public static String getPrivateStaticField() {
+        return privateStaticField;
+    }
+
+    public static void setPrivateStaticField(String privateStaticField) {
+        MyBeanParamWithPrivateField.privateStaticField = privateStaticField;
+    }
+
+    public static String getStaticField() {
+        return staticField;
+    }
+
+    public static void setStaticField(String staticField) {
+        MyBeanParamWithPrivateField.staticField = staticField;
     }
 }

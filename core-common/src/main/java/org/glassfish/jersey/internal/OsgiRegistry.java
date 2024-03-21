@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,9 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -79,6 +81,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
     private final Map<Long, Map<String, Callable<List<Class<?>>>>> factories =
             new HashMap<Long, Map<String, Callable<List<Class<?>>>>>();
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private static final Lock INSTANCE_LOCK = new ReentrantLock();
 
     private static OsgiRegistry instance;
 
@@ -90,16 +93,21 @@ public final class OsgiRegistry implements SynchronousBundleListener {
      *
      * @return an {@code OsgiRegistry} instance.
      */
-    public static synchronized OsgiRegistry getInstance() {
-        if (instance == null) {
-            final ClassLoader classLoader = AccessController
-                    .doPrivileged(ReflectionHelper.getClassLoaderPA(ReflectionHelper.class));
-            if (classLoader instanceof BundleReference) {
-                final BundleContext context = FrameworkUtil.getBundle(OsgiRegistry.class).getBundleContext();
-                if (context != null) { // context could be still null if the current bundle has not been started
-                    instance = new OsgiRegistry(context);
+    public static OsgiRegistry getInstance() {
+        INSTANCE_LOCK.lock();
+        try {
+            if (instance == null) {
+                final ClassLoader classLoader = AccessController
+                        .doPrivileged(ReflectionHelper.getClassLoaderPA(ReflectionHelper.class));
+                if (classLoader instanceof BundleReference) {
+                    final BundleContext context = FrameworkUtil.getBundle(OsgiRegistry.class).getBundleContext();
+                    if (context != null) { // context could be still null if the current bundle has not been started
+                        instance = new OsgiRegistry(context);
+                    }
                 }
             }
+        } finally {
+            INSTANCE_LOCK.unlock();
         }
         return instance;
     }
