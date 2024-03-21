@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.tests.e2e.client.connector;
 
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.AbstractRxInvoker;
 import org.glassfish.jersey.client.ClientConfig;
@@ -62,7 +61,6 @@ public class FutureCancelTest extends JerseyTest {
 
     public static List<ConnectorProvider> testData() {
         return Arrays.asList(
-                new ApacheConnectorProvider(),
                 new Apache5ConnectorProvider(),
                 new HttpUrlConnectorProvider(),
                 new NettyConnectorProvider()
