@@ -2236,26 +2236,26 @@
 
         <!-- Dependency versions -->
         <jersey.version>${project.version}</jersey.version>
-        <arquillian.version>1.7.1.Final</arquillian.version>
+        <arquillian.version>1.8.0.Final</arquillian.version>
         <arquillian.weld.version>3.0.1.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
         <asm.version>9.6</asm.version>
         <!--required for spring (ext) modules integration -->
-        <aspectj.weaver.version>1.9.20.1</aspectj.weaver.version>
+        <aspectj.weaver.version>1.9.21.1</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
-        <commons.io.version>2.15.0</commons.io.version>
+        <commons.io.version>2.15.1</commons.io.version>
         <commons.codec.version>1.16.1</commons.codec.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
-        <commons.logging.version>1.2</commons.logging.version>
-        <fasterxml.classmate.version>1.6.0</fasterxml.classmate.version>
+        <commons.logging.version>1.3.0</commons.logging.version>
+        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
         <felix.framework.security.version>2.8.4</felix.framework.security.version>
         <felix.framework.version>7.0.5</felix.framework.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <freemarker.version>2.3.32</freemarker.version>
-        <gae.version>2.0.21</gae.version>
+        <gae.version>2.0.25</gae.version>
         <groovy.version>4.0.20</groovy.version>
         <gson.version>2.10.1</gson.version>
 
@@ -2273,11 +2273,12 @@
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
         <helidon.config.version>3.2.6</helidon.config.version>
-        <helidon.config.11.version>1.4.13</helidon.config.11.version> <!-- JDK 11- support -->
+        <helidon.config.11.version>1.4.14</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.0.0</smallrye.config.version>
 
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
+        <helidon.version>1.4.14</helidon.version>
         <helidon.jersey.connector.version>3.0.2</helidon.jersey.connector.version>
         <xmlunit.version>2.9.1</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
@@ -2296,10 +2297,10 @@
         <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.10.2</junit5.version>
         <junit-platform-suite.version>1.10.0</junit-platform-suite.version>
-        <kryo.version>4.0.2</kryo.version>
+        <kryo.version>4.0.3</kryo.version>
         <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
-        <mustache.version>0.9.10</mustache.version>
-        <netty.version>4.1.100.Final</netty.version>
+        <mustache.version>0.9.11</mustache.version>
+        <netty.version>4.1.107.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2311,9 +2312,9 @@
         <rxjava.version>1.3.8</rxjava.version>
         <rxjava2.version>2.2.21</rxjava2.version>
         <simple.version>6.0.1</simple.version>
-        <slf4j.version>2.0.9</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <spring6.version>6.0.13</spring6.version>
-        <testng.version>7.8.0</testng.version>
+        <testng.version>7.9.0</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
         <!-- Jakartified, eligible for CQ -->
         <weld.version>4.0.3.Final</weld.version>
@@ -2324,7 +2325,7 @@
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.12</graalvm.version>
+        <graalvm.version>20.3.13</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>6.2.5</gf.impl.version>
@@ -2361,8 +2362,8 @@
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>11.0.20</jetty.version>
         <jetty.tracing.version>11.0.15</jetty.tracing.version> <!-- special version for tracing support tests-->
-        <jetty9.version>9.4.53.v20231009</jetty9.version>
-        <jetty.plugin.version>11.0.18</jetty.plugin.version>
+        <jetty9.version>9.4.54.v20240208</jetty9.version>
+        <jetty.plugin.version>11.0.20</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>1.0.5</jsonp.ri.version>

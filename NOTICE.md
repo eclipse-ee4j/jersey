@@ -73,7 +73,7 @@ Javassist Version 3.30.2-GA
 Jackson JAX-RS Providers Version 2.16.2
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
-* Copyright: (c) 2009-2023 FasterXML, LLC. All rights reserved unless otherwise indicated.
+* Copyright: (c) 2009-2024 FasterXML, LLC. All rights reserved unless otherwise indicated.
 
 jQuery v1.12.4
 * License: jquery.org/license
