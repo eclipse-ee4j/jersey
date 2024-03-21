@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -182,7 +182,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
             // File-system path.
             if (reader == null) {
                 try {
-                    reader = new InputStreamReader(Files.newInputStream(Paths.get(template)), encoding);
+                    reader = new InputStreamReader(Files.newInputStream(Path.of(template)), encoding);
                 } catch (final IOException ioe) {
                     // NOOP.
                 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
@@ -124,7 +123,7 @@ public class Jersey2846ITCase extends JerseyTest {
 
     private int matchingTempFiles(final String tempDir) throws IOException {
         AtomicInteger count = new AtomicInteger(0);
-        Files.walkFileTree(Paths.get(tempDir), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Path.of(tempDir), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Path name = file.getFileName();

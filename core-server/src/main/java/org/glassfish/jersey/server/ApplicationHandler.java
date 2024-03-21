@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +66,6 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.MessageBodyFactory;
 import org.glassfish.jersey.message.internal.MessagingBinders;
-import org.glassfish.jersey.message.internal.NullOutputStream;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -586,7 +585,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
      * @return response future.
      */
     public Future<ContainerResponse> apply(final ContainerRequest requestContext) {
-        return apply(requestContext, new NullOutputStream());
+        return apply(requestContext, OutputStream.nullOutputStream());
     }
 
     /**

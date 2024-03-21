@@ -1753,8 +1753,8 @@ final Response response = target.request().post(entity);
 
                         <programlisting language="java">// MediaType of the body part will be derived from the file.
 final List&lt;EntityPart&gt; multiPartEntity = new List&lt;&gt;();
-list.add(EntityPart.withFileName("file001.txt").content(new FileInputStream("file001.txt")).build());
-list.add(EntityPart.withFileName("mypom.xml").content(new FileInputStream("pom.xml")).build());
+list.add(EntityPart.withFileName("file001.txt").content(Files.newInputStream(Path.of("file001.txt"))).build());
+list.add(EntityPart.withFileName("mypom.xml").content(Files.newInputStream(Path.of("pom.xml"))).build());
 
 final GenericEntity&lt;List&lt;EntityPart&gt;&gt; genericEntity = new GenericEntity&lt;&gt;(list) {};
 final Entity entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);

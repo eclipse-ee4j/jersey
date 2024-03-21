@@ -43,7 +43,7 @@ import org.glassfish.jersey.message.MessageProperties;
  * A utility class for reading and writing using byte and character streams.
  * <p>
  * If a byte or character array is utilized then the size of the array
- * is by default the value of {@value org.glassfish.jersey.message.MessageProperties#IO_DEFAULT_BUFFER_SIZE}.
+ * is by default decided by the JRE.
  * This value can be set using the system property
  * {@value org.glassfish.jersey.message.MessageProperties#IO_BUFFER_SIZE}.
  *
@@ -57,14 +57,19 @@ public final class ReaderWriter {
      *
      * @deprecated use {@code StandardCharsets.UTF_8} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static final Charset UTF8 = StandardCharsets.UTF_8;
     /**
      * The buffer size for arrays of byte and character.
      */
     public static final int BUFFER_SIZE = getBufferSize();
 
-    private static int getBufferSize() {
+    /**
+     * Whether {@linkplain BUFFER_SIZE} is to be ignored in favor of JRE's own decision.
+     */
+    public static final boolean AUTOSIZE_BUFFER = getAutosizeBuffer();
+
+    private static int getIOBufferSize() {
         // TODO should we unify this buffer size and CommittingOutputStream buffer size (controlled by CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER)?
         final String value = AccessController.doPrivileged(PropertiesHelper.getSystemProperty(MessageProperties.IO_BUFFER_SIZE));
         if (value != null) {
@@ -78,11 +83,20 @@ public final class ReaderWriter {
                 LOGGER.log(Level.CONFIG,
                         "Value of " + MessageProperties.IO_BUFFER_SIZE
                                 + " property is not a valid positive integer [" + value + "]."
-                                + " Reverting to default [" + MessageProperties.IO_DEFAULT_BUFFER_SIZE + "].",
+                                + " Reverting to default [at JRE's discretion].",
                         e);
             }
         }
-        return MessageProperties.IO_DEFAULT_BUFFER_SIZE;
+        return -1;
+    }
+
+    private static int getBufferSize() {
+        final int ioBufferSize = getIOBufferSize();
+        return ioBufferSize == -1 ? MessageProperties.IO_DEFAULT_BUFFER_SIZE : ioBufferSize;
+    }
+
+    private static boolean getAutosizeBuffer() {
+        return getIOBufferSize() == -1;
     }
 
     /**
@@ -93,6 +107,11 @@ public final class ReaderWriter {
      * @throws IOException if there is an error reading or writing bytes.
      */
     public static void writeTo(InputStream in, OutputStream out) throws IOException {
+        if (AUTOSIZE_BUFFER) {
+            in.transferTo(out);
+            return;
+        }
+
         int read;
         final byte[] data = new byte[BUFFER_SIZE];
         while ((read = in.read(data)) != -1) {
@@ -108,6 +127,11 @@ public final class ReaderWriter {
      * @throws IOException if there is an error reading or writing characters.
      */
     public static void writeTo(Reader in, Writer out) throws IOException {
+        if (AUTOSIZE_BUFFER) {
+            in.transferTo(out);
+            return;
+        }
+
         int read;
         final char[] data = new char[BUFFER_SIZE];
         while ((read = in.read(data)) != -1) {

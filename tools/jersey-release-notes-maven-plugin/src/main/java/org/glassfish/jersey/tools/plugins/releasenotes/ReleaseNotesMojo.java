@@ -33,7 +33,7 @@ import org.kohsuke.github.PagedIterable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,12 +172,12 @@ public class ReleaseNotesMojo extends AbstractMojo {
                                           String releaseVersion, String releaseDate,
                                           String releaseNotesFilePath,
                                           Boolean dryRun, Log log) throws IOException {
-        if (Files.notExists(Paths.get(templateFilePath))) {
+        if (Files.notExists(Path.of(templateFilePath))) {
             log.warn(String.format("There is no source template file at the given location:%s", templateFilePath));
             return;
         }
         final List<String> notesLines = new ArrayList<>();
-        final List<String> lines = Files.readAllLines(Paths.get(templateFilePath), Charset.defaultCharset());
+        final List<String> lines = Files.readAllLines(Path.of(templateFilePath), Charset.defaultCharset());
         for (final String line : lines) {
             if (line.contains(RELEASE_DATE_PATTERN)) {
                 notesLines.add(line.replace(RELEASE_DATE_PATTERN, releaseDate));
@@ -197,8 +197,8 @@ public class ReleaseNotesMojo extends AbstractMojo {
         }
         if (Boolean.FALSE.equals(dryRun)) {
             log.info(String.format("Storing release notes to file %s/%s.html", releaseNotesFilePath, releaseVersion));
-            Files.createDirectories(Paths.get(releaseNotesFilePath));
-            Files.write(Paths.get(String.format("%s/%s.html", releaseNotesFilePath, releaseVersion)), notesLines, Charset.defaultCharset());
+            Files.createDirectories(Path.of(releaseNotesFilePath));
+            Files.write(Path.of(String.format("%s/%s.html", releaseNotesFilePath, releaseVersion)), notesLines, Charset.defaultCharset());
         } else {
             log.info("Prepared release notes are not stored to file due to dryRun mode");
             log.info(String.format("File path to store release notes is: %s/%s.html", releaseNotesFilePath, releaseVersion));

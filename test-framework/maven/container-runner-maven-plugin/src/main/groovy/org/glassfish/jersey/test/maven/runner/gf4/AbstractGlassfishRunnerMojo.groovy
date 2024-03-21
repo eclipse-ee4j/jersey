@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.codehaus.gmavenplus.mojo.AbstractGroovyMojo
 import org.glassfish.jersey.test.maven.runner.RunnerMojo
 
-import java.nio.file.Paths
+import java.nio.file.Path
 /**
  * Abstract class for all Glassfish4 related mojos.
  *
@@ -58,8 +58,8 @@ abstract class AbstractGlassfishRunnerMojo extends AbstractGroovyMojo implements
 
     @Override
     void execute() throws MojoExecutionException, MojoFailureException {
-        asHome = Paths.get(asHome).isAbsolute() ? asHome : Paths.get(distDir, distSubdir, asHome)
-        logFile = Paths.get(logFile).isAbsolute()? logFile : Paths.get(asHome, "domains", domain, "logs", logFile)
+        asHome = Path.of(asHome).isAbsolute() ? asHome : Path.of(distDir, distSubdir, asHome)
+        logFile = Path.of(logFile).isAbsolute()? logFile : Path.of(asHome, "domains", domain, "logs", logFile)
         executeRunner()
     }
 

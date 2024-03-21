@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.codehaus.gmavenplus.mojo.AbstractGroovyMojo
 import org.glassfish.jersey.test.maven.runner.RunnerMojo
 
-import java.nio.file.Paths
+import java.nio.file.Path
 /**
  * Abstract class for all Tomcat related mojos.
  *
@@ -47,8 +47,8 @@ abstract class AbstractTomcatRunnerMojo extends AbstractGroovyMojo implements Ru
 
     @Override
     void execute() throws MojoExecutionException, MojoFailureException {
-        catalinaHome = Paths.get(catalinaHome).isAbsolute() ? catalinaHome : Paths.get(distDir, distSubdir, catalinaHome)
-        logFile = logFile ?: Paths.get(catalinaHome, "logs", "catalina.out").toString()
+        catalinaHome = Path.of(catalinaHome).isAbsolute() ? catalinaHome : Path.of(distDir, distSubdir, catalinaHome)
+        logFile = logFile ?: Path.of(catalinaHome, "logs", "catalina.out").toString()
         executeRunner()
     }
 

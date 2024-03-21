@@ -80,6 +80,6 @@ public class Main {
     private static void writeResult(double resultValue, String propertiesFile) throws IOException {
         Properties resultProps = new Properties();
         resultProps.put("YVALUE", Double.toString(resultValue));
-        resultProps.store(Files.newOutputStream(Paths.get(propertiesFile)), null);
+        resultProps.store(Files.newOutputStream(Path.of(propertiesFile)), null);
     }
 }
