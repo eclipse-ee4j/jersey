@@ -251,6 +251,15 @@ public class UriRoutingContext implements RoutingContext {
 //@Override
     public String getMatchedResourceTemplate() {
         final StringBuilder sb = new StringBuilder();
+        for (String template : getMatchedResourceTemplates()) {
+            sb.append(template.trim());
+        }
+        return sb.toString();
+    }
+
+//@Override
+    public List<String> getMatchedResourceTemplates() {
+        final List<String> list = new ArrayList<>();
         if (ResourceConfig.class.isInstance(requestContext.getConfiguration())) {
             Application app = ((ResourceConfig) requestContext.getConfiguration()).getApplication();
             while (ResourceConfig.class.isInstance(app) && ((ResourceConfig) app).getApplication() != app) {
@@ -259,18 +268,18 @@ public class UriRoutingContext implements RoutingContext {
             final ApplicationPath annotation = app.getClass().getAnnotation(ApplicationPath.class);
             if (annotation != null) {
                 String value = annotation.value();
-                sb.append(value.endsWith("/") ? value.substring(0, value.length() - 1) : value);
+                list.add(value.endsWith("/") ? value.substring(0, value.length() - 1) : value);
             }
         }
 
         final Iterator<UriTemplate> templateIt = templates.descendingIterator();
         while (templateIt.hasNext()) {
             String template = templateIt.next().getTemplate().trim();
-            if (!template.equals("/") || sb.isEmpty()) {
-                sb.append(template);
+            if (!template.equals("/") || list.isEmpty()) { // !subresourceLocator
+                list.add(template);
             }
         }
-        return sb.toString();
+        return list;
     }
 
     private static final Function<String, String> PATH_DECODER = input -> UriComponent.decode(input, UriComponent.Type.PATH);
