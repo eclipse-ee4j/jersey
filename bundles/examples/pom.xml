@@ -380,6 +380,7 @@
             <classifier>project-src</classifier>
             <type>zip</type>
         </dependency>
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>managed-beans-webapp</artifactId>
@@ -394,6 +395,7 @@
             <classifier>gf-project-src</classifier>
             <type>zip</type>
         </dependency>
+-->
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>managed-client</artifactId>
