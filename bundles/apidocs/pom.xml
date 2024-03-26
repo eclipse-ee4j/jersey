@@ -168,7 +168,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-gson</artifactId>
+            <artifactId>jersey-media-json-gson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -292,6 +292,7 @@
                         <configuration>
                             <includeDependencySources>true</includeDependencySources>
                             <sourceFileExcludes>
+                                <fileExclude>META-INF/versions/21/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
