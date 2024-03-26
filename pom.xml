@@ -2209,7 +2209,6 @@
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
         <helidon.config.version>3.2.5</helidon.config.version>
-        <helidon.config.11.version>1.4.14</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.1.3</smallrye.config.version>
 
         <guava.version>31.1-jre</guava.version>

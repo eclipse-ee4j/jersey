@@ -34,22 +34,56 @@
 
     <modules>
         <module>asm</module>
+        <module>async-jersey-filter</module>
         <module>cdi-integration</module>
         <module>client-connector-provider</module>
         <module>ejb-multimodule</module>
         <module>ejb-multimodule-reload</module>
         <module>ejb-test-webapp</module>
+        <module>externalproperties</module>
         <module>j-376</module>
         <module>j-441</module>
         <module>j-59</module>
         <module>jackson-14</module>
+        <module>jaxrs-component-inject</module>
+        <module>jersey-780</module>
+        <module>jersey-1107</module>
+        <module>jersey-1223</module>
+        <module>jersey-1604</module>
+        <module>jersey-1667</module>
+        <module>jersey-1829</module>
+        <module>jersey-1883</module>
+        <module>jersey-1928</module>
+        <module>jersey-1960</module>
+        <module>jersey-1964</module>
+        <module>jersey-2031</module>
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
+        <module>jersey-2160</module>
+        <module>jersey-2164</module>
+        <module>jersey-2167</module>
+        <module>jersey-2176</module>
+        <module>jersey-2184</module>
+        <module>jersey-2255</module>
+        <module>jersey-2322</module>
+        <module>jersey-2335</module>
         <module>jersey-2421</module>
+        <module>jersey-2551</module>
+        <module>jersey-2612</module>
+        <module>jersey-2637</module>
+        <module>jersey-2654</module>
+        <module>jersey-2673</module>
+        <module>jersey-2689</module>
+        <module>jersey-2704</module>
         <module>jersey-2776</module>
+        <module>jersey-2794</module>
+        <module>jersey-2846</module>
+        <module>jersey-2878</module>
+        <module>jersey-2892</module>
         <module>jersey-3662</module>
         <module>jersey-3670</module>
+        <module>jersey-3796</module>
         <module>jersey-3992</module>
         <module>jersey-4003</module>
         <module>jersey-4099</module>
@@ -57,13 +91,52 @@
         <module>jersey-4542</module>
         <module>jersey-4697</module>
         <module>jersey-4722</module>
+        <module>jersey-4949</module>
         <module>jersey-5087</module>
         <module>microprofile</module>
         <module>property-check</module>
         <module>reactive-streams</module>
+        <module>security-digest</module>
         <module>servlet-2.5-reload</module>
         <module>servlet-3-gf-async</module>
         <module>servlet-3-sse-1</module>
+        <module>servlet-2.5-autodiscovery-1</module>
+        <module>servlet-2.5-autodiscovery-2</module>
+        <module>servlet-2.5-filter</module>
+        <module>servlet-2.5-inflector-1</module>
+        <module>servlet-2.5-init-1</module>
+        <module>servlet-2.5-init-2</module>
+        <module>servlet-2.5-init-3</module>
+        <module>servlet-2.5-init-4</module>
+        <module>servlet-2.5-init-5</module>
+        <module>servlet-2.5-init-6</module>
+        <module>servlet-2.5-init-7</module>
+        <module>servlet-2.5-init-8</module>
+        <module>servlet-2.5-mvc-1</module>
+        <module>servlet-2.5-mvc-2</module>
+        <module>servlet-2.5-mvc-3</module>
+        <module>servlet-3-async</module>
+        <module>servlet-3-chunked-io</module>
+        <module>servlet-3-filter</module>
+        <module>servlet-3-inflector-1</module>
+        <module>servlet-3-init-1</module>
+        <module>servlet-3-init-2</module>
+        <module>servlet-3-init-3</module>
+        <module>servlet-3-init-4</module>
+        <module>servlet-3-init-5</module>
+        <module>servlet-3-init-6</module>
+        <module>servlet-3-init-7</module>
+        <module>servlet-3-init-8</module>
+        <module>servlet-3-init-9</module>
+        <module>servlet-3-init-provider</module>
+        <module>servlet-3-params</module>
+        <module>servlet-4.0-mvc-1</module>
+        <module>servlet-tests</module>
+        <module>servlet-request-wrapper-binding</module>
+        <module>servlet-request-wrapper-binding-2</module>
+        <module>sonar-test</module>
+        <module>spring6</module>
+        <module>tracing-support</module>
         <module>thin-server</module>
     </modules>
 
@@ -115,86 +188,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>jdk17</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <modules>
-                <module>async-jersey-filter</module>
-                <module>externalproperties</module>
-                <module>jaxrs-component-inject</module>
-                <module>jersey-780</module>
-                <module>jersey-1107</module>
-                <module>jersey-1223</module>
-                <module>jersey-1604</module>
-                <module>jersey-1667</module>
-                <module>jersey-1883</module>
-                <module>jersey-1928</module>
-                <module>jersey-1960</module>
-                <module>jersey-1964</module>
-                <module>jersey-2031</module>
-                <module>jersey-2160</module>
-                <module>jersey-2164</module>
-                <module>jersey-2167</module>
-                <module>jersey-2176</module>
-                <module>jersey-2184</module>
-                <module>jersey-2255</module>
-                <module>jersey-2322</module>
-                <module>jersey-2335</module>
-                <module>jersey-2551</module>
-                <module>jersey-2612</module>
-                <module>jersey-2637</module>
-                <module>jersey-2654</module>
-                <module>jersey-2673</module>
-                <module>jersey-2689</module>
-                <module>jersey-2704</module>
-                <module>jersey-2794</module>
-                <module>jersey-2846</module>
-                <module>jersey-2878</module>
-                <module>jersey-2892</module>
-                <module>jersey-3796</module>
-                <module>jersey-4949</module>
-                <module>security-digest</module>
-                <module>servlet-2.5-autodiscovery-1</module>
-                <module>servlet-2.5-autodiscovery-2</module>
-                <module>servlet-2.5-filter</module>
-                <module>servlet-2.5-inflector-1</module>
-                <module>servlet-2.5-init-1</module>
-                <module>servlet-2.5-init-2</module>
-                <module>servlet-2.5-init-3</module>
-                <module>servlet-2.5-init-4</module>
-                <module>servlet-2.5-init-5</module>
-                <module>servlet-2.5-init-6</module>
-                <module>servlet-2.5-init-7</module>
-                <module>servlet-2.5-init-8</module>
-                <module>servlet-2.5-mvc-1</module>
-                <module>servlet-2.5-mvc-2</module>
-                <module>servlet-2.5-mvc-3</module>
-                <module>servlet-3-async</module>
-                <module>servlet-3-chunked-io</module>
-                <module>servlet-3-filter</module>
-                <module>servlet-3-inflector-1</module>
-                <module>servlet-3-init-1</module>
-                <module>servlet-3-init-2</module>
-                <module>servlet-3-init-3</module>
-                <module>servlet-3-init-4</module>
-                <module>servlet-3-init-5</module>
-                <module>servlet-3-init-6</module>
-                <module>servlet-3-init-7</module>
-                <module>servlet-3-init-8</module>
-                <module>servlet-3-init-9</module>
-                <module>servlet-3-init-provider</module>
-                <module>servlet-3-params</module>
-                <module>servlet-4.0-mvc-1</module>
-                <module>servlet-tests</module>
-                <module>servlet-request-wrapper-binding</module>
-                <module>servlet-request-wrapper-binding-2</module>
-                <module>sonar-test</module>
-                <module>spring6</module>
-                <module>tracing-support</module>
-            </modules>
         </profile>
     </profiles>
 
