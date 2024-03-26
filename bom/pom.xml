@@ -54,11 +54,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jersey.bundles</groupId>
-                <artifactId>jaxrs-ri</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.jersey.connectors</groupId>
                 <artifactId>jersey-apache5-connector</artifactId>
                 <version>${project.version}</version>
@@ -101,11 +96,6 @@
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty-http</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.containers</groupId>
-                <artifactId>jersey-container-jetty11-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
