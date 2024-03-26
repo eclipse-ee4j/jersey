@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,8 @@ import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;
@@ -36,6 +38,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
 import org.glassfish.jersey.message.internal.TracingLogger;
 import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.internal.ServerTraceEvent;
 import org.glassfish.jersey.server.internal.process.Endpoint;
 import org.glassfish.jersey.server.model.Resource;
@@ -243,6 +246,40 @@ public class UriRoutingContext implements RoutingContext {
     @Override
     public List<String> getMatchedURIs() {
         return getMatchedURIs(true);
+    }
+
+//@Override
+    public String getMatchedResourceTemplate() {
+        final StringBuilder sb = new StringBuilder();
+        for (String template : getMatchedResourceTemplates()) {
+            sb.append(template.trim());
+        }
+        return sb.toString();
+    }
+
+//@Override
+    public List<String> getMatchedResourceTemplates() {
+        final List<String> list = new ArrayList<>();
+        if (ResourceConfig.class.isInstance(requestContext.getConfiguration())) {
+            Application app = ((ResourceConfig) requestContext.getConfiguration()).getApplication();
+            while (ResourceConfig.class.isInstance(app) && ((ResourceConfig) app).getApplication() != app) {
+                app = ((ResourceConfig) app).getApplication();
+            }
+            final ApplicationPath annotation = app.getClass().getAnnotation(ApplicationPath.class);
+            if (annotation != null) {
+                String value = annotation.value();
+                list.add(value.endsWith("/") ? value.substring(0, value.length() - 1) : value);
+            }
+        }
+
+        final Iterator<UriTemplate> templateIt = templates.descendingIterator();
+        while (templateIt.hasNext()) {
+            String template = templateIt.next().getTemplate().trim();
+            if (!template.equals("/") || list.isEmpty()) { // !subresourceLocator
+                list.add(template);
+            }
+        }
+        return list;
     }
 
     private static final Function<String, String> PATH_DECODER = input -> UriComponent.decode(input, UriComponent.Type.PATH);

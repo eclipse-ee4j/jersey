@@ -2296,7 +2296,7 @@
         <jaxb.ri.version>4.0.4</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
-        <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)"</jakarta.rest.osgi.version>
+        <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)",jakarta.ws.rs.sse;version="[3.1,5)"</jakarta.rest.osgi.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>12.0.7</jetty.version>
         <jetty9.version>9.4.53.v20231009</jetty9.version>
