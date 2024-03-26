@@ -49,8 +49,10 @@
         <module>jmockit</module>
         <module>mem-leaks</module>
         <module>osgi</module>
-        <module>stress</module>
+        <module>release-test</module>
         <module>performance</module>
+        <module>stress</module>
+        <module>version-agnostic</module>
     </modules>
 
     <dependencyManagement>
@@ -113,24 +115,6 @@
             </modules>
             <build>
             </build>
-        </profile>
-        <profile>
-            <id>JDK11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <modules>
-                <module>release-test</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>JDK17+</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <modules>
-                <module>version-agnostic</module>
-            </modules>
         </profile>
     </profiles>
 </project>
