@@ -26,7 +26,7 @@ import org.glassfish.jersey.internal.util.PropertiesClass;
 public final class HelidonClientProperties {
 
     /**
-     * A Helidon {@link Config} instance that is passed to {@link WebClient.Builder#config(Config)} if available
+     * A Helidon {@code Config} instance that is passed to {@code WebClient.Builder#config(Config)} if available
      */
     public static final String CONFIG = HelidonProperties.CONFIG;
 }

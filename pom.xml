@@ -2209,12 +2209,11 @@
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
         <helidon.config.version>3.2.5</helidon.config.version>
-        <helidon.config.11.version>1.4.14</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.1.3</smallrye.config.version>
 
         <guava.version>31.1-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <helidon.jersey.connector.version>3.2.5</helidon.jersey.connector.version>
+        <helidon.jersey.connector.version>4.0.6</helidon.jersey.connector.version>
         <xmlunit.version>2.9.1</xmlunit.version>
         <httpcore.version>4.4.16</httpcore.version>
         <httpclient5.version>5.2.1</httpclient5.version>
