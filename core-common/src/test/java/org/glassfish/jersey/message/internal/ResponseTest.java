@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -80,5 +80,36 @@ public class ResponseTest {
         assertNotNull(response);
         assertEquals(123, response.getStatus());
         assertEquals("test", response.getStatusInfo().getReasonPhrase());
+    }
+
+    @Test
+    public void testEntityForbidden() {
+        try {
+            Response.status(Status.NO_CONTENT).entity("test").build();
+            throw new IllegalStateException("NO CONTENT with entity");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+
+        try {
+            Response.status(Status.NOT_MODIFIED).entity("test").build();
+            throw new IllegalStateException("NOT MODIFIED with entity");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+
+        try {
+            Response.status(Status.RESET_CONTENT).entity("test").build();
+            throw new IllegalStateException("RESET CONTENT with entity");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+
+        try {
+            Response.status(152).entity("test").build();
+            throw new IllegalStateException("INFORMATIONAL with entity");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
     }
 }
