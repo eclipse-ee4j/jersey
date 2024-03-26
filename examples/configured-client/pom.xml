@@ -114,14 +114,5 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>jdk11-</id>
-            <activation>
-                <jdk>(,12)</jdk>
-            </activation>
-            <properties>
-                <helidon.config.version>${helidon.config.11.version}</helidon.config.version>
-            </properties>
-        </profile>
     </profiles>
 </project>

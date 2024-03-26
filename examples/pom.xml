@@ -77,6 +77,8 @@
         <module>helloworld-netty</module>
         <module>helloworld-programmatic</module>
         <module>helloworld-pure-jax-rs</module>
+        <module>helloworld-spring-webapp</module>
+        <module>helloworld-spring-annotations</module>
         <module>helloworld-webapp</module>
         <module>helloworld-weld</module>
         <module>http-patch</module>
@@ -279,18 +281,4 @@
             </resource>
         </resources>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk17</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <modules>
-                <module>helloworld-spring-webapp</module>
-                <module>helloworld-spring-annotations</module>
-            </modules>
-        </profile>
-    </profiles>
-
 </project>
