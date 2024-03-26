@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>jersey-bom</artifactId>
-    <version>4.0.99-SNAPSHOT</version>
+    <version>4.0.0-M1</version>
     <packaging>pom</packaging>
     <name>jersey-bom</name>
 
