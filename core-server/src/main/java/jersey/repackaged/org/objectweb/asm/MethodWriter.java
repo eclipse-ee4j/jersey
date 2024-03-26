@@ -651,7 +651,7 @@ final class MethodWriter extends MethodVisitor {
   @Override
   public AnnotationVisitor visitAnnotationDefault() {
     defaultValue = new ByteVector();
-    return new AnnotationWriter(symbolTable, /* useNamedValues = */ false, defaultValue, null);
+    return new AnnotationWriter(symbolTable, /* useNamedValues= */ false, defaultValue, null);
   }
 
   @Override
