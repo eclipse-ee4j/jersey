@@ -2240,7 +2240,7 @@
         <arquillian.weld.version>3.0.1.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.6</asm.version>
+        <asm.version>9.7</asm.version>
         <!--required for spring (ext) modules integration -->
         <aspectj.weaver.version>1.9.21.1</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
