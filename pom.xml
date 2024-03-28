@@ -2360,7 +2360,7 @@
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>11.0.20</jetty.version>
-        <jetty.tracing.version>11.0.20</jetty.tracing.version> <!-- special version for tracing support tests-->
+        <jetty.tracing.version>11.0.15</jetty.tracing.version> <!-- special version for tracing support tests, applied before JDK 21-->
         <jetty9.version>9.4.54.v20240208</jetty9.version>
         <jetty.plugin.version>11.0.20</jetty.plugin.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>

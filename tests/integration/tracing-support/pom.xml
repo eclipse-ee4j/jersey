@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.tracing.version}</version>
+                <version>${jetty.version}</version>
                 <configuration>
                     <connectors>
                         <connector>
@@ -86,4 +86,15 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>jdk11</id>
+            <activation>
+                <jdk>[11,21)</jdk>
+            </activation>
+            <properties>
+                <jetty.version>${jetty.tracing.version}</jetty.version>
+            </properties>
+        </profile>
+    </profiles>
 </project>
