@@ -2239,6 +2239,7 @@
         <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.10.2</junit5.version>
         <junit-platform-suite.version>1.10.2</junit-platform-suite.version>
+        <junit-platform-suite.legacy.version>1.10.0</junit-platform-suite.legacy.version>
         <kryo.version>4.0.3</kryo.version>
         <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.11</mustache.version>

@@ -15,7 +15,7 @@ name: "Validate"
 on: [pull_request, push]
 
 env:
-  JAVA_VERSION: '8'
+  JAVA_VERSION: '21'
   JAVA_DISTRO: 'temurin'
 
 concurrency:

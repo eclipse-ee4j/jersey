@@ -293,12 +293,14 @@
                                 <fileExclude>META-INF/versions/17/org/glassfish/jersey/jetty/connector/*.java</fileExclude>
                                 <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
+                                <fileExclude>org/glassfish/jersey/jetty/*.java</fileExclude>
+                                <fileExclude>org/glassfish/jersey/jetty/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
-                            <excludePackageNames>*.internal.*:*.innate.*</excludePackageNames>
+                            <excludePackageNames>*.internal:*.internal.*:*.innate:*.innate.*</excludePackageNames>
                         </configuration>
                     </execution>
                 </executions>
