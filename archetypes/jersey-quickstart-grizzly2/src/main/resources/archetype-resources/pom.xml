@@ -83,8 +83,8 @@
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
-        <junit-jupiter.version>5.10.1</junit-jupiter.version>
+        <junit-jupiter.version>5.10.2</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.2.1</surefire.mvn.plugin.version>
+        <surefire.mvn.plugin.version>3.2.5</surefire.mvn.plugin.version>
     </properties>
 </project>
