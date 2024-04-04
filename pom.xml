@@ -2291,8 +2291,8 @@
         <jstl.version>3.0.0</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.1.2</istack.commons.runtime.version>
-        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
-        <jakarta.activation.version>2.0.1</jakarta.activation.version>
+        <jakarta.activation-api.version>2.1.3</jakarta.activation-api.version>
+        <jakarta.activation.version>2.0.2</jakarta.activation.version>
         <jakarta.el.version>5.0.1</jakarta.el.version>
         <jakarta.el.impl.version>5.0.0</jakarta.el.impl.version>
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[2.0,3)"</jakarta.annotation.osgi.version>
@@ -2302,18 +2302,18 @@
         <jakarta.jsonp.version>2.1.3</jakarta.jsonp.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <jakarta.validation.api.version>3.0.2</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>4.0.1</jakarta.jaxb.api.version>
-        <jaxb.ri.version>4.0.4</jaxb.ri.version>
+        <jakarta.jaxb.api.version>4.0.2</jakarta.jaxb.api.version>
+        <jaxb.ri.version>4.0.5</jaxb.ri.version>
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
         <jetty.version>12.0.7</jetty.version>
         <jetty9.version>9.4.54.v20240208</jetty9.version>
         <jetty11.version>11.0.20</jetty11.version>
-        <jetty.plugin.version>12.0.5</jetty.plugin.version>
-        <jsonb.api.version>3.0.0</jsonb.api.version>
+        <jetty.plugin.version>12.0.8</jetty.plugin.version>
+        <jsonb.api.version>3.0.1</jsonb.api.version>
         <jsonp.ri.version>1.1.5</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.1</jsonp.jaxrs.version>
+        <jsonp.jaxrs.version>1.1.5</jsonp.jaxrs.version>
         <moxy.version>4.0.2</moxy.version>
         <yasson.version>3.0.3</yasson.version>
         <!-- END of Jakartified -->
