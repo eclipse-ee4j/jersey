@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ class DefaultJerseyTagsProviderTest {
 
     @Test
     void testRootPath() {
-        assertThat(tagsProvider.httpRequestTags(event(200, null, "/", (String[]) null)))
+        assertThat(tagsProvider.httpRequestTags(event(200, null, "/", "/")))
             .containsExactlyInAnyOrder(tagsFrom("root", 200, null, "SUCCESS"));
     }
 
@@ -86,21 +86,21 @@ class DefaultJerseyTagsProviderTest {
     @Test
     @SuppressWarnings("serial")
     void exceptionsAreMappedCorrectly() {
-        assertThat(tagsProvider.httpRequestTags(event(500, new IllegalArgumentException(), "/app", (String[]) null)))
+        assertThat(tagsProvider.httpRequestTags(event(500, new IllegalArgumentException(), "/app", "/")))
             .containsExactlyInAnyOrder(tagsFrom("/app", 500, "IllegalArgumentException", "SERVER_ERROR"));
         assertThat(tagsProvider.httpRequestTags(
-                event(500, new IllegalArgumentException(new NullPointerException()), "/app", (String[]) null)))
+                event(500, new IllegalArgumentException(new NullPointerException()), "/app", "/")))
             .containsExactlyInAnyOrder(tagsFrom("/app", 500, "NullPointerException", "SERVER_ERROR"));
-        assertThat(tagsProvider.httpRequestTags(event(406, new NotAcceptableException(), "/app", (String[]) null)))
+        assertThat(tagsProvider.httpRequestTags(event(406, new NotAcceptableException(), "/app", "/")))
             .containsExactlyInAnyOrder(tagsFrom("/app", 406, "NotAcceptableException", "CLIENT_ERROR"));
         assertThat(tagsProvider.httpRequestTags(event(500, new Exception("anonymous") {
-        }, "/app", (String[]) null))).containsExactlyInAnyOrder(tagsFrom("/app", 500,
+        }, "/app", "/"))).containsExactlyInAnyOrder(tagsFrom("/app", 500,
                 "org.glassfish.jersey.micrometer.server.DefaultJerseyTagsProviderTest$1", "SERVER_ERROR"));
     }
 
     @Test
     void longRequestTags() {
-        assertThat(tagsProvider.httpLongRequestTags(event(0, null, "/app", (String[]) null)))
+        assertThat(tagsProvider.httpLongRequestTags(event(0, null, "/app", "/")))
             .containsExactlyInAnyOrder(Tag.of("method", "GET"), Tag.of("uri", "/app"));
     }
 
