@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,126 +28,87 @@
          xml:id="migration">
     <title>Migration Guide</title>
 
-    <section xml:id="mig-3.0.0">
-        <title>Migrating from Jersey 2.32+ to 3.0.x.</title>
-        <section xml:id="mig-3.0.0-breaking-changes">
+    <section xml:id="mig-4.0.0">
+        <title>Migrating from Jersey 3.x to 4.0.x.</title>
+        <section xml:id="mig-4.0.0-breaking-changes">
             <title>Breaking Changes</title>
             <para>
                 <itemizedlist>
                     <listitem>
                         <para>
-                            The most fundamental change in Jersey 3.0.0 and later is namespace change.
-                            Since Jakarta EE 9 the <literal>jakarta.</literal> namespace is introduced as a replacement
-                            for javax namespace from Java EE.
+                            Jersey 4.x is implementation of Jakarta REST 4.0, part of Jakarta EE 11.
+                            For APIs and implementations in Jakarta EE 11, JDK 17 minimum is required.
+                            However, some modules may require higher versions of Java SE. See <xref linkend="se_compatibility"/>.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            Some Jersey modules require higher versions of Java SE. See <xref linkend="se_compatibility"/>.
+                            Jakarta REST 4.0 dropped classes bound to JAX-B, since JAX-B has been removed from Jakarta EE 11 Core
+                            profile. These classes were <literal>jakarta.ws.rs.core.Link.JaxbLink</literal> and
+                            <literal>jakarta.ws.rs.core.Link.JaxbAdapter</literal> along with related methods working with these
+                            classes.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            Examples and tests are reduced in quantity (so you probably will not find all those examples which were available
-                            in the 2.32 version).
+                            Some modules supporting obsolete libraries were dropped.
+                            The Apache 4 HTTP Client supported by <literal>jersey-apache-connector</literal>
+                            is replaced by <literal>jersey-apache5-connector</literal>, using the Apache 5 HTTP Client.
+                        </para>
+                        <para>
+                            <literal>jersey-jetty11-connector</literal> based on Jetty 11 HTTP Client has been dropped, with
+                            <literal>jersey-jetty-connector</literal> based on Jetty 12 HTTP Client as a replacement.
+                        </para>
+                        <para>The same with <literal>jersey-container-jetty11-http</literal> with <literal>jersey-container-jetty-http</literal>
+                            atop Jetty 12 as a replacement.
+                        </para>
+                        <para>
+                            <literal>jersey-container-simple-http</literal> module was removed without a replacement.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Given JDK 17 does not allow reflection on JDK internal classes, it is no longer possible
+                            to support additional HTTP methods with the default <literal>HttpUrlConnector</literal>, such as popular
+                            HTTP Patch.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            &jersey.server.ServerProperties.UNWRAP_COMPLETION_STAGE_IN_WRITER_ENABLE; is by default
-                            <literal>true</literal>.
+                            Jersey 4.x still uses HK2 as a main DI framework. However, in the future releases (5.x+), the main
+                            DI container would be the CDI container. In CDI, it is not possible to register beans in the injection
+                            container in runtime the way it is possible in HK2 using AbstractBinder; the
+                            &jersey.common.internal.inject.AbstractBinder; is moved to the <literal>jersey-hk2</literal> package.
+                            Also, a releated <literal>org.glassfish.jersey.internal.inject.Bindings</literal> class was moved
+                            into the same package. A few internal <literal>Binding</literal> subclasses and related Jersey
+                            most innate classes are hidden from public usage.
+                            See Section <xref linkend="ioc"/>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Jersey stopped providing jersey as a bundle, known as <literal>jaxrs-ri</literal>. Jersey jars used
+                            in the bundle was only a subset of possibilities Jersey provides with a variety of modules each of
+                            which handles an additional customer use-case. Some modules are not designed to be together on a
+                            classpath with a module from the <literal>jaxrs-ri</literal> bundle and that has been leading to a confusion.
+                        </para>
+                        <para>
+                            The <literal>jaxrs-ri</literal> bundle also contained third party libraries with a different licensing
+                            than Jersey, which also led to a confusion about whole <literal>jaxrs-ri</literal> bundle and
+                            Jersey itself license.
                         </para>
                     </listitem>
                 </itemizedlist>
             </para>
         </section>
-        <section xml:id="mig-3.0.0-removed-deprecated">
-            <title>Removed deprecated APIs</title>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>
-                            Jackson 1 support was removed.
-                        </para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-        </section>
-        <section xml:id="mig-3.0.0-application-servers">
+        <section xml:id="mig-4.0.0-application-servers">
             <title>Application servers for Jersey</title>
             <para>
-                Note that only a few servers support Jakarta EE 9 compatible Servlet API and they are tested with Jersey.
+                Note that only a few servers support Jakarta EE 11 compatible Servlet API and they are tested with Jersey.
                 Those are:
-                <literal>GlassFish 6</literal>,
-                <literal>Grizzly 3</literal>,
-                <literal>Jetty 11 (JDK 11+ required)</literal>,
-                <literal>Payara 6</literal>, and
-                <literal>Tomcat 10</literal>.
+                <literal>GlassFish 8</literal>,
+                <literal>Tomcat 11</literal>.
+                The other containers will follow.
             </para>
-        </section>
-    </section>
-    <section xml:id="mig-3.1.0">
-        <title>Migrating from Jersey 3.0.x to &version;.</title>
-        <section xml:id="mig-3.1.0-breaking-changes">
-            <title>Breaking Changes</title>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>
-                            Jersey 3.1.0+ is the implementation of Jakarta RESTful WebServices 3.1, which is part of
-                            Jakarta EE 10. Jakarta EE 10 defines the minimum JDK 11 requirement and hence Jersey no longer
-                            supports JDK 8.
-                        </para>
-                        <para>
-                            Some Jersey modules require higher versions of Java SE. See <xref linkend="se_compatibility"/>.
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>
-                            Since Jersey 3.1.0+ the <literal>getRequestHeader(String name)</literal> method of the
-                            <literal>ClientRequest</literal> class returns NULL (instead of an empty List) in case if
-                            the specified header does not exist.
-                        </para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-        </section>
-        <section xml:id="mig-3.1.0-application-path">
-            <title>@ApplicationPath Annotation Support</title>
-            <para>
-                Jersey 3.1 supports <literal>@ApplicationPath</literal> annotation by every container, not only the
-                <literal>Servlet</literal> container. This can affect tests, as well as deployments to containers
-                where the annotation used to be ignored by previous versions of Jersey.
-            </para>
-        </section>
-        <section xml:id="mig-3.1.4-jetty-modules">
-            <title>Jetty Modules</title>
-            <itemizedlist>
-                <listitem>
-                    <para>
-                        Jersey 3.0.x, and 3.1.0 - 3.1.3 Jetty modules (jersey-jetty-connector, jersey-container-jetty-http,
-                        jersey-container-jetty-servlet, jersey-test-framework-provider-jetty) are based on Jetty 11,
-                        which is Jakarta EE 9 related.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                        Jersey 3.1.4 modules use Jetty 12 which is Jakarta EE 10 related (as well as Jersey 3.1.x).
-                        Jetty 12 dependencies use modules names different from Jetty 11.
-                    </para>
-                </listitem>
-            </itemizedlist>
-        </section>
-        <section xml:id="mig-3.1.4">
-            <title>Migrating from Jersey 3.1.3 to 3.1.4</title>
-            <section xml:id="mig-3.1.4-jackson-changes">
-                <title>Changes in Jackson</title>
-                <para>
-                    Jersey 3.1.4 starts to support Jackson 2.15 which comes with default limitations for the length of parsed text,
-                    numbers, and nesting depth. Jersey keeps the Jackson default value, but it allows to override the maximum
-                    length of parsed text using the &jersey.message.MessageProperties.JSON_MAX_STRING_LENGTH; property if needed.
-                </para>
-            </section>
         </section>
     </section>
 

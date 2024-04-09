@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -641,11 +641,6 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry><literal>org.glassfish.jersey.connectors:jersey-grizzly-connector</literal></entry>
                         </row>
                         <row>
-                            <entry>Apache HTTP client</entry>
-                            <entry>&jersey.apache.ApacheConnectorProvider;</entry>
-                            <entry><literal>org.glassfish.jersey.connectors:jersey-apache-connector</literal></entry>
-                        </row>
-                        <row>
                             <entry>Apache 5 HTTP client</entry>
                             <entry>&jersey.apache5.Apache5ConnectorProvider;</entry>
                             <entry><literal>org.glassfish.jersey.connectors:jersey-apache5-connector</literal></entry>
@@ -656,19 +651,9 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                             <entry><literal>org.glassfish.jersey.connectors:jersey-helidon-connector</literal></entry>
                         </row>
                         <row>
-                            <entry>Jetty HTTP client (JDK 17+)</entry>
+                            <entry>Jetty HTTP client</entry>
                             <entry>&jersey.jetty.JettyConnectorProvider;</entry>
                             <entry><literal>org.glassfish.jersey.connectors:jersey-jetty-connector</literal></entry>
-                        </row>
-                        <row>
-                            <entry>Jetty 11.x HTTP client</entry>
-                            <entry>&jersey.jetty11.Jetty11ConnectorProvider;</entry>
-                            <entry><literal>org.glassfish.jersey.connectors:jersey-jetty11-connector</literal></entry>
-                        </row>
-                        <row>
-                            <entry>Jetty 11.x HTTP/2 client</entry>
-                            <entry>&jersey.jetty11.Jetty11Http2ConnectorProvider;</entry>
-                            <entry><literal>org.glassfish.jersey.connectors:jersey-jetty11-http2-connector</literal></entry>
                         </row>
                         <row>
                             <entry>Netty NIO framework</entry>
@@ -808,29 +793,6 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
                 for Jetty HTTP Client, it is possible to access directly the HTTP Client classes and invoke setter methods there.
             </para>
             <section>
-                <title>Apache HttpClientBuilder Configuration</title>
-                <para>
-                    For Apache Connector, an &jersey.apache.ApacheHttpClientBuilderConfigurator; SPI allows for invoking methods
-                    of <literal>org.apache.http.impl.client.HttpClientBuilder</literal>, such as <literal>setDefaultCredentialsProvider</literal>:
-                    <programlisting language="java" linenumbering="numbered">
-                        org.apache.http.client.CredentialsProvider credentialsProvider = new org.apache.http.impl.client.BasicCredentialsProvider();
-                        credentialsProvider.setCredentials(
-                            org.apache.http.auth.AuthScope.ANY,
-                            new org.apache.http.auth.UsernamePasswordCredentials("name", "password")
-                        );
-                        ApacheHttpClientBuilderConfigurator apacheHttpClientBuilderConfigurator = (httpClientBuilder) -> {
-                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                        };
-
-                        ClientConfig cc = new ClientConfig();
-                        cc.register(apacheHttpClientBuilderConfigurator);
-                        cc.connectorProvider(new ApacheConnectorProvider());
-                        Client client = ClientBuilder.newClient(cc);
-                        ...
-                    </programlisting>
-                </para>
-            </section>
-            <section>
                 <title>Apache 5 HttpClientBuilder Configuration</title>
                 <para>
                     For Apache 5 Connector, an &jersey.apache5.Apache5HttpClientBuilderConfigurator; SPI allows for invoking methods
@@ -863,21 +825,6 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
                         ClientConfig clientConfig = new ClientConfig()
                             .connectorProvider(new JettyConnectorProvider())
                             .register(new JettyHttpClientSupplier(httpClient));
-                        Client client = ClientBuilder.newClient(clientConfig);
-                        ...
-                    </programlisting>
-                </para>
-            </section>
-            <section>
-                <title>Jetty 11.x HttpClient Configuration</title>
-                <para>
-                    For Jetty Connector, an &jersey.jetty11.Jetty11HttpClientSupplier; SPI allows for providing a configured instance
-                    of <literal>org.eclipse.jetty.client.HttpClient</literal>:
-                    <programlisting language="java" linenumbering="numbered">
-                        HttpClient httpClient = new HttpClient(...);
-                        ClientConfig clientConfig = new ClientConfig()
-                            .connectorProvider(new Jetty11ConnectorProvider())
-                            .register(new Jetty11HttpClientSupplier(httpClient));
                         Client client = ClientBuilder.newClient(clientConfig);
                         ...
                     </programlisting>

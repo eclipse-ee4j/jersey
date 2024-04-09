@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -172,15 +172,9 @@
 
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
-    &lt;artifactId&gt;jersey-apache-connector&lt;/artifactId&gt;
+    &lt;artifactId&gt;jersey-apache5-connector&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.glassfish.jersey.connectory&lt;/groupId&gt;
-    &lt;artifactId&gt;jersey-jetty11-connector&lt;/artifactId&gt;
-    &lt;version&gt;&version;&lt;/version&gt;
-&lt;/dependency&gt;
-<!-- Requires JDK 17+ -->
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.connectors&lt;/groupId&gt;
     &lt;artifactId&gt;jersey-jetty-connector&lt;/artifactId&gt;
@@ -213,12 +207,6 @@
 &lt;dependency&gt;
     &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
     &lt;artifactId&gt;jersey-container-jdk-http&lt;/artifactId&gt;
-    &lt;version&gt;&version;&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-    &lt;groupId&gt;org.glassfish.jersey.containers&lt;/groupId&gt;
-    &lt;artifactId&gt;jersey-container-simple-http&lt;/artifactId&gt;
     &lt;version&gt;&version;&lt;/version&gt;
 &lt;/dependency&gt;
 
