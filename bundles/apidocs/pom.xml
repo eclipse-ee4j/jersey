@@ -294,9 +294,6 @@
                             <sourceFileExcludes>
                                 <fileExclude>META-INF/versions/21/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
-                                <fileExclude>org/glassfish/jersey/jetty/*.java</fileExclude>
-                                <fileExclude>org/glassfish/jersey/jetty/connector/*.java</fileExclude>
-                                <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
