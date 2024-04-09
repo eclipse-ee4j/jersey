@@ -220,6 +220,15 @@
             </properties>
         </profile>
         <profile>
+            <id>test-suit</id> <!--due to the broadcast test failure after update to the latest junit platform suite -->
+            <activation>       <!--for JDK 11 (only in CI/CD job) it's required to used legacy junit version -->
+                <jdk>11</jdk>
+            </activation>
+            <properties>
+                <junit-platform-suite.version>${junit-platform-suite.legacy.version}</junit-platform-suite.version>
+            </properties>
+        </profile>
+        <profile>
             <id>sonar</id>
             <build>
                 <pluginManagement>
