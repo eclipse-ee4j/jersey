@@ -33,6 +33,7 @@ pipeline {
                     steps {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
+                                bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
                             '''
                     }
                 }

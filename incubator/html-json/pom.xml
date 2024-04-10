@@ -39,7 +39,7 @@
     </description>
 
     <properties>
-        <net.java.html.version>1.5.1</net.java.html.version>
+        <net.java.html.version>1.8.1</net.java.html.version>
         <enforcer.skip>true</enforcer.skip>
     </properties>
 
@@ -91,6 +91,16 @@
             <groupId>org.netbeans.html</groupId>
             <artifactId>ko-ws-tyrus</artifactId>
             <version>${net.java.html.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-http-server</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>runtime</scope>
         </dependency>
         <!-- Overwrite Grizzly dependency defined in ko-ws-tyrus -->
