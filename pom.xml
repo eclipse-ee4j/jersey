@@ -305,7 +305,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>${clean.mvn.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -484,7 +484,7 @@
                             <link>https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/</link>
                         </links>
                         <excludePackageNames>
-                            *.internal.*:*.innate.*:*.tests.*
+                            *.internal:*.internal.*:*.innate:*.innate.*:*.tests:*.tests.*
                         </excludePackageNames>
                         <includeDependencySources>false</includeDependencySources>
                         <dependencySourceIncludes>
@@ -548,11 +548,6 @@
                             <platform>felix</platform>
                         </options>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${site.mvn.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -742,7 +737,7 @@
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>8.1.8.v20121106</version>
+                    <version>8.1.9.v20130131</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
@@ -789,24 +784,6 @@
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
                             <version>1.10.12</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.fortasoft</groupId>
-                    <artifactId>gradle-maven-plugin</artifactId>
-                    <version>1.0.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.wvengen</groupId>
-                    <artifactId>proguard-maven-plugin</artifactId>
-                    <version>${proguard.mvn.plugin.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.sf.proguard</groupId>
-                            <artifactId>proguard-base</artifactId>
-                            <version>5.1</version><!-- transitive dependency version increased from 5.0 -->
-                            <scope>runtime</scope>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -858,7 +835,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${buildhelper.mvn.plugin.version}</version>
                 <configuration>
                     <portNames>
                         <portName>jersey.config.test.container.port</portName>
@@ -1511,7 +1487,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>${jxr.mvn.plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -2179,6 +2155,7 @@
         <!-- Versions of Maven plugins -->
         <antrun.mvn.plugin.version>3.1.0</antrun.mvn.plugin.version>
         <assembly.mvn.plugin.version>3.6.0</assembly.mvn.plugin.version>
+        <clean.mvn.plugin.version>3.3.2</clean.mvn.plugin.version>
         <enforcer.mvn.plugin.version>3.3.0</enforcer.mvn.plugin.version>
         <exec.mvn.plugin.version>3.1.0</exec.mvn.plugin.version>
         <buildhelper.mvn.plugin.version>3.4.0</buildhelper.mvn.plugin.version>
