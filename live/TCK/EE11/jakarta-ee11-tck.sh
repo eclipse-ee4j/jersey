@@ -26,6 +26,8 @@ mvn -V clean install -DskipTests
 
 cd ${WORKSPACE}
 
+export LOCAL_TCK_PATH='live/TCK/EE11/jersey-tck'
+
 mkdir TCK
 cd TCK
 export tckname=$(basename "${TCK_BUNDLE}")
@@ -51,12 +53,12 @@ mvn install:install-file \
 cd ${WORKSPACE}
 
 #Temporary
-sed -i "s#<jersey.version>4.0.99-SNAPSHOT</jersey.version>#<jersey.version>${JERSEY_VERSION}</jersey.version>#p" tests/jersey-tck/pom.tomcat.xml
-cat tests/jersey-tck/pom.tomcat.xml
+sed -i "s#<jersey.version>4.0.99-SNAPSHOT</jersey.version>#<jersey.version>${JERSEY_VERSION}</jersey.version>#p" ${LOCAL_TCK_PATH}/pom.tomcat.xml
+cat ${LOCAL_TCK_PATH}/pom.tomcat.xml
 
-mvn -f tests/jersey-tck/pom.tomcat.xml clean install -Pstaging -Djersey.version=${JERSEY_VERSION} | tee ${TCK_LOG_FILE_NAME}
+mvn -f ${LOCAL_TCK_PATH}/pom.tomcat.xml clean install -Pstaging -Djersey.version=${JERSEY_VERSION} | tee ${TCK_LOG_FILE_NAME}
 
-mvn -f tests/jersey-tck/pom.tomcat.xml dependency:copy -Dartifact=jakarta.ws.rs:jakarta-restful-ws-tck:${TCK_VERSION} -Dtck.version=${TCK_VERSION} -Dtransitive=false
+mvn -f ${LOCAL_TCK_PATH}/pom.tomcat.xml dependency:copy -Dartifact=jakarta.ws.rs:jakarta-restful-ws-tck:${TCK_VERSION} -Dtck.version=${TCK_VERSION} -Dtransitive=false
 #export DOWNLOAD_PATH='tests/jersey-tck/target/dependency'
 #export NAME=`ls ${DOWNLOAD_PATH}`
 export DOWNLOAD_PATH=${WORKSPACE}/TCK
