@@ -737,7 +737,7 @@
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>8.1.9.v20130131</version>
+                    <version>8.1.8.v20121106</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
