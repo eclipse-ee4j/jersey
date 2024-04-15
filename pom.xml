@@ -2249,7 +2249,7 @@
         <validation.impl.version>6.2.5.Final</validation.impl.version>
         <!--<weld.version>2.2.14.Final</weld.version>--> <!-- 2.4.1 doesn't work - bv tests -->
         <weld3.version>3.1.9.Final</weld3.version>
-        <wiremock.version>2.27.2</wiremock.version>
+        <wiremock.version>3.5.2</wiremock.version>
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
