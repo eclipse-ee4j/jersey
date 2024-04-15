@@ -103,7 +103,7 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         final List<Module> modules;
         try {
             modules = ObjectMapper.findModules();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOGGER.warning(LocalizationMessages.ERROR_MODULES_NOT_LOADED(e.getMessage()));
             return Collections.emptyList();
         }
