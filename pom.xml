@@ -2320,7 +2320,7 @@
         <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>7.0.5.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
-        <wiremock.version>2.27.2</wiremock.version>
+        <wiremock.version>3.5.2</wiremock.version>
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
