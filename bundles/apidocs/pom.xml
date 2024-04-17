@@ -298,7 +298,7 @@
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
-                            <excludePackageNames>*.internal.*:*.innate.*</excludePackageNames>
+                            <excludePackageNames>*.innate:*.innate.*</excludePackageNames>
                         </configuration>
                     </execution>
                 </executions>
