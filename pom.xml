@@ -473,7 +473,7 @@
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
                         <bottom>
-                            <![CDATA[Copyright &#169; 2007-2023,
+                            <![CDATA[Copyright &#169; 2007-2024,
                                 <a href="http://www.oracle.com">Oracle</a>
                                 and/or its affiliates.
                                 All Rights Reserved. Use is subject to license terms.]]>
@@ -484,7 +484,7 @@
                             <link>https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/</link>
                         </links>
                         <excludePackageNames>
-                            *.internal:*.internal.*:*.innate:*.innate.*:*.tests:*.tests.*
+                            *.innate:*.innate.*:*.tests:*.tests.*
                         </excludePackageNames>
                         <includeDependencySources>false</includeDependencySources>
                         <dependencySourceIncludes>
@@ -1434,20 +1434,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>${javadoc.mvn.plugin.version}</version>
                 <!-- Run this plugin report sets only in the main Jersey pom -->
                 <inherited>false</inherited>
                 <configuration>
                     <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                     <windowtitle>Jersey ${jersey.version} API</windowtitle>
                     <bottom>
-                        <![CDATA[Copyright &#169; 2007-2023,
+                        <![CDATA[Copyright &#169; 2007-2024,
                             <a href="http://www.oracle.com">Oracle</a>
                             and/or its affiliates.
                             All Rights Reserved. Use is subject to license terms.]]>
                     </bottom>
                     <excludePackageNames>
-                        com.sun.ws.rs.ext:*.examples.*:*.internal.*:*.tests.*
+                        com.sun.ws.rs.ext:*.examples.*:*.innate:*.innate.*:*.tests:*.tests.*
                     </excludePackageNames>
                     <links>
                         <link>https://jax-rs.github.io/apidocs/2.1</link>
