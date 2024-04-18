@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@
 <!ENTITY guava.link "<link xlink:href='https://guava.dev/'>Guava</link>">
 <!ENTITY heroku.uri "https://www.heroku.com">
 <!ENTITY heroku.link "<link xlink:href='&heroku.uri;'>Heroku</link>">
-<!ENTITY hk2.javadoc.uri "https://javaee.github.io/hk2/apidocs/">
+<!ENTITY hk2.javadoc.uri "https://javaee.github.io/hk2/apidocs">
 <!ENTITY hk2.link "<link xlink:href='https://javaee.github.io/hk2/'>HK2</link>">
 <!ENTITY hk2.spring-bridge.link "<link xlink:href='https://javaee.github.io/hk2/spring-bridge/'>The Spring/HK2 Bridge</link>">
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
@@ -214,6 +214,7 @@
 <!ENTITY jaxrs.core.Cookie "<link xlink:href='&jaxrs.javadoc.uri;/core/Cookie.html'>Cookie</link>">
 <!ENTITY jaxrs.core.EntityTag "<link xlink:href='&jaxrs.javadoc.uri;/core/EntityTag.html'>EntityTag</link>">
 <!ENTITY jaxrs.core.Feature "<link xlink:href='&jaxrs.javadoc.uri;/core/Feature.html'>Feature</link>">
+<!ENTITY jaxrs.core.FeatureContext "<link xlink:href='&jaxrs.javadoc.uri;/core/FeatureContext.html'>FeatureContext</link>">
 <!ENTITY jaxrs.core.Form "<link xlink:href='&jaxrs.javadoc.uri;/core/Form.html'>Form</link>">
 <!ENTITY jaxrs.core.GenericEntity "<link xlink:href='&jaxrs.javadoc.uri;/core/GenericEntity.html'>GenericEntity&lt;T&gt;</link>">
 <!ENTITY jaxrs.core.GenericType "<link xlink:href='&jaxrs.javadoc.uri;/core/GenericType.html'>GenericType&lt;T&gt;</link>">
@@ -408,7 +409,9 @@
 <!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
+<!ENTITY jersey.common.internal.inject.InjectionResolver "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionResolver.html'>InjectionResolver</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
+<!ENTITY jersey.common.internal.inject.PerLookup "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/PerLookup.html'>PerLookup</link>">
 <!ENTITY jersey.common.internal.inject.Binder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/Binder.html'>Binder</link>">
 <!ENTITY jersey.common.ServiceLocatorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/ServiceLocatorProvider.html'>ServiceLocatorProvider</link>">
 <!ENTITY jersey.common.SslConfigurator "<link xlink:href='&jersey.javadoc.uri.prefix;/SslConfigurator.html'>SslConfigurator</link>">
