@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,8 +60,10 @@ class ConnectorConfiguration {
     private final int connectTimeout;
     private final ProxyConfiguration proxyConfiguration;
     private final AtomicReference<SSLParamConfigurator> sniConfigs = new AtomicReference<>(null);
+    private final Configuration configuration;
 
     ConnectorConfiguration(Client client, Configuration config) {
+        configuration = config;
         final Map<String, Object> properties = config.getProperties();
 
         int proposedChunkSize = JdkConnectorProperties.getValue(properties, ClientProperties.CHUNKED_ENCODING_SIZE,
@@ -179,6 +181,10 @@ class ConnectorConfiguration {
 
     SSLParamConfigurator getSniConfig() {
         return sniConfigs.get();
+    }
+
+    Configuration getConfiguration() {
+        return configuration;
     }
 
     @Override
