@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1062,7 +1062,22 @@
                             </para>
                         </entry>
                     </row>
-
+                    <row>
+                        <entry>&jersey.client.ClientProperties.SNI_HOST_NAME; (Jersey 2.43 or later)</entry>
+                        <entry><literal>jersey.config.client.snihostname</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the host name to be used for calculating the <literal>javax.net.ssl.SNIHostName</literal>
+                                during the HTTPS request. Takes precedence over the HTTP HOST header, if set.
+                            </para>
+                            <para>
+                                By default, the <literal>SNIHostName</literal> is set when the HOST HTTP header differs from
+                                the HTTP request host. When the property value host name matches the HTTPS request host,
+                                the <literal>SNIHostName</literal> is not set, and the HTTP HOST header is not used for
+                                setting the <literal>SNIHostName</literal>. This allows for Domain Fronting.
+                            </para>
+                        </entry>
+                    </row>
                     <row>
                         <entry>&jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION;
                             (Jersey 2.2 or later)</entry>

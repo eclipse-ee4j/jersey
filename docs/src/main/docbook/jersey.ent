@@ -353,6 +353,7 @@
 <!ENTITY jersey.client.ClientProperties.PROXY_USERNAME "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#PROXY_USERNAME'>ClientProperties.PROXY_USERNAME</link>" >
 <!ENTITY jersey.client.ClientProperties.READ_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#READ_TIMEOUT'>ClientProperties.READ_TIMEOUT</link>" >
 <!ENTITY jersey.client.ClientProperties.REQUEST_ENTITY_PROCESSING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#REQUEST_ENTITY_PROCESSING'>ClientProperties.REQUEST_ENTITY_PROCESSING</link>" >
+<!ENTITY jersey.client.ClientProperties.SNI_HOST_NAME "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SNI_HOST_NAME'>ClientProperties.SNI_HOST_NAME</link>" >
 <!ENTITY jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SUPPRESS_HTTP_COMPLIANCE_VALIDATION'>ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION</link>" >
 <!ENTITY jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SSL_CONTEXT_SUPPLIER'>ClientProperties.SSL_CONTEXT_SUPPLIER</link>" >
 <!ENTITY jersey.client.ClientProperties.USE_ENCODING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#USE_ENCODING'>ClientProperties.USE_ENCODING</link>" >

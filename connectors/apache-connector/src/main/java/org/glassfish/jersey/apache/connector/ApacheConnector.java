@@ -882,7 +882,8 @@ class ApacheConnector implements Connector {
                 Object objectRequest = context.getAttribute(JERSEY_REQUEST_ATTR_NAME);
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
-                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest).build();
+                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
+                            .setSNIHostName(clientRequest).build();
                     sniConfig.setSNIServerName(socket);
                 }
             }

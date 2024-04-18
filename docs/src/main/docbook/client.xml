@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1117,6 +1117,19 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 is set, the <literal>SNIHostName</literal> is set for the host specified in the <literal>Host</literal> header.
                 Note that only <literal>Apache Connector, JDK Connector, Netty connector</literal>, and the default
                 <literal>HttpUrlConnector</literal> do support this feature.
+            </para>
+            <para>
+                Sometimes, it may be required the <literal>SNIHostName</literal> is not set, or it differs from the
+                HTTP <literal>Host</literal> header. In that case, the &jersey.client.ClientProperties.SNI_HOST_NAME;
+                property can be utilized. The property sets the host name to be used for calculating the
+                <literal>javax.net.ssl.SNIHostName</literal>. The property takes precedence over the HTTP
+                <literal>Host</literal> header.
+            </para>
+            <para>
+                When the host name in the the &jersey.client.ClientProperties.SNI_HOST_NAME; property matches the HTTP request
+                host, the <literal>SNIHostName</literal> is not set, and the HTTP <literal>Host</literal> header is not used
+                for setting the <literal>SNIHostName</literal>.
+                Turning the SNI off allows for Domain Fronting.
             </para>
         </section>
 
