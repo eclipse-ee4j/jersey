@@ -77,17 +77,17 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     protected ChunkedOutput() {
         this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
     }
-
+    
     /**
      * Create new {@code ChunkedOutput}.
      * 
      * @param queueCapacity the queueCapacity before adding items will block
-     */    
+     */
     protected ChunkedOutput(final int queueCapacity) {
         this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         queue = new LinkedBlockingDeque<>(queueCapacity);
-    } 
-
+    }
+    
     /**
      * Create {@code ChunkedOutput} with specified type.
      *
@@ -189,7 +189,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         if (chunk != null) {
-            queue.add(chunk);
+            queue.put(chunk);
         }
 
         flushQueue();
