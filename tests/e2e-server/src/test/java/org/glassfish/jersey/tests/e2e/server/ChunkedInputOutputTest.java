@@ -61,13 +61,32 @@ public class ChunkedInputOutputTest extends JerseyTest {
     @Path("/test")
     public static class TestResource {
         /**
+         * Get chunk stream with a queue capacity of 2.
+         *
+         * @return chunk stream.
+         */
+        @GET
+        @Path("/testWithBuilder")
+        public ChunkedOutput<String> getWithBuilder() {
+            return getOutput(ChunkedOutput.<String>newBuilder().withQueueCapacity(2).withChunkDelimiter("\r\n".getBytes()).build());
+        }
+
+        /**
          * Get chunk stream.
          *
          * @return chunk stream.
          */
         @GET
         public ChunkedOutput<String> get() {
-            final ChunkedOutput<String> output = new ChunkedOutput<>(String.class, "\r\n");
+            return getOutput(new ChunkedOutput<>(String.class, "\r\n"));
+        }
+
+        /**
+         * Get chunk stream.
+         *
+         * @return chunk stream.
+         */
+        private ChunkedOutput<String> getOutput(ChunkedOutput<String> output) {
 
             new Thread() {
                 @Override
@@ -177,6 +196,19 @@ public class ChunkedInputOutputTest extends JerseyTest {
     @Test
     public void testChunkedOutputToSingleString() throws Exception {
         final String response = target().path("test").request().get(String.class);
+
+        assertEquals("test\r\ntest\r\ntest\r\n", response,
+                "Unexpected value of chunked response unmarshalled as a single string.");
+    }
+
+    /**
+     * Test retrieving chunked response stream as a single response string, when a builder with capacity is used.
+     *
+     * @throws Exception in case of a failure during the test execution.
+     */
+    @Test
+    public void testChunkedOutputToSingleStringWithBuilder() throws Exception {
+        final String response = target().path("test/testWithBuilder").request().get(String.class);
 
         assertEquals("test\r\ntest\r\ntest\r\n", response,
                 "Unexpected value of chunked response unmarshalled as a single string.");
