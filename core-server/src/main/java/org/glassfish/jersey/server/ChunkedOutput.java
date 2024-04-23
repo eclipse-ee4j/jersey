@@ -467,7 +467,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         /**
-         * Set the queue capacity. If greather than 0, the queue is bounded and will block when full.
+         * Set the queue capacity. If greater than 0, the queue is bounded and will block when full.
          * @param queueCapacity the queue capacity
          * @return builder
          */
