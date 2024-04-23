@@ -22,7 +22,7 @@
 
     <groupId>org.glassfish.jersey.core</groupId>
     <artifactId>jersey-tck</artifactId>
-    <version>3.1.0</version>
+    <version>3.5.99-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Jakarta RESTful WS Compliance for Jersey</name>
@@ -538,7 +538,7 @@
         <profile>
             <id>jersey-tck</id>
             <properties>
-                <jersey.version>3.1.88-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
+                <jersey.version>3.5.99-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
             </properties>
         </profile>
     </profiles>
