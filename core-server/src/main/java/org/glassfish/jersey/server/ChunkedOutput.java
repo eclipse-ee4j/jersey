@@ -385,6 +385,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
     /**
      * Get state information.
+     * <p>
      * Please note that {@code ChunkedOutput} can be closed by the client side - client can close connection
      * from its side.
      *
@@ -455,26 +456,50 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         private Provider<AsyncContext> asyncContextProvider;
         private Type chunkType;
 
+        /**
+         * Set the chunk delimiter, in bytes.
+         * @param chunkDelimiter the chunk delimiter in bytes
+         * @return builder
+         */
         public ChunkedOutputBuilder<Y> withChunkDelimiter(byte[] chunkDelimiter) {
             this.chunkDelimiter = chunkDelimiter;
             return this;
         }
 
+        /**
+         * Set the queue capacity. If greather than 0, the queue is bounded and will block when full.
+         * @param queueCapacity the queue capacity
+         * @return builder
+         */
         public ChunkedOutputBuilder<Y> withQueueCapacity(int queueCapacity) {
             this.queueCapacity = queueCapacity;
             return this;
         }
 
+        /**
+         * Set the async context provider.
+         * @param asyncContextProvider the async context provider
+         * @return builder
+         */
         public ChunkedOutputBuilder<Y> withAsyncContextProvider(Provider<AsyncContext> asyncContextProvider) {
             this.asyncContextProvider = asyncContextProvider;
             return this;
         }
 
+        /**
+         * Set the chunk type.
+         * @param chunkType the chunk type
+         * @return builder
+         */
         public ChunkedOutputBuilder<Y> withChunkType(Type chunkType) {
             this.chunkType = chunkType;
             return this;
         }
 
+        /**
+         * Build the ChunkedOutput based on the given configuration.
+         * @return the ChunkedOutput
+         */
         public ChunkedOutput<Y> build() {
             return new ChunkedOutput<>(this);
         }
