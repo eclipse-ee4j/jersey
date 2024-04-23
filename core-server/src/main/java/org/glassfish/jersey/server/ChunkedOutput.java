@@ -216,7 +216,11 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         if (chunk != null) {
-            queue.add(chunk);
+            try {
+                queue.put(chunk);
+            } catch (InterruptedException e) {
+                throw new IOException(e);
+            }
         }
 
         flushQueue();
