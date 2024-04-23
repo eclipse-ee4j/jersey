@@ -27,11 +27,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Provider;
 import javax.ws.rs.container.ConnectionCallback;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.ext.WriterInterceptor;
-
-import javax.inject.Provider;
 
 import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;
@@ -51,7 +50,7 @@ import org.glassfish.jersey.server.internal.process.MappableException;
 public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private static final byte[] ZERO_LENGTH_DELIMITER = new byte[0];
 
-    private final BlockingDeque<T> queue = new LinkedBlockingDeque<>();
+    private final BlockingDeque<T> queue;
     private final byte[] chunkDelimiter;
     private final AtomicBoolean resumed = new AtomicBoolean(false);
     private final Object lock = new Object();
@@ -72,44 +71,90 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
 
     /**
-     * Create new {@code ChunkedOutput}.
+     * Create new {@code ChunkedOutput} with an unbounded queue capacity.
      */
     protected ChunkedOutput() {
-        this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        this(-1);
     }
 
     /**
-     * Create {@code ChunkedOutput} with specified type.
+     * Create new {@code ChunkedOutput} with the specified queue capacity.
+     *
+     * @param queueCapacity the size of the queue
+     */
+    protected ChunkedOutput(final int queueCapacity) {
+        this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
+    }
+
+    /**
+     * Create {@code ChunkedOutput} with specified type and with an unbounded queue capacity.
      *
      * @param chunkType chunk type. Must not be {code null}.
      */
     public ChunkedOutput(final Type chunkType) {
-        super(chunkType);
-        this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        this(chunkType, -1);
     }
 
     /**
-     * Create new {@code ChunkedOutput} with a custom chunk delimiter.
+     * Create {@code ChunkedOutput} with specified type and queue capacity.
+     *
+     * @param chunkType     chunk type. Must not be {code null}.
+     * @param queueCapacity the size of the queue
+     */
+    public ChunkedOutput(final Type chunkType, final int queueCapacity) {
+        super(chunkType);
+        this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
+    }
+
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and unbounded queue capacity.
      *
      * @param chunkDelimiter custom chunk delimiter bytes. Must not be {code null}.
      * @since 2.4.1
      */
     protected ChunkedOutput(final byte[] chunkDelimiter) {
+        this(chunkDelimiter, -1);
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and specified queue capacity.
+     *
+     * @param chunkDelimiter custom chunk delimiter bytes. Must not be {code null}.
+     * @param queueCapacity  the size of the queue
+     */
+    protected ChunkedOutput(final byte[] chunkDelimiter, int queueCapacity) {
         if (chunkDelimiter.length > 0) {
             this.chunkDelimiter = new byte[chunkDelimiter.length];
             System.arraycopy(chunkDelimiter, 0, this.chunkDelimiter, 0, chunkDelimiter.length);
         } else {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         }
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
     }
 
     /**
-     * Create new {@code ChunkedOutput} with a custom chunk delimiter.
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and unbounded queue capacity.
      *
-     * @param chunkDelimiter custom chunk delimiter bytes. Must not be {code null}.
+     * @param chunkDelimiter       custom chunk delimiter bytes. Must not be {code null}.
+     * @param asyncContextProvider async context provider
      * @since 2.4.1
      */
     protected ChunkedOutput(final byte[] chunkDelimiter, Provider<AsyncContext> asyncContextProvider) {
+        this(chunkDelimiter, asyncContextProvider, -1);
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter, async context provider and specified queue capacity.
+     *
+     * @param chunkDelimiter       custom chunk delimiter bytes. Must not be {code null}.
+     * @param asyncContextProvider async context provider
+     * @param queueCapacity        the size of the queue
+     */
+    protected ChunkedOutput(final byte[] chunkDelimiter, Provider<AsyncContext> asyncContextProvider, int queueCapacity) {
         if (chunkDelimiter.length > 0) {
             this.chunkDelimiter = new byte[chunkDelimiter.length];
             System.arraycopy(chunkDelimiter, 0, this.chunkDelimiter, 0, chunkDelimiter.length);
@@ -118,6 +163,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         this.asyncContext = asyncContextProvider == null ? null : asyncContextProvider.get();
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
     }
 
     /**
@@ -128,6 +174,17 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      * @since 2.4.1
      */
     public ChunkedOutput(final Type chunkType, final byte[] chunkDelimiter) {
+        this(chunkType, chunkDelimiter, -1);
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and specified queue capacity.
+     *
+     * @param chunkType      chunk type. Must not be {code null}.
+     * @param chunkDelimiter custom chunk delimiter bytes. Must not be {code null}.
+     * @param queueCapacity  the size of the queue
+     */
+    public ChunkedOutput(final Type chunkType, final byte[] chunkDelimiter, int queueCapacity) {
         super(chunkType);
         if (chunkDelimiter.length > 0) {
             this.chunkDelimiter = new byte[chunkDelimiter.length];
@@ -135,36 +192,60 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         } else {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         }
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
     }
 
     /**
-     * Create new {@code ChunkedOutput} with a custom chunk delimiter.
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and unbounded queue capacity.
      *
      * @param chunkDelimiter custom chunk delimiter string. Must not be {code null}.
      * @since 2.4.1
      */
     protected ChunkedOutput(final String chunkDelimiter) {
+        this(chunkDelimiter, -1);
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and specified queue capacity.
+     *
+     * @param chunkDelimiter custom chunk delimiter string. Must not be {code null}.
+     * @param queueCapacity  the size of the queue
+     */
+    protected ChunkedOutput(final String chunkDelimiter, int queueCapacity) {
         if (chunkDelimiter.isEmpty()) {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         } else {
             this.chunkDelimiter = chunkDelimiter.getBytes();
         }
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
     }
 
     /**
-     * Create new {@code ChunkedOutput} with a custom chunk delimiter.
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and unbounded queue capacity.
      *
      * @param chunkType      chunk type. Must not be {code null}.
      * @param chunkDelimiter custom chunk delimiter string. Must not be {code null}.
      * @since 2.4.1
      */
     public ChunkedOutput(final Type chunkType, final String chunkDelimiter) {
+        this(chunkType, chunkDelimiter, -1);
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} with a custom chunk delimiter and specified queue capacity.
+     *
+     * @param chunkType      chunk type. Must not be {code null}.
+     * @param chunkDelimiter custom chunk delimiter string. Must not be {code null}.
+     * @param queueCapacity  the size of the queue
+     */
+    public ChunkedOutput(final Type chunkType, final String chunkDelimiter, int queueCapacity) {
         super(chunkType);
         if (chunkDelimiter.isEmpty()) {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         } else {
             this.chunkDelimiter = chunkDelimiter.getBytes();
         }
+        queue = queueCapacity > 0 ? new LinkedBlockingDeque<>(queueCapacity) : new LinkedBlockingDeque<>();
     }
 
     /**
@@ -179,7 +260,12 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         if (chunk != null) {
-            queue.add(chunk);
+            try {
+                queue.put(chunk);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IOException(e);
+            }
         }
 
         flushQueue();
@@ -265,9 +351,9 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                             }
                             throw mpe;
                         } finally {
-                           synchronized (lock) {
-                               touchingEntityStream = false;
-                           }
+                            synchronized (lock) {
+                                touchingEntityStream = false;
+                            }
                         }
 
                         t = queue.poll();
