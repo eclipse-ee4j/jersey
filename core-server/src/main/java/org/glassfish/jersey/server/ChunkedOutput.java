@@ -69,7 +69,6 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private volatile ContainerResponse responseContext;
     private volatile ConnectionCallback connectionCallback;
 
-
     /**
      * Create new {@code ChunkedOutput}.
      */
@@ -385,7 +384,6 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
     /**
      * Get state information.
-     * <p>
      * Please note that {@code ChunkedOutput} can be closed by the client side - client can close connection
      * from its side.
      *
@@ -455,6 +453,10 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         private int queueCapacity = -1;
         private Provider<AsyncContext> asyncContextProvider;
         private Type chunkType;
+
+        private ChunkedOutputBuilder() {
+            // hide constructor
+        }
 
         /**
          * Set the chunk delimiter, in bytes.
