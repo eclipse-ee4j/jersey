@@ -271,7 +271,7 @@ public class AsyncResource {
         final ChunkedOutput<String> output = new ChunkedOutput<String>(String.class);
 
         // Or use the builder pattern instead, which also allows to configure the queue capacity
-        // final ChunkedOutput<String> output = ChunkedOutput.<String>newBuilder().withQueueCapacity(10).build();
+        // final ChunkedOutput<String> output = ChunkedOutput.<String>newBuilder(String.class).queueCapacity(10).build();
 
         new Thread() {
             public void run() {
