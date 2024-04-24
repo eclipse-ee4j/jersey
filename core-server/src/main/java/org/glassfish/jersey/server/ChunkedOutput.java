@@ -82,7 +82,30 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      *
      * @param builder the builder to use
      */
-    private ChunkedOutput(ChunkedOutputBuilder<T> builder) {
+    protected ChunkedOutput(Builder<T> builder) {
+        super();
+        if (builder.queueCapacity > 0) {
+            queue = new LinkedBlockingDeque<>(builder.queueCapacity);
+        } else {
+            queue = new LinkedBlockingDeque<>();
+        }
+        if (builder.chunkDelimiter != null) {
+            this.chunkDelimiter = new byte[builder.chunkDelimiter.length];
+            System.arraycopy(builder.chunkDelimiter, 0, this.chunkDelimiter, 0, builder.chunkDelimiter.length);
+        } else {
+            this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        }
+        if (builder.asyncContextProvider != null) {
+            this.asyncContext = builder.asyncContextProvider.get();
+        }
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} based on builder.
+     *
+     * @param builder the builder to use
+     */
+    private ChunkedOutput(TypedBuilder<T> builder) {
         super(builder.chunkType);
 
         if (builder.queueCapacity > 0) {
@@ -199,11 +222,20 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     /**
      * Returns a builder to create a ChunkedOutput with custom configuration.
      *
+     * @return builder
+     */
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
+    }
+
+    /**
+     * Returns a builder to create a ChunkedOutput with custom configuration.
+     *
      * @param chunkType      chunk type. Must not be {code null}.
      * @return builder
      */
-    public static <T> ChunkedOutputBuilder<T> newBuilder(Type chunkType) {
-        return new ChunkedOutputBuilder<>(chunkType);
+    public static <T> Builder<T> builder(Type chunkType) {
+        return new TypedBuilder<>(chunkType);
     }
 
     /**
@@ -449,15 +481,13 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      *
      * @param <Y>
      */
-    public static class ChunkedOutputBuilder<Y> {
-        private byte[] chunkDelimiter;
-        private int queueCapacity = -1;
-        private Provider<AsyncContext> asyncContextProvider;
-        private Type chunkType;
+    public static class Builder<Y> {
+        byte[] chunkDelimiter;
+        int queueCapacity = -1;
+        Provider<AsyncContext> asyncContextProvider;
 
-        private ChunkedOutputBuilder(Type chunkType) {
+        private Builder() {
             // hide constructor
-            this.chunkType = chunkType;
         }
 
         /**
@@ -465,7 +495,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
          * @param chunkDelimiter the chunk delimiter in bytes
          * @return builder
          */
-        public ChunkedOutputBuilder<Y> chunkDelimiter(byte[] chunkDelimiter) {
+        public Builder<Y> chunkDelimiter(byte[] chunkDelimiter) {
             this.chunkDelimiter = chunkDelimiter;
             return this;
         }
@@ -475,7 +505,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
          * @param queueCapacity the queue capacity
          * @return builder
          */
-        public ChunkedOutputBuilder<Y> queueCapacity(int queueCapacity) {
+        public Builder<Y> queueCapacity(int queueCapacity) {
             this.queueCapacity = queueCapacity;
             return this;
         }
@@ -485,9 +515,30 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
          * @param asyncContextProvider the async context provider
          * @return builder
          */
-        public ChunkedOutputBuilder<Y> asyncContextProvider(Provider<AsyncContext> asyncContextProvider) {
+        public Builder<Y> asyncContextProvider(Provider<AsyncContext> asyncContextProvider) {
             this.asyncContextProvider = asyncContextProvider;
             return this;
+        }
+
+        /**
+         * Build the ChunkedOutput based on the given configuration.
+         * @return the ChunkedOutput
+         */
+        public ChunkedOutput<Y> build() {
+            return new ChunkedOutput<>(this);
+        }
+    }
+
+    /**
+     * Builder that allows to create a new ChunkedOutput based on the given configuration options.
+     *
+     * @param <Y>
+     */
+    public static class TypedBuilder<Y> extends Builder<Y> {
+        private Type chunkType;
+
+        private TypedBuilder(Type chunkType) {
+            this.chunkType = chunkType;
         }
 
         /**
