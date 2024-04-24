@@ -68,7 +68,8 @@ public class ChunkedInputOutputTest extends JerseyTest {
         @GET
         @Path("/testWithBuilder")
         public ChunkedOutput<String> getWithBuilder() {
-            return getOutput(ChunkedOutput.<String>newBuilder(String.class).queueCapacity(2).chunkDelimiter("\r\n".getBytes()).build());
+            return getOutput(ChunkedOutput.<String>newBuilder(String.class).queueCapacity(2)
+                             .chunkDelimiter("\r\n".getBytes()).build());
         }
 
         /**
