@@ -40,7 +40,6 @@
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
-                    <enableAssertions>false</enableAssertions>
                     <skipTests>${skip.e2e}</skipTests>
                     <systemPropertyVariables>
                         <sun.net.http.allowRestrictedHeaders>true</sun.net.http.allowRestrictedHeaders>
@@ -50,6 +49,27 @@
                         </property>
                     </systemPropertyVariables>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>HttpsPatch</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/HttpsPatchTest.java</include>
+                            </includes>
+                            <systemPropertyVariables>
+                                <jersey.added.opens>true</jersey.added.opens>
+                            </systemPropertyVariables>
+                            <!-- Allow HTTP PATCH by property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true) -->
+                            <argLine>
+                                --add-opens java.base/java.net=ALL-UNNAMED
+                                --add-opens java.base/sun.net.www.protocol.https=ALL-UNNAMED
+                            </argLine>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
