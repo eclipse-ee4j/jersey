@@ -234,7 +234,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      * @param chunkType      chunk type. Must not be {code null}.
      * @return builder
      */
-    public static <T> Builder<T> builder(Type chunkType) {
+    public static <T> TypedBuilder<T> builder(Type chunkType) {
         return new TypedBuilder<>(chunkType);
     }
 
