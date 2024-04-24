@@ -432,7 +432,8 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
      * @param e Exception causing the close
      */
     protected void onClose(Exception e) {
-
+        // drain queue when an exception occurs to prevent deadlocks
+        queue.clear();
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
