@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
 package org.glassfish.jersey.server.mvc.thymeleaf;
 
 import jakarta.inject.Inject;
@@ -22,9 +38,20 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * {@link org.glassfish.jersey.server.mvc.spi.TemplateProcessor Template processor} providing support for Thymeleaf templates.
+ *
+ * @author Dmytro Dovnar (dimonmc@gmail.com)
+ */
 public final class ThymeleafViewProcessor extends AbstractTemplateProcessor<TemplateEngine> {
     private final ThymeleafConfigurationFactory factory;
 
+    /**
+     * Create an instance of this processor with injected {@link jakarta.ws.rs.core.Configuration config}.
+     *
+     * @param config           config to configure this processor from.
+     * @param injectionManager injection manager.
+     */
     @Inject
     public ThymeleafViewProcessor(Configuration config, InjectionManager injectionManager) {
         super(config, injectionManager.getInstance(ServletContext.class), "thymeleaf", "html");
@@ -33,7 +60,7 @@ public final class ThymeleafViewProcessor extends AbstractTemplateProcessor<Temp
                     ThymeleafConfigurationFactory configuration =
                             getTemplateObjectFactory(injectionManager::createAndInitialize, ThymeleafConfigurationFactory.class, Values.empty());
                     if (configuration == null) {
-                        return new ThymeleafDefaultConfigurationFactory();
+                        return new ThymeleafDefaultConfigurationFactory(config);
                     } else {
                         return new ThymeleafSuppliedConfigurationFactory(configuration);
                     }
