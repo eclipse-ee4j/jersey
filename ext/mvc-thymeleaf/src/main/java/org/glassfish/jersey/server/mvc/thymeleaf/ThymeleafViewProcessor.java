@@ -58,7 +58,9 @@ public final class ThymeleafViewProcessor extends AbstractTemplateProcessor<Temp
         this.factory = getTemplateObjectFactory(injectionManager::createAndInitialize, ThymeleafConfigurationFactory.class,
                 () -> {
                     ThymeleafConfigurationFactory configuration =
-                            getTemplateObjectFactory(injectionManager::createAndInitialize, ThymeleafConfigurationFactory.class, Values.empty());
+                            getTemplateObjectFactory(
+                                    injectionManager::createAndInitialize,
+                                    ThymeleafConfigurationFactory.class, Values.empty());
                     if (configuration == null) {
                         return new ThymeleafDefaultConfigurationFactory(config);
                     } else {
@@ -81,7 +83,7 @@ public final class ThymeleafViewProcessor extends AbstractTemplateProcessor<Temp
         if (!(model instanceof Map)) {
             context.setVariable("model", viewable.getModel());
         } else {
-            context.setVariables((Map)viewable.getModel());
+            context.setVariables((Map) viewable.getModel());
         }
 
         if (context.containsVariable("lang")) {
@@ -89,7 +91,7 @@ public final class ThymeleafViewProcessor extends AbstractTemplateProcessor<Temp
             if (langValue instanceof Locale) {
                 context.setLocale((Locale) langValue);
             } else if (langValue instanceof String) {
-                Locale locale = Locale.forLanguageTag((String)langValue);
+                Locale locale = Locale.forLanguageTag((String) langValue);
                 context.setLocale(locale);
             }
         }

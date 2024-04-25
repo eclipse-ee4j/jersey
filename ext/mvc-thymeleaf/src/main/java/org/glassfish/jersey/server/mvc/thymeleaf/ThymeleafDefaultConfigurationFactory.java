@@ -56,10 +56,10 @@ public class ThymeleafDefaultConfigurationFactory implements ThymeleafConfigurat
         Map<String, Object> properties = config.getProperties();
         String basePath = (String) PropertiesHelper.getValue(properties,
                 "jersey.config.server.mvc.templateBasePath" + ThymeleafMvcFeature.SUFFIX,
-                String.class, (Map)null);
+                String.class, (Map) null);
         if (basePath == null) {
-            basePath = (String)PropertiesHelper.getValue(properties,
-                    "jersey.config.server.mvc.templateBasePath", "", (Map)null);
+            basePath = (String) PropertiesHelper.getValue(properties,
+                    "jersey.config.server.mvc.templateBasePath", "", (Map) null);
         }
 
         if (basePath != null && !basePath.startsWith("/")) {
@@ -68,21 +68,21 @@ public class ThymeleafDefaultConfigurationFactory implements ThymeleafConfigurat
 
         String templateFileSuffix = (String) PropertiesHelper.getValue(properties,
                 "jersey.config.server.mvc.templateFileSuffix" + ThymeleafMvcFeature.SUFFIX,
-                ".html", (Map)null);
+                ".html", (Map) null);
 
         String templateFileMode = (String) PropertiesHelper.getValue(properties,
                 "jersey.config.server.mvc.templateMode" + ThymeleafMvcFeature.SUFFIX,
-                "HTML5", (Map)null);
+                "HTML5", (Map) null);
 
-        Boolean cacheEnabled = (Boolean)PropertiesHelper.getValue(properties,
-                "jersey.config.server.mvc.caching" + ThymeleafMvcFeature.SUFFIX, Boolean.class, (Map)null);
+        Boolean cacheEnabled = (Boolean) PropertiesHelper.getValue(properties,
+                "jersey.config.server.mvc.caching" + ThymeleafMvcFeature.SUFFIX, Boolean.class, (Map) null);
         if (cacheEnabled == null) {
-            cacheEnabled = (Boolean)PropertiesHelper.getValue(properties,
-                    "jersey.config.server.mvc.caching", false, (Map)null);
+            cacheEnabled = (Boolean) PropertiesHelper.getValue(properties,
+                    "jersey.config.server.mvc.caching", false, (Map) null);
         }
 
-        Long cacheLiveMs = (Long)PropertiesHelper.getValue(properties,
-                "jersey.config.server.mvc.cacheTTLMs" + ThymeleafMvcFeature.SUFFIX, 3600000L, (Map)null);
+        Long cacheLiveMs = (Long) PropertiesHelper.getValue(properties,
+                "jersey.config.server.mvc.cacheTTLMs" + ThymeleafMvcFeature.SUFFIX, 3600000L, (Map) null);
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix(basePath);
