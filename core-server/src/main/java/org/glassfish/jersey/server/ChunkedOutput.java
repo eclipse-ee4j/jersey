@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,11 +27,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Provider;
 import javax.ws.rs.container.ConnectionCallback;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.ext.WriterInterceptor;
-
-import javax.inject.Provider;
 
 import org.glassfish.jersey.process.internal.RequestContext;
 import org.glassfish.jersey.process.internal.RequestScope;
@@ -51,7 +50,7 @@ import org.glassfish.jersey.server.internal.process.MappableException;
 public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private static final byte[] ZERO_LENGTH_DELIMITER = new byte[0];
 
-    private final BlockingDeque<T> queue = new LinkedBlockingDeque<>();
+    private final BlockingDeque<T> queue;
     private final byte[] chunkDelimiter;
     private final AtomicBoolean resumed = new AtomicBoolean(false);
     private final Object lock = new Object();
@@ -70,12 +69,59 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     private volatile ContainerResponse responseContext;
     private volatile ConnectionCallback connectionCallback;
 
-
     /**
      * Create new {@code ChunkedOutput}.
      */
     protected ChunkedOutput() {
         this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        queue = new LinkedBlockingDeque<>();
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} based on builder.
+     *
+     * @param builder the builder to use
+     */
+    protected ChunkedOutput(Builder<T> builder) {
+        super();
+        if (builder.queueCapacity > 0) {
+            queue = new LinkedBlockingDeque<>(builder.queueCapacity);
+        } else {
+            queue = new LinkedBlockingDeque<>();
+        }
+        if (builder.chunkDelimiter != null) {
+            this.chunkDelimiter = new byte[builder.chunkDelimiter.length];
+            System.arraycopy(builder.chunkDelimiter, 0, this.chunkDelimiter, 0, builder.chunkDelimiter.length);
+        } else {
+            this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        }
+        if (builder.asyncContextProvider != null) {
+            this.asyncContext = builder.asyncContextProvider.get();
+        }
+    }
+
+    /**
+     * Create new {@code ChunkedOutput} based on builder.
+     *
+     * @param builder the builder to use
+     */
+    private ChunkedOutput(TypedBuilder<T> builder) {
+        super(builder.chunkType);
+
+        if (builder.queueCapacity > 0) {
+            queue = new LinkedBlockingDeque<>(builder.queueCapacity);
+        } else {
+            queue = new LinkedBlockingDeque<>();
+        }
+        if (builder.chunkDelimiter != null) {
+            this.chunkDelimiter = new byte[builder.chunkDelimiter.length];
+            System.arraycopy(builder.chunkDelimiter, 0, this.chunkDelimiter, 0, builder.chunkDelimiter.length);
+        } else {
+            this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        }
+        if (builder.asyncContextProvider != null) {
+            this.asyncContext = builder.asyncContextProvider.get();
+        }
     }
 
     /**
@@ -86,6 +132,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
     public ChunkedOutput(final Type chunkType) {
         super(chunkType);
         this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
+        queue = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -101,6 +148,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         } else {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         }
+        queue = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -118,6 +166,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         this.asyncContext = asyncContextProvider == null ? null : asyncContextProvider.get();
+        queue = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -135,6 +184,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         } else {
             this.chunkDelimiter = ZERO_LENGTH_DELIMITER;
         }
+        queue = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -149,6 +199,7 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         } else {
             this.chunkDelimiter = chunkDelimiter.getBytes();
         }
+        queue = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -165,6 +216,26 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         } else {
             this.chunkDelimiter = chunkDelimiter.getBytes();
         }
+        queue = new LinkedBlockingDeque<>();
+    }
+
+    /**
+     * Returns a builder to create a ChunkedOutput with custom configuration.
+     *
+     * @return builder
+     */
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
+    }
+
+    /**
+     * Returns a builder to create a ChunkedOutput with custom configuration.
+     *
+     * @param chunkType      chunk type. Must not be {code null}.
+     * @return builder
+     */
+    public static <T> TypedBuilder<T> builder(Type chunkType) {
+        return new TypedBuilder<>(chunkType);
     }
 
     /**
@@ -179,7 +250,12 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         }
 
         if (chunk != null) {
-            queue.add(chunk);
+            try {
+                queue.put(chunk);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IOException(e);
+            }
         }
 
         flushQueue();
@@ -265,9 +341,9 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
                             }
                             throw mpe;
                         } finally {
-                           synchronized (lock) {
-                               touchingEntityStream = false;
-                           }
+                            synchronized (lock) {
+                                touchingEntityStream = false;
+                            }
                         }
 
                         t = queue.poll();
@@ -341,7 +417,6 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
     /**
      * Get state information.
-     *
      * Please note that {@code ChunkedOutput} can be closed by the client side - client can close connection
      * from its side.
      *
@@ -353,10 +428,12 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
 
     /**
      * Executed only in case of close being triggered by client.
+     *
      * @param e Exception causing the close
      */
-    protected void onClose(Exception e){
-
+    protected void onClose(Exception e) {
+        // drain queue when an exception occurs to prevent deadlocks
+        queue.clear();
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
@@ -398,5 +475,79 @@ public class ChunkedOutput<T> extends GenericType<T> implements Closeable {
         this.responseContext = responseContext;
         this.connectionCallback = connectionCallbackRunner;
         flushQueue();
+    }
+
+    /**
+     * Builder that allows to create a new ChunkedOutput based on the given configuration options.
+     *
+     * @param <Y>
+     */
+    public static class Builder<Y> {
+        byte[] chunkDelimiter;
+        int queueCapacity = -1;
+        Provider<AsyncContext> asyncContextProvider;
+
+        private Builder() {
+            // hide constructor
+        }
+
+        /**
+         * Set the chunk delimiter, in bytes.
+         * @param chunkDelimiter the chunk delimiter in bytes
+         * @return builder
+         */
+        public Builder<Y> chunkDelimiter(byte[] chunkDelimiter) {
+            this.chunkDelimiter = chunkDelimiter;
+            return this;
+        }
+
+        /**
+         * Set the queue capacity. If greater than 0, the queue is bounded and will block when full.
+         * @param queueCapacity the queue capacity
+         * @return builder
+         */
+        public Builder<Y> queueCapacity(int queueCapacity) {
+            this.queueCapacity = queueCapacity;
+            return this;
+        }
+
+        /**
+         * Set the async context provider.
+         * @param asyncContextProvider the async context provider
+         * @return builder
+         */
+        public Builder<Y> asyncContextProvider(Provider<AsyncContext> asyncContextProvider) {
+            this.asyncContextProvider = asyncContextProvider;
+            return this;
+        }
+
+        /**
+         * Build the ChunkedOutput based on the given configuration.
+         * @return the ChunkedOutput
+         */
+        public ChunkedOutput<Y> build() {
+            return new ChunkedOutput<>(this);
+        }
+    }
+
+    /**
+     * Builder that allows to create a new ChunkedOutput based on the given configuration options.
+     *
+     * @param <Y>
+     */
+    public static class TypedBuilder<Y> extends Builder<Y> {
+        private Type chunkType;
+
+        private TypedBuilder(Type chunkType) {
+            this.chunkType = chunkType;
+        }
+
+        /**
+         * Build the ChunkedOutput based on the given configuration.
+         * @return the ChunkedOutput
+         */
+        public ChunkedOutput<Y> build() {
+            return new ChunkedOutput<>(this);
+        }
     }
 }
