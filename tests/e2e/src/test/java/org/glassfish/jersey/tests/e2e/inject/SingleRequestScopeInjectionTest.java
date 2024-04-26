@@ -79,15 +79,12 @@ public class SingleRequestScopeInjectionTest extends JerseyTest {
     }
     public static class InjectedFilterRegistrar implements DynamicFeature {
         private final Class<?> filterToRegister;
-        private final AtomicInteger ai = new AtomicInteger(0);
         public InjectedFilterRegistrar(Class<?> filterToRegister) {
             this.filterToRegister = filterToRegister;
         }
         @Override
         public void configure(ResourceInfo resourceInfo, FeatureContext context) {
-            if (ai.get() == 1) {
-                context.register(filterToRegister);
-            }
+            context.register(filterToRegister);
         }
     }
 }
