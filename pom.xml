@@ -142,6 +142,9 @@
         <contributor>
             <name>Stepan Vavra</name>
         </contributor>
+        <contributor>
+            <name>Dmytro Dovnar</name>
+        </contributor>
     </contributors>
 
     <licenses>
@@ -2292,6 +2295,7 @@
         <spring6.version>6.0.18</spring6.version>
         <testng.version>7.9.0</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
+        <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <!-- Jakartified, eligible for CQ -->
         <weld.version>4.0.3.Final</weld.version>
         <weld3.version>3.1.9.Final</weld3.version>
