@@ -81,6 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.common.mvn.plugin.version}</version>
                 <inherited>false</inherited>
                 <configuration>
                     <source>${java.version}</source>
@@ -412,6 +413,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${compiler.common.mvn.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>default-compile</id>

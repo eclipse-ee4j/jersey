@@ -118,7 +118,7 @@
         <jersey.version>${project.version}</jersey.version>
         <jetty.version>9.4.54.v20240208</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.1.2</surefire.mvn.plugin.version>
+        <surefire.mvn.plugin.version>3.2.5</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>
 </project>
