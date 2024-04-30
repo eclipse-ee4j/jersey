@@ -693,6 +693,157 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>build.jdk20-</id>
+            <activation>
+                <jdk>[1.8,21)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add.java20-</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/main/java20-</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build.jdk21</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add.java20-</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/main/java21</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-compile</id>
+                                <configuration>
+                                    <!-- compile everything to ensure module-info contains right entries -->
+                                    <release>21</release>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Building for JDK 21+</echo>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>compile-java21</id>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${java21.build.outputDirectory}" />
+                                        <javac srcdir="${java21.sourceDirectory}" destdir="${java21.build.outputDirectory}"
+                                               classpath="${project.build.outputDirectory}" includeantruntime="false" release="21"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK21FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java21.build.outputDirectory} does not work here -->
+                    <exists>target/classes-java21/org/glassfish/jersey/innate/VirtualThreadSupport.class</exists>
+                </file>
+                <jdk>[1.8,21)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk21-sources</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/21/org/glassfish/jersey/innate</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java21.sourceDirectory}/org/glassfish/jersey/innate</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-jdk21-classes-to-meta-inf</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/21</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java21.build.outputDirectory}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
         <profile>
             <id>securityOff</id>
@@ -739,6 +890,8 @@
         <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
         <java11.build.outputDirectory>${project.build.directory}/classes-java11</java11.build.outputDirectory>
         <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
+        <java21.build.outputDirectory>${project.build.directory}/classes-java21</java21.build.outputDirectory>
+        <java21.sourceDirectory>${project.basedir}/src/main/java21</java21.sourceDirectory>
     </properties>
 
 </project>
