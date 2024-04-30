@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
 
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
-            <version>1.7.0.Alpha12</version>
+            <version>1.8.0.Final</version>
             <scope>test</scope>
         </dependency>
 
@@ -106,7 +106,7 @@
 <!--                                    <artifactId>glassfish</artifactId>-->
                                     <groupId>fish.payara.distributions</groupId>
                                     <artifactId>payara</artifactId>
-                                    <version>5.2022.2</version>
+                                    <version>5.2022.5</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}</outputDirectory>
