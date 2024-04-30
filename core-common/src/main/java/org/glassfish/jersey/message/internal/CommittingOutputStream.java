@@ -23,9 +23,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.VirtualThreadSupport;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.Preconditions;
-import org.glassfish.jersey.internal.util.JdkVersion;
 
 /**
  * A committing output stream with optional serialized entity buffering functionality
@@ -59,7 +59,7 @@ import org.glassfish.jersey.internal.util.JdkVersion;
 public final class CommittingOutputStream extends OutputStream {
 
     private static final Logger LOGGER = Logger.getLogger(CommittingOutputStream.class.getName());
-    private static final boolean JDK_21 = JdkVersion.getJdkVersion().getMajor() > 20;
+    private final boolean isVirtualThread = VirtualThreadSupport.isVirtualThread();
 
     /**
      * Null stream provider.
@@ -278,7 +278,7 @@ public final class CommittingOutputStream extends OutputStream {
 
             commitStream(currentSize);
             if (buffer != null) {
-                if (adaptedOutput != null && JDK_21) {
+                if (isVirtualThread && adaptedOutput != null) {
                     adaptedOutput.write(buffer.toByteArray());
                 } else {
                     // Virtual thread in JDK 21 are blocked by synchronized writeTo
