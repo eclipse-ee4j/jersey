@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.VirtualThreadSupport;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.Preconditions;
 
@@ -58,6 +59,8 @@ import org.glassfish.jersey.internal.guava.Preconditions;
 public final class CommittingOutputStream extends OutputStream {
 
     private static final Logger LOGGER = Logger.getLogger(CommittingOutputStream.class.getName());
+    private final boolean isVirtualThread = VirtualThreadSupport.isVirtualThread();
+
     /**
      * Null stream provider.
      */
@@ -275,7 +278,13 @@ public final class CommittingOutputStream extends OutputStream {
 
             commitStream(currentSize);
             if (buffer != null) {
-                buffer.writeTo(adaptedOutput);
+                if (isVirtualThread && adaptedOutput != null) {
+                    adaptedOutput.write(buffer.toByteArray());
+                } else {
+                    // Virtual thread in JDK 21 are blocked by synchronized writeTo
+                    // but about 10% faster than ^ without virtual threads.
+                    buffer.writeTo(adaptedOutput);
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -73,10 +73,28 @@ public class SniTest {
     public void server1Test(ConnectorProvider provider) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.connectorProvider(provider);
-        serverTest(clientConfig, "www.host1.com");
+        serverTest(clientConfig, "www.host1.com", "www.host1.com");
     }
 
-    public void serverTest(ClientConfig clientConfig, String hostName) {
+    @ParameterizedTest
+    @MethodSource("getConnectors")
+    public void sniHostNamePropertyTest(ConnectorProvider provider) {
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.connectorProvider(provider);
+        clientConfig.property(ClientProperties.SNI_HOST_NAME, "www.host3.com");
+        serverTest(clientConfig, "www.host4.com", "www.host3.com");
+    }
+
+    @ParameterizedTest
+    @MethodSource("getConnectors")
+    public void turnOffSniTest(ConnectorProvider provider) {
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.connectorProvider(provider);
+        clientConfig.property(ClientProperties.SNI_HOST_NAME, LOCALHOST);
+        serverTest(clientConfig, "www.host4.com", null);
+    }
+
+    public void serverTest(ClientConfig clientConfig, String hostName, String resultHostName) {
         String newHostName = replaceWhenHostNotKnown(hostName);
         final List<SNIServerName> serverNames = new LinkedList<>();
         final String[] requestHostName = new String[1];
@@ -118,12 +136,14 @@ public class SniTest {
 
         server.stop();
 
-        if (serverNames.isEmpty()) {
+        if (resultHostName != null && serverNames.isEmpty()) {
             throw new IllegalStateException("ServerNames are empty");
+        } else if (resultHostName == null && serverNames.isEmpty()) {
+            return;
         }
 
         String clientSniName = new String(serverNames.get(0).getEncoded());
-        if (!hostName.equals(clientSniName)) {
+        if (!resultHostName.equals(clientSniName)) {
             throw new IllegalStateException("Unexpected client SNI name " + clientSniName);
         }
 

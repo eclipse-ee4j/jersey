@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
@@ -149,6 +150,11 @@ class MetricsRequestEventListenerTest extends JerseyTest {
         }
         catch (Exception ignored) {
         }
+        try {
+            target("produces-text-plain").request(MediaType.APPLICATION_JSON).get();
+        }
+        catch (Exception ignored) {
+        }
 
         assertThat(registry.get(METRIC_NAME)
             .tags(tagsFrom("/throws-exception", "500", "SERVER_ERROR", "IllegalArgumentException"))
@@ -164,6 +170,11 @@ class MetricsRequestEventListenerTest extends JerseyTest {
             .tags(tagsFrom("/throws-mappable-exception", "410", "CLIENT_ERROR", "ResourceGoneException"))
             .timer()
             .count()).isEqualTo(1);
+
+        assertThat(registry.get(METRIC_NAME)
+                       .tags(tagsFrom("UNKNOWN", "406", "CLIENT_ERROR", "NotAcceptableException"))
+                       .timer()
+                       .count()).isEqualTo(1);
     }
 
     private static Iterable<Tag> tagsFrom(String uri, String status, String outcome, String exception) {

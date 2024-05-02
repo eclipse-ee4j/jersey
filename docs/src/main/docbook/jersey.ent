@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,7 @@
 <!ENTITY heroku.uri "https://www.heroku.com">
 <!ENTITY heroku.link "<link xlink:href='&heroku.uri;'>Heroku</link>">
 <!ENTITY hk2.javadoc.uri "https://javaee.github.io/hk2/apidocs/">
-<!ENTITY hk2.link "<link xlink:href='https://github.com/eclipse-ee4j/glassfish-hk2'>Glassfish-HK2</link>">
+<!ENTITY hk2.link "<link xlink:href='https://eclipse-ee4j.github.io/glassfish-hk2/'>Glassfish-HK2</link>">
 <!ENTITY hk2.spring-bridge.link "<link xlink:href='https://javaee.github.io/hk2/spring-bridge/'>The Spring/HK2 Bridge</link>">
 <!ENTITY jaxb.release.uri "https://eclipse-ee4j.github.io/jaxb-ri">
 <!ENTITY jaxb.javadoc.uri "&jaxb.release.uri;/docs/api/jakarta.xml.bind">
@@ -217,6 +217,7 @@
 <!ENTITY jaxrs.core.Cookie "<link xlink:href='&jaxrs.javadoc.uri;/core/Cookie.html'>Cookie</link>">
 <!ENTITY jaxrs.core.EntityTag "<link xlink:href='&jaxrs.javadoc.uri;/core/EntityTag.html'>EntityTag</link>">
 <!ENTITY jaxrs.core.Feature "<link xlink:href='&jaxrs.javadoc.uri;/core/Feature.html'>Feature</link>">
+<!ENTITY jaxrs.core.FeatureContext "<link xlink:href='&jaxrs.javadoc.uri;/core/FeatureContext.html'>FeatureContext</link>">
 <!ENTITY jaxrs.core.Form "<link xlink:href='&jaxrs.javadoc.uri;/core/Form.html'>Form</link>">
 <!ENTITY jaxrs.core.GenericEntity "<link xlink:href='&jaxrs.javadoc.uri;/core/GenericEntity.html'>GenericEntity&lt;T&gt;</link>">
 <!ENTITY jaxrs.core.GenericType "<link xlink:href='&jaxrs.javadoc.uri;/core/GenericType.html'>GenericType&lt;T&gt;</link>">
@@ -354,6 +355,7 @@
 <!ENTITY jersey.client.ClientProperties.PROXY_USERNAME "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#PROXY_USERNAME'>ClientProperties.PROXY_USERNAME</link>" >
 <!ENTITY jersey.client.ClientProperties.READ_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#READ_TIMEOUT'>ClientProperties.READ_TIMEOUT</link>" >
 <!ENTITY jersey.client.ClientProperties.REQUEST_ENTITY_PROCESSING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#REQUEST_ENTITY_PROCESSING'>ClientProperties.REQUEST_ENTITY_PROCESSING</link>" >
+<!ENTITY jersey.client.ClientProperties.SNI_HOST_NAME "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SNI_HOST_NAME'>ClientProperties.SNI_HOST_NAME</link>" >
 <!ENTITY jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SUPPRESS_HTTP_COMPLIANCE_VALIDATION'>ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION</link>" >
 <!ENTITY jersey.client.ClientProperties.SSL_CONTEXT_SUPPLIER "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#SSL_CONTEXT_SUPPLIER'>ClientProperties.SSL_CONTEXT_SUPPLIER</link>" >
 <!ENTITY jersey.client.ClientProperties.USE_ENCODING "<link xlink:href='&jersey.javadoc.uri.prefix;/client/ClientProperties.html#USE_ENCODING'>ClientProperties.USE_ENCODING</link>" >
@@ -410,7 +412,9 @@
 <!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
+<!ENTITY jersey.common.internal.inject.InjectionResolver "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionResolver.html'>InjectionResolver</link>">
 <!ENTITY jersey.common.internal.inject.AbstractBinder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/AbstractBinder.html'>AbstractBinder</link>">
+<!ENTITY jersey.common.internal.inject.PerLookup "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/PerLookup.html'>PerLookup</link>">
 <!ENTITY jersey.common.internal.inject.Binder "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/Binder.html'>Binder</link>">
 <!ENTITY jersey.common.InjectionManagerProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/InjectionManagerProvider.html'>InjectionManagerProvider</link>">
 <!ENTITY jersey.common.SslConfigurator "<link xlink:href='&jersey.javadoc.uri.prefix;/SslConfigurator.html'>SslConfigurator</link>">
@@ -940,6 +944,7 @@
 <!ENTITY lit.jersey.client.EncodingFeature "<literal>EncodingFeature</literal>">
 <!ENTITY lit.jersey.client.HttpAuthenticationFeature "<literal>HttpAuthenticationFeature</literal>">
 <!ENTITY lit.jersey.client.HttpUrlConnectorProvider "<literal>HttpUrlConnectorProvider</literal>">
+<!ENTITY lit.jersey.client.HttpUrlConnector "<literal>HttpUrlConnector</literal>">
 <!ENTITY lit.jersey.client.InjectionManagerClientProvider "<literal>InjectionManagerClientProvider</literal>">
 <!ENTITY lit.jersey.client.oauth1.AccessToken "<literal>AccessToken</literal>">
 <!ENTITY lit.jersey.client.oauth1.ConsumerCredentials "<literal>ConsumerCredentials</literal>">
