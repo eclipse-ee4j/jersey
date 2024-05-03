@@ -22,9 +22,6 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TracingConfig;
 import org.glassfish.jersey.server.internal.ServerTraceEvent;
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
-import org.glassfish.jersey.test.spi.TestContainerException;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -53,11 +50,6 @@ public class TracingMatchResourceMethodTest extends JerseyTest {
         public String echo(String entity) {
             return entity;
         }
-    }
-
-    @Override
-    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-        return new ExternalTestContainerFactory();
     }
 
     @Override
