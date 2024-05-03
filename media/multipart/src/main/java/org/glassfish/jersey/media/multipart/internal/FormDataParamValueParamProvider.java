@@ -234,7 +234,9 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
         @Override
         public Object apply(ContainerRequest request) {
             // Return the field value for the field specified by the sourceName property.
-            final String sourceName = Arrays.stream(parameter.getAnnotations())
+            final String sourceName = parameter.getAnnotations().length == 1
+                    ? parameter.getSourceName()
+                    : Arrays.stream(parameter.getAnnotations())
                         .filter(ann -> FormDataParam.class.isInstance(ann))
                         .map(ann -> FormDataParam.class.cast(ann))
                         .findFirst().get().value();
