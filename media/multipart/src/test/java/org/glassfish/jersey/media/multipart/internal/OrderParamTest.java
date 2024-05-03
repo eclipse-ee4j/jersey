@@ -21,10 +21,10 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.model.ParamQualifier;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,23 +34,34 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderParamTest extends JerseyTest {
+    @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @ParamQualifier
+    public static @interface AnnoWithValue {
+        String value() default "";
+    }
+
     @Path("/order")
     public static class OrderTestResource {
         @POST
         @Path("/dataAfter")
         @Consumes(value = MediaType.MULTIPART_FORM_DATA)
-        public String orderBefore(@FormDataParam("file") @NotNull InputStream inputStream) throws IOException {
+        public String orderBefore(@FormDataParam("file") @AnnoWithValue("xxx") InputStream inputStream) throws IOException {
             return ReaderWriter.readFromAsString(inputStream, MediaType.TEXT_PLAIN_TYPE);
         }
 
         @POST
         @Path("/dataBefore")
         @Consumes(value = MediaType.MULTIPART_FORM_DATA)
-        public String orderAfter(@NotNull @FormDataParam("file") InputStream inputStream) throws IOException {
+        public String orderAfter(@AnnoWithValue("zzz") @FormDataParam("file") InputStream inputStream) throws IOException {
             return ReaderWriter.readFromAsString(inputStream, MediaType.TEXT_PLAIN_TYPE);
         }
     }
