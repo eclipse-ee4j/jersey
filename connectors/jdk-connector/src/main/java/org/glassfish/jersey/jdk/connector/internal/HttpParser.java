@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -496,7 +496,7 @@ class HttpParser {
 
         if (contentLengths != null) {
             try {
-                int bodyLength = Integer.parseInt(contentLengths.get(0));
+                long bodyLength = Long.parseLong(contentLengths.get(0));
                 if (bodyLength == 0) {
                     expectContent = false;
                     return;
