@@ -33,20 +33,50 @@
         <title>Java SE Compatibility</title>
 
         <para>
-            <emphasis>3.x branch: </emphasis>
+            <emphasis>3.0.x branch: </emphasis>
             <itemizedlist>
                 <listitem>
-                    <para>This user guide refers only to version 3 and above of Jersey, its compatibility is described below</para>
+                    <para>This user guide refers only to version 3.0.x of Jersey, its compatibility is described below.</para>
                 </listitem>
                 <listitem>
-                    <para>Since version 3.0.0* all Jersey components are compiled with Java SE 1.8 target.
-                    It means, that you will need at least Java SE 1.8 to be able to compile and run your application
-                        which uses the latest Jersey 3.x.
-                    All modules however are fully compatible with JDK 11 and above. So, it's possible to use JDK 11+ to
-                        build your app.
+                    <para>Jersey 3.0.x components are compiled with Java SE 1.8 target.
+                        It means, that you will need at least Java SE 1.8 to be able to compile and run your application
+                        which uses the latest Jersey 3.0.x. All modules are also fully compatible with JDK 11 and above - depending on Jersey version.
                     </para>
                 </listitem>
             </itemizedlist>
+            <table pgwide="1" frame='all' xml:id="jersey-jdk-compatibility">
+                <title>Jersey 3.0.x JDK compatibility</title>
+                <tgroup cols='3' align='center' colsep='1' rowsep='1'>
+                    <colspec colname='c1'/>
+                    <colspec colname='c2'/>
+                    <colspec colname='c3'/>
+                    <thead>
+                        <row>
+                            <entry>Jersey version</entry>
+                            <entry>JDK min version</entry>
+                            <entry>JDK max version</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row><entry>3.0.0</entry><entry>1.8</entry><entry>16</entry></row>
+                        <row><entry>3.0.1</entry><entry>1.8</entry><entry>16</entry></row>
+                        <row><entry>3.0.2</entry><entry>1.8</entry><entry>17</entry></row>
+                        <row><entry>3.0.3</entry><entry>1.8</entry><entry>18</entry></row>
+                        <row><entry>3.0.4</entry><entry>1.8</entry><entry>18</entry></row>
+                        <row><entry>3.0.5</entry><entry>1.8</entry><entry>19</entry></row>
+                        <row><entry>3.0.6</entry><entry>1.8</entry><entry>19</entry></row>
+                        <row><entry>3.0.7</entry><entry>1.8</entry><entry>19</entry></row>
+                        <row><entry>3.0.8</entry><entry>1.8</entry><entry>19</entry></row>
+                        <row><entry>3.0.9</entry><entry>1.8</entry><entry>20</entry></row>
+                        <row><entry>3.0.10</entry><entry>1.8</entry><entry>20</entry></row>
+                        <row><entry>3.0.11</entry><entry>1.8</entry><entry>21</entry></row>
+                        <row><entry>3.0.12</entry><entry>1.8</entry><entry>22</entry></row>
+                        <row><entry>3.0.13</entry><entry>1.8</entry><entry>23</entry></row>
+                        <row><entry>3.0.14</entry><entry>1.8</entry><entry>23</entry></row>
+                    </tbody>
+                </tgroup>
+            </table>
         </para>
     </section>
     <section>

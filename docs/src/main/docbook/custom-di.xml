@@ -223,7 +223,7 @@ public class MyApplication extends ResourceConfig {
             <para>
                 To make the <literal>HttpSession</literal> injection work without using HK2 API,
                 we will need to create a custom supplier that knows how to extract
-                &lit.jee6.servlet.HttpSession; out of given &lit.jee6.servlet.HttpServletRequest;.
+                &lit.jee9.servlet.HttpSession; out of given &lit.jee9.servlet.HttpServletRequest;.
 
                 <programlisting language="java">import java.util.function.Supplier
     ...
@@ -245,7 +245,7 @@ public class HttpSessionSupplier implements Supplier&lt;HttpSession&gt; {
 }</programlisting>
 
                 Once implemented, the supplier can be used in a custom Jersey &jersey.common.internal.inject.AbstractBinder;
-                to define the new injection binding for &lit.jee6.servlet.HttpSession;. Finally, the implemented binder
+                to define the new injection binding for &lit.jee9.servlet.HttpSession;. Finally, the implemented binder
                 can be registered in your &jersey.server.ResourceConfig;:
 
                 <programlisting language="java">import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -435,9 +435,9 @@ public class MyApplication extends ResourceConfig {
             </para>
             <para>
                 The SessionInjectResolver then looks as follows:
-<programlisting language="java">import javax.inject.Inject;
+<programlisting language="java">import jakarta.inject.Inject;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 
@@ -488,14 +488,14 @@ public class SessionInjectResolver implements InjectionResolver&lt;SessionInject
                 The &jersey.common.internal.inject.InjectionResolver; can be registered in the with Jersey application
                 &lit.jersey.server.ResourceConfig; as follows:
 
-<programlisting language="java">import javax.ws.rs.core.Feature;
+<programlisting language="java">import jakarta.ws.rs.core.Feature;
 
 import org.glassfish.jersey.InjectionManagerProvider;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 ...
 
