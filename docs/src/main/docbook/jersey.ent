@@ -60,7 +60,7 @@
 <!ENTITY jaxrs.release.uri "https://github.com/eclipse-ee4j/jaxrs-api">
 <!ENTITY jaxrs.javadoc.uri "https://jakartaee.github.io/rest/apidocs/&jax-rs.version;/jakarta/ws/rs">
 <!ENTITY jaxrs21.javadoc.uri "https://jakartaee.github.io/rest/apidocs/&jax-rs21.version;/javax/ws/rs">
-<!ENTITY jsonb.javadoc.uri "https://javaee.github.io/javaee-spec/javadocs/javax/json/bind">
+<!ENTITY jsonb.javadoc.uri "https://jakarta.ee/specifications/jsonb/2.0/apidocs/jakarta/json/bind">
 <!ENTITY jersey.documentation.uri "https://eclipse-ee4j.github.io/jersey.github.io">
 
 <!ENTITY jersey.ext.bean-validation.deps.link "<link xlink:href='&jersey.project-info.uri.prefix;/jersey-bean-validation/dependencies.html'>jersey-bean-validation</link>" >

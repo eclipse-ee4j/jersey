@@ -1277,7 +1277,7 @@
                         <entry>
                             <para>
                                 If set to &lit.true; then XML root element tag name for collections will
-                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                be derived from <literal>jakarta.xml.bind.annotation.XmlRootElement</literal>
                                 annotation value and won't be de-capitalized.
                             </para>
                             <para>
@@ -1384,12 +1384,12 @@
                         <entry>
                             <para>
                                 If &lit.true;, the &lit.jersey.client.HttpUrlConnector; (if used) will assume the content length
-                                from the value of <literal>javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
+                                from the value of <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
                                 header (if present).
                             </para>
                             <para>
                                 When this property is enabled and the request has a valid non-zero content length
-                                value specified in its <literal>javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
+                                value specified in its <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
                                 header, that this value will be used as an input to the
                                 <literal>java.net.HttpURLConnection#setFixedLengthStreamingMode(int)</literal> method call
                                 invoked on the underlying <literal>java.net.HttpURLConnection</literal>.
@@ -1398,7 +1398,7 @@
                             </para>
                             <para>
                                 Note that the content length value defined in the request header must exactly match
-                                the real size of the entity. If the <literal>javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal>
+                                the real size of the entity. If the <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal>
                                 header is explicitly specified in a request, this property will be ignored and the
                                 request entity will be still buffered by the underlying <literal>HttpURLConnection</literal> infrastructure.
                             </para>
