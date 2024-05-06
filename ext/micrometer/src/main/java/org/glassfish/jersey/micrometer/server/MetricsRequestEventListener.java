@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -79,7 +79,7 @@ public class MetricsRequestEventListener implements RequestEventListener {
 
         switch (event.getType()) {
             case ON_EXCEPTION:
-                if (!isNotFoundException(event)) {
+                if (!isClientError(event)) {
                     break;
                 }
                 time(event, containerRequest);
@@ -122,13 +122,14 @@ public class MetricsRequestEventListener implements RequestEventListener {
         }
     }
 
-    private boolean isNotFoundException(RequestEvent event) {
+    private boolean isClientError(RequestEvent event) {
         Throwable t = event.getException();
         if (t == null) {
             return false;
         }
-        String className = t.getClass().getCanonicalName();
-        return className.equals("jakarta.ws.rs.NotFoundException") || className.equals("jakarta.ws.rs.NotFoundException");
+        String className = t.getClass().getSuperclass().getCanonicalName();
+        return className.equals("jakarta.ws.rs.ClientErrorException")
+                || className.equals("javax.ws.rs.ClientErrorException");
     }
 
     private Set<Timer> shortTimers(Set<Timed> timed, RequestEvent event) {

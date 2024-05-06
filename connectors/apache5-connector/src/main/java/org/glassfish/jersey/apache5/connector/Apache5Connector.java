@@ -881,7 +881,8 @@ class Apache5Connector implements Connector {
                 Object objectRequest = context.getAttribute(JERSEY_REQUEST_ATTR_NAME);
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
-                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest).build();
+                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
+                            .setSNIHostName(clientRequest).build();
                     sniConfig.setSNIServerName(socket);
 
                     final int socketTimeout = ((ClientRequest) objectRequest).resolveProperty(ClientProperties.READ_TIMEOUT, -1);

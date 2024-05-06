@@ -211,6 +211,7 @@
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/Jersey2462Test.java</testExclude>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/JettyEmptyHeaderParamTest.java</testExclude>
+                                <testExclude>org/glassfish/jersey/tests/e2e/inject/SingleRequestScopeInjectionTest.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>

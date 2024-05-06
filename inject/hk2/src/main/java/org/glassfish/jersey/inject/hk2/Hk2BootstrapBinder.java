@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,10 @@ public class Hk2BootstrapBinder extends AbstractBinder {
 
     @Override
     protected void configure() {
+        // Singletons, install once
+        if (serviceLocator.getService(RequestScope.class) != null) {
+            return;
+        }
         install(
                 // Jersey-like class analyzer that is able to choose the right services' constructor.
                 new JerseyClassAnalyzer.Binder(serviceLocator),
