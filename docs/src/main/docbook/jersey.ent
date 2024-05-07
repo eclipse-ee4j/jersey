@@ -536,7 +536,12 @@
 <!ENTITY jersey.media.multipart.FormDataParam "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/FormDataParam.html'>@FormDataParam</link>" >
 <!ENTITY jersey.media.multipart.MultiPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPart.html'>MultiPart</link>" >
 <!ENTITY jersey.media.multipart.MultiPartFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartFeature.html'>MultiPartFeature</link>" >
-<!ENTITY jersey.media.multipart.StreamDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/StreamDataBodyPart.html'>StreamDataBodyPart</link>" >
+<!ENTITY jersey.media.multipart.MultiPartProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartProperties.html'>MultiPartProperties</link>" >
+<!ENTITY jersey.media.multipart.MultiPartProperties.BUFFER_THRESHOLD "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartProperties.html#BUFFER_THRESHOLD'>MultiPartProperties.BUFFER_THRESHOLD</link>">
+<!ENTITY jersey.media.multipart.MultiPartProperties.MAX_PARTS "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartProperties.html#MAX_PARTS'>MultiPartProperties.MAX_PARTS</link>">
+<!ENTITY jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartProperties.html#MULTI_PART_CONFIG_RESOURCE'>MultiPartProperties.MULTI_PART_CONFIG_RESOURCE</link>">
+<!ENTITY jersey.media.multipart.MultiPartProperties.TEMP_DIRECTORY "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/MultiPartProperties.html#TEMP_DIRECTORY'>MultiPartProperties.TEMP_DIRECTORY</link>">
+<!ENTITY jersey.media.multipart.StreamDataBodyPart "<link xlink:href='&jersey.javadoc.uri.prefix;/media/multipart/file/StreamDataBodyPart.html'>StreamDataBodyPart</link>">
 <!ENTITY jersey.message.MessageBodyWorkers "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageBodyWorkers.html'>MessageBodyWorkers</link>">
 <!ENTITY jersey.message.MessageProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html'>MessageProperties</link>">
 <!ENTITY jersey.message.MessageProperties.DEFLATE_WITHOUT_ZLIB "<link xlink:href='&jersey.javadoc.uri.prefix;/message/MessageProperties.html#DEFLATE_WITHOUT_ZLIB'>MessageProperties.DEFLATE_WITHOUT_ZLIB</link>">
