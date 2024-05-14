@@ -69,7 +69,7 @@ public class MultiPartProperties {
     /**
      * <p>
      *     Limit the maximum number of parts the multipart entity can have. If the limit is over,
-     *     the error response status {@link javax.ws.rs.core.Response.Status#REQUEST_ENTITY_TOO_LARGE} is returned.
+     *     the error response status {@link jakarta.ws.rs.core.Response.Status#REQUEST_ENTITY_TOO_LARGE} is returned.
      * </p>
      * <p>
      *     By default, the number is unlimited.
