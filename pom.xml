@@ -2116,7 +2116,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 <!--        <release.tests.args>-Dmaven.test.skip=false</release.tests.args>-->
 <!--        <release.preparationGoals>clean install</release.preparationGoals>-->
-        <skip.e2e>false</skip.e2e>
         <skip.tests>false</skip.tests>
         <xdk.absolute.path />
         <surefire.security.argline />
