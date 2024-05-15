@@ -2210,4 +2210,80 @@
             </tgroup>
         </table>
     </section>
+    <section xml:id="appendix-properties-multipart">
+        <title>Multipart configuration properties</title>
+
+        <para>
+            List of multipart configuration properties that can be found in &jersey.media.multipart.MultiPartProperties; class.
+        </para>
+
+        <table>
+            <title>
+                List of multipart configuration properties settable in the
+                &jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE; configuration file.
+            </title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.BUFFER_THRESHOLD;</entry>
+                        <entry><literal>jersey.config.multipart.bufferThreshold</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the threshold size (in bytes) above which a
+                                body part entity will be buffered to disk instead of being held in memory.
+                            </para>
+                            <para>
+                                The default value is &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MAX_PARTS;</entry>
+                        <entry><literal>jersey.config.multipart.maxParts</literal></entry>
+                        <entry>
+                            <para>
+                                Limit the maximum number of parts the multipart entity can have. If the limit is over,
+                                the error response status <literal>413 - REQUEST_ENTITY_TOO_LARGE</literal>
+                                is returned.
+                            </para>
+                            <para>
+                                By default, the number is unlimited.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE;</entry>
+                        <entry><literal>jersey-multipart-config.properties</literal></entry>
+                        <entry>
+                            <para>
+                                Name of a properties resource that (if found in the classpath
+                                for this application) will be used to configure the settings returned
+                                by our getter methods.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.TEMP_DIRECTORY;</entry>
+                        <entry><literal>jersey.config.multipart.tempDir</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the directory to store temporary files containing body parts
+                                of multipart message that extends allowed memory threshold.
+                            </para>
+                            <para>
+                                The default value is not set (will be taken from <literal>java.io.tmpdir</literal> system property).
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </appendix>

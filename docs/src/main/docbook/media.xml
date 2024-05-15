@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!--
 
-    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1877,6 +1877,25 @@ public String postForm(
                     <para>&lit.jersey.media.multipart.FormDataParam; annotation can be also used on fields.</para>
                 </tip>
             </section>
+        </section>
+        <section xml:id="multipart.configuration">
+            <title>Properties for configuring the Multipart</title>
+            <para>
+                There are multiple options that can be used when configuring
+                the multipart. See &jersey.media.multipart.MultiPartProperties; or <xref linkend="appendix-properties-multipart"/>
+                for the possibilities.
+            </para>
+            <para>
+                The options can set in a configuration file specified by the
+                &jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE; property.
+                That is the standard Java properties file.
+            </para>
+            <para>
+                Or the options can be set programmatically,
+                by registering <literal>ContextResolver&lt;MultiPartProperties&gt;</literal>. For instance:
+            </para>
+            <programlisting language="java">ResourceConfig resourceConfig = new ResourceConfig();
+resourceConfig.register(new MultiPartProperties().bufferThreshold(65535).maxParts(2).resolver());</programlisting>
         </section>
     </section>
 </chapter>
