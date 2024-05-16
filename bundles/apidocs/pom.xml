@@ -300,7 +300,7 @@
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
-                            <excludePackageNames>*.internal:*.internal.*:*.innate:*.innate.*</excludePackageNames>
+                            <excludePackageNames>*.innate:*.innate.*</excludePackageNames>
                         </configuration>
                     </execution>
                 </executions>

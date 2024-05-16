@@ -31,6 +31,7 @@ import org.glassfish.jersey.message.MessageProperties;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
@@ -104,7 +105,13 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
                         commonConfig.getRuntimeType(),
                         CommonProperties.JSON_JACKSON_ENABLED_MODULES, String.class);
 
-        final List<Module> modules = ObjectMapper.findModules();
+        final List<Module> modules;
+        try {
+            modules = ObjectMapper.findModules();
+        } catch (Throwable e) {
+            LOGGER.warning(LocalizationMessages.ERROR_MODULES_NOT_LOADED(e.getMessage()));
+            return Collections.emptyList();
+        }
         for (String exludeModuleName : EXCLUDE_MODULE_NAMES) {
             modules.removeIf(mod -> mod.getModuleName().contains(exludeModuleName));
         }

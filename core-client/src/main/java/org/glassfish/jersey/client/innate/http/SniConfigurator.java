@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,12 +50,13 @@ final class SniConfigurator {
     }
 
     /**
-     * Create ClientSNI when {@link HttpHeaders#HOST} is set different from the request URI host (or {@code whenDiffer}.is false).
+     * Create {@link SniConfigurator} when {@link HttpHeaders#HOST} is set different from the request URI host
+     * (or {@code whenDiffer}.is false).
      * @param hostUri the Uri of the HTTP request
      * @param sniHostName the SniHostName either from HttpHeaders or the
      *      {@link org.glassfish.jersey.client.ClientProperties#SNI_HOST_NAME} property from Configuration object.
      * @param whenDiffer create {@SniConfigurator only when different from the request URI host}
-     * @return ClientSNI or empty when {@link HttpHeaders#HOST}
+     * @return Optional {@link SniConfigurator} or empty when {@link HttpHeaders#HOST} is equal to the requestHost
      */
     static Optional<SniConfigurator> createWhenHostHeader(URI hostUri, String sniHostName, boolean whenDiffer) {
         if (sniHostName == null) {

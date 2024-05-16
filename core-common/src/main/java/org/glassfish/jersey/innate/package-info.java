@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,5 +16,6 @@
 
 /**
  * Jersey innate packages. The innate packages will not be opened by JPMS outside of Jersey.
+ * Not for public use.
  */
 package org.glassfish.jersey.innate;

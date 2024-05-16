@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -688,71 +688,6 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
                     </tbody>
                 </tgroup>
             </table>
-
-            <warning xml:id="connectors.warning" xreflabel="Header modification issue">
-                <para>
-                    Be aware of using other than default &lit.jersey.client.Connector; implementation.
-                    There is an issue handling HTTP headers in
-                    &lit.jaxrs.WriterInterceptor; or &lit.jaxrs.ext.MessageBodyWriter;.
-                    If you need to change header fields do not use nor
-                    &lit.jersey.apache.ApacheConnectorProvider; nor &lit.jersey.grizzly.GrizzlyConnectorProvider;
-                    nor &lit.jersey.jetty.JettyConnectorProvider; neither &lit.jersey.netty.NettyConnectorProvider;.
-                    The issue for example applies to Jersey <xref linkend="multipart" endterm="multipart.short"/>
-                    feature that also modifies HTTP headers.
-                </para>
-                <para>
-                    On the other hand, in the default transport connector, there are some restrictions on the headers, that
-                    can be sent in the default configuration.
-                    <literal>HttpUrlConnectorProvider</literal> uses &lit.jdk6.HttpUrlConnection; as an underlying connection
-                    implementation. This JDK class by default restricts the use of following headers:
-                    <itemizedlist>
-                        <listitem>&lit.http.header.AccessControlRequestHeaders;</listitem>
-                        <listitem>&lit.http.header.AccessControlRequestMethod;</listitem>
-                        <listitem>&lit.http.header.Connection; (with one exception - &lit.http.header.Connection; header with
-                            value <literal>Closed</literal> is allowed by default)</listitem>
-                        <listitem>&lit.http.header.ContentLength;</listitem>
-                        <listitem>&lit.http.header.ContentTransferEncoding;</listitem>
-                        <listitem>&lit.http.header.Host;</listitem>
-                        <listitem>&lit.http.header.Keep-Alive;</listitem>
-                        <listitem>&lit.http.header.Origin;</listitem>
-                        <listitem>&lit.http.header.Trailer;</listitem>
-                        <listitem>&lit.http.header.Transfer-Encoding;</listitem>
-                        <listitem>&lit.http.header.Upgrade;</listitem>
-                        <listitem>&lit.http.header.Via;</listitem>
-                        <listitem>all the headers starting with &lit.http.header.Sec.prefix;</listitem>
-                    </itemizedlist>
-                    The underlying connection can be configured to permit all headers to be sent,
-                    however this behaviour can be changed only by setting the system property
-                    <literal>sun.net.http.allowRestrictedHeaders</literal>.
-                    <example>
-                        <title>Sending restricted headers with <literal>HttpUrlConnector</literal></title>
-                        <programlisting language="java" linenumbering="numbered">
-                            Client client = ClientBuilder.newClient();
-                            System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
-
-                            Response response = client.target(yourUri).path(yourPath).request().
-                            header("Origin", "http://example.com").
-                            header("Access-Control-Request-Method", "POST").
-                            get();
-                        </programlisting>
-                    </example>
-                </para>
-                <para>
-                    Note, that internally the &lit.jdk6.HttpUrlConnection; instances are pooled, so (un)setting the
-                    property after already creating a target typically does not have any effect.
-                    The property influences all the connections <emphasis>created</emphasis> after the property has been
-                    (un)set, but there is no guarantee, that your request will use a connection
-                    created after the property change.
-                </para>
-                <para>
-                    In a simple environment, setting the property before creating the first target is sufficient, but in complex
-                    environments (such as application servers), where some poolable connections might exist before your
-                    application even bootstraps, this approach is not 100% reliable and we recommend using a different client
-                    transport connector, such as Apache Connector.
-                    These limitations have to be considered especially when invoking <emphasis>CORS</emphasis> (Cross Origin
-                    Resource Sharing) requests.
-                </para>
-            </warning>
         </para>
         <para>
             As indicated earlier, &jersey.client.Connector; and &jersey.client.ConnectorProvider; contracts are Jersey-specific
@@ -761,8 +696,8 @@ webTarget.request().post(Entity.entity(f, MediaType.TEXT_PLAIN_TYPE));
             instance:
 
             <programlisting language="java" linenumbering="numbered">ClientConfig clientConfig = new ClientConfig();
-clientConfig.connectorProvider(new GrizzlyConnectorProvider());
-Client client = ClientBuilder.newClient(clientConfig);</programlisting>
+                clientConfig.connectorProvider(new GrizzlyConnectorProvider());
+                Client client = ClientBuilder.newClient(clientConfig);</programlisting>
 
             &lit.jaxrs.client.Client; accepts as a constructor argument a &lit.jaxrs.core.Configurable; instance. Jersey
             implementation of the &lit.jaxrs.core.Configurable; provider for the client is &lit.jersey.client.ClientConfig;.
@@ -781,11 +716,96 @@ Client client = ClientBuilder.newClient(clientConfig);</programlisting>
             Jersey 2.40. The following example shows how to setup the custom Grizzly Asynchronous HTTP Client based
             &lit.jersey.client.ConnectorProvider; in a Jersey client instance:
             <programlisting language="java" linenumbering="numbered">Client client = ClientBuilder.newBuilder()
-    .property(ClientProperties.CONNECTOR_PROVIDER, "org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider")
-    .build();</programlisting>
+                .property(ClientProperties.CONNECTOR_PROVIDER, "org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider")
+                .build();</programlisting>
 
             For more information about the property see <xref linkend="appendix-properties"/>.
         </para>
+        <para>
+            <warning xml:id="connectors.warning" xreflabel="Header modification issue">
+                <para>
+                    Be aware of using other than default &lit.jersey.client.Connector; implementation.
+                    There is an issue handling HTTP headers in
+                    &lit.jaxrs.WriterInterceptor; or &lit.jaxrs.ext.MessageBodyWriter;.
+                    If you need to change header fields do not use neither
+                    &lit.jersey.apache.ApacheConnectorProvider; nor &lit.jersey.grizzly.GrizzlyConnectorProvider;
+                    nor &lit.jersey.jetty.JettyConnectorProvider; (for asynchronous requests).
+                    Other older version connectors can be affected by this issue as well.
+                    The issue for example applies to Jersey <xref linkend="multipart" endterm="multipart.short"/>
+                    feature that also modifies HTTP headers.
+                </para>
+            </warning>
+        </para>
+        <section>
+            <title>The default &lit.jersey.client.HttpUrlConnector;</title>
+
+            <para>The default connector is the most advanced connector, and it supports the most features Jersey has to offer.
+                However, there are a few limitations coming from the &lit.jdk6.HttpUrlConnection;</para>.
+            <para>
+                One limitation is in the variety of HTTP methods supported by the &lit.jdk6.HttpUrlConnection;, since only the
+                original HTTP/1.1 methods are supported. For instance, HTTP Patch method is not supported. See
+                property &jersey.client.HttpUrlConnectorProvider.SET_METHOD_WORKAROUND; in the Appendix
+                <xref linkend="appendix-properties-client-default"/> for a possible workaround.
+            </para>
+            <para>
+                Also, in the default transport connector, there are some restrictions on the headers, that
+                can be sent in the default configuration.
+                <literal>HttpUrlConnectorProvider</literal> uses &lit.jdk6.HttpUrlConnection; as an underlying connection
+                implementation. This JDK class by default restricts the use of following headers:
+                <itemizedlist>
+                    <listitem>&lit.http.header.AccessControlRequestHeaders;</listitem>
+                    <listitem>&lit.http.header.AccessControlRequestMethod;</listitem>
+                    <listitem>&lit.http.header.Connection; (with one exception - &lit.http.header.Connection; header with
+                        value <literal>Closed</literal> is allowed by default)</listitem>
+                    <listitem>&lit.http.header.ContentLength;</listitem>
+                    <listitem>&lit.http.header.ContentTransferEncoding;</listitem>
+                    <listitem>&lit.http.header.Host;</listitem>
+                    <listitem>&lit.http.header.Keep-Alive;</listitem>
+                    <listitem>&lit.http.header.Origin;</listitem>
+                    <listitem>&lit.http.header.Trailer;</listitem>
+                    <listitem>&lit.http.header.Transfer-Encoding;</listitem>
+                    <listitem>&lit.http.header.Upgrade;</listitem>
+                    <listitem>&lit.http.header.Via;</listitem>
+                    <listitem>all the headers starting with &lit.http.header.Sec.prefix;</listitem>
+                </itemizedlist>
+                The underlying connection can be configured to permit all headers to be sent,
+                however this behaviour can be changed only by setting the system property
+                <literal>sun.net.http.allowRestrictedHeaders</literal>.
+                <example>
+                    <title>Sending restricted headers with <literal>HttpUrlConnector</literal></title>
+                    <programlisting language="java" linenumbering="numbered">
+                        Client client = ClientBuilder.newClient();
+                        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
+                        Response response = client.target(yourUri).path(yourPath).request().
+                        header("Origin", "http://example.com").
+                        header("Access-Control-Request-Method", "POST").
+                        get();
+                    </programlisting>
+                </example>
+                <warning>
+                    <para>
+                        Internally, the &lit.jdk6.HttpUrlConnection; instances are pooled, so (un)setting the
+                        property after already creating a target typically does not have any effect.
+                        The property influences all the connections <emphasis>created</emphasis> after the property has been
+                        (un)set, but there is no guarantee, that your request will use a connection
+                        created after the property change.
+                    </para>
+                    <para>
+                        In a simple environment, setting the property before creating the first target is sufficient, but in complex
+                        environments (such as application servers), where some poolable connections might exist before your
+                        application even bootstraps, this approach is not 100% reliable and we recommend using a different client
+                        transport connector, such as Apache Connector.
+                        These limitations have to be considered especially when invoking <emphasis>CORS</emphasis> (Cross Origin
+                        Resource Sharing) requests.
+                    </para>
+                </warning>
+            </para>
+            <para>
+                The limited configurability of the &lit.jdk6.HttpUrlConnection; is another aspect to consider. For details, see
+                <literal>Java Networking Properties</literal>, for instance property <literal>http.maxConnections</literal>.
+            </para>
+        </section>
         <section>
             <title>Client Connectors Properties</title>
             <para>
@@ -956,7 +976,7 @@ System.out.println("Now the connection is closed.");</programlisting>
         <para>
             To solve injection of a custom type into a client provider instance
             use &jersey.client.InjectionManagerClientProvider; to
-            extract &hk2.ServiceLocator; which can return the required injection. The following example shows how to utilize
+            extract &lit.jersey.common.internal.inject.InjectionManager; which can return the required injection. The following example shows how to utilize
             &lit.jersey.client.InjectionManagerClientProvider;:
         </para>
         <example>
@@ -981,7 +1001,7 @@ System.out.println("Now the connection is closed.");</programlisting>
         </example>
         <para>
             For more information see javadoc of &jersey.client.InjectionManagerClientProvider;
-            (and javadoc of &lit.jersey.common.InjectionManagerProvider; which supports common JAX-RS components).
+            (and javadoc of &lit.jersey.common.InjectionManagerProvider; which supports common Jakarta REST components).
         </para>
     </section>
 
@@ -1141,6 +1161,19 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();</prog
                 is set, the <literal>SNIHostName</literal> is set for the host specified in the <literal>Host</literal> header.
                 Note that only <literal>Apache Connector, JDK Connector, Netty connector</literal>, and the default
                 <literal>HttpUrlConnector</literal> do support this feature.
+            </para>
+            <para>
+                Sometimes, it may be required the <literal>SNIHostName</literal> is not set, or it differs from the
+                HTTP <literal>Host</literal> header. In that case, the &jersey.client.ClientProperties.SNI_HOST_NAME;
+                property can be utilized. The property sets the host name to be used for calculating the
+                <literal>javax.net.ssl.SNIHostName</literal>. The property takes precedence over the HTTP
+                <literal>Host</literal> header.
+            </para>
+            <para>
+                When the host name in the the &jersey.client.ClientProperties.SNI_HOST_NAME; property matches the HTTP request
+                host, the <literal>SNIHostName</literal> is not set, and the HTTP <literal>Host</literal> header is not used
+                for setting the <literal>SNIHostName</literal>.
+                Turning the SNI off allows for Domain Fronting.
             </para>
         </section>
 

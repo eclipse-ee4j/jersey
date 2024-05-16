@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,6 +60,35 @@
     </para>
 
     <para>
+        Since Jersey 2.26, the injection has been abstracted, so that &hk2.link; can be eventually replaced by the CDI or
+        any other injection framework. In the next chapters, we document possibilities provided directly by &hk2.link; and
+        by Jersey abstraction components.
+    </para>
+
+    <section xml:id="injection.manager">
+        <title>InjectionManager</title>
+
+        <para>
+            Since Jersey 2.26, Jersey comes with the main abstraction interface to communicate with the DI container, the
+            &jersey.common.internal.inject.InjectionManager;. What is <literal>ServiceLocator</literal> for &hk2.link;, or
+            <literal>BeanManager</literal> for CDI, that's &jersey.common.internal.inject.InjectionManager; for Jersey.
+        </para>
+        <para>
+            &jersey.common.internal.inject.InjectionManager; can be injected into the user provided classes instantiated
+            by Jersey. It can also be obtained programmatically by &jersey.client.InjectionManagerClientProvider;
+            and &lit.jersey.common.InjectionManagerProvider; from Jakarta REST components, such as
+            &jaxrs.core.FeatureContext;, or &jaxrs.ext.MessageBodyReader; and &jaxrs.ext.MessageBodyReader;.
+        </para>
+        <para>
+            Customers used to the &hk2.ServiceLocator; can still use it directly; the &hk2.ServiceLocator; can be obtained
+            either directly by injection, or programmatically as <literal>InjectionManager.getInstance(ServiceLocator.class)</literal>.
+        </para>
+    </section>
+
+    <section>
+        <title>Implementing Custom Injection Provider</title>
+
+      <para>
         Relying on Servlet HTTP session concept is not very RESTful. It turns the originally state-less HTTP
         communication schema into a state-full manner. However, it could serve
         as a good example that will help me demonstrate implementation of the use cases described above.
@@ -68,10 +97,7 @@
         Below we will show how to make actual Servlet &jee9.servlet.HttpSession; injectable into JAX-RS components
         and how to make this injection work with a custom inject annotation type. Finally, we will demonstrate
         how you can write &lit.jee9.servlet.HttpSession;-scoped JAX-RS resources.
-    </para>
-
-    <section>
-        <title>Implementing Custom Injection Provider</title>
+      </para>
 
         <para>
             Jersey implementation allows you to directly inject &jee9.servlet.HttpServletRequest; instance into
@@ -89,7 +115,11 @@ public class MyDiResource {
     ...
 
 }</programlisting>
+        </para>
+        <section>
+            <title>Using HK2 classes</title>
 
+            <para>
             To make the above injection work, you will need to define an additional HK2 binding in your
             application &jersey.server.ResourceConfig;.
             Let's start with a custom HK2 &hk2.Factory; implementation that knows how to extract
@@ -145,48 +175,122 @@ public class MyApplication extends ResourceConfig {
             @Override
             protected void configure() {
                 bindFactory(HttpSessionFactory.class).to(HttpSession.class)
-                .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+                   .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
             }
         });
     }
 }</programlisting>
 
-            Note that we did not define any explicit injection scope for the new injection binding.
-            By default, HK2 factories are bound in a HK2 &hk2.PerLookup; scope, which is in most
-            cases a good choice and it is suitable also in our example.
-        </para>
+                Note that if we did not define any explicit injection scope for the new injection binding,
+                By default, HK2 factories are bound in a HK2 &hk2.PerLookup; scope, which is in most
+                cases a good choice, and it is suitable also in our example.
+            </para>
 
-        <para>
-            To summarize the approach described above, here is a list of steps to follow
-            when implementing custom injection provider in your Jersey application :
+            <para>
+                To summarize the approach described above, here is a list of steps to follow
+                when implementing custom injection provider in your Jersey application :
 
-            <itemizedlist>
-                <listitem><simpara>Implement your own HK2 &lit.hk2.Factory; to provide the
-                    injectable instances.</simpara></listitem>
-                <listitem><simpara>Use the HK2 &lit.hk2.Factory; to define an injection
-                    binding for the injected instance via custom HK2 &lit.hk2.Binder;.</simpara></listitem>
-                <listitem><simpara>Register the custom HK2 &lit.hk2.Binder; in your application
-                    &lit.jersey.server.ResourceConfig;.</simpara></listitem>
-            </itemizedlist>
-        </para>
+                <itemizedlist>
+                    <listitem><simpara>Implement your own HK2 &lit.hk2.Factory; to provide the
+                        injectable instances.</simpara></listitem>
+                    <listitem><simpara>Use the HK2 &lit.hk2.Factory; to define an injection
+                        binding for the injected instance via custom HK2 &lit.hk2.Binder;.</simpara></listitem>
+                    <listitem><simpara>Register the custom HK2 &lit.hk2.Binder; in your application
+                        &lit.jersey.server.ResourceConfig;.</simpara></listitem>
+                </itemizedlist>
+            </para>
 
-        <para>
-            While the &lit.hk2.Factory;-based approach is quite straight-forward and should help you to
-            quickly prototype or even implement final solutions, you should bear in mind, that your
-            implementation does not need to be based on factories. You can for instance bind your own
-            types directly, while still taking advantage of HK2 provided dependency injection.
-            Also, in your implementation you may want to pay more attention to defining or managing
-            injection binding scopes for the sake of performance or correctness of your custom injection
-            extension.
+            <para>
+                While the &lit.hk2.Factory;-based approach is quite straight-forward and should help you to
+                quickly prototype or even implement final solutions, you should bear in mind, that your
+                implementation does not need to be based on factories. You can for instance bind your own
+                types directly, while still taking advantage of HK2 provided dependency injection.
+                Also, in your implementation you may want to pay more attention to defining or managing
+                injection binding scopes for the sake of performance or correctness of your custom injection
+                extension.
 
-            <important>
-                <para>
-                    While the individual injection binding implementations vary and depend on your use case,
-                    to enable your custom injection extension in Jersey, you must register your custom HK2 &hk2.Binder;
-                    implementation in your application &jersey.server.ResourceConfig;!
-                </para>
-            </important>
-        </para>
+                <important>
+                    <para>
+                        While the individual injection binding implementations vary and depend on your use case,
+                        to enable your custom injection extension in Jersey, you must register your custom HK2 &hk2.Binder;
+                        implementation in your application &jersey.server.ResourceConfig;!
+                    </para>
+                </important>
+            </para>
+        </section>
+        <section>
+            <title>Injection Provider Using Jersey API</title>
+            <para>
+                To make the <literal>HttpSession</literal> injection work without using HK2 API,
+                we will need to create a custom supplier that knows how to extract
+                &lit.jee9.servlet.HttpSession; out of given &lit.jee9.servlet.HttpServletRequest;.
+
+                <programlisting language="java">import java.util.function.Supplier
+    ...
+
+public class HttpSessionSupplier implements Supplier&lt;HttpSession&gt; {
+
+    private final HttpServletRequest request;
+
+    @Inject
+    public HttpSessionSupplier(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    @Override
+    public HttpSession get() {
+        return request.getSession();
+    }
+
+}</programlisting>
+
+                Once implemented, the supplier can be used in a custom Jersey &jersey.common.internal.inject.AbstractBinder;
+                to define the new injection binding for &lit.jee9.servlet.HttpSession;. Finally, the implemented binder
+                can be registered in your &jersey.server.ResourceConfig;:
+
+                <programlisting language="java">import org.glassfish.jersey.internal.inject.AbstractBinder;
+    ...
+public class MyApplication extends ResourceConfig {
+
+    public MyApplication() {
+
+        ...
+
+        register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bindFactory(HttpSessionSupplier.class).to(HttpSession.class)
+                    .proxy(true).proxyForSameScope(false).in(RequestScoped.class);
+            }
+        });
+    }
+}</programlisting>
+                   The default scope for Jersey binder is similarly as for the HK2, the
+                &jersey.common.internal.inject.PerLookup;.
+            </para>
+            <para>
+                To summarize the approach described above, here is a list of steps to follow
+                when implementing custom injection provider in your Jersey application :
+
+                <itemizedlist>
+                    <listitem><simpara>Implement your own Supplier to provide the
+                        injectable instances.</simpara></listitem>
+                    <listitem><simpara>Use the Supplier to define an injection
+                        binding for the injected instance via custom &jersey.common.internal.inject.AbstractBinder;.
+                    </simpara></listitem>
+                    <listitem><simpara>Register the custom &jersey.common.internal.inject.AbstractBinder; in your application
+                        &lit.jersey.server.ResourceConfig;.</simpara></listitem>
+                </itemizedlist>
+
+                <important>
+                    <para>
+                        Similarly to the HK2, to enable your custom injection extension in Jersey,
+                        you must register your custom &jersey.common.internal.inject.AbstractBinder;
+                        implementation in your application &jersey.server.ResourceConfig;!
+                    </para>
+                </important>
+            </para>
+        </section>
     </section>
 
     <section>
@@ -231,6 +335,8 @@ public class MyDiResource {
             use case will help us to avoid use case specific distractions and allow us better focus on
             the important aspects of the job of defining a custom injection annotation.
         </para>
+        <section>
+            <title>Custom Injection Annotation using HK2</title>
 
         <para>
             If you remember from the previous section, to make the injection in the code snippet above work,
@@ -317,6 +423,104 @@ public class MyApplication extends ResourceConfig {
     }
 }</programlisting>
         </para>
+        </section>
+        <section>
+            <title>Custom Injection Annotation using Jersey InjectionResolver</title>
+
+            <para>
+                Jersey also comes with its &jersey.common.internal.inject.InjectionResolver; used to translate into
+                the HK2 &hk2.InjectionResolver; during runtime. The abstraction is important for allowing to support
+                the custom injection annotation in various DI containers. For instance, the abstraction is used when
+                supporting injection using &jaxrs.core.Context; in the CDI container (<literal>jersey-cdi2-se</literal> module).
+            </para>
+            <para>
+                The SessionInjectResolver then looks as follows:
+<programlisting language="java">import jakarta.inject.Inject;
+
+import jakarta.servlet.http.HttpSession;
+
+import org.glassfish.jersey.internal.inject.InjectionResolver;
+
+...
+
+public class SessionInjectResolver implements InjectionResolver&lt;SessionInject&gt; {
+
+    private final InjectionManger injectionManager;
+
+    public SessionInjectResolver(InjectionManager) {
+        this.injectionManager = injectionManager;
+    }
+
+    @Override
+    public Object resolve(Injectee injectee) {
+        if (HttpSession.class == injectee.getRequiredType()) {
+            return injectionManager.getInstance(HttpServletRequest.class).getSession();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isConstructorParameterIndicator() {
+        return false;
+    }
+
+    @Override
+    public boolean isMethodParameterIndicator() {
+        return false;
+    }
+
+    @Override
+    public Class&lt;SessionInject&gt; getAnnotation() {
+        return SessionInject.class;
+    }
+}</programlisting>
+
+                The SessionInjectResolver uses &jersey.common.internal.inject.InjectionManager; described in
+                <xref linkend="injection.manager"/>.
+            </para>
+            <para>
+                Unlike with &hk2.link;, Jersey &jersey.common.internal.inject.InjectionResolver; can only be bound
+                as instance in the &jersey.common.internal.inject.AbstractBinder;. That is why the
+                &jersey.common.internal.inject.InjectionManager; is used in the <literal>InjectionResolver</literal>
+                to resolve the <literal>HttpSession</literal> instance.
+            </para>
+            <para>
+                The &jersey.common.internal.inject.InjectionResolver; can be registered in the with Jersey application
+                &lit.jersey.server.ResourceConfig; as follows:
+
+<programlisting language="java">import jakarta.ws.rs.core.Feature;
+
+import org.glassfish.jersey.InjectionManagerProvider;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
+
+import jakarta.inject.Singleton;
+
+...
+
+public class MyApplication extends ResourceConfig {
+
+public MyApplication() {
+
+    ...
+
+    register(new Feature() {
+        @Override
+        public boolean configure(FeatureContext context) {
+            final InjectionManager injectionManager = InjectionManagerProvider.getInjectionManager(context);
+            context.register(new AbstractBinder() {
+                @Override
+                protected void configure() {
+                    bind(new SessionInjectResolver(injectionManager)).to(HttpSession.class).in(Singleton.class);
+                }
+            });
+            return true;
+        }
+    });
+}</programlisting>
+            </para>
+        </section>
     </section>
 
     <section>
