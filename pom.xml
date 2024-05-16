@@ -316,6 +316,8 @@
                     <version>${compiler.mvn.plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                         <compilerArguments>
                             <!--<Werror />-->
                             <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
