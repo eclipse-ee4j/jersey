@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.net.URI;
 
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
+import org.glassfish.jersey.innate.VirtualThreadUtil;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ApplicationHandler;
@@ -281,10 +283,12 @@ public final class GrizzlyHttpServerFactory {
                 : uri.getPort();
 
         final NetworkListener listener = new NetworkListener("grizzly", host, port);
+        final Configuration configuration = handler != null ? handler.getConfiguration().getConfiguration() : null;
 
         listener.getTransport().getWorkerThreadPoolConfig().setThreadFactory(new ThreadFactoryBuilder()
                 .setNameFormat("grizzly-http-server-%d")
                 .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
+                .setThreadFactory(VirtualThreadUtil.withConfig(configuration).getThreadFactory())
                 .build());
 
         listener.setSecure(secure);

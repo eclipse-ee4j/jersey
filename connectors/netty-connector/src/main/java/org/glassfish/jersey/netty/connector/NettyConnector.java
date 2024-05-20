@@ -34,7 +34,6 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -88,6 +87,7 @@ import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.innate.VirtualThreadUtil;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.netty.connector.internal.NettyEntityWriter;
 
@@ -129,14 +129,15 @@ class NettyConnector implements Connector {
 
     NettyConnector(Client client) {
 
-        final Map<String, Object> properties = client.getConfiguration().getProperties();
+        final Configuration configuration = client.getConfiguration();
+        final Map<String, Object> properties = configuration.getProperties();
         final Object threadPoolSize = properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE);
 
         if (threadPoolSize != null && threadPoolSize instanceof Integer && (Integer) threadPoolSize > 0) {
-            executorService = Executors.newFixedThreadPool((Integer) threadPoolSize);
+            executorService = VirtualThreadUtil.withConfig(configuration).newFixedThreadPool((Integer) threadPoolSize);
             this.group = new NioEventLoopGroup((Integer) threadPoolSize);
         } else {
-            executorService = Executors.newCachedThreadPool();
+            executorService = VirtualThreadUtil.withConfig(configuration).newCachedThreadPool();
             this.group = new NioEventLoopGroup();
         }
 

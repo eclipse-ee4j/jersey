@@ -408,6 +408,8 @@
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_CLIENT</link>" >
 <!ENTITY jersey.common.CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#JSON_JACKSON_DISABLED_MODULES'>CommonProperties.JSON_JACKSON_DISABLED_MODULES_SERVER</link>" >
 <!ENTITY jersey.common.CommonProperties.PARAM_CONVERTERS_THROW_IAE "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#PARAM_CONVERTERS_THROW_IAE'>CommonProperties.PARAM_CONVERTERS_THROW_IAE</link>" >
+<!ENTITY jersey.common.CommonProperties.THREAD_FACTORY "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#THREAD_FACTORY'>CommonProperties.THREAD_FACTORY</link>" >
+<!ENTITY jersey.common.CommonProperties.USE_VIRTUAL_THREADS "<link xlink:href='&jersey.javadoc.uri.prefix;/CommonProperties.html#USE_VIRTUAL_THREADS'>CommonProperties.USE_VIRTUAL_THREADS</link>" >
 <!ENTITY jersey.common.internal.inject.DisposableSupplier "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/DisposableSupplier.html'>DisposableSupplier</link>">
 <!ENTITY jersey.common.internal.inject.InjectionManager "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionManager.html'>InjectionManager</link>">
 <!ENTITY jersey.common.internal.inject.InjectionResolver "<link xlink:href='&jersey.javadoc.uri.prefix;/internal/inject/InjectionResolver.html'>InjectionResolver</link>">

@@ -16,10 +16,19 @@
 
 package org.glassfish.jersey.innate;
 
+import org.glassfish.jersey.innate.virtual.LoomishExecutors;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
 /**
  * Utility class for the virtual thread support.
  */
 public final class VirtualThreadSupport {
+
+    private static final LoomishExecutors VIRTUAL_THREADS = new Java21LoomishExecutors(Thread.ofVirtual().factory());
+    private static final LoomishExecutors NON_VIRTUAL_THREADS = new NonLoomishExecutors(Executors.defaultThreadFactory());
 
     /**
      * Do not instantiate.
@@ -34,5 +43,71 @@ public final class VirtualThreadSupport {
      */
     public static boolean isVirtualThread() {
         return Thread.currentThread().isVirtual();
+    }
+
+    /**
+     * Return an instance of {@link LoomishExecutors} based on a permission to use virtual threads.
+     * @param allow whether to allow virtual threads.
+     * @return the {@link LoomishExecutors} instance.
+     */
+    public static LoomishExecutors allowVirtual(boolean allow) {
+        return allow ? VIRTUAL_THREADS : NON_VIRTUAL_THREADS;
+    }
+
+    /**
+     * Return an instance of {@link LoomishExecutors} based on a permission to use virtual threads.
+     * @param allow whether to allow virtual threads.
+     * @param threadFactory the thread factory to be used by a the {@link ExecutorService}.
+     * @return the {@link LoomishExecutors} instance.
+     */
+    public static LoomishExecutors allowVirtual(boolean allow, ThreadFactory threadFactory) {
+        return allow ? new Java21LoomishExecutors(threadFactory) : new NonLoomishExecutors(threadFactory);
+    }
+
+    private static class NonLoomishExecutors implements LoomishExecutors {
+        private final ThreadFactory threadFactory;
+
+        private NonLoomishExecutors(ThreadFactory threadFactory) {
+            this.threadFactory = threadFactory;
+        }
+
+        @Override
+        public ExecutorService newCachedThreadPool() {
+            return Executors.newCachedThreadPool(getThreadFactory());
+        }
+
+        @Override
+        public ExecutorService newFixedThreadPool(int nThreads) {
+            return Executors.newFixedThreadPool(nThreads, getThreadFactory());
+        }
+
+        @Override
+        public ThreadFactory getThreadFactory() {
+            return threadFactory;
+        }
+    }
+
+    private static class Java21LoomishExecutors implements LoomishExecutors {
+        private final ThreadFactory threadFactory;
+
+        private Java21LoomishExecutors(ThreadFactory threadFactory) {
+            this.threadFactory = threadFactory;
+        }
+
+        @Override
+        public ExecutorService newCachedThreadPool() {
+            return Executors.newThreadPerTaskExecutor(getThreadFactory());
+        }
+
+        @Override
+        public ExecutorService newFixedThreadPool(int nThreads) {
+            ThreadFactory threadFactory = this == VIRTUAL_THREADS ? Executors.defaultThreadFactory() : getThreadFactory();
+            return Executors.newFixedThreadPool(nThreads, threadFactory);
+        }
+
+        @Override
+        public ThreadFactory getThreadFactory() {
+            return threadFactory;
+        }
     }
 }
